@@ -53,7 +53,7 @@ const META = "Microsoft lists 65+ always-free Azure services. This page covers t
 const STATED_ON_THE_PAGE = [
   "To sign up for the Azure free account, you need a phone number, a non-prepaid credit or debit card (only credit cards in Hong Kong and Brazil), and a Microsoft or GitHub account. Your card verifies identity and is not charged, except for a temporary $1 authorization that is reversed. Only one account with free services and $200 credit is allowed per new customer.",
   "If you are a full-time university student aged 18 or older without a credit card, use Azure for Students: $100 in credits to use within 12 months plus free services, with no credit card required. Sign up with your school email. It is for students at accredited degree-granting institutions, one subscription per student, renewable yearly.",
-  "Separately from Microsoft for Startups, new Azure customers can get Azure for Startups: $1,000 in credits instantly with no application, up to $5,000 in total after business verification. Credits are valid for 90 days initially and 180 days post-verification. A credit card is required only for identity verification and usage beyond the credits.",
+  "Startups new to Azure without an investor get Microsoft for Startups credits: $200 for 90 days, then $4,800 more for 180 days after business verification. Until 2026-10-30 Microsoft's FAQ offered $1,000 for 90 days and $4,000 more. A credit card is required only for identity verification and usage beyond the credits.",
   "Microsoft for Startups requires an application on its website and gives up to $200 in credits immediately while eligibility is verified. Startups get up to $150K in credits over time as they demonstrate verified progress, service adoption and Azure usage. Startups backed by Microsoft's Investor Network may unlock up to $200K. To be eligible, the startup must own a software product, be privately held and for-profit, have no Series C funding or later, and no more than $350,000 in lifetime free Azure credits.",
   "Microsoft for Startups: up to $150K with no investor needed, or up to $200K for startups backed by its Investor Network.",
 
@@ -188,6 +188,13 @@ describe("the Azure free tier guide states Microsoft's terms as Microsoft's own 
     assert.deepStrictEqual(found, []);
   });
 
+  it("limits the old startup amounts to the dated FAQ history", () => {
+    const history = "Until 2026-10-30 Microsoft's FAQ offered $1,000 for 90 days and $4,000 more.";
+    assert.strictEqual(html.split(history).length - 1, 1);
+    const current = html.replace(history, "");
+    assert.deepStrictEqual(current.match(/\$1,000 for 90 days|\$1,000 in credits instantly|Azure startup credit offer|\$4,000 more|\$4,000 lasts/gi) ?? [], []);
+  });
+
   it("states the free account's spending limit, the move to pay-as-you-go and the credit's exclusions as written", () => {
     const text = textOf(html);
     assert.deepStrictEqual(STATED_ON_THE_PAGE.filter((line) => !text.includes(line)), []);
@@ -205,7 +212,7 @@ describe("the Azure free tier guide states Microsoft's terms as Microsoft's own 
         "https://azure.microsoft.com/en-us/free/students"
     ],
     [
-        "Separately from Microsoft for Startups, new Azure customers can get Azure for Startups: $1,000 in credits instantly with no application, up to $5,000 in total after business verification. Credits are valid for 90 days initially and 180 days post-verification. A credit card is required only for identity verification and usage beyond the credits.",
+        "Startups new to Azure without an investor get Microsoft for Startups credits: $200 for 90 days, then $4,800 more for 180 days after business verification. Until 2026-10-30 Microsoft's FAQ offered $1,000 for 90 days and $4,000 more. A credit card is required only for identity verification and usage beyond the credits.",
         "https://learn.microsoft.com/en-us/startups/microsoft-for-startups/mfs-faqs"
     ],
     [
@@ -226,7 +233,7 @@ describe("the Azure free tier guide states Microsoft's terms as Microsoft's own 
     const trialTable = html.indexOf('<table', trialAt);
     const signupAt = html.indexOf('To sign up for the ');
     const studentAt = html.indexOf('If you are a full-time university student');
-    const startupAt = html.indexOf('Separately from Microsoft for Startups');
+    const startupAt = html.indexOf('Startups new to Azure without an investor');
     assert.ok(trialAt < signupAt && signupAt < studentAt && studentAt < trialTable);
     assert.ok(html.indexOf('id="startups"') < startupAt && startupAt < html.indexOf('<h3>Microsoft for Startups</h3>'));
   });

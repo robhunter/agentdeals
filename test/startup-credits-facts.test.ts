@@ -60,7 +60,7 @@ const WITHDRAWN = [
 const PROGRAMMES: Record<string, [string, string, string, string]> = {
   "AWS Activate": ["$1K–$5K (Founders), up to $200K (Portfolio), $200K+ (AI Startups, invite only)", "Pre-Series B, founded in the last 10 years, AWS account on a paid plan. Founders: self-funded. Portfolio: needs an Activate Provider Org ID. AWS Credits for AI Startups is by invitation only, for startups ready to scale after Activate Portfolio, through an AWS account manager; AWS states \"$200,000+\" with no upper amount.", "Activate credits expire on a date shown in the AWS Billing console.", "One award per approved application; a later, larger award pays only the difference"],
   "Google Cloud for Startups": ["$2K (Start), up to $200K (Scale), up to $350K (Scale AI)", "Start: no funding yet but plans to raise venture funding soon, founded within 24 months, working MVP; Scale: VC funding from pre-seed to Series A (Series A within the last 12 months; angel money does not count), founded within 5 years.", "12 months (Start), 2 years (Scale)", "Scale: year 1 covers usage up to $100K ($250K for AI); year 2 covers 20% of spend, up to $100K more"],
-  "Microsoft for Startups (formerly Founders Hub)": ["Up to $200 on joining Microsoft for Startups; up to $150K over time as Azure usage grows; up to $200K for Investor Network-backed startups. Startups new to Azure can start with $1,000 for 90 days and $4,000 more after business verification.", "B2B software, AI or tech startups, pre-seed through Series B, privately held; no investor needed. Business verification and sustained Azure usage unlock more credits, and Investor Network backing starts most startups at $100K.", "Activate Microsoft for Startups credits within 90 days; the first $200 lasts 90 days, the verification credit 180 days, and credits from the $25K milestone up to 2 years. The Azure startup credit offer's $1,000 lasts 90 days and its $4,000 lasts 180 days after business verification.", "Released in milestones as you verify the business and use more Azure"],
+  "Microsoft for Startups (formerly Founders Hub)": ["Up to $200 on joining Microsoft for Startups; up to $150K over time as Azure usage grows; up to $200K for Investor Network-backed startups. Startups new to Azure can start with $200 for 90 days and $4,800 more after business verification.", "B2B software, AI or tech startups, pre-seed through Series B, privately held; no investor needed. Business verification and sustained Azure usage unlock more credits, and Investor Network backing starts most startups at $100K.", "Activate Microsoft for Startups credits within 90 days; the first $200 lasts 90 days, the verification credit 180 days, and credits from the $25K milestone up to 2 years.", "Released in milestones as you verify the business and use more Azure"],
   "DigitalOcean Startups": ["Not accepting new applications until an updated program launches in early 2027. Members: credits for 12 months; amount varies, up to $10,000 a month", "Not accepting new applications: paused until early 2027", "12 months", ""],
   "Cloudflare Startup Program": ["$10K, $100K or $350K by tier", "Tier 3 ($10K): bootstrapped or self-funded, under $1M raised; Tiers 2 ($100K) and 1 ($350K): funded by an affiliated partner, Tier 1 with $5M+ raised.", "1 year or until used up", "Lump sum per tier"],
   "Stripe Atlas": ["Over $50K in partner discounts, plus $2.5K of Stripe credits", "Companies incorporated through Atlas ($500, then $100 a year after the first year)", "Varies by perk; Stripe credits last the first year", "Available once the Atlas application is approved"],
@@ -130,7 +130,7 @@ const STATED_ON_THE_GUIDE = [
   "Revenue & Funding Caps Google Scale requires VC funding; angel money doesn't count. PostHog's YC deal has a $25M fundraising cap and renews only while you stay under it.",
   "Overlapping Perks Problem Brex, Mercury, Ramp, SVB and Stripe Atlas all offer AWS Activate credits. A later AWS Activate award pays only the difference, so several $5,000 perks give $5,000 in total. Mercury states that credits are not added on.",
   "Funded startup, three clouds (up to $500K) Google Scale (up to $200K) + AWS Activate Portfolio (up to $200K) + Cloudflare Tier 2 ($100K). Requires VC funding and an affiliated partner.",
-  "Bootstrapped founder ($63K+) AWS Activate Founders offers $1,000. Google Start offers $2,000. Microsoft offers $1,000 for 90 days to startups new to Azure, then $4,000 more after business verification. Microsoft for Startups gives up to $200 at once, with more at milestones. Cloudflare Tier 3 offers $10,000. PostHog offers $50,000 for startups under 2 years old. None needs funding.",
+  "Bootstrapped founder ($63K+) AWS Activate Founders offers $1,000. Google Start offers $2,000. Microsoft offers $200 for 90 days to startups new to Azure, then $4,800 more after business verification. Microsoft for Startups gives up to $200 at once, with more at milestones. Cloudflare Tier 3 offers $10,000. PostHog offers $50,000 for startups under 2 years old. None needs funding.",
   "YC / Accelerator company (up to $350K) AWS Activate Portfolio (up to $200K) + Google Scale (up to $100K in the first year) + PostHog ($50K) = up to $350K in the first year.",
   "AI-focused startup (up to $550K, plus Kiro) Google Scale AI (up to $350K) + Kiro (up to one year of Kiro Pro+, $40 per user a month) + AWS Activate Portfolio (up to $200K). Apply for Kiro first: it excludes startups with active Activate credits.",
   "Careful: their AWS credits don't add up; a later Activate award pays only the difference.",
@@ -290,6 +290,23 @@ describe("the startup credits guide states each programme's terms as the program
     assert.deepStrictEqual(found, []);
   });
 
+  it("states the current Azure entry credit in both the comparison and programme card", () => {
+    const html = served.get("/startup-credits")!;
+    const value = PROGRAMMES["Microsoft for Startups (formerly Founders Hub)"][0];
+    const table = html.split('id="comparison-table"')[1]?.split("</table>")[0] ?? "";
+    const row = [...table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)]
+      .find(([, markup]) => readable(markup.match(/<td[^>]*>([\s\S]*?)<\/td>/)?.[1] ?? "") === "Microsoft for Startups (formerly Founders Hub)")?.[1] ?? "";
+    const cells = [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => readable(cell));
+    assert.strictEqual(cells[1], value);
+    assert.strictEqual(programmeCards(html).get("Microsoft for Startups (formerly Founders Hub)")?.["Credit value"], value);
+  });
+
+  it("serves no previous Azure entry offer in the guide or structured answers", () => {
+    const html = served.get("/startup-credits")!;
+    const withdrawn = /\$1,000 for 90 days|\$1,000 in credits instantly|Azure startup credit offer|\$4,000 more|\$4,000 lasts/gi;
+    assert.deepStrictEqual(html.match(withdrawn) ?? [], []);
+  });
+
   it("lists sixteen programmes, without IBM or Segment, and counts sixteen", () => {
     const cards = programmeCards(served.get("/startup-credits")!);
     assert.deepStrictEqual([...cards.keys()].sort(), [...Object.keys(PROGRAMMES), ...AI_LAB_PROGRAMMES].sort());
@@ -389,9 +406,9 @@ describe("the startup credits guide states each programme's terms as the program
     assert.deepStrictEqual(FAQ_ANSWERS.filter((answer) => !text.includes(answer) || !inStructuredData(answer)), []);
   });
 
-  it("states both credit offers' expiry windows in the guide and its FAQ", () => {
+  it("states the milestone expiry windows in the guide and its FAQ", () => {
     const html = served.get("/startup-credits")!;
-    const claim = "The Azure startup credit offer's $1,000 lasts 90 days and its $4,000 lasts 180 days after business verification.";
+    const claim = "Microsoft for Startups credits must be activated within 90 days; the first $200 lasts 90 days and the business-verification credit 180 days, and from the $25K milestone credits last up to two years.";
     const text = readable(html);
     const expirySection = html.slice(html.indexOf("Credit Expiry Timelines"), html.indexOf("Vesting Schedules"));
     assert.ok(readable(expirySection).includes(claim));
