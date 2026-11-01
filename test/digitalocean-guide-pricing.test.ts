@@ -67,6 +67,18 @@ it("DigitalOcean guide states service prices, backup schedules and spending cont
   assert.ok(body.includes("Pro tip: " + SPEND_ALERT));
 });
 
+it("DigitalOcean comparison distinguishes Vultr's admitted free applicants and IPv4 price", async () => {
+  const response = await fetch(base + "/digitalocean-free-tier-2026");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  const rows = [...html.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/g)]
+    .filter(match => /href="\/vendor\/vultr"/.test(match[1]));
+  assert.equal(rows.length, 1);
+  const cells = [...rows[0][1].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)];
+  assert.equal(text(cells[1][1]), "Free Tier Program: a free 1 vCPU, 512 MB instance for applicants Vultr admits; free DNS on any account; paid VPS from $2.50/mo (IPv6 only) or $3.50/mo with IPv4");
+  assert.ok(!html.includes("cheapest VPS at $2.50/mo"));
+});
+
 const SERVICES = [
   [
     "DNS Management",
