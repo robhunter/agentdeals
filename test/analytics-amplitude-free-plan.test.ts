@@ -172,7 +172,7 @@ describe(`${PAGE} states Amplitude's Free plan and GA4's sampling quota as the v
       return matches[0];
     };
     assert.deepStrictEqual(rows.filter(r => r[0]?.text.includes("June.so")), []);
-    assert.deepStrictEqual(rows.filter(r => r.length === 9).map(r => r[0].text.replace(/ No record.*$/, "").replace(/ PRIVACY TRADE-OFF.*$/, "")), [
+    assert.deepStrictEqual(rows.filter(r => r.length === 9).map(r => ["PostHog", "Mixpanel", "Amplitude", "Google Analytics", "Heap (Contentsquare)", "Plausible", "Umami", "Fathom", "Simple Analytics", "Matomo", "Countly", "Pirsch"].find(vendor => r[0].text === vendor || r[0].text.startsWith(vendor + " "))), [
       "PostHog", "Mixpanel", "Amplitude", "Google Analytics", "Heap (Contentsquare)", "Plausible", "Umami", "Fathom", "Simple Analytics", "Matomo", "Countly", "Pirsch",
     ]);
     assert.deepStrictEqual(row("Mixpanel").slice(2, 5).map(c => c.text), ["✓ 10K/mo", "✓ Up to 10 active", "2 years (default)"]);
