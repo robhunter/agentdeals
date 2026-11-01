@@ -1757,9 +1757,9 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-09-19",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Convex as \"convex\" and states \"$0\""
       },
@@ -2403,7 +2403,7 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Grafana Cloud as \"grafana cloud\" and states \"$19\" and \"10k active series per month\" and \"50 GB ingested per month\""
       },
@@ -2431,7 +2431,7 @@
       "free_plan_excerpt": {
         "text": "free Always free Always $0 Perfect for personal projects, exploring new ideas, and early-stage startups. No charges ever. Start free Benefits: All Grafana Cloud services, with usage limits Adaptive Telemetry, AI Assistant, and much more Community support 14 days retention for metrics, logs, traces, profiles, & k6 performance tests",
         "url": "https://grafana.com/pricing/",
-        "read_on": "2026-10-07"
+        "read_on": "2026-11-01"
       },
       "restatement_reverted": {
         "record_date": "2026-09-02",
@@ -2689,9 +2689,9 @@
         "users",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Clerk as \"clerk\" and states \"$0\""
       }
@@ -2720,7 +2720,7 @@
         "notes": "Part of Okta. Enterprise referral via Okta partner program only ($100 charity donation per qualified referral)."
       },
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Auth0 as \"auth0\" and states \"$ 0\""
       },
@@ -2748,9 +2748,9 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Kinde as \"kinde\" and states \"$0\""
       }
@@ -3944,16 +3944,16 @@
         "github",
         "free tier"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "states_a_free_price",
         "detail": "the page names jsDelivr and states its price in words as \"free API\", and the 1 structured-data block in its markup states no price"
       },
       "free_plan_excerpt": {
-        "text": "A free CDN for open source projects Optimized for JS and ESM delivery from npm and GitHub. Works with all web formats. Operating since 2012. 150 billion requests past month over 5 000 TB past month",
+        "text": "A free CDN for open source projects Optimized for JS and ESM delivery from npm and GitHub. Works with all web formats. Operating since 2012.",
         "url": "https://www.jsdelivr.com/",
-        "read_on": "2026-10-07"
+        "read_on": "2026-11-01"
       }
     },
     {
@@ -4091,7 +4091,7 @@
       ],
       "verifiedDate": "2026-07-25",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-01",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -4683,9 +4683,9 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-10-31",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names PostHog as \"posthog\" and states \"100K events/month\""
       }
@@ -4705,9 +4705,9 @@
       ],
       "verifiedDate": "2026-10-07",
       "source_check": {
-        "checked": "2026-10-06",
+        "checked": "2026-11-01",
         "outcome": "ok",
-        "detail": "the page names Amplitude as \"amplitude\" and states \"$0\""
+        "detail": "the page names Amplitude as \"amplitude\" and states \"2M Events/month\" and \"0 First 2M Events/month\" and \"2 million events per month\" and \"2 million events included per month\""
       }
     },
     {
@@ -5488,7 +5488,7 @@
         "notes": "Technology and SI partner programs. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-01",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       },
@@ -5985,7 +5985,7 @@
         "github",
         "jekyll"
       ],
-      "verifiedDate": "2026-08-25",
+      "verifiedDate": "2026-11-01",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -5995,9 +5995,9 @@
         "notes": "No individual referral program."
       },
       "source_check": {
-        "checked": "2026-10-09",
-        "outcome": "states_no_terms",
-        "detail": "the page names GitHub Pages but states no amount, tier or rate we can read, and its markup carries no structured data"
+        "checked": "2026-11-01",
+        "outcome": "ok",
+        "detail": "the page names GitHub Pages as \"github pages\" and states \"100 GB per month\" and \"10 builds per hour\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -6102,9 +6102,9 @@
         "background-jobs",
         "automation"
       ],
-      "verifiedDate": "2026-10-31",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Cron-job.org as \"cron job org\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -6337,7 +6337,7 @@
       ],
       "verifiedDate": "2026-04-19",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-01",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -6396,7 +6396,7 @@
       ],
       "verifiedDate": "2026-07-23",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-01",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
         "rendered": true
@@ -6497,7 +6497,7 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Bugsnag as \"bugsnag\" and states \"1M spans per month\""
       },
@@ -6600,10 +6600,9 @@
       ],
       "verifiedDate": "2026-04-19",
       "source_check": {
-        "checked": "2026-10-07",
-        "outcome": "ok",
-        "detail": "the page names Make as \"make\" and states \"1,000 credits/mo\" and \"1,000 credits/month\" and \"1000 credits per month\"",
-        "rendered": true
+        "checked": "2026-11-01",
+        "outcome": "unreadable",
+        "detail": "HTTP 403"
       },
       "free_plan_excerpt": {
         "text": "10k credits/mo Free $ 0 /mo Up to 1,000 credits/mo Get started For those looking to experience our visual-first interface and create the first scenario Free includes: 1,000 credits/month No-code visual workflow builder 3000+ apps Routers & filters Customer support 15-minute minimum interval between runs",
@@ -7773,7 +7772,7 @@
       ],
       "verifiedDate": "2026-05-02",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-01",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       },
@@ -8037,7 +8036,7 @@
       ],
       "verifiedDate": "2026-07-26",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Meilisearch, renders no terms we can read, and its markup states 1 typed price (Meilisearch Cloud USD 20)",
         "read": "markup",
@@ -10175,7 +10174,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Cronitor as \"cronitor\" and states \"$0\""
       },
@@ -10208,7 +10207,7 @@
       "free_plan_excerpt": {
         "text": "Hacker $0 free forever Limited monitoring for homelabs and small projects. 5 monitors Email and Slack alerts Basic status page No SMS alerts No premium integrations",
         "url": "https://cronitor.io/pricing",
-        "read_on": "2026-10-07"
+        "read_on": "2026-11-01"
       }
     },
     {
@@ -10408,9 +10407,9 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "states_a_free_price",
-        "detail": "the page names AbstractAPI and states its price in words as \"Free API\", and its markup carries no structured data"
+        "detail": "the page names AbstractAPI and states its price in words as \"free API\", and its markup carries no structured data"
       }
     },
     {
@@ -10729,9 +10728,9 @@
         "object-detection",
         "model-training"
       ],
-      "verifiedDate": "2026-10-31",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "states_a_free_price",
         "detail": "the page names Roboflow and states its price in words as \"Free Tier\", and its markup carries no structured data"
       },
@@ -11660,7 +11659,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Hasura as \"hasura\" and states \"$0.075\" and \"$0.0075\""
       },
@@ -11682,7 +11681,7 @@
       "free_plan_excerpt": {
         "text": "DDN Free Always $0 Ideal for individual developers building and running a supergraph, at any scale. Includes: Unlimited models, at any scale 1 supergraph developer Observability: 15-minute retention",
         "url": "https://hasura.io/pricing",
-        "read_on": "2026-10-07"
+        "read_on": "2026-11-01"
       }
     },
     {
@@ -12091,14 +12090,14 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Bitrise as \"bitrise\" and states \"300 credits per month\""
       },
       "free_plan_excerpt": {
         "text": "Hobby Build and distribute your passion project without the extra cost. ‍ Free Forever Get started Access for a team of one (that's you!) Enough build credits for you to build your small project a few times per month Support from the Bitrise Community via Slack or Discuss forum",
         "url": "https://bitrise.io/pricing",
-        "read_on": "2026-10-31"
+        "read_on": "2026-11-01"
       },
       "conditions": [
         {
@@ -12241,7 +12240,7 @@
       ],
       "verifiedDate": "2026-10-07",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Harness CI, renders \"free tier\" and no amount, and its markup states 1 typed price (Free Plan USD 0)",
         "read": "markup"
@@ -12674,7 +12673,7 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Zoho Survey, renders \"free version\" and no amount, and its markup states 1 typed price (INR 0)",
         "read": "markup"
@@ -12693,7 +12692,7 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Zoho Bookings, renders \"free plan\" and no amount, and its markup states 3 typed prices (USD 0, USD 6, USD 9)",
         "read": "markup"
@@ -12714,7 +12713,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names DBOS as \"dbos\" and states \"$99\""
       },
@@ -12737,7 +12736,7 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Brainboard, renders \"free tier\" and no amount, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -12894,7 +12893,7 @@
       ],
       "verifiedDate": "2026-06-12",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-01",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -13398,7 +13397,7 @@
       ],
       "verifiedDate": "2026-09-19",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Data Fetcher, renders no terms we can read, and its markup states 1 typed price (Free USD 0)",
         "read": "markup"
@@ -13433,7 +13432,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Dataimporter.io, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -13695,9 +13694,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names ExtendsClass, renders no terms we can read, and its markup states 1 typed price (0)",
         "read": "markup"
@@ -13735,9 +13734,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names FormatJSONOnline.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -14367,9 +14366,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Mockfly, renders \"Free plan\" and no amount, and its markup states 3 typed prices (Starter EUR 0, Pro EUR 15, Team EUR 49)",
         "read": "markup",
@@ -14678,7 +14677,7 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Preset Cloud, renders no terms we can read, and its markup states 1 typed price (Starter Plan USD 0)",
         "read": "markup"
@@ -14713,7 +14712,7 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Reducto, renders \"Standard tier\" and no amount, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -15685,10 +15684,9 @@
       ],
       "verifiedDate": "2026-10-07",
       "source_check": {
-        "checked": "2026-10-07",
-        "outcome": "ok",
-        "detail": "the page names Fibo, renders no terms we can read, and its markup states 1 typed price (EUR 0)",
-        "read": "markup",
+        "checked": "2026-11-01",
+        "outcome": "states_no_terms",
+        "detail": "the page names Fibo but states no amount, tier or rate we can read, and its markup carries no structured data",
         "rendered": true
       }
     },
@@ -15704,7 +15702,7 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "states_no_terms",
         "detail": "the page names Fizzy but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -16331,7 +16329,7 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Tencent RTC, renders \"Starter Plan\" and no amount, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -16339,7 +16337,7 @@
       "free_plan_excerpt": {
         "text": "No credit card required | 10,000 free minutes",
         "url": "https://trtc.io/",
-        "read_on": "2026-10-07"
+        "read_on": "2026-11-01"
       }
     },
     {
@@ -16727,7 +16725,7 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Prismic, renders no terms we can read, and its markup states 1 typed price (0)",
         "read": "markup"
@@ -16879,7 +16877,7 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-01",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -16976,7 +16974,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names codacy.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -16984,7 +16982,7 @@
       "free_plan_excerpt": {
         "text": "Full scan within minutes | Free trial for 14 days | No credit card required",
         "url": "https://www.codacy.com/",
-        "read_on": "2026-10-07"
+        "read_on": "2026-11-01"
       }
     },
     {
@@ -17423,7 +17421,7 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names bytebase.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -17506,9 +17504,9 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names LocalOps, renders \"Free tier\" and no amount, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -17585,7 +17583,7 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Shipfox, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -17892,7 +17890,7 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names loadmill.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -18031,15 +18029,21 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-04",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
-        "outcome": "states_a_free_price",
-        "detail": "the page names testingbot.com and states its price in words as \"free plan\", and the 2 structured-data blocks in its markup state no price"
+        "checked": "2026-11-01",
+        "outcome": "ok",
+        "detail": "the page names testingbot.com, renders \"Free forever\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       },
       "restatement_reverted": {
         "record_date": "2026-10-07",
         "reverted_on": "2026-10-07"
+      },
+      "free_plan_excerpt": {
+        "text": "Free forever for active open source projects Unlimited automated test runs 2 concurrent (parallel) tests 6100+ browser and OS combinations Real iOS and Android devices Selenium, Cypress, Playwright, Puppeteer, Appium, Espresso, XCUITest",
+        "url": "https://testingbot.com/open-source",
+        "read_on": "2026-11-01"
       }
     },
     {
@@ -18618,9 +18622,9 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names 360username as \"360username\" and states \"$0\""
       }
@@ -18771,7 +18775,7 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Cloud-IAM, renders no terms we can read, and its markup states 1 typed price (EUR 0)",
         "read": "markup"
@@ -19113,7 +19117,7 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Diawi, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -19182,7 +19186,7 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "states_no_amount",
         "detail": "the page names bitnami.com and says \"standard package\" but states no amount, rate or price we can read, and its markup carries no structured data"
       }
@@ -19565,9 +19569,9 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names SMSGate, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -20088,7 +20092,7 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names bleemeo.com as \"bleemeo com\" and states amounts, none of which we matched to the terms we publish",
         "unrendered_prices": [
@@ -20114,7 +20118,7 @@
       "free_plan_excerpt": {
         "text": "No credit card required • 15-day free trial • Production-ready in 5 minutes",
         "url": "https://bleemeo.com",
-        "read_on": "2026-10-07"
+        "read_on": "2026-11-01"
       }
     },
     {
@@ -21032,7 +21036,7 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Wachete, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -22589,14 +22593,14 @@
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "states_a_free_price",
         "detail": "the page names formlets.com and states its price in words as \"Free Forever\", and its markup carries no structured data"
       },
       "free_plan_excerpt": {
-        "text": "Free Forever Unlimited submits & No signup/creditcard needed",
+        "text": "Create your form Free Forever Unlimited submits & No signup/creditcard needed",
         "url": "https://formlets.com/",
-        "read_on": "2026-10-07"
+        "read_on": "2026-11-01"
       }
     },
     {
@@ -22763,7 +22767,7 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "states_no_amount",
         "detail": "the page names SimplePDF.eu and says \"Pro plans\" but states no amount, rate or price we can read, and the 3 structured-data blocks in its markup state no price"
       }
@@ -24297,7 +24301,7 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "states_no_amount",
         "detail": "the page names YepCode and says \"DEVELOPER plan\" but states no amount, rate or price we can read, and its markup carries no structured data"
       },
@@ -24637,9 +24641,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "states_a_free_price",
         "detail": "the page names Clappia and states its price in words as \"Free Plan\", and its markup carries no structured data"
       }
@@ -24948,9 +24952,9 @@
         "free-for-dev",
         "kinsta-alternative"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Sevalla (formerly Kinsta) as \"sevalla\" and states \"100GB bandwidth per month\" and \"100GB bandwidth / month\""
       },
@@ -24973,7 +24977,7 @@
       "free_plan_excerpt": {
         "text": "100 static sites 600 build minutes per month 100GB bandwidth per month / account 1GB build size and 1 concurrent build per site Static sites $0 260+ global edge locations 100 sites 600 free build minutes 100GB bandwidth / month 1GB size limit / site",
         "url": "https://sevalla.com/static-site-hosting/",
-        "read_on": "2026-10-07"
+        "read_on": "2026-11-01"
       }
     },
     {
@@ -25016,9 +25020,9 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-31",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Neocities as \"neocities\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -25116,7 +25120,7 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-01",
         "outcome": "states_no_amount",
         "detail": "the page names pantheon.io and says \"Enterprise Plans\" but states no amount, rate or price we can read, and the 1 structured-data block in its markup states no price"
       },
@@ -25682,7 +25686,7 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "states_no_terms",
         "detail": "the page names DigitalPlat but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
@@ -26002,7 +26006,7 @@
       ],
       "verifiedDate": "2026-07-14",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names skyvia.com as \"skyvia com\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -27361,7 +27365,7 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names GoFile.io as \"gofile io\" and states \"$0\"",
         "rendered": true
@@ -27369,7 +27373,7 @@
       "free_plan_excerpt": {
         "text": "Free $0 no account required Gofile is free to use — upload and share files instantly, no account required. Files are kept temporarily, perfect for quick shares.",
         "url": "https://gofile.io/",
-        "read_on": "2026-10-31"
+        "read_on": "2026-11-01"
       },
       "restatement_reverted": {
         "record_date": "2026-10-06",
@@ -29186,7 +29190,7 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names ShadcnUI as \"shadcn ui\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -31324,7 +31328,7 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names inspectlet.com as \"inspectlet com\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -34062,7 +34066,7 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names xAI as \"xai\" and states \"$2.00\" and \"$0.50\" and \"$6.00\" and \"$4.00\""
       },
@@ -35305,9 +35309,9 @@
         "gpu",
         "free tier"
       ],
-      "verifiedDate": "2026-10-31",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names NVIDIA NIM as \"nim\" and states \"40 requests per minute\""
       },
@@ -35678,7 +35682,7 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names MiniMax as \"minimax\" and states \"$0.60\" and \"$0.30\" and \"$1.20\" and \"$2.40\""
       },
@@ -35915,7 +35919,7 @@
       ],
       "verifiedDate": "2026-10-04",
       "source_check": {
-        "checked": "2026-10-31",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names TickTick as \"ticktick\" and states \"$49.99\""
       },
@@ -37146,7 +37150,7 @@
         "kubernetes_control_plane": "Free (pay for workers only)"
       },
       "source_check": {
-        "checked": "2026-10-06",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names OVHcloud as \"ovhcloud\" and states \"$ 200\""
       }
@@ -37317,7 +37321,7 @@
       ],
       "verifiedDate": "2026-10-07",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-01",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -37339,9 +37343,17 @@
       ],
       "verifiedDate": "2026-10-07",
       "source_check": {
-        "checked": "2026-10-01",
-        "outcome": "unreadable",
-        "detail": "fetch failed"
+        "checked": "2026-11-01",
+        "outcome": "ok",
+        "detail": "the page names GPU-Bridge as \"gpu bridge\" and states amounts, none of which we matched to the terms we publish",
+        "unrendered_prices": [
+          "Speech-to-Text USD 0.01",
+          "Text-to-Speech USD 0.02",
+          "Embeddings USD 0.01",
+          "Vision & OCR USD 0.01",
+          "Document Parsing USD 0.05",
+          "Video Enhancement USD 0.50"
+        ]
       }
     },
     {
@@ -37372,9 +37384,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-10-02",
-        "outcome": "unreadable",
-        "detail": "HTTP 404"
+        "checked": "2026-11-01",
+        "outcome": "states_a_free_price",
+        "detail": "the page names Strale and states its price in words as \"Free Tier\", and its markup carries no structured data"
       }
     },
     {
@@ -37392,11 +37404,11 @@
         "self-hosted",
         "free tier"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-01",
       "source_check": {
-        "checked": "2026-10-02",
-        "outcome": "unreadable",
-        "detail": "HTTP 404"
+        "checked": "2026-11-01",
+        "outcome": "ok",
+        "detail": "the page names tollbooth as \"tollbooth\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -37414,7 +37426,7 @@
       ],
       "verifiedDate": "2026-04-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-01",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -38855,7 +38867,12 @@
           "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/flat-rate-pricing-plan.html",
           "read_on": "2026-10-06"
         }
-      ]
+      ],
+      "source_check": {
+        "checked": "2026-11-01",
+        "outcome": "ok",
+        "detail": "the page names Amazon CloudFront as \"amazon cloudfront\" and states \"$0\" and \"$15\""
+      }
     },
     {
       "vendor": "Vultr",
@@ -38907,7 +38924,12 @@
           "url": "https://docs.vultr.com/support/platform/billing/are-stopped-instances-still-billed-on-vultr",
           "read_on": "2026-10-07"
         }
-      ]
+      ],
+      "source_check": {
+        "checked": "2026-11-01",
+        "outcome": "unreadable",
+        "detail": "HTTP 403"
+      }
     },
     {
       "vendor": "Akamai Cloud",
@@ -38948,7 +38970,12 @@
           "url": "https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works",
           "read_on": "2026-10-07"
         }
-      ]
+      ],
+      "source_check": {
+        "checked": "2026-11-01",
+        "outcome": "ok",
+        "detail": "the page names Akamai Cloud as \"akamai cloud\" and states \"$100\""
+      }
     },
     {
       "vendor": "Amazon Lightsail",
@@ -38966,7 +38993,7 @@
         "hetzner-alternative",
         "digitalocean-alternative"
       ],
-      "verifiedDate": "2026-10-06",
+      "verifiedDate": "2026-11-01",
       "conditions": [
         {
           "text": "Lightsail's own free trials are closed to new customers. A trial started before AWS removed them runs to the end of its period, and the resources then bill monthly.",
@@ -38988,7 +39015,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-10-06",
+        "checked": "2026-11-01",
         "outcome": "ok",
         "detail": "the page names Amazon Lightsail as \"amazon lightsail\" and states \"$5\" and \"$7\" and \"$12\" and \"$9.50\""
       }
