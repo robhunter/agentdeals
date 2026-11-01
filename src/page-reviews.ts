@@ -620,7 +620,7 @@ export function readHetznerPricesRead(file: string = hetznerPricesReadPath()): s
 
 export const HETZNER_PLAN_TABLE_READ_ON = readHetznerPricesRead();
 export const HETZNER_PLAN_AVAILABILITY_READ_ON = "2026-10-20";
-export const STORAGE_RATE_CARD_READ_ON = "2026-09-07";
+export const STORAGE_RATE_CARD_READ_ON = "2026-11-01";
 
 export interface DeclaredFigureRead {
   path: string;

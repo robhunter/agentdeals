@@ -34,8 +34,8 @@ describe("published storage rate cards", () => {
   it("reproduces the three columns compiled from list rates without allowances", () => {
     const expected: Record<string, string[]> = {
       "Cloudflare R2": ["$1.50", "$15", "$150", "$1,500"],
-      "AWS S3": ["$11.30", "$113", "$1,130", "$11,300"],
-      "Google Cloud Storage": ["$14", "$140", "$1,400", "$14,000"],
+      "AWS S3": ["$11.30", "$113", "$1,130", "$10,050"],
+      "Google Cloud Storage": ["$14", "$140", "$1,400", "$13,100"],
     };
     for (const [provider, cells] of Object.entries(expected)) {
       STORAGE_SCALE_WORKLOADS.forEach((workload, i) => {
@@ -70,7 +70,7 @@ describe("published storage rate cards", () => {
     assert.match(egressBillOnceOverAllowance(b2, readHeavy), /3 TB free, 7 TB billed at \$0\.01\/GB/);
   });
 
-  it("bills the whole egress at the headline rate for providers with no scaling allowance", () => {
+  it("keeps egress volume intact for providers with no scaling allowance", () => {
     const workload = { storageGb: 1_000, egressGb: 1_000 };
     for (const card of STORAGE_RATE_CARDS) {
       if (card.freeEgressMultipleOfStorage > 0) continue;
@@ -179,4 +179,25 @@ describe("published storage rate cards", () => {
       assert.ok(card.storagePerGbMonth > 0, `${card.provider} stores for nothing`);
     }
   });
+  it("charges only the volume within each AWS and Google internet-egress tier", () => {
+    const examples: [string, [number, number][]][] = [
+      ["AWS S3", [[0, 0], [9_999, 899.91], [10_000, 900], [10_001, 900.085], [49_999, 4299.915], [50_000, 4300], [50_001, 4300.07], [149_999, 11299.93], [150_000, 11300], [150_001, 11300.05], [200_000, 13800]]],
+      ["Google Cloud Storage", [[0, 0], [9_999, 1199.88], [10_000, 1200], [10_001, 1200.11], [149_999, 16599.89], [150_000, 16600], [150_001, 16600.08], [200_000, 20600]]],
+    ];
+    for (const [provider, cases] of examples) {
+      for (const [egressGb, dollars] of cases) {
+        assert.ok(Math.abs(monthlyStorageCost(rateCardFor(provider), { storageGb: 0, egressGb }) - dollars) < 1e-8, `${provider}: ${egressGb} GB`);
+      }
+    }
+  });
+
+  it("lowers only AWS storage above 50 TB and totals the 5 TB plus 50 TB workload", () => {
+    const s3 = rateCardFor("AWS S3");
+    for (const [storageGb, dollars] of [[49_999, 1149.977], [50_000, 1150], [50_001, 1150.022], [100_000, 2250], [500_000, 11050]]) {
+      assert.ok(Math.abs(monthlyStorageCost(s3, { storageGb, egressGb: 0 }) - dollars) < 1e-8, `${storageGb} GB`);
+    }
+    assert.strictEqual(scaleCostFor("AWS S3", { storageGb: 5_000, egressGb: 50_000 }), "$4,415");
+    assert.strictEqual(model.STORAGE_RATES_READ, "2026-11-01");
+  });
+
 });
