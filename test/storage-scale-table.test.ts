@@ -156,8 +156,71 @@ describe("the storage scaling table publishes its rate card", () => {
     const cheapest = monthlyStorageCost(rateCardFor(cheapestProviderAt(hundredTb)), hundredTb);
     const dearest = monthlyStorageCost(rateCardFor(costliestProviderAt(hundredTb)), hundredTb);
     const spread = Math.round(dearest / cheapest);
-    assert.strictEqual(spread, 20);
+    assert.strictEqual(spread, 19);
     assert.ok(html.includes(`The ${spread}x gap at scale`), `page does not headline a ${spread}x gap`);
     assert.ok(!html.includes("The 60x gap at scale"), "page still headlines the pre-correction 60x gap");
   });
+  it("prints the tiered 100 TB totals without changing the three smaller rows", () => {
+    const rows = growthTableCells(html);
+    assert.deepStrictEqual(rows.map(row => row.slice(1, 5)), [
+      ["$1.50", "$11.30", "$0.70", "$14"],
+      ["$15", "$113", "$6.95", "$140"],
+      ["$150", "$1,130", "$69.50", "$1,400"],
+      ["$1,500", "$10,050", "$695", "$13,100"],
+    ]);
+    assert.ok(html.includes("AWS S3 and Google Cloud Storage bill egress in published tiers that get cheaper per GB past 10 TB a month, which only the 100 TB row reaches."));
+    assert.doesNotMatch(html, /Volume discounts and committed-use pricing are excluded throughout/);
+  });
+
+  it("gives the NAT gateway its processing charge without charging same-region S3 transfer", () => {
+    const trap = html.match(/<strong>The NAT Gateway trap in detail:<\/strong>\s*([\s\S]*?)<\/div>/)?.[1].trim();
+    assert.strictEqual(trap, "EC2 instances in a private subnet reading S3 through a NAT Gateway pay $0.045/GB for NAT data processing. S3 charges nothing for transfers to another AWS service in the same Region, so that is the whole charge. This appears under EC2, not S3. An S3 gateway VPC endpoint carries the same traffic at no charge.");
+    const card = html.match(/<h3>AWS S3: NAT Gateway charges appear on your EC2 bill<\/h3>\s*<div class="diff-desc">([\s\S]*?)<\/div>/)?.[1];
+    assert.strictEqual(card, "EC2 instances in private subnets reading S3 through a NAT Gateway pay $0.045/GB data processing, billed under EC2, so it is missing from S3 cost breakdowns. An S3 gateway VPC endpoint has no charge. At 1 TB a month that is $45, with no S3 transfer charge when the bucket is in the same Region.");
+  });
+
+  it("keeps free storage, egress and S3 support in their named provider columns", () => {
+    const table = html.match(/<table class="comp-table">([\s\S]*?)<\/table>/)?.[1];
+    assert.ok(table);
+    const headers = [...table.matchAll(/<th\b[^>]*>([\s\S]*?)<\/th>/g)].map(m => m[1].replace(/<[^>]*>/g, "").trim());
+    const row = (name: string) => {
+      const rows = [...table.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/g)].map(r => [...r[1].matchAll(/<td\b([^>]*)>([\s\S]*?)<\/td>/g)].map(c => ({ text: c[2].replace(/<[^>]*>/g, "").trim(), attributes: c[1] }))).filter(r => r[0]?.text === name || r[0]?.text.startsWith(name + " "));
+      assert.strictEqual(rows.length, 1, name);
+      assert.strictEqual(rows[0].length, headers.length, name);
+      return (column: string) => { const index = headers.indexOf(column); assert.ok(index >= 0, column); return rows[0][index]; };
+    };
+    const supabase = row("Supabase Storage");
+    assert.strictEqual(supabase("Free Storage").text, "1 GB");
+    assert.strictEqual(supabase("Free Egress").text, "5 GB/mo");
+    assert.strictEqual(supabase("S3 Compatible").text, "&#10003;");
+    assert.match(supabase("S3 Compatible").attributes, /class="check"/);
+    assert.strictEqual(row("Vercel Blob")("Free Storage").text, "1 GB");
+    assert.strictEqual(row("Vercel Blob")("Free Egress").text, "10 GB/mo");
+    assert.strictEqual(row("Pinata IPFS")("Free Storage").text, "1 GB");
+    assert.strictEqual(row("Google Cloud Storage")("Free Egress").text, "100 GB/mo from North America");
+  });
+
+  it("carries the corrected service terms and excludes the withdrawn hand-written claims", () => {
+    const plain = html.replace(/<[^>]*>/g, "").replace(/&rsquo;/g, "'").replace(/\s+/g, " ");
+    for (const sentence of [
+      "1 GB file storage, 5 GB egress and 5 GB cached egress a month.",
+      "S3-compatible, alongside its own Storage API.",
+      "Its object lifecycle rules can delete objects, or move them to Infrequent Access, after a set number of days.",
+      "Tigris also charges nothing for egress, and B2 gives free egress up to 3x what you store.",
+      "waived during the trial; accounts paying with USDC are exempt.",
+      "Hobby includes 1 GB of Blob storage and 10 GB of Blob data transfer a month.",
+      "1 GB storage and 500 files.",
+      "119 global PoPs.",
+      "Bunny Storage for origin storage from $0.01/GB per region.",
+      "R2 saves $81 over S3. At 50 TB/month, R2 saves about $4,300.",
+      "At 50 TB/month egress, either saves about $4,300 vs S3.",
+    ]) assert.ok(plain.includes(sentence), sentence);
+    assert.strictEqual((html.match(/\$4,415/g) ?? []).length, 3);
+    assert.strictEqual((html.match(/119 PoPs/g) ?? []).length, 2);
+    assert.doesNotMatch(html, /\$0\.135\/GB|\$4,625|\$11,300|\$14,000|R2 saves \$92|\$4,500\+|on top of \$81 in egress|not S3-compatible|no built-in lifecycle rules|free cross-region replication|Hobby incl\.|114 (?:global )?PoPs/);
+    const storj = html.match(/<h3>Storj <span class="caution-badge">30-DAY TRIAL<\/span>(?:(?!<\/h3>)[\s\S])*<\/h3>\s*<div class="diff-desc">([\s\S]*?)<\/div>/)?.[1];
+    assert.ok(storj);
+    assert.doesNotMatch(storj, /STORJ token/);
+  });
+
 });

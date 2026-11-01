@@ -41041,7 +41041,7 @@ function storageScalingAllowanceSentence(): string {
   const scaling = providersWithScalingEgressAllowance();
   if (scaling.length === 0) return "No provider here publishes an egress allowance that scales with what you store.";
   const named = scaling.map(card => egressAllowanceSentence(card)).join(" ");
-  return `${named} No other column has an allowance that scales, so their egress bills at the headline rate from the first byte.`;
+  return `${named} No other column has an allowance that scales. AWS S3 and Google Cloud Storage bill egress in published tiers that get cheaper per GB past 10 TB a month, which only the 100 TB row reaches.`;
 }
 
 function storageScaleSpreadClause(): string {
@@ -41207,12 +41207,12 @@ ${globalNavCss()}
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Storage & CDN Services</div></div>
     <div class="stat-card"><div class="stat-number green">$0</div><div class="stat-label">R2 Egress (Zero Fees)</div></div>
-    <div class="stat-card"><div class="stat-number red">$4,625</div><div class="stat-label">S3 at 5TB + 50TB Egress/mo</div></div>
+    <div class="stat-card"><div class="stat-number red">$4,415</div><div class="stat-label">S3 at 5TB + 50TB Egress/mo</div></div>
     <div class="stat-card"><div class="stat-number green">$75</div><div class="stat-label">R2 Same Scenario</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> offers 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,625/month on S3. <strong>Storj</strong> offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier &mdash; a $5 minimum monthly fee applies once it ends. <strong>Backblaze B2</strong> has the cheapest paid storage at ${rateCardFor("Backblaze B2").publishedStorageRate} and gives every account free egress up to 3x what it stores, no CDN needed &mdash; which makes it the cheapest column in the scaling table below, not R2&rsquo;s equal. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: ${SELF_HOSTED_S3_STORAGE_ANSWER}</p>
+    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> offers 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,415/month on S3. <strong>Storj</strong> offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier &mdash; a $5 minimum monthly fee applies once it ends. <strong>Backblaze B2</strong> has the cheapest paid storage at ${rateCardFor("Backblaze B2").publishedStorageRate} and gives every account free egress up to 3x what it stores, no CDN needed &mdash; which makes it the cheapest column in the scaling table below, not R2&rsquo;s equal. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: ${SELF_HOSTED_S3_STORAGE_ANSWER}</p>
     <p><strong>The S3 egress tax is legendary.</strong> AWS S3 egress charges are the #1 developer bill shock story. S3 bills across 6 dimensions most developers don&rsquo;t know about: storage, egress, PUT requests, GET requests, lifecycle transitions, and the hidden NAT Gateway charge ($0.045/GB) that appears on your EC2 bill, not your S3 bill. At 1 TB/month egress, S3 costs ${egressBillAfterMonthlyGrantFor("AWS S3", ONE_TO_ONE_SCENARIO)} in bandwidth alone &mdash; 1 TB less the ${monthlyEgressGrantGb("AWS S3")} GB every account gets free each month, billed at $${rateCardFor("AWS S3").egressPerGb.toFixed(2)}/GB. R2 costs $0. This single difference has disrupted the entire cloud storage market.</p>
   </div>
 
@@ -41307,7 +41307,7 @@ ${globalNavCss()}
         <td class="provider-col">Google Cloud Storage</td>
         <td>Object</td>
         <td>5 GB-mo</td>
-        <td>1 GB/mo</td>
+        <td>100 GB/mo from North America</td>
         <td class="check">&#10003; Interop</td>
         <td class="partial">Cloud CDN sep.</td>
         <td class="check">&#10003;</td>
@@ -41337,8 +41337,8 @@ ${globalNavCss()}
         <td class="provider-col">Supabase Storage</td>
         <td>BaaS</td>
         <td>1 GB</td>
-        <td>2 GB/mo</td>
-        <td class="cross">&#10007;</td>
+        <td>5 GB/mo</td>
+        <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td>Included</td>
@@ -41356,8 +41356,8 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">Vercel Blob</td>
         <td>BaaS</td>
-        <td>Hobby incl.</td>
-        <td>Hobby incl.</td>
+        <td>1 GB</td>
+        <td>10 GB/mo</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; Edge</td>
         <td class="check">&#10003;</td>
@@ -41389,7 +41389,7 @@ ${globalNavCss()}
         <td>N/A</td>
         <td>14-day trial</td>
         <td class="cross">&#10007;</td>
-        <td class="check">&#10003; 114 PoPs</td>
+        <td class="check">&#10003; 119 PoPs</td>
         <td class="cross">&#10007; Trial</td>
         <td>$0.01/GB</td>
       </tr>${vendorPageConditionsRowHtml("bunnycdn", 8)}
@@ -41416,7 +41416,7 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">Pinata IPFS</td>
         <td>Decentr.</td>
-        <td>500 MB</td>
+        <td>1 GB</td>
         <td>IPFS gateway</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; IPFS</td>
@@ -41443,7 +41443,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Cloudflare R2 <span class="winner-badge">ZERO EGRESS</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 10 GB storage, 1M Class A operations (writes), 10M Class B operations (reads) per month. The defining feature: <strong>zero egress fees</strong>, ever. No bandwidth charges regardless of how much data you serve. S3-compatible API, Workers integration for edge compute on your objects, and automatic global distribution. The free tier has no SLA but uses the same infrastructure as paid. At scale: 5 TB stored + 50 TB egress = $75/month vs $4,625/month on S3. Best for any project where read-heavy access patterns would make S3 egress costs unsustainable.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 10 GB storage, 1M Class A operations (writes), 10M Class B operations (reads) per month. The defining feature: <strong>zero egress fees</strong>, ever. No bandwidth charges regardless of how much data you serve. S3-compatible API, Workers integration for edge compute on your objects, and automatic global distribution. The free tier has no SLA but uses the same infrastructure as paid. At scale: 5 TB stored + 50 TB egress = $75/month vs $4,415/month on S3. Best for any project where read-heavy access patterns would make S3 egress costs unsustainable.</div>
   </div>
 
   <div class="diff-card">
@@ -41458,7 +41458,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Storj <span class="caution-badge">30-DAY TRIAL</span></h3>
-    <div class="diff-desc"><strong>Free trial:</strong> 25 GB storage free for 30 days, no credit card required. There is no permanent free tier. After the trial it is $7/TB stored and $7/TB egress against a $5 minimum monthly fee &mdash; waived during the trial and for accounts paying in STORJ token. Decentralized storage network: files encrypted, split, and distributed across independent nodes. S3-compatible gateway. Edge-optimized downloads (retrieves from nearest nodes). Unique trade-off: decentralized architecture means slightly higher first-byte latency, but competitive download speeds and inherent data redundancy.</div>
+    <div class="diff-desc"><strong>Free trial:</strong> 25 GB storage free for 30 days, no credit card required. There is no permanent free tier. After the trial it is $7/TB stored and $7/TB egress against a $5 minimum monthly fee &mdash; waived during the trial; accounts paying with USDC are exempt. Decentralized storage network: files encrypted, split, and distributed across independent nodes. S3-compatible gateway. Edge-optimized downloads (retrieves from nearest nodes). Unique trade-off: decentralized architecture means slightly higher first-byte latency, but competitive download speeds and inherent data redundancy.</div>
   </div>
 
   <div class="diff-card">
@@ -41530,7 +41530,7 @@ ${globalNavCss()}
         <td class="provider-col">BunnyCDN</td>
         <td>14-day trial</td>
         <td class="partial">Image processing add-on</td>
-        <td>114 PoPs</td>
+        <td>119 PoPs</td>
         <td class="check">&#10003; Stream</td>
         <td>General CDN, video hosting</td>
       </tr>
@@ -41582,7 +41582,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>BunnyCDN</h3>
-    <div class="diff-desc"><strong>Trial:</strong> 14-day free trial. After: $0.01/GB for most regions (cheapest mainstream CDN). 114 global PoPs. Bunny Stream for video hosting + HLS delivery. Bunny Storage for origin storage at $0.005/GB. Image processing via Bunny Optimizer. No free permanent tier, but at $0.01/GB, serving 100 GB costs $1. For many projects, this is effectively free. Best for general-purpose CDN with video support.</div>
+    <div class="diff-desc"><strong>Trial:</strong> 14-day free trial. After: $0.01/GB for most regions (cheapest mainstream CDN). 119 global PoPs. Bunny Stream for video hosting + HLS delivery. Bunny Storage for origin storage from $0.01/GB per region. Image processing via Bunny Optimizer. No free permanent tier, but at $0.01/GB, serving 100 GB costs $1. For many projects, this is effectively free. Best for general-purpose CDN with video support.</div>
   </div>
 
   <h2 id="baas-integrated">BaaS-Integrated Storage</h2>
@@ -41590,7 +41590,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Supabase Storage</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1 GB file storage, 2 GB bandwidth/month. Integrated with Supabase Auth (row-level security on files), Database, and Edge Functions. Custom API (not S3-compatible). Image transformations on Pro plan. The 1 GB limit is tight, but sufficient for avatars, documents, and small media. Best for apps already on Supabase.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 1 GB file storage, 5 GB egress and 5 GB cached egress a month. Integrated with Supabase Auth (row-level security on files), Database, and Edge Functions. S3-compatible, alongside its own Storage API. Image transformations on Pro plan. The 1 GB limit is tight, but sufficient for avatars, documents, and small media. Best for apps already on Supabase.</div>
   </div>
 
   <div class="diff-card">
@@ -41600,7 +41600,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Vercel Blob</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Included in Hobby plan with Vercel&rsquo;s overall bandwidth limits. Edge-distributed storage with automatic CDN. Simplest API for Next.js and Vercel-hosted projects. Not S3-compatible &mdash; Vercel SDK only. Limited to Vercel ecosystem. Best for Next.js projects on Vercel that need simple file uploads.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> Hobby includes 1 GB of Blob storage and 10 GB of Blob data transfer a month. Edge-distributed storage with automatic CDN. Simplest API for Next.js and Vercel-hosted projects. Not S3-compatible &mdash; Vercel SDK only. Limited to Vercel ecosystem. Best for Next.js projects on Vercel that need simple file uploads.</div>
   </div>
 
   <div class="diff-card">
@@ -41631,7 +41631,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Pinata IPFS</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 500 MB storage + 100 pins. IPFS pinning service with a dedicated gateway for fast retrieval. Files are content-addressed (CID-based) and available through any IPFS gateway. SDK and API for programmatic uploads. Best for NFT metadata, Web3 apps, and content that benefits from decentralized, immutable storage.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 1 GB storage and 500 files. IPFS pinning service with a dedicated gateway for fast retrieval. Files are content-addressed (CID-based) and available through any IPFS gateway. SDK and API for programmatic uploads. Best for NFT metadata, Web3 apps, and content that benefits from decentralized, immutable storage.</div>
   </div>
 
   <div class="diff-card">
@@ -41661,7 +41661,7 @@ ${globalNavCss()}
   </div>
 
   <div class="methodology">
-    <strong>How to read this table:</strong> every column is that provider&rsquo;s published pay-as-you-go rate for the row&rsquo;s workload, read ${STORAGE_RATES_READ}, with each provider&rsquo;s own egress allowance applied. ${storageScalingAllowanceSentence()} Fixed monthly grants are not netted out of any column, so no provider is credited one the others do not get: ${fixedMonthlyGrantsSentence()} At the 100 GB row those grants are most of the bill; by 10 TB they are a rounding error. Volume discounts and committed-use pricing are excluded throughout.
+    <strong>How to read this table:</strong> every column is that provider&rsquo;s published pay-as-you-go rate for the row&rsquo;s workload, read ${STORAGE_RATES_READ}, with each provider&rsquo;s own egress allowance applied. ${storageScalingAllowanceSentence()} Fixed monthly grants are not netted out of any column, so no provider is credited one the others do not get: ${fixedMonthlyGrantsSentence()} At the 100 GB row those grants are most of the bill; by 10 TB they are a rounding error.
   </div>
 
   <div class="context-box">
@@ -41690,11 +41690,11 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>The NAT Gateway trap in detail:</strong> If your app runs on EC2 in a private VPC and accesses S3 through a NAT Gateway, you pay $0.045/GB for NAT data processing <em>plus</em> $0.09/GB for S3 egress = $0.135/GB total. The fix is an S3 VPC Gateway Endpoint (free), but most developers don&rsquo;t know it exists because the NAT charge is buried in the EC2 cost explorer, not the S3 one. This single misconfiguration generates more surprise AWS bills than any other S3 issue.
+    <strong>The NAT Gateway trap in detail:</strong> EC2 instances in a private subnet reading S3 through a NAT Gateway pay $0.045/GB for NAT data processing. S3 charges nothing for transfers to another AWS service in the same Region, so that is the whole charge. This appears under EC2, not S3. An S3 gateway VPC endpoint carries the same traffic at no charge.
   </div>
 
   <div class="context-box">
-    <strong>The R2 disruption:</strong> Cloudflare launched R2 with a radical proposition: <strong>zero egress fees, forever</strong>. This wasn&rsquo;t a promotion &mdash; it&rsquo;s the business model. Cloudflare monetizes R2 through storage ($0.015/GB) and operations, not bandwidth. The result: at 1 TB/month egress, R2 saves $92 over S3. At 50 TB/month, R2 saves $4,500. This forced AWS to introduce free cross-region replication and reduced some egress tiers, but the core $0.09/GB egress remains. B2 and Tigris adopted the same zero-egress playbook.
+    <strong>The R2 disruption:</strong> Cloudflare launched R2 with a radical proposition: <strong>zero egress fees, forever</strong>. This wasn&rsquo;t a promotion &mdash; it&rsquo;s the business model. Cloudflare monetizes R2 through storage ($0.015/GB) and operations, not bandwidth. The result: at 1 TB/month egress, R2 saves $81 over S3. At 50 TB/month, R2 saves about $4,300. S3&rsquo;s core $0.09/GB egress remains. Tigris also charges nothing for egress, and B2 gives free egress up to 3x what you store.
   </div>
 
   <div class="context-box">
@@ -41718,7 +41718,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Best for bandwidth-heavy apps &rarr; Cloudflare R2</strong>
-      <p>Streaming, downloads, media delivery: these workloads are 90% egress cost, and they are the case where egress out-runs storage by a wide multiple. R2 eliminates egress entirely at any ratio, which is why it wins here rather than B2 &mdash; B2&rsquo;s allowance is 3x what you store, so a 100 GB library serving 50 TB/month is billed for 49.7 TB of it. Put a partner CDN in front of B2 and that goes away too, but R2 needs no such arrangement. At 50 TB/month egress, either saves $4,500+ vs S3.</p>
+      <p>Streaming, downloads, media delivery: these workloads are 90% egress cost, and they are the case where egress out-runs storage by a wide multiple. R2 eliminates egress entirely at any ratio, which is why it wins here rather than B2 &mdash; B2&rsquo;s allowance is 3x what you store, so a 100 GB library serving 50 TB/month is billed for 49.7 TB of it. Put a partner CDN in front of B2 and that goes away too, but R2 needs no such arrangement. At 50 TB/month egress, either saves about $4,300 vs S3.</p>
     </div>
 
     <div class="verdict-item">
@@ -41756,7 +41756,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>AWS S3: NAT Gateway charges appear on your EC2 bill</h3>
-    <div class="diff-desc">EC2 instances in private subnets accessing S3 through a NAT Gateway pay $0.045/GB for data processing. This charge is billed under EC2, not S3, making it invisible in S3 cost breakdowns. Fix: use an S3 VPC Gateway Endpoint (free). This single misconfiguration generates more surprise AWS bills than any other S3 issue. At 1 TB/month through NAT: $45 in hidden charges on top of ${egressBillAfterMonthlyGrantFor("AWS S3", ONE_TO_ONE_SCENARIO)} in egress, which is 1 TB less the ${monthlyEgressGrantGb("AWS S3")} GB every account gets free each month.</div>
+    <div class="diff-desc">EC2 instances in private subnets reading S3 through a NAT Gateway pay $0.045/GB data processing, billed under EC2, so it is missing from S3 cost breakdowns. An S3 gateway VPC endpoint has no charge. At 1 TB a month that is $45, with no S3 transfer charge when the bucket is in the same Region.</div>
   </div>
 
   <div class="diff-card">
@@ -41766,7 +41766,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Cloudflare R2: no SLA on free tier</h3>
-    <div class="diff-desc">R2&rsquo;s free tier has no uptime guarantee or support. Paid tiers ($0.015/GB storage, still zero egress) come with an SLA. For production workloads needing guaranteed availability, budget for the paid plan. That said, R2 runs on Cloudflare&rsquo;s infrastructure with strong practical reliability. Also: R2 has fewer regions than S3 and no built-in lifecycle rules (yet).</div>
+    <div class="diff-desc">R2&rsquo;s free tier has no uptime guarantee or support. Paid tiers ($0.015/GB storage, still zero egress) come with an SLA. For production workloads needing guaranteed availability, budget for the paid plan. That said, R2 runs on Cloudflare&rsquo;s infrastructure with strong practical reliability. Also: R2 has fewer regions than S3. Its object lifecycle rules can delete objects, or move them to Infrequent Access, after a set number of days.</div>
   </div>
 
   <div class="diff-card">

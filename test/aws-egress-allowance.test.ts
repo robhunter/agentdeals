@@ -275,12 +275,13 @@ describe("AWS's monthly internet egress allowance is published as the standing g
   it("leaves the scaling table netting out no fixed monthly grant", () => {
     assert.deepStrictEqual(
       STORAGE_SCALE_WORKLOADS.map((workload: { storageGb: number; egressGb: number }) => scaleCostFor("AWS S3", workload)),
-      ["$11.30", "$113", "$1,130", "$11,300"],
+      ["$11.30", "$113", "$1,130", "$10,050"],
     );
+    const withoutGrant = { ...S3, freeEgressGbPerMonth: 0, freeStorageGbPerMonth: 0 };
     for (const workload of STORAGE_SCALE_WORKLOADS as { storageGb: number; egressGb: number; label: string }[]) {
       assert.strictEqual(
         monthlyStorageCost(S3, workload),
-        workload.storageGb * S3.storagePerGbMonth + billableEgressGb(S3, workload) * S3.egressPerGb,
+        monthlyStorageCostAfterMonthlyEgressGrant(withoutGrant, workload),
         `${workload.label} had a fixed grant netted out of the table`,
       );
     }

@@ -1,4 +1,9 @@
-export const STORAGE_RATES_READ = "2026-09-07";
+export const STORAGE_RATES_READ = "2026-11-01";
+
+export interface StoragePriceTier {
+  upToGb: number;
+  perGb: number;
+}
 
 export interface StorageRateCard {
   provider: string;
@@ -6,6 +11,8 @@ export interface StorageRateCard {
   publishedStorageRate: string;
   storagePerGbMonth: number;
   egressPerGb: number;
+  storageTiers?: readonly StoragePriceTier[];
+  egressTiers?: readonly StoragePriceTier[];
   freeEgressMultipleOfStorage: number;
   freeStorageGbPerMonth: number;
   freeEgressGbPerMonth: number;
@@ -35,6 +42,13 @@ export const STORAGE_RATE_CARDS: readonly StorageRateCard[] = [
     publishedStorageRate: "$0.023/GB-month",
     storagePerGbMonth: 0.023,
     egressPerGb: 0.09,
+    storageTiers: [{ upToGb: 50_000, perGb: 0.023 }, { upToGb: Infinity, perGb: 0.022 }],
+    egressTiers: [
+      { upToGb: 10_000, perGb: 0.09 },
+      { upToGb: 50_000, perGb: 0.085 },
+      { upToGb: 150_000, perGb: 0.07 },
+      { upToGb: Infinity, perGb: 0.05 },
+    ],
     freeEgressMultipleOfStorage: 0,
     freeStorageGbPerMonth: 0,
     freeEgressGbPerMonth: 100,
@@ -55,6 +69,11 @@ export const STORAGE_RATE_CARDS: readonly StorageRateCard[] = [
     publishedStorageRate: "$0.02/GB-month",
     storagePerGbMonth: 0.02,
     egressPerGb: 0.12,
+    egressTiers: [
+      { upToGb: 10_000, perGb: 0.12 },
+      { upToGb: 150_000, perGb: 0.11 },
+      { upToGb: Infinity, perGb: 0.08 },
+    ],
     freeEgressMultipleOfStorage: 0,
     freeStorageGbPerMonth: 5,
     freeEgressGbPerMonth: 0,
@@ -87,8 +106,21 @@ export function billableEgressGb(card: StorageRateCard, workload: Pick<StorageWo
   return Math.max(0, workload.egressGb - freeEgressAllowanceGb(card, workload));
 }
 
+function costAtTiers(gb: number, flatRate: number, tiers?: readonly StoragePriceTier[]): number {
+  if (!tiers) return gb * flatRate;
+  let cost = 0;
+  let previous = 0;
+  for (const tier of tiers) {
+    cost += Math.max(0, Math.min(gb, tier.upToGb) - previous) * tier.perGb;
+    if (gb <= tier.upToGb) break;
+    previous = tier.upToGb;
+  }
+  return cost;
+}
+
 export function monthlyStorageCost(card: StorageRateCard, workload: Pick<StorageWorkload, "storageGb" | "egressGb">): number {
-  return workload.storageGb * card.storagePerGbMonth + billableEgressGb(card, workload) * card.egressPerGb;
+  return costAtTiers(workload.storageGb, card.storagePerGbMonth, card.storageTiers) +
+    costAtTiers(billableEgressGb(card, workload), card.egressPerGb, card.egressTiers);
 }
 
 export function billableEgressGbAfterMonthlyGrant(card: StorageRateCard, workload: Pick<StorageWorkload, "storageGb" | "egressGb">): number {
@@ -96,11 +128,11 @@ export function billableEgressGbAfterMonthlyGrant(card: StorageRateCard, workloa
 }
 
 export function egressBillAfterMonthlyGrant(card: StorageRateCard, workload: Pick<StorageWorkload, "storageGb" | "egressGb">): number {
-  return billableEgressGbAfterMonthlyGrant(card, workload) * card.egressPerGb;
+  return costAtTiers(billableEgressGbAfterMonthlyGrant(card, workload), card.egressPerGb, card.egressTiers);
 }
 
 export function monthlyStorageCostAfterMonthlyEgressGrant(card: StorageRateCard, workload: Pick<StorageWorkload, "storageGb" | "egressGb">): number {
-  return workload.storageGb * card.storagePerGbMonth + egressBillAfterMonthlyGrant(card, workload);
+  return costAtTiers(workload.storageGb, card.storagePerGbMonth, card.storageTiers) + egressBillAfterMonthlyGrant(card, workload);
 }
 
 export function formatMonthlyStorageCost(amount: number): string {
