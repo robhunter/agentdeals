@@ -21,11 +21,11 @@
       "daily": true
     },
     "/ai-free-tiers": {
-      "hash": "b93ce669483dacd1",
+      "hash": "095b13c179efcf8c",
       "changed": "2026-11-01"
     },
     "/ai-ml-alternatives": {
-      "hash": "e20e3f3892cb6c7f",
+      "hash": "af95389b7bbf56b7",
       "changed": "2026-11-01"
     },
     "/alternative-to": {
@@ -1098,7 +1098,7 @@
       "changed": "2026-10-31"
     },
     "/category/ai-ml": {
-      "hash": "b190f1fec67fa0a6",
+      "hash": "0fcebccce9596fe0",
       "changed": "2026-11-01"
     },
     "/category/analytics": {
@@ -3081,8 +3081,8 @@
       "changed": "2026-10-31"
     },
     "/digest/2026-w49": {
-      "hash": "c6dcc9a69bb2824e",
-      "changed": "2026-10-30"
+      "hash": "69198d455191cf30",
+      "changed": "2026-11-01"
     },
     "/digest/2026-w50": {
       "hash": "04a2e9f8adb7d9ee",
@@ -3216,7 +3216,7 @@
       "changed": "2026-10-31"
     },
     "/free-llm-apis": {
-      "hash": "38c31e59d2db6878",
+      "hash": "1d4605e85ec5cf99",
       "changed": "2026-11-01"
     },
     "/free-nextjs-stack": {
@@ -3252,7 +3252,7 @@
       "daily": true
     },
     "/gemini-api-pricing-2026": {
-      "hash": "7ae3d09c1857b716",
+      "hash": "9915380bbec95eb4",
       "changed": "2026-11-01"
     },
     "/github-actions-alternatives": {
@@ -3264,8 +3264,8 @@
       "changed": "2026-10-31"
     },
     "/google-developer-program-2026": {
-      "hash": "01f249eb7983ecc4",
-      "changed": "2026-10-31"
+      "hash": "b0a1e9bde639f842",
+      "changed": "2026-11-01"
     },
     "/groq-vs-hugging-face": {
       "hash": "5746b7547287b0b8",
@@ -3324,7 +3324,7 @@
       "changed": "2026-10-31"
     },
     "/llm-api-pricing": {
-      "hash": "e142bd2469279b98",
+      "hash": "268e1519036a308f",
       "changed": "2026-11-01"
     },
     "/localstack-alternatives": {
@@ -3603,7 +3603,7 @@
       "daily": true
     },
     "/stack-check": {
-      "hash": "1c1fe4c2e7c7baf5",
+      "hash": "a4bb299977683844",
       "changed": "2026-11-01"
     },
     "/stacks": {
@@ -9621,7 +9621,7 @@
       "changed": "2026-10-31"
     },
     "/whatsapp-business-api-pricing-2026": {
-      "hash": "02d3381848caef5b",
+      "hash": "0b8f560eb4d70ef3",
       "changed": "2026-11-01"
     },
     "/x402-services": {
