@@ -24,104 +24,6 @@
           "refused": "tier_is_not_one_we_record_as_free"
         }
       ]
-    },
-    {
-      "proposal_id": "2026-11-01/amplitude/limits_increased",
-      "proposed_on": "2026-11-01",
-      "vendor": "Amplitude",
-      "change_type": "limits_increased",
-      "date": "2026-11-01",
-      "date_source": "discovered",
-      "summary": "The free tier now includes AI Agents and MCP, 2000 AI feedback records, and cohort syncs. Session replays are still limited to 10K/month with 1-month retention. The page also introduces paid tiers (Plus, Growth, Enterprise) with increased limits and features.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Product analytics — Free plan: 2M events a month, 10K session replays a month (1-month replay retention), unlimited feature flags, 1-year data access, 10 saved charts, unlimited team members. No credit card required.",
-      "current_state": "Free analytics with AI built in. Every plan includes the full platform and unlimited seats. All plans include: Amplitude AI Analytics Session Replay Experimentation Guides and Surveys Activation Free For individuals and explorers getting started Free 2M Events/month forever. Start for free No Credit Card required. Get started with: AI Agents and MCP Product Analytics Agent Analytics Cohort syncs (one time) 2000 AI feedback records 10K monthly session replays",
-      "impact": "medium",
-      "source_url": "https://amplitude.com/pricing",
-      "category": "Analytics",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-01",
-      "restatement": [
-        {
-          "url": "https://amplitude.com/pricing",
-          "description": "Free analytics with AI built in. Every plan includes the full platform and unlimited seats. All plans include: Amplitude AI Analytics Session Replay Experimentation Guides and Surveys Activation Free For individuals and explorers getting started Free 2M Events/month forever. Start for free No Credit Card required. Get started with: AI Agents and MCP Product Analytics Agent Analytics Cohort syncs (one time) 2000 AI feedback records 10K monthly session replays"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-01/bitrise/free_tier_removed",
-      "proposed_on": "2026-11-01",
-      "vendor": "Bitrise",
-      "change_type": "free_tier_removed",
-      "date": "2026-11-01",
-      "date_source": "discovered",
-      "summary": "The Hobby plan is now a paid tier called 'Starter' starting at $89/month. The free Hobby plan is no longer available.",
-      "tier": "Hobby",
-      "tier_direction": "narrowed",
-      "previous_state": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app, 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
-      "current_state": "Explore our new starter package options. Hobby Build and distribute your passion project without the extra cost. ‍ Free Forever Get started Access for a team of one (that's you!) Enough build credits for you to build your small project a few times per month Support from the Bitrise Community via Slack or Discuss forum Starter Designed for indie developers and small teams to get up and running. Recommended up to 100 builds/month. From $89 per month when billed annually, or $99 per month when billed monthly",
-      "impact": "high",
-      "source_url": "https://bitrise.io/pricing",
-      "category": "CI/CD",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-01",
-      "restatement": [
-        {
-          "url": "https://bitrise.io/pricing",
-          "refused": "reading_drops_a_figure_our_source_check_found",
-          "figures": [
-            "300 credits per month"
-          ]
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-01/bugsnag/limits_reduced",
-      "proposed_on": "2026-11-01",
-      "vendor": "Bugsnag",
-      "change_type": "limits_reduced",
-      "date": "2026-11-01",
-      "date_source": "discovered",
-      "summary": "The free tier now has a 7-day data retention period. The free tier includes 7.5K events and 1M spans per month, and is for solo users and passion projects.",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "Error monitoring — Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications",
-      "current_state": "Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications. Our Free tier includes 7 days of data retention",
-      "impact": "medium",
-      "source_url": "https://www.bugsnag.com/pricing/",
-      "category": "Error Tracking",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-01",
-      "restatement": [
-        {
-          "url": "https://www.bugsnag.com/pricing/",
-          "description": "Error monitoring — Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications. Our Free tier includes 7 days of data retention"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-01/xai/pricing_restructured",
-      "proposed_on": "2026-11-01",
-      "vendor": "xAI",
-      "change_type": "pricing_restructured",
-      "date": "2026-11-01",
-      "date_source": "discovered",
-      "summary": "Several models have been retired or replaced, and pricing has been updated. The Imagine API pricing has changed. The Voice API pricing has been updated. The Tools pricing has been detailed. Batch API pricing has been detailed. Priority Processing pricing has been detailed. Grok 4.7 Fast pricing has been detailed. US Regional Endpoint Pricing has been detailed.",
-      "tier": "Grok API",
-      "tier_direction": "unchanged",
-      "previous_state": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). grok-4.6 and grok-4.5 cost the same as grok-4.7 ($2.00 input and $6.00 output per 1M tokens under 200k prompt tokens), and grok-4.20 (0309 reasoning, non-reasoning and multi-agent) the same as grok-4.3 ($1.25 input and $2.50 output). A request whose prompt reaches 200k tokens is billed at the long-context rate for all its tokens, twice the standard rate: grok-4.7 and grok-4.6 go from $2.00 input and $6.00 output per 1M tokens to $4.00 and $12.00; grok-4.3 and grok-4.20 from $1.25 and $2.50 to $2.50 and $5.00; grok-build-0.1 from $1.00 and $2.00 to $2.00 and $4.00. Cached input costs $0.50 on grok-4.7 and grok-4.6, $0.30 on grok-4.5, and $0.20 on grok-4.3, grok-4.20 and grok-build-0.1. These cached rates also double from 200k prompt tokens. Context windows: 500k tokens for grok-4.7, grok-4.6 and grok-4.5; 1M for grok-4.3 and grok-4.20; 256k for grok-build-0.1. The US endpoint costs 10% more than the global endpoint. Priority Processing (service_tier \"priority\" on Chat Completions and the Responses API) bills text requests at 2x standard rates. A request xAI's system finds in violation of its usage guidelines is still charged for its generation; one caught before generation in the Responses API costs a $0.05 violation fee. On 2026-05-15 xAI retired eight model names, which still resolve, so code that calls them keeps working: requests to Grok 4.1 Fast (grok-4-1-fast-reasoning, grok-4-1-fast-non-reasoning), Grok 4 Fast (grok-4-fast-reasoning, grok-4-fast-non-reasoning), grok-4-0709 and grok-3 are served by grok-4.3 (low reasoning effort for the reasoning names and grok-4-0709, none for the non-reasoning names and grok-3) and billed at grok-4.3 rates; grok-code-fast-1 is served by grok-build-0.1; grok-imagine-image-pro is served by grok-imagine-image-quality. grok-voice-transcribe-1.0 reached end of life on 2026-10-02; its requests are served by grok-voice-transcribe-2.0 at the same price. Image generation: grok-imagine-image $0.02 per image; grok-imagine-image-2.0 $0.04 per image at 1K resolution and low quality, up to $0.08 per image at 2K resolution and medium quality; $0.01 per input image when editing. grok-imagine-image-quality ($0.05 per image at 1K resolution) is retired on 2026-11-02, when its requests are served by grok-imagine-image-2.0 at low quality. Voice API: speech-to-text costs $0.10 per hour of audio (REST) or $0.20 per hour (streaming), text-to-speech $15.00 per 1M characters, and speech-to-speech with grok-voice-3.0 $0.08 a minute ($4.80 an hour). grok-voice-3.0 replaced grok-voice-2.0 on 2026-10-14 at the same price; grok-voice-2.0 is deprecated, and the grok-voice-latest alias now points to grok-voice-3.0. Video generation: grok-imagine-video-1.5 $0.08 per second at 480p, $0.14 at 720p, $0.25 at 1080p. grok-imagine-video-1.5-lite $0.02 per second at 480p, $0.03 at 720p, $0.14 at 1080p. grok-imagine-video $0.05 per second at 480p, $0.07 at 720p. Batch API discounts: 20% off input, cached input, output and reasoning tokens on grok-4.7, grok-4.6, grok-4.5, grok-4.3, grok-4.20-0309-reasoning, grok-4.20-0309-non-reasoning and grok-4.20-multi-agent-0309. grok-4.7 under 200k prompt tokens: $1.60 input, $0.40 cached input, $4.80 output per 1M tokens. grok-build-0.1 does not support Batch API. Image and video generation in Batch API are at standard rates. Server-side tools cost extra, per call, on top of tokens: web_search, code_execution and attachment_search $5 per 1,000 calls, collections_search $2.50 per 1,000, and x_search $5 per 1,000 posts and $10 per 1,000 profiles it returns. view_image, view_x_video and remote MCP tools are billed for their tokens only.",
-      "current_state": "Text API Prices per 1M tokens:\nModel Context Short context Long context Input Cached Output Input Cached Output\ngrok-4.7 Long context ≥ 200k tokens 500k $2.00 $0.50 $6.00 $4.00 $1.00 $12.00\ngrok-build-0.1 Long context ≥ 200k tokens 256k $1.00 $0.20 $2.00 $2.00 $0.40 $4.00",
-      "impact": "high",
-      "source_url": "https://docs.x.ai/developers/pricing",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-01",
-      "restatement": []
     }
   ],
   "dropped": [
@@ -1485,6 +1387,112 @@
       ],
       "dropped_on": "2026-10-31",
       "drop_reason": "zilore.com/en/dns: the pricing table still gives Free 5 domains, 1 000 resource records per domain and 10 000 000 DNS queries; 'unlimited records and requests' is a feature blurb on the same page, which the reading took over the table"
+    },
+    {
+      "proposal_id": "2026-11-01/bitrise/free_tier_removed",
+      "proposed_on": "2026-11-01",
+      "vendor": "Bitrise",
+      "change_type": "free_tier_removed",
+      "date": "2026-11-01",
+      "date_source": "discovered",
+      "summary": "The Hobby plan is now a paid tier called 'Starter' starting at $89/month. The free Hobby plan is no longer available.",
+      "tier": "Hobby",
+      "tier_direction": "narrowed",
+      "previous_state": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app, 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
+      "current_state": "Explore our new starter package options. Hobby Build and distribute your passion project without the extra cost. ‍ Free Forever Get started Access for a team of one (that's you!) Enough build credits for you to build your small project a few times per month Support from the Bitrise Community via Slack or Discuss forum Starter Designed for indie developers and small teams to get up and running. Recommended up to 100 builds/month. From $89 per month when billed annually, or $99 per month when billed monthly",
+      "impact": "high",
+      "source_url": "https://bitrise.io/pricing",
+      "category": "CI/CD",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-01",
+      "restatement": [
+        {
+          "url": "https://bitrise.io/pricing",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "300 credits per month"
+          ]
+        }
+      ],
+      "dropped_on": "2026-11-01",
+      "drop_reason": "bitrise.io/pricing (read 2026-11-01) still lists Hobby as 'Free Forever' ('Access for a team of one', 'Enough build credits for you to build your small project a few times per month'); Starter, from $89 a month billed annually or $99 monthly, is a paid package beside it, not a replacement"
+    },
+    {
+      "proposal_id": "2026-11-01/amplitude/limits_increased",
+      "proposed_on": "2026-11-01",
+      "vendor": "Amplitude",
+      "change_type": "limits_increased",
+      "date": "2026-11-01",
+      "date_source": "discovered",
+      "summary": "The free tier now includes AI Agents and MCP, 2000 AI feedback records, and cohort syncs. Session replays are still limited to 10K/month with 1-month retention. The page also introduces paid tiers (Plus, Growth, Enterprise) with increased limits and features.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Product analytics — Free plan: 2M events a month, 10K session replays a month (1-month replay retention), unlimited feature flags, 1-year data access, 10 saved charts, unlimited team members. No credit card required.",
+      "current_state": "Free analytics with AI built in. Every plan includes the full platform and unlimited seats. All plans include: Amplitude AI Analytics Session Replay Experimentation Guides and Surveys Activation Free For individuals and explorers getting started Free 2M Events/month forever. Start for free No Credit Card required. Get started with: AI Agents and MCP Product Analytics Agent Analytics Cohort syncs (one time) 2000 AI feedback records 10K monthly session replays",
+      "impact": "medium",
+      "source_url": "https://amplitude.com/pricing",
+      "category": "Analytics",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-01",
+      "restatement": [
+        {
+          "url": "https://amplitude.com/pricing",
+          "description": "Free analytics with AI built in. Every plan includes the full platform and unlimited seats. All plans include: Amplitude AI Analytics Session Replay Experimentation Guides and Surveys Activation Free For individuals and explorers getting started Free 2M Events/month forever. Start for free No Credit Card required. Get started with: AI Agents and MCP Product Analytics Agent Analytics Cohort syncs (one time) 2000 AI feedback records 10K monthly session replays"
+        }
+      ],
+      "dropped_on": "2026-11-01",
+      "drop_reason": "amplitude.com/pricing printed the same Free plan on 2026-10-23 (Internet Archive): '2M Events/month forever', 'AI Agents and MCP', 'Cohort syncs (one time)', '2000 AI feedback records', '10K monthly session replays'; nothing changed on 2026-11-01 and the listing's limits hold"
+    },
+    {
+      "proposal_id": "2026-11-01/bugsnag/limits_reduced",
+      "proposed_on": "2026-11-01",
+      "vendor": "Bugsnag",
+      "change_type": "limits_reduced",
+      "date": "2026-11-01",
+      "date_source": "discovered",
+      "summary": "The free tier now has a 7-day data retention period. The free tier includes 7.5K events and 1M spans per month, and is for solo users and passion projects.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Error monitoring — Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications",
+      "current_state": "Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications. Our Free tier includes 7 days of data retention",
+      "impact": "medium",
+      "source_url": "https://www.bugsnag.com/pricing/",
+      "category": "Error Tracking",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-01",
+      "restatement": [
+        {
+          "url": "https://www.bugsnag.com/pricing/",
+          "description": "Error monitoring — Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications. Our Free tier includes 7 days of data retention"
+        }
+      ],
+      "dropped_on": "2026-11-01",
+      "drop_reason": "bugsnag.com/pricing's footnote 'Our Free tier includes 7 days of data retention' cannot be dated: the Internet Archive's captures of 2026-07-07 and 2026-10-22 hold no pricing text, and neither our listing nor any page we hold gave the Free tier a longer retention, so there is no reduction to record; the retention belongs in the listing as a condition"
+    },
+    {
+      "proposal_id": "2026-11-01/xai/pricing_restructured",
+      "proposed_on": "2026-11-01",
+      "vendor": "xAI",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-01",
+      "date_source": "discovered",
+      "summary": "Several models have been retired or replaced, and pricing has been updated. The Imagine API pricing has changed. The Voice API pricing has been updated. The Tools pricing has been detailed. Batch API pricing has been detailed. Priority Processing pricing has been detailed. Grok 4.7 Fast pricing has been detailed. US Regional Endpoint Pricing has been detailed.",
+      "tier": "Grok API",
+      "tier_direction": "unchanged",
+      "previous_state": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). grok-4.6 and grok-4.5 cost the same as grok-4.7 ($2.00 input and $6.00 output per 1M tokens under 200k prompt tokens), and grok-4.20 (0309 reasoning, non-reasoning and multi-agent) the same as grok-4.3 ($1.25 input and $2.50 output). A request whose prompt reaches 200k tokens is billed at the long-context rate for all its tokens, twice the standard rate: grok-4.7 and grok-4.6 go from $2.00 input and $6.00 output per 1M tokens to $4.00 and $12.00; grok-4.3 and grok-4.20 from $1.25 and $2.50 to $2.50 and $5.00; grok-build-0.1 from $1.00 and $2.00 to $2.00 and $4.00. Cached input costs $0.50 on grok-4.7 and grok-4.6, $0.30 on grok-4.5, and $0.20 on grok-4.3, grok-4.20 and grok-build-0.1. These cached rates also double from 200k prompt tokens. Context windows: 500k tokens for grok-4.7, grok-4.6 and grok-4.5; 1M for grok-4.3 and grok-4.20; 256k for grok-build-0.1. The US endpoint costs 10% more than the global endpoint. Priority Processing (service_tier \"priority\" on Chat Completions and the Responses API) bills text requests at 2x standard rates. A request xAI's system finds in violation of its usage guidelines is still charged for its generation; one caught before generation in the Responses API costs a $0.05 violation fee. On 2026-05-15 xAI retired eight model names, which still resolve, so code that calls them keeps working: requests to Grok 4.1 Fast (grok-4-1-fast-reasoning, grok-4-1-fast-non-reasoning), Grok 4 Fast (grok-4-fast-reasoning, grok-4-fast-non-reasoning), grok-4-0709 and grok-3 are served by grok-4.3 (low reasoning effort for the reasoning names and grok-4-0709, none for the non-reasoning names and grok-3) and billed at grok-4.3 rates; grok-code-fast-1 is served by grok-build-0.1; grok-imagine-image-pro is served by grok-imagine-image-quality. grok-voice-transcribe-1.0 reached end of life on 2026-10-02; its requests are served by grok-voice-transcribe-2.0 at the same price. Image generation: grok-imagine-image $0.02 per image; grok-imagine-image-2.0 $0.04 per image at 1K resolution and low quality, up to $0.08 per image at 2K resolution and medium quality; $0.01 per input image when editing. grok-imagine-image-quality ($0.05 per image at 1K resolution) is retired on 2026-11-02, when its requests are served by grok-imagine-image-2.0 at low quality. Voice API: speech-to-text costs $0.10 per hour of audio (REST) or $0.20 per hour (streaming), text-to-speech $15.00 per 1M characters, and speech-to-speech with grok-voice-3.0 $0.08 a minute ($4.80 an hour). grok-voice-3.0 replaced grok-voice-2.0 on 2026-10-14 at the same price; grok-voice-2.0 is deprecated, and the grok-voice-latest alias now points to grok-voice-3.0. Video generation: grok-imagine-video-1.5 $0.08 per second at 480p, $0.14 at 720p, $0.25 at 1080p. grok-imagine-video-1.5-lite $0.02 per second at 480p, $0.03 at 720p, $0.14 at 1080p. grok-imagine-video $0.05 per second at 480p, $0.07 at 720p. Batch API discounts: 20% off input, cached input, output and reasoning tokens on grok-4.7, grok-4.6, grok-4.5, grok-4.3, grok-4.20-0309-reasoning, grok-4.20-0309-non-reasoning and grok-4.20-multi-agent-0309. grok-4.7 under 200k prompt tokens: $1.60 input, $0.40 cached input, $4.80 output per 1M tokens. grok-build-0.1 does not support Batch API. Image and video generation in Batch API are at standard rates. Server-side tools cost extra, per call, on top of tokens: web_search, code_execution and attachment_search $5 per 1,000 calls, collections_search $2.50 per 1,000, and x_search $5 per 1,000 posts and $10 per 1,000 profiles it returns. view_image, view_x_video and remote MCP tools are billed for their tokens only.",
+      "current_state": "Text API Prices per 1M tokens:\nModel Context Short context Long context Input Cached Output Input Cached Output\ngrok-4.7 Long context ≥ 200k tokens 500k $2.00 $0.50 $6.00 $4.00 $1.00 $12.00\ngrok-build-0.1 Long context ≥ 200k tokens 256k $1.00 $0.20 $2.00 $2.00 $0.40 $4.00",
+      "impact": "high",
+      "source_url": "https://docs.x.ai/developers/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-01",
+      "restatement": [],
+      "dropped_on": "2026-11-01",
+      "drop_reason": "docs.x.ai/developers/pricing (read 2026-11-01): the reading's own table gives grok-4.7 $2.00/$6.00 and grok-build-0.1 $1.00/$2.00, the page still lists grok-4.6, grok-4.5, grok-4.3 and the grok-4.20 models the listing prices, and the only model marked Deprecated is grok-voice-2.0, which the listing already calls deprecated"
     }
   ]
 }
