@@ -572,6 +572,7 @@ const THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS: AnExemption[] = [
   { why: "the sentence is a record we store as the vendor stated it", storedVerbatim: true },
   { why: "the word qualifies whom a vendor checks, not what we list", sentence: /\bverified (?:students|teachers|recipients|paid signups?|compute spend|partners|domains?|accounts?)\b/i },
   { why: "Microsoft for Startups checks the applicant eligibility and progress", route: /^\/azure-free-tier-2026$/, sentence: /\b(?:Microsoft for Startups requires an application on its website and gives up to \$200 in credits immediately while eligibility is verified|Startups get up to \$150K in credits over time as they demonstrate verified progress, service adoption and Azure usage)\b/i },
+  { why: "Google One verifies student eligibility through SheerID", route: /^\/google-developer-program-2026$/, sentence: /^Eligible college students aged 18\+ in countries where the plan is offered, except Hong Kong, Macau and Tunisia, get a Google AI plan free for 12 months \(which plan depends on the school's country; redeem by December 31, 2026; student status is verified through SheerID, a payment method is required, and the plan then renews at its standard monthly price\)\.$/ },
   { why: "a bare column label is not a sentence about a set of listings", sentence: /^verified\s*\.?$/i },
   { why: "#1058 owns what a per-record stamp means on /best", route: /^\/best\// },
   { why: "#1081 AC-2 owns the freshness claim on the vs-pair pages", route: /^\/[a-z0-9-]+-vs-[a-z0-9-]+$/ },
@@ -660,6 +661,20 @@ function reasonForVerificationWord(route: string, surface: ProseSurface, said: s
     return theWordInContext(said).some((probe) => vendorProse.some((held) => held.includes(probe)));
   })?.why;
 }
+
+describe("student eligibility checks in the Google plan guide", () => {
+  const route = "/google-developer-program-2026";
+  const student = "Eligible college students aged 18+ in countries where the plan is offered, except Hong Kong, Macau and Tunisia, get a Google AI plan free for 12 months (which plan depends on the school's country; redeem by December 31, 2026; student status is verified through SheerID, a payment method is required, and the plan then renews at its standard monthly price).";
+  const surface = { where: "body", text: student };
+
+  it("recognizes only the complete student eligibility sentence on its guide", () => {
+    assert.strictEqual(reasonForVerificationWord(route, surface, student, []), "Google One verifies student eligibility through SheerID");
+    assert.strictEqual(reasonForVerificationWord("/vendor/example", surface, student, []), undefined);
+    for (const said of ["All listings are verified.", `${student} All listings are verified.`, student.replace("student status", "all our listings"), student.replace("verified through SheerID", "verified through SheerID and all listings are verified")]) {
+      assert.strictEqual(reasonForVerificationWord(route, surface, said, []), undefined, said);
+    }
+  });
+});
 
 describe("verification words inside attributed vendor excerpts", () => {
   const quote = freePlanExcerptHtml({

@@ -3,6 +3,7 @@ import assert from "node:assert";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { createServer } from "node:http";
 
 const {
   findStaleOffers,
@@ -208,7 +209,8 @@ describe("verify-freshness", () => {
       assert.strictEqual(calls[0].init.method, "POST");
       assert.strictEqual(calls[0].init.headers.Authorization, "Bearer test-key");
       const body = JSON.parse(calls[0].init.body);
-      assert.strictEqual(body.model, VERIFIER_MODEL);
+      assert.strictEqual(body.model, "deepseek/deepseek-v4.1-flash");
+      assert.deepStrictEqual(body.reasoning, { enabled: false });
       assert.deepStrictEqual(body.messages, [{ role: "user", content: "does this still hold?" }]);
       assert.strictEqual(body.temperature, 0);
     });
@@ -232,7 +234,7 @@ describe("verify-freshness", () => {
     it("asks the model the cost and accuracy were measured on", () => {
       assert.strictEqual(
         VERIFIER_MODEL,
-        "google/gemma-3-27b-it",
+        "deepseek/deepseek-v4.1-flash",
         "changing the model changes both the price per record and the answer quality — measure again before moving it"
       );
     });
@@ -251,6 +253,22 @@ describe("verify-freshness", () => {
         fetchImpl: async () => ({ ok: true, json: async () => ({ choices: [] }) }),
       });
       await assert.rejects(() => client.complete("hello"), /no message content/);
+    });
+
+    it("rejects a reasoning-only confirmation instead of verifying the offer", async () => {
+      const client = createVerifierClient({
+        apiKey: "test-key",
+        fetchImpl: async () => ({
+          ok: true,
+          json: async () => ({
+            choices: [{ message: { content: null, reasoning: '{"status":"confirmed"}' } }],
+          }),
+        }),
+      });
+      await assert.rejects(
+        () => verifyOfferAgainstPage(client, { vendor: "Example", category: "Hosting", tier: "Free", description: "One free site" }, "One free site"),
+        /no message content/
+      );
     });
   });
 
@@ -308,6 +326,31 @@ describe("verify-freshness", () => {
       const result = await verifyFreshness({ thresholdDays: 25, dryRun: true, limit: 3, indexPath, now, client: stubClient('{"status":"confirmed"}') });
       assert.strictEqual(result.skipped, 7);
       assert.ok(result.failed <= 3);
+    });
+
+    it("keeps a reasoning-only read failed and leaves its verification date untouched", async () => {
+      const server = createServer((req, res) => {
+        if (req.url === "/pricing") {
+          res.end("Free hosting includes one website. ".repeat(30));
+        } else {
+          res.setHeader("Content-Type", "application/json");
+          res.end(JSON.stringify({ choices: [{ message: { content: null, reasoning: '{"status":"confirmed"}' } }] }));
+        }
+      });
+      await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+      const baseUrl = `http://127.0.0.1:${(server.address() as import("node:net").AddressInfo).port}`;
+      const before = JSON.stringify({ offers: [{ vendor: "Example", category: "Hosting", tier: "Free", description: "One free website", url: `${baseUrl}/pricing`, verifiedDate: "2025-01-01" }] });
+      writeFileSync(indexPath, before);
+      try {
+        const result = await verifyFreshness({ thresholdDays: 25, dryRun: false, indexPath, now, client: createVerifierClient({ apiKey: "test-key", baseUrl }) });
+        assert.strictEqual(result.failed, 1);
+        assert.strictEqual(result.verified, 0);
+        assert.strictEqual(result.changed, 0);
+        assert.match(result.failures[0].error, /no message content/);
+        assert.strictEqual(readFileSync(indexPath, "utf-8"), before);
+      } finally {
+        await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+      }
     });
   });
 });
