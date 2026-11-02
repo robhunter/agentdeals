@@ -357,7 +357,7 @@
     {
       "vendor": "AWS",
       "change_type": "pricing_restructured",
-      "date": "2026-01-04",
+      "date": "2026-01-03",
       "source_url": "https://www.theregister.com/2026/01/05/aws_price_increase/",
       "tier_direction": "unchanged",
       "finding": "EC2 Capacity Blocks for ML are paid GPU reservations: \"p5e.48xlarge went from $34.61 to $39.80/hr\"; no free-tier term moves"
