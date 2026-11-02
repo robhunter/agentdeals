@@ -35490,7 +35490,7 @@ const comparisonPagesMeta: ComparisonPageMeta[] = [
   { slug: "cloud-free-tier-comparison-2026", subject: "Cloud IaaS", questionNoun: "cloud IaaS", catalogueCategory: "Cloud IaaS", shortName: "Cloud", relatedSlugs: ["hosting-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "storage-comparison-2026"] },
   { slug: "database-free-tier-comparison-2026", subject: "Databases", questionNoun: "database", catalogueCategory: "Databases", shortName: "Database", relatedSlugs: ["serverless-free-tier-comparison-2026", "storage-comparison-2026", "auth-comparison-2026"] },
   { slug: "cicd-free-tier-comparison-2026", subject: "CI/CD", questionNoun: "CI/CD", catalogueCategory: "CI/CD", shortName: "CI/CD", costSectionName: "Hidden Costs and Gotchas", relatedSlugs: ["testing-free-tier-comparison-2026", "security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026"] },
-  { slug: "serverless-free-tier-comparison-2026", subject: "Serverless", questionNoun: "serverless", catalogueCategory: null, shortName: "Serverless", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
+  { slug: "serverless-free-tier-comparison-2026", subject: "Serverless", questionNoun: "serverless", catalogueCategory: null, shortName: "Serverless", limitsAnswer: "Each provider structures free tier limits differently — some cap storage, others cap requests or compute hours. Our comparison table provides exact numbers for each provider.", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
   { slug: "auth-comparison-2026", subject: "Auth", questionNoun: "auth", catalogueCategory: "Auth", shortName: "Auth & Identity", comparisonBasis: "This page compares them on free tier limits and what each charges past them; the tables above carry the figures side by side.", limitsAnswer: "The free tiers cap monthly users (Auth0, Kinde, PropelAuth, Stytch, Descope, WorkOS, Supabase, Appwrite, Cognito) or retained users (Clerk), and some also cap SSO connections or M2M tokens. The growth-cost table shows what most of them charge past their free tier.", relatedSlugs: ["security-free-tier-comparison-2026", "database-free-tier-comparison-2026", "monitoring-comparison-2026"] },
   { slug: "email-comparison-2026", subject: "Email", questionNoun: "email", catalogueCategory: "Email", shortName: "Email", relatedSlugs: ["monitoring-comparison-2026", "analytics-free-tier-comparison-2026", "api-development-free-tier-comparison-2026"] },
   { slug: "monitoring-comparison-2026", subject: "Monitoring", questionNoun: "monitoring", catalogueCategory: "Monitoring", shortName: "Monitoring", relatedSlugs: ["security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "analytics-free-tier-comparison-2026"] },
@@ -37744,8 +37744,8 @@ ${globalNavCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>AWS Lambda</strong> gives 1M invocations/month free. <strong>Google Cloud Run</strong> includes 2M requests, 360K GB-seconds, and 1 GB free egress. <strong>Cloudflare Workers</strong> includes 100K requests/day, sub-5ms cold starts, and <strong>CPU-time billing</strong> (you don&rsquo;t pay for I/O waits). <strong>Azure Functions</strong> matches Lambda at 1M requests/month with a consumption-based model.</p>
-    <p><strong>The critical distinction most developers miss:</strong> Cloudflare Workers bills by <strong>CPU time</strong> while AWS Lambda, Google Cloud Functions, and Azure Functions bill by <strong>wall-clock time</strong> (including time spent waiting for network I/O, database queries, and external API calls). For I/O-heavy workloads, this can mean 10-50x cheaper effective compute on Workers. This single billing model difference matters more than headline invocation counts.</p>
+    <p><strong>Quick verdict:</strong> <strong>AWS Lambda</strong> gives 1M invocations/month free. <strong>Google Cloud Run</strong> includes 2M requests, 360K GB-seconds, and 1 GB free egress. <strong>Cloudflare Workers</strong> includes 100K requests/day, sub-5ms cold starts, and <strong>CPU-time billing</strong> (you don&rsquo;t pay for I/O waits). <strong>Azure Functions</strong> matches Lambda at 1M requests/month on its Consumption plan; its recommended Flex Consumption plan gives 250,000 executions a month.</p>
+    <p><strong>The critical distinction most developers miss:</strong> Cloudflare Workers, Vercel Functions and AWS Lambda Web Functions (since 2026-10-12) bill CPU time, so waiting on I/O is not billed. Lambda Event Functions (AWS's new name for existing Lambda functions), Cloud Run functions and Azure Functions bill elapsed time, waits included. For I/O-heavy workloads this matters more than headline invocation counts.</p>
   </div>
 
   <div class="toc">
@@ -37788,7 +37788,7 @@ ${globalNavCss()}
         <td style="font-family:var(--mono)">400K GB-sec/mo${figureSourceLinkHtml("https://aws.amazon.com/lambda/pricing/", escHtmlServer)}</td>
         <td>128 MB &ndash; 10 GB</td>
         <td>15 min max</td>
-        <td>Wall-clock time</td>
+        <td>Duration (Event Functions); active CPU (Web Functions)</td>
         <td>100&ndash;500ms (cold)</td>
         <td style="color:#3fb950">Yes (Always Free)</td>
       </tr>${vendorPageConditionsRowHtml("aws", 8)}
@@ -37804,8 +37804,8 @@ ${globalNavCss()}
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/azure" style="color:var(--text)">Azure Functions</a></td>
-        <td style="font-family:var(--mono)">1M / month</td>
-        <td style="font-family:var(--mono)">400K GB-sec/mo</td>
+        <td style="font-family:var(--mono)">1M / month (Consumption); 250K (Flex Consumption)</td>
+        <td style="font-family:var(--mono)">400K GB-sec/mo (Consumption); 100K (Flex Consumption)</td>
         <td>1.5 GB max (Consumption)</td>
         <td>5 min (default) / 10 min (max)</td>
         <td>Wall-clock time</td>
@@ -37827,18 +37827,18 @@ ${globalNavCss()}
         <td style="font-family:var(--mono)">100K / day (~3M/mo)</td>
         <td style="font-family:var(--mono)">10ms CPU time / invocation</td>
         <td>128 MB RAM</td>
-        <td>30s (HTTP) / 15 min (Cron)</td>
+        <td>No limit (HTTP) / 15 min (Cron)</td>
         <td><strong style="color:#3fb950">CPU time only</strong></td>
         <td>&lt;5ms (near-zero)</td>
         <td style="color:#3fb950">Yes</td>
       </tr>${vendorPageConditionsRowHtml("cloudflare-workers", 8)}
       <tr>
-        <td class="provider-col"><a href="/vendor/vercel" style="color:var(--text)">Vercel Edge Functions</a></td>
-        <td style="font-family:var(--mono)">1M edge requests/mo</td>
+        <td class="provider-col"><a href="/vendor/vercel" style="color:var(--text)">Vercel Functions</a></td>
+        <td style="font-family:var(--mono)">1M function invocations/mo</td>
         <td style="font-family:var(--mono)">4 hrs Active CPU/mo</td>
-        <td>128 MB (Edge) / 1 GB (Serverless)</td>
-        <td>25s (Hobby)</td>
-        <td>Wall-clock time (credit-based)</td>
+        <td>2 GB / 1 vCPU (Hobby)</td>
+        <td>300s (Hobby)</td>
+        <td>Active CPU time</td>
         <td>&lt;5ms (Edge) / 250ms (Serverless)</td>
         <td style="color:#3fb950">Yes (Hobby)</td>
       </tr>${vendorPageConditionsRowHtml("vercel", 8)}
@@ -37846,10 +37846,10 @@ ${globalNavCss()}
         <td class="provider-col"><a href="/vendor/deno-deploy" style="color:var(--text)">Deno Deploy</a></td>
         <td style="font-family:var(--mono)">1M / month</td>
         <td style="font-family:var(--mono)">10 hrs CPU time/mo</td>
-        <td>512 MB RAM</td>
+        <td>768 MB (default)</td>
         <td>No hard limit</td>
         <td>CPU time</td>
-        <td>&lt;10ms (near-zero)</td>
+        <td>&lt;100ms (hello world)</td>
         <td style="color:#f85149">No</td>
       </tr>${vendorPageConditionsRowHtml("deno-deploy", 8)}
       <tr>
@@ -37864,18 +37864,18 @@ ${globalNavCss()}
       </tr>${vendorPageConditionsRowHtml("val-town", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/dbos" style="color:var(--text)">DBOS</a></td>
-        <td style="font-family:var(--mono)">1M service calls/mo</td>
-        <td style="font-family:var(--mono)">1 microVM (512 MB, 1 vCPU)</td>
-        <td>512 MB / 1 vCPU</td>
+        <td style="font-family:var(--mono)">None hosted (open-source library is free)</td>
+        <td style="font-family:var(--mono)">Self-hosted on your Postgres</td>
+        <td>Your own servers</td>
         <td>No hard limit</td>
-        <td>Service call-based</td>
+        <td>DBOS Pro $99/mo; DBOS Cloud via sales</td>
         <td>Scale-to-zero (seconds)</td>
-        <td style="color:#3fb950">Yes</td>
+        <td style="color:#d29922">Library only</td>
       </tr>${vendorPageConditionsRowHtml("dbos", 8)}
       <tr>
         <td class="provider-col">Inngest</td>
         <td style="font-family:var(--mono)">50K executions/mo</td>
-        <td style="font-family:var(--mono)">100K events/mo</td>
+        <td style="font-family:var(--mono)">500K events/mo</td>
         <td>Runs on your serverless</td>
         <td>Configurable retries</td>
         <td>Execution-based</td>
@@ -37897,11 +37897,11 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>Key takeaway:</strong> The main comparison table reveals two distinct models. <strong>Traditional FaaS</strong> (Lambda, Cloud Functions, Azure Functions) bills by wall-clock time with generous monthly invocation counts. <strong>Edge platforms</strong> (Workers, Deno Deploy) bill by CPU time with near-zero cold starts. <strong>Cloud Run</strong> and <strong>Azure Container Apps</strong> are container-based serverless platforms with an always-free tier, between the two models. For background jobs, <strong>Inngest</strong> and <strong>Trigger.dev</strong> offer serverless workflow orchestration rather than raw compute.
+    <strong>Key takeaway:</strong> The main comparison table reveals two distinct models. <strong>Traditional FaaS</strong> (Lambda Event Functions, Cloud Run functions, Azure Functions) bills by elapsed time with generous monthly invocation counts. <strong>Edge platforms</strong> (Workers, Deno Deploy) and Vercel Functions bill by CPU time. Workers' cold starts are under 5 ms, Deno Deploy's under 100 ms for a hello-world app. <strong>Cloud Run</strong> and <strong>Azure Container Apps</strong> are container-based serverless platforms with an always-free tier, between the two models. For background jobs, <strong>Inngest</strong> and <strong>Trigger.dev</strong> offer serverless workflow orchestration rather than raw compute.
   </div>
 
   <h2 id="traditional-faas">Traditional FaaS</h2>
-  <p class="section-intro">The big three cloud providers&rsquo; serverless compute offerings. These are the most mature platforms with the largest ecosystems, but they all bill by wall-clock time.</p>
+  <p class="section-intro">The big three clouds' serverless compute, the most mature platforms with the largest ecosystems. Lambda Event Functions, Cloud Run functions and Azure Functions bill elapsed time, waits included. AWS's Lambda Web Functions (since 2026-10-12) bill active CPU time.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -37945,11 +37945,11 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>AWS Lambda vs Google Cloud Functions vs Azure Functions:</strong> All three offer similar free compute (400K GB-seconds). <strong>Google Cloud Functions</strong> leads on invocations (2M vs 1M). <strong>AWS Lambda</strong> has the largest ecosystem and most third-party integrations. <strong>Azure Functions</strong> is the natural choice for .NET/Microsoft shops. <strong>Important:</strong> All three charge for <strong>API Gateway</strong> separately — Lambda invocations are free, but the API Gateway to expose them adds $3.50/million requests (AWS). Google Cloud Functions includes HTTP triggers for free; Azure Functions uses Azure Functions Premium for custom domains.
+    <strong>AWS Lambda vs Google Cloud Functions vs Azure Functions:</strong> AWS Lambda and Azure Functions' Consumption plan each give 1M requests and 400K GB-s free; Cloud Run functions (formerly Cloud Functions) give 2M invocations; Azure's recommended Flex Consumption plan gives 250,000 executions and 100,000 GB-s. Lambda function URLs expose a function over HTTPS at no extra charge; API Gateway is optional. Azure Functions supports custom domains on the Consumption plan by CNAME; Premium is not needed.
   </div>
 
   <h2 id="edge-compute">Edge Compute</h2>
-  <p class="section-intro">Serverless platforms that run code at the edge (CDN PoPs worldwide). Near-zero cold starts, global distribution, but more constrained runtimes.</p>
+  <p class="section-intro">Platforms that bill CPU time rather than elapsed time. Cloudflare Workers runs V8 isolates across Cloudflare's network. Vercel Functions run Node.js, Python and other runtimes in Washington, D.C. by default. Deno Deploy runs Deno apps in Linux microVMs.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -37973,19 +37973,19 @@ ${globalNavCss()}
         <td>APIs, edge logic, full-stack apps</td>
       </tr>
       <tr>
-        <td class="provider-col">Vercel Edge Functions</td>
-        <td>1M edge req/mo, 4 hrs CPU</td>
+        <td class="provider-col">Vercel Functions</td>
+        <td>1M invocations/mo, 4 hrs Active CPU</td>
         <td>&lt;5ms</td>
-        <td>V8 isolates (JS/TS)</td>
-        <td>Blob: 1 GB, KV: via Vercel KV</td>
+        <td>Node.js, Python, Go, Ruby, Bun, Rust, Wasm</td>
+        <td>Blob: 1 GB; Redis via Marketplace (Vercel KV ended)</td>
         <td>Next.js middleware, edge API routes</td>
       </tr>${vendorPageConditionsRowHtml("vercel-edge-functions", 6)}
       <tr>
         <td class="provider-col">Deno Deploy</td>
         <td>1M req/mo, 10 hrs CPU, 20 GiB egress</td>
-        <td>&lt;10ms</td>
+        <td>&lt;100ms (hello world)</td>
         <td>Deno runtime (JS/TS, Web APIs)</td>
-        <td>KV: 1 GB (450K reads/mo)</td>
+        <td>KV: 1 GB (1M reads/mo)</td>
         <td>Deno/Fresh apps, Web API-native code</td>
       </tr>
     </tbody>
@@ -37993,7 +37993,7 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>Cloudflare Workers leads the edge:</strong> The combination of 100K daily requests, near-zero cold starts, and integrated storage (KV, D1, R2, Durable Objects, Queues) makes Workers the most complete edge platform. <strong>Vercel Edge Functions</strong> are ideal if you&rsquo;re already on Vercel/Next.js. <strong>Deno Deploy</strong> offers the most developer-friendly experience with native TypeScript, Web APIs, and built-in KV storage. All three use V8 isolates for instant startup — a fundamentally different architecture from container-based FaaS.
+    <strong>Cloudflare Workers leads the edge:</strong> The combination of 100K daily requests, near-zero cold starts, and integrated storage (KV, D1, R2, Durable Objects, Queues) makes Workers the most complete edge platform. <strong>Vercel Functions</strong> fit Vercel/Next.js projects; Vercel deprecated Edge Functions for new projects. <strong>Deno Deploy</strong> offers the most developer-friendly experience with native TypeScript, Web APIs, and built-in KV storage. Only Workers uses V8 isolates. Vercel Functions run on Fluid compute, where concurrent requests share one instance. Deno Deploy starts each app in a pre-provisioned Linux microVM, and Deno says cold starts take under 100 ms for a hello-world app and a few hundred milliseconds for larger apps.
   </div>
 
   <h2 id="full-service">Full-Service Serverless</h2>
@@ -38060,14 +38060,14 @@ ${globalNavCss()}
       </tr>
       <tr>
         <td class="provider-col">DBOS</td>
-        <td>1M service calls/mo, 1 microVM</td>
+        <td>Open-source library free; DBOS Cloud via sales, Pro $99/mo</td>
         <td>Durable workflow orchestration</td>
         <td class="check">Built-in (transactional, exactly-once)</td>
         <td>Transactional workflows, reliable background processing</td>
       </tr>
       <tr>
         <td class="provider-col">Inngest</td>
-        <td>50K executions/mo, 100K events</td>
+        <td>50K executions/mo, 500K events</td>
         <td>Event-driven workflow orchestration</td>
         <td class="check">Built-in retries, step functions</td>
         <td>Background jobs, scheduled tasks, event-driven workflows</td>
@@ -38098,20 +38098,20 @@ ${globalNavCss()}
   <p class="section-intro">This is the most important and least understood difference between serverless platforms. It can change your effective cost by 10-50x.</p>
 
   <div class="diff-card" style="border-left-color:#3fb950">
-    <h3>Wall-clock-time billing (AWS Lambda, Cloud Functions, Azure Functions, Cloud Run)</h3>
-    <p class="diff-desc">You pay for the <strong>total elapsed time</strong> of your function, including time spent <strong>waiting</strong> for database queries, HTTP requests, file I/O, and external API responses. A function that takes 500ms but spends 480ms waiting for a database query still costs 500ms of compute.</p>
+    <h3>Elapsed-time billing (Lambda Event Functions, Cloud Run functions, Azure Functions, Cloud Run)</h3>
+    <p class="diff-desc">You pay for the whole run, waits included. A 500 ms call that waits 480 ms on a database is billed for 500 ms.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#3b82f6">
-    <h3>CPU-time billing (Cloudflare Workers, Deno Deploy)</h3>
-    <p class="diff-desc">You pay only for <strong>actual CPU cycles</strong> used. Time spent waiting for I/O is <strong>free</strong>. That same function that takes 500ms but only uses 20ms of CPU time costs only 20ms. For I/O-heavy workloads (most web APIs), this is dramatically cheaper.</p>
+    <h3>CPU-time billing (Cloudflare Workers, Vercel Functions, Lambda Web Functions)</h3>
+    <p class="diff-desc">You pay for CPU time actually used; waiting on I/O is not billed. The same call that uses 20 ms of CPU is billed for 20 ms.</p>
   </div>
 
   <div class="context-box">
     <strong>Concrete example:</strong> An API endpoint that queries a database (200ms), calls an external API (150ms), and does 10ms of processing:<br><br>
-    &bull; <strong>AWS Lambda:</strong> Billed for ~360ms wall-clock time at 128 MB = 0.000046 GB-seconds<br>
+    &bull; <strong>AWS Lambda Event Function:</strong> Billed for ~360ms of elapsed time at 128 MB = 0.045 GB-seconds<br>
     &bull; <strong>Cloudflare Workers:</strong> Billed for ~10ms CPU time only<br><br>
-    At scale (1M requests/month), this difference is significant. The Lambda function uses ~46 GB-seconds per million requests. The Workers function uses ~10,000ms (10 seconds) of total CPU per million requests — well within the free tier&rsquo;s 10ms-per-request limit. <strong>For I/O-heavy APIs, Workers can be effectively 10-50x cheaper than Lambda.</strong>
+    At 1M requests a month, the Lambda Event Function uses 45,000 GB-seconds (0.045 each), inside Lambda's 400,000 GB-second free tier. The Workers function uses 10,000 seconds of CPU (about 2.8 hours), and each request sits at the free plan's 10 ms CPU limit, not under it.
   </div>
 
   <h2 id="best-for">By Use Case</h2>
@@ -38135,8 +38135,8 @@ ${globalNavCss()}
     </div>
 
     <div class="verdict-item">
-      <strong>Next.js / Vercel projects &rarr; Vercel Edge Functions</strong>
-      <p>Seamless integration with Next.js middleware and edge API routes. 1M edge requests/month on the Hobby plan. Use Vercel&rsquo;s serverless functions for Node.js APIs, edge functions for latency-sensitive routes.</p>
+      <strong>Next.js / Vercel projects &rarr; Vercel Functions</strong>
+      <p>Vercel deprecated Edge Functions for new projects; use Vercel Functions on the Node.js runtime with Fluid compute. Hobby includes 1M invocations and 4 hours of Active CPU a month, for non-commercial use.</p>
     </div>
 
     <div class="verdict-item">
@@ -38151,7 +38151,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Durable / transactional workflows &rarr; DBOS</strong>
-      <p>1M service calls/month with exactly-once execution guarantees. Ideal for payment processing, multi-step workflows, and anything where partial failure is unacceptable. Open-source DBOS Transact library available for TypeScript, Python, Go, Java, Kotlin.</p>
+      <p>DBOS Transact is open source and free to self-host on Postgres, for TypeScript, Python, Go, Java and Kotlin. There is no free hosted plan: DBOS Pro is $99 a month and DBOS Cloud is sold through sales.</p>
     </div>
 
     <div class="verdict-item">
@@ -38165,7 +38165,7 @@ ${globalNavCss()}
 
   <div class="diff-card" style="border-left-color:#f85149">
     <h3>API Gateway fees (AWS Lambda)</h3>
-    <p class="diff-desc"><strong>AWS Lambda</strong> invocations are free, but exposing them via <strong>API Gateway</strong> costs $3.50 per million requests (REST API) or $1.00 per million (HTTP API). For 1M Lambda invocations/month, the API Gateway bill can exceed $1-3.50. <strong>Google Cloud Functions</strong> and <strong>Azure Functions</strong> include HTTP triggers at no extra cost — a significant advantage over Lambda for HTTP workloads.</p>
+    <p class="diff-desc">A Lambda function URL serves HTTPS at no charge beyond Lambda's own. API Gateway is for its extra features (request validation, authorizers, Cognito, OAuth 2.0) at $3.50 per million REST API requests or $1.00 per million HTTP API requests.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
@@ -38175,12 +38175,12 @@ ${globalNavCss()}
 
   <div class="diff-card" style="border-left-color:#d29922">
     <h3>Cold start mitigation costs</h3>
-    <p class="diff-desc"><strong>AWS Lambda</strong> Provisioned Concurrency eliminates cold starts but costs $0.015/GB-hour — not free tier eligible. <strong>Azure Functions Premium</strong> keeps instances warm but starts at ~$0.173/vCPU-hour. <strong>Edge platforms</strong> (Workers, Deno Deploy) avoid this entirely with V8 isolate architecture — cold starts under 5ms without any warm-up configuration.</p>
+    <p class="diff-desc"><strong>AWS Lambda</strong> Provisioned Concurrency eliminates cold starts but costs $0.015/GB-hour — not free tier eligible. <strong>Azure Functions Premium</strong> keeps instances warm but starts at ~$0.173/vCPU-hour. <strong>Cloudflare Workers</strong> avoids this with V8 isolates, with cold starts under 5 ms and no warm-up configuration. <strong>Deno Deploy</strong> pre-provisions Linux microVMs, and Deno puts its cold starts under 100 ms for a hello-world app.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
-    <h3>Vercel credit-based pricing complexity</h3>
-    <p class="diff-desc"><strong>Vercel</strong> restructured to a credit-based model in 2026. The Hobby plan includes 4 hours Active CPU and 360 GB-hours Provisioned Memory — but understanding how credits map to actual usage requires monitoring the Vercel dashboard. Serverless functions and edge functions consume credits differently, and overage charges apply automatically. <a href="/vendor/vercel">Vercel details &rarr;</a></p>
+    <h3>Vercel Pro credits</h3>
+    <p class="diff-desc">On 2025-09-09 Vercel moved Pro to $20 of monthly usage credit. Hobby is unchanged and has no credits: it includes 1M function invocations, 4 hours of Active CPU and 360 GB-hours of Provisioned Memory a month, and Hobby accounts cannot buy more. <a href="/vendor/vercel">Vercel details &rarr;</a></p>
   </div>
 
   <div class="diff-card" style="border-left-color:#3fb950">
