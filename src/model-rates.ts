@@ -158,9 +158,9 @@ export function sameFigures(a: ModelRate, b: ModelRate): boolean {
 
 export function formatRate(rate: ModelRate): string {
   if (rate.output === null) {
-    return rate.model ? `${rate.input} (${rate.model}, input only)` : `${rate.input} (input only)`;
+    return rate.model ? `${rate.model} ${rate.input} (input only)` : `${rate.input} (input only)`;
   }
-  return rate.model ? `${rate.input}/${rate.output} (${rate.model})` : `${rate.input}/${rate.output}`;
+  return rate.model ? `${rate.model} ${rate.input}/${rate.output}` : `${rate.input}/${rate.output}`;
 }
 
 export function formatRateSpan(rates: ModelRate[]): string | null {

@@ -282,7 +282,7 @@ describe("the AI guides state Groq's and Mistral's free plans as the vendors lis
       .filter((cells) => cells[0] === "Groq");
     assert.strictEqual(rows.length, 1);
     assert.match(rows[0][1], /Free plan: gpt-oss-20b, gpt-oss-120b and Qwen3\.8 27B, each at/);
-    assert.strictEqual(rows[0][2], "$0.075/$0.30 (gpt-oss-20b), $0.15/$0.60 (gpt-oss-120b), $0.80/$4.00 (Qwen3.8 27B) per MTok");
+    assert.strictEqual(rows[0][2], "gpt-oss-20b $0.075/$0.30, gpt-oss-120b $0.15/$0.60, Qwen3.8 27B $0.80/$4.00 per MTok");
   });
 
   it("quotes only figures that Groq's and Cerebras's own listings still state", () => {

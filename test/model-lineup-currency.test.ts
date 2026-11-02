@@ -169,7 +169,7 @@ describe("#1362 a superseded Claude version is not published as the current one"
     for (const claim of [
       "Claude Haiku 4.5 $1/$5. Groq Qwen3.8 27B $0.80/$4.00.",
       "Haiku 4.5 $0.80/$4.50.",
-      "<tr><td>Anthropic Haiku 4.5</td><td>$1/$5</td></tr><tr><td>Groq</td><td>$0.80/$4.00 (Qwen3.8 27B)</td></tr>",
+      "<tr><td>Anthropic Haiku 4.5</td><td>Haiku 4.5 $1/$5</td></tr><tr><td>Groq</td><td>Qwen3.8 27B $0.80/$4.00</td></tr>",
       '<meta name="description" content="Claude Haiku 4.5 $1/$5"><script type="application/ld+json">{"text":"Qwen3.8 27B $0.80/$4.00"}</script>',
     ]) assert.deepEqual(retiredHaikuRateClaims(claim), [], claim);
   });
