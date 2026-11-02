@@ -1283,7 +1283,7 @@
       "changed": "2026-11-01"
     },
     "/category/security": {
-      "hash": "a48ef6a520caefba",
+      "hash": "f19dc639f2e1abc5",
       "changed": "2026-11-02"
     },
     "/category/server-management": {
@@ -2992,8 +2992,8 @@
       "changed": "2026-10-22"
     },
     "/digest/2026-w25": {
-      "hash": "4f122cfa7877a799",
-      "changed": "2026-10-21"
+      "hash": "bbeb35a00fa91196",
+      "changed": "2026-11-02"
     },
     "/digest/2026-w26": {
       "hash": "77e5e45ffcfe68ac",
@@ -3032,8 +3032,8 @@
       "changed": "2026-10-31"
     },
     "/digest/2026-w35": {
-      "hash": "e3d38072204c524e",
-      "changed": "2026-10-21"
+      "hash": "3feea4c01693ee54",
+      "changed": "2026-11-02"
     },
     "/digest/2026-w36": {
       "hash": "bf19d9f30772fff0",
@@ -3586,12 +3586,12 @@
       "changed": "2026-10-31"
     },
     "/security-alternatives": {
-      "hash": "41d6370ffe0c052e",
+      "hash": "5d21cbf92e0a18ef",
       "changed": "2026-11-02"
     },
     "/security-free-tier-comparison-2026": {
-      "hash": "3283ddc155510904",
-      "changed": "2026-10-30"
+      "hash": "5c74c0c957751dc5",
+      "changed": "2026-11-02"
     },
     "/serverless-free-tier-comparison-2026": {
       "hash": "7d862542b439ed31",
@@ -3609,7 +3609,7 @@
       "changed": "2026-11-02"
     },
     "/stack-check": {
-      "hash": "c1f882a6e3c8be3b",
+      "hash": "1931e78666972cfe",
       "changed": "2026-11-02"
     },
     "/stacks": {
@@ -3641,7 +3641,7 @@
       "changed": "2026-11-02"
     },
     "/state-of-free-tiers": {
-      "hash": "32fe3e647631df1b",
+      "hash": "6833c0f47d270419",
       "changed": "2026-11-02"
     },
     "/storage-alternatives": {
@@ -3924,8 +3924,8 @@
       "changed": "2026-11-02"
     },
     "/vendor": {
-      "hash": "74c9741297436ba1",
-      "changed": "2026-10-29"
+      "hash": "94ea3603f645e584",
+      "changed": "2026-11-02"
     },
     "/vendor/10minutemail": {
       "hash": "c575dbf0bcc21a5e",
@@ -5902,7 +5902,7 @@
       "changed": "2026-11-02"
     },
     "/vendor/gitguardian": {
-      "hash": "53a7e3199f9e5cb2",
+      "hash": "8beed5e2cd2a9236",
       "changed": "2026-11-02"
     },
     "/vendor/gitgud": {
@@ -5938,7 +5938,7 @@
       "changed": "2026-11-02"
     },
     "/vendor/gitleaks": {
-      "hash": "919db74600bb183a",
+      "hash": "c1907ba0f5af8ca1",
       "changed": "2026-11-02"
     },
     "/vendor/gitter-im": {
@@ -8462,7 +8462,7 @@
       "daily": true
     },
     "/vendor/soos": {
-      "hash": "a66580f4f4fac375",
+      "hash": "3d94598ecc5da084",
       "changed": "2026-11-02"
     },
     "/vendor/sourceforge": {
@@ -8974,7 +8974,7 @@
       "changed": "2026-11-02"
     },
     "/vendor/trufflehog": {
-      "hash": "4750693f23e6acd5",
+      "hash": "0efc1b8a6a6c14a4",
       "changed": "2026-11-02"
     },
     "/vendor/ttl-sh": {
