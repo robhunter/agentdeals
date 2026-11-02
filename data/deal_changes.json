@@ -3430,16 +3430,28 @@
     {
       "vendor": "Plunk",
       "change_type": "limits_reduced",
-      "date": "2026-04-12",
-      "summary": "Free tier reduced from 3,000 to 1,000 emails/month",
-      "previous_state": "",
-      "current_state": "Free tier reduced from 3,000 to 1,000 emails/month",
+      "date": "2026-03-07",
+      "summary": "Free tier reduced from 3,000 to 1,000 emails/month. Plunk's home page said \"Send up to 3000 emails for free every month\" in the Internet Archive's copy of 2026-03-06 and \"1,000 emails free every month. Then $0.001 per email\" in its copy of 2026-03-07.",
+      "previous_state": "Free: up to 3,000 emails a month (1,000 each of automated, transactional and campaign emails)",
+      "current_state": "Free: 1,000 emails a month, then $0.001 per email",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://www.useplunk.com/pricing",
       "category": "Email",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "archive_check": {
+        "checked": "2026-11-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-03-06",
+            "first_new": "2026-03-07",
+            "last_old_capture": "https://web.archive.org/web/20260306023548/https://www.useplunk.com/",
+            "first_new_capture": "https://web.archive.org/web/20260307081830/https://www.useplunk.com/"
+          }
+        ]
+      }
     },
     {
       "vendor": "Maileroo",
@@ -17586,6 +17598,20 @@
       "impact": "low",
       "source_url": "https://www.clever.cloud/blog/press/2024/05/21/clever-cloud-launches-up-dedicated-to-startups",
       "category": "Cloud IaaS",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Plunk",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Plunk cut its free plan from 3,000 to 1,000 emails a month between 2026-03-06 and 2026-03-07, not on 2026-04-12.",
+      "previous_state": "Recorded 2026-04-12 as limits_reduced, dated 2026-04-12, with no source",
+      "current_state": "limits_reduced, dated 2026-03-07 from the Internet Archive's copies of useplunk.com",
+      "impact": "low",
+      "source_url": "https://www.useplunk.com/pricing",
+      "category": "Email",
       "alternatives": [],
       "recorded_date": "2026-11-02",
       "date_source": "hand_written"
