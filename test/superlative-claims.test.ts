@@ -317,6 +317,7 @@ describe("#1073 a superlative is graded against the page it is printed on", () =
 const REFUTED_BEFORE_THIS_ISSUE = [
   {
     page: "/serverless-free-tier-comparison-2026",
+    section: "traditional-faas",
     markup: `<div class="stat-card"><div class="stat-number green">Lambda</div><div class="stat-label">Most Invocations Free</div></div>`,
     beaten: "Google Cloud Functions",
   },
@@ -339,10 +340,12 @@ const REFUTED_BEFORE_THIS_ISSUE = [
 
 describe("#1073 the check goes red on the cards this issue was filed for", () => {
   it("refutes each withdrawn card against the page it was printed on", () => {
-    for (const { page, markup, beaten } of REFUTED_BEFORE_THIS_ISSUE) {
+    for (const { page, section, markup, beaten } of REFUTED_BEFORE_THIS_ISSUE) {
       const html = rendered.get(page);
       assert.ok(html, `${page} is not in the register`);
-      const graded = gradeSuperlatives(markup + html!);
+      const evidence = section ? html!.slice(html!.indexOf(`id="${section}"`)).match(/<table\b[\s\S]*?<\/table>/)?.[0] : html;
+      assert.ok(evidence, `${page} has no comparison table for ${section}`);
+      const graded = gradeSuperlatives(markup + evidence);
       const refuted = graded.refuted.map(found => `${found.claim.label} < ${found.beatenBy}`);
       assert.ok(
         graded.refuted.some(found => found.beatenBy === beaten),
