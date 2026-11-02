@@ -773,8 +773,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 72,
-      "table_figures_from_records": 18,
+      "table_figures": 74,
+      "table_figures_from_records": 20,
       "tables": [
         {
           "label": "Free Trial Credits",
@@ -783,8 +783,8 @@
         },
         {
           "label": "Always-Free Compute",
-          "figures": 15,
-          "from_records": 4
+          "figures": 17,
+          "from_records": 6
         },
         {
           "label": "Always-Free Databases",
@@ -1920,23 +1920,23 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 92,
-      "table_figures_from_records": 44,
+      "table_figures": 94,
+      "table_figures_from_records": 46,
       "tables": [
         {
           "label": "Always Free Products",
-          "figures": 26,
+          "figures": 28,
           "from_records": 2
         },
         {
           "label": "Free Trial & AI/ML Tools",
           "figures": 6,
-          "from_records": 0
+          "from_records": 1
         },
         {
           "label": "GCP vs AWS vs Others",
           "figures": 59,
-          "from_records": 41
+          "from_records": 42
         },
         {
           "label": "Recent GCP & Google Changes",
