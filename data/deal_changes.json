@@ -625,12 +625,12 @@
     {
       "vendor": "Vercel",
       "change_type": "pricing_restructured",
-      "date": "2026-01-01",
-      "summary": "Pro plan moved to credit-based model ($20/mo credit pool), Hobby plan metrics renamed and restructured — bandwidth→Fast Data Transfer, serverless split into Active CPU + Provisioned Memory, Blob Storage and Image Transformations added",
-      "previous_state": "Hobby: 100 GB bandwidth, 100 GB-hours serverless. Pro: fixed per-resource allocations",
-      "current_state": "Hobby: 100 GB/mo Fast Data Transfer, 4 hrs Active CPU, 360 GB-hrs Provisioned Memory, 1M edge requests, 1 GB Blob Storage, 5K image transformations. Pro: $20/mo credit pool across all resources, SAML SSO and HIPAA included",
+      "date": "2025-09-09",
+      "summary": "On 2025-09-09 Vercel replaced the Pro plan's fixed allowance for each resource with $20 of usage credit a month, applied to existing teams automatically from October 2025.",
+      "previous_state": "Pro: a fixed allowance for each resource",
+      "current_state": "Pro: $20 of usage credit a month across all resources. SAML SSO and a HIPAA BAA became paid add-ons that Pro teams can buy themselves.",
       "impact": "medium",
-      "source_url": "https://vercel.com/pricing",
+      "source_url": "https://vercel.com/blog/new-pro-pricing-plan",
       "category": "Cloud Hosting",
       "alternatives": [
         "Netlify",
@@ -638,7 +638,7 @@
         "Render"
       ],
       "recorded_date": "2026-02-26",
-      "date_source": "hand_written"
+      "date_source": "vendor_page"
     },
     {
       "vendor": "Atlassian",
@@ -1399,7 +1399,13 @@
         "OrbStack"
       ],
       "recorded_date": "2026-03-15",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-02",
+        "detail": "Retracted 2026-11-02: Docker's prices did not change on 2026-01-01. docker.com/pricing showed the same prices in the Internet Archive's captures of 2025-12-02 and 2026-02-16 and on 2026-11-02: Personal $0; Pro $11 a month or $9 billed yearly; Team $16 or $15; Business $24. No capture shows a paid Personal plan or the $14, $24 and $35 this record gave. Its 67-80% are the rises in Docker's 2024-12-10 change (Pro $5 to $9, Team $9 to $15), which is recorded under Docker Hub.",
+        "source_url": "https://www.docker.com/pricing/"
+      }
     },
     {
       "vendor": "Unity DevOps",
@@ -17359,6 +17365,20 @@
       "category": "Storage",
       "alternatives": [],
       "recorded_date": "2026-11-01"
+    },
+    {
+      "vendor": "Vercel",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Vercel announced its credit-based Pro plan on 2025-09-09 and applied it automatically from October 2025, not on 2026-01-01. The record also said Pro includes SAML SSO and HIPAA; both are paid add-ons. The Hobby renames it listed were earlier changes.",
+      "previous_state": "Recorded 2026-02-26 as pricing_restructured, dated 2026-01-01",
+      "current_state": "pricing_restructured, dated 2025-09-09 from Vercel's announcement",
+      "impact": "low",
+      "source_url": "https://vercel.com/blog/new-pro-pricing-plan",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
     }
   ]
 }
