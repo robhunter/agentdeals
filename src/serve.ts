@@ -44354,7 +44354,7 @@ ${globalNavCss()}
     <strong>The scan budget math:</strong> Snyk&rsquo;s free tier gives 200 SCA tests/month. Each <code>snyk test</code> on a project counts as one test. If you have 10 repos and run CI on every PR (5 PRs/day &times; 20 days = 100 PRs/month &times; 10 repos = 1,000 tests), you&rsquo;ll burn through the free tier in 4 days. Teams with active CI/CD pipelines outgrow hosted free tiers fast &mdash; which is exactly the business model.
   </div>
   <div class="context-box">
-    <strong>Free for OSS, expensive for private repos:</strong> CodeQL is free on public repositories, and private code needs GitHub Code Security at $30 per active committer a month. SonarQube Cloud is free for public projects and for private projects up to 50k lines of code. If your code is open-source, you get enterprise-grade security for free. If it&rsquo;s private, the same tools cost thousands per year. Plan accordingly: use OSS-unlimited tools (Semgrep, Trivy, Gitleaks) for private repos, and take advantage of full platform features on your open-source projects.
+    <strong>Free for OSS, expensive for private repos:</strong> CodeQL is free on public repositories, and private code needs GitHub Code Security at $30 per active committer a month. SonarQube Cloud is free for public projects and for private projects up to 50k lines of code. If your code is open-source, you get enterprise-grade security for free. If it&rsquo;s private, CodeQL costs $30 per active committer a month and SonarQube Cloud charges past 50k lines of code. Plan accordingly: use OSS-unlimited tools (Semgrep, Trivy, Gitleaks) for private repos, and take advantage of full platform features on your open-source projects.
   </div>
 
   <h2 id="best-for">By Use Case</h2>

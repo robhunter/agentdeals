@@ -70,7 +70,7 @@ describe("security comparison plans, licences and hosted prices", () => {
   after(() => child?.kill("SIGKILL"));
 
   it("withdraws obsolete limits, licences and price claims from the complete response", () => {
-    for (const text of ["50 private repos", "50 repos", "Public only<", "MIT (engine)", "Unlimited for OSS projects", "420+", "April 2026", "first private repo", "10 remote networks", "free for all repositories", "widest price gap", "$50,000+", "$23,000", "$23K", "$49/committer", "(enterprise only)", "public-only on free tiers", "SonarCloud, CodeQL, and SOOS", "15+ languages"]) {
+    for (const text of ["50 private repos", "50 repos", "Public only<", "MIT (engine)", "Unlimited for OSS projects", "420+", "April 2026", "first private repo", "10 remote networks", "free for all repositories", "widest price gap", "$50,000+", "$23,000", "$23K", "$49/committer", "(enterprise only)", "public-only on free tiers", "SonarCloud, CodeQL, and SOOS", "15+ languages", "cost thousands per year"]) {
       assert.ok(!html.toLowerCase().includes(text.toLowerCase()), text);
       assert.ok(!plain(html).toLowerCase().includes(text.toLowerCase()), text);
     }
@@ -152,6 +152,10 @@ describe("security comparison plans, licences and hosted prices", () => {
     assert.ok(plain(html).includes("The open-source tools cost $0 to run yourself. Hosted paid plans are priced per developer or per team. Semgrep Teams costs $30 a month per contributor for Code or Supply Chain and $15 for Secrets. StackHawk Wingman costs $10 per user a month. Snyk Team starts at $25 a month for teams of up to 10 developers. GitGuardian prices its Business plan on request."));
     assert.ok(plain(html).includes("The price difference buys convenience, not capability."));
     assert.ok(plain(html).includes("CodeQL is free on public repositories, and private code needs GitHub Code Security at $30 per active committer a month. SonarQube Cloud is free for public projects and for private projects up to 50k lines of code."));
+  });
+
+  it("states private repository prices without an unsupported annual minimum", () => {
+    assert.ok(plain(html).includes("If it's private, CodeQL costs $30 per active committer a month and SonarQube Cloud charges past 50k lines of code."));
   });
 
   it("withdraws the unsupported hosted total from both state-of-free-tiers passages", () => {
