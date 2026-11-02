@@ -5688,7 +5688,7 @@
     {
       "vendor": "Docker Hub",
       "category": "Container Registry",
-      "description": "1 private repository, unlimited public repositories. 200 pulls per 6-hour window (authenticated). No automated builds on free tier",
+      "description": "1 private repository, unlimited public repositories. 100 pulls an hour when logged in (Docker's pricing page); without logging in, 100 an hour per IP address (Docker Hub's rate-limit header, 2026-11-02). No automated builds on free tier",
       "tier": "Personal",
       "url": "https://www.docker.com/pricing/",
       "tags": [
