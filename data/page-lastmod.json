@@ -1358,8 +1358,8 @@
       "changed": "2026-11-02"
     },
     "/cloudflare-pages-vs-vercel": {
-      "hash": "7fc86a24456e8ab9",
-      "changed": "2026-10-31"
+      "hash": "d24c616baacb2cd9",
+      "changed": "2026-11-02"
     },
     "/cloudinary-vs-imagekit": {
       "hash": "054cf5f80db66ea0",
@@ -1666,8 +1666,8 @@
       "changed": "2026-10-30"
     },
     "/compare/cloudflare-pages-vs-vercel": {
-      "hash": "5739042bd4a49700",
-      "changed": "2026-10-31"
+      "hash": "34a620a6f90b239d",
+      "changed": "2026-11-02"
     },
     "/compare/cloudflare-warp-vs-proton-vpn": {
       "hash": "915b85aea24d58e4",
@@ -1986,8 +1986,8 @@
       "changed": "2026-10-30"
     },
     "/compare/firebase-vs-vercel": {
-      "hash": "a6e4862cf5f8a81a",
-      "changed": "2026-10-31"
+      "hash": "04cc6bcbb3f9dffe",
+      "changed": "2026-11-02"
     },
     "/compare/fivetran-activations-vs-heap-io": {
       "hash": "c4834c1a1c2a39d7",
@@ -2418,8 +2418,8 @@
       "changed": "2026-10-29"
     },
     "/compare/netlify-vs-vercel": {
-      "hash": "6c39c641c110e4c0",
-      "changed": "2026-10-31"
+      "hash": "448022a77b3771ee",
+      "changed": "2026-11-02"
     },
     "/compare/nextra-vs-sphinx": {
       "hash": "1d534b77c4d85ad2",
@@ -2550,8 +2550,8 @@
       "changed": "2026-10-19"
     },
     "/compare/render-vs-vercel": {
-      "hash": "c8ffa6b9a631d9af",
-      "changed": "2026-10-31"
+      "hash": "4f12eaf7655cac3f",
+      "changed": "2026-11-02"
     },
     "/compare/resend-vs-mail-tester-com": {
       "hash": "69b764a827c8b9ce",
@@ -2856,8 +2856,8 @@
       "changed": "2026-10-21"
     },
     "/digest/2025-w37": {
-      "hash": "440465a5b1da281f",
-      "changed": "2026-10-09"
+      "hash": "b5e52f22b78b2343",
+      "changed": "2026-11-02"
     },
     "/digest/2025-w38": {
       "hash": "1d02f34bd7dfb3bf",
@@ -2900,7 +2900,7 @@
       "changed": "2026-10-09"
     },
     "/digest/2026-w01": {
-      "hash": "e4089971486bfde6",
+      "hash": "d7acec685a368318",
       "changed": "2026-11-02"
     },
     "/digest/2026-w02": {
@@ -3136,7 +3136,7 @@
       "changed": "2026-10-31"
     },
     "/digest/archive": {
-      "hash": "d53c816351288bac",
+      "hash": "41140d881f7d0dda",
       "changed": "2026-11-02"
     },
     "/digitalocean-free-tier-2026": {
@@ -3213,7 +3213,7 @@
       "changed": "2026-11-02"
     },
     "/free-frontend-stack": {
-      "hash": "6ecc7403ec7cc71b",
+      "hash": "e1c61b9d6f3aecc3",
       "changed": "2026-11-02"
     },
     "/free-go-stack": {
@@ -3225,11 +3225,11 @@
       "changed": "2026-11-02"
     },
     "/free-nextjs-stack": {
-      "hash": "c32e6f1f93b8c508",
+      "hash": "d23e998f4836a28b",
       "changed": "2026-11-02"
     },
     "/free-saas-stack": {
-      "hash": "8922d865530e5ea5",
+      "hash": "a6ca98c837341d06",
       "changed": "2026-11-02"
     },
     "/free-startup-stack": {
@@ -3241,7 +3241,7 @@
       "changed": "2026-10-29"
     },
     "/free-tier-risk": {
-      "hash": "80f10e63365b767d",
+      "hash": "3a096f10450e7f12",
       "changed": "2026-11-02"
     },
     "/free-tier-tracker": {
@@ -3311,7 +3311,7 @@
       "changed": "2026-11-01"
     },
     "/hetzner-pricing-2026": {
-      "hash": "66f3f01b9a99d6e8",
+      "hash": "e4fd6141786aaeaf",
       "changed": "2026-11-02"
     },
     "/hosting-alternatives": {
@@ -3323,7 +3323,7 @@
       "changed": "2026-11-01"
     },
     "/hosting-pricing": {
-      "hash": "d80ef49994fcbdb4",
+      "hash": "606bfd7270fa6531",
       "changed": "2026-11-02"
     },
     "/ide-code-editors-alternatives": {
@@ -3402,7 +3402,7 @@
       "changed": "2026-11-02"
     },
     "/q1-2026-developer-pricing-report": {
-      "hash": "e99a93af0a8ce2ef",
+      "hash": "dd78a7faacd4a705",
       "changed": "2026-11-02"
     },
     "/q2-pricing-preview-2026": {
@@ -3422,7 +3422,7 @@
       "changed": "2026-10-15"
     },
     "/reports": {
-      "hash": "2e075cd50e2f00f6",
+      "hash": "fbf762405e8c5e19",
       "changed": "2026-11-02"
     },
     "/reports/2022-11": {
@@ -3494,12 +3494,12 @@
       "changed": "2026-10-19"
     },
     "/reports/2025-09": {
-      "hash": "f6c1f07428b4f67a",
-      "changed": "2026-10-10"
+      "hash": "3ca532f0ea0b2aa2",
+      "changed": "2026-11-02"
     },
     "/reports/2025-10": {
-      "hash": "9110dd5e07e0e255",
-      "changed": "2026-10-10"
+      "hash": "ad15779f945c7513",
+      "changed": "2026-11-02"
     },
     "/reports/2025-11": {
       "hash": "76d248f2e2609eaf",
@@ -3510,11 +3510,11 @@
       "changed": "2026-10-10"
     },
     "/reports/2026-01": {
-      "hash": "3de0541e90e0d5d7",
+      "hash": "d99898ec981fa303",
       "changed": "2026-11-02"
     },
     "/reports/2026-02": {
-      "hash": "62a401214dcb3dc0",
+      "hash": "32752a3de2735724",
       "changed": "2026-11-02"
     },
     "/reports/2026-03": {
@@ -3608,11 +3608,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "d972b90fa4ec08a0",
+      "hash": "3602d1fe35a6e437",
       "changed": "2026-11-02"
     },
     "/stack-check": {
-      "hash": "ae3f9818d1bb47db",
+      "hash": "b787a32979b1570d",
       "changed": "2026-11-02"
     },
     "/stacks": {
@@ -3644,7 +3644,7 @@
       "changed": "2026-11-02"
     },
     "/state-of-free-tiers": {
-      "hash": "613e897f1820f9f3",
+      "hash": "935235c9873eff59",
       "changed": "2026-11-02"
     },
     "/storage-alternatives": {
@@ -3725,8 +3725,8 @@
       "changed": "2026-11-01"
     },
     "/trends/cloud-hosting": {
-      "hash": "f35b940c16016f95",
-      "changed": "2026-11-01"
+      "hash": "065c13c44fe76595",
+      "changed": "2026-11-02"
     },
     "/trends/cloud-iaas": {
       "hash": "8796bc807cbe8f6f",
@@ -9625,11 +9625,11 @@
       "changed": "2026-11-02"
     },
     "/vercel-alternatives": {
-      "hash": "fa021ea0cc663a47",
-      "changed": "2026-10-30"
+      "hash": "5b735dd7741d1325",
+      "changed": "2026-11-02"
     },
     "/vercel-vs-netlify": {
-      "hash": "b75b0462db8115d8",
+      "hash": "9ff9bfc8f5022ef9",
       "changed": "2026-11-02"
     },
     "/whatsapp-business-api-pricing-2026": {
