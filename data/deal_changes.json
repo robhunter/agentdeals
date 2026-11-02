@@ -3456,16 +3456,28 @@
     {
       "vendor": "Maileroo",
       "change_type": "limits_reduced",
-      "date": "2026-04-12",
-      "summary": "Free tier reduced from 5,000 to 3,000 emails/month",
-      "previous_state": "",
-      "current_state": "Free tier reduced from 5,000 to 3,000 emails/month",
+      "date": "2025-04-27",
+      "summary": "Free tier reduced from 5,000 to 3,000 emails/month. maileroo.com/pricing said \"send up to 5,000 emails per month at no cost\" in the Internet Archive's copy of 2024-12-19 and \"send up to 3,000 emails per month at no cost\" in its copy of 2025-04-27.",
+      "previous_state": "Free plan: up to 5,000 emails a month",
+      "current_state": "Free plan: up to 3,000 emails a month",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://maileroo.com/pricing",
       "category": "Email",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "archive_check": {
+        "checked": "2026-11-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2024-12-19",
+            "first_new": "2025-04-27",
+            "last_old_capture": "https://web.archive.org/web/20241219200001/https://maileroo.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20250427002251/https://maileroo.com/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Mailtrap",
@@ -3541,7 +3553,13 @@
       "category": "Email",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-02",
+        "detail": "Retracted 2026-11-02: Maildroppa's free plan did not change on 2026-04-12. maildroppa.com/pricing gave the Free plan as \"Up to 100 subscribers Send up to 2500 emails per month\" in the Internet Archive's copies of 2024-05-23, 2024-12-16, 2025-02-18, 2025-10-06 and 2026-09-24. Unlimited monthly emails are a Premium plan feature.",
+        "source_url": "https://www.maildroppa.com/pricing/"
+      }
     },
     {
       "vendor": "Kitemaker",
@@ -17611,6 +17629,20 @@
       "current_state": "limits_reduced, dated 2026-03-07 from the Internet Archive's copies of useplunk.com",
       "impact": "low",
       "source_url": "https://www.useplunk.com/pricing",
+      "category": "Email",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Maileroo",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Maileroo cut its free plan from 5,000 to 3,000 emails a month between 2024-12-19 and 2025-04-27, not on 2026-04-12.",
+      "previous_state": "Recorded 2026-04-12 as limits_reduced, dated 2026-04-12, with no source",
+      "current_state": "limits_reduced, dated 2025-04-27 from the Internet Archive's copies of maileroo.com/pricing",
+      "impact": "low",
+      "source_url": "https://maileroo.com/pricing",
       "category": "Email",
       "alternatives": [],
       "recorded_date": "2026-11-02",
