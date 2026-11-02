@@ -1399,7 +1399,13 @@
         "OrbStack"
       ],
       "recorded_date": "2026-03-15",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-02",
+        "detail": "Retracted 2026-11-02: Docker's prices did not change on 2026-01-01. docker.com/pricing showed the same prices in the Internet Archive's captures of 2025-12-02 and 2026-02-16 and on 2026-11-02: Personal $0; Pro $11 a month or $9 billed yearly; Team $16 or $15; Business $24. No capture shows a paid Personal plan or the $14, $24 and $35 this record gave. Its 67-80% are the rises in Docker's 2024-12-10 change (Pro $5 to $9, Team $9 to $15), which is recorded under Docker Hub.",
+        "source_url": "https://www.docker.com/pricing/"
+      }
     },
     {
       "vendor": "Unity DevOps",
