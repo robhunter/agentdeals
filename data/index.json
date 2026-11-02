@@ -659,6 +659,18 @@
           "quote": "Can I try Railway without a credit card? Yes. As a new Railway user, you can sign up for a free Trial. You will receive a one-time grant of $5 to use on resources.",
           "url": "https://railway.com/pricing",
           "read_on": "2026-10-22"
+        },
+        {
+          "text": "Run `ssh railway.new` to get a free Linux VM with no account or credit card. The VM has 2 vCPU, 2 GB RAM, and a preview URL. Claude Code, Codex, OpenCode, and the Railway Agent are preinstalled. Railway identifies you by your SSH key. Each VM can be used for 60 minutes. You can get 3 VMs per IP address per day.",
+          "quote": "Run ssh railway.new to get a free Linux VM with coding agents preinstalled and a preview URL, with no account or credit card.",
+          "url": "https://docs.railway.com/pricing/free-trial",
+          "read_on": "2026-11-02"
+        },
+        {
+          "text": "Open the claim link from the welcome message and sign up within 24 hours to keep the VM. The VM, files, and URL move into your account. Unclaimed VMs are deleted with their files. Railway caps free VMs at high demand.",
+          "quote": "To keep it, open the claim link from the welcome message and sign up; the box moves into your account with the same VM, files, and URL. Unclaimed boxes are deleted with their files.",
+          "url": "https://docs.railway.com/pricing/free-trial",
+          "read_on": "2026-11-02"
         }
       ]
     },
@@ -34949,6 +34961,18 @@
           "quote": "If you create a disk in the Google Cloud console, the default disk type is pd-balanced. If you create a disk using the gcloud CLI or the Compute Engine API, the default disk type is pd-standard.",
           "url": "https://docs.cloud.google.com/compute/docs/disks/persistent-disks",
           "read_on": "2026-10-11"
+        },
+        {
+          "text": "If you do not upgrade to a Paid billing account by the end of the 90-day trial or after spending the $300 credit, your Free Trial billing account closes and all its resources stop, including a free e2-micro VM. They are permanently deleted after a 30-day grace period without an upgrade. After upgrading, the Free Tier still applies.",
+          "quote": "If you don't upgrade to a Paid billing account before 90 days pass or if you spend the $300 in free credit, then your Free Trial billing account will be closed and all of its associated projects and resources will be stopped.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-02"
+        },
+        {
+          "text": "The Free Tier has no end date. Google may change or eliminate its usage limits with 30 days' advance notice.",
+          "quote": "The Free Tier has no end date, but Google reserves the right to change the offering, including changing or eliminating usage limits, with 30 days' advance notice.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-02"
         }
       ],
       "official_mcp_servers": [
