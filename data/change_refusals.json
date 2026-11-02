@@ -377,6 +377,18 @@
     },
     {
       "vendor": "Apify",
+      "change_type": "pricing_restructured",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The stored description says the Creator plan costs $1/month paid six months in advance and adds a one-time $500 of usage for those six months. The current pricing page no longer lists a Creator plan; instead it offers a 'Build your own' benefit of $500 worth of free usage for 6 months, and the plan lineup is Free, Starter, Scale, Business, and Enterprise.",
+      "previous_state": "Web scraping and automation platform. The Free plan is $0 with $5 of prepaid usage a month to spend in Apify Store or on your own Actors, at $0.2 per compute unit, with up to 16 GB of Actor RAM and community support; no credit card is required. Starter is $19/month with $19 of usage a month. The Creator plan, for developers who run their own Actors, costs $1/month paid six months in advance, adds a one-time $500 of usage for those six months, and limits access to Apify Store Actors.",
+      "current_state": "The page lists Free ($0, $5/month prepaid usage, $0.2 per CU, community support, no credit card required), Starter ($19/month + pay as you go, $19/month prepaid usage, $0.2 per CU, chat support, Bronze Apify Store discount), Scale ($199/month + pay as you go, $199/month prepaid usage, $0.16 per CU, priority chat support, Silver discount), Business ($999/month + pay as you go, $999/month prepaid usage, $0.13 per CU, account manager, Gold discount), and Enterprise (custom). It also states 'Build your own: Enjoy $500 worth of free usage to build your own Actors and AI agents along with other benefits for 6 months.' No Creator plan is listed.",
+      "source_url": "https://apify.com/pricing",
+      "category": "Web Scraping",
+      "refused_date": "2026-11-02"
+    },
+    {
+      "vendor": "Apify",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-10-03 (confirmed_unchanged) stated the same 3 figures, so the page showed these terms before the date this record gives",
@@ -898,6 +910,18 @@
       "category": "Server Management",
       "refused_date": "2026-09-18",
       "collided_with": "bitnami.com|pricing_restructured|2026-08-28|https://bitnami.com/"
+    },
+    {
+      "vendor": "Bitrise",
+      "change_type": "limits_reduced",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (300 credit/mo, 1 private, 5 build, 90 build), and drops 1 the stored description carried",
+      "summary": "The Hobby plan's stated limits differ from the stored info: the page now describes Hobby as free forever with access for a team of one and 'enough build credits for a few builds per month,' and does not mention 300 credits/month, 1 private app, 5 concurrent builds, or a 90-minute build timeout. The comparison table shows Starter (not Hobby) with up to 4 concurrent builds, up to 3 private apps, and a 210-minute build timeout.",
+      "previous_state": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app, 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
+      "current_state": "Hobby is described as 'Free Forever' with 'Access for a team of one (that's you!)' and 'Enough build credits for you to build your small project a few times per month,' with support from the Bitrise Community via Slack or Discuss forum. The page does not state 300 credits/month, 1 private app, 5 concurrent builds, or a 90-minute build timeout for Hobby.",
+      "source_url": "https://bitrise.io/pricing",
+      "category": "CI/CD",
+      "refused_date": "2026-11-02"
     },
     {
       "vendor": "Bitrise",
@@ -2619,6 +2643,18 @@
       "refused_date": "2026-10-24"
     },
     {
+      "vendor": "CurrencyScoop",
+      "change_type": "rebranded",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names CurrencyScoop and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The stored deal is for 'CurrencyScoop' but the pricing page is for 'CurrencyBeacon' (HATCHSQUARE Technologies LLC). The free tier still exists with 5,000 requests/month, but the vendor name/branding differs from the stored info.",
+      "previous_state": "Realtime currency data API for fintech apps. The free plan includes 5,000 calls per month.",
+      "current_state": "CurrencyBeacon offers a free 'Developer sandbox' plan at $0/month with 5,000 API requests per month, hourly updates, and REST and MCP calls sharing the quota.",
+      "source_url": "https://currencybeacon.com/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-11-02"
+    },
+    {
       "vendor": "Cursor",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -4333,6 +4369,18 @@
     {
       "vendor": "GitHub Actions",
       "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-31 (same_transition_graded_differently) stated the same 3 figures, so the page showed these terms before the date this record gives",
+      "summary": "The stored description says private repos get 2,000 min/mo of GitHub-hosted runner time, but the page now expresses included compute usage as a monetary amount ($12 USD for GitHub Free) rather than a fixed minute allotment, and it no longer states a 2,000-minute figure.",
+      "previous_state": "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runners remain free — planned $0.002/min charge was postponed indefinitely after community backlash (March 2026). Hosted runner prices reduced 39% (Jan 2026)",
+      "current_state": "GitHub Free includes 500 MB artifact storage, $12 USD of included compute usage per month, and 10 GB cache storage per repository; included compute usage is expressed as a monetary amount, not a fixed number of minutes, and standard GitHub-hosted runners in public repositories and self-hosted runners remain free.",
+      "source_url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
+      "category": "CI/CD",
+      "refused_date": "2026-11-02"
+    },
+    {
+      "vendor": "GitHub Actions",
+      "change_type": "pricing_restructured",
       "reason": "same_transition_graded_differently",
       "detail": "graded as GitHub Actions|pricing_restructured|2026-09-02|https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions, a record we withdrew",
       "summary": "The free tier for GitHub Actions now provides a monetary allowance ($12 USD for Free, $18 USD for Pro, $300 USD for Enterprise) instead of a fixed number of minutes. Artifact storage limits have also changed (500MB Free, 1GB Pro, 50GB Enterprise). Cache storage is now 10GB per repository for all plans.",
@@ -5971,6 +6019,18 @@
       "refused_date": "2026-10-25"
     },
     {
+      "vendor": "Koyeb",
+      "change_type": "restriction",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The page shows a Free serverless Postgres instance (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hours/mo) is available on the pricing page, but the stored description says new users must subscribe to Pro or higher since February 2026 and only organizations already on Starter keep their plan. The page's Pro plan pricing is $29/mo + compute with $10 included compute, matching the description, but the page still advertises a free Postgres tier without stating the new-user restriction.",
+      "previous_state": "Serverless platform for web services, workers and Postgres databases. No free plan for new users since February 2026: new organizations must subscribe to Pro ($29 a month plus compute, with $10 of compute included) or a higher plan. Every plan can run one small Postgres instance (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hours of compute a month) at no extra charge. Organizations already on the Starter plan keep it.",
+      "current_state": "The page lists a Free Serverless Postgres instance with 5h, 0.25 vCPU, 1 GB RAM, 1 GB storage at $0/hr and $0/mo, alongside paid Postgres plans (Small $29.76/mo, Medium $59.52/mo, Large $119.04/mo, etc.). Plans shown are Pro $29/mo +compute with $10 included compute, Scale $299/mo +compute with $100 included compute, and Enterprise Custom from $1000/mo. No free plan for new users is mentioned on the page.",
+      "source_url": "https://www.koyeb.com/pricing",
+      "category": "Databases",
+      "refused_date": "2026-11-02"
+    },
+    {
       "vendor": "Kwes.io",
       "change_type": "free_tier_removed",
       "reason": "no_price_signal",
@@ -7211,6 +7271,18 @@
       "refused_date": "2026-11-01"
     },
     {
+      "vendor": "MiniMax",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored deal info describes MiniMax-M3 as the pay-as-you-go option and lists M2.7/M2.5 models with retirement dates, but the current pricing page now shows MiniMax-M3.1-Flash as the standard LLM (with M3 as a separate standard/priority tier), and the M2.7/M2.5 models are no longer listed at all. The page also shows new H3 video model pricing tiers (H3-Highspeed, H3-Lite, H3-Max, H3-Regeneration) and a Context-IR model not in the stored info.",
+      "previous_state": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount); MiniMax-M2.7 $0.30/$1.20 (per 1M tokens); MiniMax-M2.7-highspeed $0.60/$2.40 (per 1M tokens). MiniMax M2.5 and M2.7 models are unavailable to new users from 2026-10-19. They are retired on 2026-11-18, after which API requests will not work. For M Plan and Token Plan users, requests to these models are routed to MiniMax-M3.1-Flash-Preview from 2026-10-19. MiniMax-M3.1-Flash-Preview is not available to pay-as-you-go users; MiniMax-M3 is the pay-as-you-go option. Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Subscriptions: M Plan Go $22, Explore $55 and Build $132 a month, with the first month half price on monthly billing during the M Plan launch; annual billing charges 10 months for 12. The Token Plan no longer takes new purchases.",
+      "current_state": "The pricing page lists MiniMax-M3.1-Flash at $0.15/$0.60 per M tokens (prompt caching read $0.015), and MiniMax-M3 at $0.30/$1.20 (≤512k input) or $0.60/$2.40 (>512k input) with permanent 50% off, plus a Priority tier at 1.5x standard pricing. Video H3 Series includes MiniMax-H3 (2K $0.13/s, 768P $0.08/s), H3-Highspeed (768P $0.06/s, 480P $0.04/s), H3-Lite (768P $0.04/s, 480P $0.025/s), H3-Max, and H3-Regeneration. Audio speech-2.8-hd is $100/M characters and speech-2.8-turbo is $60/M characters. Image image-01 is $0.0035 per image. Music and lyrics APIs are discontinued to new users as of August 20, 2026.",
+      "source_url": "https://platform.minimax.io/docs/guides/pricing-paygo",
+      "category": "AI / ML",
+      "refused_date": "2026-11-02"
+    },
+    {
       "vendor": "MinIO",
       "change_type": "open_source_killed",
       "reason": "confirmed_unchanged",
@@ -7262,13 +7334,13 @@
       "vendor": "Mistral AI",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The report describes features already mentioned in the stored description (Vibe, limited messages/searches/coding sessions). The addition of Mistral Studio is also present in the stored description.",
-      "summary": "The free plan now has limited messages and web searches, and limited coding sessions. It also includes access to Mistral Studio. The free plan now includes access to Mistral Studio and Vibe, with limited features.",
-      "previous_state": "Mistral's Free plan includes monthly usage shared across Studio, the API and Vibe Code. The pricing page no longer states the amount as of 2026-10-07; it previously listed $10 a month in API credits. When it is used up, usage can stop until the next month unless pay-as-you-go is turned on. API keys work with no credit card, within rate limits. The plan also has limited messages, web searches and coding sessions in Vibe. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Large 4 (public preview since 2026-10-06, 1M-token context) $1.36/$4.18 (per 1M tokens), and Mistral charges half that for its first two weeks; Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens); Codestral $0.3/$0.9 (per 1M tokens). Mistral Embed is $0.1 per 1M input tokens, and Codestral Embed is $0.15 per 1M input tokens. OCR 4.1 costs $4 per 1,000 pages. Mistral Moderation 2 is free. Mistral retired Devstral 2 (devstral-2512) on 2026-07-31 and names Mistral Medium 3.5 as its replacement. Batch processing is half price, and cached input tokens cost up to 90% less. Mistral publishes no rate-limit figures. Each organization's per-model limits (tokens per minute, requests per second) appear in Admin Panel > API > Limits.",
-      "current_state": "The Free plan provides limited access to Vibe, including our latest models, chat, search, creation, and Vibe for code for agentic coding in your terminal. On the Free plan, you also get access to Mistral Studio.",
+      "detail": "The report restates the stored description: Free plan has limited Vibe/Studio access and no longer states the $10/month API credit amount.",
+      "summary": "The current pricing page describes the Free plan as limited access to Vibe (chat, search, creation, coding) plus access to Mistral Studio, with limited messages, web searches, coding sessions, and basic image generation/editing. The page also no longer states the $10/month API credit figure.",
+      "previous_state": "Mistral's Free plan includes monthly usage shared across Studio, the API and Vibe Code. The pricing page no longer states the amount as of 2026-10-07; it previously listed $10 a month in API credits. When it is used up, usage can stop until the next month unless pay-as-you-go is turned on. Mistral Pro costs $14.99 a month and includes $25.50 a month in API credits, shared across the API, Studio and Vibe Code. It included $30 a month until 2026-10-07. Verified students who have not used Vibe or Le Chat before can take the Education plan for $5.99 a month, for up to 12 months, with $15 a month in API credits. API keys work with no credit card, within rate limits. The plan also has limited messages, web searches and coding sessions in Vibe. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Large 4 (mistral-large-4; public preview since 2026-10-06, 1M-token context) $0.7/$2.1 (per 1M tokens); this price started on 2026-10-29; from 2026-10-20 until then, it was $1.36/$4.18; Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens); Codestral $0.3/$0.9 (per 1M tokens). To call Mistral Large 4, use the model name mistral-large-4; mistral-large-latest still points to Mistral Large 3 (mistral-large-2512). Mistral Embed is $0.1 per 1M input tokens, and Codestral Embed is $0.15 per 1M input tokens. OCR 3 (mistral-ocr-2512) costs $2 per 1,000 pages and $3 per 1,000 annotated pages. OCR 4.1 (mistral-ocr-4-1) costs $4 per 1,000 pages and $5 per 1,000 annotated pages. OCR 3 remains available. Mistral Moderation 2 is free. Speech: Voxtral 3 models, released 2026-10-20: Voxtral Mini Transcribe 3 (batch) costs $0.0035 per minute of audio, Voxtral Small Transcribe 3 $0.004 per minute, Voxtral Mini Transcribe Realtime 3 $0.008 per minute, and Voxtral Speech 3 (text-to-speech) $13 per 1M characters. The earlier models are still offered: Voxtral Mini Transcribe 2 $0.003 per minute, Voxtral Mini Transcribe Realtime $0.006 per minute, and Voxtral TTS (text-to-speech) $16 per 1M characters. Mistral's voice agent API costs $0.04 per minute with Mistral Small 4 for reasoning, and $0.08 per minute with any other reasoning model. Mistral retired these models in 2026, and a request to a retired model fails with a 404 error: Mistral Large 2.1 (mistral-large-2411), Pixtral Large (pixtral-large-2411) and Devstral Medium 1.0 (devstral-medium-2507) on 2026-05-31, replaced by Mistral Medium 3.5; Devstral Small 1.1 (devstral-small-2507) on 2026-05-31, replaced by Mistral Small 4; Voxtral Mini and Voxtral Mini Transcribe (voxtral-mini-2507) on 2026-05-31, replaced by Voxtral Mini Transcribe 2; OCR 2 (mistral-ocr-2505) on 2026-05-31 and OCR 4.0 (mistral-ocr-4-0) on 2026-09-30, replaced by OCR 4.1; Mistral Moderation (mistral-moderation-2411) on 2026-06-30, replaced by Mistral Moderation 2; Mistral Small 3.2 (mistral-small-2506) and Magistral Small 1.2 (magistral-small-2509) on 2026-07-31, replaced by Mistral Small 4; Mistral Nemo 12B (open-mistral-nemo-2407) on 2026-07-31, replaced by Ministral 3 8B; Devstral 2 (devstral-2512) and Magistral Medium 1.2 (magistral-medium-2509) on 2026-07-31, and Mistral Medium 3 and 3.1 (mistral-medium-2505, mistral-medium-2508) on 2026-08-31, replaced by Mistral Medium 3.5. Mistral's table at docs.mistral.ai/models also lists the Labs models it retired. Z.ai GLM 5.2 (zai-glm-5-2) retired on 2026-10-31, replaced by GLM 5.3. Mistral deprecated Mistral Large 3 (mistral-large-2512), Mistral Medium 3.5 (mistral-medium-3-5) and Voxtral TTS (voxtral-mini-tts-2603) on 2026-10-31; all three retire on 2027-04-30, replaced by Mistral Large 4 for the two text models and Voxtral TTS 3 for Voxtral TTS. Batch processing is half price, and cached input tokens cost up to 90% less. Mistral publishes no rate-limit figures. Each organization's per-model limits (tokens per minute, requests per second) appear in Admin Panel > API > Limits. The tools of Mistral's MCP server are grouped by Studio capability: Skills, Workflows, Connectors, Observability, Evaluations, Organization and Apps.",
+      "current_state": "Free plan: personal AI agent for everyday tasks; test out Vibe's capabilities; access on web and mobile; limited messages and web searches; limited coding sessions; basic image generation and editing; 100+ connectors; access to Mistral Studio. No monthly API credit amount is stated.",
       "source_url": "https://mistral.ai/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-10-08"
+      "refused_date": "2026-11-02"
     },
     {
       "vendor": "mockaroo",

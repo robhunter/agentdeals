@@ -1,6 +1,17 @@
 {
   "held": [
     {
+      "vendor": "Appetize",
+      "change_type": "restriction",
+      "impact": "medium",
+      "summary": "The free tier now has a 3-minute session limit.",
+      "previous_state": "Test your Android & iOS apps on this Cloud Based Android Phone / Tablets emulator and iPhone/iPad simulators directly in your browser. The free tier includes two concurrent session with 30 minutes of usage per month. No limit on app size.",
+      "current_state": "Free $0/mo, single user, 2 active devices maximum, 30 minutes refilled monthly, session limit 3 minutes.",
+      "source_url": "https://appetize.io/pricing",
+      "category": "Testing",
+      "first_read_date": "2026-11-02"
+    },
+    {
       "vendor": "Grafana Cloud",
       "change_type": "pricing_restructured",
       "impact": "high",
@@ -21,6 +32,28 @@
       "source_url": "https://www.harness.io/pricing",
       "category": "CI/CD",
       "first_read_date": "2026-11-01"
+    },
+    {
+      "vendor": "LiveKit",
+      "change_type": "limits_reduced",
+      "impact": "low",
+      "summary": "LiveKit's own page now redirects to livekit.com. The Build plan's free US local inbound minutes are now 50 minutes included. The Build plan still exists at $0/mo with 1,000 agent session minutes, 5 concurrent agent sessions, and 1 free US phone number.",
+      "previous_state": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
+      "current_state": "Build is $0/mo and includes 1,000 agent session minutes, 5 concurrent agent sessions, 1 free US local phone number, and 50 included US local inbound minutes.",
+      "source_url": "https://livekit.io/pricing",
+      "category": "Communication",
+      "first_read_date": "2026-11-02"
+    },
+    {
+      "vendor": "Parallel",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The free-tier terms as described are no longer fully stated on the page.",
+      "previous_state": "Web search and research APIs for AI agents. Organizations with a credit card on file get $5 of free credit each month, and unused credit expires at month end. $5 covers up to 1,000 requests a month in Search's Basic or Advanced mode (Advanced is the API default), or 5,000 in Turbo or Fast mode; usage beyond $5 is billed to the card at standard rates. One monthly credit per organization and per card; marketplace and postpaid organizations are not eligible. The pricing page also offers \"up to $80 at signup\" without stating its terms. A hosted Search MCP is free without an account or API key, at lower rate limits, for personal and hobby use. Then pay as you go: Search $1 per 1,000 requests (Turbo, Fast) or $5 (Basic, Advanced) with 10 results, at 600 requests a minute.",
+      "current_state": "The page states 'Run up to 5,000 requests per month for free' and 'Earn up to $80 at signup + $5 in free credits per month.' It does not state the card-on-file requirement, monthly expiration of unused credit, per-organization/per-card limits, marketplace/postpaid ineligibility, or the free hosted Search MCP. Search API pricing is listed as $1 per 1K requests for Turbo and Fast, and $5 per 1K requests for Basic and Advanced, with 600 requests/min rate limit.",
+      "source_url": "https://parallel.ai/pricing",
+      "category": "AI / ML",
+      "first_read_date": "2026-11-02"
     }
   ],
   "resolved": [
