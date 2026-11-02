@@ -3625,7 +3625,7 @@
     {
       "vendor": "SonarQube Cloud",
       "category": "Security",
-      "description": "Code quality and security analysis — free and unlimited for open-source projects, 15+ languages, CI/CD integration. Formerly SonarCloud.",
+      "description": "Code quality and security analysis, free for open-source projects and for private projects up to 50k lines of code: SonarSource lists the \"SonarQube Team Plan, free for your private projects up to 50k LOC. No card, no expiry.\" 40+ languages and frameworks, CI/CD integration. Formerly SonarCloud.",
       "tier": "Free",
       "url": "https://www.sonarsource.com/products/sonarcloud/",
       "tags": [
@@ -6930,7 +6930,7 @@
     {
       "vendor": "GitGuardian",
       "category": "Security",
-      "description": "Secrets detection for up to 25 developers — 420+ secret types, unlimited real-time scanning, 500 historical scan detections, CLI (ggshield) for pre-commit hooks, VSCode extension, 10K API calls/month",
+      "description": "Secrets detection for up to 25 developers — 550+ secret types, unlimited real-time scanning, 500 historical scan detections, CLI (ggshield) for pre-commit hooks, VSCode extension, 10K API calls/month",
       "tier": "Free",
       "url": "https://www.gitguardian.com/pricing",
       "tags": [
@@ -18565,14 +18565,14 @@
     {
       "vendor": "SOOS",
       "category": "Security",
-      "description": "Free, unlimited SCA scans for open-source projects. Detect and fix security threats before release. Protect your projects with a simple and effective solution.",
-      "tier": "Free",
+      "description": "There is no free tier: SOOS has shut down. Checked 2026-11-02, soos.io, app.soos.io and kb.soos.io return HTTP 410 with \"SOOS.io has shut down. This site / service no longer exists.\" The Internet Archive has the live site on 2026-06-15 and the notice from 2026-08-27. The former offer was free, unlimited SCA scans for open-source projects.",
+      "tier": "Retired",
       "url": "https://soos.io",
       "tags": [
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-23",
+      "verifiedDate": "2026-11-02",
       "source_check": {
         "checked": "2026-11-02",
         "outcome": "unreadable",
@@ -33694,7 +33694,7 @@
     {
       "vendor": "Gitleaks",
       "category": "Security",
-      "description": "Open source (MIT) secret scanner for git repositories, files, and directories. CLI tool is free with no limits. GitHub Action free for personal repos and 1 org repo.",
+      "description": "Open source (MIT) secret scanner for git repositories, files, and directories. CLI tool is free with no limits. The GitHub Action needs no license key on personal accounts; repositories owned by a GitHub organization need a free license key from gitleaks.io.",
       "tier": "Open Source",
       "url": "https://github.com/gitleaks/gitleaks",
       "tags": [
@@ -33717,7 +33717,7 @@
     {
       "vendor": "TruffleHog",
       "category": "Security",
-      "description": "Open source (Apache 2.0) secret scanner for git repos, Docker images, S3, Slack, and 20+ sources. Detects 800+ credential types with active API verification.",
+      "description": "Open source (AGPL-3.0) secret scanner for git repos, Docker images, S3, Slack, and 20+ sources. Detects 800+ credential types with active API verification.",
       "tier": "Open Source",
       "url": "https://github.com/trufflesecurity/trufflehog",
       "tags": [
