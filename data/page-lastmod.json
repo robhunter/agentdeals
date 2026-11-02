@@ -1251,7 +1251,7 @@
       "changed": "2026-11-01"
     },
     "/category/monitoring": {
-      "hash": "4e84039fdbfe270a",
+      "hash": "f983e1bebc96e476",
       "changed": "2026-11-02"
     },
     "/category/notebooks-data-science": {
@@ -1842,7 +1842,7 @@
       "changed": "2026-11-02"
     },
     "/compare/datadog-vs-grafana-cloud": {
-      "hash": "17257cf2900b41f9",
+      "hash": "b3b5e0c609f627bc",
       "changed": "2026-11-02"
     },
     "/compare/datalore-vs-deepnote": {
@@ -2146,7 +2146,7 @@
       "changed": "2026-10-18"
     },
     "/compare/grafana-cloud-vs-sentry": {
-      "hash": "337c851487190e79",
+      "hash": "467d143dd0a127c3",
       "changed": "2026-11-02"
     },
     "/compare/grafana-loki-vs-highlight-io": {
@@ -2713,15 +2713,15 @@
       "changed": "2026-11-02"
     },
     "/datadog-alternatives": {
-      "hash": "969895437e2930b4",
-      "changed": "2026-10-31"
+      "hash": "f8c4ecbb2f76a7ab",
+      "changed": "2026-11-02"
     },
     "/datadog-vs-grafana-cloud": {
-      "hash": "43f8a531377c5814",
+      "hash": "e35e5a9fdac4315f",
       "changed": "2026-11-02"
     },
     "/datadog-vs-new-relic": {
-      "hash": "27bba9f9930c34a2",
+      "hash": "1121075f82445fd6",
       "changed": "2026-11-02"
     },
     "/datadog-vs-sentry": {
@@ -3176,8 +3176,8 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "4da9f2c96c1a7e17",
-      "changed": "2026-11-01"
+      "hash": "1fcd35e05c058e66",
+      "changed": "2026-11-02"
     },
     "/events": {
       "hash": "10c036e7bfb60e32",
@@ -3360,11 +3360,11 @@
       "changed": "2026-11-01"
     },
     "/monitoring-alternatives": {
-      "hash": "9d1a70e694467279",
+      "hash": "8b6a3274e31e7c68",
       "changed": "2026-11-02"
     },
     "/monitoring-comparison-2026": {
-      "hash": "1ad77692f8dd3e52",
+      "hash": "c92af41721631584",
       "changed": "2026-11-02"
     },
     "/neon-vs-supabase": {
@@ -3610,11 +3610,11 @@
       "changed": "2026-11-02"
     },
     "/security-free-tier-comparison-2026": {
-      "hash": "4e2b60bd64ff424e",
+      "hash": "e5751098b2f6bfe9",
       "changed": "2026-11-02"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "7ddb154edf9f6059",
+      "hash": "97b6ded4432c1ed9",
       "changed": "2026-11-02"
     },
     "/setup": {
@@ -3629,7 +3629,7 @@
       "changed": "2026-11-02"
     },
     "/stack-check": {
-      "hash": "973ed361be0e44b5",
+      "hash": "e852c363145d6ad0",
       "changed": "2026-11-02"
     },
     "/stacks": {
@@ -9654,7 +9654,7 @@
       "changed": "2026-11-01"
     },
     "/x402-services": {
-      "hash": "fbddacade220adc6",
+      "hash": "ead21652e1e96bd6",
       "changed": "2026-11-02"
     }
   }

@@ -33031,10 +33031,10 @@ function buildX402ServicesPage(): string {
 
   const faqItems = [
     { q: "What is the x402 payment protocol?", a: "x402 is an open HTTP-native payment protocol that uses the HTTP 402 status code to enable machine-to-machine micropayments. When an agent hits a 402 response, it reads payment requirements from the response, completes a USDC payment on Base, and retries with proof of payment. No accounts or API keys needed. Joined the Linux Foundation in April 2026 with founding members including Coinbase, Cloudflare, Stripe, Google, Visa, Mastercard, AWS, and Shopify." },
-    { q: "How does x402 work for AI agents?", a: "An AI agent sends an HTTP request to an x402-enabled API. If payment is required, the server returns HTTP 402 with payment details (amount, address, chain). The agent completes the USDC payment on Base L2 (fast, ~$0.001 gas fees), then retries the original request with the payment receipt in headers. The server verifies on-chain and serves the response. The entire flow takes 1-3 seconds." },
+    { q: "How does x402 work for AI agents?", a: "An AI agent sends an HTTP request to an x402-enabled API. If payment is required, the server returns HTTP 402 with payment details (amount, recipient, network). The agent signs a payment authorization and retries with it in a header. The server or a facilitator verifies and settles it on-chain. The facilitator pays the gas. The server returns the response." },
     { q: `How many developer services support x402?`, a: `We currently index ${x402Offers.length} developer services with x402 support across ${byCategory.size} categories.` },
     { q: "Do x402 services require crypto knowledge?", a: "No. Modern x402 client libraries handle the payment flow automatically. The agent needs a funded USDC wallet on Base — that's it. Libraries like @x402/fetch and @x402/axios abstract the payment negotiation entirely." },
-    { q: "What are the costs of using x402?", a: "Each service sets its own price, and this page lists a cost only where the vendor's own docs state it. Base L2 gas fees are typically under $0.001 per transaction. There are no monthly minimums, no commitments, and no signup fees. You only pay for what you use, per-request." },
+    { q: "What are the costs of using x402?", a: "Each service sets its own price, and this page lists a cost only where the vendor's own docs state it. The agent pays no gas fee; the facilitator covers it. There are no monthly minimums, no commitments, and no signup fees. You only pay for what you use, per-request." },
   ];
 
   const faqJsonLd = faqPageJsonLd("/x402-services", faqItems);
@@ -33166,7 +33166,7 @@ ${globalNavCss()}
     <ol class="how-steps">
       <li><strong>Agent sends request</strong> &mdash; standard HTTP request to any x402-enabled API endpoint.</li>
       <li><strong>Server returns 402</strong> &mdash; response includes payment amount, recipient address, and chain (Base L2).</li>
-      <li><strong>Agent pays</strong> &mdash; USDC transfer on Base (~$0.001 gas fee, 1-2 second confirmation).</li>
+      <li><strong>Agent pays</strong> &mdash; signs a payment authorization. No gas fee for the agent.</li>
       <li><strong>Agent retries with receipt</strong> &mdash; original request + payment proof in headers.</li>
       <li><strong>Server verifies &amp; responds</strong> &mdash; on-chain verification, then normal API response.</li>
     </ol>
