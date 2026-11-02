@@ -350,6 +350,29 @@ describe("/free-tier-tracker's hand-typed cards say when their figures were true
     }
   });
 
+  it("dates the legacy Terraform plan notice without calling it a six-month removal notice", () => {
+    const advice = page.match(/<strong>For production workloads:<\/strong>\s*<p>([\s\S]*?)<\/p>/)?.[1];
+    assert.ok(advice);
+    assert.strictEqual(textOf(advice), "If you're building on a free tier, have a migration plan. HashiCorp announced the end of HCP Terraform's legacy free plan on December 17, 2025, about three and a half months before it ended on March 31, 2026. Budget for paid tiers or self-hosted alternatives.");
+    assert.doesNotMatch(textOf(advice), /(?:6|six) months|vendors that removed free tiers/);
+  });
+
+  const patternExamples = (name: string): string => {
+    const card = page.split('<div class="pattern-card">').slice(1).find((piece) => textOf(piece.match(/<h3>([\s\S]*?)<\/h3>/)?.[1] ?? "") === name);
+    assert.ok(card, name);
+    const examples = card.match(/<p class="pattern-examples">([\s\S]*?)<\/p>/)?.[1];
+    assert.ok(examples, name);
+    return textOf(examples);
+  };
+
+  it("distinguishes the Windsurf quota example from Netlify and Vercel moving to credits", () => {
+    assert.strictEqual(patternExamples("Credits → Hard Quotas"), "Example: Windsurf. Netlify and Vercel moved the other way: Netlify's plans are now credit-based (the Free plan has 300 credits a month), and Vercel's Pro plan includes $20 of usage credit a month.");
+  });
+
+  it("gives Postman alone as the free-team to single-user example", () => {
+    assert.strictEqual(patternExamples("Free Team → Single-User"), "Example: Postman");
+  });
+
   const methodology = (): string => page.match(/<div id="methodology"[\s\S]*?<\/div>/)?.[0] ?? "";
   const trackedOnFile = () => trackedChanges(JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf8")).changes);
 

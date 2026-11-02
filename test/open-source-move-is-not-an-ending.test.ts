@@ -156,7 +156,7 @@ describe("pages rate a vendor that moved away from open source without saying it
     assert.ok(productionAdvice, "the tracker's production advice did not render");
     assert.strictEqual(
       textOf(productionAdvice),
-      "If you&rsquo;re building on a free tier, have a migration plan. The vendors that removed free tiers in Q1 gave up to 6 months of notice (HCP Terraform). Budget for paid tiers or self-hosted alternatives.",
+      "If you&rsquo;re building on a free tier, have a migration plan. HashiCorp announced the end of HCP Terraform's legacy free plan on December 17, 2025, about three and a half months before it ended on March 31, 2026. Budget for paid tiers or self-hosted alternatives.",
     );
 
     const riskRow = (await get("/free-tier-risk")).match(/<tr>\s*<td\b[^>]*><a href="\/vendor\/minio"[^>]*>MinIO \(OSS\)<\/a><\/td>[\s\S]*?<\/tr>/)?.[0] ?? "";
