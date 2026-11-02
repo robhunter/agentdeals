@@ -44417,7 +44417,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>StackHawk is no longer a free option</h3>
-    <div class="diff-desc">The free Developer plan is gone: our own pricing change record, dated 2026-04-12, says it was removed for an enterprise sales model. StackHawk now sells Wingman at $10/user/month, which covers unlimited apps and 50 scans per user per month, and StackHawk Scale on request. There is no per-app rate. Teams that budgeted DAST around a free managed tier should either move to OWASP ZAP (unlimited apps) via the ZAP GitHub Action, or price the per-seat plan.</div>
+    <div class="diff-desc">StackHawk's free plan ended in mid-2024. Wingman is self-serve: it starts with a 14-day free trial without a credit card and converts to $10/user/month for unlimited apps and 50 scans per user per month. Scale requires contacting StackHawk's sales team. There is no per-app rate. Teams that budgeted DAST around a free managed tier should either move to OWASP ZAP (unlimited apps) via the ZAP GitHub Action, or price the per-seat plan.</div>
   </div>
 
   <div class="diff-card">

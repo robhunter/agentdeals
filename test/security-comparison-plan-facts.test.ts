@@ -116,6 +116,17 @@ describe("security comparison plans, licences and hosted prices", () => {
     assert.ok(plain(html).includes("removed its free Developer plan in mid-2024 and now starts at $10/user/month."));
   });
 
+  it("withdraws the superseded StackHawk date and sales-only claim", () => {
+    for (const text of ["dated 2026-04-12", "enterprise sales model"]) {
+      assert.ok(!html.toLowerCase().includes(text.toLowerCase()), text);
+      assert.ok(!plain(html).toLowerCase().includes(text.toLowerCase()), text);
+    }
+  });
+
+  it("distinguishes StackHawk's self-serve Wingman trial from Scale sales", () => {
+    assert.ok(card("StackHawk is no longer a free option").includes("StackHawk's free plan ended in mid-2024. Wingman is self-serve: it starts with a 14-day free trial without a credit card and converts to $10/user/month for unlimited apps and 50 scans per user per month. Scale requires contacting StackHawk's sales team."));
+  });
+
   it("gives Socket.dev unlimited repositories with one developer seat and a scan cap", () => {
     const cells = row("main-comparison", "Socket.dev");
     assert.equal(cells[2], "1 dev seat, unlimited repos, 1,000 scans/mo");
