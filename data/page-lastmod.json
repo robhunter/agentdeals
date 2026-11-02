@@ -10,8 +10,8 @@
       "changed": "2026-10-29"
     },
     "/agent-payments": {
-      "hash": "3780947eb7faba29",
-      "changed": "2026-10-29"
+      "hash": "97288face338de5a",
+      "changed": "2026-11-02"
     },
     "/agent-stack": {
       "hash": "1dd54900ca4fcd3f",
@@ -9637,8 +9637,8 @@
       "changed": "2026-11-01"
     },
     "/x402-services": {
-      "hash": "62f7c1dc274a373b",
-      "changed": "2026-10-29"
+      "hash": "fbddacade220adc6",
+      "changed": "2026-11-02"
     }
   }
 }
