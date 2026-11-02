@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-01",
+  "generated": "2026-11-02",
   "pages": {
     "/": {
       "daily": true
@@ -18,7 +18,8 @@
       "changed": "2026-11-01"
     },
     "/ai-coding-tools-pricing": {
-      "daily": true
+      "hash": "18e5da8e21a67a0b",
+      "changed": "2026-11-02"
     },
     "/ai-free-tiers": {
       "hash": "dff8fe9d1444d316",
@@ -3071,10 +3072,12 @@
       "changed": "2026-10-29"
     },
     "/digest/2026-w44": {
-      "daily": true
+      "hash": "7b602e8978d791a2",
+      "changed": "2026-11-02"
     },
     "/digest/2026-w45": {
-      "daily": true
+      "hash": "cdb9a1731a733bf1",
+      "changed": "2026-11-02"
     },
     "/digest/2026-w47": {
       "hash": "63c4c4a5c2529a93",
@@ -3169,10 +3172,12 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "daily": true
+      "hash": "21a97237b0cc3d0f",
+      "changed": "2026-11-02"
     },
     "/events/google-io-2026": {
-      "daily": true
+      "hash": "74079dc851238182",
+      "changed": "2026-11-02"
     },
     "/events/microsoft-build-2026": {
       "hash": "cd6f05d26d819687",
@@ -3236,7 +3241,8 @@
       "changed": "2026-10-29"
     },
     "/free-tier-risk": {
-      "daily": true
+      "hash": "6ea64dcb3416eaf9",
+      "changed": "2026-11-02"
     },
     "/free-tier-tracker": {
       "daily": true
@@ -3249,7 +3255,8 @@
       "changed": "2026-11-01"
     },
     "/gcp-free-tier-2026": {
-      "daily": true
+      "hash": "3c7697f3d73551d6",
+      "changed": "2026-11-02"
     },
     "/gemini-api-pricing-2026": {
       "hash": "e104ba8ef32b7cb8",
@@ -3348,8 +3355,8 @@
       "changed": "2026-11-01"
     },
     "/neon-vs-supabase": {
-      "hash": "aa6b1c1d2d423fd9",
-      "changed": "2026-11-01"
+      "hash": "d39b8cd57f2dca38",
+      "changed": "2026-11-02"
     },
     "/neon-vs-turso": {
       "hash": "edd42530666a7289",
@@ -3415,7 +3422,8 @@
       "changed": "2026-10-15"
     },
     "/reports": {
-      "daily": true
+      "hash": "49d5bbeb23df6797",
+      "changed": "2026-11-02"
     },
     "/reports/2022-11": {
       "hash": "d0778aa8cced1e23",
@@ -3600,7 +3608,8 @@
       "daily": true
     },
     "/stability": {
-      "daily": true
+      "hash": "3a3ff5bd4d748778",
+      "changed": "2026-11-02"
     },
     "/stack-check": {
       "hash": "7db9e871a60665d2",
@@ -3635,7 +3644,8 @@
       "changed": "2026-11-01"
     },
     "/state-of-free-tiers": {
-      "daily": true
+      "hash": "f01a2b5e255abe60",
+      "changed": "2026-11-02"
     },
     "/storage-alternatives": {
       "hash": "72669ba5142beac0",
@@ -3677,7 +3687,8 @@
       "changed": "2026-11-01"
     },
     "/trends/ai-coding": {
-      "daily": true
+      "hash": "f98c877c68b992ea",
+      "changed": "2026-11-02"
     },
     "/trends/ai-ml": {
       "daily": true
@@ -5978,7 +5989,8 @@
       "changed": "2026-11-01"
     },
     "/vendor/google-antigravity": {
-      "daily": true
+      "hash": "9287890d6e4e5b97",
+      "changed": "2026-11-02"
     },
     "/vendor/google-artifact-registry": {
       "hash": "5901ac20ec8381ab",

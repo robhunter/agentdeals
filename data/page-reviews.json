@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-01",
+  "measured_on": "2026-11-02",
   "pages": [
     {
       "path": "/agent-payments",
@@ -158,11 +158,6 @@
           "label": "Recent Pricing Changes",
           "figures": 31,
           "from_records": 31
-        },
-        {
-          "label": "Upcoming Changes",
-          "figures": 0,
-          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -1928,8 +1923,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 97,
-      "table_figures_from_records": 48,
+      "table_figures": 92,
+      "table_figures_from_records": 44,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1948,8 +1943,8 @@
         },
         {
           "label": "Recent GCP & Google Changes",
-          "figures": 6,
-          "from_records": 5
+          "figures": 1,
+          "from_records": 1
         },
         {
           "label": "Upcoming Changes",
@@ -2450,12 +2445,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 34,
+      "table_figures": 36,
       "table_figures_from_records": 12,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
-          "figures": 10,
+          "figures": 12,
           "from_records": 0
         },
         {
