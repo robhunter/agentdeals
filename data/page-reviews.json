@@ -2348,6 +2348,7 @@
       "vendors_tabulated": [
         "appsignal",
         "axiom",
+        "better-stack-logs",
         "betterstack",
         "bugsnag",
         "checkly",
@@ -2369,7 +2370,6 @@
         "prometheus",
         "pulsetic",
         "rollbar",
-        "sematext",
         "sentry",
         "signoz",
         "statuscake",
@@ -2384,12 +2384,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 91,
+      "table_figures": 79,
       "table_figures_from_records": 12,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 42,
+          "figures": 40,
           "from_records": 0
         },
         {
@@ -2403,8 +2403,8 @@
           "from_records": 0
         },
         {
-          "label": "Annual Cost by Scale (Infrastructure + APM + Logs)",
-          "figures": 29,
+          "label": "List Prices Beyond the Free Tier",
+          "figures": 19,
           "from_records": 0
         },
         {
