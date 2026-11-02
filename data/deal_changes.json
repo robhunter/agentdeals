@@ -17673,6 +17673,34 @@
       "alternatives": [],
       "recorded_date": "2026-11-02",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Backblaze B2",
+      "change_type": "pricing_restructured",
+      "date": "2026-05-01",
+      "date_source": "hand_written",
+      "summary": "On May 1, 2026 Backblaze raised B2 pay-as-you-go storage from $6 to $6.95 per TB a month and made Class B and Class C API calls free; they had been free for the first 2,500 a day per class and then charged per 1,000 calls. The first 10 GB of storage and free egress up to 3x average monthly storage did not change.",
+      "previous_state": "Pay-as-you-go storage \"$6 /TB/30-day\"; \"Class A calls are free, and Class B and C calls are free for the first 2,500/day/class, after which they are charged at $0.0004/1,000 calls/day and $0.004/1,000 calls/day, respectively\" (backblaze.com/cloud-storage/pricing, Internet Archive 2026-04-30)",
+      "current_state": "Pay-as-you-go storage \"$6.95 /TB/30-days\"; \"Class A, B, and C API calls are free for pay-as-you-go customers. Class D transactions cost $0.004 per 10,000 calls plus the first 2,500 calls per day are free.\" (backblaze.com/cloud-storage/pricing, read 2026-11-02). Backblaze's results release of May 4, 2026: \"Effective May 1st, Backblaze increased pay-as-you-go storage pricing to support our continued investment in performance, while removing API transaction fees to simplify pricing and support customers.\"",
+      "impact": "medium",
+      "source_url": "https://www.backblaze.com/cloud-storage/pricing",
+      "category": "Storage",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "archive_check": {
+        "checked": "2026-11-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-04-30",
+            "first_new": "2026-05-04",
+            "last_old_capture": "https://web.archive.org/web/20260430082017/https://www.backblaze.com/cloud-storage/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260504155827/https://www.backblaze.com/cloud-storage/pricing"
+          }
+        ]
+      },
+      "tier": "Pay-as-you-go",
+      "tier_direction": "unchanged"
     }
   ]
 }
