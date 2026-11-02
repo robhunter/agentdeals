@@ -168,6 +168,23 @@ describe("payment protocol filters and pages, on a catalogue whose payment listi
     assert.deepStrictEqual(answer?.match(/Libraries like (.*?) abstract the payment negotiation/)?.[1]?.split(/, | and /), ["@x402/fetch", "@x402/axios"]);
   });
 
+  it("GET /x402-services assigns gas to the facilitator in its steps and both FAQ representations", async () => {
+    const html = await page(server.base, "/x402-services");
+    for (const retired of ["0.001", "gas fee, 1-2 second", "gas fees are typically"]) {
+      assert.ok(!html.includes(retired), `the page still contains ${retired}`);
+    }
+    assert.ok(html.includes("<strong>Agent pays</strong> &mdash; signs a payment authorization. No gas fee for the agent."));
+    const flow = "An AI agent sends an HTTP request to an x402-enabled API. If payment is required, the server returns HTTP 402 with payment details (amount, recipient, network). The agent signs a payment authorization and retries with it in a header. The server or a facilitator verifies and settles it on-chain. The facilitator pays the gas. The server returns the response.";
+    const cost = "The agent pays no gas fee; the facilitator covers it.";
+    const visible = faqAnswers(html);
+    const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(match => JSON.parse(match[1]!));
+    const structured = new Map<string, string>(blocks.find(block => block["@type"] === "FAQPage").mainEntity.map((entry: any) => [entry.name, entry.acceptedAnswer.text]));
+    for (const answers of [visible, structured]) {
+      assert.strictEqual(answers.get("How does x402 work for AI agents?"), flow);
+      assert.ok(answers.get("What are the costs of using x402?")?.includes(cost));
+    }
+  });
+
   it("GET /x402-services gives no price of its own for x402 calls and no growth it cannot source", async () => {
     const answers = faqAnswers(await page(server.base, "/x402-services"));
     const costs = answers.get("What are the costs of using x402?");

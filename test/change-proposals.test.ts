@@ -58,9 +58,9 @@ function isOneOfTheRun(change: Record_): boolean {
   );
 }
 
-function logBeforeTheRun(): { changes: Record_[] } {
-  const shipped = readJson(path.join(REPO, "data", "deal_changes.json"));
-  return { ...shipped, changes: shipped.changes.filter((c: Record_) => !isOneOfTheRun(c)) };
+function logBeforeTheRun(shipped = readJson(path.join(REPO, "data", "deal_changes.json"))): { changes: Record_[] } {
+  const runDay = RUN_DAY.toISOString().slice(0, 10);
+  return { ...shipped, changes: shipped.changes.filter((c: Record_) => !isOneOfTheRun(c) && (c.recorded_date || c.date) <= runDay) };
 }
 
 function indexBeforeTheRun(): { offers: Listing[] } {
@@ -337,6 +337,39 @@ describe("#2497 unique ids", () => {
     );
     assert.strictEqual(proposed.length, 1);
     assert.deepStrictEqual(suppressed.map((s: { reason: string }) => s.reason), [SUPPRESSED_WITHIN_REPICK_WINDOW]);
+  });
+});
+
+describe("historical proposal replay", () => {
+  for (const candidate of THE_RUN.records) {
+    it(`proposes ${candidate.vendor} despite a matching record recorded after the run`, () => {
+      const later = { ...candidate, recorded_date: "2026-11-02" };
+      const changes = logBeforeTheRun({ changes: [...logBeforeTheRun().changes, later] }).changes;
+      const paths = stores(`later-${proposalId(candidate).replaceAll("/", "-")}`, changes);
+      const { proposed, suppressed } = proposeChangeEntries([candidate], {
+        changesPath: paths.changesPath,
+        path: paths.proposalsPath,
+        windowDays: WINDOW,
+        now: RUN_DAY,
+        offers: readJson(paths.indexPath).offers,
+      });
+      assert.deepStrictEqual(suppressed, []);
+      assert.deepStrictEqual(proposed.map(recordAsWritten), [candidate]);
+      assert.deepStrictEqual(readJson(paths.changesPath).changes, changes);
+    });
+  }
+
+  it("keeps earlier and same-day records, using the effective date only when no recording date exists", () => {
+    const earlier = { ...A_WIDENING, recorded_date: "2026-10-06", date: "2026-12-01" };
+    const sameDay = { ...A_WIDENING, recorded_date: "2026-10-07" };
+    const later = { ...A_WIDENING, recorded_date: "2026-10-08", date: "2026-04-07" };
+    const { recorded_date: _recorded, ...undated } = A_WIDENING;
+    const legacy = { ...undated, date: "2026-10-06" };
+    const futureLegacy = { ...undated, date: "2026-10-08" };
+    assert.deepStrictEqual(
+      logBeforeTheRun({ changes: [earlier, sameDay, later, legacy, futureLegacy, ...THE_RUN.records] }).changes,
+      [earlier, sameDay, legacy],
+    );
   });
 });
 
