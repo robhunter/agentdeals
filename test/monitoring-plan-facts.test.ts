@@ -21,7 +21,7 @@ function table(id: string): string[][] {
   const source = html.slice(start).match(/<table\b[^>]*>([\s\S]*?)<\/table>/)?.[1];
   assert.ok(source, id);
   return [...source.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/g)]
-    .map(r => [...r[1].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map((c, index) => plain(index === 0 ? c[1].replace(/<a\b[^>]*href="[^"]*#changes"[^>]*>[\s\S]*?<\/a>/g, "").replace(/<span\b[^>]*>[\s\S]*?<\/span>/g, "") : c[1])))
+    .map(r => [...r[1].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map((c, index) => plain(index === 0 ? c[1].replace(/<a\b[^>]*href="[^"]*#changes"[^>]*>[\s\S]*?<\/a>/g, "").replace(/<span\b[^>]*class="[^"]*caution-badge[^"]*"[^>]*>[\s\S]*?<\/span>/g, "") : c[1])))
     .filter(r => r.length > 1);
 }
 
