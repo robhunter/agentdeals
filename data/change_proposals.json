@@ -1,62 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-11-02/google-cloud-run/limits_increased",
-      "proposed_on": "2026-11-02",
-      "vendor": "Google Cloud Run",
-      "change_type": "limits_increased",
-      "date": "2026-11-02",
-      "date_source": "discovered",
-      "summary": "The pricing page now shows a separate 'Delayed Jobs' free tier (342,857 vCPU-seconds and 642,857 GiB-seconds per month). Does not match the stored Jobs terms.",
-      "tier": "Jobs",
-      "tier_direction": "unchanged",
-      "previous_state": "Always Free: 2M requests/month, 360K GB-seconds memory, 180K vCPU-seconds compute, 1 GB North America egress. Fully managed serverless containers. If your service uses instance-based billing, its free tier is 240K vCPU-seconds and 450K GiB-seconds a month instead of 180K and 360K. Jobs get the same 240K and 450K",
-      "current_state": "Jobs free tier is 240,000 vCPU-seconds and 450,000 GiB-seconds per month; Delayed Jobs free tier is 342,857 vCPU-seconds and 642,857 GiB-seconds per month. Services with request-based billing get 180,000 vCPU-seconds, 360,000 GiB-seconds, and 2 million requests free per month; services with instance-based billing get 240,000 vCPU-seconds and 450,000 GiB-seconds free per month.",
-      "impact": "low",
-      "source_url": "https://cloud.google.com/run/pricing",
-      "category": "Cloud Hosting",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-02",
-      "restatement": [
-        {
-          "url": "https://cloud.google.com/run/pricing",
-          "description": "Jobs free tier is 240,000 vCPU-seconds and 450,000 GiB-seconds per month; Delayed Jobs free tier is 342,857 vCPU-seconds and 642,857 GiB-seconds per month. Services with request-based billing get 180,000 vCPU-seconds, 360,000 GiB-seconds, and 2 million requests free per month; services with instance-based billing get 240,000 vCPU-seconds and 450,000 GiB-seconds free per month."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-02/google-gemini-api/new_free_tier",
-      "proposed_on": "2026-11-02",
-      "vendor": "Google Gemini API",
-      "change_type": "new_free_tier",
-      "date": "2026-11-02",
-      "date_source": "discovered",
-      "summary": "The pricing page shows Gemini 3.8 Flash now has a free tier for Standard, Batch, Flex, and Priority (with Priority showing 'Free of charge' for input/output/context caching).",
-      "tier": "Priority",
-      "tier_direction": "widened",
-      "previous_state": "Free tier: Gemini 3.8 Flash, 3.6 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Also free of charge are Gemini 3.8 Live (real-time voice), Gemini 3.5 Live Translate (translation), Gemini 3.5 Transcribe (speech-to-text), Gemini 3.8 Flash TTS and Gemini 3.8 Flash-Lite TTS (text-to-speech). Gemini 4 Argon (gemini-4-argon), Gemini 3.1 Pro Preview and Gemini Omni Flash (gemini-omni-1.1-flash) are paid only. Gemini 4 Argon, generally available since 2026-10-13, is not available on the Gemini API free tier. According to ai.google.dev/gemini-api/docs/google-ai-plans, \"Gemini 4 Argon is not available on the Free plan.\" Gemini 4 Argon is available through the Gemini API on the paid tier. \"Direct use of the Gemini API (such as using API keys or external applications) is billed and managed separately,\" per ai.google.dev/gemini-api/docs/google-ai-plans. Google AI Pro and Ultra provide access to Gemini 4 Argon in Google AI Studio, per ai.google.dev/gemini-api/docs/google-ai-plans. Gemini 4 Argon is in Antigravity on Google AI Ultra and paid Google AI Pro. On a Google AI Pro trial, Argon is only available \"on trial with eligible premium devices\" (antigravity.google/docs/models). Claude Opus 5.5 and Claude Sonnet 5.5 are not included on Google AI Pro trials; trial users and those with memberships through third-party partners, Pixel Pass or Google Fi manage subscriptions through Google One. No Gemini image model has a free tier in the API. Nano Banana 2.1 (gemini-nano-banana-2.1) became generally available on 2026-10-06. It costs $0.0336 per 1K image, $0.0504 per 2K image and $0.113 per 4K image. The Batch API halves those prices. Nano Banana Pro costs $0.134 per 1K or 2K image and $0.24 per 4K image. Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Developers report 429 errors showing 20 requests per day for Gemini 3.x Flash models and 500 requests per day for 3.x Flash-Lite models as of September 2026. Rate limits apply per project, not per API key. Daily request quotas reset at midnight Pacific time, per Google's rate-limits page. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. If your app calls gemini-3.7-flash, Google deprecated it on 2026-10-08. Requests to gemini-3.7-flash are routed automatically to gemini-3.8-flash. Google says to update the model string to gemini-3.8-flash. If your app calls Gemini 3.5 Flash (gemini-3.5-flash), Google deprecated it on 2026-10-08. Requests to gemini-3.5-flash are routed automatically to gemini-3.6-flash. Google says to update the model string to gemini-3.6-flash or gemini-3.8-flash. Google shut down Gemini Omni Flash Preview (gemini-omni-flash-preview) on 2026-10-22. Google's replacement is gemini-omni-1.1-flash. Gemini 3.1 Flash-Lite (gemini-3.1-flash-lite) can be called until 2027-05-07, when Google shuts it down. Google's replacement is gemini-3.5-flash-lite. Paid, per million tokens (input/output; output prices include thinking tokens): Gemini 4 Argon $2/$10 through 2026-11-30 (context caching $0.10, then $0.20, implicit caching only); Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.6 Flash: the same prices and dates); Gemini 3.5 Flash-Lite $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens; prompts over 200K tokens cost $4 input and $18 output). Through 2026-11-30, Gemini 4 Argon's Standard output price is below Gemini 3.1 Pro Preview's for prompts up to 200K tokens, with the same input price; from 2026-12-01 Argon's is higher. From December 1, 2026, Gemini 4 Argon will cost $4 per million input tokens and $20 per million output tokens for Standard, $2 input and $10 output for Batch API, $2 input and $10 output for Flex, and $7.20 input and $36 output for Priority. The Batch API costs half the standard price; Gemini 3.8 Flash is $0.375 input and $1.875 output per million tokens through 2026-12-31. Gemini 4 Argon on the Batch API is $1 input and $5 output through 2026-11-30. Google also sells two tiers, Flex and Priority, both in Preview. A request picks one with the service_tier field (\"flex\" or \"priority\"); without it the request is Standard. Gemini 4 Argon on Flex is $1 input and $5 output through 2026-11-30; on Priority it is $3.60 input and $18 output through 2026-11-30. \"The Gemini Flex API is an inference tier that offers a 50% cost reduction compared to standard rates, in exchange for variable latency and best-effort availability\" (ai.google.dev/gemini-api/docs/flex-inference). \"Priority inference is priced at 75-100% more than the standard API and billed per token\" (ai.google.dev/gemini-api/docs/priority-inference). The Gemini API Contributor Tier is an invite-only private preview. Eligible users will be invited by email. It offers half the Standard price for Gemini 4 Argon, Gemini 3.1 Pro Preview, Gemini 3.8 Flash, and Gemini 3.5 Flash-Lite. Google uses the data from those models to improve its products. \"Please don't submit sensitive or personal information\" (ai.google.dev/gemini-api/docs/logs-policy). Grounding with Google Search is supported on the free tier for Gemini 3.8 Live, Gemini 3.8 Live Extended Thinking and Gemini 3.1 Flash Live Preview. It is not available on the free tier for Gemini 4 Argon or the Gemini 3.x Flash, Flash-Lite and Pro models. On the paid tier, 5,000 search requests a month are free, shared across Gemini 3 and newer models, then $14 per 1,000. Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API.",
-      "current_state": "Gemini 3.8 Flash Priority shows Free Tier input price 'Free of charge' and output price 'Free of charge', with paid tier $1.35 input / $6.75 output through December 31, 2026, then $2.70 / $13.50 starting January 1, 2027.",
-      "impact": "low",
-      "source_url": "https://ai.google.dev/pricing",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-02",
-      "restatement": [
-        {
-          "url": "https://ai.google.dev/pricing",
-          "refused": "reading_drops_a_figure_our_source_check_found",
-          "figures": [
-            "$2.00",
-            "$4.00",
-            "$10.00",
-            "$20.00"
-          ]
-        }
-      ]
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
@@ -1551,6 +1494,66 @@
       ],
       "dropped_on": "2026-11-01",
       "drop_reason": "Not a new free tier on 2026-11-01: iban-validate was already free on 2026-10-10 (Internet Archive capture of api.strale.io/llms.txt); the llms.txt has listed every free tool since Strale's change of 2026-10-26 (github.com/strale-io/strale/pull/743), and Strale's change of 2026-10-28 (pull/789) replaced a per-IP daily limit with 300 calls a calendar month per IP."
+    },
+    {
+      "proposal_id": "2026-11-02/google-cloud-run/limits_increased",
+      "proposed_on": "2026-11-02",
+      "vendor": "Google Cloud Run",
+      "change_type": "limits_increased",
+      "date": "2026-11-02",
+      "date_source": "discovered",
+      "summary": "The pricing page now shows a separate 'Delayed Jobs' free tier (342,857 vCPU-seconds and 642,857 GiB-seconds per month). Does not match the stored Jobs terms.",
+      "tier": "Jobs",
+      "tier_direction": "unchanged",
+      "previous_state": "Always Free: 2M requests/month, 360K GB-seconds memory, 180K vCPU-seconds compute, 1 GB North America egress. Fully managed serverless containers. If your service uses instance-based billing, its free tier is 240K vCPU-seconds and 450K GiB-seconds a month instead of 180K and 360K. Jobs get the same 240K and 450K",
+      "current_state": "Jobs free tier is 240,000 vCPU-seconds and 450,000 GiB-seconds per month; Delayed Jobs free tier is 342,857 vCPU-seconds and 642,857 GiB-seconds per month. Services with request-based billing get 180,000 vCPU-seconds, 360,000 GiB-seconds, and 2 million requests free per month; services with instance-based billing get 240,000 vCPU-seconds and 450,000 GiB-seconds free per month.",
+      "impact": "low",
+      "source_url": "https://cloud.google.com/run/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-02",
+      "restatement": [
+        {
+          "url": "https://cloud.google.com/run/pricing",
+          "description": "Jobs free tier is 240,000 vCPU-seconds and 450,000 GiB-seconds per month; Delayed Jobs free tier is 342,857 vCPU-seconds and 642,857 GiB-seconds per month. Services with request-based billing get 180,000 vCPU-seconds, 360,000 GiB-seconds, and 2 million requests free per month; services with instance-based billing get 240,000 vCPU-seconds and 450,000 GiB-seconds free per month."
+        }
+      ],
+      "dropped_on": "2026-11-02",
+      "drop_reason": "Not a change to the Jobs free tier: Delayed Jobs is a separately priced job class whose prices are dynamic, and its free allowance (342,857 vCPU-seconds and 642,857 GiB-seconds a month) is the Jobs allowance at Delayed Jobs rates, 'based on us-central1 pricing' (cloud.google.com/run/pricing, read 2026-11-02). Cloud Run's release notes give it no date, so there is no event to record."
+    },
+    {
+      "proposal_id": "2026-11-02/google-gemini-api/new_free_tier",
+      "proposed_on": "2026-11-02",
+      "vendor": "Google Gemini API",
+      "change_type": "new_free_tier",
+      "date": "2026-11-02",
+      "date_source": "discovered",
+      "summary": "The pricing page shows Gemini 3.8 Flash now has a free tier for Standard, Batch, Flex, and Priority (with Priority showing 'Free of charge' for input/output/context caching).",
+      "tier": "Priority",
+      "tier_direction": "widened",
+      "previous_state": "Free tier: Gemini 3.8 Flash, 3.6 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Also free of charge are Gemini 3.8 Live (real-time voice), Gemini 3.5 Live Translate (translation), Gemini 3.5 Transcribe (speech-to-text), Gemini 3.8 Flash TTS and Gemini 3.8 Flash-Lite TTS (text-to-speech). Gemini 4 Argon (gemini-4-argon), Gemini 3.1 Pro Preview and Gemini Omni Flash (gemini-omni-1.1-flash) are paid only. Gemini 4 Argon, generally available since 2026-10-13, is not available on the Gemini API free tier. According to ai.google.dev/gemini-api/docs/google-ai-plans, \"Gemini 4 Argon is not available on the Free plan.\" Gemini 4 Argon is available through the Gemini API on the paid tier. \"Direct use of the Gemini API (such as using API keys or external applications) is billed and managed separately,\" per ai.google.dev/gemini-api/docs/google-ai-plans. Google AI Pro and Ultra provide access to Gemini 4 Argon in Google AI Studio, per ai.google.dev/gemini-api/docs/google-ai-plans. Gemini 4 Argon is in Antigravity on Google AI Ultra and paid Google AI Pro. On a Google AI Pro trial, Argon is only available \"on trial with eligible premium devices\" (antigravity.google/docs/models). Claude Opus 5.5 and Claude Sonnet 5.5 are not included on Google AI Pro trials; trial users and those with memberships through third-party partners, Pixel Pass or Google Fi manage subscriptions through Google One. No Gemini image model has a free tier in the API. Nano Banana 2.1 (gemini-nano-banana-2.1) became generally available on 2026-10-06. It costs $0.0336 per 1K image, $0.0504 per 2K image and $0.113 per 4K image. The Batch API halves those prices. Nano Banana Pro costs $0.134 per 1K or 2K image and $0.24 per 4K image. Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Developers report 429 errors showing 20 requests per day for Gemini 3.x Flash models and 500 requests per day for 3.x Flash-Lite models as of September 2026. Rate limits apply per project, not per API key. Daily request quotas reset at midnight Pacific time, per Google's rate-limits page. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. If your app calls gemini-3.7-flash, Google deprecated it on 2026-10-08. Requests to gemini-3.7-flash are routed automatically to gemini-3.8-flash. Google says to update the model string to gemini-3.8-flash. If your app calls Gemini 3.5 Flash (gemini-3.5-flash), Google deprecated it on 2026-10-08. Requests to gemini-3.5-flash are routed automatically to gemini-3.6-flash. Google says to update the model string to gemini-3.6-flash or gemini-3.8-flash. Google shut down Gemini Omni Flash Preview (gemini-omni-flash-preview) on 2026-10-22. Google's replacement is gemini-omni-1.1-flash. Gemini 3.1 Flash-Lite (gemini-3.1-flash-lite) can be called until 2027-05-07, when Google shuts it down. Google's replacement is gemini-3.5-flash-lite. Paid, per million tokens (input/output; output prices include thinking tokens): Gemini 4 Argon $2/$10 through 2026-11-30 (context caching $0.10, then $0.20, implicit caching only); Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.6 Flash: the same prices and dates); Gemini 3.5 Flash-Lite $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens; prompts over 200K tokens cost $4 input and $18 output). Through 2026-11-30, Gemini 4 Argon's Standard output price is below Gemini 3.1 Pro Preview's for prompts up to 200K tokens, with the same input price; from 2026-12-01 Argon's is higher. From December 1, 2026, Gemini 4 Argon will cost $4 per million input tokens and $20 per million output tokens for Standard, $2 input and $10 output for Batch API, $2 input and $10 output for Flex, and $7.20 input and $36 output for Priority. The Batch API costs half the standard price; Gemini 3.8 Flash is $0.375 input and $1.875 output per million tokens through 2026-12-31. Gemini 4 Argon on the Batch API is $1 input and $5 output through 2026-11-30. Google also sells two tiers, Flex and Priority, both in Preview. A request picks one with the service_tier field (\"flex\" or \"priority\"); without it the request is Standard. Gemini 4 Argon on Flex is $1 input and $5 output through 2026-11-30; on Priority it is $3.60 input and $18 output through 2026-11-30. \"The Gemini Flex API is an inference tier that offers a 50% cost reduction compared to standard rates, in exchange for variable latency and best-effort availability\" (ai.google.dev/gemini-api/docs/flex-inference). \"Priority inference is priced at 75-100% more than the standard API and billed per token\" (ai.google.dev/gemini-api/docs/priority-inference). The Gemini API Contributor Tier is an invite-only private preview. Eligible users will be invited by email. It offers half the Standard price for Gemini 4 Argon, Gemini 3.1 Pro Preview, Gemini 3.8 Flash, and Gemini 3.5 Flash-Lite. Google uses the data from those models to improve its products. \"Please don't submit sensitive or personal information\" (ai.google.dev/gemini-api/docs/logs-policy). Grounding with Google Search is supported on the free tier for Gemini 3.8 Live, Gemini 3.8 Live Extended Thinking and Gemini 3.1 Flash Live Preview. It is not available on the free tier for Gemini 4 Argon or the Gemini 3.x Flash, Flash-Lite and Pro models. On the paid tier, 5,000 search requests a month are free, shared across Gemini 3 and newer models, then $14 per 1,000. Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API.",
+      "current_state": "Gemini 3.8 Flash Priority shows Free Tier input price 'Free of charge' and output price 'Free of charge', with paid tier $1.35 input / $6.75 output through December 31, 2026, then $2.70 / $13.50 starting January 1, 2027.",
+      "impact": "low",
+      "source_url": "https://ai.google.dev/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-02",
+      "restatement": [
+        {
+          "url": "https://ai.google.dev/pricing",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$2.00",
+            "$4.00",
+            "$10.00",
+            "$20.00"
+          ]
+        }
+      ],
+      "dropped_on": "2026-11-02",
+      "drop_reason": "Not new: the Priority table's Free Tier column for Gemini 3.8 Flash reads 'Free of charge' in every Internet Archive capture of ai.google.dev/gemini-api/docs/pricing from 2026-10-20 to 2026-11-02, and the listing already states that Gemini 3.8 Flash is free of charge."
     }
   ]
 }
