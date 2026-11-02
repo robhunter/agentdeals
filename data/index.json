@@ -659,6 +659,18 @@
           "quote": "Can I try Railway without a credit card? Yes. As a new Railway user, you can sign up for a free Trial. You will receive a one-time grant of $5 to use on resources.",
           "url": "https://railway.com/pricing",
           "read_on": "2026-10-22"
+        },
+        {
+          "text": "Run `ssh railway.new` to get a free Linux VM with no account or credit card. The VM has 2 vCPU, 2 GB RAM, and a preview URL. Claude Code, Codex, OpenCode, and the Railway Agent are preinstalled. Railway identifies you by your SSH key. Each VM can be used for 60 minutes. You can get 3 VMs per IP address per day.",
+          "quote": "Run ssh railway.new to get a free Linux VM with coding agents preinstalled and a preview URL, with no account or credit card.",
+          "url": "https://docs.railway.com/pricing/free-trial",
+          "read_on": "2026-11-02"
+        },
+        {
+          "text": "Open the claim link from the welcome message and sign up within 24 hours to keep the VM. The VM, files, and URL move into your account. Unclaimed VMs are deleted with their files. Railway caps free VMs at high demand.",
+          "quote": "To keep it, open the claim link from the welcome message and sign up; the box moves into your account with the same VM, files, and URL. Unclaimed boxes are deleted with their files.",
+          "url": "https://docs.railway.com/pricing/free-trial",
+          "read_on": "2026-11-02"
         }
       ]
     },
