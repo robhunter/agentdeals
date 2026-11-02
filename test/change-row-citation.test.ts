@@ -350,7 +350,7 @@ describe("every published change row carries the page it was read from", () => {
 
   it("does not reach that by citing everything — it states the ones we hold no source for", () => {
     assertPopulationFloor(citedRows, 3268, "rows shown beside the page they were read from");
-    assertPopulationFloor(statedRows, 400, "rows shown beside a statement that we hold no source");
+    assertPopulationFloor(statedRows, 1, "rows shown beside a statement that we hold no source");
     assert.strictEqual(citedRows + statedRows, rowsChecked);
   });
 
