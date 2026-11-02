@@ -394,12 +394,12 @@
     {
       "vendor": "GitHub Actions",
       "change_type": "pricing_postponed",
-      "date": "2026-01-01",
-      "summary": "Self-hosted runner per-minute fee ($0.002/min) announced for March 2026 was postponed indefinitely after community backlash. Self-hosted runners remain free. Separately, hosted runner prices were reduced up to 39% (Jan 2026)",
-      "previous_state": "Self-hosted runners free. Previous per-minute pricing for hosted runners",
-      "current_state": "Self-hosted runners remain free — no orchestration fees. Hosted runners 39% cheaper. GitHub re-evaluating self-hosted pricing approach",
+      "date": "2025-12-17",
+      "summary": "On 2025-12-17 GitHub postponed the $0.002-a-minute charge for self-hosted Actions runners that it had announced the day before for 2026-03-01, to re-evaluate its approach. Self-hosted runners remain free. The price cut of up to 39% for GitHub-hosted runners went ahead on 2026-01-01 as announced.",
+      "previous_state": "Announced 2025-12-16: from 2026-03-01, self-hosted runner usage would pay a $0.002-a-minute Actions cloud platform charge",
+      "current_state": "Self-hosted runners remain free; the charge is postponed while GitHub re-evaluates. GitHub-hosted runner prices fell by up to 39% on 2026-01-01",
       "impact": "low",
-      "source_url": "https://github.com/orgs/community/discussions/182089",
+      "source_url": "https://github.blog/changelog/2025-12-16-coming-soon-simpler-pricing-and-a-better-experience-for-github-actions/",
       "category": "CI/CD",
       "alternatives": [
         "GitLab CI",
@@ -407,7 +407,7 @@
         "Buildkite"
       ],
       "recorded_date": "2026-03-14",
-      "date_source": "hand_written"
+      "date_source": "vendor_page"
     },
     {
       "vendor": "Bright Data MCP",
@@ -428,20 +428,20 @@
     },
     {
       "vendor": "Stripe",
-      "change_type": "pricing_restructured",
-      "date": "2026-02-01",
-      "summary": "Managed Payments (Merchant of Record) service entering general availability — Stripe handles tax, billing, fraud, and disputes",
-      "previous_state": "Payment processing only — developers handled tax compliance, fraud, and disputes separately",
-      "current_state": "Managed Payments acts as Merchant of Record in 75+ countries, handling sales tax/VAT/GST, fraud prevention, dispute resolution, and transaction-level support",
-      "impact": "high",
-      "source_url": "https://docs.stripe.com/payments/managed-payments",
+      "change_type": "new_tier",
+      "date": "2026-04-22",
+      "summary": "On 2026-04-22 Stripe made Managed Payments, its optional merchant-of-record service for digital products, generally available to businesses in 39 countries. It adds 3.5% per successful transaction to Stripe's standard processing fees, which did not change.",
+      "previous_state": "Managed Payments was in preview: private, with a wait-list, in January 2026, and public by February 2026",
+      "current_state": "Generally available to businesses in 39 countries for 3.5% per successful transaction on top of standard processing fees; Stripe handles sales tax, VAT and GST, fraud prevention, disputes and transaction-level customer support",
+      "impact": "low",
+      "source_url": "https://docs.stripe.com/payments/managed-payments/changelog",
       "category": "Payments",
       "alternatives": [
         "Paddle",
         "Lemon Squeezy"
       ],
       "recorded_date": "2026-02-25",
-      "date_source": "hand_written"
+      "date_source": "vendor_page"
     },
     {
       "vendor": "Postman",
@@ -484,7 +484,7 @@
       "vendor": "Fly.io",
       "change_type": "pricing_restructured",
       "date": "2026-01-01",
-      "summary": "Volume snapshots now billed — previously free automatic snapshots now cost $0.08/GB-month",
+      "summary": "From January 2026 Fly.io bills volume snapshot storage at $0.08/GB a month after the first 10 GB free each month; automatic snapshots were free before.",
       "previous_state": "Automatic volume snapshots included at no cost, enabled by default",
       "current_state": "$0.08/GB-month for snapshot storage, first 10 GB free. Snapshots can be disabled to avoid charges",
       "impact": "medium",
@@ -774,7 +774,7 @@
     {
       "vendor": "AWS",
       "change_type": "pricing_restructured",
-      "date": "2026-01-04",
+      "date": "2026-01-03",
       "summary": "EC2 Capacity Blocks for ML GPU prices increased ~15% across regions. p5e.48xlarge went from $34.61 to $39.80/hr (US East) and $43.26 to $49.75/hr (US West N. California)",
       "previous_state": "p5e.48xlarge at $34.61/hr (US East), $43.26/hr (US West N. California) for Capacity Blocks",
       "current_state": "p5e.48xlarge at $39.80/hr (US East), $49.75/hr (US West N. California). ~15% increase across most GPU Capacity Block instances",
@@ -912,12 +912,12 @@
     {
       "vendor": "Google Programmable Search Engine",
       "change_type": "restriction",
-      "date": "2026-01-22",
+      "date": "2026-01-20",
       "summary": "Free full-web search being discontinued. Free tier restricted to max 50 domains per search engine. Migration deadline January 1, 2027",
       "previous_state": "New engines could search the entire web, and the Custom Search JSON API gave 100 free queries a day ($5 per 1,000 after that, up to 10,000 a day)",
       "current_state": "New engines must use Sites to search, up to 50 domains. Existing engines set to search the entire web keep it until January 1, 2027. The Custom Search JSON API is closed to new customers, and existing customers have until January 1, 2027",
       "impact": "high",
-      "source_url": "https://developers.google.com/custom-search",
+      "source_url": "https://programmablesearchengine.googleblog.com/2026/01/updates-to-our-web-search-products.html",
       "category": "Search",
       "alternatives": [
         "Brave Search API",
@@ -925,7 +925,7 @@
         "Meilisearch"
       ],
       "recorded_date": "2026-02-26",
-      "date_source": "hand_written"
+      "date_source": "vendor_page"
     },
     {
       "vendor": "odrive",
@@ -17376,6 +17376,62 @@
       "impact": "low",
       "source_url": "https://vercel.com/blog/new-pro-pricing-plan",
       "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "GitHub Actions",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - GitHub postponed its self-hosted runner charge on 2025-12-17, the day after announcing it, not on 2026-01-01. The hosted-runner price cut took effect on 2026-01-01.",
+      "previous_state": "Recorded 2026-03-14 as pricing_postponed, dated 2026-01-01",
+      "current_state": "pricing_postponed, dated 2025-12-17 from GitHub's changelog",
+      "impact": "low",
+      "source_url": "https://github.blog/changelog/2025-12-16-coming-soon-simpler-pricing-and-a-better-experience-for-github-actions/",
+      "category": "CI/CD",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "AWS",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - AWS raised EC2 Capacity Blocks for ML prices on Saturday 2026-01-03, as The Register reported on 2026-01-05, not on 2026-01-04.",
+      "previous_state": "Recorded 2026-02-26 as pricing_restructured, dated 2026-01-04",
+      "current_state": "pricing_restructured, dated 2026-01-03",
+      "impact": "low",
+      "source_url": "https://www.theregister.com/2026/01/05/aws_price_increase/",
+      "category": "Cloud IaaS",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Google Programmable Search Engine",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Google's Programmable Search Engine blog announced on 2026-01-20 that new engines must use Sites to search from that day, not on 2026-01-22.",
+      "previous_state": "Recorded 2026-02-26 as restriction, dated 2026-01-22",
+      "current_state": "restriction, dated 2026-01-20 from Google's announcement",
+      "impact": "low",
+      "source_url": "https://programmablesearchengine.googleblog.com/2026/01/updates-to-our-web-search-products.html",
+      "category": "Search",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Stripe",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Stripe made Managed Payments generally available on 2026-04-22, not on 2026-02-01; it was in public preview in February. It is an optional service at 3.5% per transaction on top of standard fees, not a change to Stripe's pricing.",
+      "previous_state": "Recorded 2026-02-25 as pricing_restructured, dated 2026-02-01, high impact",
+      "current_state": "new_tier, dated 2026-04-22 from Stripe's Managed Payments changelog, low impact",
+      "impact": "low",
+      "source_url": "https://docs.stripe.com/payments/managed-payments/changelog",
+      "category": "Payments",
       "alternatives": [],
       "recorded_date": "2026-11-02",
       "date_source": "hand_written"

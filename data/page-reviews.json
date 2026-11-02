@@ -1813,7 +1813,6 @@
         "firebase",
         "fivenines-io",
         "fly-io",
-        "github-actions",
         "github-copilot",
         "google",
         "google-content-api-for-shopping",
@@ -1837,7 +1836,6 @@
         "roboflow",
         "smartlook-com",
         "socket-dev",
-        "stripe",
         "tugboat",
         "unity-devops",
         "vercel",
@@ -1848,10 +1846,10 @@
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-09-12",
+      "reviewed_at": "2026-11-02",
       "reviewer": "pm",
-      "review_outcome": "fail",
-      "review_note": null,
+      "review_outcome": "pass",
+      "review_note": "Every hand-typed claim checked against the vendors' pages on 2026-11-01 and 2026-11-02. The Brave card recommended Google's Custom Search JSON API, which is closed to new customers; the expansion cards counted GitHub Copilot, Terragrunt Scale and Neon as Q1 2026 changes; the advice said HashiCorp gave 6 months of notice (it gave about three and a half); and the trend cards gave Netlify, Vercel and Docker Hub as examples of moves they did not make. All were corrected in https://github.com/robhunter/agentdeals/issues/3184 and https://github.com/robhunter/agentdeals/issues/3187 and read right on production. The Q1 table prints our change records. The 19 typed in bulk in February and March 2026 were read against the vendors' pages and announcements: Docker Desktop's 2026-01-01 price rise was invented and is retracted (https://github.com/robhunter/agentdeals/pull/3186), and the records for Vercel, GitHub Actions, Stripe, AWS and Google Programmable Search Engine were misdated and are re-dated. The table's other records were spot-checked.",
       "partial_recheck": null,
       "reads_index": false,
       "tables_read_index": false,
@@ -2222,8 +2220,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 149,
-      "table_figures_from_records": 43,
+      "table_figures": 150,
+      "table_figures_from_records": 44,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2242,8 +2240,8 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 43,
-          "from_records": 43
+          "figures": 44,
+          "from_records": 44
         }
       ],
       "reads_changes": true,
