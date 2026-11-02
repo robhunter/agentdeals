@@ -2245,16 +2245,28 @@
     {
       "vendor": "Socket.dev",
       "change_type": "limits_increased",
-      "date": "2026-04-12",
-      "summary": "Private repo free tier expanded from 1 repo to unlimited repos with 1,000 scans/month and up to 5 members",
-      "previous_state": "Free for OSS repos + first private repo",
-      "current_state": "Free for OSS repos + unlimited private repos with 1,000 scans/month, 5 members",
+      "date": "2025-11-03",
+      "summary": "Private repo free tier expanded from 1 repo to unlimited repos, with 1,000 scans a month and 3 members. socket.dev/pricing showed the Free plan \"Limited to 1 private repo\" in the Internet Archive's copy of 2025-08-21 and \"Unlimited private repositories\" in its copy of 2025-11-03.",
+      "previous_state": "Free plan: unlimited public repos, limited to 1 private repo (socket.dev/pricing, Internet Archive copy of 2025-08-21)",
+      "current_state": "Free plan: unlimited private repositories, 1,000 scans per month, 3 members, 1 repository label (socket.dev/pricing, Internet Archive copy of 2025-11-03)",
       "impact": "low",
       "source_url": "https://socket.dev/pricing",
       "category": "Security",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "archive_check": {
+        "checked": "2026-11-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2025-08-21",
+            "first_new": "2025-11-03",
+            "last_old_capture": "https://web.archive.org/web/20250821184422/https://socket.dev/pricing",
+            "first_new_capture": "https://web.archive.org/web/20251103204306/https://socket.dev/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "LocalStack",
@@ -17644,6 +17656,20 @@
       "impact": "low",
       "source_url": "https://maileroo.com/pricing",
       "category": "Email",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Socket.dev",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Socket.dev's Free plan went from 1 private repo to unlimited private repos between 2025-08-21 and 2025-11-03, not on 2026-04-12, and it allowed 3 members, not 5.",
+      "previous_state": "Recorded 2026-04-12 as limits_increased, dated 2026-04-12, with up to 5 members",
+      "current_state": "limits_increased, dated 2025-11-03 from the Internet Archive's copies of socket.dev/pricing",
+      "impact": "low",
+      "source_url": "https://socket.dev/pricing",
+      "category": "Security",
       "alternatives": [],
       "recorded_date": "2026-11-02",
       "date_source": "hand_written"
