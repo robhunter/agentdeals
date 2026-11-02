@@ -27,7 +27,7 @@ function table(id: string): string[][] {
     .map(row => [...row[1].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)]
       .map((cell, index) => plain(index === 0 ? cell[1]
         .replace(/<a\b[^>]*href="[^"]*#changes"[^>]*>[\s\S]*?<\/a>/g, "")
-        .replace(/<span\b[^>]*>[\s\S]*?<\/span>/g, "") : cell[1])))
+        .replace(/<span\b[^>]*class="[^"]*badge[^"]*"[^>]*>[\s\S]*?<\/span>/g, "") : cell[1])))
     .filter(row => row.length > 1);
 }
 
