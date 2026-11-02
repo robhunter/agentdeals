@@ -4218,11 +4218,11 @@ const VS_PAGES: VsPageConfig[] = [
     verdict: "Cloudflare Pages offers unlimited bandwidth with zero egress costs. Vercel builds and hosts Next.js first-party but bans commercial use on the free plan. For static sites, Cloudflare Pages wins on cost; for Next.js apps, Vercel wins on DX.",
     keyDifferences: `<ul>
       <li><strong>Bandwidth:</strong> Cloudflare Pages has unlimited bandwidth (truly free). Vercel caps at 100 GB/month on the free plan — and the $20/seat Pro plan is required for commercial use.</li>
-      <li><strong>Framework support:</strong> Vercel is the creator of Next.js and has first-class support for ISR, middleware, and edge functions. Cloudflare Pages supports most frameworks but Next.js features may lag.</li>
+      <li><strong>Framework support:</strong> Cloudflare Pages runs static Next.js exports. For full-stack Next.js (SSR, RSC, Server Actions, middleware), Cloudflare recommends vinext, a beta reimplementation of the Next.js API, on Workers. Vercel created Next.js and supports Next.js features such as ISR and middleware.</li>
       <li><strong>Commercial use:</strong> Vercel's Hobby plan explicitly bans commercial use, forcing the $20/seat Pro upgrade. Cloudflare Pages has no such restriction on the free tier.</li>
       <li><strong>Build limits:</strong> Cloudflare Pages allows 500 builds/month. Vercel Hobby includes builds, up to 45 minutes each.</li>
     </ul>`,
-    recommendation: `<p><strong>Choose Cloudflare Pages if</strong> you want truly free hosting with unlimited bandwidth, no commercial use restrictions, or you're building static/Jamstack sites.</p>
+    recommendation: `<p><strong>Choose Cloudflare Pages if</strong> you want truly free hosting with unlimited bandwidth, no commercial use restrictions (except credit card processing), or you're building static/Jamstack sites. Cloudflare recommends Workers for new projects and full-stack apps.</p>
     <p><strong>Choose Vercel if</strong> you're building with Next.js and want the best possible developer experience, including ISR, preview deployments, and edge middleware — just budget for the $20/seat Pro plan.</p>`,
   },
   {
@@ -4321,8 +4321,8 @@ const VS_PAGES: VsPageConfig[] = [
     category: "Email",
     verdict: "Resend is a developer-first transactional email API with React Email support. Brevo (formerly Sendinblue) is an all-in-one marketing + transactional platform. Choose Resend for pure transactional email DX; choose Brevo for combined marketing and transactional needs.",
     keyDifferences: `<ul>
-      <li><strong>Free volume:</strong> Brevo allows 300 emails/day (~9K/month) with up to 100K contacts. Resend allows 3K emails/month — lower volume but with no daily cap fluctuation.</li>
-      <li><strong>Scope:</strong> Brevo includes marketing automation, landing pages, CRM, and segmentation. Resend is purely transactional email — lean and focused.</li>
+      <li><strong>Free volume:</strong> Brevo allows 300 emails/day (~9K/month) with up to 100K contacts. Resend allows 3K emails/month, capped at 100 a day.</li>
+      <li><strong>Scope:</strong> Brevo includes marketing automation, landing pages, CRM, and segmentation. Resend sends transactional emails using the /emails API and marketing emails using the /broadcasts API or dashboard. Its marketing plans are limited by the number of contacts, not emails.</li>
       <li><strong>Developer experience:</strong> Resend integrates with React Email for JSX-based templates, has a minimal API, and feels modern. Brevo's API is more traditional with a larger surface area.</li>
       <li><strong>Growth pricing:</strong> Brevo's paid plans start at $9/month for 5K emails. Resend starts at $20/month for 50K emails — better per-email economics at scale.</li>
     </ul>`,
