@@ -2245,16 +2245,28 @@
     {
       "vendor": "Socket.dev",
       "change_type": "limits_increased",
-      "date": "2026-04-12",
-      "summary": "Private repo free tier expanded from 1 repo to unlimited repos with 1,000 scans/month and up to 5 members",
-      "previous_state": "Free for OSS repos + first private repo",
-      "current_state": "Free for OSS repos + unlimited private repos with 1,000 scans/month, 5 members",
+      "date": "2025-11-03",
+      "summary": "Private repo free tier expanded from 1 repo to unlimited repos, with 1,000 scans a month and 3 members. socket.dev/pricing showed the Free plan \"Limited to 1 private repo\" in the Internet Archive's copy of 2025-08-21 and \"Unlimited private repositories\" in its copy of 2025-11-03.",
+      "previous_state": "Free plan: unlimited public repos, limited to 1 private repo (socket.dev/pricing, Internet Archive copy of 2025-08-21)",
+      "current_state": "Free plan: unlimited private repositories, 1,000 scans per month, 3 members, 1 repository label (socket.dev/pricing, Internet Archive copy of 2025-11-03)",
       "impact": "low",
       "source_url": "https://socket.dev/pricing",
       "category": "Security",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "archive_check": {
+        "checked": "2026-11-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2025-08-21",
+            "first_new": "2025-11-03",
+            "last_old_capture": "https://web.archive.org/web/20250821184422/https://socket.dev/pricing",
+            "first_new_capture": "https://web.archive.org/web/20251103204306/https://socket.dev/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "LocalStack",
@@ -3430,30 +3442,54 @@
     {
       "vendor": "Plunk",
       "change_type": "limits_reduced",
-      "date": "2026-04-12",
-      "summary": "Free tier reduced from 3,000 to 1,000 emails/month",
-      "previous_state": "",
-      "current_state": "Free tier reduced from 3,000 to 1,000 emails/month",
+      "date": "2026-03-07",
+      "summary": "Free tier reduced from 3,000 to 1,000 emails/month. Plunk's home page said \"Send up to 3000 emails for free every month\" in the Internet Archive's copy of 2026-03-06 and \"1,000 emails free every month. Then $0.001 per email\" in its copy of 2026-03-07.",
+      "previous_state": "Free: up to 3,000 emails a month (1,000 each of automated, transactional and campaign emails)",
+      "current_state": "Free: 1,000 emails a month, then $0.001 per email",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://www.useplunk.com/pricing",
       "category": "Email",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "archive_check": {
+        "checked": "2026-11-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-03-06",
+            "first_new": "2026-03-07",
+            "last_old_capture": "https://web.archive.org/web/20260306023548/https://www.useplunk.com/",
+            "first_new_capture": "https://web.archive.org/web/20260307081830/https://www.useplunk.com/"
+          }
+        ]
+      }
     },
     {
       "vendor": "Maileroo",
       "change_type": "limits_reduced",
-      "date": "2026-04-12",
-      "summary": "Free tier reduced from 5,000 to 3,000 emails/month",
-      "previous_state": "",
-      "current_state": "Free tier reduced from 5,000 to 3,000 emails/month",
+      "date": "2025-04-27",
+      "summary": "Free tier reduced from 5,000 to 3,000 emails/month. maileroo.com/pricing said \"send up to 5,000 emails per month at no cost\" in the Internet Archive's copy of 2024-12-19 and \"send up to 3,000 emails per month at no cost\" in its copy of 2025-04-27.",
+      "previous_state": "Free plan: up to 5,000 emails a month",
+      "current_state": "Free plan: up to 3,000 emails a month",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://maileroo.com/pricing",
       "category": "Email",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "archive_check": {
+        "checked": "2026-11-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2024-12-19",
+            "first_new": "2025-04-27",
+            "last_old_capture": "https://web.archive.org/web/20241219200001/https://maileroo.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20250427002251/https://maileroo.com/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Mailtrap",
@@ -3529,7 +3565,13 @@
       "category": "Email",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-02",
+        "detail": "Retracted 2026-11-02: Maildroppa's free plan did not change on 2026-04-12. maildroppa.com/pricing gave the Free plan as \"Up to 100 subscribers Send up to 2500 emails per month\" in the Internet Archive's copies of 2024-05-23, 2024-12-16, 2025-02-18, 2025-10-06 and 2026-09-24. Unlimited monthly emails are a Premium plan feature.",
+        "source_url": "https://www.maildroppa.com/pricing/"
+      }
     },
     {
       "vendor": "Kitemaker",
@@ -3785,16 +3827,28 @@
     {
       "vendor": "StackHawk",
       "change_type": "free_tier_removed",
-      "date": "2026-04-12",
-      "summary": "Free Developer plan removed, enterprise sales model now",
-      "previous_state": "",
-      "current_state": "Free Developer plan removed, enterprise sales model now",
+      "date": "2024-06-17",
+      "summary": "Free plan removed. stackhawk.com/pricing offered a Free plan, \"Modern DAST, with unlimited scans, automatable in your CI/CD for a single application\", in the Internet Archive's copy of 2024-05-16, and none in its copy of 2024-06-17, which starts at Pro, $42 per code contributor a month with a five-contributor minimum.",
+      "previous_state": "Free plan: \"Modern DAST, with unlimited scans, automatable in your CI/CD for a single application\"",
+      "current_state": "No free plan: Pro at $42 per code contributor a month, five-contributor minimum, and a 14-day Enterprise trial",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://www.stackhawk.com/pricing/",
       "category": "Security",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "archive_check": {
+        "checked": "2026-11-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2024-05-16",
+            "first_new": "2024-06-17",
+            "last_old_capture": "https://web.archive.org/web/20240516174622/https://www.stackhawk.com/pricing/",
+            "first_new_capture": "https://web.archive.org/web/20240617105636/https://www.stackhawk.com/pricing/"
+          }
+        ]
+      }
     },
     {
       "vendor": "CookieFirst",
@@ -3819,16 +3873,16 @@
     {
       "vendor": "Tailscale",
       "change_type": "limits_increased",
-      "date": "2026-04-12",
+      "date": "2026-04-08",
       "summary": "Free tier expanded: 3→6 users, 100→unlimited devices",
-      "previous_state": "",
-      "current_state": "Free tier expanded: 3→6 users, 100→unlimited devices",
+      "previous_state": "Personal plan, $0: limited to 3 users and 100 devices (tailscale.com/pricing, Internet Archive copy of 2026-04-06)",
+      "current_state": "Personal plan, $0: up to 6 users, unlimited user devices (tailscale.com/pricing, Internet Archive copy of 2026-04-10)",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://tailscale.com/blog/pricing-v4",
       "category": "Security",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "vendor_page"
     },
     {
       "vendor": "PyUp",
@@ -3999,17 +4053,29 @@
     },
     {
       "vendor": "Hotjar",
-      "change_type": "pricing_restructured",
-      "date": "2026-04-12",
-      "summary": "Now part of Contentsquare, free plan changed to 20K sessions (was 2K pageviews/day)",
-      "previous_state": "",
-      "current_state": "Now part of Contentsquare, free plan changed to 20K sessions (was 2K pageviews/day)",
+      "change_type": "limits_increased",
+      "date": "2025-11-08",
+      "summary": "Now part of Contentsquare, free plan changed to up to 20k monthly sessions (was 35 daily sessions). hotjar.com/pricing showed the Basic plan, \"$0 Track up to 35 daily sessions\", in the Internet Archive's copy of 2025-10-09 and the Free plan, \"Up to 20k monthly sessions\", in its copy of 2025-11-08.",
+      "previous_state": "Basic plan, $0: track up to 35 daily sessions",
+      "current_state": "Free plan, $0: up to 20k monthly sessions",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://www.hotjar.com/pricing/",
       "category": "Analytics",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "archive_check": {
+        "checked": "2026-11-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2025-10-09",
+            "first_new": "2025-11-08",
+            "last_old_capture": "https://web.archive.org/web/20251009152452/https://www.hotjar.com/pricing/",
+            "first_new_capture": "https://web.archive.org/web/20251108134209/https://www.hotjar.com/pricing/"
+          }
+        ]
+      }
     },
     {
       "vendor": "FullStory",
@@ -4318,21 +4384,39 @@
       "category": "Web Scraping",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-02",
+        "detail": "Retracted 2026-11-02: microlink's free limit did not drop on 2026-04-13. Its rate-limit docs gave the same free limit, \"a soft limitation of 50 reqs\", in the Internet Archive's copies of 2024-03-27 and 2026-03-11, and its home page gave \"50 requests per day\" in the copies of 2026-05-01 and 2026-07-02. No copy gives a limit per billing period. The cut from 50 to 25 requests a day came between 2026-07-02 and 2026-08-05 and is recorded on 2026-08-28.",
+        "source_url": "https://microlink.io/docs/api/basics/rate-limit"
+      }
     },
     {
       "vendor": "Firecrawl",
       "change_type": "limits_reduced",
-      "date": "2026-04-13",
-      "summary": "Free credits now one-time 500 (not recurring monthly)",
-      "previous_state": "",
-      "current_state": "Free credits now one-time 500 (not recurring monthly)",
+      "date": "2024-09-05",
+      "summary": "Free credits now one-time 500 (not recurring monthly). firecrawl.dev/pricing showed \"Free Plan 500 credits $0 /month\" in the Internet Archive's copy of 2024-08-11 and \"500 credits $0 one-time\" in its copy of 2024-09-05.",
+      "previous_state": "Free Plan: 500 credits a month, $0",
+      "current_state": "Free Plan: 500 credits one-time, $0",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://www.firecrawl.dev/pricing",
       "category": "Web Scraping",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "archive_check": {
+        "checked": "2026-11-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2024-08-11",
+            "first_new": "2024-09-05",
+            "last_old_capture": "https://web.archive.org/web/20240811193214/https://www.firecrawl.dev/pricing",
+            "first_new_capture": "https://web.archive.org/web/20240905141210/https://www.firecrawl.dev/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "filebase.com",
@@ -4442,7 +4526,13 @@
       "category": "Messaging",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-02",
+        "detail": "Retracted 2026-11-02: OneSignal's free email allowance did not change on 2026-04-13. onesignal.com/pricing gave \"Email 10,000 free sends / month\" in the Internet Archive's copies of 2025-01-03, 2025-10-16, 2026-03-20, 2026-04-28 and 2026-06-04. We found no copy giving 100 emails a day.",
+        "source_url": "https://onesignal.com/pricing"
+      }
     },
     {
       "vendor": "Stadia Maps",
@@ -4546,16 +4636,16 @@
     {
       "vendor": "LambdaTest",
       "change_type": "rebranded",
-      "date": "2026-04-13",
-      "summary": "Rebranded to TestMu AI (testmuai.com), freemium plan preserved",
+      "date": "2026-01-12",
+      "summary": "Rebranded to TestMu AI (testmuai.com), freemium plan preserved. TestMu AI: \"LambdaTest rebranded to TestMu AI on January 12, 2026.\"",
       "previous_state": "",
       "current_state": "Rebranded to TestMu AI (testmuai.com), freemium plan preserved",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://www.testmuai.com/lambdatest-is-now-testmuai/",
       "category": "Testing",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "vendor_page"
     },
     {
       "vendor": "DhiWise",
@@ -4624,16 +4714,16 @@
     {
       "vendor": "Clever Cloud",
       "change_type": "rebranded",
-      "date": "2026-04-13",
-      "summary": "Program renamed to UP, offers up to €10K credits",
-      "previous_state": "",
-      "current_state": "Program renamed to UP, offers up to €10K credits",
+      "date": "2024-05-20",
+      "summary": "Program renamed to UP, offers up to €10K credits. Clever Cloud announced UP on 2024-05-20, in place of its Early Stage offer of a first-year discount; UP gives up to €10,000 in cloud credits for the first year.",
+      "previous_state": "Early Stage: a discount during the first year, tailored to each startup",
+      "current_state": "UP: up to €10,000 in cloud credits for the first year, with onboarding, training and support",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://www.clever.cloud/blog/press/2024/05/21/clever-cloud-launches-up-dedicated-to-startups",
       "category": "Cloud IaaS",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "vendor_page"
     },
     {
       "vendor": "Alibaba Cloud Startups",
@@ -7223,8 +7313,16 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2025-11-23",
+            "first_new": "2025-12-09",
+            "last_old_capture": "https://web.archive.org/web/20251123075349/https://www.hotjar.com/pricing/",
+            "first_new_capture": "https://web.archive.org/web/20251209142413/https://www.hotjar.com/pricing/"
+          }
+        ]
       }
     },
     {
@@ -9183,7 +9281,7 @@
       "change_type": "limits_increased",
       "date": "2026-05-07",
       "date_source": "discovered",
-      "summary": "The free tier now offers 1,000 credits/month instead of 500.",
+      "summary": "The free tier now offers 1,000 credits/month instead of a one-time 500.",
       "previous_state": "Web scraping API — 500 credits (up to 500 pages), 2 concurrent requests, no credit card required",
       "current_state": "Free Plan: 1,000 credits / month, scrape 1,000 pages, 2 concurrent requests. No cost, no card, no hassle.",
       "impact": "low",
@@ -17449,6 +17547,160 @@
       "alternatives": [],
       "recorded_date": "2026-11-02",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Tailscale",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Tailscale widened its free Personal plan on 2026-04-08, the date of its \"Pricing v4\" post, not on 2026-04-12.",
+      "previous_state": "Recorded 2026-04-12 as limits_increased, dated 2026-04-12, with no source",
+      "current_state": "limits_increased, dated 2026-04-08 from tailscale.com/blog/pricing-v4",
+      "impact": "low",
+      "source_url": "https://tailscale.com/blog/pricing-v4",
+      "category": "Security",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Firecrawl",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Firecrawl made its 500 free credits one-time between 2024-08-11 and 2024-09-05, not on 2026-04-13.",
+      "previous_state": "Recorded 2026-04-12 as limits_reduced, dated 2026-04-13, with no source",
+      "current_state": "limits_reduced, dated 2024-09-05 from the Internet Archive's copies of firecrawl.dev/pricing",
+      "impact": "low",
+      "source_url": "https://www.firecrawl.dev/pricing",
+      "category": "Web Scraping",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "StackHawk",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - StackHawk removed its free plan between 2024-05-16 and 2024-06-17, not on 2026-04-12.",
+      "previous_state": "Recorded 2026-04-12 as free_tier_removed, dated 2026-04-12, with no source",
+      "current_state": "free_tier_removed, dated 2024-06-17 from the Internet Archive's copies of stackhawk.com/pricing",
+      "impact": "low",
+      "source_url": "https://www.stackhawk.com/pricing/",
+      "category": "Security",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Hotjar",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Hotjar's free plan went from 35 daily sessions to 20k monthly sessions between 2025-10-09 and 2025-11-08, not on 2026-04-12. It was 35 daily sessions before, not 2K pageviews a day, so the change widened the plan.",
+      "previous_state": "Recorded 2026-04-12 as pricing_restructured, dated 2026-04-12, with no source",
+      "current_state": "limits_increased, dated 2025-11-08 from the Internet Archive's copies of hotjar.com/pricing",
+      "impact": "low",
+      "source_url": "https://www.hotjar.com/pricing/",
+      "category": "Analytics",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "LambdaTest",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - LambdaTest became TestMu AI on 2026-01-12, the date TestMu AI gives, not on 2026-04-13.",
+      "previous_state": "Recorded 2026-04-12 as rebranded, dated 2026-04-13, with no source",
+      "current_state": "rebranded, dated 2026-01-12 from testmuai.com/lambdatest-is-now-testmuai",
+      "impact": "low",
+      "source_url": "https://www.testmuai.com/lambdatest-is-now-testmuai/",
+      "category": "Testing",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Clever Cloud",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Clever Cloud announced its UP startup programme on 2024-05-20, not on 2026-04-13.",
+      "previous_state": "Recorded 2026-04-12 as rebranded, dated 2026-04-13, with no source",
+      "current_state": "rebranded, dated 2024-05-20 from Clever Cloud's press release",
+      "impact": "low",
+      "source_url": "https://www.clever.cloud/blog/press/2024/05/21/clever-cloud-launches-up-dedicated-to-startups",
+      "category": "Cloud IaaS",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Plunk",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Plunk cut its free plan from 3,000 to 1,000 emails a month between 2026-03-06 and 2026-03-07, not on 2026-04-12.",
+      "previous_state": "Recorded 2026-04-12 as limits_reduced, dated 2026-04-12, with no source",
+      "current_state": "limits_reduced, dated 2026-03-07 from the Internet Archive's copies of useplunk.com",
+      "impact": "low",
+      "source_url": "https://www.useplunk.com/pricing",
+      "category": "Email",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Maileroo",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Maileroo cut its free plan from 5,000 to 3,000 emails a month between 2024-12-19 and 2025-04-27, not on 2026-04-12.",
+      "previous_state": "Recorded 2026-04-12 as limits_reduced, dated 2026-04-12, with no source",
+      "current_state": "limits_reduced, dated 2025-04-27 from the Internet Archive's copies of maileroo.com/pricing",
+      "impact": "low",
+      "source_url": "https://maileroo.com/pricing",
+      "category": "Email",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Socket.dev",
+      "change_type": "record_corrected",
+      "date": "2026-11-02",
+      "summary": "Data correction - Socket.dev's Free plan went from 1 private repo to unlimited private repos between 2025-08-21 and 2025-11-03, not on 2026-04-12, and it allowed 3 members, not 5.",
+      "previous_state": "Recorded 2026-04-12 as limits_increased, dated 2026-04-12, with up to 5 members",
+      "current_state": "limits_increased, dated 2025-11-03 from the Internet Archive's copies of socket.dev/pricing",
+      "impact": "low",
+      "source_url": "https://socket.dev/pricing",
+      "category": "Security",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Backblaze B2",
+      "change_type": "pricing_restructured",
+      "date": "2026-05-01",
+      "date_source": "hand_written",
+      "summary": "On May 1, 2026 Backblaze raised B2 pay-as-you-go storage from $6 to $6.95 per TB a month and made Class B and Class C API calls free; they had been free for the first 2,500 a day per class and then charged per 1,000 calls. The first 10 GB of storage and free egress up to 3x average monthly storage did not change.",
+      "previous_state": "Pay-as-you-go storage \"$6 /TB/30-day\"; \"Class A calls are free, and Class B and C calls are free for the first 2,500/day/class, after which they are charged at $0.0004/1,000 calls/day and $0.004/1,000 calls/day, respectively\" (backblaze.com/cloud-storage/pricing, Internet Archive 2026-04-30)",
+      "current_state": "Pay-as-you-go storage \"$6.95 /TB/30-days\"; \"Class A, B, and C API calls are free for pay-as-you-go customers. Class D transactions cost $0.004 per 10,000 calls plus the first 2,500 calls per day are free.\" (backblaze.com/cloud-storage/pricing, read 2026-11-02). Backblaze's results release of May 4, 2026: \"Effective May 1st, Backblaze increased pay-as-you-go storage pricing to support our continued investment in performance, while removing API transaction fees to simplify pricing and support customers.\"",
+      "impact": "medium",
+      "source_url": "https://www.backblaze.com/cloud-storage/pricing",
+      "category": "Storage",
+      "alternatives": [],
+      "recorded_date": "2026-11-02",
+      "archive_check": {
+        "checked": "2026-11-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-04-30",
+            "first_new": "2026-05-04",
+            "last_old_capture": "https://web.archive.org/web/20260430082017/https://www.backblaze.com/cloud-storage/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260504155827/https://www.backblaze.com/cloud-storage/pricing"
+          }
+        ]
+      },
+      "tier": "Pay-as-you-go",
+      "tier_direction": "unchanged"
     }
   ]
 }

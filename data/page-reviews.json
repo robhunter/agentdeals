@@ -1192,8 +1192,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 53,
-      "table_figures_from_records": 5,
+      "table_figures": 57,
+      "table_figures_from_records": 9,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -1217,8 +1217,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 5,
-          "from_records": 5
+          "figures": 9,
+          "from_records": 9
         }
       ],
       "reads_changes": true,
@@ -1821,6 +1821,7 @@
         "hcp-terraform",
         "incidenthub-cloud",
         "koyeb",
+        "lambdatest",
         "lensdump-com",
         "localstack",
         "minimax",
@@ -1830,6 +1831,7 @@
         "ollama-cloud",
         "phase-two",
         "pipedream",
+        "plunk",
         "pollinations-ai",
         "postman",
         "pythonanywhere",
@@ -2785,7 +2787,6 @@
         "snyk",
         "socket-dev",
         "sonarqube-cloud",
-        "soos",
         "tailscale",
         "trivy",
         "trufflehog",
@@ -2793,10 +2794,10 @@
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
-      "reviewed_at": null,
-      "reviewer": null,
-      "review_outcome": null,
-      "review_note": null,
+      "reviewed_at": "2026-11-02",
+      "reviewer": "pm",
+      "review_outcome": "fail",
+      "review_note": "Checked on 2026-11-02 against the vendors' pricing pages, docs and GitHub's licence data. SOOS has shut down, and CodeQL's private-repo price, SonarQube Cloud's free private plan, TruffleHog's and CodeQL's licences, Semgrep's, Socket.dev's and Twingate's limits, StackHawk's removal date and the hosted-cost totals are wrong; corrections in https://github.com/robhunter/agentdeals/issues/3197",
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
@@ -3234,8 +3235,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 91,
-      "table_figures_from_records": 30,
+      "table_figures": 93,
+      "table_figures_from_records": 32,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -3254,8 +3255,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 17,
-          "from_records": 17
+          "figures": 19,
+          "from_records": 19
         }
       ],
       "reads_changes": true,
