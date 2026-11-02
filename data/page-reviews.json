@@ -1781,10 +1781,8 @@
       "vendors_asserted": [
         "cloudflare-for-startups",
         "github",
-        "github-copilot",
         "google-for-startups-cloud-program",
-        "hcp-terraform",
-        "terragrunt-scale"
+        "hcp-terraform"
       ],
       "vendors_tabulated": [
         "algolia",

@@ -78,7 +78,7 @@ import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./c
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
 import { cutsByQuarterNewestFirst, cutsWindow, freeTierCutsIn } from "./free-tier-cuts.js";
 import { STARTUP_CREDITS_META_DESCRIPTION, STARTUP_PROGRAMS, type DatedTerms, type StartupProgram } from "./startup-programmes.js";
-import { CHANGE_TIMELINE_LINK_TEXT, CHANGE_TIMELINE_PATH, CUTS_THIS_YEAR_ANCHOR, CUTS_THIS_YEAR_HEADING, CUTS_THIS_YEAR_SUMMARY_CLASS, FIGURES_AS_OF_CLASS, FREE_TIER_TRACKER_HEADING, FREE_TIER_TRACKER_META_DESCRIPTION, FREE_TIER_TRACKER_TITLE, FREE_TIER_TRACKER_YEAR, NO_KNOWN_EFFECTIVE_DATE_LEFT_OUT, UNTIL_ITS_DATE_ARRIVES, changeTypesAmong, cutsThisYearSummary, figuresAsOfTheChangeHtml, isAFirstQuarterCard, neonFiguresWereJanuarysHtml, quarterAnchor, quarterHeading } from "./free-tier-tracker.js";
+import { CHANGE_TIMELINE_LINK_TEXT, CHANGE_TIMELINE_PATH, CUTS_THIS_YEAR_ANCHOR, CUTS_THIS_YEAR_HEADING, CUTS_THIS_YEAR_SUMMARY_CLASS, FIGURES_AS_OF_CLASS, FREE_TIER_TRACKER_HEADING, FREE_TIER_TRACKER_META_DESCRIPTION, FREE_TIER_TRACKER_TITLE, FREE_TIER_TRACKER_YEAR, NO_KNOWN_EFFECTIVE_DATE_LEFT_OUT, UNTIL_ITS_DATE_ARRIVES, changeTypesAmong, cutsThisYearSummary, figuresAsOfTheChangeHtml, isAFirstQuarterCard, quarterAnchor, quarterHeading } from "./free-tier-tracker.js";
 import { changeCitesASource, citationLabel, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, CITATION_REL, listingSourceLinkHtml, type CitableChangeRow } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { listingStatements, serviceStopsAtItsLimitSentence, usageBeyondTheFreeTierBillingSentence } from "./overage-billing.js";
@@ -27511,8 +27511,8 @@ function buildFreeTierTrackerPage(): string {
       oneLiner: "Free plan (2,000 queries/mo) became $5 of free credit a month",
       changeType: "limits_reduced",
       impact: "medium",
-      detail: "Brave Search API's free plan (2,000 queries a month) became $5 of free credit a month, which covers 1,000 Search requests at $5 per 1,000. The credit requires attribution.",
-      alternatives: ["SerpAPI", "Google Custom Search"],
+      detail: "Brave Search API's free plan (2,000 queries a month) became $5 of free credit a month, which covers 1,000 Search requests at $5 per 1,000. The credit requires attribution. Google Custom Search JSON API is closed to new customers and ends on January 1, 2027.",
+      alternatives: ["SerpAPI", "Exa"],
     },
     {
       vendor: "HCP Terraform",
@@ -27564,19 +27564,19 @@ function buildFreeTierTrackerPage(): string {
       oneLiner: "Free tier launched as HCP Terraform alternative",
       changeType: "new_free_tier",
       impact: "medium",
-      detail: "Gruntwork launched a free tier for Terragrunt Scale IaC orchestration, positioned as the HCP Terraform alternative. Includes GitOps, drift detection, and module update automation with up to 25 infrastructure units.",
+      detail: "Before Q1 2026: Gruntwork launched a free tier for Terragrunt Scale IaC orchestration, positioned as the HCP Terraform alternative. Includes GitOps, drift detection, and module update automation with up to 25 infrastructure units.",
       alternatives: ["Spacelift", "env0", "Scalr"],
     },
     {
       vendor: "Neon",
       slug: "neon",
-      date: "2026-01-15",
-      oneLiner: "Projects increased 10x (10\u219270→100), storage per-project",
-      changeType: "pricing_restructured",
+      date: "2025-12-19",
+      oneLiner: "Free projects increased from 10 to 100 before Q1 2026",
+      changeType: "limits_increased",
       impact: "medium",
-      detail: "Post-Databricks acquisition, Neon restructured pricing with both expansions and changes. Projects increased from 10 to 100, storage became per-project (0.5 GB each, up to 5 GB total), and Neon Auth added at 60K MAU.",
+      detail: "Before Q1 2026: Neon raised the Free plan's project limit from 10 to 100 in seven steps between 2025-08-29 and 2025-12-19. Neon Auth became available on all plans, including Free, on 2025-12-12.",
       alternatives: ["Supabase", "Turso"],
-      figuresNoteHtml: neonFiguresWereJanuarysHtml(escHtmlServer),
+      figuresNoteHtml: figuresAsOfTheChangeHtml("2025-12-19", "Neon", servedVendorSlugForName("neon"), escHtmlServer),
     },
     {
       vendor: "Unity DevOps",
@@ -27798,7 +27798,7 @@ ${globalNavCss()}
 
   <div class="executive-summary">
     <p><strong>${removedOrReduced.length} developer tool free tiers were removed in Q1 2026. ${limitsReduced.length + restructured.length} more were reduced or restructured. Here&rsquo;s what changed and what&rsquo;s still free.</strong></p>
-    <p>But it&rsquo;s not all erosion. <strong>Terragrunt Scale</strong> launched a free tier specifically to capture HCP Terraform refugees, and <strong>GitHub Copilot</strong> went free. The pattern: some vendors are removing free tiers, while competitors swoop in to capture displaced developers.</p>
+    <p>But it&rsquo;s not all erosion. The pattern: some vendors are removing free tiers, while competitors swoop in to capture displaced developers.</p>
   </div>
 
   <div class="toc">

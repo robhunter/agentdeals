@@ -67,10 +67,6 @@ export function figuresAsOfTheChangeHtml(date: string, vendor: string, vendorSlu
   return `${asOf} ${esc("Today's terms:")} <a href="/vendor/${vendorSlug}">${esc(`our ${vendor} listing`)}</a>.`;
 }
 
-export function neonFiguresWereJanuarysHtml(esc: Escape): string {
-  return `${esc("These were January's figures; Neon's free plan now gives 1 GB of storage per project, 20 GB in total")} (<a href="/vendor/neon">${esc("our Neon listing")}</a>).`;
-}
-
 export function isAFirstQuarterCard(date: string): boolean {
   return date >= `${FREE_TIER_TRACKER_YEAR}-01-01` && date <= `${FREE_TIER_TRACKER_YEAR}-03-31`;
 }
