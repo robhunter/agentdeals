@@ -1163,8 +1163,8 @@
       "changed": "2026-10-21"
     },
     "/category/container-registry": {
-      "hash": "f2709e2715c8f344",
-      "changed": "2026-10-28"
+      "hash": "058524a9a3b237b9",
+      "changed": "2026-11-02"
     },
     "/category/databases": {
       "hash": "793b8aadc47c201e",
@@ -1442,8 +1442,8 @@
       "changed": "2026-10-21"
     },
     "/compare/amazon-ecr-public-vs-docker-hub": {
-      "hash": "75376b23224c4081",
-      "changed": "2026-10-28"
+      "hash": "ba93252d8f95504d",
+      "changed": "2026-11-02"
     },
     "/compare/amazon-kiro-vs-openai-codex": {
       "hash": "60e69ff8471a5e67",
@@ -1742,8 +1742,8 @@
       "changed": "2026-10-29"
     },
     "/compare/container-registry-service-vs-docker-hub": {
-      "hash": "777c1764177fabcf",
-      "changed": "2026-10-28"
+      "hash": "8d1a3df0b71746a3",
+      "changed": "2026-11-02"
     },
     "/compare/container-registry-service-vs-google-artifact-registry": {
       "hash": "b34ba7250cdff2e3",
@@ -1902,8 +1902,8 @@
       "changed": "2026-10-15"
     },
     "/compare/docker-hub-vs-google-artifact-registry": {
-      "hash": "4ae3eb579c2f82b9",
-      "changed": "2026-10-28"
+      "hash": "e81d5d14ab9b4ae5",
+      "changed": "2026-11-02"
     },
     "/compare/docusaurus-vs-gitbook": {
       "hash": "2e59586e7ecb70a2",
@@ -3608,7 +3608,7 @@
       "changed": "2026-11-02"
     },
     "/stack-check": {
-      "hash": "2daef1c22c917b04",
+      "hash": "534ca782db4896f7",
       "changed": "2026-11-02"
     },
     "/stacks": {
