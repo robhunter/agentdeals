@@ -3590,8 +3590,8 @@
       "changed": "2026-11-02"
     },
     "/security-free-tier-comparison-2026": {
-      "hash": "3283ddc155510904",
-      "changed": "2026-10-30"
+      "hash": "ef0b5152c526c9fc",
+      "changed": "2026-11-02"
     },
     "/serverless-free-tier-comparison-2026": {
       "hash": "7d862542b439ed31",
@@ -3641,7 +3641,7 @@
       "changed": "2026-11-02"
     },
     "/state-of-free-tiers": {
-      "hash": "32fe3e647631df1b",
+      "hash": "14c6ea22d62fdb42",
       "changed": "2026-11-02"
     },
     "/storage-alternatives": {
