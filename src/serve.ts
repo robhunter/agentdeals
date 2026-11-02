@@ -27599,12 +27599,15 @@ function buildFreeTierTrackerPage(): string {
     {
       name: "Credits \u2192 Hard Quotas",
       description: "Flexible credit systems are being replaced by fixed quotas. This makes 'free' more predictable but less useful — you can't burst when you need to.",
-      examples: "Windsurf, Netlify, Vercel",
+      examples: "Windsurf",
+      examplesLabel: "Example",
+      counterexamples: "Netlify and Vercel moved the other way: Netlify's plans are now credit-based (the Free plan has 300 credits a month), and Vercel's Pro plan includes $20 of usage credit a month.",
     },
     {
       name: "Free Team \u2192 Single-User",
       description: "Team collaboration features are being paywalled while individual use stays free. The message: work alone for free, pay to collaborate.",
-      examples: "Postman, Docker Hub (commercial use restrictions)",
+      examples: "Postman",
+      examplesLabel: "Example",
     },
     {
       name: "API Monetization Wave",
@@ -27841,7 +27844,7 @@ ${globalNavCss()}
     <div class="pattern-card">
       <h3>${escHtmlServer(p.name)}</h3>
       <p>${escHtmlServer(p.description)}</p>
-      <p class="pattern-examples">Examples: ${escHtmlServer(p.examples)}</p>
+      <p class="pattern-examples">${p.examplesLabel ?? "Examples"}: ${escHtmlServer(p.examples)}${p.counterexamples ? `. ${escHtmlServer(p.counterexamples)}` : ""}</p>
     </div>`).join("\n  ")}
 
   <div class="verdict-box">
@@ -27852,7 +27855,7 @@ ${globalNavCss()}
     </div>
     <div class="verdict-item">
       <strong>For production workloads:</strong>
-      <p>If you&rsquo;re building on a free tier, have a migration plan. The vendors that removed free tiers in Q1 gave up to 6 months of notice (HCP Terraform). Budget for paid tiers or self-hosted alternatives.</p>
+      <p>If you&rsquo;re building on a free tier, have a migration plan. HashiCorp announced the end of HCP Terraform's legacy free plan on December 17, 2025, about three and a half months before it ended on March 31, 2026. Budget for paid tiers or self-hosted alternatives.</p>
     </div>
     <div class="verdict-item">
       <strong>For startups:</strong>
