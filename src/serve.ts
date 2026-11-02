@@ -4245,7 +4245,7 @@ const VS_PAGES: VsPageConfig[] = [
     keyDifferences: `<ul>
       <li><strong>Focus:</strong> Datadog monitors infrastructure (5 hosts free, metrics, logs, APM). Sentry tracks application errors (5K errors/month, stack traces, session replays, performance).</li>
       <li><strong>Free tier value:</strong> Datadog's free tier has only 1-day metric retention — effectively useless for trend analysis. Sentry's 5K errors/month with full stack traces is genuinely useful for small projects.</li>
-      <li><strong>Pricing trap:</strong> Datadog's per-host pricing scales linearly — at 100 hosts, expect $5,500+/month. Sentry scales by error volume, which is more predictable.</li>
+      <li><strong>Pricing trap:</strong> At 100 hosts, Datadog Infrastructure Pro costs $1,500 a month, and with APM $4,600 a month, billed annually. Sentry scales by error volume, which is more predictable.</li>
       <li><strong>Team size:</strong> Sentry's Developer plan is limited to 1 user. Datadog's free tier allows up to 5 hosts with no user limit.</li>
     </ul>`,
     recommendation: `<p><strong>Choose Datadog if</strong> you need infrastructure monitoring across multiple hosts and want a unified observability platform — but be aware of the 1-day retention trap on the free tier.</p>
@@ -17310,7 +17310,7 @@ function buildFreeNextjsStackPage(): string {
       recommended: { vendor: "Sentry", why: "Developer tier: 5,000 errors/month, 5M spans, 50 session replays, 1 GB attachments. First-class Next.js SDK with automatic instrumentation for API routes, server components, middleware, and client-side errors. Source map support for production debugging." },
       alternatives: ["BetterStack", "Grafana Cloud", "Highlight.io"],
       outgrow: "When you exceed 5,000 errors/month or need more than 1 team member. BetterStack combines uptime monitoring (10 monitors) with incident management. Grafana Cloud offers 10,000 series metrics + 50 GB logs + 50 GB traces. Highlight.io bundles 500 sessions + 1,000 errors + 1M logs on free tier.",
-      whyNot: "Why not Datadog: Free tier has only 1-day metric retention — practically unusable for debugging. The per-host pricing model gets expensive fast: ~$5,500/month at 100 hosts.",
+      whyNot: "Why not Datadog: Free tier has only 1-day metric retention — practically unusable for debugging. At 100 hosts with APM, Datadog costs $4,600 a month at list price, billed annually.",
       relatedPage: "/monitoring-comparison-2026",
     },
     {
@@ -40189,7 +40189,7 @@ ${globalNavCss()}
 
   <div class="executive-summary">
     <p><strong>Quick verdict:</strong> <strong>Grafana Cloud</strong> offers a free tier for monitoring &mdash; 10,000 metrics series, 50GB logs, 50GB traces, and 14-day retention with full dashboarding and alerting. <strong>New Relic</strong> has unified platform ingest at 100GB/month with full APM, but limits you to 1 full platform user. <strong>Axiom</strong> offers 500GB/month raw ingest free. For self-hosted: <strong>SigNoz</strong> is the modern all-in-one alternative; <strong>Prometheus + Grafana</strong>.</p>
-    <p><strong>The observability cost trap:</strong> Monitoring is the #1 developer spending complaint. Datadog bills can go from $0 to $10,000+/month because pricing compounds across per-host fees, separate product charges (APM, logs, synthetics are each billed independently), and cardinality penalties. At 100 hosts with APM and logs, Datadog costs ~$5,500/mo while Grafana Cloud Pro runs ~$300-800/mo. The worst trap: <strong>Datadog&rsquo;s free tier retains metrics for only 1 day</strong> &mdash; you literally cannot investigate yesterday&rsquo;s incident.</p>
+    <p><strong>The observability cost trap:</strong> Monitoring is the #1 developer spending complaint. Datadog bills can go from $0 to $10,000+/month because pricing compounds across per-host fees, separate product charges (APM, logs, synthetics are each billed independently), and cardinality penalties. At list price, 100 hosts with APM cost $4,600/mo (annual billing) on Datadog. Grafana Cloud Application Observability for 100 hosts is ~$1,800/mo plus $19 platform fee. Logs excluded. The worst trap: <strong>Datadog&rsquo;s free tier retains metrics for only 1 day</strong> &mdash; you literally cannot investigate yesterday&rsquo;s incident.</p>
   </div>
 
   <div class="toc">
@@ -40276,32 +40276,20 @@ ${globalNavCss()}
         <td>30 days</td>
         <td>30 days</td>
         <td>Unlimited</td>
-        <td>Unlimited</td>
+        <td>1 user</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Traces</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#d29922">Medium</span></td>
       </tr>${vendorPageConditionsRowHtml("axiom", 11)}
-      <tr>
-        <td class="provider-col">Sematext</td>
-        <td>500MB/day logs</td>
-        <td>30 min</td>
-        <td>7 days</td>
-        <td>5 hosts</td>
-        <td>Unlimited</td>
-        <td class="check">&#10003;</td>
-        <td class="check">&#10003;</td>
-        <td class="partial">Basic</td>
-        <td class="cross">&#10007;</td>
-        <td><span style="color:#d29922">Medium</span></td>
-      </tr>${vendorPageConditionsRowHtml("sematext", 11)}
+
       <tr>
         <td class="provider-col">Middleware.io</td>
-        <td>1 host</td>
-        <td>1 day</td>
-        <td>1 day</td>
-        <td>1 host</td>
+        <td>100GB/mo</td>
+        <td>14 days</td>
+        <td>14 days</td>
+        <td>N/A (volume-based)</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
@@ -40337,9 +40325,9 @@ ${globalNavCss()}
       </tr>${vendorPageConditionsRowHtml("sentry", 11)}
       <tr>
         <td class="provider-col">AppSignal</td>
-        <td>100K requests</td>
-        <td>30 days</td>
-        <td>10 days</td>
+        <td>30K requests</td>
+        <td>5 days</td>
+        <td>5 days</td>
         <td>Unlimited</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
@@ -40509,7 +40497,7 @@ ${globalNavCss()}
         <td>N/A</td>
         <td>N/A</td>
         <td>N/A</td>
-        <td>5 browser checks + 10 API checks</td>
+        <td>10 uptime monitors, 1,000 browser + 10,000 API checks</td>
         <td>1 user</td>
         <td class="check">&#10003;</td>
         <td class="partial">Status pages</td>
@@ -40523,7 +40511,7 @@ ${globalNavCss()}
         <td>N/A</td>
         <td>30 days</td>
         <td>Unlimited</td>
-        <td>1 user</td>
+        <td>Unlimited</td>
         <td class="check">&#10003;</td>
         <td class="partial">Issue tracking</td>
         <td class="cross">&#10007;</td>
@@ -40557,7 +40545,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Grafana Cloud</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 10,000 metric series (Prometheus), 50GB logs (Loki), 50GB traces (Tempo), 14-day retention, 3 users, unlimited dashboards, alerting included. By far the most generous free tier in full-stack observability. Built on open-source Grafana, Prometheus, Loki, and Tempo &mdash; so your queries and dashboards are portable. 3-user limit is the main constraint for teams.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 10,000 metric series (Prometheus), 50GB logs (Loki), 50GB traces (Tempo), 14-day retention, 3 users, at most 1,000 dashboards and 1,000 folders per stack, alerting included. Grafana Cloud free accounts opened from April 20, 2026 can only send email alerts to users within the Grafana instance. By far the most generous free tier in full-stack observability. Built on open-source Grafana, Prometheus, Loki, and Tempo &mdash; so your queries and dashboards are portable. 3-user limit is the main constraint for teams.</div>
   </div>
 
   <div class="diff-card">
@@ -40567,12 +40555,12 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Axiom</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 500GB/month ingest with 30-day retention. Unlimited users. Supports logs, metrics, and traces. Modern query language (APL) with a fast columnar engine. The most generous raw ingest allowance on this list. Good for startups that generate a lot of telemetry data and need longer retention.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 500 GB/month data loading, 10 GB-hours query compute, 25 GB storage, 30-day retention, 1 user, 3 datasets, 3 monitors, Email and Discord notifiers. Supports logs, metrics, and traces. Modern query language (APL) with a fast columnar engine. The most generous raw ingest allowance on this list. Good for startups that generate a lot of telemetry data and need longer retention.</div>
   </div>
 
   <div class="diff-card">
     <h3>Sematext</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 500MB/day logs (7-day retention), 5 hosts for infrastructure monitoring (30-min metric retention), basic alerting. Offers both logs and infrastructure in one platform. The 30-minute metric retention is extremely short &mdash; only useful for live monitoring.</div>
+    <div class="diff-desc"><strong>Sematext has no free plan.</strong> A 14-day free trial requires no credit card. Logs Basic starts at $5/month for 500MB/day and 7-day retention. Infrastructure Basic starts at $2.8/host/month with 1-day retention. Logs and infrastructure are in one platform.</div>
   </div>
 
   <div class="diff-card">
@@ -40582,7 +40570,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Middleware.io</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1 host, 1-day data retention, full-stack observability including APM, logs, and infrastructure. Modern OpenTelemetry-native platform. The single host limit makes it suitable only for development or very small projects.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> Up to 100 GB of data a month, 1,000 RUM sessions, 20,000 synthetic checks, 10 browser test runs, unlimited users, 14-day retention. Modern OpenTelemetry-native platform. The 100 GB data limit makes it suitable for small projects.</div>
   </div>
 
   <div class="diff-card">
@@ -40600,7 +40588,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Rollbar</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 5,000 events/month, 30-day retention, 1 user. Error monitoring with automatic grouping, deploy tracking, and real-time alerts. Strong REST API and 40+ platform integrations. Deploy tracking links errors to specific releases. The 1-user limit and lower event count vs Sentry makes it a secondary choice for most teams.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 5K occurrences + 1K sessions/month, unlimited users and projects, 30-day retention. Error monitoring with automatic grouping, deploy tracking, and real-time alerts. Strong REST API and 40+ platform integrations. Deploy tracking links errors to specific releases. Sentry&rsquo;s free plan also allows 5K errors/month and 1 user.</div>
   </div>
 
   <div class="diff-card">
@@ -40610,7 +40598,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>AppSignal</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 100,000 requests/month, 30-day APM retention, 10-day log retention. Error tracking, performance monitoring, host metrics, and anomaly detection. Particularly strong for Ruby and Elixir. Unlimited team members.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 30K requests a month, 1 GB logging, 5-day retention. Error tracking, performance monitoring, host metrics, and anomaly detection. Particularly strong for Ruby and Elixir. Unlimited team members.</div>
   </div>
 
   <h2 id="uptime-monitoring">Uptime &amp; Synthetic Monitoring</h2>
@@ -40633,9 +40621,9 @@ ${globalNavCss()}
         <td class="provider-col">UptimeRobot</td>
         <td>50</td>
         <td>5 min</td>
-        <td>Email, webhook</td>
+        <td>Email, Google Chat, Discord, Pushover, Pushbullet, Splunk</td>
         <td class="check">&#10003; 1 page</td>
-        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
       </tr>
       <tr>
         <td class="provider-col">BetterStack</td>
@@ -40655,8 +40643,8 @@ ${globalNavCss()}
       </tr>
       <tr>
         <td class="provider-col">Hyperping</td>
-        <td>10</td>
-        <td>1 min</td>
+        <td>20</td>
+        <td>5 min</td>
         <td>Email, Slack</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
@@ -40664,7 +40652,7 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">Pulsetic</td>
         <td>10</td>
-        <td>3 min</td>
+        <td>5 min</td>
         <td>Email</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
@@ -40679,7 +40667,7 @@ ${globalNavCss()}
       </tr>${vendorPageConditionsRowHtml("pingbreak-com", 6)}
       <tr>
         <td class="provider-col">OnlineOrNot</td>
-        <td>5</td>
+        <td>3</td>
         <td>3 min</td>
         <td>Email, Slack</td>
         <td class="check">&#10003;</td>
@@ -40687,8 +40675,8 @@ ${globalNavCss()}
       </tr>${vendorPageConditionsRowHtml("onlineornot", 6)}
       <tr>
         <td class="provider-col">Checkly</td>
-        <td>5 browser + 10 API</td>
-        <td>1 min</td>
+        <td>10 uptime monitors</td>
+        <td>2 min</td>
         <td>Email, Slack, PagerDuty, OpsGenie</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
@@ -40699,11 +40687,11 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Checkly</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 5 browser checks (Playwright-based), 10 API checks, 1-min check interval from 20+ global locations. Monitoring-as-code: define checks in JavaScript/TypeScript, version in git, deploy via CLI. Integrates with Vercel, GitHub Actions, and Terraform. The only free synthetic monitoring tool with full Playwright browser automation &mdash; test real user flows, not just pings.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 10 uptime monitors, maximum frequency 2 minutes, 6 locations, 1,000 Browser/Playwright checks and 10,000 API checks. Monitoring-as-code: define checks in JavaScript/TypeScript, version in git, deploy via CLI. Integrates with Vercel, GitHub Actions, and Terraform. The only free synthetic monitoring tool with full Playwright browser automation &mdash; test real user flows, not just pings.</div>
   </div>
 
   <div class="context-box">
-    <strong>Key takeaway:</strong> UptimeRobot dominates on monitor count (50 free). Checkly is the best choice for synthetic browser testing (Playwright-based, monitoring-as-code). Hyperping has the fastest simple check interval (1 min). Better Stack combines uptime with logging for a two-in-one free tier. For most small projects, UptimeRobot's 50 monitors at 5-min intervals is more than enough.
+    <strong>Key takeaway:</strong> UptimeRobot dominates on monitor count (50 free). Checkly is the best choice for synthetic browser testing (Playwright-based, monitoring-as-code). Hyperping's free plan gives 20 monitors with 5-minute checks. Better Stack combines uptime with logging for a two-in-one free tier. For most small projects, UptimeRobot's 50 monitors at 5-min intervals is more than enough.
   </div>
 
   <h2 id="incident-management">Incident Management</h2>
@@ -40747,7 +40735,7 @@ ${globalNavCss()}
         <td class="provider-col">Cronitor</td>
         <td>5</td>
         <td>1</td>
-        <td>Email, Slack, PagerDuty</td>
+        <td>Email, Slack, webhooks</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
       </tr>
@@ -40782,7 +40770,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>SigNoz</h3>
-    <div class="diff-desc"><strong>Cost:</strong> Free self-hosted (open-source, Apache 2.0 or AGPL depending on features). Single binary with metrics, logs, and traces powered by ClickHouse and OpenTelemetry. The closest open-source equivalent to Datadog &mdash; single pane of glass with correlated metrics/logs/traces, APM dashboards, and alerting. OpenTelemetry-native (no vendor SDK). Cloud tier starts at $199/mo. Best for teams wanting a Datadog-like experience without Datadog pricing.</div>
+    <div class="diff-desc"><strong>Cost:</strong> SigNoz Community is free to self-host. Code outside of ee/ and cmd/enterprise/ is MIT licensed. Code in those directories is licensed under ee/LICENSE. Single binary with metrics, logs, and traces powered by ClickHouse and OpenTelemetry. The closest open-source equivalent to Datadog &mdash; single pane of glass with correlated metrics/logs/traces, APM dashboards, and alerting. OpenTelemetry-native (no vendor SDK). SigNoz Teams costs $49/month, including $49 of usage. Best for teams wanting a Datadog-like experience without Datadog pricing.</div>
   </div>
 
   <div class="diff-card">
@@ -40800,72 +40788,33 @@ ${globalNavCss()}
   </div>
 
   <h2 id="cost-trap">The Observability Cost Trap</h2>
-  <p class="section-intro">Monitoring is the #1 developer spending complaint. Here's what it actually costs when you outgrow the free tier &mdash; at 10, 50, 100, and 500 host scale.</p>
+  <p class="section-intro">Monitoring is the #1 developer spending complaint. The table lists vendor list prices. Prices were read from vendor pages on 2026-11-02.</p>
 
-  <h3>Annual Cost by Scale (Infrastructure + APM + Logs)</h3>
+  <h3>List Prices Beyond the Free Tier</h3>
   <div style="overflow-x:auto">
   <table class="growth-table">
     <thead>
       <tr>
-        <th>Scale</th>
-        <th>Datadog</th>
-        <th>Grafana Cloud</th>
-        <th>New Relic</th>
-        <th>Better Stack</th>
-        <th>Self-Hosted (Prometheus/SigNoz)</th>
+        <th>Vendor</th>
+        <th>List price (read 2026-11-02)</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><strong>10 hosts</strong></td>
-        <td class="expensive">~$3,720/yr ($31/host/mo)</td>
-        <td class="cheapest">$0 (free tier)</td>
-        <td class="cheapest">$0 (within 100GB)</td>
-        <td>~$348/yr ($29/mo)</td>
-        <td class="cheapest">$0 (infra only)</td>
-      </tr>
-      <tr>
-        <td><strong>50 hosts + APM + logs</strong></td>
-        <td class="expensive">~$27,000/yr</td>
-        <td>~$600-2,400/yr</td>
-        <td>~$2,400-4,800/yr</td>
-        <td>~$3,000-6,000/yr</td>
-        <td class="cheapest">$600-1,800/yr (infra)</td>
-      </tr>
-      <tr>
-        <td><strong>100 hosts full stack</strong></td>
-        <td class="expensive">~$66,000/yr</td>
-        <td>~$3,600-9,600/yr</td>
-        <td>~$6,000-12,000/yr</td>
-        <td>~$7,200-12,000/yr</td>
-        <td class="cheapest">$2,400-6,000/yr (infra)</td>
-      </tr>
-      <tr>
-        <td><strong>500 hosts enterprise</strong></td>
-        <td class="expensive">~$330,000/yr</td>
-        <td>~$24,000-60,000/yr</td>
-        <td>~$36,000-72,000/yr</td>
-        <td>~$36,000-60,000/yr</td>
-        <td class="cheapest">$12,000-30,000/yr (infra)</td>
-      </tr>
-      <tr>
-        <td><strong>100GB/day logs (any scale)</strong></td>
-        <td class="expensive">~$61,200/yr (ingest + index)</td>
-        <td>~$18,000/yr</td>
-        <td>~$21,600/yr</td>
-        <td>~$14,400/yr</td>
-        <td class="cheapest">$1,200-3,600/yr (storage)</td>
-      </tr>
+      <tr><td><strong>Datadog</strong></td><td>Infrastructure Pro $15/host/mo billed annually ($18 on-demand); Enterprise $23 ($27 on-demand); APM $31/host/mo with Infrastructure ($36 on-demand); logs $0.10/GB ingested, $1.70 per million events indexed (15-day retention)</td></tr>
+      <tr><td><strong>Grafana Cloud</strong></td><td>Pro $19/mo platform fee; metrics $6.50 per 1k series above 10k; Application Observability $0.025/host hour ($18/host) above 2,232 host hours</td></tr>
+      <tr><td><strong>New Relic</strong></td><td>100 GB/mo of data free, then $0.40/GB; full platform users: 1 free, Standard $10 for the first and $99 for each additional (up to 5), Pro $349/user/mo billed annually</td></tr>
+      <tr><td><strong>Better Stack</strong></td><td>Responder licence $29/mo; logs and traces 3 GB/mo included, then priced per GB ingested</td></tr>
+      <tr><td><strong>Self-Hosted (Prometheus/SigNoz)</strong></td><td>Software free; you pay for servers and storage</td></tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>Why Datadog costs explode:</strong> Datadog uses <strong>per-host pricing</strong> ($15-31/host/mo for Infrastructure, $31-40/host/mo for APM) that scales linearly. But the real trap is that every feature is a separate add-on: APM, Log Management, Synthetics, SIEM, Database Monitoring, and Continuous Profiler are each priced independently. At 50 hosts with APM + logs, you're paying for 3 separate products. At 500 hosts, that's $330K+/year &mdash; more than many companies spend on the infrastructure being monitored. Grafana Cloud, New Relic, and Better Stack include APM and logs in base pricing. Self-hosted eliminates per-host costs entirely.
+    <strong>Why Datadog costs explode:</strong> Datadog Infrastructure Pro is $15 per host per month, Enterprise $23. APM is $31 per host per month with Infrastructure Monitoring, billed annually. But the real trap is that every feature is a separate add-on: APM, Log Management, Synthetics, SIEM, Database Monitoring, and Continuous Profiler are each priced independently. At 50 hosts with APM + logs, you're paying for 3 separate products. Grafana Cloud bills Application Observability at $18 per host per month above 2,232 free host hours. New Relic bills $0.40 per GB of data ingested beyond 100 GB a month. Better Stack bills logs and traces per GB ingested. Self-hosted eliminates per-host costs entirely.
   </div>
 
   <div class="context-box">
-    <strong>The cardinality trap:</strong> Beyond per-host pricing, Datadog charges $0.05/custom metric for high-cardinality metrics. A single Kubernetes cluster with 200 pods can generate 50,000+ custom metrics = $2,500/mo in cardinality charges alone. New Relic and Grafana Cloud don't charge per-metric on their free tiers. If you use custom tags heavily, cardinality fees can exceed your base monitoring bill.
+    <strong>The cardinality trap:</strong> Datadog includes 100 custom metrics per host on Pro, 200 on Enterprise. Usage beyond that is billed at an unpublished rate. New Relic and Grafana Cloud don't charge per-metric on their free tiers. If you use custom tags heavily, cardinality fees can exceed your base monitoring bill.
   </div>
 
   <div class="context-box">
@@ -40889,7 +40838,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Simple uptime monitoring &rarr; UptimeRobot</strong>
-      <p>50 monitors at 5-min intervals. Dead simple setup. Email + webhook alerts. Free status page. Handles HTTP, keyword, ping, and port checks.</p>
+      <p>50 monitors at 5-min intervals. Dead simple setup. Free plan includes email alerts plus Google Chat, Discord, Pushover, Pushbullet and Splunk. Webhooks, Slack, Mattermost, Telegram, MS Teams, Zapier, PagerDuty and SSL monitoring require a paid plan. Free status page. Handles HTTP, keyword, ping, and port checks.</p>
     </div>
 
     <div class="verdict-item">
@@ -40909,7 +40858,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Best for serverless (Lambda/Edge) &rarr; New Relic or Axiom</strong>
-      <p>Serverless functions generate bursty, high-volume telemetry that per-host pricing can't handle. New Relic's 100GB ingest with no host counting, or Axiom's 500GB with unlimited users, fit serverless architectures where "hosts" are ephemeral. Datadog charges per-function invocation for serverless &mdash; avoid.</p>
+      <p>Serverless functions generate bursty, high-volume telemetry that per-host pricing can't handle. New Relic's 100GB ingest with no host counting, or Axiom's 500GB, fit serverless architectures where "hosts" are ephemeral. Datadog charges per-function invocation for serverless &mdash; avoid.</p>
     </div>
 
     <div class="verdict-item">
@@ -40947,7 +40896,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Per-host pricing that scales linearly</h3>
-    <div class="diff-desc">Datadog ($15-31/host/mo) and Sematext charge per host. Auto-scaling infrastructure means your monitoring bill fluctuates with your cloud bill. A Black Friday traffic spike that scales you to 200 hosts also scales your Datadog bill to $6,000+/mo &mdash; and that's just infrastructure monitoring, before APM or logs.</div>
+    <div class="diff-desc">Datadog ($15-23/host/mo for infrastructure, billed annually) and Sematext charge per host. Auto-scaling infrastructure means your monitoring bill fluctuates with your cloud bill. A Black Friday traffic spike that scales you to 200 hosts also scales your Datadog bill to $3,000/mo at list price (Infrastructure Pro, billed annually) &mdash; and that's just infrastructure monitoring, before APM or logs.</div>
   </div>
 
   <div class="diff-card">
@@ -40957,12 +40906,12 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Alert channel limitations</h3>
-    <div class="diff-desc">Many free tiers limit alert delivery to email only. No Slack, PagerDuty, or phone call alerts without upgrading. UptimeRobot supports webhooks on free, which is a workaround. Grafana Cloud includes all notification channels on free tier &mdash; another reason it leads.</div>
+    <div class="diff-desc">Many free tiers limit alert delivery to email only. No Slack, PagerDuty, or phone call alerts without upgrading. UptimeRobot's free plan includes Google Chat, Discord, Pushover, Pushbullet and Splunk. Webhooks, Slack, Mattermost, Telegram, MS Teams, Zapier and PagerDuty require paid plans. Grafana Cloud Free accounts opened from April 20, 2026 can only send email alerts to users within the Grafana instance. Webhooks remain functional.</div>
   </div>
 
   <div class="diff-card">
     <h3>Datadog custom metric cardinality charges</h3>
-    <div class="diff-desc">Custom metrics cost $0.05/metric/month. With Kubernetes labels, container IDs, and dynamic tags, a modest cluster can generate 50,000+ custom metrics without you noticing. That's $2,500/mo in surprise cardinality charges &mdash; often discovered only on the first bill. Use metric aggregation rules and allowlists to prevent runaway cardinality.</div>
+    <div class="diff-desc">Datadog includes 100 custom metrics per host on Pro, 200 on Enterprise. Usage beyond that is billed at an unpublished rate. With Kubernetes labels, container IDs, and dynamic tags, a modest cluster can generate 50,000+ custom metrics without you noticing. Use metric aggregation rules and allowlists to prevent runaway cardinality.</div>
   </div>
 
   <div class="diff-card">
@@ -45500,7 +45449,7 @@ ${globalNavCss()}
 
   <h3>Monitoring: Per-Host Pricing Explodes</h3>
   <div class="callout callout-warn">
-    At 100 hosts, <strong>Datadog costs ~$5,500/mo</strong> while <strong>Grafana Cloud costs ~$300&ndash;$800/mo</strong>. Datadog&rsquo;s 1-day free retention makes the free tier practically unusable for debugging.
+    At 100 hosts and list price, Datadog Infrastructure Pro costs $1,500 a month billed annually ($1,800 on-demand). With APM, it costs $4,600 a month billed annually ($5,400 on-demand). Grafana Cloud Application Observability for 100 hosts costs about $1,800 a month plus a $19 platform fee. Logs are not included in either. Datadog&rsquo;s 1-day free retention makes the free tier practically unusable for debugging.
     <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/monitoring-comparison-2026">Full monitoring comparison &rarr;</a></span>
   </div>
 
