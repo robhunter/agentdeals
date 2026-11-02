@@ -15,7 +15,7 @@ const CHECK_DATE_NAMED = /(?:Figures compiled|Compiled) \d{4}-\d{2}-\d{2}, last 
 const NOT_RE_CHECKED = /(?:Figures compiled|Compiled) \d{4}-\d{2}-\d{2}, not re-checked since/;
 const DATE_MODIFIED = /"dateModified"\s*:\s*"(\d{4}-\d{2}-\d{2})"/;
 
-const A_PAGE_THAT_COMPILES_ITS_FIGURES = "/gemini-api-pricing-2026";
+const PAGES_THAT_COMPILE_THEIR_FIGURES = ["/gemini-api-pricing-2026", "/vector-database-pricing"];
 
 function registeredPages(): PageReviewRecord[] {
   return parsePageReviews(readFileSync(path.join(REPO, "data", "page-reviews.json"), "utf-8")).pages;
@@ -109,55 +109,57 @@ describe("a page names no check date that dateModified does not carry", () => {
   });
 });
 
-describe("what a page stamps follows the outcome its review recorded", () => {
-  const PUBLISHED = registeredPages().find(p => p.path === A_PAGE_THAT_COMPILES_ITS_FIGURES)!.published;
-  const REVIEWED_ON = "2026-09-13";
+for (const pagePath of PAGES_THAT_COMPILE_THEIR_FIGURES) {
+  describe(`${pagePath} stamps the outcome its review recorded`, () => {
+    const PUBLISHED = registeredPages().find(p => p.path === pagePath)!.published;
+    const REVIEWED_ON = "2026-09-13";
 
-  const underOutcome = async (outcome: Record<string, unknown>): Promise<Stamps & { body: string }> => {
-    const fixture = registerWith(REPO, "byline-", { [A_PAGE_THAT_COMPILES_ITS_FIGURES]: outcome });
-    const { proc, port } = await startServer({ AGENTDEALS_PAGE_REVIEWS_PATH: fixture.file });
-    try {
-      const html = await (await fetch(`http://localhost:${port}${A_PAGE_THAT_COMPILES_ITS_FIGURES}`)).text();
-      return { ...stampsOn(html), body: readableBody(html) };
-    } finally {
-      proc.kill("SIGKILL");
-      rmSync(fixture.dir, { recursive: true, force: true });
-    }
-  };
+    const underOutcome = async (outcome: Record<string, unknown>): Promise<Stamps & { body: string }> => {
+      const fixture = registerWith(REPO, "byline-", { [pagePath]: outcome });
+      const { proc, port } = await startServer({ AGENTDEALS_PAGE_REVIEWS_PATH: fixture.file });
+      try {
+        const html = await (await fetch(`http://localhost:${port}${pagePath}`)).text();
+        return { ...stampsOn(html), body: readableBody(html) };
+      } finally {
+        proc.kill("SIGKILL");
+        rmSync(fixture.dir, { recursive: true, force: true });
+      }
+    };
 
-  it("names the review date on a page the review cleared", async () => {
-    const stamps = await underOutcome(reviewPassedOn(REVIEWED_ON));
+    it("names the review date on a page the review cleared", async () => {
+      const stamps = await underOutcome(reviewPassedOn(REVIEWED_ON));
 
-    assert.strictEqual(stamps.checkDateNamed, REVIEWED_ON);
-    assert.strictEqual(stamps.dateModified, REVIEWED_ON);
-    assert.strictEqual(stamps.saysNotReChecked, false);
+      assert.strictEqual(stamps.checkDateNamed, REVIEWED_ON);
+      assert.strictEqual(stamps.dateModified, REVIEWED_ON);
+      assert.strictEqual(stamps.saysNotReChecked, false);
+    });
+
+    it("names no check date on a page the same review found wrong, and still reports the review", async () => {
+      const stamps = await underOutcome(reviewFailedOn(REVIEWED_ON));
+
+      assert.strictEqual(stamps.checkDateNamed, null);
+      assert.strictEqual(stamps.dateModified, PUBLISHED);
+      assert.strictEqual(stamps.saysNotReChecked, false,
+        "a page we read on the review date is telling readers it has not been re-checked since it was compiled");
+      assert.match(stamps.body, new RegExp(`Reviewed ${REVIEWED_ON}, corrections outstanding`));
+    });
+
+    it("says it has not been re-checked on a page no review has read", async () => {
+      const stamps = await underOutcome(NEVER_REVIEWED);
+
+      assert.strictEqual(stamps.checkDateNamed, null);
+      assert.strictEqual(stamps.saysNotReChecked, true);
+      assert.strictEqual(stamps.dateModified, PUBLISHED);
+    });
+
+    it("moves the reader's date and the machine's date on the same review", async () => {
+      const cleared = await underOutcome(reviewPassedOn(REVIEWED_ON));
+      const notCleared = await underOutcome(reviewFailedOn(REVIEWED_ON));
+
+      assert.notStrictEqual(cleared.dateModified, notCleared.dateModified);
+      assert.notStrictEqual(cleared.checkDateNamed, notCleared.checkDateNamed);
+      assert.strictEqual(cleared.checkDateNamed, cleared.dateModified);
+      assert.strictEqual(notCleared.checkDateNamed, null);
+    });
   });
-
-  it("names no check date on a page the same review found wrong, and still reports the review", async () => {
-    const stamps = await underOutcome(reviewFailedOn(REVIEWED_ON));
-
-    assert.strictEqual(stamps.checkDateNamed, null);
-    assert.strictEqual(stamps.dateModified, PUBLISHED);
-    assert.strictEqual(stamps.saysNotReChecked, false,
-      "a page we read on the review date is telling readers it has not been re-checked since it was compiled");
-    assert.match(stamps.body, new RegExp(`Reviewed ${REVIEWED_ON}, corrections outstanding`));
-  });
-
-  it("says it has not been re-checked on a page no review has read", async () => {
-    const stamps = await underOutcome(NEVER_REVIEWED);
-
-    assert.strictEqual(stamps.checkDateNamed, null);
-    assert.strictEqual(stamps.saysNotReChecked, true);
-    assert.strictEqual(stamps.dateModified, PUBLISHED);
-  });
-
-  it("moves the reader's date and the machine's date on the same review", async () => {
-    const cleared = await underOutcome(reviewPassedOn(REVIEWED_ON));
-    const notCleared = await underOutcome(reviewFailedOn(REVIEWED_ON));
-
-    assert.notStrictEqual(cleared.dateModified, notCleared.dateModified);
-    assert.notStrictEqual(cleared.checkDateNamed, notCleared.checkDateNamed);
-    assert.strictEqual(cleared.checkDateNamed, cleared.dateModified);
-    assert.strictEqual(notCleared.checkDateNamed, null);
-  });
-});
+}

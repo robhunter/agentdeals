@@ -30973,7 +30973,7 @@ function buildVectorDatabasePricingPage(): string {
     "headline": title,
     "description": metaDesc,
     "datePublished": pubDate,
-    "dateModified": pubDate,
+    "dateModified": pageDateModified("/vector-database-pricing", pubDate),
     "publisher": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
     "mainEntityOfPage": { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
     "about": { "@type": "SoftwareApplication", "applicationCategory": "Vector Database", "name": "Vector Database Pricing Comparison" },

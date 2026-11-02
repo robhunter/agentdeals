@@ -1,7 +1,8 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, assertPopulationFloor, pagesOnTheReviewRegister } from "./population-floor.ts";
@@ -47,12 +48,12 @@ function slugsHoldingAWithdrawnRecord(): Set<string> {
   return held;
 }
 
-function startServer(): Promise<{ proc: ChildProcess; port: number }> {
+function startServer(env: NodeJS.ProcessEnv = {}): Promise<{ proc: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       cwd: REPO,
       stdio: ["ignore", "ignore", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", ...env },
     });
     const timer = setTimeout(() => { child.kill("SIGKILL"); reject(new Error("server startup timeout")); }, 60000);
     child.stderr!.on("data", (buffer: Buffer) => {
@@ -165,9 +166,16 @@ describe("marking a compiled figure the change log has moved past", () => {
     assertCoversPopulation(swept.length, pagesOnTheReviewRegister(), "registered pages rendered and read for markers");
   });
 
-  it("reads enough resolved subjects for the property to bite", () => {
-    const subjects = swept.reduce((n, page) => n + page.reachableStale.length, 0);
-    assertPopulationFloor(subjects, 24, "registered subjects the resolver reaches whose record post-dates the page");
+  function staleSubjectsOnRegisteredPages() {
+    return {
+      size: swept.reduce((n, page) => n + page.reachableStale.length, 0),
+      read: "registered subjects the resolver reaches whose record post-dates the page",
+    };
+  }
+
+  it("marks the current population of resolved stale subjects", () => {
+    const marked = swept.reduce((n, page) => n + page.reachableStale.length - page.unmarked.length, 0);
+    assertCoversPopulation(marked, staleSubjectsOnRegisteredPages(), "resolved stale subjects carrying a record marker");
   });
 
   it("marks every subject a page names whose record post-dates the figures it publishes", () => {
@@ -244,4 +252,36 @@ describe("marking a compiled figure the change log has moved past", () => {
     );
     assert.deepStrictEqual(restated, []);
   });
+});
+
+
+describe("a compiled marker with an isolated change log", () => {
+  for (const hasChange of [false, true]) {
+    it(hasChange ? "marks the planted Qdrant change" : "needs no marker when there are no changes", async () => {
+      const dir = mkdtempSync(path.join(tmpdir(), "compiled-marker-"));
+      const changesPath = path.join(dir, "changes.json");
+      writeFileSync(changesPath, JSON.stringify({ changes: hasChange ? [{
+        vendor: "Qdrant",
+        date: "2026-04-11",
+        change_type: "limits_reduced",
+        previous_state: "Previous vector allowance",
+        current_state: "Reduced vector allowance",
+        summary: "Qdrant reduced its vector allowance.",
+        source_url: "https://qdrant.tech/pricing/",
+        impact: "medium",
+      }] : [] }));
+      let server: Awaited<ReturnType<typeof startServer>> | undefined;
+      try {
+        server = await startServer({ AGENTDEALS_CHANGES_PATH: changesPath });
+        const response = await fetch(`http://localhost:${server.port}/vector-database-pricing`);
+        assert.strictEqual(response.status, 200);
+        const html = await response.text();
+        assert.ok(subjectsTheResolverReaches(html).has("qdrant"));
+        assert.strictEqual(recordMarkerSlugs(html).has("qdrant"), hasChange);
+      } finally {
+        server?.proc.kill("SIGKILL");
+        rmSync(dir, { recursive: true, force: true });
+      }
+    });
+  }
 });
