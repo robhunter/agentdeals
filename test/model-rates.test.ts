@@ -100,30 +100,39 @@ describe("choosing and formatting a rate to publish", () => {
   });
 
   it("marks a rate that states only an input price", () => {
-    assert.equal(formatRate({ model: "GPT-4o", input: "$2.50", output: null }), "$2.50 (GPT-4o, input only)");
+    assert.equal(formatRate({ model: "GPT-4o", input: "$2.50", output: null }), "GPT-4o $2.50 (input only)");
+  });
+
+  it("leaves unnamed paired and input-only figures unchanged", () => {
+    assert.equal(formatRate({ model: null, input: "$0.10", output: "$0.50" }), "$0.10/$0.50");
+    assert.equal(formatRate({ model: null, input: "$2.50", output: null }), "$2.50 (input only)");
+  });
+
+  it("keeps the model before a paired rate without changing its amount spelling", () => {
+    assert.equal(formatRate({ model: "Large 2.5", input: "$1,250.50", output: "$4,000.00" }), "Large 2.5 $1,250.50/$4,000.00");
   });
 
   it("lists two models even when their figures match", () => {
     const rates = readModelRates("Flash $1/$4. Flash Thinking $1/$4.");
-    assert.equal(formatRateSpan(rates), "$1/$4 (Flash), $1/$4 (Flash Thinking)");
+    assert.equal(formatRateSpan(rates), "Flash $1/$4, Flash Thinking $1/$4");
   });
 
   it("keeps a single input-only rate and orders short lists without changing the input", () => {
     const rates = readModelRates("Large $10/$50. Small $1/M input.");
     const original = structuredClone(rates);
-    assert.equal(formatRateSpan(rates.slice(1)), "$1 (Small, input only)");
-    assert.equal(formatRateSpan(rates), "$1 (Small, input only), $10/$50 (Large)");
+    assert.equal(formatRateSpan(rates.slice(1)), "Small $1 (input only)");
+    assert.equal(formatRateSpan(rates), "Small $1 (input only), Large $10/$50");
     assert.deepEqual(rates, original);
   });
 
   it("retains the cheapest-to-dearest span for four or more rates", () => {
     const rates = readModelRates("Large $10/$50. Mid $5/$25. Small $1/$5. Mini $0.1/$0.5.");
-    assert.equal(formatRateSpan(rates), "$0.1/$0.5 (Mini) – $10/$50 (Large)");
-    assert.equal(formatRateSpan([...rates, { model: "Medium", input: "$3", output: "$15" }]), "$0.1/$0.5 (Mini) – $10/$50 (Large)");
+    assert.equal(formatRateSpan(rates), "Mini $0.1/$0.5 – Large $10/$50");
+    assert.equal(formatRateSpan([...rates, { model: "Medium", input: "$3", output: "$15" }]), "Mini $0.1/$0.5 – Large $10/$50");
   });
 
   it("names the model beside the figures", () => {
-    assert.equal(formatRateSpan(lineup), "$1/$5 (Haiku 4.5), $5/$25 (Opus 5), $10/$50 (Fable 5.1)");
+    assert.equal(formatRateSpan(lineup), "Haiku 4.5 $1/$5, Opus 5 $5/$25, Fable 5.1 $10/$50");
   });
 });
 

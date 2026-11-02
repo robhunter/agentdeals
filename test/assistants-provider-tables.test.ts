@@ -98,7 +98,7 @@ function functionBody(source: string, name: string): string {
 }
 
 function ratePairsIn(text: string): string[] {
-  return [...text.matchAll(/\$\d[\d.,]*\s*\/\s*\$\d[\d.,]*/g)].map(m => m[0].replace(/\s+/g, ""));
+  return [...text.matchAll(/\$\d+(?:,\d{3})*(?:\.\d+)?\s*\/\s*\$\d+(?:,\d{3})*(?:\.\d+)?/g)].map(m => m[0].replace(/\s+/g, ""));
 }
 
 function indexedRatePairs(): Set<string> {
@@ -159,6 +159,12 @@ describe("AI provider tables on the Assistants API pages", () => {
         );
       }
     }
+  });
+
+  it("reads decimal and grouped rate pairs without consuming list punctuation", () => {
+    assert.deepEqual(ratePairsIn("First $0.0375/$0.15, Second $1.00/$2.00. Third $1,250.50 / $4,000.00 per MTok"), [
+      "$0.0375/$0.15", "$1.00/$2.00", "$1,250.50/$4,000.00",
+    ]);
   });
 
   it("prices every index-backed table cell at a rate a record carries", () => {

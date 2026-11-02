@@ -115,7 +115,7 @@ describe("the LLM provider tables on the AI guides read each vendor's listing", 
         const row = readable(cells.join(" "));
         const expected = [
           ...(table.includes("<th>Free Tier</th>") ? ["17 requests a minute on Zorblax-9B"] : []),
-          ...(table.includes("<th>Paid Rate</th>") ? ["$0.13/$0.47 (Zorblax-9B)"] : []),
+          ...(table.includes("<th>Paid Rate</th>") ? ["Zorblax-9B $0.13/$0.47"] : []),
           ...(table.includes("<th>Recorded Tier</th>") ? [SYNTHETIC_TIER] : []),
         ];
         if (expected.length === 0) problems.push(`${page}: a listing-backed table shows neither terms, rate nor tier`);
@@ -150,7 +150,7 @@ describe("the LLM provider tables on the AI guides read each vendor's listing", 
           if (tierAt > 0 && readable(cells[tierAt]) !== record.tier) problems.push(`${page}: ${slug} tier "${readable(cells[tierAt])}", listing "${record.tier}"`);
           if (rateAt > 0) {
             const listed = new Set(readModelRates(record.description).map((r: { input: string; output: string | null }) => `${r.input}/${r.output}`));
-            for (const pair of readable(cells[rateAt]).match(/\$[\d.,]+\/\$[\d.,]+/g) ?? []) {
+            for (const pair of readable(cells[rateAt]).match(/\$\d+(?:,\d{3})*(?:\.\d+)?\/\$\d+(?:,\d{3})*(?:\.\d+)?/g) ?? []) {
               if (!listed.has(pair)) problems.push(`${page}: ${slug} prints ${pair}, which its listing does not state`);
             }
           }
@@ -187,12 +187,22 @@ const RATE_PAGES = [...PAGES, "/openai-assistants-alternatives"];
 describe("short model price lists in provider tables", () => {
   let pages: Map<string, string>;
   let changed: Map<string, string>;
+  let ranged: Map<string, string>;
+  let inputOnly: Map<string, string>;
 
   before(async () => {
-    pages = await servePages(shipped, [...RATE_PAGES, "/vendor/groq"]);
+    pages = await servePages(shipped, [...RATE_PAGES, "/openai-assistants-migration-2026", "/vendor/groq"]);
     changed = await servePages(catalogueWith(o => o.vendor === SUBJECT ? {
       ...o,
       description: "High $3/$9; Low $0.1/$0.4; Middle $1/$4.",
+    } : o), RATE_PAGES);
+    ranged = await servePages(catalogueWith(o => o.vendor === SUBJECT ? {
+      ...o,
+      description: "High $3/$9; Low $0.1/$0.4; Middle $1/$4; Other $2/$8.",
+    } : o), RATE_PAGES);
+    inputOnly = await servePages(catalogueWith(o => o.vendor === SUBJECT ? {
+      ...o,
+      description: "Small $1/M input.",
     } : o), RATE_PAGES);
   });
 
@@ -211,11 +221,52 @@ describe("short model price lists in provider tables", () => {
       const rates = readModelRates(subjectOffer.description);
       const cell = rateCell(pages.get(page)!, "groq");
       const shown = rates.length <= 3 ? rates : [rates.reduce((a, b) => dollars(a.input) <= dollars(b.input) ? a : b), rates.reduce((a, b) => dollars(a.input) >= dollars(b.input) ? a : b)];
-      for (const rate of shown) assert.ok(cell.includes(`${rate.input}/${rate.output} (${rate.model})`), cell);
+      for (const rate of shown) assert.ok(cell.includes(`${rate.model} ${rate.input}/${rate.output}`), cell);
+    });
+
+    it(`keeps model names before their figures in every paid cell on ${page}`, () => {
+      let cellsRead = 0;
+      for (const table of listingTables(pages.get(page)!)) {
+        const headers = [...table.matchAll(/<th\b[^>]*>([\s\S]*?)<\/th>/gi)].map(m => readable(m[1]));
+        const at = headers.indexOf("Paid Rate");
+        if (at < 0) continue;
+        for (const row of bodyRows(table)) {
+          if (row.length !== headers.length) continue;
+          cellsRead++;
+          assert.doesNotMatch(readable(row[at]), /\$[\d.,]+(?:\/\$[\d.,]+)? \((?!input only\))[^)]+\)/);
+        }
+      }
+      assert.ok(cellsRead > 0, page);
+      for (const paragraph of pages.get(page)!.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)) {
+        const text = readable(paragraph[1]);
+        if (/lowest paid rate|top of the lineup/.test(text)) {
+          assert.doesNotMatch(text, /\$[\d.,]+(?:\/\$[\d.,]+)? \((?!input only\))[^)]+\)/);
+        }
+      }
+    });
+
+    it(`names both ends of a four-model span on ${page}`, () => {
+      assert.equal(rateCell(ranged.get(page)!, "groq"), "Low $0.1/$0.4 – High $3/$9 per MTok");
+    });
+
+    it(`keeps an input-only marker after its figures on ${page}`, () => {
+      assert.equal(rateCell(inputOnly.get(page)!, "groq"), "Small $1 (input only) per MTok");
     });
 
     it(`follows a replacement listing's middle rate on ${page}`, () => {
-      assert.equal(rateCell(changed.get(page)!, "groq"), "$0.1/$0.4 (Low), $1/$4 (Middle), $3/$9 (High) per MTok");
+      assert.equal(rateCell(changed.get(page)!, "groq"), "Low $0.1/$0.4, Middle $1/$4, High $3/$9 per MTok");
+    });
+  }
+
+  for (const page of ["/openai-assistants-alternatives", "/openai-assistants-migration-2026"]) {
+    it(`puts the model before its figures in both rate summaries on ${page}`, () => {
+      const summaries = [...pages.get(page)!.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)]
+        .map(m => readable(m[1])).filter(text => /lowest paid rate|top of the lineup/.test(text));
+      assert.equal(summaries.length, 2);
+      for (const text of summaries) {
+        assert.match(text, /— [^$()]+ \$[\d.,]+\/\$[\d.,]+ per MTok/);
+        assert.doesNotMatch(text, /\$[\d.,]+\/\$[\d.,]+ \(/);
+      }
     });
   }
 
@@ -225,7 +276,7 @@ describe("short model price lists in provider tables", () => {
       const rates = readModelRates(offer.description);
       const cell = rateCell(pages.get(page)!, "xai");
       if (rates.length <= 3) {
-        for (const rate of rates) assert.ok(cell.includes(`${rate.input}/${rate.output} (${rate.model})`), cell);
+        for (const rate of rates) assert.ok(cell.includes(`${rate.model} ${rate.input}/${rate.output}`), cell);
         assert.ok(!cell.includes(" – "), cell);
       }
     });

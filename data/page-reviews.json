@@ -2800,7 +2800,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 29,
+      "table_figures": 28,
       "table_figures_from_records": 3,
       "tables": [
         {
@@ -2810,7 +2810,7 @@
         },
         {
           "label": "The DevSecOps Cost Trap",
-          "figures": 20,
+          "figures": 19,
           "from_records": 0
         },
         {
