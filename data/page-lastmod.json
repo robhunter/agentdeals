@@ -10,8 +10,8 @@
       "changed": "2026-10-29"
     },
     "/agent-payments": {
-      "hash": "3780947eb7faba29",
-      "changed": "2026-10-29"
+      "hash": "97288face338de5a",
+      "changed": "2026-11-02"
     },
     "/agent-stack": {
       "hash": "1dd54900ca4fcd3f",
@@ -804,8 +804,8 @@
       "changed": "2026-10-09"
     },
     "/auth-comparison-2026": {
-      "hash": "2c78b5b7a26cfa70",
-      "changed": "2026-11-01"
+      "hash": "2358c8c186cc3cb8",
+      "changed": "2026-11-02"
     },
     "/auth0-alternatives": {
       "hash": "610c6b4b2551435a",
@@ -1346,8 +1346,8 @@
       "changed": "2026-11-01"
     },
     "/cicd-free-tier-comparison-2026": {
-      "hash": "b6c9e374797f7530",
-      "changed": "2026-11-01"
+      "hash": "bc2a86ac46391717",
+      "changed": "2026-11-02"
     },
     "/circleci-vs-github-actions": {
       "hash": "5905b95d88c14d47",
@@ -9637,8 +9637,8 @@
       "changed": "2026-11-01"
     },
     "/x402-services": {
-      "hash": "62f7c1dc274a373b",
-      "changed": "2026-10-29"
+      "hash": "fbddacade220adc6",
+      "changed": "2026-11-02"
     }
   }
 }
