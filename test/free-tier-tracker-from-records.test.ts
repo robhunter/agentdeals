@@ -246,8 +246,8 @@ describe("/free-tier-tracker's hand-typed cards say when their figures were true
     assert.ok(names.some((name) => name.endsWith(FREE_TIER_TRACKER_HEADING)), "no page names it by its heading");
   });
 
-  const cards = (): { vendor: string; date: string; text: string; note: string; noteHtml: string }[] =>
-    page
+  const cards = (html = page): { vendor: string; date: string; text: string; note: string; noteHtml: string }[] =>
+    html
       .split(/(?=<div style="padding:1\.25rem;border:1px solid var\(--border\);border-left:3px solid)/)
       .slice(1)
       .map((piece) => {
@@ -270,10 +270,10 @@ describe("/free-tier-tracker's hand-typed cards say when their figures were true
     }
   });
 
-  it("tells a reader the Neon card's storage was January's and gives today's from the listing", () => {
+  it("dates the Neon expansion figures to their record and links today's terms", () => {
     const neon = cards().find((c) => c.vendor === "Neon");
     assert.ok(neon, "the Neon card is gone");
-    assert.strictEqual(neon.note, "These were January's figures; Neon's free plan now gives 1 GB of storage per project, 20 GB in total ( our Neon listing ).");
+    assert.strictEqual(neon.note, "Figures as of 2025-12-19. Today's terms: our Neon listing .");
     assert.ok(neon.noteHtml.includes('<a href="/vendor/neon">'), "the Neon card does not link the listing");
   });
 
@@ -283,6 +283,49 @@ describe("/free-tier-tracker's hand-typed cards say when their figures were true
     assert.ok(terragrunt.text.includes("up to 25 infrastructure units"), "the Terragrunt Scale card does not give 25 infrastructure units");
     assert.ok(!terragrunt.text.includes("500+"), "the Terragrunt Scale card still gives 500+");
     assert.strictEqual(terragrunt.noteHtml, "", "the Terragrunt Scale card carries a dated note");
+  });
+
+  it("offers available search alternatives and states the closed API's end date", () => {
+    const brave = cards().find((c) => c.vendor === "Brave Search API");
+    assert.ok(brave);
+    const alternatives = brave.text.slice(brave.text.indexOf("Still free:"));
+    assert.ok(alternatives.includes("SerpAPI"));
+    assert.ok(alternatives.includes("Exa"));
+    assert.ok(!alternatives.includes("Google Custom Search"));
+    assert.ok(brave.text.includes("Google Custom Search JSON API is closed to new customers and ends on January 1, 2027."));
+  });
+
+  it("keeps earlier launches out of the first-quarter introduction", () => {
+    const intro = textOf(page.match(/<div class="executive-summary">([\s\S]*?)<\/div>/)?.[1] ?? "");
+    assert.ok(intro.includes("Q1 2026"));
+    assert.doesNotMatch(intro, /GitHub Copilot|Terragrunt Scale/);
+  });
+
+  it("labels each expansion outside the first quarter as earlier", () => {
+    const start = page.indexOf('<h2 id="expanded">');
+    const section = page.slice(start, page.indexOf('<h2', start + 4));
+    const expansionCards = cards(section);
+    assert.deepStrictEqual(expansionCards.map((c) => c.vendor), ["Terragrunt Scale", "Neon", "Unity DevOps"]);
+    for (const card of expansionCards) {
+      assert.ok(card.date);
+      if (card.date < "2026-01-01" || card.date > "2026-03-31") {
+        assert.ok(card.text.includes("Before Q1 2026:"), card.vendor);
+      }
+    }
+  });
+
+  it("takes Neon's project expansion date and figures from the stored change", () => {
+    const neon = cards().find((c) => c.vendor === "Neon");
+    assert.ok(neon);
+    const records = trackedOnFile().filter((record: { vendor: string }) => record.vendor === "Neon");
+    const projects = records.find((r: { summary: string }) => r.summary.includes("the last of seven increases"));
+    assert.ok(projects);
+    assert.strictEqual(neon.date, projects.date);
+    assert.ok(neon.text.includes("from 10 to 100 in seven steps between 2025-08-29 and 2025-12-19"));
+    const auth = records.find((r: { summary: string }) => r.summary.includes("Neon Auth available on all plans"));
+    assert.ok(auth);
+    assert.ok(neon.text.includes(`on ${auth.date}`));
+    assert.doesNotMatch(neon.text, /2026-01-15|January's|0\.5 GB|60K MAU/);
   });
 
   it("does not offer Terragrunt Scale's 25 units as still free to HCP Terraform users leaving a 500-resource tier", () => {

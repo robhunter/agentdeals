@@ -147,7 +147,6 @@ const FAQ_ANSWERS = [
 const STATED_ELSEWHERE: Record<string, string[]> = {
   "/free-tier-tracker": [
     "Take advantage of expanded startup programs: Cloudflare $350K, Google Cloud $350K. These are more reliable than consumer free tiers.",
-    "But it’s not all erosion. Terragrunt Scale launched a free tier specifically to capture HCP Terraform refugees",
   ],
   "/cloud-free-tier-comparison-2026": [
     "Up to $350K Startup Program Credits",
