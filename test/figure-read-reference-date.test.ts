@@ -223,7 +223,7 @@ describe("the hetzner plan table is dated by the read that produced it", () => {
   });
 });
 
-describe("a page whose dates are source checks keeps every flag", () => {
+describe("a scoped monitoring price-table read leaves the page-wide flags standing", () => {
   const PAGE = "/monitoring-comparison-2026";
 
   it("declares no figure read", () => {

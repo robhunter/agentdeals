@@ -4408,7 +4408,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Cron"), "Should have cron monitoring section");
     assert.ok(html.includes("Self-Hosted"), "Should have self-hosted section");
     assert.ok(html.includes("Observability Cost Trap"), "Should have cost trap section");
-    assert.ok(html.includes("500 hosts"), "Should have 500-host scale in cost table");
+    assert.ok(html.includes("List Prices Beyond the Free Tier"), "Should have the list-price table");
     assert.ok(html.includes("By Use Case"), "Should have the use-case section");
     assert.ok(html.includes("serverless"), "Should have serverless verdict");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");

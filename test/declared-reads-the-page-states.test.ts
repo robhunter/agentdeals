@@ -13,7 +13,7 @@ const A_LISTINGS_CONDITIONS = new RegExp(`<ul class="${LISTING_CONDITIONS_CLASS}
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const SOURCE_CHECK_PAGE = "/monitoring-comparison-2026";
+const SOURCE_CHECK_PAGE = "/auth-comparison-2026";
 const ISO_DATE_AFTER_READ = /\bread\b[^.]{0,80}?(\d{4}-\d{2}-\d{2})/gi;
 
 let port = 0;
@@ -89,6 +89,12 @@ describe("a declared figure read is a date its own page states", () => {
     const html = await page(SOURCE_CHECK_PAGE);
     assert.deepStrictEqual(declaredFigureReadsFor(SOURCE_CHECK_PAGE), []);
     assert.deepStrictEqual(figureReadDatesStatedBy(html), []);
+  });
+
+  it("reads the monitoring price-table date without dating the other tables", async () => {
+    const path = "/monitoring-comparison-2026";
+    assert.deepStrictEqual(figureReadDatesStatedBy(await page(path)), ["2026-11-02"]);
+    assert.deepStrictEqual(declaredFigureReadsFor(path), []);
   });
 
   it("finds the source-check dates below the timeline the static half cuts away", async () => {
