@@ -22331,7 +22331,7 @@ function buildNeonVsSupabasePage(): string {
   const comparisonRows = [
     { feature: "Database Storage", neon: "1 GB per project, 20 GB in total", supabase: "500 MB", notes: "Neon allows 1 GB per project and 20 GB across all projects. Supabase's Free plan lists a 500 MB database size and a limit of 2 active projects." },
     { feature: "Projects", neon: "100", supabase: "2", notes: "Neon allows 50× more projects — ideal for microservices, multi-tenant apps, or per-client databases" },
-    { feature: "Compute", neon: "100 CU-hours/month, up to 2 CU (8 GB RAM)", supabase: "Shared compute (limited resources)", notes: "Neon offers explicit compute hours with auto-scaling. Supabase shared compute has no published limits" },
+    { feature: "Compute", neon: "100 CU-hours/month, up to 2 CU (8 GB RAM)", supabase: "Shared CPU, 500 MB RAM", notes: "Neon offers explicit compute hours with auto-scaling. Supabase's Free plan lists a shared CPU with 500 MB RAM" },
     { feature: "Branching", neon: "10 branches per project", supabase: "Paid only (Pro+)", notes: "Neon includes branching on the free plan; Supabase requires a paid plan." },
     { feature: "Auth (MAU)", neon: "60K MAU (Neon Auth)", supabase: "50K MAU (Supabase Auth)", notes: "Both include auth on the free plan." },
     { feature: "File Storage", neon: "5 GB object storage per project", supabase: "1 GB", notes: "Both include file storage on the free plan." },

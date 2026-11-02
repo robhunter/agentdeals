@@ -108,6 +108,18 @@ describe("Neon's Realtime is stated as in beta beside Supabase's generally avail
 
   after(() => { proc?.kill(); });
 
+  it("states Supabase's published Free compute in its Compute row", () => {
+    const rows = tableRows(html[NEON_VS_SUPABASE], "Feature");
+    const compute = rows.filter(cells => cells[0] === "Compute");
+    assert.deepStrictEqual(compute, [[
+      "Compute",
+      "100 CU-hours/month, up to 2 CU (8 GB RAM)",
+      "Shared CPU, 500 MB RAM",
+      "Neon offers explicit compute hours with auto-scaling. Supabase's Free plan lists a shared CPU with 500 MB RAM",
+    ]]);
+    assert.doesNotMatch(html[NEON_VS_SUPABASE], /Shared compute \(limited resources\)|no published limits/);
+  });
+
   it("gives Supabase's free Realtime the concurrent connections its listing states, in the verdict, the table and the backend card", () => {
     const [connections] = listingFigures("Supabase", /Realtime with ([\d,]+) concurrent connections/);
     const page = html[NEON_VS_SUPABASE];
