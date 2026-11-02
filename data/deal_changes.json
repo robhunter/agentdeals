@@ -17701,38 +17701,6 @@
       },
       "tier": "Pay-as-you-go",
       "tier_direction": "unchanged"
-    },
-    {
-      "vendor": "Grafana Cloud",
-      "change_type": "limits_reduced",
-      "date": "2026-04-07",
-      "date_source": "vendor_page",
-      "summary": "On 2026-04-07, Grafana Cloud introduced a hard limit of 1,000 dashboards and 1,000 folders per free tier stack. Stacks already above these limits kept their resources. Paid stacks received a soft limit that support could raise.",
-      "previous_state": "No limit on the number of dashboards and folders in a stack: Grafana's post of 2026-04-07 says \"we are introducing limits to the number of dashboards and folders that can be created in each Grafana stack.\"",
-      "current_state": "\"A hard limit of 1,000 dashboards and 1,000 folders for all free tier stacks. If existing stacks already exceed those limits, resources in excess will be preserved.\" (grafana.com/whats-new/2026-04-07-introducing-limits-to-dashboards-and-folders-resources, release date 2026-04-07, read 2026-11-02)",
-      "impact": "low",
-      "source_url": "https://grafana.com/whats-new/2026-04-07-introducing-limits-to-dashboards-and-folders-resources/",
-      "category": "Monitoring",
-      "alternatives": [],
-      "recorded_date": "2026-11-02",
-      "tier": "Free",
-      "tier_direction": "narrowed"
-    },
-    {
-      "vendor": "Grafana Cloud",
-      "change_type": "limits_reduced",
-      "date": "2026-04-20",
-      "date_source": "vendor_page",
-      "summary": "On 2026-04-20, Grafana Cloud restricted new Free and Trial accounts. Email alerts and reports can only go to users of their own Grafana instance; other recipients are rejected. Cloud Alertmanager is unavailable. Other alert integrations such as webhooks are unaffected. Accounts opened before April 20 are unaffected. Grafana stated this safeguarded the platform against unauthorized emails.",
-      "previous_state": "Free and Trial accounts could send email alerts and reports to any address and use the Cloud Alertmanager; accounts opened before 2026-04-20 still can.",
-      "current_state": "\"Users who open Grafana Cloud Free and Trial accounts can only send email alerts and reports to users within their Grafana instance. Other email recipients will be rejected. Additionally, the Cloud Alertmanager is no longer available for these instances, requiring all alerting to be configured via the native Grafana Alertmanager. All other integrations for alerting remain functional.\" \"Existing Grafana Cloud Free and Trial accounts opened before April 20 and all other Grafana Cloud account types are unaffected by these changes.\" (status.grafana.com/incidents/xg2h8ht1d44n, final update 2026-04-24, read 2026-11-02)",
-      "impact": "medium",
-      "source_url": "https://status.grafana.com/incidents/xg2h8ht1d44n",
-      "category": "Monitoring",
-      "alternatives": [],
-      "recorded_date": "2026-11-02",
-      "tier": "Free",
-      "tier_direction": "narrowed"
     }
   ]
 }
