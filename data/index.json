@@ -2436,7 +2436,21 @@
       "restatement_reverted": {
         "record_date": "2026-09-02",
         "reverted_on": "2026-10-09"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Free and Trial accounts opened on or after 2026-04-20 can only send email alerts and reports to users in their own Grafana instance. Other email recipients are rejected. Cloud Alertmanager is unavailable; native Grafana Alertmanager is used. Webhooks and other alert integrations are unaffected. Upgrading lifts the email limit. Older free accounts are unaffected.",
+          "quote": "Users who open Grafana Cloud Free and Trial accounts can only send email alerts and reports to users within their Grafana instance. Other email recipients will be rejected.",
+          "url": "https://status.grafana.com/incidents/xg2h8ht1d44n",
+          "read_on": "2026-11-02"
+        },
+        {
+          "text": "Free-tier stacks have a hard cap of 1,000 dashboards and 1,000 folders. Stacks already above the cap keep their existing resources.",
+          "quote": "A hard limit of 1,000 dashboards and 1,000 folders for all free tier stacks. If existing stacks already exceed those limits, resources in excess will be preserved.",
+          "url": "https://grafana.com/whats-new/2026-04-07-introducing-limits-to-dashboards-and-folders-resources/",
+          "read_on": "2026-11-02"
+        }
+      ]
     },
     {
       "vendor": "BetterStack",
