@@ -43963,26 +43963,26 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">Semgrep</td>
         <td>SAST + SCA</td>
-        <td>10 contributors, 50 private repos (unlimited public)</td>
+        <td>10 contributors, 10 private repos (unlimited public)</td>
         <td class="check">&#10003; LGPL-2.1</td>
         <td class="check">&#10003;</td>
-        <td class="check">&#10003; 50 repos</td>
+        <td class="check">&#10003; 10 repos</td>
         <td class="check">&#10003; OSS CLI</td>
       </tr>${vendorPageConditionsRowHtml("semgrep", 7)}
       <tr>
         <td class="provider-col">SonarCloud</td>
         <td>SAST + Code Quality</td>
-        <td>Free for public projects, unlimited</td>
+        <td>Free for public projects; private up to 50k LOC</td>
         <td class="partial">&#9679; SonarQube is OSS</td>
         <td class="check">&#10003;</td>
-        <td class="cross">&#10007; Public only</td>
+        <td class="check">&#10003; Up to 50k LOC</td>
         <td class="check">&#10003; SonarQube</td>
       </tr>${vendorPageConditionsRowHtml("sonarcloud", 7)}
       <tr>
         <td class="provider-col">CodeQL</td>
         <td>SAST (Semantic)</td>
         <td>Free for all public repos, no scan limits</td>
-        <td class="partial">&#9679; MIT (engine)</td>
+        <td class="partial">&#9679; Queries MIT; CLI under GitHub's CodeQL terms</td>
         <td class="check">&#10003; GitHub Actions</td>
         <td class="cross">&#10007; Public only (free)</td>
         <td class="cross">&#10007;</td>
@@ -43999,7 +43999,7 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">GitGuardian</td>
         <td>Secrets Detection</td>
-        <td>25 devs, 420+ secret types, unlimited real-time, 500 historical</td>
+        <td>25 devs, 550+ secret types, unlimited real-time, 500 historical</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; ggshield CLI</td>
         <td class="check">&#10003;</td>
@@ -44018,7 +44018,7 @@ ${globalNavCss()}
         <td class="provider-col">TruffleHog</td>
         <td>Secrets Detection</td>
         <td>Unlimited (OSS CLI)</td>
-        <td class="check">&#10003; Apache-2.0</td>
+        <td class="check">&#10003; AGPL-3.0</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
@@ -44071,7 +44071,7 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">StackHawk</td>
         <td>DAST</td>
-        <td>Removed April 2026 &mdash; was 1 app, unlimited scans</td>
+        <td>Removed mid-2024 &mdash; was 1 app, unlimited scans</td>
         <td class="cross">&#10007;</td>
         <td>Was included</td>
         <td>Was included</td>
@@ -44116,18 +44116,18 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">Socket.dev</td>
         <td>Supply Chain Security</td>
-        <td>Free for OSS + first private repo</td>
+        <td>1 dev seat, unlimited repos, 1,000 scans/mo</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
-        <td class="partial">&#9679; 1 private</td>
+        <td class="check">&#10003; Unlimited</td>
         <td class="cross">&#10007;</td>
       </tr>${vendorPageConditionsRowHtml("socket-dev", 7)}
       <tr>
         <td class="provider-col">SOOS</td>
         <td>SCA</td>
-        <td>Unlimited for OSS projects</td>
+        <td>Shut down in 2026 (soos.io returns HTTP 410)</td>
         <td class="cross">&#10007;</td>
-        <td class="check">&#10003;</td>
+        <td>Was included</td>
         <td class="cross">&#10007; OSS only</td>
         <td class="cross">&#10007;</td>
       </tr>${vendorPageConditionsRowHtml("soos", 7)}
@@ -44152,7 +44152,7 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">Twingate</td>
         <td>Zero Trust Access</td>
-        <td>5 users, 10 remote networks</td>
+        <td>5 users, 50 Resources</td>
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
@@ -44176,15 +44176,15 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Semgrep &mdash; best free SAST for teams</h3>
-    <div class="diff-desc">Open-source SAST engine with a managed platform. The OSS CLI is unlimited with 2,000+ community rules. The hosted platform (Semgrep Cloud) adds a free tier: 10 contributors, 50 private repos, unlimited public repos. Cross-file analysis, custom rules in YAML, and 30+ languages. The strongest combination of power and accessibility for teams that want managed SAST without paying.</div>
+    <div class="diff-desc">Open-source SAST engine with a managed platform. The OSS CLI is unlimited with 2,000+ community rules. The hosted platform (Semgrep Cloud) adds a free tier: 10 contributors, 10 private repos, unlimited public repos. Cross-file analysis, custom rules in YAML, and 30+ languages. The strongest combination of power and accessibility for teams that want managed SAST without paying.</div>
   </div>
   <div class="diff-card">
     <h3>SonarCloud / SonarQube &mdash; best for code quality + security</h3>
-    <div class="diff-desc">SonarCloud is free and unlimited for open-source projects &mdash; code quality, security analysis, and CI/CD integration across 15+ languages. For private repos, self-host SonarQube Community Edition (free, open source). SonarQube covers fewer security rules than dedicated SAST tools but excels at combining quality and security analysis in one workflow.</div>
+    <div class="diff-desc">SonarQube Cloud (formerly SonarCloud) is free for open-source projects and for private projects up to 50k lines of code, with code quality, security analysis and CI/CD integration across 40+ languages and frameworks. Larger private codebases can self-host SonarQube Community Edition (free, open source). SonarQube covers fewer security rules than dedicated SAST tools but excels at combining quality and security analysis in one workflow.</div>
   </div>
   <div class="diff-card">
     <h3>CodeQL &mdash; best for public repos on GitHub</h3>
-    <div class="diff-desc">GitHub&rsquo;s semantic code analysis engine. Free for all public repositories with no scan limits. Supports JS/TS, Python, Java, C#, C/C++, Go, Ruby, Swift, Kotlin. The semantic analysis approach catches vulnerabilities that pattern-matching tools miss (taint tracking, data flow analysis). Free for public repos; GitHub Advanced Security license required for private repos (enterprise only).</div>
+    <div class="diff-desc">GitHub&rsquo;s semantic code analysis engine. Free for all public repositories with no scan limits. Supports JS/TS, Python, Java, C#, C/C++, Go, Ruby, Swift, Kotlin. The semantic analysis approach catches vulnerabilities that pattern-matching tools miss (taint tracking, data flow analysis). Free for public repos; private repos need GitHub Code Security, $30 per active committer a month, sold on GitHub Team and Enterprise plans.</div>
   </div>
   <div class="diff-card">
     <h3>Snyk Code &mdash; real-time SAST with IDE integration</h3>
@@ -44208,7 +44208,7 @@ ${globalNavCss()}
   </div>
   <div class="diff-card">
     <h3>Socket.dev &mdash; supply chain threat detection</h3>
-    <div class="diff-desc">Goes beyond CVE scanning to detect supply chain attacks: typosquatting, install scripts, obfuscated code, author anomalies. Free for all open-source repos plus your first private repo. The unique &ldquo;package health score&rdquo; approach catches threats that traditional SCA tools miss entirely (zero-day supply chain attacks have no CVE to match against).</div>
+    <div class="diff-desc">Goes beyond CVE scanning to detect supply chain attacks: typosquatting, install scripts, obfuscated code, author anomalies. The Free plan covers 1 dev seat, unlimited repositories and 1,000 scans a month. The unique &ldquo;package health score&rdquo; approach catches threats that traditional SCA tools miss entirely (zero-day supply chain attacks have no CVE to match against).</div>
   </div>
   <div class="diff-card">
     <h3>FOSSA &mdash; license compliance + SCA</h3>
@@ -44240,15 +44240,15 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>GitGuardian &mdash; most comprehensive hosted secrets scanner</h3>
-    <div class="diff-desc">Free for up to 25 developers with 420+ secret types detected, unlimited real-time scanning, and 500 historical scan detections. The CLI (ggshield) integrates as a pre-commit hook and CI scanner. The 25-developer limit is generous for startups. Historical scanning (scanning existing commit history) is capped at 500 detections &mdash; enough for an initial audit but may not cover large repositories.</div>
+    <div class="diff-desc">Free for up to 25 developers with 550+ secret types detected, unlimited real-time scanning, and 500 historical scan detections. The CLI (ggshield) integrates as a pre-commit hook and CI scanner. The 25-developer limit is generous for startups. Historical scanning (scanning existing commit history) is capped at 500 detections &mdash; enough for an initial audit but may not cover large repositories.</div>
   </div>
   <div class="diff-card">
     <h3>Gitleaks &mdash; best fully free secrets scanner</h3>
-    <div class="diff-desc">Open-source (MIT) CLI tool with no limits on repos, scans, or secret types. The GitHub Action is free for all repositories. Configurable via TOML with custom patterns. Faster than TruffleHog for simple git history scanning. The go-to choice for teams that want secrets detection without any vendor dependency or scan caps.</div>
+    <div class="diff-desc">Open-source (MIT) CLI tool with no limits on repos, scans, or secret types. The GitHub Action is free; repositories owned by a GitHub organization need a free license key from gitleaks.io. Configurable via TOML with custom patterns. Faster than TruffleHog for simple git history scanning. The go-to choice for teams that want secrets detection without any vendor dependency or scan caps.</div>
   </div>
   <div class="diff-card">
     <h3>TruffleHog &mdash; multi-source secrets scanner</h3>
-    <div class="diff-desc">Open-source (Apache 2.0) with a unique advantage: scans not just git repos but also Docker images, S3 buckets, Slack, and 20+ other sources. Detects 800+ credential types with active verification (tests if detected secrets are still valid). The multi-source scanning makes TruffleHog ideal for comprehensive secrets audits across your entire infrastructure.</div>
+    <div class="diff-desc">Open-source (AGPL-3.0) with a unique advantage: scans not just git repos but also Docker images, S3 buckets, Slack, and 20+ other sources. Detects 800+ credential types with active verification (tests if detected secrets are still valid). The multi-source scanning makes TruffleHog ideal for comprehensive secrets audits across your entire infrastructure.</div>
   </div>
 
   <h2 id="container">Container &amp; IaC Security</h2>
@@ -44284,11 +44284,11 @@ ${globalNavCss()}
   </div>
   <div class="diff-card">
     <h3>Twingate &mdash; zero trust network access</h3>
-    <div class="diff-desc">Starter plan free forever: 5 users, 10 remote networks. Replace traditional VPNs with identity-based access. Each user gets secure access to specific resources rather than the entire network. More enterprise-oriented than Tailscale &mdash; better for accessing internal services (databases, admin panels) without exposing them to the internet.</div>
+    <div class="diff-desc">Starter plan free forever: 5 users, 50 Resources. Replace traditional VPNs with identity-based access. Each user gets secure access to specific resources rather than the entire network. More enterprise-oriented than Tailscale &mdash; better for accessing internal services (databases, admin panels) without exposing them to the internet.</div>
   </div>
 
   <h2 id="cost-trap">The DevSecOps Cost Trap</h2>
-  <p class="section-intro">Security tools have the widest price gap of any developer tool category. The same capabilities that cost $0 via open-source tools can cost $50,000+/year through hosted platforms. Understanding where to use OSS vs. hosted is the single biggest cost decision in DevSecOps.</p>
+  <p class="section-intro">The open-source tools cost $0 to run yourself. Hosted paid plans are priced per developer or per team. Semgrep Teams costs $30 a month per contributor for Code or Supply Chain and $15 for Secrets. StackHawk Wingman costs $10 per user a month. Snyk Team starts at $25 a month for teams of up to 10 developers. GitGuardian prices its Business plan on request.</p>
 
   <div style="overflow-x:auto">
   <table class="growth-table">
@@ -44305,56 +44305,56 @@ ${globalNavCss()}
         <td>SAST</td>
         <td class="cheapest">$0 (Semgrep OSS)</td>
         <td>$0 (Semgrep Cloud, 10 devs)</td>
-        <td class="expensive">$4,000&ndash;10,000/yr</td>
+        <td class="expensive">Semgrep Code $30/contributor/mo</td>
       </tr>
       <tr>
         <td>SCA</td>
         <td class="cheapest">$0 (Trivy + Renovate)</td>
         <td>$0 (Snyk, 200 tests/mo)</td>
-        <td class="expensive">$5,000&ndash;15,000/yr</td>
+        <td class="expensive">Snyk Team from $25/mo (up to 10 devs)</td>
       </tr>
       <tr>
         <td>DAST</td>
         <td class="cheapest">$0 (OWASP ZAP)</td>
         <td>None &mdash; StackHawk removed its free plan</td>
-        <td class="expensive">$3,000&ndash;12,000/yr</td>
+        <td class="expensive">StackHawk Wingman $10/user/mo</td>
       </tr>
       <tr>
         <td>Secrets</td>
         <td class="cheapest">$0 (Gitleaks)</td>
         <td>$0 (GitGuardian, 25 devs)</td>
-        <td class="expensive">$3,000&ndash;8,000/yr</td>
+        <td class="expensive">Semgrep Secrets $15/contributor/mo</td>
       </tr>
       <tr>
         <td>Container</td>
         <td class="cheapest">$0 (Trivy)</td>
         <td>$0 (Snyk, 100 tests/mo)</td>
-        <td class="expensive">$5,000&ndash;20,000/yr</td>
+        <td class="expensive">Snyk Team from $25/mo (up to 10 devs)</td>
       </tr>
       <tr>
         <td>IaC</td>
         <td class="cheapest">$0 (Checkov)</td>
         <td>$0 (Snyk, 300 IaC tests/mo)</td>
-        <td class="expensive">$3,000&ndash;8,000/yr</td>
+        <td class="expensive">Snyk Team from $25/mo (up to 10 devs)</td>
       </tr>
       <tr>
         <td><strong>Total</strong></td>
         <td class="cheapest"><strong>$0</strong></td>
         <td><strong>$0 (with limits)</strong></td>
-        <td class="expensive"><strong>$23,000&ndash;73,000/yr</strong></td>
+        <td class="expensive"><strong>Per-developer or per-team list prices; GitGuardian Business on request</strong></td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>The open-source vs hosted trade-off:</strong> Open-source security tools are genuinely enterprise-grade &mdash; Trivy, Semgrep, ZAP, and Gitleaks are used by Fortune 500 companies. The cost of self-hosting is engineering time: setting up CI/CD integrations, managing vulnerability databases, building dashboards, and triaging alerts. For a team of 5, the setup cost is 2&ndash;3 days. For hosted platforms, it&rsquo;s 30 minutes. The $23K&ndash;$73K/yr price difference buys convenience, not capability.
+    <strong>The open-source vs hosted trade-off:</strong> Open-source security tools are genuinely enterprise-grade &mdash; Trivy, Semgrep, ZAP, and Gitleaks are used by Fortune 500 companies. The cost of self-hosting is engineering time: setting up CI/CD integrations, managing vulnerability databases, building dashboards, and triaging alerts. For a team of 5, the setup cost is 2&ndash;3 days. For hosted platforms, it&rsquo;s 30 minutes. The price difference buys convenience, not capability.
   </div>
   <div class="context-box">
     <strong>The scan budget math:</strong> Snyk&rsquo;s free tier gives 200 SCA tests/month. Each <code>snyk test</code> on a project counts as one test. If you have 10 repos and run CI on every PR (5 PRs/day &times; 20 days = 100 PRs/month &times; 10 repos = 1,000 tests), you&rsquo;ll burn through the free tier in 4 days. Teams with active CI/CD pipelines outgrow hosted free tiers fast &mdash; which is exactly the business model.
   </div>
   <div class="context-box">
-    <strong>Free for OSS, expensive for private repos:</strong> SonarCloud, CodeQL, and SOOS are unlimited for public repositories but require paid plans for private code. This is the most common pricing model in security tooling. If your code is open-source, you get enterprise-grade security for free. If it&rsquo;s private, the same tools cost thousands per year. Plan accordingly: use OSS-unlimited tools (Semgrep, Trivy, Gitleaks) for private repos, and take advantage of full platform features on your open-source projects.
+    <strong>Free for OSS, expensive for private repos:</strong> CodeQL is free on public repositories, and private code needs GitHub Code Security at $30 per active committer a month. SonarQube Cloud is free for public projects and for private projects up to 50k lines of code. If your code is open-source, you get enterprise-grade security for free. If it&rsquo;s private, the same tools cost thousands per year. Plan accordingly: use OSS-unlimited tools (Semgrep, Trivy, Gitleaks) for private repos, and take advantage of full platform features on your open-source projects.
   </div>
 
   <h2 id="best-for">By Use Case</h2>
@@ -44374,7 +44374,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Best free DAST &rarr; OWASP ZAP</strong>
-      <p>No scan limits, no app limits, full CI/CD integration. The gold standard that commercial DAST tools benchmark against. StackHawk, the managed alternative we used to name here, removed its free Developer plan in April 2026 and now starts at $10/user/month.</p>
+      <p>No scan limits, no app limits, full CI/CD integration. The gold standard that commercial DAST tools benchmark against. StackHawk, the managed alternative we used to name here, removed its free Developer plan in mid-2024 and now starts at $10/user/month.</p>
     </div>
 
     <div class="verdict-item">
@@ -44406,8 +44406,8 @@ ${globalNavCss()}
   </div>
 
   <div class="diff-card">
-    <h3>CodeQL and SonarCloud are public-only on free tiers</h3>
-    <div class="diff-desc">Both tools offer unlimited free scanning &mdash; but only for public/open-source repositories. For private codebases, CodeQL requires GitHub Advanced Security ($49/committer/month) and SonarCloud requires a paid plan. If you have a mix of public and private repos, use these tools on public repos and supplement with Semgrep OSS (unlimited for private repos) on private code.</div>
+    <h3>CodeQL is free only on public repositories</h3>
+    <div class="diff-desc">CodeQL scans public repositories free with no limits. For private repositories it needs GitHub Code Security at $30 per active committer a month, which GitHub sells only on its Team and Enterprise plans. SonarQube Cloud's free plan covers private projects up to 50k lines of code. For larger private codebases, Semgrep's open-source CLI has no repository limit.</div>
   </div>
 
   <div class="diff-card">
@@ -45356,7 +45356,7 @@ ${globalNavCss()}
     <li><strong>${negativeChanges.length} negative pricing changes vs ${positiveChanges.length} positive</strong> &mdash; free tier removals and restrictions outpace expansions ${directionRatioLabel(negativeChanges.length, positiveChanges.length)}.</li>
     <li><strong>${durability.stillInForce.length} free tiers completely removed</strong> &mdash; ${escHtmlServer(lastingExamples.map(e => e.vendor).join(", "))}, and more. ${escHtmlServer(removalReturnRateSentence(durability))}</li>
     <li><strong>Egress and overage are the real costs</strong> &mdash; storage at $0.023/GB vs egress at $0.09/GB. Cloudflare R2&rsquo;s zero-egress model is 60x cheaper than S3 at scale.</li>
-    <li><strong>Open source is the safety net</strong> &mdash; in security tools, a $0 OSS stack matches $23K&ndash;$73K/yr hosted alternatives on capability.</li>
+    <li><strong>Open source is the safety net</strong> &mdash; in security tools, a $0 OSS stack matches paid hosted plans on capability.</li>
   </ul>
 
   <h2>By the Numbers</h2>
@@ -45512,7 +45512,7 @@ ${globalNavCss()}
 
   <h3>Security: OSS Wins on Price</h3>
   <div class="callout callout-good">
-    A full OSS security stack (Semgrep + Gitleaks + Trivy + OWASP ZAP) costs <strong>$0</strong> and matches the capability of $23K&ndash;$73K/yr hosted alternatives. Security has the strongest OSS options of any category.
+    A full OSS security stack (Semgrep + Gitleaks + Trivy + OWASP ZAP) costs <strong>$0</strong> and matches the capability of paid hosted platforms. Security has the strongest OSS options of any category.
     <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/security-free-tier-comparison-2026">Full security comparison &rarr;</a></span>
   </div>
 
