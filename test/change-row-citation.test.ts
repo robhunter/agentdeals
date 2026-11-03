@@ -206,11 +206,20 @@ function pastAnUnconfirmedNote(page: string, from: number): number {
   return note ? from + note[0].length : from;
 }
 
+function sourceDestinations(url: string): string[] {
+  const oldDocs = "https://ai.google.dev/gemini-api/docs/";
+  if (url.startsWith(oldDocs)) return [url, `https://aistudio.google.com/docs/${url.slice(oldDocs.length)}`];
+  if (/^https:\/\/ai\.google\.dev\/pricing(?:[?#]|$)/.test(url)) {
+    return [url, url.replace("https://ai.google.dev/pricing", "https://aistudio.google.com/docs/pricing")];
+  }
+  return [url];
+}
+
 function evidenceBeside(page: string, at: number, row: RenderableRow): "source" | "no-source" | null {
   const runEnd = page.indexOf("<", at);
   const end = pastAnUnconfirmedNote(page, runEnd < 0 ? at + row.summary.length : runEnd) + LOOKAHEAD;
   const window = decode(page.slice(Math.max(0, at - LOOKBEHIND), end));
-  if (row.sources.some((url) => window.includes(url))) return "source";
+  if (row.sources.flatMap(sourceDestinations).some((url) => window.includes(url))) return "source";
   if (row.notices.some((notice) => window.includes(notice))) return "no-source";
   return null;
 }
@@ -586,5 +595,39 @@ describe("a route added later cannot render a change record bare", () => {
         `${exemption.at} no longer holds ${exemption.expr} — drop the exemption (${exemption.why})`,
       );
     }
+  });
+});
+
+
+describe("a Gemini documentation source moved to AI Studio", () => {
+  const row = (source: string): RenderableRow => ({
+    summary: "A published change.", anchors: [], sources: [source], vendors: [], notices: [], swallowers: [],
+  });
+
+  for (const page of ["billing", "changelog", "pricing", "billing#eligible-accounts"]) {
+    it(`recognizes the same ${page} page at its new documentation address`, () => {
+      const source = `https://ai.google.dev/gemini-api/docs/${page}`;
+      const current = `https://aistudio.google.com/docs/${page}`;
+      assert.strictEqual(evidenceBeside(`A published change. <a href="${current}">Source</a>`, 0, row(source)), "source");
+      assert.strictEqual(evidenceBeside(`A published change. <a href="${source}">Source</a>`, 0, row(source)), "source");
+    });
+  }
+
+  it("recognizes the old short pricing URL as the current pricing page", () => {
+    assert.strictEqual(evidenceBeside('A published change. <a href="https://aistudio.google.com/docs/pricing">Source</a>', 0, row("https://ai.google.dev/pricing")), "source");
+  });
+
+  it("keeps every unrelated host, document and fragment distinct", () => {
+    for (const [source, current] of [
+      ["https://ai.google.dev/gemini-api/docs/billing", "https://aistudio.google.com/docs/pricing"],
+      ["https://ai.google.dev/gemini-api/docs/billing#eligible-accounts", "https://aistudio.google.com/docs/billing#missed-payment"],
+      ["https://ai.google.dev/gemini-api/terms", "https://aistudio.google.com/docs/terms"],
+      ["https://example.com/gemini-api/docs/billing", "https://aistudio.google.com/docs/billing"],
+      ["https://ai.google.dev/pricing-archive", "https://aistudio.google.com/docs/pricing-archive"],
+      ["https://ai.google.dev/gemini-api/docs/billing", "https://aistudio.google.com.example/docs/billing"],
+    ]) {
+      assert.strictEqual(evidenceBeside(`A published change. <a href="${current}">Source</a>`, 0, row(source)), null);
+    }
+    assert.strictEqual(evidenceBeside("A published change.", 0, row("https://ai.google.dev/gemini-api/docs/billing")), null);
   });
 });
