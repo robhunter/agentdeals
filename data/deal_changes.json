@@ -17733,6 +17733,22 @@
       "recorded_date": "2026-11-02",
       "tier": "Free",
       "tier_direction": "narrowed"
+    },
+    {
+      "vendor": "Railway",
+      "change_type": "new_free_tier",
+      "date": "2026-09-25",
+      "date_source": "vendor_page",
+      "summary": "Railway added a free VM accessible via `ssh railway.new` with no account or credit card needed. Each VM has 2 vCPU / 2 GB, preinstalled coding agents, and a preview URL. You have 60 minutes to build, then 24 hours to claim the VM into an account.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "A Railway account (the trial or the Free plan) was needed to run a VM or sandbox",
+      "current_state": "\"Run ssh railway.new to get a free Linux VM with coding agents preinstalled and a preview URL. You can start building before you create an account or enter a credit card.\" \"Each VM comes with 2 vCPU and 2 GB of RAM.\"",
+      "impact": "medium",
+      "source_url": "https://railway.com/changelog/2026-09-25-free-vms-without-an-account",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-03"
     }
   ]
 }

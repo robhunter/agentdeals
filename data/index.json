@@ -671,6 +671,12 @@
           "quote": "To keep it, open the claim link from the welcome message and sign up; the box moves into your account with the same VM, files, and URL. Unclaimed boxes are deleted with their files.",
           "url": "https://docs.railway.com/pricing/free-trial",
           "read_on": "2026-11-02"
+        },
+        {
+          "text": "Railway Sandboxes are available on every plan. Usage draws from the plan's included credit. Free plan limits are 10 sandboxes per environment, 2 vCPU and 2 GB each, and an idle timeout of at most 5 minutes.",
+          "quote": "Sandboxes are available on every plan.",
+          "url": "https://docs.railway.com/sandboxes",
+          "read_on": "2026-11-03"
         }
       ]
     },
@@ -722,6 +728,24 @@
           "quote": "You don’t need a credit card to start the trial. After the trial ends, you’ll need to add a credit card to keep using billable resources.",
           "url": "https://docs.fly.io/about/pricing",
           "read_on": "2026-10-22"
+        },
+        {
+          "text": "Fly.io's free trial lasts 2 hours of machine runtime or 7 days, whichever comes first. Trial machines stop automatically after 5 minutes of running. The trial allows 10 machines, 20 GB of volume storage, and up to 2 vCPUs and 4 GB of memory per machine. Dedicated IPv4 addresses and performance-optimized vCPUs are not included.",
+          "quote": "A free trial on Fly.io includes 2 hours of machine runtime or 7 days of access, whichever comes first.",
+          "url": "https://docs.fly.io/about/free-trial",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "If you use up the trial's resources, or do not add a payment method within 7 days, your apps stop running and you cannot launch new machines, attach volumes or deploy changes until billing is set up. Adding a card ends the free trial and starts billing.",
+          "quote": "You won’t be able to launch new machines, attach volumes, or deploy changes until billing is set up.",
+          "url": "https://docs.fly.io/about/free-trial",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Fly.io offers Sprites, its Linux VMs for AI agents, with a one-time $30 trial credit.",
+          "quote": "Each user can grant one $30 trial credit, and each org can receive at most one.",
+          "url": "https://fly.io/sprites/",
+          "read_on": "2026-11-03"
         }
       ]
     },
@@ -39234,6 +39258,58 @@
           "read_on": "2026-10-11"
         }
       ]
+    },
+    {
+      "vendor": "Railway Sandboxes",
+      "category": "Cloud Hosting",
+      "description": "$1 of free credit a month on Railway's Free plan, after a one-time $5 grant on the 30-day trial; the credit is shared with other Railway usage and does not roll over. Sandboxes are isolated Linux VMs for coding agents, test runs or code execution, managed by SDK, CLI, dashboard or API, with Claude Code, Codex, OpenCode and Pi preinstalled. Free and Trial plans allow 10 sandboxes per environment, each up to 2 vCPU and 2 GB. The idle timeout is at most 5 minutes, after which Railway destroys the sandbox. Rates are $50 per vCPU-month and $50 per GB-month for CPU used and memory in use, metered per second, and egress at $0.05 per GB; a 20-minute task averaging 1 GB of memory and 30% of one vCPU costs about 3 cents. Hobby costs $5 a month with $5 of usage, allows 50 sandboxes per environment up to 8 vCPU and 8 GB, and an idle timeout up to 120 minutes or off.",
+      "tier": "Free",
+      "url": "https://docs.railway.com/sandboxes",
+      "tags": [
+        "sandboxes",
+        "code-execution",
+        "agents",
+        "vm",
+        "railway"
+      ],
+      "verifiedDate": "2026-11-03",
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "agent_sandbox",
+            "source_url": "https://docs.railway.com/sandboxes",
+            "source_quote": "Sandboxes are isolated Linux VMs you create on demand, run commands in, and destroy."
+          }
+        ],
+        "reviewed": "2026-11-03"
+      }
+    },
+    {
+      "vendor": "Fly.io Sprites",
+      "category": "Cloud Hosting",
+      "description": "$30 in free trial credit, one per user and at most one per org. Sprites are persistent, hardware-isolated Linux VMs on Fly.io for AI agents, dev environments and untrusted code, with sign-in through a Fly.io account. Compute is billed only while a Sprite runs; it pauses after about 30 seconds idle, and a paused Sprite costs nothing beyond its storage. Rates are $0.0385 per CPU-hour, $0.021875 per GB-hour of memory, $0.000683 per GB-hour of hot storage while awake and $0.000027 per GB-hour of cold storage. There is no per-Sprite charge, and bandwidth is not metered. Each Sprite has up to 8 vCPUs and 100 GB of storage. Fly.io does not say whether the credit needs a card.",
+      "tier": "Free Credits",
+      "url": "https://fly.io/sprites/",
+      "tags": [
+        "sandboxes",
+        "code-execution",
+        "agents",
+        "vm",
+        "fly-io"
+      ],
+      "verifiedDate": "2026-11-03",
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "agent_sandbox",
+            "source_url": "https://docs.fly.io/sprites",
+            "source_quote": "Sprites are persistent, hardware-isolated Linux environments for running arbitrary code."
+          }
+        ],
+        "reviewed": "2026-11-03"
+      }
     }
   ],
   "changes": []
