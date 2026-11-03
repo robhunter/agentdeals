@@ -5,11 +5,11 @@ export interface GeminiTimelineEntry {
   source: string;
 }
 
-export const GEMINI_BILLING_DOCS = "https://ai.google.dev/gemini-api/docs/billing";
+export const GEMINI_BILLING_DOCS = "https://aistudio.google.com/docs/billing";
 
-export const GEMINI_CHANGELOG = "https://ai.google.dev/gemini-api/docs/changelog";
+export const GEMINI_CHANGELOG = "https://aistudio.google.com/docs/changelog";
 
-export const GEMINI_PRICING_PAGE = "https://ai.google.dev/gemini-api/docs/pricing";
+export const GEMINI_PRICING_PAGE = "https://aistudio.google.com/docs/pricing";
 
 export const WELCOME_CREDIT_EXCLUDED: GeminiTimelineEntry = {
   dateLabel: "Mar 2026",
