@@ -1099,8 +1099,7 @@
       "changed": "2026-11-02"
     },
     "/category/ai-ml": {
-      "hash": "f55d14a43ce5fa21",
-      "changed": "2026-11-02"
+      "daily": true
     },
     "/category/analytics": {
       "hash": "d6436f964b00d193",
@@ -3629,8 +3628,7 @@
       "changed": "2026-11-02"
     },
     "/stack-check": {
-      "hash": "e1c61d3eb7069af1",
-      "changed": "2026-11-02"
+      "daily": true
     },
     "/stacks": {
       "hash": "326af21f0ad96c08",
@@ -6719,8 +6717,7 @@
       "daily": true
     },
     "/vendor/langtrace": {
-      "hash": "716649b21b5d6a06",
-      "changed": "2026-11-02"
+      "daily": true
     },
     "/vendor/langwatch": {
       "daily": true
