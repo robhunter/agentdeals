@@ -8504,7 +8504,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "vector-database-pricing",
     title: "Vector Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs for RAG/AI",
-    metaDesc: "Compare 11+ vector databases: Pinecone, Qdrant, Weaviate, Chroma, Zilliz Cloud, LanceDB, Upstash Vector, Supabase pgvector, Neon pgvector, MongoDB Atlas Vector Search and more. Free tiers, vector limits, dimensions, pricing models. [[freshness]]",
+    metaDesc: "Compare 12 vector databases: Pinecone, Qdrant, Weaviate, Chroma, Zilliz Cloud, LanceDB, Upstash Vector, Cloudflare Vectorize, Supabase pgvector, Neon pgvector, MongoDB Atlas Vector Search and more. Free tiers, vector limits, dimensions, pricing models. [[freshness]]",
     contextHtml: "",
     tag: "vector-database-pricing",
     primaryVendor: "Pinecone",
@@ -30669,13 +30669,12 @@ function buildDatabasePricingPage(): string {
 
 function buildVectorDatabasePricingPage(): string {
   const title = "Vector Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs for RAG/AI";
-  const metaDesc = "Compare 11+ vector databases: Pinecone, Qdrant, Weaviate, Chroma, Zilliz Cloud, LanceDB, Upstash Vector, Supabase pgvector, Neon pgvector, MongoDB Atlas Vector Search and more. Free tiers, vector limits, dimensions, pricing models. [[freshness]]";
   const slug = "vector-database-pricing";
   const pubDate = "2026-04-10";
 
   const vectorOffers = offers.filter(o => o.tags.includes("vector-database"));
 
-  const vectorVendorNames = ["Pinecone", "Qdrant", "Weaviate", "Zilliz Cloud", "LanceDB", "Upstash Vector", "Chroma", "Turbopuffer", "Supabase", "Neon", "MongoDB Atlas"];
+  const vectorVendorNames = ["Pinecone", "Qdrant", "Weaviate", "Zilliz Cloud", "LanceDB", "Upstash Vector", "Chroma", "Turbopuffer", "Cloudflare Vectorize", "Supabase", "Neon", "MongoDB Atlas"];
   const vectorChanges = changesTheVendorMade(dealChanges).filter((c: any) =>
     vectorVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -30845,6 +30844,24 @@ function buildVectorDatabasePricingPage(): string {
       selfHosted: false,
     },
     {
+      name: "Cloudflare Vectorize",
+      slug: "cloudflare-vectorize",
+      vectorType: "Serverless (Workers)",
+      category: "serverless",
+      freeVectors: "~6,500 at 768 dimensions (5M stored vector dimensions)",
+      freeStorage: "5M stored vector dimensions",
+      freeDimensions: "Up to 1,536",
+      freeQueries: "30M queried vector dimensions/month",
+      paidFrom: "$5/mo minimum (Workers Paid)",
+      pricingModel: "Per queried and stored vector dimension",
+      freeDetails: "Vectorize is Cloudflare's vector database for Workers. Workers Free includes 30 million queried vector dimensions a month and 5 million stored vector dimensions (about 6,500 vectors of 768 dimensions). Up to 1,536 dimensions per vector. Workers Paid starts at $5 a month per account.",
+      hiddenCosts: "Queried dimensions include stored vectors and queries. A larger index uses the query allowance faster. Each vector has a 1,536-dimension cap.",
+      freeType: "limited",
+      selfHosted: false,
+      monthlyCostSmall: "$0 (Workers Free)",
+      monthlyCostTeam: "$5+ (Workers Paid minimum plus usage)",
+    },
+    {
       name: "Supabase pgvector",
       slug: "supabase",
       category: "pgvector",
@@ -30899,6 +30916,8 @@ function buildVectorDatabasePricingPage(): string {
       selfHosted: false,
     },
   ];
+
+  const metaDesc = `Compare ${services.length} vector databases: Pinecone, Qdrant, Weaviate, Chroma, Zilliz Cloud, LanceDB, Upstash Vector, Cloudflare Vectorize, Supabase pgvector, Neon pgvector, MongoDB Atlas Vector Search and more. Free tiers, vector limits, dimensions, pricing models. [[freshness]]`;
 
   const generousCount = services.filter(s => s.freeType === "generous").length;
   const ossCount = services.filter(s => s.freeType === "oss-only").length;
@@ -31044,6 +31063,7 @@ function buildVectorDatabasePricingPage(): string {
     '.pricing-table tr:hover{background:var(--accent-glow)}\n' +
     '.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n' +
     '.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n' +
+    '.diff-card .listing-conditions a{overflow-wrap:anywhere}\n' +
     '.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n' +
     '.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n' +
     '.context-box strong{color:var(--text)}\n' +
