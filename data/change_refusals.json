@@ -498,6 +498,18 @@
       "refused_date": "2026-10-09"
     },
     {
+      "vendor": "Appetize",
+      "change_type": "restriction",
+      "reason": "states_no_narrowing",
+      "detail": "a restriction was recorded by a summary that reports the free tier still standing and names no term that moved",
+      "summary": "The free tier still exists but its session limit is now 3 minutes per session, a restriction not mentioned in the stored deal info.",
+      "previous_state": "Test your Android & iOS apps on this Cloud Based Android Phone / Tablets emulator and iPhone/iPad simulators directly in your browser. The free tier includes two concurrent session with 30 minutes of usage per month. No limit on app size.",
+      "current_state": "Free $0/mo, single user, 2 active devices maximum, 30 minutes refilled monthly, session limit 3 minutes.",
+      "source_url": "https://appetize.io/pricing",
+      "category": "Testing",
+      "refused_date": "2026-11-03"
+    },
+    {
       "vendor": "AppFit",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
@@ -2137,6 +2149,18 @@
       "refused_date": "2026-11-01"
     },
     {
+      "vendor": "CodeFactor",
+      "change_type": "limits_reduced",
+      "reason": "zero_allowance",
+      "detail": "limits_reduced claimed on a state that grants zero of a resource — \"0 private repositories\". A vendor states a withdrawn allowance by dropping the row, not by publishing a zero, so a literal zero reads as a widget or plan configurator that had not populated when the page was fetched",
+      "summary": "The free Community plan now lists 0 private repositories, whereas the stored deal info says the free version includes one private repo.",
+      "previous_state": "Automated Code Review for Git. The free version includes unlimited users, public repositories, and one private repo.",
+      "current_state": "Community is $0 per month with 0 private repositories, unlimited users, and unlimited public repos.",
+      "source_url": "https://www.codefactor.io/pricing",
+      "category": "Code Quality",
+      "refused_date": "2026-11-03"
+    },
+    {
       "vendor": "Codefresh",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -2592,6 +2616,18 @@
       "category": "Headless CMS",
       "refused_date": "2026-09-18",
       "collided_with": "Crystallize|limits_reduced|2026-09-02|https://crystallize.com/pricing"
+    },
+    {
+      "vendor": "Cube",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored description says Cube Cloud's free tier is limited to 1,000 queries per day. The current pricing page's Free plan instead lists a daily compute request limit of 1,000 and a workbooks limit of up to 5, with no mention of a 1,000 queries/day limit.",
+      "previous_state": "Cube helps data engineers and application developers access data from modern data stores, organize it into consistent definitions, and deliver it to every application. The fastest way to use Cube is with Cube Cloud, which has a free tier limited to 1,000 queries per day.",
+      "current_state": "Free plan is free forever for hobbyists completing small projects and showcasing work. Features include: Connect any data source, Model in semantic layer IDE, Explore data in workbooks, Publish workbooks as dashboards, Semantic model agent, Workbooks and dashboards agent, Analytics chat, MCP server for AI agents. Compare features table lists Free with Workbooks up to 5, Compute Request limit daily 1,000, Query history retention 1 day, Developer seats $0, Community support.",
+      "source_url": "https://cube.dev/pricing",
+      "category": "Notebooks & Data Science",
+      "refused_date": "2026-11-03"
     },
     {
       "vendor": "Currencyapi",
@@ -3775,15 +3811,15 @@
     },
     {
       "vendor": "Fizzy",
-      "change_type": "limits_reduced",
+      "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-31 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page states that Fizzy is 'entirely free' with a file space limit of 1 GB.",
+      "detail": "the reading of this page refused on 2026-11-01 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "Stored deal info says the free tier is limited to 1000 items, but the current page says Fizzy is entirely free with a 1 GB file space limit and no mention of a 1000-item cap.",
       "previous_state": "Kanban-based platform for project management and issue tracking. Create public boards, set up webhooks, use card stamping, and track unlimited users — free for up to 1000 items.",
-      "current_state": "Fizzy is entirely free and is subsidized by Basecamp and HEY. It does limit file space usage to 1 GB.",
+      "current_state": "Fizzy is entirely free, fully subsidized by Basecamp and HEY, with file space usage limited to 1 GB.",
       "source_url": "https://www.fizzy.do/",
       "category": "Project Management",
-      "refused_date": "2026-11-01"
+      "refused_date": "2026-11-03"
     },
     {
       "vendor": "Flagsmith",
@@ -3904,6 +3940,18 @@
       "source_url": "https://fly.io/docs/about/pricing/",
       "category": "Cloud Hosting",
       "refused_date": "2026-09-18"
+    },
+    {
+      "vendor": "ForgeCode",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored free tier for ForgeCode is not described on the current page. The page now presents ForgeCode as a paid 'software factory' product with a launch offer of $1 for $100 worth of credits, a 'Book a demo' sales motion, and no mention of a free tier, basic AI model access, local processing, or native CLI/IDE integration.",
+      "previous_state": "AI-enabled pair programmer for Claude, GPT4 Series, Grok, Deepseek, Gemini and all frontier models. Works natively with your CLI and integrates seamlessly with any IDE. Free tier includes basic AI model access with local processing.",
+      "current_state": "The page describes ForgeCode as a software factory with a launch offer of $1 for $100 worth of credits, sign up, pricing, and book-a-demo options; it lists supported model providers (Anthropic, OpenAI, Vertex AI, DeepSeek, OpenRouter, Fireworks AI, Z.ai) and cloud/BYOC deployment, but does not mention a free tier or free basic AI model access.",
+      "source_url": "https://forgecode.dev/",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-11-03"
     },
     {
       "vendor": "Formbricks",
@@ -6383,6 +6431,18 @@
       "category": "Communication",
       "refused_date": "2026-09-26",
       "collided_with": "LiveKit|limits_reduced|2026-09-09|https://livekit.io/pricing"
+    },
+    {
+      "vendor": "LiveKit",
+      "change_type": "limits_reduced",
+      "reason": "zero_allowance",
+      "detail": "limits_reduced claimed on a state that grants zero of a resource — \"0 non-production deployments\". A vendor states a withdrawn allowance by dropping the row, not by publishing a zero, so a literal zero reads as a widget or plan configurator that had not populated when the page was fetched",
+      "summary": "The Build plan's free tier limits have changed: agent session minutes are now 1,000/mo (was 1,000 in stored info — matches), but concurrent agent sessions are now 5 (matches), concurrent connections are no longer listed as 100, and the free US phone number is now 1 free number (matches). However, the stored description mentions '5,000 WebRTC minutes/mo' and '100 concurrent connections' which are not present on the current page. The page now shows Build includes 1,000 agent session minutes, 5 concurrent agent sessions, 1 free US phone number, but no WebRTC minutes or concurrent connections limits are stated.",
+      "previous_state": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
+      "current_state": "Build plan: $0/mo, includes 1,000 agent session minutes/mo, 5 concurrent agent sessions, 1 free US phone number, 1 agent deployment, 0 non-production deployments, 5 LiveKit Inference concurrency, 1,000 voice isolation minutes, 1,000 agent session recordings minutes, 100,000 observability events, 350 text simulation turns, 60 audio simulation turns, 50 US local inbound minutes. No WebRTC minutes or concurrent connections limits are stated.",
+      "source_url": "https://livekit.io/pricing",
+      "category": "Communication",
+      "refused_date": "2026-11-03"
     },
     {
       "vendor": "localazy.com",
@@ -10657,15 +10717,15 @@
     },
     {
       "vendor": "Stream",
-      "change_type": "limits_reduced",
+      "change_type": "pricing_restructured",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-01 (same_transition_graded_differently) stated the same 2 figures, so the page showed these terms before the date this record gives",
-      "summary": "Chat limits have been updated.",
+      "detail": "the reading of this page refused on 2026-08-29 (no_baseline) stated the same 5 figures, so the page showed these terms before the date this record gives",
+      "summary": "The Maker Account still exists, but the page now describes it as a modified Chat Start Plan with a 2,000 MAU and 100 concurrent connection limit, and lists Video & Audio as Build Plan and AI Moderation as Pay-as-You-Go with a $100 monthly credit, rather than the stored description's specific free allowances (125K API calls/month feeds, 333K participant-minutes/month video).",
       "previous_state": "Chat, Activity Feeds, and Video APIs. Maker Account (free): 2,000 MAU chat, 125K API calls/month feeds, 333K participant-minutes/month video. Hard limits, no surprise overages",
-      "current_state": "The Maker Account for Chat offers a modified Chat Start Plan with all the same capabilities, but with a limit of 2,000 monthly active users and 100 concurrent connections.",
+      "current_state": "Maker Account is free/gratis/complimentary for companies with five or less team members, less than $10k/mo revenue, and less than $100k in funding. What you get: Chat Start Plan with hard limits, Vision Agents Open Source, Activity Feeds Start Plan, AI Moderation Pay-as-You-Go with $100 monthly credit, and Video & Audio Build Plan. The Maker Account for Chat offers a modified Chat Start Plan with all the same capabilities but with a limit of 2,000 monthly active users and 100 concurrent connections.",
       "source_url": "https://getstream.io/maker-account/",
       "category": "Communication",
-      "refused_date": "2026-10-24"
+      "refused_date": "2026-11-03"
     },
     {
       "vendor": "Stream",
@@ -10971,6 +11031,18 @@
       "source_url": "https://www.tawk.to/pricing/",
       "category": "Communication",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Teamcamp",
+      "change_type": "record_corrected",
+      "reason": "confirmed_unchanged",
+      "detail": "The report says the current page matches the stored description; no terms differ.",
+      "summary": "The Free plan now shows '1 GB Storage' (matching) and the paid Plus plan is $6/user/month annually, $8 monthly (matching). The page confirms all these. No discrepancy found in Free tier terms.",
+      "previous_state": "All-in-one project management. Free plan: up to 10 users, unlimited projects, 250 tasks, 1 GB storage, time tracking, docs & whiteboard, invoicing and payment, integrations, free support. Plus is $6 per user/month billed annually, $8 billed monthly.",
+      "current_state": "Free plan: up to 10 users, unlimited projects, 250 tasks, 1 GB storage, time tracking, docs & whiteboard, invoicing and payment, integrations, free support. Plus is $6 per user/month billed annually, $8 billed monthly.",
+      "source_url": "https://www.teamcamp.app/pricing",
+      "category": "Project Management",
+      "refused_date": "2026-11-03"
     },
     {
       "vendor": "Teamcamp",
@@ -12069,6 +12141,18 @@
     },
     {
       "vendor": "Weights & Biases",
+      "change_type": "pricing_restructured",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The stored deal info says W&B's hosted service is sold as CoreWeave Forge and describes the Free plan as $0/mo with up to 5 model seats, 5 GB/mo storage, and 1 GB/mo Weave data ingestion. The pricing page confirms the Free plan at $0/mo with up to 5 model seats, 5 GB/mo storage, and 1 GB/mo Weave data ingestion, but it also shows the Pro plan now starts at $60/month with a 30-day free trial and up to 10 model seats, 100 GB/mo storage, and 1.5 GB/mo Weave data ingestion, whereas the stored info only says Pro starts at $60/month with a 30-day free trial for teams with fewer than 50 employees. The page also lists an Enterprise tier and academic free Pro license details not in the stored info.",
+      "previous_state": "ML experiment tracking, model registry, and LLM app tracing and evaluation (Weave). W&B's hosted service is now sold as CoreWeave Forge. Its Free plan is $0/mo and designed for personal development, with up to 5 model seats, 5 GB/mo of storage and 1 GB/mo of Weave data ingestion. Pro starts at $60/month with a 30-day free trial and is for teams with fewer than 50 employees. Self-managed W&B Server needs a license; W&B's docs offer a free trial license, and CoreWeave's pricing page lists no free self-hosted plan.",
+      "current_state": "Free is $0/mo for personal development with up to 5 model seats, 5 GB/mo storage, and 1 GB/mo Weave data ingestion. Pro starts at $60/month, billed monthly, with a 30-day free trial, up to 10 model seats, 100 GB/mo storage, and 1.5 GB/mo Weave data ingestion, for early-stage teams fewer than 50 employees. Enterprise is custom plans. A free Pro license is available for academic research with unlimited projects, teams, and 200GB free cloud storage.",
+      "source_url": "https://coreweave.com/forge-pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-11-03"
+    },
+    {
+      "vendor": "Weights & Biases",
       "change_type": "restriction",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Weights & Biases|restriction|2026-09-03|https://wandb.ai/site/pricing/",
@@ -12128,6 +12212,18 @@
       "source_url": "https://windsurf.com/pricing",
       "category": "AI Coding",
       "refused_date": "2026-09-24"
+    },
+    {
+      "vendor": "wistia.com",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (25 video)",
+      "summary": "The Free plan no longer offers 25 videos; it now provides 25 GB of storage, max 1 user, 3,000+ lifetime credits, basic video analytics, and Wistia branding.",
+      "previous_state": "Video hosting with viewer analytics, HD video delivery, and marketing tools to help understand your visitors, 25 videos, and Wistia branded player",
+      "current_state": "Free $0/mo: 25 GB of storage, max 1 user, 3,000+ lifetime credits, Basic video analytics, Wistia branding included",
+      "source_url": "https://wistia.com/pricing",
+      "category": "Video",
+      "refused_date": "2026-11-03"
     },
     {
       "vendor": "WorkOS",
