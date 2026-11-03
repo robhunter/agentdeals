@@ -17749,6 +17749,22 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "recorded_date": "2026-11-03"
+    },
+    {
+      "vendor": "Google Gemini API",
+      "change_type": "product_deprecated",
+      "date": "2026-12-01",
+      "summary": "Gemini 2.5 Pro (gemini-2.5-pro) and Gemini 2.5 Flash (gemini-2.5-flash) can be used on the Gemini API until December 1, 2026, when Google shuts them down. From that date every request to gemini-2.5-pro goes to gemini-3.8-flash, billed at Gemini 3.8 Flash rates, and every request to gemini-2.5-flash goes to gemini-3.5-flash-lite, billed at Gemini 3.5 Flash-Lite rates. Google deprecated both on 2026-11-02 and lists breaking API changes for each move in its migration guides. Gemini 2.5 Flash-Lite (gemini-2.5-flash-lite) is not deprecated. The Gemini API keeps running.",
+      "previous_state": "gemini-2.5-pro and gemini-2.5-flash could be called on the Gemini API by users who had used them before, with no shutdown date.",
+      "current_state": "Google's deprecations page lists December 1, 2026 as the shutdown date for gemini-2.5-pro, with gemini-3.8-flash as the replacement, and for gemini-2.5-flash, with gemini-3.5-flash-lite as the replacement. Google's release notes of November 2, 2026: \"Effective December 1, 2026, all API requests to gemini-2.5-pro will automatically route to gemini-3.8-flash and be billed at Gemini 3.8 Flash rates\"; requests to gemini-2.5-flash \"will automatically route to gemini-3.5-flash-lite and be billed at Gemini 3.5 Flash-Lite rates\". gemini-2.5-flash-lite \"is not deprecated and remains available through the API until further notice\".",
+      "impact": "medium",
+      "source_url": "https://aistudio.google.com/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-03",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "Gemini 2.5 Pro (gemini-2.5-pro) and Gemini 2.5 Flash (gemini-2.5-flash) on the Gemini API"
     }
   ]
 }
