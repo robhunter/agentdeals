@@ -3922,8 +3922,8 @@
           "read_on": "2026-11-03"
         },
         {
-          "text": "Hetzner GPU servers are only in the dedicated GPU line, not in cloud plans. The cheapest is GEX45 with NVIDIA RTX PRO 4000 Blackwell SFF Edition and 24 GB GDDR7. It costs €214.00 a month or €0.3429 per hour, plus a one-time €209.00 setup fee, excluding VAT.",
-          "quote": "€ 209.00 one-time setup fee, excl. VAT",
+          "text": "Hetzner GPU servers are only in the dedicated GPU line, not in cloud plans. The cheapest is GEX45 with NVIDIA RTX PRO 4000 Blackwell SFF Edition and 24 GB GDDR7, billed monthly or hourly with a one-time setup fee.",
+          "quote": "GEX45 for AI inference",
           "url": "https://www.hetzner.com/dedicated-rootserver/matrix-gpu/",
           "read_on": "2026-11-03"
         },
