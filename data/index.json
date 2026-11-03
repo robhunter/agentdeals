@@ -4730,6 +4730,12 @@
           "quote": "Cloudflare does not use Customer Content processed by Workers AI to train AI models.",
           "url": "https://developers.cloudflare.com/workers-ai/platform/data-usage/",
           "read_on": "2026-10-29"
+        },
+        {
+          "text": "Cloudflare AI Search is a managed search service over your own content. Every account gets 5 million ingestion tokens, 10 GB-month of storage, 1,000 semantic queries and 1,000 full-text queries a month. Billing starts on December 1, 2026. Embedding and reranking calls are billed as AI Search usage and do not appear on the Workers AI bill.",
+          "quote": "Workers AI embedding and reranking usage is included in AI Search usage and does not appear on your Workers AI bill or in your AI Gateway logs.",
+          "url": "https://developers.cloudflare.com/ai-search/platform/limits-pricing/",
+          "read_on": "2026-11-03"
         }
       ]
     },
@@ -34572,10 +34578,10 @@
       },
       "conditions": [
         {
-          "text": "Until November 2, 2026, the Free and Google AI Plus plans include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date, leaving Gemini 3.8 Flash as the only reasoning model for those plans.",
-          "quote": "Will be removed on November 2, 2026.",
+          "text": "Until November 18, 2026, the Free and Google AI Plus plans include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date, leaving Gemini 3.8 Flash as the only reasoning model for those plans.",
+          "quote": "Will be removed on November 18, 2026.",
           "url": "https://antigravity.google/docs/models",
-          "read_on": "2026-10-17"
+          "read_on": "2026-11-03"
         },
         {
           "text": "Google AI Pro and Ultra include Gemini 4 Argon, Claude Sonnet 5.5 and Claude Opus 5.5. On a Google AI Pro trial, Claude Sonnet 5.5 and Claude Opus 5.5 are not included and Gemini 4 Argon is included only on trials with eligible premium devices.",
@@ -39313,6 +39319,22 @@
         ],
         "reviewed": "2026-11-03"
       }
+    },
+    {
+      "vendor": "Cloudflare AI Search",
+      "category": "AI / ML",
+      "description": "Cloudflare AI Search is a managed search service for indexing content and querying it with natural language from a Workers binding, REST API or MCP server. Every account receives 5 million ingestion tokens, 10 GB-month of storage, 1,000 semantic queries, and 1,000 full-text queries each month. The Workers Free plan includes 100 AI Search instances per account, 100,000 files per instance, and 500 pages crawled per day. Billing begins December 1, 2026, and usage before that date is not charged. Beyond the included usage, base ingestion costs $0.75 per million tokens; storage is $2.00 per GB-month; semantic, vector and hybrid queries are $0.75 per 1,000 queries; full-text queries are $0.10 per 1,000 queries. Embedding and reranking usage is included in AI Search usage, while generation and query rewriting are billed separately through Workers AI or the external model provider that runs them.",
+      "tier": "Free",
+      "url": "https://developers.cloudflare.com/ai-search/platform/limits-pricing/",
+      "tags": [
+        "search",
+        "rag",
+        "retrieval",
+        "mcp",
+        "agents",
+        "cloudflare"
+      ],
+      "verifiedDate": "2026-11-03"
     }
   ],
   "changes": []
