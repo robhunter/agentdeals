@@ -485,8 +485,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 86,
-      "table_figures_from_records": 57,
+      "table_figures": 89,
+      "table_figures_from_records": 60,
       "tables": [
         {
           "label": "Always Free Services",
@@ -500,8 +500,8 @@
         },
         {
           "label": "AWS vs Alternatives",
-          "figures": 66,
-          "from_records": 48
+          "figures": 69,
+          "from_records": 51
         },
         {
           "label": "Recent AWS Changes",
@@ -540,8 +540,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 92,
-      "table_figures_from_records": 51,
+      "table_figures": 95,
+      "table_figures_from_records": 54,
       "tables": [
         {
           "label": "Always Free Services",
@@ -560,8 +560,8 @@
         },
         {
           "label": "Azure vs Alternatives",
-          "figures": 61,
-          "from_records": 49
+          "figures": 64,
+          "from_records": 52
         },
         {
           "label": "Recent Azure Changes",
@@ -885,13 +885,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 125,
-      "table_figures_from_records": 93,
+      "table_figures": 128,
+      "table_figures_from_records": 96,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 67,
-          "from_records": 47
+          "figures": 70,
+          "from_records": 50
         },
         {
           "label": "Postgres-Compatible Databases",
@@ -1925,8 +1925,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 107,
-      "table_figures_from_records": 58,
+      "table_figures": 110,
+      "table_figures_from_records": 61,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1940,8 +1940,8 @@
         },
         {
           "label": "GCP vs AWS vs Others",
-          "figures": 67,
-          "from_records": 50
+          "figures": 70,
+          "from_records": 53
         },
         {
           "label": "Recent GCP & Google Changes",

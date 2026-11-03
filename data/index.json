@@ -1286,6 +1286,12 @@
           "read_on": "2026-10-04"
         },
         {
+          "text": "Neon's Free plan provides 100 CU-hours per project per month. One CU allocates about 4 GB of RAM, and 100 CU-hours is enough to run a 0.25 CU compute (about 1 GB of RAM) for 400 hours, about 17 days of continuous running. All computes in a project count toward usage, including those for each branch and any read replicas.",
+          "quote": "100 CU-hours/project/month (enough to run a 0.25 CU compute in a project for 400 hours/month)",
+          "url": "https://neon.com/docs/introduction/plans",
+          "read_on": "2026-11-03"
+        },
+        {
           "text": "At the storage cap, inserts, updates and deletes fail until space is freed or the plan is upgraded.",
           "quote": "causes operations that increase storage (inserts, updates, and deletes) to fail until you free space or upgrade.",
           "url": "https://neon.com/docs/introduction/plans",
@@ -4661,7 +4667,7 @@
     {
       "vendor": "Cloudflare Workers AI",
       "category": "AI / ML",
-      "description": "Workers AI runs AI models on Cloudflare's global network. Every account gets 10,000 Neurons per day at no charge, reset daily at 00:00 UTC; on the Workers Free plan, requests beyond that fail until the reset. On the Workers Paid plan (from $5 per month), usage above 10,000 Neurons per day costs $0.011 per 1,000 Neurons. Seven models, including @cf/moonshotai/kimi-k2.6, @cf/zai-org/glm-5.3 and @cf/deepseek-ai/deepseek-v4-pro-0813, require the Workers Paid plan or prepaid AI Gateway credits. On 2026-05-30, Cloudflare deprecated 18 models and told users to remove references to them: @cf/meta/llama-3.1-8b-instruct, @cf/meta/llama-3.1-8b-instruct-awq, @cf/meta/llama-3.1-70b-instruct, @cf/meta/llama-3-8b-instruct, @cf/meta/llama-3-8b-instruct-awq, @hf/meta-llama/meta-llama-3-8b-instruct, @cf/meta/llama-2-7b-chat-int8, @cf/meta/llama-2-7b-chat-fp16, @cf/mistral/mistral-7b-instruct-v0.1, @hf/mistral/mistral-7b-instruct-v0.2, @hf/google/gemma-7b-it, @cf/google/gemma-3-12b-it, @hf/nousresearch/hermes-2-pro-mistral-7b, @cf/microsoft/phi-2, @cf/defog/sqlcoder-7b-2, @cf/unum/uform-gen2-qwen-500m, @cf/facebook/bart-large-cnn and @cf/moonshotai/kimi-k2.5. On 2026-10-15, Cloudflare's model catalog still lists @cf/meta/llama-3.1-8b-instruct-fp8, @cf/meta/llama-3.3-70b-instruct-fp8-fast and the -lora variants, but no longer lists @cf/meta/llama-3.1-8b-instruct-fast. Cloudflare's suggested replacements are @cf/zai-org/glm-4.7-flash, @cf/google/gemma-4-26b-a4b-it and @cf/moonshotai/kimi-k2.6. Since 2026-05-30, requests to @cf/moonshotai/kimi-k2.5 go to @cf/moonshotai/kimi-k2.6, which costs more and requires the Workers Paid plan or prepaid AI Gateway credits; without them, requests get HTTP 403 (error 5035).",
+      "description": "Workers AI runs AI models on Cloudflare's global network. Every account gets 10,000 Neurons per day at no charge, reset daily at 00:00 UTC; on the Workers Free plan, requests beyond that fail until the reset. On the Workers Paid plan (from $5 per month), usage above 10,000 Neurons per day costs $0.011 per 1,000 Neurons. Eight models, including @cf/moonshotai/kimi-k2.6, @cf/zai-org/glm-5.3 and @cf/deepseek-ai/deepseek-v4-pro-0813, require the Workers Paid plan or prepaid AI Gateway credits. On 2026-05-30, Cloudflare deprecated 18 models and told users to remove references to them: @cf/meta/llama-3.1-8b-instruct, @cf/meta/llama-3.1-8b-instruct-awq, @cf/meta/llama-3.1-70b-instruct, @cf/meta/llama-3-8b-instruct, @cf/meta/llama-3-8b-instruct-awq, @hf/meta-llama/meta-llama-3-8b-instruct, @cf/meta/llama-2-7b-chat-int8, @cf/meta/llama-2-7b-chat-fp16, @cf/mistral/mistral-7b-instruct-v0.1, @hf/mistral/mistral-7b-instruct-v0.2, @hf/google/gemma-7b-it, @cf/google/gemma-3-12b-it, @hf/nousresearch/hermes-2-pro-mistral-7b, @cf/microsoft/phi-2, @cf/defog/sqlcoder-7b-2, @cf/unum/uform-gen2-qwen-500m, @cf/facebook/bart-large-cnn and @cf/moonshotai/kimi-k2.5. On 2026-10-15, Cloudflare's model catalog still lists @cf/meta/llama-3.1-8b-instruct-fp8, @cf/meta/llama-3.3-70b-instruct-fp8-fast and the -lora variants, but no longer lists @cf/meta/llama-3.1-8b-instruct-fast. Cloudflare's suggested replacements are @cf/zai-org/glm-4.7-flash, @cf/google/gemma-4-26b-a4b-it and @cf/moonshotai/kimi-k2.6. Since 2026-05-30, requests to @cf/moonshotai/kimi-k2.5 go to @cf/moonshotai/kimi-k2.6, which costs more and requires the Workers Paid plan or prepaid AI Gateway credits; without them, requests get HTTP 403 (error 5035).",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
       "tags": [
@@ -4712,6 +4718,12 @@
           "quote": "Start building for free — no credit card required.",
           "url": "https://www.cloudflare.com/products/workers-ai/",
           "read_on": "2026-10-22"
+        },
+        {
+          "text": "Cloudflare prices models in Neurons per million tokens. @cf/openai/gpt-oss-20b costs 18,182 Neurons per million input tokens and 27,273 per million output tokens. @cf/openai/gpt-oss-120b costs 31,818 and 68,182 Neurons respectively. @cf/meta/llama-3.3-70b-instruct-fp8-fast costs 26,668 and 204,805 Neurons. 10,000 Neurons pay for about 367,000 output tokens of gpt-oss-20b, 147,000 of gpt-oss-120b, or 49,000 of llama-3.3-70b-instruct-fp8-fast, not counting input tokens.",
+          "quote": "The Price in Tokens column is equivalent to the Price in Neurons column - the different units are displayed so you can easily compare and understand pricing.",
+          "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+          "read_on": "2026-11-03"
         },
         {
           "text": "Workers AI is subject to Cloudflare's Self-Serve Subscription Agreement. The agreement does not restrict commercial use.",
