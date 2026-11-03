@@ -10884,6 +10884,24 @@
           "quote": "If you run into compute constraints while using notebooks on Kaggle, you can consider upgrading to Google Cloud AI Notebooks. These notebooks run under your project in Google Cloud, and can be configured to use your choice of virtual machine, accelerators and run without limits",
           "url": "https://www.kaggle.com/docs/notebooks",
           "read_on": "2026-10-29"
+        },
+        {
+          "text": "Kaggle's interactive notebook sessions end after 20 minutes of idle time. Save & Run All runs the entire notebook in a separate session. That session must complete within 12 hours, or 9 hours for TPU notebooks.",
+          "quote": "While editing a Notebook, you are provided with 20 minutes of idle time for your interactive session.",
+          "url": "https://www.kaggle.com/docs/notebooks",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "New Kaggle notebooks have the Internet setting on by default. Pip installs are possible. Kaggle saves up to 20 GB of output in /kaggle/working. This data is reusable in later notebooks. Other disk space is scratch and not saved after the session.",
+          "quote": "Up to 20 GBs of output from a Notebook may be saved to disk in /kaggle/working. This data is saved automatically",
+          "url": "https://www.kaggle.com/docs/notebooks",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "New Kaggle notebooks are private by default. Datasets are Private by default. They are visible only to the owner, collaborators, and Kaggle for purposes consistent with its Privacy Policy. Public datasets are visible to everyone.",
+          "quote": "Notebooks you create are private by default",
+          "url": "https://www.kaggle.com/docs/datasets",
+          "read_on": "2026-11-03"
         }
       ],
       "official_mcp_servers": [
@@ -11637,7 +11655,7 @@
     {
       "vendor": "Thunder Client",
       "category": "API Development",
-      "description": "Lightweight REST API client for VS Code and JetBrains. Free plan is $0 per user/month for the VS Code extension, with 1 local collection run per month. Paid plans are billed annually from Starter at $3 per user/month, which adds JetBrains, team features, CLI and CI/CD, WebSocket/SSE/gRPC and 250 collection runs; Business is $7 and Enterprise $16.",
+      "description": "Thunder Client is a lightweight REST API client. The Free plan is $0 per user/month, no credit card required. It includes the extension for VS Code, JetBrains, Cursor, Antigravity, Kiro and Devin; CLI and CI/CD; WebSocket, SSE and gRPC; MCP Server. Free limits include 3 collections, 50 requests per collection, 5 collection imports per month, 30 local collection runs per month per user. There is no limit for collection runs in CI/CD. Paid plans are billed annually: Starter is $3 per user/month, Business is $7, and Enterprise is $16. Local run limits are 250, 500, and unlimited respectively.",
       "tier": "Free",
       "url": "https://www.thunderclient.com/pricing",
       "tags": [
@@ -18236,7 +18254,7 @@
     {
       "vendor": "qase.io",
       "category": "Testing",
-      "description": "Test management system for Dev and QA teams. Manage test cases, compose test runs, perform tests, track defects, and measure impact. The free tier includes all core features, with 500MB available for attachments and up to 3 users.",
+      "description": "Qase is a test management system for Dev and QA teams. The Free plan is $0 per user/month, free forever. It is for \"students, hobbyists, educators, and non-profits to learn the basics of a TMS.\" Free limits include up to 2 projects, 500 MB storage, 30-day test history, 5,000 API results a month, 4 full seats, 2 active test runs. Free does not include custom fields, test case review, integrations, webhooks, requirements traceability, dashboards, SSO or audit logs. Teams is $35 per user/month billed annually, from 5 seats.",
       "tier": "Free",
       "url": "https://qase.io/pricing",
       "tags": [
@@ -38701,7 +38719,7 @@
     {
       "vendor": "Mem0",
       "category": "AI / ML",
-      "description": "Memory layer for AI agents and apps. Free plan: unlimited end users and community support. For the first 30 days Mem0 pays for the model calls, with 10,000 adds and 1,000 retrievals a month. After that, adding memories needs your own LLM key (OpenAI, Anthropic, Azure OpenAI or OpenRouter), billed by your provider; Mem0 puts its recommended models at about $3.55 to $5.34 per 1,000 adds. With a key, Free allows 50,000 adds and 10,000 retrievals a month at no charge from Mem0. Without one, stored memories stay and up to 1,000 searches a month still work, but new adds return an error. Calls past a monthly limit return an error until the next month, unless you connect a key and turn on usage-based billing with a monthly cap you set (Mem0 shows the rate when you turn it on). Mem0 made this change on October 26, 2026; accounts created before then have until November 25, 2026. Starter ($19/month), Growth and Pro are no longer sold to new accounts; existing subscribers keep their plans. Graph memory, user profiles, SSO and on-prem deployment are on the Custom plan, priced by Mem0's sales team. Under Mem0's terms (2026-08-03), Free Plan users grant Mem0 a perpetual licence to their content, including to train AI models; paid plans exclude that, apart from aggregated, de-identified data. Mem0 Open-Source (Apache 2.0) can be self-hosted.",
+      "description": "Memory layer for AI agents and apps. Free plan: unlimited end users and community support. For the first 30 days Mem0 pays for the model calls, with 10,000 adds and 1,000 retrievals a month. After that, adding memories needs your own LLM key (OpenAI, Anthropic, Azure OpenAI or OpenRouter), billed by your provider; Mem0 puts its recommended models at about $3.55 to $5.34 per 1,000 adds. With a key, Free allows 50,000 adds and 10,000 retrievals a month at no charge from Mem0. Without one, stored memories stay and up to 1,000 searches a month still work, but new adds return an error. Calls past a monthly limit return an error until the next month, unless you connect a key and turn on usage-based billing with a monthly cap you set (Mem0 shows the rate when you turn it on). Mem0 Free accounts that signed up before October 26, 2026 have model calls paid by Mem0 until November 25, 2026; after that, adding memories requires their own LLM key. Starter ($19/month), Growth and Pro are no longer sold to new accounts; existing subscribers keep their plans. Graph memory, user profiles, SSO and on-prem deployment are on the Custom plan, priced by Mem0's sales team. Under Mem0's terms (2026-08-03), Free Plan users grant Mem0 a perpetual licence to their content, including to train AI models; paid plans exclude that, apart from aggregated, de-identified data. Mem0 Open-Source (Apache 2.0) can be self-hosted.",
       "tier": "Free",
       "url": "https://mem0.ai/pricing",
       "tags": [

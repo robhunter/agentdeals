@@ -2,12 +2,32 @@ import { after, before, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { spawn, type ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const comparison = "/database-free-tier-comparison-2026";
 const vector = "/vector-database-pricing";
 const pages: Record<string, string> = {};
 let server: ChildProcess;
+
+async function startServer(env: NodeJS.ProcessEnv = {}): Promise<{ child: ChildProcess; base: string }> {
+  const child = spawn("node", ["dist/serve.js"], {
+    cwd: root, stdio: ["ignore", "ignore", "pipe"],
+    env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_REFERRAL_HEALTH: "off", ...env },
+  });
+  const base = await new Promise<string>((resolve, reject) => {
+    const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 20000);
+    child.once("error", (error) => { clearTimeout(timeout); reject(error); });
+    child.once("exit", (code) => { clearTimeout(timeout); reject(new Error(`Server exited with ${code}`)); });
+    child.stderr!.on("data", (chunk: Buffer) => {
+      const port = chunk.toString().match(/running on http:\/\/localhost:(\d+)/)?.[1];
+      if (port) { clearTimeout(timeout); resolve(`http://localhost:${port}`); }
+    });
+  });
+  return { child, base };
+}
 
 function text(html: string): string {
   return html.replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, " ")
@@ -25,18 +45,9 @@ function cells(route: string, vendor: string, columns = 6): string[] {
 
 describe("database comparisons distinguish free-plan limits and closed cloud signup", () => {
   before(async () => {
-    const base = await new Promise<string>((resolve, reject) => {
-      server = spawn("node", ["dist/serve.js"], {
-        cwd: root, stdio: ["ignore", "ignore", "pipe"],
-        env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_REFERRAL_HEALTH: "off" },
-      });
-      const timeout = setTimeout(() => { server.kill(); reject(new Error("Server startup timeout")); }, 20000);
-      server.once("error", (error) => { clearTimeout(timeout); reject(error); });
-      server.stderr!.on("data", (chunk: Buffer) => {
-        const port = chunk.toString().match(/running on http:\/\/localhost:(\d+)/)?.[1];
-        if (port) { clearTimeout(timeout); resolve(`http://localhost:${port}`); }
-      });
-    });
+    const running = await startServer();
+    server = running.child;
+    const base = running.base;
     for (const route of [comparison, vector]) {
       const response = await fetch(base + route, { redirect: "error" });
       assert.equal(response.status, 200, route);
@@ -81,5 +92,77 @@ describe("database comparisons distinguish free-plan limits and closed cloud sig
     assert.equal(cells(comparison, "Turso")[2], "5 GB");
     assert.equal(cells(comparison, "Upstash")[3], "500K commands/mo");
     assert.equal(cells(vector, "Pinecone", 7)[3], "2 GB");
+  });
+
+  it("compares Vectorize's stored dimensions, vector size and Workers Paid minimum", () => {
+    assert.deepEqual(cells(vector, "Cloudflare Vectorize", 7).slice(1), [
+      "Serverless (Workers)", "~6,500 at 768 dimensions (5M stored vector dimensions)",
+      "5M stored vector dimensions", "Up to 1,536", "$5/mo minimum (Workers Paid)",
+      "Per queried and stored vector dimension",
+    ]);
+    const section = pages[vector].match(/<h2 id="pricing-table">[\s\S]*?(?=<h2)/)?.[0];
+    assert.match(section!, /href="\/vendor\/cloudflare-vectorize"/);
+    const names = [...section!.matchAll(/<tr\b[^>]*>\s*<td\b[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => text(cell));
+    assert.equal(names.indexOf("Cloudflare Vectorize"), names.indexOf("Turbopuffer") + 1);
+  });
+
+  it("explains Vectorize's query allowance separately from its standing storage allowance", () => {
+    const section = pages[vector].match(/<h3>Serverless Vector DB<\/h3>[\s\S]*?(?=<h2)/)?.[0];
+    const card = section?.match(/<h3><a href="\/vendor\/cloudflare-vectorize">Cloudflare Vectorize<\/a><\/h3>\s*<div class="diff-desc">([\s\S]*?)<\/div>/)?.[1];
+    assert.ok(card, "the serverless category contains Vectorize's description");
+    assert.equal(text(card), "Vectorize is Cloudflare's vector database for Workers. Workers Free includes 30 million queried vector dimensions a month and 5 million stored vector dimensions (about 6,500 vectors of 768 dimensions). Up to 1,536 dimensions per vector. Workers Paid starts at $5 a month per account.");
+    assert.deepEqual(cells(vector, "Cloudflare Vectorize", 4).slice(1), [
+      "$0 (Workers Free)", "$5+ (Workers Paid minimum plus usage)", "Per queried and stored vector dimension",
+    ]);
+  });
+
+  it("keeps Vectorize and the service count in page metadata and the route registry", () => {
+    const html = pages[vector];
+    const section = html.match(/<h2 id="pricing-table">[\s\S]*?(?=<h2)/)?.[0];
+    const count = [...section!.matchAll(/<tr\b[^>]*>\s*<td\b/g)].length;
+    assert.equal(count, 12);
+    assert.match(text(html), new RegExp(`${count} services compared`));
+    assert.match(text(html), new RegExp(`${count} services across five categories`));
+    assert.match(html, new RegExp(`class="stat-number">${count}</div><div class="stat-label">Services Compared`));
+    const descriptions = [...html.matchAll(/<meta (?:name="description"|property="og:description") content="([^"]+)"/g)].map(([, value]) => value);
+    const article = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+      .map(([, value]) => JSON.parse(value)).find(value => value["@type"] === "Article");
+    descriptions.push(article.description);
+    const source = readFileSync(path.join(root, "src/serve.ts"), "utf8");
+    descriptions.push(source.match(/slug: "vector-database-pricing",\s*title: "[^"]+",\s*metaDesc: "([^"]+)"/)![1]);
+    assert.equal(descriptions.length, 4);
+    for (const description of descriptions) {
+      assert.match(description, new RegExp(`^Compare ${count} vector databases:`));
+      assert.match(description, /Cloudflare Vectorize/);
+    }
+  });
+
+  it("includes a sourced Vectorize change in the vector pricing timeline", async () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "vectorize-timeline-"));
+    let child: ChildProcess | undefined;
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+      const file = path.join(dir, "changes.json");
+      const summary = "Vectorize query allowance increased for Workers Free.";
+      const source = "https://developers.cloudflare.com/vectorize/platform/pricing/";
+      writeFileSync(file, JSON.stringify({ changes: [{
+        vendor: "Cloudflare Vectorize", category: "Databases", date: today, recorded_date: today,
+        date_source: "vendor_page", change_type: "limits_increased", summary,
+        previous_state: "Earlier query allowance", current_state: "Increased query allowance",
+        source_url: source, impact: "medium", alternatives: [],
+      }] }));
+      const running = await startServer({ AGENTDEALS_CHANGES_PATH: file });
+      child = running.child;
+      const response = await fetch(running.base + vector, { redirect: "error" });
+      assert.equal(response.status, 200);
+      const section = (await response.text()).match(/<h2 id="changes">[\s\S]*?(?=<h2|$)/)?.[0];
+      assert.ok(section, "the page contains its change timeline");
+      assert.match(text(section), /Cloudflare Vectorize/);
+      assert.ok(text(section).includes(summary));
+      assert.ok(section.includes(`href="${source}"`));
+    } finally {
+      child?.kill();
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
