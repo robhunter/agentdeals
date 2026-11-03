@@ -6,7 +6,6 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadOffers } from "../dist/data.js";
-import { changeSourceLinkHtml } from "../dist/change-citation.js";
 import {
   flashPriceStepEntry,
   flashPriceStepIn,
@@ -65,7 +64,19 @@ function entriesOf(timeline: string): { date: string; heading: string; body: str
 
 const asServed = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-const sourceLink = (url: string) => changeSourceLinkHtml({ source_url: url }, asServed);
+const sourceLink = (url: string) => `<a href="${asServed(url)}" target="_blank" rel="nofollow noopener" style="font-size:.75rem;color:var(--text-dim)" title="${new URL(url).host}${new URL(url).pathname}">Source &nearr;</a>`;
+
+describe("Gemini documentation sources", () => {
+  for (const [name, actual, page] of [
+    ["billing", GEMINI_BILLING_DOCS, "billing"],
+    ["changelog", GEMINI_CHANGELOG, "changelog"],
+    ["pricing", GEMINI_PRICING_PAGE, "pricing"],
+  ]) {
+    it(`links ${name} directly to AI Studio documentation`, () => {
+      assert.strictEqual(actual, `https://aistudio.google.com/docs/${page}`);
+    });
+  }
+});
 
 describe("the Flash price step in the Google Gemini API listing", () => {
   it("is read from the listing's sentence: the models priced alike, both prices and both days", () => {

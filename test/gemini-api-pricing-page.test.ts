@@ -113,7 +113,7 @@ describe(`${PAGE} on long prompts and prepaid credits`, () => {
 
   it("links the move to Prepay to Google's billing page and the reported cutover date to the article that reports it", () => {
     const prepaid = page.slice(page.indexOf('<h2 id="prepaid">'));
-    assert.ok(prepaid.includes('<a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">Google is moving existing paid accounts from Postpay to Prepay for Gemini API usage</a>: switch on the AI Studio Billing page'));
+    assert.ok(prepaid.includes('<a href="https://aistudio.google.com/docs/billing" target="_blank" rel="noopener">Google is moving existing paid accounts from Postpay to Prepay for Gemini API usage</a>: switch on the AI Studio Billing page'));
     assert.ok(prepaid.includes('in your account notice, <a href="https://www.watch.impress.co.jp/docs/news/2132505.html" target="_blank" rel="noopener">reported as October 12, 2026</a>, or the account'));
   });
 });
@@ -173,7 +173,7 @@ function retirementsStated(html: string): { models: string[]; day: string }[] {
 describe(`${PAGE} on paying after use once Prepay starts`, () => {
   it("does not state an unconditional bar on moving back to Postpay and preserves the Cloud billing link", () => {
     assert.ok(!page.includes("accounts cannot switch from Prepay to Postpay"));
-    assert.ok(prepayParagraph(page).includes('<a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">bills it on the standard Cloud charging cycle</a>, not Prepay.'));
+    assert.ok(prepayParagraph(page).includes('<a href="https://aistudio.google.com/docs/billing" target="_blank" rel="noopener">bills it on the standard Cloud charging cycle</a>, not Prepay.'));
   });
 
   it("states the qualified Postpay upgrade, then the route that bills after use, what gemini-3.5-flash calls cost there, the one model to move to, priced the same on both platforms, and when Agent Platform retires gemini-3.6-flash and the Gemini 2.5 models", () => {
@@ -187,7 +187,7 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
       "Change the model ID to gemini-3.8-flash before moving; it costs the same on both platforms. " +
       "Agent Platform retired gemini-2.5-pro, gemini-2.5-flash and gemini-2.5-flash-lite on October 20, 2026. " +
       "gemini-3.6-flash can be called on Agent Platform until November 19, 2026, when Google retires it there. " +
-      "On the Gemini API, none of these four models has a shutdown date. " +
+      "On the Gemini API, gemini-2.5-pro and gemini-2.5-flash have a shutdown date of 2026-12-01. They are usable until then, then route to gemini-3.8-flash and gemini-3.5-flash-lite, respectively. gemini-2.5-flash-lite and gemini-3.6-flash have no shutdown date. " +
       "Agent Platform charges $0.75 input and $3.75 output per million tokens for Gemini 3.8 Flash and 3.6 Flash on the global endpoint through 2026-12-31, then $1.50 input and $7.50 output. " +
       "Non-global endpoints cost 10% more. " +
       "These match Gemini API paid-tier prices for gemini-3.6-flash and gemini-3.8-flash. " +
@@ -214,13 +214,34 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
     }
   });
 
-  it("says the Gemini API gives those models no shutdown date only while each record retiring them on Agent Platform says the Gemini API keeps serving them", () => {
-    assert.ok(withoutTags(prepayParagraph(page)).includes("On the Gemini API, none of these four models has a shutdown date."));
-    const stated = retirementsStated(page);
-    assert.strictEqual(stated.flatMap(({ models }) => models).length, 4);
-    for (const { day } of stated) {
-      assert.match(retirementRecordDated(day).summary, /^The Gemini API keeps serving [^.]*(?:\.\d[^.]*)* with no shutdown date\./);
-    }
+  it("pairs Gemini API shutdown dates and undated models with the records for their Agent Platform retirements", () => {
+    const text = withoutTags(prepayParagraph(page));
+    const dated = text.match(/On the Gemini API, (.*?) have a shutdown date of (\d{4}-\d{2}-\d{2})\./);
+    assert.ok(dated, "the guide must name the models with a Gemini API shutdown date");
+    assert.deepStrictEqual(modelsIn(dated[1]), ["gemini-2.5-pro", "gemini-2.5-flash"]);
+    const october = retirementRecordDated("October 20, 2026");
+    assert.ok(october.summary.startsWith(
+      `On the Gemini API, ${dated[1]} can be used until ${longDate(dated[2])}, and gemini-2.5-flash-lite has no shutdown date.`,
+    ));
+    assert.ok(text.includes("gemini-2.5-flash-lite and gemini-3.6-flash have no shutdown date."));
+    assert.match(retirementRecordDated("November 19, 2026").summary, /^The Gemini API keeps serving gemini-3\.6-flash with no shutdown date\./);
+    assert.doesNotMatch(text, /none of these four models has a shutdown date/);
+  });
+
+  it("gives both automatic replacements in the same order as the dated Gemini API models", () => {
+    const text = withoutTags(prepayParagraph(page));
+    assert.ok(text.includes("They are usable until then, then route to gemini-3.8-flash and gemini-3.5-flash-lite, respectively."));
+  });
+
+  it("preserves the October Agent Platform retirement while dating the later Gemini API announcement", async () => {
+    const record = retirementRecordDated("October 20, 2026");
+    assert.strictEqual(record.summary,
+      "On the Gemini API, gemini-2.5-pro and gemini-2.5-flash can be used until December 1, 2026, and gemini-2.5-flash-lite has no shutdown date. " +
+      "On Gemini Enterprise Agent Platform (formerly Vertex AI) they can be called until October 20, 2026, when Google retires them. Google names gemini-3.8-flash as a replacement for all three.");
+    assert.ok(record.current_state.endsWith("Google's Gemini API deprecations page (last updated 2026-10-12) gave the three models no shutdown date; on 2026-11-02 Google set December 1, 2026 for gemini-2.5-pro and gemini-2.5-flash."));
+    const response = await fetch(base + "/shutdowns");
+    assert.strictEqual(response.status, 200);
+    assert.ok(readable(await response.text()).includes(record.summary));
   });
 
   it("no longer tells readers to move to gemini-3.6-flash", () => {
@@ -256,7 +277,7 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
 
   it("links the charging cycle to Google's billing doc and both prices to the Agent Platform pricing page", () => {
     const paragraph = prepayParagraph(page);
-    assert.ok(paragraph.includes('Google <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">bills it on the standard Cloud charging cycle</a>, not Prepay.'), paragraph);
+    assert.ok(paragraph.includes('Google <a href="https://aistudio.google.com/docs/billing" target="_blank" rel="noopener">bills it on the standard Cloud charging cycle</a>, not Prepay.'), paragraph);
     assert.ok(paragraph.includes('Agent Platform charges <a href="https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing" target="_blank" rel="noopener">$0.75 input and $3.75 output per million tokens for Gemini 3.8 Flash and 3.6 Flash on the global endpoint through 2026-12-31, then $1.50 input and $7.50 output</a>. Non-global endpoints cost 10% more.'), paragraph);
   });
 
@@ -285,7 +306,7 @@ describe(`${PAGE} on accounts charged monthly`, () => {
 
   it("links Google's statement on invoiced accounts to its billing doc", () => {
     const paragraph = prepayParagraph(page);
-    assert.ok(paragraph.includes('move to Prepay. <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">Prepay is not available for invoiced (offline) accounts</a>, which a business applies for'), paragraph);
+    assert.ok(paragraph.includes('move to Prepay. <a href="https://aistudio.google.com/docs/billing" target="_blank" rel="noopener">Prepay is not available for invoiced (offline) accounts</a>, which a business applies for'), paragraph);
   });
 
   it("states it once on the page", () => {
@@ -332,7 +353,7 @@ describe(`${PAGE} on a billing account AI Studio calls inactive or unsupported`,
 
   it("links Google's billing FAQ to its answer on eligible accounts", () => {
     const paragraph = prepayParagraph(page);
-    assert.ok(paragraph.includes('<a href="https://ai.google.dev/gemini-api/docs/billing#eligible-accounts" target="_blank" rel="noopener">Google\'s billing FAQ</a> says this means the billing account\'s type or status is not eligible for the Paid Tier.'), paragraph);
+    assert.ok(paragraph.includes('<a href="https://aistudio.google.com/docs/billing#eligible-accounts" target="_blank" rel="noopener">Google\'s billing FAQ</a> says this means the billing account\'s type or status is not eligible for the Paid Tier.'), paragraph);
   });
 });
 
@@ -369,7 +390,7 @@ describe(`${PAGE} on a missed payment for another Google Cloud service`, () => {
 
   it("links the suspension to the billing FAQ's answer on missed payments", () => {
     const paragraph = prepayParagraph(page);
-    assert.ok(paragraph.includes('the Gemini API <a href="https://ai.google.dev/gemini-api/docs/billing#missed-payment" target="_blank" rel="noopener">can still be suspended</a>.'), paragraph);
+    assert.ok(paragraph.includes('the Gemini API <a href="https://aistudio.google.com/docs/billing#missed-payment" target="_blank" rel="noopener">can still be suspended</a>.'), paragraph);
   });
 });
 
@@ -390,7 +411,7 @@ describe(`${PAGE} on an account that missed its cutover date`, () => {
 
   it("links the transition to Google's billing doc", () => {
     const paragraph = prepayParagraph(page);
-    assert.ok(paragraph.includes('<a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">Google\'s billing FAQ says an existing Postpay account can transition to Prepay</a> on the AI Studio Billing page.'), paragraph);
+    assert.ok(paragraph.includes('<a href="https://aistudio.google.com/docs/billing" target="_blank" rel="noopener">Google\'s billing FAQ says an existing Postpay account can transition to Prepay</a> on the AI Studio Billing page.'), paragraph);
   });
 });
 
@@ -427,7 +448,7 @@ describe(`${PAGE} on buying credits by bank transfer`, () => {
 
   it("links the clearing time to the billing doc's answer on processing times", () => {
     const paragraph = prepayParagraph(page);
-    assert.ok(paragraph.includes('some payments take <a href="https://ai.google.dev/gemini-api/docs/billing#processing-times" target="_blank" rel="noopener">several days to clear</a>.'), paragraph);
+    assert.ok(paragraph.includes('some payments take <a href="https://aistudio.google.com/docs/billing#processing-times" target="_blank" rel="noopener">several days to clear</a>.'), paragraph);
   });
 });
 
@@ -468,7 +489,7 @@ describe(`${PAGE} on how much a high-spend account can prepay`, () => {
 
   it("links the $5,000 ceiling to Google's billing doc", () => {
     const paragraph = prepayParagraph(page);
-    assert.ok(paragraph.includes('To keep a high-spend account running, you can <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">prepay up to $5,000 in credits</a>.'), paragraph);
+    assert.ok(paragraph.includes('To keep a high-spend account running, you can <a href="https://aistudio.google.com/docs/billing" target="_blank" rel="noopener">prepay up to $5,000 in credits</a>.'), paragraph);
   });
 });
 
@@ -493,5 +514,30 @@ describe(`${PAGE} on how a paid project moves up a tier`, () => {
       tierSection(page),
       /What "spend cap" means in practice:<\/strong>(?:(?!<\/div>)[\s\S])*<\/div>\s*<div class="context-box">\s*<strong>Spend-based rate limit:<\/strong> paid tiers/,
     );
+  });
+});
+
+
+describe("Gemini documentation links on guides", () => {
+  it("links pricing, billing and methodology directly to AI Studio while preserving billing anchors", async () => {
+    for (const [url, label] of [
+      ["pricing", "Google's Gemini API pricing page"],
+      ["billing", "billing documentation"],
+      ["billing#eligible-accounts", "Google's billing FAQ"],
+      ["billing#missed-payment", "can still be suspended"],
+      ["billing#processing-times", "several days to clear"],
+    ]) {
+      assert.ok(page.includes(`<a href="https://aistudio.google.com/docs/${url}" target="_blank" rel="noopener">${label}</a>`), url);
+    }
+    const response = await fetch(base + "/google-developer-program-2026");
+    assert.strictEqual(response.status, 200);
+    assert.ok((await response.text()).includes('<a href="https://aistudio.google.com/docs/pricing" target="_blank" rel="noopener">Google AI pricing page</a>'));
+  });
+
+  it("links the Gemini 2.0 shutdown source directly to AI Studio deprecations", async () => {
+    const response = await fetch(base + "/shutdowns");
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes('href="https://aistudio.google.com/docs/deprecations"'));
   });
 });

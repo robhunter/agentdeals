@@ -70,7 +70,7 @@ const STUDENT_OFFER_TERMS = "https://one.google.com/offer/studentoffer8";
 const GEMINI_25_ACCESS =
   "Since September 18, 2026, Google limits the Gemini 2.5 models to users who have used them before. New projects should use Gemini 3.5 Flash-Lite or 3.8 Flash. See our Free LLM APIs comparison for full details.";
 
-const GEMINI_API_CHANGELOG = "https://ai.google.dev/gemini-api/docs/changelog";
+const GEMINI_API_CHANGELOG = "https://aistudio.google.com/docs/changelog";
 
 function geminiContextBox(html: string): string {
   return html.split("<strong>Context — Gemini API free tier reduction:</strong>")[1]?.split("</div>")[0] ?? "";
@@ -260,7 +260,7 @@ describe("the Google Developer Program guide states Google's, Microsoft's, Appwr
     assert.ok(stopped >= 0, text);
     assert.ok(text.endsWith(GEMINI_25_ACCESS), text);
     assert.ok(text.indexOf(GEMINI_25_ACCESS) > stopped, text);
-    assert.deepStrictEqual(anchors(box).filter((link) => link.includes("-> https://ai.google.dev")), [`Since September 18, 2026 -> ${GEMINI_API_CHANGELOG}`]);
+    assert.deepStrictEqual(anchors(box).filter((link) => link.endsWith(`-> ${GEMINI_API_CHANGELOG}`)), [`Since September 18, 2026 -> ${GEMINI_API_CHANGELOG}`]);
     const recordSource = box.indexOf('class="change-source"');
     assert.ok(recordSource >= 0 && box.indexOf(GEMINI_API_CHANGELOG) > recordSource, "the record keeps its own source link ahead of the new sentence");
   });
