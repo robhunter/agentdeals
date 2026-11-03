@@ -538,6 +538,10 @@ describe("Gemini documentation links on guides", () => {
     const response = await fetch(base + "/shutdowns");
     assert.strictEqual(response.status, 200);
     const html = await response.text();
-    assert.ok(html.includes('href="https://aistudio.google.com/docs/deprecations"'));
+    const start = html.indexOf('>Gemini 2.0 Flash</a></h3>');
+    assert.ok(start >= 0);
+    const header = html.slice(start, html.indexOf('<p class="shutdown-what"', start));
+    assert.ok(header.includes('<span>June 1, 2026</span> <a href="https://aistudio.google.com/docs/deprecations"'));
+    assert.doesNotMatch(header, /https:\/\/ai\.google\.dev\//);
   });
 });
