@@ -273,6 +273,9 @@
     "/alternative-to/fly-io": {
       "daily": true
     },
+    "/alternative-to/fly-io-sprites": {
+      "daily": true
+    },
     "/alternative-to/freeflarum": {
       "daily": true
     },
@@ -574,6 +577,9 @@
       "daily": true
     },
     "/alternative-to/railway": {
+      "daily": true
+    },
+    "/alternative-to/railway-sandboxes": {
       "daily": true
     },
     "/alternative-to/ravion": {
@@ -1492,6 +1498,18 @@
       "hash": "c1deb8fd442604ce",
       "changed": "2026-10-14"
     },
+    "/compare/apply-build-vs-gigalixir-com": {
+      "hash": "713e5814a6ec7b2c",
+      "changed": "2026-11-03"
+    },
+    "/compare/apply-build-vs-github-pages": {
+      "hash": "fc9614b614535bcc",
+      "changed": "2026-11-03"
+    },
+    "/compare/apply-build-vs-qoddi": {
+      "hash": "dc8e827dc66f10bf",
+      "changed": "2026-11-03"
+    },
     "/compare/appsmith-vs-budibase": {
       "hash": "3c9c9460cb015193",
       "changed": "2026-10-23"
@@ -1828,18 +1846,6 @@
       "hash": "9ce5f9a725be72ef",
       "changed": "2026-10-29"
     },
-    "/compare/daestro-vs-encore-dev": {
-      "hash": "eea3e7852ab54d21",
-      "changed": "2026-10-16"
-    },
-    "/compare/daestro-vs-freeflarum": {
-      "hash": "a56e1fb14ded3c05",
-      "changed": "2026-10-15"
-    },
-    "/compare/daestro-vs-neocities": {
-      "hash": "de0a4ee8b00d87d9",
-      "changed": "2026-11-02"
-    },
     "/compare/datadog-vs-grafana-cloud": {
       "hash": "9cbd57e56708c4aa",
       "changed": "2026-11-02"
@@ -2044,10 +2050,6 @@
       "hash": "196e0a841ca7355e",
       "changed": "2026-10-12"
     },
-    "/compare/freeflarum-vs-encore-dev": {
-      "hash": "1c7135b1252974ae",
-      "changed": "2026-10-16"
-    },
     "/compare/fusionauth-vs-zitadel-cloud": {
       "hash": "8f302143d31d0141",
       "changed": "2026-10-31"
@@ -2091,6 +2093,10 @@
     "/compare/github-copilot-vs-windsurf": {
       "hash": "786d61bb8805dcd3",
       "changed": "2026-10-31"
+    },
+    "/compare/github-pages-vs-gigalixir-com": {
+      "hash": "d260a47dcedb07a9",
+      "changed": "2026-11-03"
     },
     "/compare/gleek-io-vs-tldraw-com": {
       "hash": "e3c6743646587d8d",
@@ -2400,10 +2406,6 @@
       "hash": "64a5255e04b1ca41",
       "changed": "2026-11-02"
     },
-    "/compare/neocities-vs-encore-dev": {
-      "hash": "72064ce2d3907c90",
-      "changed": "2026-11-02"
-    },
     "/compare/neon-vs-supabase": {
       "hash": "181829db86b9f26d",
       "changed": "2026-11-02"
@@ -2531,6 +2533,10 @@
     "/compare/puppeteer-vs-steel": {
       "hash": "b502c7a619874c95",
       "changed": "2026-10-22"
+    },
+    "/compare/qoddi-vs-gigalixir-com": {
+      "hash": "f4f13b543a4675e0",
+      "changed": "2026-11-03"
     },
     "/compare/railway-vs-render": {
       "hash": "71dd5e2b9afee3ca",
@@ -5709,6 +5715,9 @@
     "/vendor/fly-io": {
       "daily": true
     },
+    "/vendor/fly-io-sprites": {
+      "daily": true
+    },
     "/vendor/flyon-ui": {
       "hash": "e6b895f8ae2e735c",
       "changed": "2026-11-02"
@@ -7949,6 +7958,9 @@
       "changed": "2026-11-02"
     },
     "/vendor/railway": {
+      "daily": true
+    },
+    "/vendor/railway-sandboxes": {
       "daily": true
     },
     "/vendor/raindrop-io": {
