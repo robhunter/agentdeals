@@ -1,86 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-11-03/thunder-client/limits_increased",
-      "proposed_on": "2026-11-03",
-      "vendor": "Thunder Client",
-      "change_type": "limits_increased",
-      "date": "2026-11-03",
-      "date_source": "discovered",
-      "summary": "Previously the Free plan includes 1 local collection run per month and that JetBrains, CLI/CI/CD, and WebSocket/SSE/gRPC are paid-only Starter features. The current page lists the Free plan as including JetBrains, CLI & CI/CD, WebSocket/SSE/gRPC, and MCP Server, and shows a Collection Runner limit of 1 for Free (with 30/250/500/Unlimited for Starter/Business/Enterprise). Paid tier prices ($3 Starter, $7 Business, $16 Enterprise) still match.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Lightweight REST API client for VS Code and JetBrains. Free plan is $0 per user/month for the VS Code extension, with 1 local collection run per month. Paid plans are billed annually from Starter at $3 per user/month, which adds JetBrains, team features, CLI and CI/CD, WebSocket/SSE/gRPC and 250 collection runs; Business is $7 and Enterprise $16.",
-      "current_state": "Free is $0/user/month with no credit card required and includes Extension for VS Code, JetBrains, Cursor, Antigravity, Kiro, Devin; CLI & CI/CD; WebSocket, SSE, gRPC; and MCP Server (AI). The comparison table lists Free with 3 collections, 50 requests per collection, 5 imports per month, unlimited environments, and a Collection Runner limit of 1.",
-      "impact": "medium",
-      "source_url": "https://www.thunderclient.com/pricing",
-      "category": "API Development",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-03",
-      "restatement": [
-        {
-          "url": "https://www.thunderclient.com/pricing",
-          "refused": "reading_drops_a_figure_our_source_check_found",
-          "figures": [
-            "$3",
-            "$7",
-            "$16"
-          ]
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-03/qase-io/limits_increased",
-      "proposed_on": "2026-11-03",
-      "vendor": "qase.io",
-      "change_type": "limits_increased",
-      "date": "2026-11-03",
-      "date_source": "discovered",
-      "summary": "The free tier now allows up to 4 users (previously 3) and includes MCP Server.",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "Test management system for Dev and QA teams. Manage test cases, compose test runs, perform tests, track defects, and measure impact. The free tier includes all core features, with 500MB available for attachments and up to 3 users.",
-      "current_state": "Free is $0/user/month, free forever, for students, hobbyists, educators, and non-profits. Includes up to 2 projects, 500 MB storage, 30-day test history, 5k/mo API results, MCP Server, up to 4 full seats, 2 active test runs, test case management, defect management, shared steps, limited Quality Supervisor, and 150/min API rate limit. Custom fields, test case review, integrations, webhooks, requirements management, RTM, dashboards, QQL, RBAC, SSO, and audit logs are not included.",
-      "impact": "medium",
-      "source_url": "https://qase.io/pricing",
-      "category": "Testing",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-03",
-      "restatement": [
-        {
-          "url": "https://qase.io/pricing",
-          "description": "Test management system for Dev and QA teams — Free is $0/user/month, free forever, for students, hobbyists, educators, and non-profits. Includes up to 2 projects, 500 MB storage, 30-day test history, 5k/mo API results, MCP Server, up to 4 full seats, 2 active test runs, test case management, defect management, shared steps, limited Quality Supervisor, and 150/min API rate limit. Custom fields, test case review, integrations, webhooks, requirements management, RTM, dashboards, QQL, RBAC, SSO, and audit logs are not included."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-03/grafana-cloud/pricing_restructured",
-      "proposed_on": "2026-11-03",
-      "vendor": "Grafana Cloud",
-      "change_type": "pricing_restructured",
-      "date": "2026-11-03",
-      "date_source": "discovered",
-      "summary": "The page also now lists Pro at $19/month platform fee plus usage with 13 months metrics retention and 30 days for logs/traces/profiles/k6, and adds new free-tier limits (e.g., 2,232 host hours, 50k sessions, 3 active AI users) not in previously.",
-      "tier": "Pro",
-      "tier_direction": "unchanged",
-      "previous_state": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. Pro costs $19 a month plus usage, includes 10k active series and 50 GB each of logs and traces, and bills usage above them. Pro keeps metrics for 13 months and logs, traces, profiles and k6 tests for 30 days.",
-      "current_state": "Free is Always $0 with all Grafana Cloud services, usage limits, Adaptive Telemetry, AI Assistant, community support, and 14 days retention for metrics, logs, traces, profiles, & k6 performance tests. Pro is from $19/month + usage with unlimited access to all Grafana Cloud services (pay as you go above free tier), Adaptive Telemetry, AI Assistant, 8x5 email support, 13 months retention for metrics, and 30 days retention for logs, traces, profiles, & k6 performance tests. Metrics Pro includes 10k active series/month then pay as you go, 13 months retention, 8x5 email support, at $6.50/1k series. Logs Pro includes 50 GB ingested/month then pay as you go, 30 days retention, 8x5 email support. Traces Pro includes 50 GB ingested/month then pay as you go, 30 days retention, 8x5 email support. Profiles Pro includes 50 GB ingested/month then pay as you go, 30 days retention, 8x5 email support.",
-      "impact": "medium",
-      "source_url": "https://grafana.com/pricing/",
-      "category": "Monitoring",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-03",
-      "restatement": [
-        {
-          "url": "https://grafana.com/pricing/",
-          "description": "Free is Always $0 with all Grafana Cloud services, usage limits, Adaptive Telemetry, AI Assistant, community support, and 14 days retention for metrics, logs, traces, profiles, & k6 performance tests. Pro is from $19/month + usage with unlimited access to all Grafana Cloud services (pay as you go above free tier), Adaptive Telemetry, AI Assistant, 8x5 email support, 13 months retention for metrics, and 30 days retention for logs, traces, profiles, & k6 performance tests. Metrics Pro includes 10k active series/month then pay as you go, 13 months retention, 8x5 email support, at $6.50/1k series. Logs Pro includes 50 GB ingested/month then pay as you go, 30 days retention, 8x5 email support. Traces Pro includes 50 GB ingested/month then pay as you go, 30 days retention, 8x5 email support. Profiles Pro includes 50 GB ingested/month then pay as you go, 30 days retention, 8x5 email support."
-        }
-      ]
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
@@ -1635,6 +1554,92 @@
       ],
       "dropped_on": "2026-11-02",
       "drop_reason": "Not new: the Priority table's Free Tier column for Gemini 3.8 Flash reads 'Free of charge' in every Internet Archive capture of ai.google.dev/gemini-api/docs/pricing from 2026-10-20 to 2026-11-02, and the listing already states that Gemini 3.8 Flash is free of charge."
+    },
+    {
+      "proposal_id": "2026-11-03/grafana-cloud/pricing_restructured",
+      "proposed_on": "2026-11-03",
+      "vendor": "Grafana Cloud",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-03",
+      "date_source": "discovered",
+      "summary": "The page also now lists Pro at $19/month platform fee plus usage with 13 months metrics retention and 30 days for logs/traces/profiles/k6, and adds new free-tier limits (e.g., 2,232 host hours, 50k sessions, 3 active AI users) not in previously.",
+      "tier": "Pro",
+      "tier_direction": "unchanged",
+      "previous_state": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. Pro costs $19 a month plus usage, includes 10k active series and 50 GB each of logs and traces, and bills usage above them. Pro keeps metrics for 13 months and logs, traces, profiles and k6 tests for 30 days.",
+      "current_state": "Free is Always $0 with all Grafana Cloud services, usage limits, Adaptive Telemetry, AI Assistant, community support, and 14 days retention for metrics, logs, traces, profiles, & k6 performance tests. Pro is from $19/month + usage with unlimited access to all Grafana Cloud services (pay as you go above free tier), Adaptive Telemetry, AI Assistant, 8x5 email support, 13 months retention for metrics, and 30 days retention for logs, traces, profiles, & k6 performance tests. Metrics Pro includes 10k active series/month then pay as you go, 13 months retention, 8x5 email support, at $6.50/1k series. Logs Pro includes 50 GB ingested/month then pay as you go, 30 days retention, 8x5 email support. Traces Pro includes 50 GB ingested/month then pay as you go, 30 days retention, 8x5 email support. Profiles Pro includes 50 GB ingested/month then pay as you go, 30 days retention, 8x5 email support.",
+      "impact": "medium",
+      "source_url": "https://grafana.com/pricing/",
+      "category": "Monitoring",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-03",
+      "restatement": [
+        {
+          "url": "https://grafana.com/pricing/",
+          "description": "Free is Always $0 with all Grafana Cloud services, usage limits, Adaptive Telemetry, AI Assistant, community support, and 14 days retention for metrics, logs, traces, profiles, & k6 performance tests. Pro is from $19/month + usage with unlimited access to all Grafana Cloud services (pay as you go above free tier), Adaptive Telemetry, AI Assistant, 8x5 email support, 13 months retention for metrics, and 30 days retention for logs, traces, profiles, & k6 performance tests. Metrics Pro includes 10k active series/month then pay as you go, 13 months retention, 8x5 email support, at $6.50/1k series. Logs Pro includes 50 GB ingested/month then pay as you go, 30 days retention, 8x5 email support. Traces Pro includes 50 GB ingested/month then pay as you go, 30 days retention, 8x5 email support. Profiles Pro includes 50 GB ingested/month then pay as you go, 30 days retention, 8x5 email support."
+        }
+      ],
+      "dropped_on": "2026-11-03",
+      "drop_reason": "Not a change: grafana.com/pricing (read 2026-11-03) still prices Pro at $19 a month plus usage with 10k series and 50 GB each of logs and traces, 13 months and 30 days retention. The reading adds free limits our listing never stated (host hours, sessions, AI users). A reading with the same figures was retracted on 2026-10-07."
+    },
+    {
+      "proposal_id": "2026-11-03/thunder-client/limits_increased",
+      "proposed_on": "2026-11-03",
+      "vendor": "Thunder Client",
+      "change_type": "limits_increased",
+      "date": "2026-11-03",
+      "date_source": "discovered",
+      "summary": "Previously the Free plan includes 1 local collection run per month and that JetBrains, CLI/CI/CD, and WebSocket/SSE/gRPC are paid-only Starter features. The current page lists the Free plan as including JetBrains, CLI & CI/CD, WebSocket/SSE/gRPC, and MCP Server, and shows a Collection Runner limit of 1 for Free (with 30/250/500/Unlimited for Starter/Business/Enterprise). Paid tier prices ($3 Starter, $7 Business, $16 Enterprise) still match.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Lightweight REST API client for VS Code and JetBrains. Free plan is $0 per user/month for the VS Code extension, with 1 local collection run per month. Paid plans are billed annually from Starter at $3 per user/month, which adds JetBrains, team features, CLI and CI/CD, WebSocket/SSE/gRPC and 250 collection runs; Business is $7 and Enterprise $16.",
+      "current_state": "Free is $0/user/month with no credit card required and includes Extension for VS Code, JetBrains, Cursor, Antigravity, Kiro, Devin; CLI & CI/CD; WebSocket, SSE, gRPC; and MCP Server (AI). The comparison table lists Free with 3 collections, 50 requests per collection, 5 imports per month, unlimited environments, and a Collection Runner limit of 1.",
+      "impact": "medium",
+      "source_url": "https://www.thunderclient.com/pricing",
+      "category": "API Development",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-03",
+      "restatement": [
+        {
+          "url": "https://www.thunderclient.com/pricing",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$3",
+            "$7",
+            "$16"
+          ]
+        }
+      ],
+      "dropped_on": "2026-11-03",
+      "drop_reason": "A real widening that cannot be dated: thunderclient.com/pricing (read 2026-11-03) lists JetBrains, CLI & CI/CD, WebSocket/SSE/gRPC and MCP Server in Free, and neither the page nor our captures give a date. 3 people a week. The listing description is updated from the vendor page instead."
+    },
+    {
+      "proposal_id": "2026-11-03/qase-io/limits_increased",
+      "proposed_on": "2026-11-03",
+      "vendor": "qase.io",
+      "change_type": "limits_increased",
+      "date": "2026-11-03",
+      "date_source": "discovered",
+      "summary": "The free tier now allows up to 4 users (previously 3) and includes MCP Server.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Test management system for Dev and QA teams. Manage test cases, compose test runs, perform tests, track defects, and measure impact. The free tier includes all core features, with 500MB available for attachments and up to 3 users.",
+      "current_state": "Free is $0/user/month, free forever, for students, hobbyists, educators, and non-profits. Includes up to 2 projects, 500 MB storage, 30-day test history, 5k/mo API results, MCP Server, up to 4 full seats, 2 active test runs, test case management, defect management, shared steps, limited Quality Supervisor, and 150/min API rate limit. Custom fields, test case review, integrations, webhooks, requirements management, RTM, dashboards, QQL, RBAC, SSO, and audit logs are not included.",
+      "impact": "medium",
+      "source_url": "https://qase.io/pricing",
+      "category": "Testing",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-03",
+      "restatement": [
+        {
+          "url": "https://qase.io/pricing",
+          "description": "Test management system for Dev and QA teams — Free is $0/user/month, free forever, for students, hobbyists, educators, and non-profits. Includes up to 2 projects, 500 MB storage, 30-day test history, 5k/mo API results, MCP Server, up to 4 full seats, 2 active test runs, test case management, defect management, shared steps, limited Quality Supervisor, and 150/min API rate limit. Custom fields, test case review, integrations, webhooks, requirements management, RTM, dashboards, QQL, RBAC, SSO, and audit logs are not included."
+        }
+      ],
+      "dropped_on": "2026-11-03",
+      "drop_reason": "Undated and mixed: qase.io/pricing (read 2026-11-03) gives Free up to 4 users (our listing says 3) and also caps it at 2 projects and 30-day test history; the page gives no date. No readers in 7 days. The listing description is updated from the vendor page instead."
     }
   ]
 }
