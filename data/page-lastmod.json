@@ -3085,8 +3085,8 @@
       "changed": "2026-10-23"
     },
     "/digest/2026-w43": {
-      "hash": "3e0010443c357c25",
-      "changed": "2026-10-29"
+      "hash": "645b88ab43b5fe92",
+      "changed": "2026-11-03"
     },
     "/digest/2026-w44": {
       "hash": "7b602e8978d791a2",
@@ -3189,12 +3189,12 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "hash": "4ea7018ecfd5815e",
-      "changed": "2026-11-02"
+      "hash": "97cf6fc9a0bd56f5",
+      "changed": "2026-11-03"
     },
     "/events/google-io-2026": {
-      "hash": "df866d4640ce340a",
-      "changed": "2026-11-02"
+      "hash": "871fca08a0f9fd2a",
+      "changed": "2026-11-03"
     },
     "/events/microsoft-build-2026": {
       "hash": "9647861276a12dd2",
@@ -3204,7 +3204,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "7fab521641cfdc18",
+      "hash": "a516e31d57f96052",
       "changed": "2026-11-03"
     },
     "/firebase-alternatives": {
@@ -3273,11 +3273,11 @@
       "changed": "2026-11-03"
     },
     "/gcp-free-tier-2026": {
-      "hash": "fa485df56f9de43a",
+      "hash": "f059dc5e322a428c",
       "changed": "2026-11-03"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "a6b617575ec46d80",
+      "hash": "f11999952cee41a3",
       "changed": "2026-11-03"
     },
     "/github-actions-alternatives": {
@@ -3289,7 +3289,7 @@
       "changed": "2026-11-02"
     },
     "/google-developer-program-2026": {
-      "hash": "400e00b108e759ec",
+      "hash": "ca9151e75cb54928",
       "changed": "2026-11-03"
     },
     "/groq-vs-hugging-face": {
@@ -3349,7 +3349,7 @@
       "changed": "2026-11-03"
     },
     "/llm-api-pricing": {
-      "hash": "7b870a99572bb7c9",
+      "hash": "2335a83eaae19ce3",
       "changed": "2026-11-03"
     },
     "/localstack-alternatives": {
@@ -3568,7 +3568,7 @@
       "changed": "2026-11-03"
     },
     "/reports/2026-10": {
-      "hash": "5c6d6b7bbfaf914f",
+      "hash": "f12bbecc583a13fc",
       "changed": "2026-11-03"
     },
     "/reports/2026-11": {
