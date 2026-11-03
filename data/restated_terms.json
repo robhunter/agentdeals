@@ -53,7 +53,8 @@
       "source_url": "https://railway.com/pricing",
       "record_date": "2026-09-03",
       "change_type": "limits_reduced",
-      "summary": "The free tier now has a $1/month minimum after the trial, and the number of projects is reduced to 1 after the trial. The free trial now offers 2 replicas instead of 1."
+      "summary": "The free tier now has a $1/month minimum after the trial, and the number of projects is reduced to 1 after the trial. The free trial now offers 2 replicas instead of 1.",
+      "reverted_on": "2026-11-03"
     },
     {
       "vendor": "Supabase",

@@ -581,7 +581,7 @@
     {
       "vendor": "Railway",
       "category": "Cloud Hosting",
-      "description": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. Projects: 5 during trial, then 1",
+      "description": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 of free credit per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. Projects: 5 during trial, then 1",
       "tier": "Free",
       "url": "https://railway.com/pricing",
       "tags": [
@@ -635,13 +635,6 @@
         ],
         "reviewed": "2026-08-31"
       },
-      "restated_from": {
-        "reading_date": "2026-09-03",
-        "source_url": "https://railway.com/pricing",
-        "record_date": "2026-09-03",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
-      },
       "free_plan_excerpt": {
         "text": "Free $ 0 per month Perfect for getting started and deploying small apps on Railway Start with a 30-day free trial with $5 credits, then $1 per month Up to 1 vCPU / 0.5 GB RAM per service 0.5 GB of volume storage Community support Deploy a new project No credit card required",
         "url": "https://railway.com/pricing",
@@ -661,6 +654,12 @@
           "read_on": "2026-10-22"
         },
         {
+          "text": "After 30 days passes or $5 is spent, the free trial reverts to the Free plan, which provides $1 of free credit per month. The credit does not roll over month to month.",
+          "quote": "After 30 days passes or $5 is spent, the free trial reverts to the Free plan, which provides $1 of free credit per month. The credit does not roll over month to month.",
+          "url": "https://docs.railway.com/pricing/free-trial",
+          "read_on": "2026-11-03"
+        },
+        {
           "text": "Run `ssh railway.new` to get a free Linux VM with no account or credit card. The VM has 2 vCPU, 2 GB RAM, and a preview URL. Claude Code, Codex, OpenCode, and the Railway Agent are preinstalled. Railway identifies you by your SSH key. Each VM can be used for 60 minutes. You can get 3 VMs per IP address per day.",
           "quote": "Run ssh railway.new to get a free Linux VM with coding agents preinstalled and a preview URL, with no account or credit card.",
           "url": "https://docs.railway.com/pricing/free-trial",
@@ -678,7 +677,11 @@
           "url": "https://docs.railway.com/sandboxes",
           "read_on": "2026-11-03"
         }
-      ]
+      ],
+      "restatement_reverted": {
+        "record_date": "2026-09-03",
+        "reverted_on": "2026-11-03"
+      }
     },
     {
       "vendor": "Fly.io",
