@@ -4786,7 +4786,7 @@
           "read_on": "2026-10-29"
         },
         {
-          "text": "Cloudflare AI Search is a managed search service over your own content. Every account gets 5 million ingestion tokens, 10 GB-month of storage, 1,000 semantic queries and 1,000 full-text queries a month. Billing starts on December 1, 2026. Embedding and reranking calls are billed as AI Search usage and do not appear on the Workers AI bill.",
+          "text": "Cloudflare AI Search is a managed search service over your own content. Every account gets 5 million ingestion tokens, 10 GB-month of storage, 1,000 semantic queries and 1,000 full-text queries a month. Embedding and reranking calls are billed as AI Search usage and do not appear on the Workers AI bill.",
           "quote": "Workers AI embedding and reranking usage is included in AI Search usage and does not appear on your Workers AI bill or in your AI Gateway logs.",
           "url": "https://developers.cloudflare.com/ai-search/platform/limits-pricing/",
           "read_on": "2026-11-03"
