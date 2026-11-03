@@ -34,20 +34,20 @@ const WITHDRAWN: Record<string, Record<string, RegExp>> = {
 
 const STATED: Record<string, string[]> = {
   "/free-django-stack": [
-    "Serverless Redis with a generous free tier: 500K commands/month, 256 MB storage.",
+    "Serverless Redis with a generous free tier: 500K commands/month, 250 MB of data.",
     "When you exceed 500K commands/month.",
     "Upstash's 500K commands/month free tier covers moderate task queue usage",
     "When you exceed 500,000 Redis commands a month.",
     "cache/Redis (500K cmds/mo)",
   ],
   "/free-fastapi-stack": [
-    "Serverless Redis with async support. Free tier: 500K commands/month, 256 MB storage.",
+    "Serverless Redis with async support. Free tier: 500K commands/month, 250 MB of data.",
     "When you exceed 500K commands/month.",
     "When you exceed 500,000 Redis commands a month or need more than a single worker process.",
     "cache/Redis (500K cmds/mo)",
   ],
   "/free-go-stack": [
-    "Serverless Redis with Go support. Free tier: 500K commands/month, 256 MB storage.",
+    "Serverless Redis with Go support. Free tier: 500K commands/month, 250 MB of data.",
     "Upstash's 500K commands/month covers moderate Asynq usage.",
     "Upstash Redis (500K commands a month free) works as the Asynq backend.",
     "cache/Redis (500K cmds/mo)",
@@ -202,4 +202,36 @@ describe("database and stack pages state Upstash, QStash, Upstash Vector, Nile, 
     assert.ok(answers.length > 0, "the Django stack page publishes no FAQPage structured data");
     assert.deepStrictEqual(answers.filter((answer) => answer.includes(DJANGO_REDIS_ANSWER)).length, 1);
   });
+
+  for (const page of ["/free-django-stack", "/free-fastapi-stack", "/free-go-stack"]) {
+    function railwaySection(): string {
+      const sections = html.get(page)!.split('<div class="stack-category"');
+      const railway = sections.filter((section) => {
+        const name = section.match(/class="pick-name"[^>]*>([^<]+)</);
+        return name && textOf(name[1]) === "Railway";
+      });
+      assert.strictEqual(railway.length, 1, page);
+      return railway[0];
+    }
+
+    it(`${page} explains the Free credit's RAM budget and optional Serverless sleep`, () => {
+      const section = railwaySection();
+      const why = section.match(/<p class="pick-why">([\s\S]*?)<\/p>/);
+      assert.ok(why, page);
+      assert.ok(textOf(why[1]).includes("Railway does not put idle services to sleep unless Serverless is turned on. The Free plan gives $1 of credit a month. That pays for about 100 MB of RAM for a whole month at Railway's $10 per GB of RAM a month, before CPU. An always-on app that holds more than 100 MB uses more than $1."), page);
+    });
+
+    it(`${page} distinguishes outgrowing Free from Hobby's included usage`, () => {
+      const section = railwaySection();
+      const outgrow = section.match(/<div class="outgrow-box">([\s\S]*?)<\/div>/);
+      assert.ok(outgrow, page);
+      assert.ok(textOf(outgrow[1]).startsWith("When you'll outgrow it: You outgrow the Free plan when the app uses more than $1 of resources a month. Hobby costs $5 a month and includes $5 of usage, then charges only for usage beyond it."), page);
+    });
+
+    it(`${page} carries neither an always-warm promise nor the old Free threshold`, () => {
+      assert.doesNotMatch(html.get(page)!, /stays warm|When you exceed the \$5 of usage that Hobby/i, page);
+      assert.doesNotMatch(textOf(html.get(page)!), /stays warm|When you exceed the \$5 of usage that Hobby/i, page);
+    });
+  }
+
 });

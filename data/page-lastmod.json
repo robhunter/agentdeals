@@ -3223,11 +3223,11 @@
       "changed": "2026-11-03"
     },
     "/free-django-stack": {
-      "hash": "aed341a9086f3053",
+      "hash": "c6483ea92e506571",
       "changed": "2026-11-03"
     },
     "/free-fastapi-stack": {
-      "hash": "c89a1fae4d5ec2ac",
+      "hash": "6dcb4f809ffe8134",
       "changed": "2026-11-03"
     },
     "/free-frontend-stack": {
@@ -3235,7 +3235,7 @@
       "changed": "2026-11-03"
     },
     "/free-go-stack": {
-      "hash": "65bb222f41434fea",
+      "hash": "13ad51f8de9f769a",
       "changed": "2026-11-03"
     },
     "/free-llm-apis": {

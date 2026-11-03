@@ -17622,9 +17622,9 @@ function buildFreeDjangoStackPage(): string {
     {
       name: "Hosting & Deployment",
       icon: "🚀",
-      recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with WSGI/ASGI support, managed Postgres add-on, and auto-deploy from GitHub. Supports Gunicorn, Uvicorn, and Daphne out of the box. No sleep timer — your app stays warm. Nixpacks auto-detects Django projects and installs dependencies from requirements.txt or pyproject.toml." },
+      recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with WSGI/ASGI support, managed Postgres add-on, and auto-deploy from GitHub. Supports Gunicorn, Uvicorn, and Daphne out of the box. Railway does not put idle services to sleep unless Serverless is turned on. The Free plan gives $1 of credit a month. That pays for about 100 MB of RAM for a whole month at Railway's $10 per GB of RAM a month, before CPU. An always-on app that holds more than 100 MB uses more than $1. Nixpacks auto-detects Django projects and installs dependencies from requirements.txt or pyproject.toml." },
       alternatives: ["Render", "Fly.io", "PythonAnywhere"],
-      outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of about one minute hurt Django apps. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. PythonAnywhere offers a free tier with WSGI support but only one web app and no custom domain.",
+      outgrow: "You outgrow the Free plan when the app uses more than $1 of resources a month. Hobby costs $5 a month and includes $5 of usage, then charges only for usage beyond it. Render's free tier spins down after 15 minutes of inactivity — cold starts of about one minute hurt Django apps. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. PythonAnywhere offers a free tier with WSGI support but only one web app and no custom domain.",
       whyNot: "Why not Heroku: No free tier since November 2022 — Eco dynos start at $5/month with mandatory credit card. Why not AWS Elastic Beanstalk: it has no fee of its own, but you pay for the EC2 instances it runs, from the Free plan's credits on a new account. Overkill for a Django side project.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
@@ -17640,7 +17640,7 @@ function buildFreeDjangoStackPage(): string {
     {
       name: "Cache & Redis",
       icon: "⚡",
-      recommended: { vendor: "Upstash", why: "Serverless Redis with a generous free tier: 500K commands/month, 256 MB storage. Perfect for Django's cache framework (django.core.cache with django-redis backend), session storage, and Celery broker. Pay-per-request pricing means you only pay for what you use beyond free limits. REST API works anywhere — no persistent connections needed." },
+      recommended: { vendor: "Upstash", why: "Serverless Redis with a generous free tier: 500K commands/month, 250 MB of data. Perfect for Django's cache framework (django.core.cache with django-redis backend), session storage, and Celery broker. Pay-per-request pricing means you only pay for what you use beyond free limits. REST API works anywhere — no persistent connections needed." },
       alternatives: ["Redis Cloud", "Railway"],
       outgrow: "When you exceed 500K commands/month. Redis Cloud offers 30 MB free with unlimited commands — better if you have high command volume but small data. For simple caching without Redis, Django's built-in database cache backend costs nothing extra.",
       whyNot: null,
@@ -18029,9 +18029,9 @@ function buildFreeFastapiStackPage(): string {
     {
       name: "Hosting & Deployment",
       icon: "🚀",
-      recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with uvicorn ASGI server, auto-deploy from GitHub, and managed add-ons. Nixpacks auto-detects Python projects — just add a Procfile with `web: uvicorn main:app --host 0.0.0.0 --port $PORT`. No sleep timer — your API stays warm for consistent response times." },
+      recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with uvicorn ASGI server, auto-deploy from GitHub, and managed add-ons. Nixpacks auto-detects Python projects — just add a Procfile with `web: uvicorn main:app --host 0.0.0.0 --port $PORT`. Railway does not put idle services to sleep unless Serverless is turned on. The Free plan gives $1 of credit a month. That pays for about 100 MB of RAM for a whole month at Railway's $10 per GB of RAM a month, before CPU. An always-on app that holds more than 100 MB uses more than $1." },
       alternatives: ["Render", "Fly.io", "Koyeb"],
-      outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of about one minute kill API latency. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs). Koyeb has had no free plan for new users since February 2026 (Pro from $29/mo).",
+      outgrow: "You outgrow the Free plan when the app uses more than $1 of resources a month. Hobby costs $5 a month and includes $5 of usage, then charges only for usage beyond it. Render's free tier spins down after 15 minutes of inactivity — cold starts of about one minute kill API latency. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs). Koyeb has had no free plan for new users since February 2026 (Pro from $29/mo).",
       whyNot: "Why not Vercel: Vercel supports FastAPI via serverless functions (Mangum adapter), but loses WebSocket support, background tasks, and startup events — core FastAPI features. Why not Deta Space: Deta shut down Space in 2024. Many FastAPI tutorials still reference it — those guides are outdated.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
@@ -18047,7 +18047,7 @@ function buildFreeFastapiStackPage(): string {
     {
       name: "Cache & Redis",
       icon: "⚡",
-      recommended: { vendor: "Upstash", why: "Serverless Redis with async support. Free tier: 500K commands/month, 256 MB storage. FastAPI's async architecture pairs perfectly with Upstash's REST API or the async redis-py client. Use for response caching (fastapi-cache2), rate limiting (slowapi), and session storage. Pay-per-request pricing means you only pay beyond free limits." },
+      recommended: { vendor: "Upstash", why: "Serverless Redis with async support. Free tier: 500K commands/month, 250 MB of data. FastAPI's async architecture pairs perfectly with Upstash's REST API or the async redis-py client. Use for response caching (fastapi-cache2), rate limiting (slowapi), and session storage. Pay-per-request pricing means you only pay beyond free limits." },
       alternatives: ["Redis Cloud"],
       outgrow: "When you exceed 500K commands/month. Redis Cloud offers 30 MB free with unlimited commands — better for high-throughput caching. For simple caching without Redis, fastapi-cache2 supports in-memory backends, but these don't persist across deploys.",
       whyNot: null,
@@ -18451,9 +18451,9 @@ function buildFreeGoStackPage(): string {
     {
       name: "Hosting & Deployment",
       icon: "🚀",
-      recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with auto-deploy from GitHub. Nixpacks auto-detects Go projects — compiles your binary and runs it. No sleep timer — your service stays warm. Go binaries start in milliseconds, so even serverless cold starts are negligible. Docker images from scratch base are typically 5-15 MB, maximizing the free credit." },
+      recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with auto-deploy from GitHub. Nixpacks auto-detects Go projects — compiles your binary and runs it. Railway does not put idle services to sleep unless Serverless is turned on. The Free plan gives $1 of credit a month. That pays for about 100 MB of RAM for a whole month at Railway's $10 per GB of RAM a month, before CPU. An always-on app that holds more than 100 MB uses more than $1. Go binaries start in milliseconds, so even serverless cold starts are negligible. Docker images from scratch base are typically 5-15 MB, maximizing the free credit." },
       alternatives: ["Render", "Fly.io", "Koyeb"],
-      outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity, but Go's instant cold starts (~50ms) make this less painful than Python/Node. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs with 256 MB RAM). Koyeb has no free compute tier. Google Cloud Run's free tier (2M requests/month) is excellent for Go — instant scale-to-zero with near-instant cold starts.",
+      outgrow: "You outgrow the Free plan when the app uses more than $1 of resources a month. Hobby costs $5 a month and includes $5 of usage, then charges only for usage beyond it. Render's free tier spins down after 15 minutes of inactivity, but Go's instant cold starts (~50ms) make this less painful than Python/Node. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs with 256 MB RAM). Koyeb has no free compute tier. Google Cloud Run's free tier (2M requests/month) is excellent for Go — instant scale-to-zero with near-instant cold starts.",
       whyNot: "Why not Heroku: No free tier since November 2022. Why not Vercel: Vercel's Go support is limited to serverless functions — no persistent connections, WebSockets, or goroutines.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
@@ -18469,7 +18469,7 @@ function buildFreeGoStackPage(): string {
     {
       name: "Cache & Redis",
       icon: "⚡",
-      recommended: { vendor: "Upstash", why: "Serverless Redis with Go support. Free tier: 500K commands/month, 256 MB storage. The go-redis/redis library is the standard Go Redis client — supports connection pooling, pipelining, pub/sub, and Lua scripting. Go's goroutines + Redis pub/sub is a natural fit for real-time features without external message brokers. Use for session storage, rate limiting, response caching, and as a task queue backend." },
+      recommended: { vendor: "Upstash", why: "Serverless Redis with Go support. Free tier: 500K commands/month, 250 MB of data. The go-redis/redis library is the standard Go Redis client — supports connection pooling, pipelining, pub/sub, and Lua scripting. Go's goroutines + Redis pub/sub is a natural fit for real-time features without external message brokers. Use for session storage, rate limiting, response caching, and as a task queue backend." },
       alternatives: ["Redis Cloud"],
       outgrow: "When you exceed 500K commands/month. Redis Cloud offers 30 MB free with unlimited commands — better for high-throughput caching. For simple caching without Redis, Go's sync.Map or groupcache provide in-process caching with zero external dependencies, but these don't persist across deploys or share state between instances.",
       whyNot: null,
