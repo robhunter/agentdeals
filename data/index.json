@@ -3886,6 +3886,48 @@
           "quote": "We do not charge for our Cloud Firewalls.",
           "url": "https://docs.hetzner.com/cloud/firewalls/overview/",
           "read_on": "2026-10-10"
+        },
+        {
+          "text": "Hetzner prohibits cryptocurrency mining, farming and plotting. Hetzner may lock the customer's services or account for non-compliance.",
+          "quote": "The operation of applications for mining cryptocurrencies remains prohibited. These include, but are not limited to, mining, farming and plotting of cryptocurrencies.",
+          "url": "https://www.hetzner.com/legal/terms-and-conditions/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Hetzner invoices are due immediately. You must pay within ten days. Hetzner then sends email reminders. For late payments, Hetzner may lock servers, cancel products, or lock or delete the account. Hetzner decides case by case. New accounts may have servers locked earlier for unpaid first invoices. Hetzner does not guarantee data recovery.",
+          "quote": "If you have a late invoice, we will first send you payment reminders and warnings by email.",
+          "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/payment-overview/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Hetzner dedicated servers cancel immediately in Robot. Hetzner bills by the hour up to the monthly price cap, except for additional hardware and licenses. Windows, Plesk and cPanel licenses bill for full calendar months.",
+          "quote": "We bill by the hour and never exceed the monthly price cap (except for additional hardware and licenses).",
+          "url": "https://docs.hetzner.com/general/billing-and-account-management/cancellation/cancellations-robot/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Hetzner has a standard data processing agreement under Art. 28 GDPR, concluded in the customer account. Hetzner does not create individual DPAs. Non-cloud product data stays in the EU. Cloud data stays in the location the customer chooses; data stored on a server in the US or Singapore is transferred there.",
+          "quote": "We do not create or sign individual Data Processing Agreement (DPA)s",
+          "url": "https://docs.hetzner.com/general/company-and-policy/data-protection-at-hetzner/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Hetzner GPU servers are only in the dedicated GPU line, not in cloud plans. The cheapest is GEX45 with NVIDIA RTX PRO 4000 Blackwell SFF Edition and 24 GB GDDR7. It costs €214.00 a month or €0.3429 per hour, plus a one-time €209.00 setup fee, excluding VAT.",
+          "quote": "€ 209.00 one-time setup fee, excl. VAT",
+          "url": "https://www.hetzner.com/dedicated-rootserver/matrix-gpu/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Hetzner DNS zones and records are free in the Hetzner Console and API.",
+          "quote": "you can list, add, modify or remove zones and records for free",
+          "url": "https://www.hetzner.com/dns/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Hetzner's experimental Inference API is free while it stays experimental. Hetzner says not to use it for production.",
+          "quote": "As long as the Inference API remains in experimental status, it is free of charge.",
+          "url": "https://docs.hetzner.com/general/company-and-policy/experiments/inference/",
+          "read_on": "2026-11-03"
         }
       ]
     },
