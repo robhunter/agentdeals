@@ -39335,6 +39335,59 @@
         "cloudflare"
       ],
       "verifiedDate": "2026-11-03"
+    },
+    {
+      "vendor": "Cloudflare Vectorize",
+      "category": "Databases",
+      "description": "Vectorize is Cloudflare's vector database for Workers. Workers Free includes 30 million queried vector dimensions per month and 5 million stored vector dimensions (about 6,500 vectors of 768 dimensions, or about 3,250 vectors of 1,536 dimensions). It allows 100 indexes. Workers Paid includes 50 million queried dimensions per month and 10 million stored dimensions. Overage is $0.01 per million queried dimensions and $0.05 per 100 million stored dimensions. CPU, memory and active index hours are not billed. Each vector can have up to 1536 dimensions. Each index can hold up to 20 million vectors.",
+      "tier": "Free",
+      "url": "https://developers.cloudflare.com/vectorize/platform/pricing/",
+      "tags": [
+        "vector-database",
+        "ai",
+        "embeddings",
+        "serverless",
+        "cloudflare",
+        "workers"
+      ],
+      "verifiedDate": "2026-11-03",
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "vector",
+            "source_url": "https://developers.cloudflare.com/vectorize/",
+            "source_quote": "Vectorize is a globally distributed vector database that enables you to build full-stack, AI-powered applications with Cloudflare Workers."
+          }
+        ],
+        "reviewed": "2026-11-03"
+      },
+      "conditions": [
+        {
+          "text": "Cloudflare counts queried vector dimensions as stored vectors plus queries, multiplied by dimensions. For example, 10,000 vectors with 384 dimensions and 100 queries gives (10,000 + 100) × 384 = 3.878 million queried vector dimensions.",
+          "quote": "If you have 10,000 vectors with 384-dimensions in an index, and make 100 queries against that index, your total queried vector dimensions would sum to 3.878 million ((10000 + 100) * 384).",
+          "url": "https://developers.cloudflare.com/vectorize/platform/pricing/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Cloudflare says the Workers Free plan will always include Vectorize for prototyping and experimenting.",
+          "quote": "Yes, the Workers free tier will always include the ability to prototype and experiment with Vectorize for free.",
+          "url": "https://developers.cloudflare.com/vectorize/platform/pricing/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Cloudflare Vectorize's free plan needs no credit card.",
+          "quote": "Start building for free — no credit card required.",
+          "url": "https://www.cloudflare.com/developer-platform/products/vectorize/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Vectorize usage past the Free allowances requires the Workers Paid plan. That plan has a minimum charge of $5 per month per account.",
+          "quote": "The Workers Paid plan includes Workers, Pages Functions, Workers KV, Hyperdrive, and Durable Objects usage for a minimum charge of $5 USD per month for an account.",
+          "url": "https://developers.cloudflare.com/workers/platform/pricing/",
+          "read_on": "2026-11-03"
+        }
+      ]
     }
   ],
   "changes": []

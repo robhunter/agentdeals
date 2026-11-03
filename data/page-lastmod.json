@@ -165,6 +165,9 @@
     "/alternative-to/cloudflare-sandboxes": {
       "daily": true
     },
+    "/alternative-to/cloudflare-vectorize": {
+      "daily": true
+    },
     "/alternative-to/cloudflare-workers": {
       "daily": true
     },
@@ -1674,6 +1677,18 @@
       "hash": "fa572a9da114b545",
       "changed": "2026-11-03"
     },
+    "/compare/cloudflare-vectorize-vs-convex": {
+      "hash": "6812b21e80202996",
+      "changed": "2026-11-03"
+    },
+    "/compare/cloudflare-vectorize-vs-filess-io": {
+      "hash": "7a8a66cbc93435f6",
+      "changed": "2026-11-03"
+    },
+    "/compare/cloudflare-vectorize-vs-pocketbase": {
+      "hash": "7ff33caf070fb3c8",
+      "changed": "2026-11-03"
+    },
     "/compare/cloudflare-warp-vs-proton-vpn": {
       "hash": "915b85aea24d58e4",
       "changed": "2026-10-15"
@@ -1754,6 +1769,10 @@
       "hash": "b34ba7250cdff2e3",
       "changed": "2026-10-14"
     },
+    "/compare/convex-vs-pocketbase": {
+      "hash": "03738a005cb3a606",
+      "changed": "2026-11-03"
+    },
     "/compare/core-web-vitals-history-vs-healthchecks-io": {
       "hash": "05f248d39c75d45b",
       "changed": "2026-10-15"
@@ -1761,18 +1780,6 @@
     "/compare/core-web-vitals-history-vs-inspector-dev": {
       "hash": "51e9896e06ca35a3",
       "changed": "2026-10-11"
-    },
-    "/compare/couchbase-capella-vs-influxdb-cloud": {
-      "hash": "6c0fbba501c26372",
-      "changed": "2026-10-24"
-    },
-    "/compare/couchbase-capella-vs-nhost": {
-      "hash": "44c3c94e93e5d074",
-      "changed": "2026-10-18"
-    },
-    "/compare/couchbase-capella-vs-prisma-accelerate": {
-      "hash": "8f7b263fba6596c8",
-      "changed": "2026-10-31"
     },
     "/compare/courier-com-vs-webpushr": {
       "hash": "a44a6f0d1b276ee1",
@@ -2242,14 +2249,6 @@
       "hash": "dd1dfaa52bacba26",
       "changed": "2026-10-29"
     },
-    "/compare/influxdb-cloud-vs-nhost": {
-      "hash": "f0238029a080292e",
-      "changed": "2026-10-24"
-    },
-    "/compare/influxdb-cloud-vs-prisma-accelerate": {
-      "hash": "20f85eef0d45defe",
-      "changed": "2026-10-31"
-    },
     "/compare/inkscape-vs-krita": {
       "hash": "8bd6f952cf08a1bb",
       "changed": "2026-10-22"
@@ -2517,6 +2516,10 @@
     "/compare/pika-code-screenshots-vs-redirect-pizza": {
       "hash": "ee5814d65f091bd8",
       "changed": "2026-10-23"
+    },
+    "/compare/pocketbase-vs-filess-io": {
+      "hash": "fa6ae416d9e8536a",
+      "changed": "2026-11-03"
     },
     "/compare/proton-mail-vs-tutanota": {
       "hash": "5cf8109a450ad093",
@@ -4844,6 +4847,9 @@
       "changed": "2026-11-03"
     },
     "/vendor/cloudflare-sandboxes": {
+      "daily": true
+    },
+    "/vendor/cloudflare-vectorize": {
       "daily": true
     },
     "/vendor/cloudflare-warp": {
