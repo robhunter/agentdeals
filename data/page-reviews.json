@@ -157,6 +157,11 @@
           "label": "Recent Pricing Changes",
           "figures": 31,
           "from_records": 31
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -1920,8 +1925,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 102,
-      "table_figures_from_records": 54,
+      "table_figures": 107,
+      "table_figures_from_records": 58,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1940,8 +1945,8 @@
         },
         {
           "label": "Recent GCP & Google Changes",
-          "figures": 1,
-          "from_records": 1
+          "figures": 6,
+          "from_records": 5
         },
         {
           "label": "Upcoming Changes",
