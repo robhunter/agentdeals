@@ -3992,6 +3992,9 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("LanceDB"), "Should include LanceDB");
     assert.ok(html.includes("Upstash Vector"), "Should include Upstash Vector");
     assert.ok(html.includes("Turbopuffer"), "Should include Turbopuffer");
+    assert.ok(html.includes('/vendor/cloudflare-vectorize'), "Should link Cloudflare Vectorize");
+    assert.ok(html.includes("5M stored vector dimensions"), "Should state stored dimensions");
+    assert.ok(html.includes("30 million queried vector dimensions a month"), "Should state queried dimensions");
     assert.ok(html.includes("Supabase pgvector"), "Should include Supabase pgvector");
     assert.ok(html.includes("Neon pgvector"), "Should include Neon pgvector");
     assert.ok(html.includes("MongoDB Atlas Vector Search"), "Should include MongoDB Atlas Vector Search");

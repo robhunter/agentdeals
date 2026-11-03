@@ -3448,6 +3448,7 @@
       ],
       "vendors_tabulated": [
         "chroma",
+        "cloudflare-vectorize",
         "lancedb",
         "mongodb-atlas",
         "neon",
@@ -3468,12 +3469,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 73,
+      "table_figures": 76,
       "table_figures_from_records": 13,
       "tables": [
         {
           "label": "Free Tier Comparison Table",
-          "figures": 27,
+          "figures": 28,
           "from_records": 0
         },
         {
@@ -3483,7 +3484,7 @@
         },
         {
           "label": "Cost Comparison by Team Size",
-          "figures": 20,
+          "figures": 22,
           "from_records": 0
         },
         {

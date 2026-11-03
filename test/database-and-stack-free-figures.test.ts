@@ -128,6 +128,11 @@ function textOf(markup: string): string {
   ).replace(/\s+/g, " ").replace(/ ([,.:;])/g, "$1").trim();
 }
 
+function upstashVectorClaimSurface(markup: string): string {
+  return markup.replace(/<div class="diff-card">[\s\S]*?\n<\/div>/g, (card) =>
+    /upstash/i.test(card) ? card : "");
+}
+
 const CITATION_ANCHOR = new RegExp(`<a [^>]*class="${FIGURE_SOURCE_CLASS}"[^>]*>[\\s\\S]*?<\\/a>`, "g");
 
 function namedFor(firstCell: string, name: string): boolean {
@@ -174,9 +179,33 @@ describe("database and stack pages state Upstash, QStash, Upstash Vector, Nile, 
   it("serves none of the withdrawn figures on the pages that carried them", () => {
     const found = Object.entries(WITHDRAWN).flatMap(([page, claims]) =>
       Object.entries(claims)
-        .filter(([, pattern]) => pattern.test(html.get(page)!))
-        .map(([claim, pattern]) => `${page}: ${claim} ("${html.get(page)!.match(pattern)![0].slice(0, 80)}")`));
+        .flatMap(([claim, pattern]) => {
+          const markup = page === "/vector-database-pricing" ? upstashVectorClaimSurface(html.get(page)!) : html.get(page)!;
+          const match = markup.match(pattern);
+          return match ? [`${page}: ${claim} ("${match[0].slice(0, 80)}")`] : [];
+        }));
     assert.deepStrictEqual(found, []);
+  });
+
+  it("distinguishes another vector service's example from a withdrawn Upstash claim", () => {
+    const pattern = WITHDRAWN["/vector-database-pricing"]["Upstash Vector's free plan as 10K vectors"];
+    const card = (heading: string, body: string) => `<div class="diff-card">\n<h3>${heading}</h3>\n<div class="diff-desc">${body}</div>\n</div>`;
+    const other = card("Cloudflare Vectorize", "For 10,000 vectors and 100 queries, count stored vectors plus queries.");
+    assert.strictEqual(pattern.test(upstashVectorClaimSurface(other)), false);
+    for (const markup of [
+      card('<a href="/vendor/upstash-vector">Upstash Vector</a>', "Free: 10,000 vectors."),
+      card("Cloudflare Vectorize", "Unlike Upstash Vector's 10,000 vectors."),
+      card("Cloudflare Vectorize", '<span data-old-claim="Upstash Vector: 10,000 vectors"></span>'),
+      card("Cloudflare Vectorize", '<script type="application/ld+json">{"answer":"Upstash Vector: 10,000 vectors"}</script>'),
+      card("Cloudflare Vectorize", '<a href="/vendor/upstash-vector">Earlier plan</a>: 10,000 vectors.'),
+      '<tr><td>Upstash Vector</td><td>10,000 vectors</td></tr>',
+      '<p>Upstash Vector provides 10,000 vectors free.</p>',
+      '<meta name="description" content="Upstash Vector: 10,000 vectors">',
+      '<span data-old-claim="10,000 vectors"></span>',
+      '<script type="application/ld+json">{"answer":"Upstash Vector: 10,000 vectors"}</script>',
+    ]) {
+      assert.strictEqual(pattern.test(upstashVectorClaimSurface(other + markup)), true, markup);
+    }
   });
 
   it("states each vendor's free figures in the corrected sentences", () => {
