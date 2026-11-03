@@ -34578,10 +34578,10 @@
       },
       "conditions": [
         {
-          "text": "Until November 2, 2026, the Free and Google AI Plus plans include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date, leaving Gemini 3.8 Flash as the only reasoning model for those plans.",
-          "quote": "Will be removed on November 2, 2026.",
+          "text": "Until November 18, 2026, the Free and Google AI Plus plans include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date, leaving Gemini 3.8 Flash as the only reasoning model for those plans.",
+          "quote": "Will be removed on November 18, 2026.",
           "url": "https://antigravity.google/docs/models",
-          "read_on": "2026-10-17"
+          "read_on": "2026-11-03"
         },
         {
           "text": "Google AI Pro and Ultra include Gemini 4 Argon, Claude Sonnet 5.5 and Claude Opus 5.5. On a Google AI Pro trial, Claude Sonnet 5.5 and Claude Opus 5.5 are not included and Gemini 4 Argon is included only on trials with eligible premium devices.",
