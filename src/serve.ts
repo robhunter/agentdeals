@@ -25863,6 +25863,26 @@ ${globalNavCss()}
     <strong>Production keys:</strong> Klipy offers a production key providing limitless requests, requested through its Partner Panel; it publishes no price. GIPHY production keys require an application and incur a fee; the GIPHY team will discuss pricing if your application meets their criteria.
   </div>
 
+  <div class="context-box">
+    <strong>Ads:</strong> Klipy ads are off unless enabled per API key in the Partner Dashboard. The type field marks an ad object. Klipy's Ads API offers revenue for the app. (From docs.klipy.com/advertisements, read 2026-11-03.)
+  </div>
+
+  <div class="context-box">
+    <strong>Attribution:</strong> GIPHY requires apps using its API or SDK to display “Powered By GIPHY” attribution marks where the API is utilized. (From GIPHY's API docs, read 2026-11-03.)
+  </div>
+
+  <div class="context-box">
+    <strong>Content ratings:</strong> GIPHY API requests use a rating parameter. Acceptable values include g, pg, pg-13, r. If you do not specify a rating, GIPHY returns results from all ratings. Klipy’s Tenor-compatible endpoints use contentfilter, with accepted values off, low, medium, and high. The default value for contentfilter is off. Klipy’s Partner Panel blocks search terms and keywords globally or in selected countries. (From GIPHY's API docs and docs.klipy.com, read 2026-11-03.)
+  </div>
+
+  <div class="context-box">
+    <strong>Keys:</strong> GIPHY requires one key per platform for iOS, Android, and Web. It also requires one key per section of an app. (From GIPHY's API docs, read 2026-11-03.)
+  </div>
+
+  <div class="context-box">
+    <strong>Stickers and clips:</strong> Klipy’s Tenor-compatible endpoints return only GIFs unless searchfilter names another type. Accepted types are sticker, static, -static, ai-gif, emoji, clip. GIPHY supports GIF, Sticker, Clips with sound, and Emoji. (From docs.klipy.com and GIPHY's API docs, read 2026-11-03.)
+  </div>
+
   <h2 id="migration-paths">Migration Paths</h2>
   <p class="section-intro">Three paths depending on your constraints.</p>
 
