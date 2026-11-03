@@ -1,26 +1,37 @@
 {
   "held": [
     {
-      "vendor": "Appetize",
-      "change_type": "restriction",
+      "vendor": "flat.social",
+      "change_type": "pricing_restructured",
       "impact": "medium",
-      "summary": "The free tier now has a 3-minute session limit.",
-      "previous_state": "Test your Android & iOS apps on this Cloud Based Android Phone / Tablets emulator and iPhone/iPad simulators directly in your browser. The free tier includes two concurrent session with 30 minutes of usage per month. No limit on app size.",
-      "current_state": "Free $0/mo, single user, 2 active devices maximum, 30 minutes refilled monthly, session limit 3 minutes.",
-      "source_url": "https://appetize.io/pricing",
-      "category": "Testing",
-      "first_read_date": "2026-11-02"
+      "summary": "Free tier now caps at 5 concurrent people instead of 8",
+      "previous_state": "Interactive customizable spaces for team meetings & happy hours socials. Unlimited meetings, free up to 8 concurrent users.",
+      "current_state": "Free $0 forever, up to 5 people at once, unlimited session length, spatial audio + video rooms, your own maps & look, embed button for your site",
+      "source_url": "https://flat.social/pricing",
+      "category": "Team Collaboration",
+      "first_read_date": "2026-11-03"
     },
     {
-      "vendor": "Grafana Cloud",
-      "change_type": "pricing_restructured",
-      "impact": "high",
-      "summary": "The free tier now includes access to all Grafana Cloud services. Has specific limits for each service (metrics, logs, traces, profiles, Kubernetes Monitoring, Application Observability, Frontend Observability, Database Observability, and AI Assistant). The Pro tier now starts at $6.50 / 1k series and includes a $19/month platform fee, and has different limits for each service.",
-      "previous_state": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. Pro costs $19 a month plus usage, includes 10k active series and 50 GB each of logs and traces, and bills usage above them. Pro keeps metrics for 13 months and logs, traces, profiles and k6 tests for 30 days.",
-      "current_state": "The free tier includes access to all Grafana Cloud services with usage limits. Pro starts at $6.50 / 1k series and includes a $19/month platform fee, with pay-as-you-go above the free tier.",
-      "source_url": "https://grafana.com/pricing/",
-      "category": "Monitoring",
-      "first_read_date": "2026-11-01"
+      "vendor": "gridlastic.com",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free plan now lists 5 free grid starts instead of the stored 4,000 test minutes/month and up to 4 simultaneous nodes; the page also states the free account limits grid run time to 2 hours per grid start.",
+      "previous_state": "Selenium Grid testing with a free plan of up to 4 simultaneous selenium nodes/10 grid starts/4,000 test minutes/month",
+      "current_state": "Free Plan is $0 per month and includes 5 free grid starts; the free account plan limits the time the selenium grid runs to 2 hours per grid start.",
+      "source_url": "https://www.gridlastic.com/pricing.html",
+      "category": "Testing",
+      "first_read_date": "2026-11-03"
+    },
+    {
+      "vendor": "Hackmd.io",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The Free plan now explicitly caps team size at 3 teammates and limits invites to 3, custom templates to 3, and GitHub pushes to 20/month.",
+      "previous_state": "Real time collaboration & writing tool for markdown format docs/files. Like Google Docs but for markdown files. Free unlimited number of \"notes\", but the number of collaborators (invitee) for private notes & template [will be limited](https://hackmd.io/pricing).",
+      "current_state": "Free plan is $0 free forever, up to 3 teammates, includes unlimited notes, 3 invitees, 3 custom templates, suggest edit, GitHub integration with 20 GitHub pushes per month, customize permalink, and upload up to 1MB per image.",
+      "source_url": "https://hackmd.io/pricing",
+      "category": "Team Collaboration",
+      "first_read_date": "2026-11-03"
     },
     {
       "vendor": "Harness CI",
@@ -34,26 +45,26 @@
       "first_read_date": "2026-11-01"
     },
     {
-      "vendor": "LiveKit",
-      "change_type": "limits_reduced",
-      "impact": "low",
-      "summary": "LiveKit's own page now redirects to livekit.com. The Build plan's free US local inbound minutes are now 50 minutes included. The Build plan still exists at $0/mo with 1,000 agent session minutes, 5 concurrent agent sessions, and 1 free US phone number.",
-      "previous_state": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
-      "current_state": "Build is $0/mo and includes 1,000 agent session minutes, 5 concurrent agent sessions, 1 free US local phone number, and 50 included US local inbound minutes.",
-      "source_url": "https://livekit.io/pricing",
-      "category": "Communication",
-      "first_read_date": "2026-11-02"
-    },
-    {
-      "vendor": "Parallel",
+      "vendor": "Notion",
       "change_type": "pricing_restructured",
       "impact": "medium",
-      "summary": "The free-tier terms as described are no longer fully stated on the page.",
-      "previous_state": "Web search and research APIs for AI agents. Organizations with a credit card on file get $5 of free credit each month, and unused credit expires at month end. $5 covers up to 1,000 requests a month in Search's Basic or Advanced mode (Advanced is the API default), or 5,000 in Turbo or Fast mode; usage beyond $5 is billed to the card at standard rates. One monthly credit per organization and per card; marketplace and postpaid organizations are not eligible. The pricing page also offers \"up to $80 at signup\" without stating its terms. A hosted Search MCP is free without an account or API key, at lower rate limits, for personal and hobby use. Then pay as you go: Search $1 per 1,000 requests (Turbo, Fast) or $5 (Basic, Advanced) with 10 results, at 600 requests a minute.",
-      "current_state": "The page states 'Run up to 5,000 requests per month for free' and 'Earn up to $80 at signup + $5 in free credits per month.' It does not state the card-on-file requirement, monthly expiration of unused credit, per-organization/per-card limits, marketplace/postpaid ineligibility, or the free hosted Search MCP. Search API pricing is listed as $1 per 1K requests for Turbo and Fast, and $5 per 1K requests for Basic and Advanced, with 600 requests/min rate limit.",
-      "source_url": "https://parallel.ai/pricing",
-      "category": "AI / ML",
-      "first_read_date": "2026-11-02"
+      "summary": "Notion's Free plan now includes a limited trial of Notion AI, and the page no longer states the 7-day page history or 10 external guest limits for Free.",
+      "previous_state": "Notion Free is $0 per member a month. Workspaces with one member have unlimited pages and blocks, while workspaces with two or more members have a block limit. The Free plan includes file uploads up to 5 MB per file, 7 days of page history, and 10 external guests. It also includes a trial of Notion AI, basic forms, basic sites, Notion Calendar, and databases. Plus costs $10 per seat a month and provides unlimited file uploads, 30 days of page history, and unlimited guests.",
+      "current_state": "Free is $0 per member/month for individuals to organize personal projects and life. It includes a trial of Notion AI, basic forms, basic sites, Notion Calendar, and databases. Pages & blocks are limited for 2+ members. File uploads are up to 5 MB. Page history is 7 days. External guest limit is 10. Notion AI features are Limited Trial. Custom Agents require Notion credits.",
+      "source_url": "https://www.notion.com/pricing",
+      "category": "Productivity & Notes",
+      "first_read_date": "2026-11-03"
+    },
+    {
+      "vendor": "staticforms.xyz",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "staticforms.xyz's own page now redirects to staticforms.dev. Free plan submission limit reduced from 500/month to 250 submissions every 30 days.",
+      "previous_state": "Free plan, 500 a month",
+      "current_state": "Free: 250 submissions every 30 days on one form.",
+      "source_url": "https://www.staticforms.xyz/",
+      "category": "Forms",
+      "first_read_date": "2026-11-03"
     }
   ],
   "resolved": [
@@ -3120,6 +3131,54 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-11-01 read it as pricing_restructured too",
       "resolved_date": "2026-11-01"
+    },
+    {
+      "vendor": "Appetize",
+      "change_type": "restriction",
+      "impact": "medium",
+      "summary": "The free tier now has a 3-minute session limit.",
+      "previous_state": "Test your Android & iOS apps on this Cloud Based Android Phone / Tablets emulator and iPhone/iPad simulators directly in your browser. The free tier includes two concurrent session with 30 minutes of usage per month. No limit on app size.",
+      "source_url": "https://appetize.io/pricing",
+      "first_read_date": "2026-11-02",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-03 read a change the gate refused as states_no_narrowing",
+      "resolved_date": "2026-11-03"
+    },
+    {
+      "vendor": "Grafana Cloud",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier now includes access to all Grafana Cloud services. Has specific limits for each service (metrics, logs, traces, profiles, Kubernetes Monitoring, Application Observability, Frontend Observability, Database Observability, and AI Assistant). The Pro tier now starts at $6.50 / 1k series and includes a $19/month platform fee, and has different limits for each service.",
+      "previous_state": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. Pro costs $19 a month plus usage, includes 10k active series and 50 GB each of logs and traces, and bills usage above them. Pro keeps metrics for 13 months and logs, traces, profiles and k6 tests for 30 days.",
+      "source_url": "https://grafana.com/pricing/",
+      "first_read_date": "2026-11-01",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-03 read it as pricing_restructured too",
+      "resolved_date": "2026-11-03"
+    },
+    {
+      "vendor": "LiveKit",
+      "change_type": "limits_reduced",
+      "impact": "low",
+      "summary": "LiveKit's own page now redirects to livekit.com. The Build plan's free US local inbound minutes are now 50 minutes included. The Build plan still exists at $0/mo with 1,000 agent session minutes, 5 concurrent agent sessions, and 1 free US phone number.",
+      "previous_state": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
+      "source_url": "https://livekit.io/pricing",
+      "first_read_date": "2026-11-02",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-03 read a change the gate refused as zero_allowance",
+      "resolved_date": "2026-11-03"
+    },
+    {
+      "vendor": "Parallel",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The free-tier terms as described are no longer fully stated on the page.",
+      "previous_state": "Web search and research APIs for AI agents. Organizations with a credit card on file get $5 of free credit each month, and unused credit expires at month end. $5 covers up to 1,000 requests a month in Search's Basic or Advanced mode (Advanced is the API default), or 5,000 in Turbo or Fast mode; usage beyond $5 is billed to the card at standard rates. One monthly credit per organization and per card; marketplace and postpaid organizations are not eligible. The pricing page also offers \"up to $80 at signup\" without stating its terms. A hosted Search MCP is free without an account or API key, at lower rate limits, for personal and hobby use. Then pay as you go: Search $1 per 1,000 requests (Turbo, Fast) or $5 (Basic, Advanced) with 10 results, at 600 requests a minute.",
+      "source_url": "https://parallel.ai/pricing",
+      "first_read_date": "2026-11-02",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-03 read it as pricing_restructured too",
+      "resolved_date": "2026-11-03"
     }
   ]
 }

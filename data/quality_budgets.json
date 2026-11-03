@@ -1,9 +1,9 @@
 {
   "version": 1,
   "budgets": {
-    "stale_fact_pages": 37,
+    "stale_fact_pages": 36,
     "unsourced_tier_a": 2,
-    "uncited_change_records": 82,
+    "uncited_change_records": 74,
     "source_checks_ok_without_quoted_evidence": 0,
     "faq_answers": 166,
     "faq_answers_stating_a_figure": 77,
