@@ -198,10 +198,10 @@
           "read_on": "2026-10-29"
         },
         {
-          "text": "A Hobby workspace allows 100 concurrent sandboxes. Each sandbox can run continuously for 24 hours, versus 30 days on Pro and above.",
-          "quote": "Sandboxes can run up to 30 days on Pro and above",
+          "text": "A Hobby workspace allows 100 concurrent sandboxes. Each sandbox can run continuously for 24 hours; on Pro and above there is no limit on session length.",
+          "quote": "Sandboxes can indefinitely on Pro and above",
           "url": "https://render.com/pricing",
-          "read_on": "2026-10-29"
+          "read_on": "2026-11-03"
         },
         {
           "text": "Render Sandboxes is in public beta. During the beta, sandboxes have no public URL and no private network to other Render services.",
