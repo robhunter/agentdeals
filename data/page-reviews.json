@@ -2315,14 +2315,14 @@
           "from_records": 27
         },
         {
-          "label": "Recent Pricing Changes",
-          "figures": 9,
-          "from_records": 9
-        },
-        {
           "label": "Upcoming Changes",
           "figures": 0,
           "from_records": 0
+        },
+        {
+          "label": "Recent Pricing Changes",
+          "figures": 9,
+          "from_records": 9
         }
       ],
       "reads_changes": true,
