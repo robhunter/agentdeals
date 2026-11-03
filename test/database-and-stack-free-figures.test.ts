@@ -203,7 +203,7 @@ describe("database and stack pages state Upstash, QStash, Upstash Vector, Nile, 
     assert.deepStrictEqual(answers.filter((answer) => answer.includes(DJANGO_REDIS_ANSWER)).length, 1);
   });
 
-  for (const page of ["/free-django-stack", "/free-fastapi-stack", "/free-go-stack"]) {
+  for (const page of ["/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack"]) {
     function railwaySection(): string {
       const sections = html.get(page)!.split('<div class="stack-category"');
       const railway = sections.filter((section) => {

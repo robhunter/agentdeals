@@ -1286,6 +1286,12 @@
           "read_on": "2026-10-04"
         },
         {
+          "text": "Neon's Free plan provides 100 CU-hours per project per month. One CU allocates about 4 GB of RAM, and 100 CU-hours is enough to run a 0.25 CU compute (about 1 GB of RAM) for 400 hours, about 17 days of continuous running. All computes in a project count toward usage, including those for each branch and any read replicas.",
+          "quote": "100 CU-hours/project/month (enough to run a 0.25 CU compute in a project for 400 hours/month)",
+          "url": "https://neon.com/docs/introduction/plans",
+          "read_on": "2026-11-03"
+        },
+        {
           "text": "At the storage cap, inserts, updates and deletes fail until space is freed or the plan is upgraded.",
           "quote": "causes operations that increase storage (inserts, updates, and deletes) to fail until you free space or upgrade.",
           "url": "https://neon.com/docs/introduction/plans",
@@ -3890,6 +3896,48 @@
           "quote": "We do not charge for our Cloud Firewalls.",
           "url": "https://docs.hetzner.com/cloud/firewalls/overview/",
           "read_on": "2026-10-10"
+        },
+        {
+          "text": "Hetzner prohibits cryptocurrency mining, farming and plotting. Hetzner may lock the customer's services or account for non-compliance.",
+          "quote": "The operation of applications for mining cryptocurrencies remains prohibited. These include, but are not limited to, mining, farming and plotting of cryptocurrencies.",
+          "url": "https://www.hetzner.com/legal/terms-and-conditions/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Hetzner invoices are due immediately. You must pay within ten days. Hetzner then sends email reminders. For late payments, Hetzner may lock servers, cancel products, or lock or delete the account. Hetzner decides case by case. New accounts may have servers locked earlier for unpaid first invoices. Hetzner does not guarantee data recovery.",
+          "quote": "If you have a late invoice, we will first send you payment reminders and warnings by email.",
+          "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/payment-overview/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Hetzner dedicated servers cancel immediately in Robot. Hetzner bills by the hour up to the monthly price cap, except for additional hardware and licenses. Windows, Plesk and cPanel licenses bill for full calendar months.",
+          "quote": "We bill by the hour and never exceed the monthly price cap (except for additional hardware and licenses).",
+          "url": "https://docs.hetzner.com/general/billing-and-account-management/cancellation/cancellations-robot/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Hetzner has a standard data processing agreement under Art. 28 GDPR, concluded in the customer account. Hetzner does not create individual DPAs. Non-cloud product data stays in the EU. Cloud data stays in the location the customer chooses; data stored on a server in the US or Singapore is transferred there.",
+          "quote": "We do not create or sign individual Data Processing Agreement (DPA)s",
+          "url": "https://docs.hetzner.com/general/company-and-policy/data-protection-at-hetzner/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Hetzner GPU servers are only in the dedicated GPU line, not in cloud plans. The cheapest is GEX45 with NVIDIA RTX PRO 4000 Blackwell SFF Edition and 24 GB GDDR7, billed monthly or hourly with a one-time setup fee.",
+          "quote": "GEX45 for AI inference",
+          "url": "https://www.hetzner.com/dedicated-rootserver/matrix-gpu/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Hetzner DNS zones and records are free in the Hetzner Console and API.",
+          "quote": "you can list, add, modify or remove zones and records for free",
+          "url": "https://www.hetzner.com/dns/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Hetzner's experimental Inference API is free while it stays experimental. Hetzner says not to use it for production.",
+          "quote": "As long as the Inference API remains in experimental status, it is free of charge.",
+          "url": "https://docs.hetzner.com/general/company-and-policy/experiments/inference/",
+          "read_on": "2026-11-03"
         }
       ]
     },
@@ -4671,7 +4719,7 @@
     {
       "vendor": "Cloudflare Workers AI",
       "category": "AI / ML",
-      "description": "Workers AI runs AI models on Cloudflare's global network. Every account gets 10,000 Neurons per day at no charge, reset daily at 00:00 UTC; on the Workers Free plan, requests beyond that fail until the reset. On the Workers Paid plan (from $5 per month), usage above 10,000 Neurons per day costs $0.011 per 1,000 Neurons. Seven models, including @cf/moonshotai/kimi-k2.6, @cf/zai-org/glm-5.3 and @cf/deepseek-ai/deepseek-v4-pro-0813, require the Workers Paid plan or prepaid AI Gateway credits. On 2026-05-30, Cloudflare deprecated 18 models and told users to remove references to them: @cf/meta/llama-3.1-8b-instruct, @cf/meta/llama-3.1-8b-instruct-awq, @cf/meta/llama-3.1-70b-instruct, @cf/meta/llama-3-8b-instruct, @cf/meta/llama-3-8b-instruct-awq, @hf/meta-llama/meta-llama-3-8b-instruct, @cf/meta/llama-2-7b-chat-int8, @cf/meta/llama-2-7b-chat-fp16, @cf/mistral/mistral-7b-instruct-v0.1, @hf/mistral/mistral-7b-instruct-v0.2, @hf/google/gemma-7b-it, @cf/google/gemma-3-12b-it, @hf/nousresearch/hermes-2-pro-mistral-7b, @cf/microsoft/phi-2, @cf/defog/sqlcoder-7b-2, @cf/unum/uform-gen2-qwen-500m, @cf/facebook/bart-large-cnn and @cf/moonshotai/kimi-k2.5. On 2026-10-15, Cloudflare's model catalog still lists @cf/meta/llama-3.1-8b-instruct-fp8, @cf/meta/llama-3.3-70b-instruct-fp8-fast and the -lora variants, but no longer lists @cf/meta/llama-3.1-8b-instruct-fast. Cloudflare's suggested replacements are @cf/zai-org/glm-4.7-flash, @cf/google/gemma-4-26b-a4b-it and @cf/moonshotai/kimi-k2.6. Since 2026-05-30, requests to @cf/moonshotai/kimi-k2.5 go to @cf/moonshotai/kimi-k2.6, which costs more and requires the Workers Paid plan or prepaid AI Gateway credits; without them, requests get HTTP 403 (error 5035).",
+      "description": "Workers AI runs AI models on Cloudflare's global network. Every account gets 10,000 Neurons per day at no charge, reset daily at 00:00 UTC; on the Workers Free plan, requests beyond that fail until the reset. On the Workers Paid plan (from $5 per month), usage above 10,000 Neurons per day costs $0.011 per 1,000 Neurons. Eight models, including @cf/moonshotai/kimi-k2.6, @cf/zai-org/glm-5.3 and @cf/deepseek-ai/deepseek-v4-pro-0813, require the Workers Paid plan or prepaid AI Gateway credits. On 2026-05-30, Cloudflare deprecated 18 models and told users to remove references to them: @cf/meta/llama-3.1-8b-instruct, @cf/meta/llama-3.1-8b-instruct-awq, @cf/meta/llama-3.1-70b-instruct, @cf/meta/llama-3-8b-instruct, @cf/meta/llama-3-8b-instruct-awq, @hf/meta-llama/meta-llama-3-8b-instruct, @cf/meta/llama-2-7b-chat-int8, @cf/meta/llama-2-7b-chat-fp16, @cf/mistral/mistral-7b-instruct-v0.1, @hf/mistral/mistral-7b-instruct-v0.2, @hf/google/gemma-7b-it, @cf/google/gemma-3-12b-it, @hf/nousresearch/hermes-2-pro-mistral-7b, @cf/microsoft/phi-2, @cf/defog/sqlcoder-7b-2, @cf/unum/uform-gen2-qwen-500m, @cf/facebook/bart-large-cnn and @cf/moonshotai/kimi-k2.5. On 2026-10-15, Cloudflare's model catalog still lists @cf/meta/llama-3.1-8b-instruct-fp8, @cf/meta/llama-3.3-70b-instruct-fp8-fast and the -lora variants, but no longer lists @cf/meta/llama-3.1-8b-instruct-fast. Cloudflare's suggested replacements are @cf/zai-org/glm-4.7-flash, @cf/google/gemma-4-26b-a4b-it and @cf/moonshotai/kimi-k2.6. Since 2026-05-30, requests to @cf/moonshotai/kimi-k2.5 go to @cf/moonshotai/kimi-k2.6, which costs more and requires the Workers Paid plan or prepaid AI Gateway credits; without them, requests get HTTP 403 (error 5035).",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
       "tags": [
@@ -4724,6 +4772,12 @@
           "read_on": "2026-10-22"
         },
         {
+          "text": "Cloudflare prices models in Neurons per million tokens. @cf/openai/gpt-oss-20b costs 18,182 Neurons per million input tokens and 27,273 per million output tokens. @cf/openai/gpt-oss-120b costs 31,818 and 68,182 Neurons respectively. @cf/meta/llama-3.3-70b-instruct-fp8-fast costs 26,668 and 204,805 Neurons. 10,000 Neurons pay for about 367,000 output tokens of gpt-oss-20b, 147,000 of gpt-oss-120b, or 49,000 of llama-3.3-70b-instruct-fp8-fast, not counting input tokens.",
+          "quote": "The Price in Tokens column is equivalent to the Price in Neurons column - the different units are displayed so you can easily compare and understand pricing.",
+          "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+          "read_on": "2026-11-03"
+        },
+        {
           "text": "Workers AI is subject to Cloudflare's Self-Serve Subscription Agreement. The agreement does not restrict commercial use.",
           "quote": "Cloudflare processes certain customer data to provide Workers AI, subject to our Privacy Policy and, as applicable, our Self-Serve Subscription Agreement",
           "url": "https://developers.cloudflare.com/workers-ai/platform/data-usage/",
@@ -4742,7 +4796,7 @@
           "read_on": "2026-10-29"
         },
         {
-          "text": "Cloudflare AI Search is a managed search service over your own content. Every account gets 5 million ingestion tokens, 10 GB-month of storage, 1,000 semantic queries and 1,000 full-text queries a month. Billing starts on December 1, 2026. Embedding and reranking calls are billed as AI Search usage and do not appear on the Workers AI bill.",
+          "text": "Cloudflare AI Search is a managed search service over your own content. Every account gets 5 million ingestion tokens, 10 GB-month of storage, 1,000 semantic queries and 1,000 full-text queries a month. Embedding and reranking calls are billed as AI Search usage and do not appear on the Workers AI bill.",
           "quote": "Workers AI embedding and reranking usage is included in AI Search usage and does not appear on your Workers AI bill or in your AI Gateway logs.",
           "url": "https://developers.cloudflare.com/ai-search/platform/limits-pricing/",
           "read_on": "2026-11-03"
@@ -6821,6 +6875,12 @@
           "quote": "Projects on the Build plan might have their deployed agents shut down after all active sessions end. The agent automatically starts again when a new session begins. This can cause up to 10 to 20 seconds of delay before the agent joins the room.",
           "url": "https://docs.livekit.io/deploy/admin/quotas-and-limits/",
           "read_on": "2026-10-06"
+        },
+        {
+          "text": "LiveKit Cloud's free Build plan includes 350 text simulation turns and 60 audio simulation turns. Ship and Scale cost $0.02 per text simulation turn and $0.05 per audio simulation turn.",
+          "quote": "Text simulations 350 turns included $0.02 per turn $0.02 per turn Custom Audio simulations 60 turns included $0.05 per turn $0.05 per turn Custom",
+          "url": "https://livekit.com/pricing",
+          "read_on": "2026-11-03"
         }
       ],
       "tier": "Build",
@@ -39505,6 +39565,59 @@
         "cloudflare"
       ],
       "verifiedDate": "2026-11-03"
+    },
+    {
+      "vendor": "Cloudflare Vectorize",
+      "category": "Databases",
+      "description": "Vectorize is Cloudflare's vector database for Workers. Workers Free includes 30 million queried vector dimensions per month and 5 million stored vector dimensions (about 6,500 vectors of 768 dimensions, or about 3,250 vectors of 1,536 dimensions). It allows 100 indexes. Workers Paid includes 50 million queried dimensions per month and 10 million stored dimensions. Overage is $0.01 per million queried dimensions and $0.05 per 100 million stored dimensions. CPU, memory and active index hours are not billed. Each vector can have up to 1536 dimensions. Each index can hold up to 20 million vectors.",
+      "tier": "Free",
+      "url": "https://developers.cloudflare.com/vectorize/platform/pricing/",
+      "tags": [
+        "vector-database",
+        "ai",
+        "embeddings",
+        "serverless",
+        "cloudflare",
+        "workers"
+      ],
+      "verifiedDate": "2026-11-03",
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "vector",
+            "source_url": "https://developers.cloudflare.com/vectorize/",
+            "source_quote": "Vectorize is a globally distributed vector database that enables you to build full-stack, AI-powered applications with Cloudflare Workers."
+          }
+        ],
+        "reviewed": "2026-11-03"
+      },
+      "conditions": [
+        {
+          "text": "Cloudflare counts queried vector dimensions as stored vectors plus queries, multiplied by dimensions. For example, 10,000 vectors with 384 dimensions and 100 queries gives (10,000 + 100) × 384 = 3.878 million queried vector dimensions.",
+          "quote": "If you have 10,000 vectors with 384-dimensions in an index, and make 100 queries against that index, your total queried vector dimensions would sum to 3.878 million ((10000 + 100) * 384).",
+          "url": "https://developers.cloudflare.com/vectorize/platform/pricing/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Cloudflare says the Workers Free plan will always include Vectorize for prototyping and experimenting.",
+          "quote": "Yes, the Workers free tier will always include the ability to prototype and experiment with Vectorize for free.",
+          "url": "https://developers.cloudflare.com/vectorize/platform/pricing/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Cloudflare Vectorize's free plan needs no credit card.",
+          "quote": "Start building for free — no credit card required.",
+          "url": "https://www.cloudflare.com/developer-platform/products/vectorize/",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Vectorize usage past the Free allowances requires the Workers Paid plan. That plan has a minimum charge of $5 per month per account.",
+          "quote": "The Workers Paid plan includes Workers, Pages Functions, Workers KV, Hyperdrive, and Durable Objects usage for a minimum charge of $5 USD per month for an account.",
+          "url": "https://developers.cloudflare.com/workers/platform/pricing/",
+          "read_on": "2026-11-03"
+        }
+      ]
     }
   ],
   "changes": []

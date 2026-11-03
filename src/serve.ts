@@ -18876,9 +18876,9 @@ function buildFreeSaasStackPage(): string {
     {
       name: "Hosting & Deployment",
       icon: "\u{1F680}",
-      recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with auto-deploy from GitHub. Supports any language/framework via Nixpacks or Dockerfile. No cold starts \u2014 your service stays warm. Includes free Postgres and Redis add-ons. Best DX: instant deploys, logs, and metrics in one dashboard." },
+      recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with auto-deploy from GitHub. Supports any language/framework via Nixpacks or Dockerfile. Railway does not put idle services to sleep unless Serverless is turned on. The Free plan gives $1 of credit a month. That pays for about 100 MB of RAM for a whole month at Railway's $10 per GB of RAM a month, before CPU. An always-on app that holds more than 100 MB uses more than $1. Includes free Postgres and Redis add-ons. Best DX: instant deploys, logs, and metrics in one dashboard." },
       alternatives: ["Vercel", "Render", "Cloudflare Pages"],
-      outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (1-2 services). Vercel is best for Next.js (100 GB bandwidth, but bans commercial use on Hobby plan \u2014 you must upgrade to Pro at $20/seat/month when you launch your SaaS). Render offers a free tier with 750 hours/month but spins down after 15 min inactivity. Cloudflare Pages is best for static/Jamstack with unlimited bandwidth.",
+      outgrow: "You outgrow the Free plan when the app uses more than $1 of resources a month. Hobby costs $5 a month and includes $5 of usage, then charges only for usage beyond it. Vercel is best for Next.js (100 GB bandwidth, but bans commercial use on Hobby plan \u2014 you must upgrade to Pro at $20/seat/month when you launch your SaaS). Render offers a free tier with 750 hours/month but spins down after 15 min inactivity. Cloudflare Pages is best for static/Jamstack with unlimited bandwidth.",
       whyNot: "Why not Heroku: No free tier since November 2022. Why not Vercel Hobby: Bans commercial use \u2014 the moment your SaaS charges users, you owe $20/seat/month. Great for prototyping, but plan for the upgrade. Why not AWS/GCP/Azure directly: Free tiers exist but are complex to configure. AWS credits last 6 months; GCP has $300 in credit plus always-free products; Azure offers free services for 12 months to new customers.",
       relatedPage: "/hosting-free-tier-comparison-2026",
       isFrameworkSection: false,
@@ -32533,13 +32533,13 @@ function buildLlmApiPricingPage(): string {
     '    <h3>Jump to section</h3>\n' +
     '    <ol>\n' +
     '      <li><a href="#pricing-table">Pricing Comparison Table</a></li>\n' +
-    '      <li><a href="#categories">Provider Breakdown</a> (Frontier, Inference, Open-Source, Specialized)</li>\n' +
     '      <li><a href="#free-tiers">What You Actually Get for Free</a></li>\n' +
-    '      <li><a href="#hidden-costs">Pricing Gotchas</a></li>\n' +
-    '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
-    (llmChangesByDayServed.upcoming.length > 0 ? '      <li><a href="#upcoming-changes">' + escHtmlServer(UPCOMING_CHANGES_HEADING) + '</a></li>\n' : '') +
     '      <li><a href="#recommendations">By Use Case</a></li>\n' +
     '      <li><a href="#faq">FAQ</a></li>\n' +
+    '      <li><a href="#hidden-costs">Pricing Gotchas</a></li>\n' +
+    '      <li><a href="#categories">Provider Breakdown</a> (Frontier, Inference, Open-Source, Specialized)</li>\n' +
+    (llmChangesByDayServed.upcoming.length > 0 ? '      <li><a href="#upcoming-changes">' + escHtmlServer(UPCOMING_CHANGES_HEADING) + '</a></li>\n' : '') +
+    '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
     '    </ol>\n' +
     '  </div>\n' +
     '\n' +
@@ -32565,11 +32565,6 @@ function buildLlmApiPricingPage(): string {
     '    <strong>The price floor:</strong> For open models, SiliconFlow\'s international site lists gpt-oss-120b at $0.05/$0.45 and DeepSeek-V4.1-Flash at $0.15/$0.60 (per 1M tokens). DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. The batch APIs from OpenAI and Anthropic offer 50% discounts for non-real-time workloads.\n' +
     '  </div>\n' +
     '\n' +
-    '  <h2 id="categories">Provider Breakdown</h2>\n' +
-    '  <p class="section-intro">LLM API providers fall into four categories. Each optimized for different use cases, budgets, and requirements.</p>\n' +
-    '\n' +
-    '  ' + categorySections + '\n' +
-    '\n' +
     '  <h2 id="free-tiers">What You Actually Get for Free</h2>\n' +
     '  <p class="section-intro">Free tiers range from genuinely production-viable' + inParentheses(namedAsFree(["groq", "cerebras"])) + ' to token giveaways that run out in hours. Here\'s the honest breakdown.</p>\n' +
     '\n' +
@@ -32586,40 +32581,6 @@ function buildLlmApiPricingPage(): string {
     freeTermsTableRows + '\n' +
     '    </tbody>\n' +
     '  </table>\n' +
-    '  </div>\n' +
-    '\n' +
-    '  <h2 id="hidden-costs">Pricing Gotchas</h2>\n' +
-    '  <p class="section-intro">Token pricing is rarely the full story. These are the costs and limits that surprise developers.</p>\n' +
-    '\n' +
-    '  <div class="hidden-cost-card">\n' +
-    '    <h4>OpenAI Reasoning Tokens Are Billed as Output</h4>\n' +
-    '    <p>OpenAI\'s reasoning models generate internal reasoning tokens that are billed as output tokens but aren\'t visible in the response; OpenAI states no typical ratio. Monitor usage carefully — your bill reflects total tokens, not just visible output. o4-mini and o3-mini shut down in the OpenAI API on 2026-10-23.</p>\n' +
-    '  </div>\n' +
-    '  <div class="hidden-cost-card">\n' +
-    '    <h4>Anthropic Thinking: Output Tokens Add Up</h4>\n' +
-    '    <p>Claude\'s thinking tokens are billed at output rates ($20/M on Opus 5.5, $50/M on Fable 5.1). A complex reasoning task can produce 10K+ thinking tokens before the actual answer. Budget for 2–5x the output tokens you\'d expect from a non-thinking request. Fable 5.1, Opus 5.5, Sonnet 5.5 and Sonnet 5 decide their own thinking budget (adaptive thinking) rather than taking one from the request, so the multiplier is harder to cap than it was on the 4.6 generation.</p>\n' +
-    '  </div>\n' +
-    '  <div class="hidden-cost-card">\n' +
-    '    <h4>Gemini Free Tier: Gemini 3.1 Pro Needs a Paid Account</h4>\n' +
-    '    <p>Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models. Gemini 3.1 Pro Preview has no free tier.</p>\n' +
-    '  </div>\n' +
-    '  <div class="hidden-cost-card">\n' +
-    '    <h4>Context Window ≠ Effective Context</h4>\n' +
-    '    <p>A 128K context window doesn\'t mean the model performs well at 128K tokens. Quality degrades in the middle of long contexts ("lost in the middle" problem). For retrieval-heavy tasks, expect effective context of 30–50% of the advertised window. DeepSeek and Gemini\'s 1M windows are more susceptible to this.</p>\n' +
-    '  </div>\n' +
-    '  <div class="hidden-cost-card">\n' +
-    '    <h4>Rate Limits Follow Usage Tiers</h4>\n' +
-    '    <p>OpenAI and Anthropic set rate limits by usage tier. OpenAI has three paid tiers since 2026-10-06 and moves an organization up as its total credit purchases reach $5 (Build), $100 (Launch) and $500 (Grow). Anthropic places organizations on a tier based on usage history and account standing, and new organizations may start in an Evaluation tier with lower limits. Groq\'s free tier limits are per-model, so switching models resets your quota.</p>\n' +
-    '  </div>\n' +
-    '\n' +
-    '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
-    '  <p class="section-intro">LLM API pricing is the most volatile in the developer tools space. Here are the changes we\'ve tracked. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
-    '\n' +
-    (llmChangesByDayServed.inEffect.length > 0 ? llmChangesTable(changeTimelineRows) : '  <p class="section-intro">No LLM pricing changes tracked yet.</p>\n') +
-    upcomingChangesSection +
-    '\n' +
-    '  <div class="context-box">\n' +
-    '    <strong>The trend:</strong> Opus-class prices fell from $15/$75 per M tokens (Opus 4.1) to $5/$25 in November 2025 and $4/$20 with Opus 5.5, while each lab\'s top model costs $10/$50 (Claude Fable 5.1, OpenAI GPT-6 Astra). Open-weight inference is cheap: Groq\'s free plan allows 200K tokens a day on each of its free chat models. The implication: if you\'re paying more than $5/M input tokens, you should evaluate whether a cheaper model handles your use case.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="recommendations">By Use Case</h2>\n' +
@@ -32666,6 +32627,45 @@ function buildLlmApiPricingPage(): string {
       '  </div>'
     ).join("\n") + '\n' +
     '\n' +
+    '  <h2 id="hidden-costs">Pricing Gotchas</h2>\n' +
+    '  <p class="section-intro">Token pricing is rarely the full story. These are the costs and limits that surprise developers.</p>\n' +
+    '\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>OpenAI Reasoning Tokens Are Billed as Output</h4>\n' +
+    '    <p>OpenAI\'s reasoning models generate internal reasoning tokens that are billed as output tokens but aren\'t visible in the response; OpenAI states no typical ratio. Monitor usage carefully — your bill reflects total tokens, not just visible output. o4-mini and o3-mini shut down in the OpenAI API on 2026-10-23.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Anthropic Thinking: Output Tokens Add Up</h4>\n' +
+    '    <p>Claude\'s thinking tokens are billed at output rates ($20/M on Opus 5.5, $50/M on Fable 5.1). A complex reasoning task can produce 10K+ thinking tokens before the actual answer. Budget for 2–5x the output tokens you\'d expect from a non-thinking request. Fable 5.1, Opus 5.5, Sonnet 5.5 and Sonnet 5 decide their own thinking budget (adaptive thinking) rather than taking one from the request, so the multiplier is harder to cap than it was on the 4.6 generation.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Gemini Free Tier: Gemini 3.1 Pro Needs a Paid Account</h4>\n' +
+    '    <p>Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models. Gemini 3.1 Pro Preview has no free tier.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Context Window ≠ Effective Context</h4>\n' +
+    '    <p>A 128K context window doesn\'t mean the model performs well at 128K tokens. Quality degrades in the middle of long contexts ("lost in the middle" problem). For retrieval-heavy tasks, expect effective context of 30–50% of the advertised window. DeepSeek and Gemini\'s 1M windows are more susceptible to this.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Rate Limits Follow Usage Tiers</h4>\n' +
+    '    <p>OpenAI and Anthropic set rate limits by usage tier. OpenAI has three paid tiers since 2026-10-06 and moves an organization up as its total credit purchases reach $5 (Build), $100 (Launch) and $500 (Grow). Anthropic places organizations on a tier based on usage history and account standing, and new organizations may start in an Evaluation tier with lower limits. Groq\'s free tier limits are per-model, so switching models resets your quota.</p>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="categories">Provider Breakdown</h2>\n' +
+    '  <p class="section-intro">LLM API providers fall into four categories. Each optimized for different use cases, budgets, and requirements.</p>\n' +
+    '\n' +
+    '  ' + categorySections + '\n' +
+    '\n' +
+    upcomingChangesSection +
+    '\n' +
+    '  <div class="context-box">\n' +
+    '    <strong>The trend:</strong> Opus-class prices fell from $15/$75 per M tokens (Opus 4.1) to $5/$25 in November 2025 and $4/$20 with Opus 5.5, while each lab\'s top model costs $10/$50 (Claude Fable 5.1, OpenAI GPT-6 Astra). Open-weight inference is cheap: Groq\'s free plan allows 200K tokens a day on each of its free chat models. The implication: if you\'re paying more than $5/M input tokens, you should evaluate whether a cheaper model handles your use case.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
+    '  <p class="section-intro">LLM API pricing is the most volatile in the developer tools space. Here are the changes we\'ve tracked. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
+    '\n' +
+    (llmChangesByDayServed.inEffect.length > 0 ? llmChangesTable(changeTimelineRows) : '  <p class="section-intro">No LLM pricing changes tracked yet.</p>\n') +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
     '    <strong>Powered by AgentDeals.</strong> The tables on this page read our catalogue: each vendor\'s listing, and our change records for recent changes. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked).<br><br>\n' +
