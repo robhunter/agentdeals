@@ -1634,18 +1634,6 @@
       "hash": "6f75d696c98890be",
       "changed": "2026-10-31"
     },
-    "/compare/cerebras-vs-deepgram": {
-      "hash": "8e41f686d9630d58",
-      "changed": "2026-10-26"
-    },
-    "/compare/cerebras-vs-e2b": {
-      "hash": "8c672a6396e15490",
-      "changed": "2026-10-26"
-    },
-    "/compare/cerebras-vs-letta": {
-      "hash": "14e90137dd2764bc",
-      "changed": "2026-10-26"
-    },
     "/compare/circleci-vs-github-actions": {
       "hash": "4958b227ad345d7c",
       "changed": "2026-11-02"
@@ -1870,9 +1858,13 @@
       "hash": "8b1d8aa35aa23aae",
       "changed": "2026-11-01"
     },
-    "/compare/deepgram-vs-letta": {
-      "hash": "c9704c720768c5af",
-      "changed": "2026-10-26"
+    "/compare/deepar-vs-exa": {
+      "hash": "7a48cd50da9636a0",
+      "changed": "2026-11-03"
+    },
+    "/compare/deepar-vs-serper": {
+      "hash": "746a592de8a34c02",
+      "changed": "2026-11-03"
     },
     "/compare/diawi-vs-expo": {
       "hash": "f490b1dc9c0248ca",
@@ -1950,10 +1942,6 @@
       "hash": "c8c904868b3caa96",
       "changed": "2026-10-22"
     },
-    "/compare/e2b-vs-letta": {
-      "hash": "a7c0d7e16af12c1a",
-      "changed": "2026-10-22"
-    },
     "/compare/element-io-vs-talky-io": {
       "hash": "f805cd6014e00569",
       "changed": "2026-10-11"
@@ -1965,6 +1953,14 @@
     "/compare/emaillabs-io-vs-resend": {
       "hash": "11cbbb76badad82d",
       "changed": "2026-11-02"
+    },
+    "/compare/exa-vs-letta": {
+      "hash": "c880a10c06da4108",
+      "changed": "2026-11-03"
+    },
+    "/compare/exa-vs-serper": {
+      "hash": "dc892eca4256a79d",
+      "changed": "2026-11-03"
     },
     "/compare/expo-vs-loadly": {
       "hash": "5e7c0647da3764e3",
@@ -2333,6 +2329,10 @@
     "/compare/lastpass-vs-zoho-vault": {
       "hash": "42630d2aa41672c2",
       "changed": "2026-10-24"
+    },
+    "/compare/letta-vs-serper": {
+      "hash": "eae2eb6741450521",
+      "changed": "2026-11-03"
     },
     "/compare/loadly-vs-shake": {
       "hash": "c27d39e63e87e0b2",
@@ -4805,6 +4805,9 @@
     "/vendor/clouddev": {
       "hash": "737bd334407e0399",
       "changed": "2026-11-03"
+    },
+    "/vendor/cloudflare-ai-search": {
+      "daily": true
     },
     "/vendor/cloudflare-d1": {
       "daily": true

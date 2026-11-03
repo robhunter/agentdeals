@@ -17765,6 +17765,20 @@
       "date_source": "hand_written",
       "listing_effect": "none",
       "what_ends": "Gemini 2.5 Pro (gemini-2.5-pro) and Gemini 2.5 Flash (gemini-2.5-flash) on the Gemini API"
+    },
+    {
+      "vendor": "Cloudflare AI Search",
+      "change_type": "pricing_model_change",
+      "date": "2026-12-01",
+      "summary": "Cloudflare AI Search usage is not charged until December 1, 2026, when usage-based billing begins. Every account receives 5 million ingestion tokens, 10 GB-month of storage, 1,000 semantic queries and 1,000 full-text queries each month. Usage beyond these amounts is billed at $0.75 per million ingestion tokens, $2.00 per GB-month of storage, $0.75 per 1,000 semantic queries and $0.10 per 1,000 full-text queries. Cloudflare first set the start for November 1, 2026 and moved it on November 2, 2026.",
+      "previous_state": "AI Search usage is not charged before December 1, 2026.",
+      "current_state": "From December 1, 2026, AI Search has usage-based billing. Included monthly usage is 5 million ingestion tokens, 10 GB-month of storage, 1,000 semantic queries and 1,000 full-text queries. Beyond included usage, base ingestion costs $0.75 per million tokens, storage $2.00 per GB-month, semantic queries $0.75 per 1,000 queries and full-text queries $0.10 per 1,000 queries.",
+      "impact": "medium",
+      "source_url": "https://developers.cloudflare.com/changelog/post/2026-11-02-billing-postponed-default-sync-interval/",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-03",
+      "date_source": "vendor_page"
     }
   ]
 }
