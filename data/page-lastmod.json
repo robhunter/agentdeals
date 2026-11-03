@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-02",
+  "generated": "2026-11-03",
   "pages": {
     "/": {
       "daily": true
@@ -3661,8 +3661,8 @@
       "changed": "2026-11-02"
     },
     "/state-of-free-tiers": {
-      "hash": "9c9b65594c7c4f80",
-      "changed": "2026-11-02"
+      "hash": "a16aba6445b11441",
+      "changed": "2026-11-03"
     },
     "/storage-alternatives": {
       "hash": "505856baa6e7a0c3",

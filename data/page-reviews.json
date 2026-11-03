@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-02",
+  "measured_on": "2026-11-03",
   "pages": [
     {
       "path": "/agent-payments",
@@ -3172,7 +3172,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 5,
+      "table_figures": 6,
       "table_figures_from_records": 0,
       "tables": [
         {
@@ -3182,7 +3182,7 @@
         },
         {
           "label": "Startup Credit Programs: The Hidden Goldmine",
-          "figures": 5,
+          "figures": 6,
           "from_records": 0
         },
         {
