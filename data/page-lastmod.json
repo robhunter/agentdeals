@@ -22,11 +22,11 @@
       "changed": "2026-11-03"
     },
     "/ai-free-tiers": {
-      "hash": "f0af71f650854662",
+      "hash": "4431d28fdb80f962",
       "changed": "2026-11-04"
     },
     "/ai-ml-alternatives": {
-      "hash": "737c843a72c9fcd9",
+      "hash": "26d807e7b63a6fb0",
       "changed": "2026-11-04"
     },
     "/alternative-to": {
@@ -1107,7 +1107,7 @@
       "changed": "2026-11-03"
     },
     "/category/ai-ml": {
-      "hash": "5efcab46abbb5a5e",
+      "hash": "0e3499f3557c1fd9",
       "changed": "2026-11-04"
     },
     "/category/analytics": {
@@ -3241,8 +3241,8 @@
       "changed": "2026-11-03"
     },
     "/free-llm-apis": {
-      "hash": "a66da38639b082d3",
-      "changed": "2026-11-03"
+      "hash": "8bc1a6ba7ed70ae5",
+      "changed": "2026-11-04"
     },
     "/free-nextjs-stack": {
       "hash": "7bf39a68873b83ee",
@@ -3686,7 +3686,7 @@
       "changed": "2026-11-03"
     },
     "/tenor-alternatives": {
-      "hash": "3785bd710d4dad13",
+      "hash": "1713f00ecc869ebd",
       "changed": "2026-11-03"
     },
     "/terraform-alternatives": {

@@ -23856,6 +23856,36 @@
           "quote": "Prompts/outputs (commercial & demos): processed transiently to deliver results; not retained beyond what's necessary to run the Service, except configuration you save and short-lived response caches. … Pollinations does not use your prompts or outputs to train or fine-tune models without explicit opt-in. Community providers may follow different practices under their own policies.",
           "url": "https://pollinations.ai/privacy",
           "read_on": "2026-10-30"
+        },
+        {
+          "text": "Pollinations stores generated images, video, audio, and 3D files at media.pollinations.ai. Retrieval is public with the URL. These files have a 30-day lifecycle from upload or refresh.",
+          "quote": "Image generation and editing preserve this header in both URL and base64 JSON responses … retrieval is public. … Files use a 30-day lifecycle from upload or the latest refresh.",
+          "url": "https://github.com/pollinations/pollinations/blob/main/APIDOCS.md",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Pollinations requires browser apps to use a user-authorized sk_ key from Pollinations Pay. Personal sk_ keys must not be in browser code. A pk_ key only identifies the app and returns 401 if sent as a key.",
+          "quote": "Personal secret keys stay out of browser code.",
+          "url": "https://github.com/pollinations/pollinations/blob/main/APIDOCS.md",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Pollinations Pay, also called BYOP, lets users authorize an app to spend Pollen from their own wallet. Users set budget, expiry, models, and permissions. They can edit or revoke issued keys.",
+          "quote": "Pollinations Pay, also called BYOP (Bring Your Own Pollen), lets users authorize an application to spend Pollen from their own wallet.",
+          "url": "https://github.com/pollinations/pollinations/blob/main/enter.pollinations.ai/POLLEN_FAQ.md",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Pollinations' image endpoint has a safe parameter. It defaults to off. The value nsfw enables sexual and violence filtering. The value true enables privacy and secrets filtering.",
+          "quote": "true enables privacy,secrets; nsfw enables sexual,violence. Also accepted in the Pollinations-Safe header. Defaults to off",
+          "url": "https://github.com/pollinations/pollinations/blob/main/APIDOCS.md",
+          "read_on": "2026-11-03"
+        },
+        {
+          "text": "Owners of public community models in Pollinations can set prices. Pollinations credits owners 75% of the Pollen spent on their models. A linked GitHub username is required.",
+          "quote": "Public community models can set prices and compatible fallback models. Pollinations monitors public text and image endpoints and credits 75% of the Pollen spent on them to the owner.",
+          "url": "https://github.com/pollinations/pollinations/blob/main/enter.pollinations.ai/POLLEN_FAQ.md",
+          "read_on": "2026-11-03"
         }
       ]
     },
