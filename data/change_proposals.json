@@ -1,5 +1,131 @@
 {
-  "proposals": [],
+  "proposals": [
+    {
+      "proposal_id": "2026-11-04/jam/limits_increased",
+      "proposed_on": "2026-11-04",
+      "vendor": "Jam",
+      "change_type": "limits_increased",
+      "date": "2026-11-04",
+      "date_source": "discovered",
+      "summary": "The Free plan's recording limit is now 5 minutes (matching previously). The Team plan's recording limit is 15 minutes on the pricing page. The page confirms 'Connect Jira, Linear and more', 'Debug Jams via MCP', and 'Webhooks' on Free. The page shows the Free plan now has 'AI summaries 30 / month' and 'Creator seats 5'. Previously's Team plan details (unlimited Jams, 150 Recording Links) match the page.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Bug reports with console logs, network requests and device details captured in one click, from a browser extension or the Jam for Mac app. The Free plan is $0 with 30 Jams a month, 5 Recording Links and recordings up to 5 minutes; it includes Jira and Linear integrations, webhooks and debugging Jams through Jam's MCP server. Team is $14 per creator a month, billed yearly, with unlimited Jams and 150 Recording Links.",
+      "current_state": "Free plan is $0 with 30 Jams/month, 5 Recording Links, recordings up to 5 minutes, Jira/Linear integrations, MCP debugging, webhooks, 30 AI summaries/month, and 5 creator seats. Team is $14 per creator/month billed yearly with unlimited Jams, 150 Recording Links, recordings up to 15 minutes, 200 AI summaries, access controls, and backend logging.",
+      "impact": "low",
+      "source_url": "https://jam.dev/pricing",
+      "category": "Error Tracking",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-04",
+      "restatement": [
+        {
+          "url": "https://jam.dev/pricing",
+          "description": "Free plan is $0 with 30 Jams/month, 5 Recording Links, recordings up to 5 minutes, Jira/Linear integrations, MCP debugging, webhooks, 30 AI summaries/month, and 5 creator seats. Team is $14 per creator/month billed yearly with unlimited Jams, 150 Recording Links, recordings up to 15 minutes, 200 AI summaries, access controls, and backend logging."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-04/waiverstevie-com/rebranded",
+      "proposed_on": "2026-11-04",
+      "vendor": "WaiverStevie.com",
+      "change_type": "rebranded",
+      "date": "2026-11-04",
+      "date_source": "discovered",
+      "summary": "The vendor has rebranded from WaiverStevie.com to WaiverCat, and the free tier now explicitly states that all PDFs are watermarked. The paid tiers (Basic $15/mo for 250 signatures, Premium $25/mo for 500 signatures) and the $0.06 per signature rate remain the same.",
+      "tier": "Free",
+      "tier_direction": "unchanged",
+      "previous_state": "Now WaiverCat — A free account is available with no stated signature limits, but all PDFs are watermarked. Usage beyond the free account is $0.06 per signature. Basic is $15/mo for 250 signatures and Premium is $25/mo for 500 signatures.",
+      "current_state": "A free account is available with API access, custom fields, chained signatures, mobile signature, and text/email notifications, but all PDFs are watermarked. Paid plans are Basic at $15/mo for 250 signatures and Premium at $25/mo for 500 signatures, with a per-signature rate of $0.06.",
+      "impact": "low",
+      "source_url": "https://waivercat.com/pricing/",
+      "category": "Forms",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-04",
+      "restatement": [
+        {
+          "url": "https://waivercat.com/pricing/",
+          "description": "Now WaiverCat — A free account is available with API access, custom fields, chained signatures, mobile signature, and text/email notifications, but all PDFs are watermarked. Paid plans are Basic at $15/mo for 250 signatures and Premium at $25/mo for 500 signatures, with a per-signature rate of $0.06."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-04/flat-social/pricing_restructured",
+      "proposed_on": "2026-11-04",
+      "vendor": "flat.social",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-04",
+      "date_source": "discovered",
+      "summary": "Free tier now caps concurrent users at 5 instead of 8",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Interactive customizable spaces for team meetings & happy hours socials. Unlimited meetings, free up to 8 concurrent users.",
+      "current_state": "Free $0 forever, up to 5 people at once, unlimited session length, spatial audio + video rooms, your own maps & look, embed button for your site",
+      "impact": "medium",
+      "source_url": "https://flat.social/pricing",
+      "category": "Team Collaboration",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-04",
+      "restatement": [
+        {
+          "url": "https://flat.social/pricing",
+          "description": "Interactive customizable spaces for team meetings & happy hours socials — Free $0 forever, up to 5 people at once, unlimited session length, spatial audio + video rooms, your own maps & look, embed button for your site"
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-04/gridlastic-com/limits_reduced",
+      "proposed_on": "2026-11-04",
+      "vendor": "gridlastic.com",
+      "change_type": "limits_reduced",
+      "date": "2026-11-04",
+      "date_source": "discovered",
+      "summary": "The free plan now lists 5 free grid starts instead of the stored 4 grid starts, and the page no longer states the 4 simultaneous selenium nodes or 4,000 test minutes/month limits.",
+      "tier": "Free Plan",
+      "tier_direction": "narrowed",
+      "previous_state": "Selenium Grid testing with a free plan of up to 4 simultaneous selenium nodes/10 grid starts/4,000 test minutes/month",
+      "current_state": "Free Plan is $0 per month and includes 5 free grid starts; the free account plan limits the selenium grid run time to 2 hours per grid start.",
+      "impact": "medium",
+      "source_url": "https://www.gridlastic.com/pricing.html",
+      "category": "Testing",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-04",
+      "restatement": [
+        {
+          "url": "https://www.gridlastic.com/pricing.html",
+          "description": "Free Plan is $0 per month and includes 5 free grid starts; the free account plan limits the selenium grid run time to 2 hours per grid start."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-04/staticforms-xyz/limits_reduced",
+      "proposed_on": "2026-11-04",
+      "vendor": "staticforms.xyz",
+      "change_type": "limits_reduced",
+      "date": "2026-11-04",
+      "date_source": "discovered",
+      "summary": "staticforms.xyz's own page now redirects to staticforms.dev. The free plan's submission limit has been reduced from 500 per month to 250 submissions every 30 days.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free plan, 500 a month",
+      "current_state": "Free: 250 submissions every 30 days on one form.",
+      "impact": "medium",
+      "source_url": "https://www.staticforms.xyz/",
+      "category": "Forms",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-04",
+      "restatement": [
+        {
+          "url": "https://www.staticforms.xyz/",
+          "description": "Free: 250 submissions every 30 days on one form."
+        }
+      ]
+    }
+  ],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
