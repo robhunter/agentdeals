@@ -3,7 +3,7 @@
   "title": "WhatsApp Business API Pricing 2026: Service Messages No Longer Free",
   "meta_description": "Since 2026-10-01 each business phone number gets 1,000 free service messages a month and then pays per message.",
   "lead": "Since 2026-10-01 service replies are no longer free. Each business phone number gets 1,000 free service messages a month, then pays the market's rate. Utility templates sent inside the 24-hour window are now charged. An account with no payment method stops delivering replies past 1,000. The next possible price change is 2027-01-01.",
-  "read_line": "Prices read on Meta's pricing page (updated 2026-09-30) and its USD and BRL rate cards effective 2026-10-01, on 2026-10-10 and 2026-10-16. Meta's fees only, before any provider's markup and before tax.",
+  "read_line": "Prices read on Meta's pricing page (updated 2026-09-30) and its USD and BRL rate cards effective 2026-10-01, on 2026-10-10 and 2026-10-16. Meta's fees only, before any provider's markup and before tax. Meta charges only when a message is delivered. Messages sent but not delivered are not charged.",
   "free_service_messages_per_number": 1000,
   "changes": {
     "heading": "What changed on 2026-10-01",
@@ -1188,6 +1188,41 @@
           "A business portfolio whose limit is already 2,000, 10,000 or 100,000",
           "Meta raises it automatically, one level within 6 hours (to 10,000, then 100,000, then unlimited), when messages are high quality and the business used at least half its current limit in the last 7 days. Nothing else is required"
         ]
+      },
+      {
+        "label": "Per-user marketing limit",
+        "cells": [
+          "Marketing templates a user receives from all businesses",
+          "WhatsApp may limit how many marketing template messages a user receives from all businesses, based on factors such as the user's read rate. A template blocked by this limit fails with error code 131049 and is not charged. Wait at least 24 hours before resending. Marketing messages sent inside a customer service window the user opened do not count toward the limit"
+        ]
+      },
+      {
+        "label": "Throughput",
+        "cells": [
+          "Each business phone number on Cloud API, inbound and outbound messages",
+          "Up to 80 messages per second by default, and up to 1,000 by automatic upgrade at no charge. Error code 130429 is returned above the limit"
+        ]
+      },
+      {
+        "label": "WhatsApp Business app on the same number",
+        "cells": [
+          "A WhatsApp Business app number onboarded to Cloud API",
+          "The business can keep sending one-to-one messages from the app. App messages stay free and do not open, extend or affect API windows or pricing. API messages pay API rates. The number has a fixed throughput of 20 messages per second"
+        ]
+      },
+      {
+        "label": "Calls",
+        "cells": [
+          "WhatsApp Business Calling API",
+          "User-initiated calls are free. Business-initiated calls are charged per minute in six-second pulses, by the called number's country and monthly volume. Calls to North America (US and Canada numbers) cost $0.0121 a minute for the first 50,000 business-initiated minutes a month. Business numbers with US, Canada, Egypt, Vietnam or Nigeria country codes cannot place calls, but they can receive them. The Calling API needs a messaging limit of at least 2,000, and placing calls needs a payment method. Call recording and transcription are currently free"
+        ]
+      },
+      {
+        "label": "Groups",
+        "cells": [
+          "Groups API, for an Official Business Account; a group has up to 8 participants",
+          "Each delivered copy of a billable message is charged at its recipient's country rate. A billable message delivered to 5 members is 5 charged messages. Any member's message opens a customer service window with the whole group. Since 2026-10-01, utility messages in it are charged and non-template messages are free only within the free tier"
+        ]
       }
     ]
   },
@@ -1237,7 +1272,7 @@
     "heading": "Why other pages say replies are free",
     "text": "Many third-party pages, and some copies of Meta's own page, still say service messages are free. That was Meta's rule from 2024-11-01 to 2026-09-30. The current rule applies from 2026-10-01.",
     "sources": {
-      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-10-15, read 2026-10-23), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11; Meta's messaging-limits page (updated 2026-05-21) and Twilio's WhatsApp pricing page (current as of September 2026), read 2026-10-18; Meta's About the WhatsApp Business Platform page (updated 2026-08-04) and its WhatsApp accounts and Messaging accounts page (updated 2026-08-05), read 2026-11-01; Meta's Cloud API error codes page (updated 2026-06-18), read 2026-11-01.",
+      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-10-15, read 2026-10-23), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11; Meta's messaging-limits page (updated 2026-05-21) and Twilio's WhatsApp pricing page (current as of September 2026), read 2026-10-18; Meta's About the WhatsApp Business Platform page (updated 2026-08-04) and its WhatsApp accounts and Messaging accounts page (updated 2026-08-05), read 2026-11-01; Meta's Cloud API error codes page (updated 2026-06-18), read 2026-11-01. Meta's Calling API pricing page and its USD calling rate card effective 2026-10-01, its Cloud API Calling page, its per-user marketing template message limits page, its throughput page, its page on onboarding WhatsApp Business app users and its Groups API pricing page, read 2026-11-04.",
       "links": [
         {
           "text": "developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
@@ -1278,6 +1313,30 @@
         {
           "text": "Meta's Cloud API error codes page",
           "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/support/error-codes"
+        },
+        {
+          "text": "Meta's Calling API pricing page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/calling/pricing/"
+        },
+        {
+          "text": "its Cloud API Calling page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/calling/"
+        },
+        {
+          "text": "its per-user marketing template message limits page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/per-user-limits/"
+        },
+        {
+          "text": "its throughput page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/throughput/"
+        },
+        {
+          "text": "its page on onboarding WhatsApp Business app users",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/embedded-signup/onboarding-business-app-users/"
+        },
+        {
+          "text": "its Groups API pricing page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/groups/pricing/"
         }
       ]
     }
