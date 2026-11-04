@@ -2581,6 +2581,18 @@
       "refused_date": "2026-10-07"
     },
     {
+      "vendor": "crypteron.com",
+      "change_type": "limits_reduced",
+      "reason": "no_terms_to_narrow",
+      "detail": "limits_reduced claimed against \"Cloud-first, developer-friendly security platform prevents data breaches in .NET and Java applications\", a stored description that states no price, no allowance and nothing free, so there is nothing for the terms to have narrowed from",
+      "summary": "The Community plan is now described as free encryption and key management for only 3 months, whereas the stored deal info describes it as a Free tier without a time limit.",
+      "previous_state": "Cloud-first, developer-friendly security platform prevents data breaches in .NET and Java applications",
+      "current_state": "Community is FREE encryption and key management for 3 months, Development Only, AES-128 Encryption, No Support, 1 Security Partition, 1 Access Control Rule, 1 App per plan, $0 per month / $0 per year.",
+      "source_url": "https://www.crypteron.com/pricing",
+      "category": "Security",
+      "refused_date": "2026-11-04"
+    },
+    {
       "vendor": "Crystallize",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -5023,6 +5035,18 @@
       "refused_date": "2026-10-28"
     },
     {
+      "vendor": "Hackmd.io",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "Stored description already said collaborators/invitees and templates would be limited; current page just gives the specific limits, which the stored description never claimed.",
+      "summary": "The Free plan now caps team size at 3 teammates and limits invitees to 3, custom templates to 3, and GitHub pushes to 20/month.",
+      "previous_state": "Real time collaboration & writing tool for markdown format docs/files. Like Google Docs but for markdown files. Free unlimited number of \"notes\", but the number of collaborators (invitee) for private notes & template [will be limited](https://hackmd.io/pricing).",
+      "current_state": "Free plan is $0 free forever, up to 3 teammates, includes unlimited notes, 3 invitees, 3 custom templates, suggest edit, GitHub integration with 20 GitHub pushes per month, customize permalink, and upload up to 1MB per image.",
+      "source_url": "https://hackmd.io/pricing",
+      "category": "Team Collaboration",
+      "refused_date": "2026-11-04"
+    },
+    {
       "vendor": "Hanko",
       "change_type": "startup_program_expanded",
       "reason": "confirmed_unchanged",
@@ -5579,6 +5603,18 @@
       "source_url": "https://ifttt.com",
       "category": "Cloud Hosting",
       "refused_date": "2026-10-08"
+    },
+    {
+      "vendor": "Ilograph",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (3 viewer)",
+      "summary": "The free tier no longer includes private diagram viewers; private diagram viewers are now a Pro feature (20 viewers per diagram), while the free tier only offers unlimited private diagrams visible only to the user.",
+      "previous_state": "interactive diagrams that allow users to see their infrastructure from multiple perspectives and levels of detail. Charts can be expressed in code. The free tier has unlimited private diagrams with up to 3 viewers.",
+      "current_state": "Ilograph Free is a cloud-based personal workspace with unlimited public diagrams, unlimited private diagrams visible only to you, unlimited diagram size, built-in icons, and 14 days of diagram history, at $0 per month. Private diagram viewers (invite others to view your private diagrams) are listed under Ilograph Pro, not Free.",
+      "source_url": "https://www.ilograph.com/pricing.html",
+      "category": "Diagramming",
+      "refused_date": "2026-11-04"
     },
     {
       "vendor": "image-charts.com",
@@ -6491,6 +6527,18 @@
       "source_url": "https://www.localstack.cloud/pricing",
       "category": "Testing",
       "refused_date": "2026-10-26"
+    },
+    {
+      "vendor": "LocalXpose",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 2 active against 2 active",
+      "summary": "The Starter free plan now lists '− Time limits' and '− Interstitial warning page', indicating time limits and the interstitial warning page are no longer included, whereas the stored info said the free Starter plan includes an interstitial warning page.",
+      "previous_state": "Reverse proxy that exposes your localhost servers to the internet. Free Starter plan: 2 active HTTP/HTTPS tunnels, unique subdomains, SSL/TLS, interstitial warning page on public pageviews. No credit card required; TCP/TLS/UDP tunneling requires Pro.",
+      "current_state": "Starter is $0, no credit card required, with 2 active HTTP/HTTPS tunnels, SSL/TLS encryption, unique subdomains, and works on your machine; it lists '− Time limits' and '− Interstitial warning page'.",
+      "source_url": "https://localxpose.io/pricing",
+      "category": "Tunneling & Networking",
+      "refused_date": "2026-11-04"
     },
     {
       "vendor": "LocationIQ",
@@ -7718,6 +7766,18 @@
       "refused_date": "2026-10-18"
     },
     {
+      "vendor": "nitropack.io",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5,000 pageview)",
+      "summary": "The stored deal info describes a free tier with up to 5,000 pageviews/month, but the current pricing page shows the Free plan now includes only 1,000 pageviews/mo. and 1GB/mo. CDN bandwidth. The 5,000 pageviews/month limit now applies to the paid Starter plan.",
+      "previous_state": "Accelerate your site's speed on autopilot with complete front-end optimization (caching, images and code optimization, CDN). Free for up to 5,000 pageviews/month",
+      "current_state": "Free plan is $0/mo. and includes 1 site, 1,000/mo. pageviews, 1GB/mo. CDN bandwidth, 1 team member, and no 24/7 live chat support.",
+      "source_url": "https://nitropack.io/pricing",
+      "category": "Storage",
+      "refused_date": "2026-11-04"
+    },
+    {
       "vendor": "noip",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -7776,6 +7836,18 @@
       "source_url": "https://www.notion.com/pricing",
       "category": "Productivity & Notes",
       "refused_date": "2026-10-31"
+    },
+    {
+      "vendor": "Notion",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-31 (confirmed_unchanged) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The Free plan's page history is now listed as 7 days (matching the stored info), but the page no longer states the Free plan's block limit as 'unlimited pages and blocks for one member' — it now says 'Pages & blocks: Limited for 2+ members' and describes the Free plan as 'For individuals to organize personal projects and life.' The stored description's claim that workspaces with one member have unlimited pages and blocks is not supported by the current page.",
+      "previous_state": "Notion Free is $0 per member a month. Workspaces with one member have unlimited pages and blocks, while workspaces with two or more members have a block limit. The Free plan includes file uploads up to 5 MB per file, 7 days of page history, and 10 external guests. It also includes a trial of Notion AI, basic forms, basic sites, Notion Calendar, and databases. Plus costs $10 per seat a month and provides unlimited file uploads, 30 days of page history, and unlimited guests.",
+      "current_state": "Free is $0 per member/month, described as 'For individuals to organize personal projects and life.' Pages & blocks are 'Limited for 2+ members.' File uploads are up to 5 MB. Page history is 7 days. External guest limit is 10. Includes trial of Notion AI, basic forms, basic sites, Notion Calendar, and databases.",
+      "source_url": "https://www.notion.com/pricing",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-11-04"
     },
     {
       "vendor": "Notion",
@@ -9173,6 +9245,18 @@
     {
       "vendor": "QRtracer",
       "change_type": "limits_increased",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-02 (no_price_signal) claimed the same change, limits_increased, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier now offers unlimited dynamic codes for a 30-day trial (previously 3 dynamic codes with 14 days of Analytics/QR Studio), and Pro pricing is €5.99/month or €49/year.",
+      "previous_state": "New Free accounts can create up to 3 dynamic codes and get 14 days of Analytics and QR Studio access. After that, Pro is required to use those premium areas. Existing codes keep redirecting and scans continue to be recorded.",
+      "current_state": "Static QR codes are free with no account. Dynamic codes with scan tracking start with a 30-day trial, then Pro costs €5.99/month or €49/year. The trial includes unlimited dynamic QR codes, Analytics, and QR Studio, with no card required. Existing printed codes keep redirecting whether or not you upgrade.",
+      "source_url": "https://qrtracer.io/pricing",
+      "category": "Storage",
+      "refused_date": "2026-11-04"
+    },
+    {
+      "vendor": "QRtracer",
+      "change_type": "limits_increased",
       "reason": "no_price_signal",
       "detail": "the page read carries no price signal — no amount, named tier or metered rate in 5726 characters, so it states no terms to have changed",
       "summary": "The free tier allows for unlimited QR codes and scan tracking, but advanced features like exporting scan data as CSV require a paid plan. The stored information stated a limit of 3 dynamic codes and 14 days of analytics access before requiring a Pro plan.",
@@ -9640,6 +9724,18 @@
       "source_url": "https://rightfeature.com/",
       "category": "Project Management",
       "refused_date": "2026-10-03"
+    },
+    {
+      "vendor": "Rive",
+      "change_type": "restriction",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description never claimed specific export, collaboration, or project limits; the report only adds detail and restates the same free-tier offering.",
+      "summary": "The Free tier still exists at $0/seat/mo. It now exports .riv files with a Rive splash screen and is limited to 3 collaborative files and 1 project.",
+      "previous_state": "Create and ship beautiful animations to any platform. Free forever for Individuals. The service is an editor that also hosts all the graphics on their servers. They also provide runtimes for many platforms to run representations made using Rive.",
+      "current_state": "Free is $0/seat/mo and lets you build and ship with a Rive splash screen; key features include Rive Editor, CLI with limits, export .riv files with a splash screen, 3 collaborative files, and Agent with limits.",
+      "source_url": "https://rive.app/pricing",
+      "category": "Design",
+      "refused_date": "2026-11-04"
     },
     {
       "vendor": "Roboflow",
@@ -11178,6 +11274,18 @@
       "refused_date": "2026-09-17"
     },
     {
+      "vendor": "Testspace.com",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (450 result)",
+      "summary": "The free tier is now limited to 200 sessions per month (down from 450 monthly results), and it is restricted to open source GitHub personal accounts with unlimited public projects.",
+      "previous_state": "A Dashboard for publishing automated test results and a Framework for implementing manual tests as code using GitHub. The service is [free for Open Source](https://github.com/marketplace/testspace-com) and accounts for 450 monthly results.",
+      "current_state": "Free $0/month: Open source GitHub personel account, Unlimited public projects, 200 sessions",
+      "source_url": "https://testspace.com/pricing",
+      "category": "Testing",
+      "refused_date": "2026-11-04"
+    },
+    {
       "vendor": "The GoSquared Early Stage Plan",
       "change_type": "rebranded",
       "reason": "page_does_not_name_vendor",
@@ -11650,6 +11758,18 @@
       "source_url": "https://cloud.typesense.org/",
       "category": "Search",
       "refused_date": "2026-10-09"
+    },
+    {
+      "vendor": "UI Bakery",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (5 user)",
+      "summary": "The stored deal info says the Free plan is 'Free for up to 5 users,' but the current pricing page describes the Free plan as '$0 month per developer' with unlimited apps, data source connections, public app users, and no stated 5-user cap. The page also lists a separate 'Max workspace viewer seats' limit of 50 for paid plans, not 5 users for Free.",
+      "previous_state": "Low-code platform that enables faster building of custom web applications. Supports building UI using drag and drop with a high level of customization through JavaScript, Python, and SQL. Available as both cloud and self-hosted solutions. Free for up to 5 users.",
+      "current_state": "Free plan is $0 per developer per month and includes unlimited apps & data source connections, monthly AI trial credits, public and private apps, unlimited public app users, release history, hosted database, and community support.",
+      "source_url": "https://uibakery.io/pricing",
+      "category": "Low-Code Platforms",
+      "refused_date": "2026-11-04"
     },
     {
       "vendor": "Umami",
@@ -12514,6 +12634,18 @@
       "source_url": "https://www.zendesk.com/business/startups/",
       "category": "Startup Perks",
       "refused_date": "2026-10-02"
+    },
+    {
+      "vendor": "zenhub.com",
+      "change_type": "restriction",
+      "reason": "no_terms_to_narrow",
+      "detail": "a restriction was measured against \"The only project management solution inside GitHub. Free for public repos, OSS, and nonprofit organizations\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
+      "summary": "The stored description says Zenhub is 'Free for public repos, OSS, and nonprofit organizations,' but the current pricing page describes the Free plan as 'Built for small teams, with essential features, and a single workspace' at $0 per user/mo, with limits like 1 team workspace, up to 50 users, 1 connected GitHub organization, up to 2 connected repositories, and up to 250 issues. The page no longer frames the free tier around public repos, OSS, or nonprofits.",
+      "previous_state": "The only project management solution inside GitHub. Free for public repos, OSS, and nonprofit organizations",
+      "current_state": "Free plan is $0 per user/mo, 'Built for small teams, with essential features, and a single workspace,' limited to 1 team workspace, up to 50 users, 1 connected GitHub organization, up to 2 connected repositories, and up to 250 issues.",
+      "source_url": "https://www.zenhub.com/pricing",
+      "category": "Project Management",
+      "refused_date": "2026-11-04"
     },
     {
       "vendor": "Zenscrape",
