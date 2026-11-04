@@ -103,7 +103,7 @@
       }
     ],
     "note": {
-      "text": "Prices are US dollars per 1 million tokens. Mistral Embed costs $0.10 per 1 million input tokens and Codestral Embed $0.15. OCR 3 (mistral-ocr-2512) costs $2 per 1,000 pages and $3 per 1,000 annotated pages. OCR 4.1 (mistral-ocr-4-1) costs $4 per 1,000 pages and $5 per 1,000 annotated pages. OCR 3 remains available. Voxtral Mini Transcribe 2 costs $0.003 per minute. Voxtral Mini Transcribe 3 costs $0.0035 per minute. Voxtral Mini Transcribe Realtime 3 costs $0.008 per minute. Voxtral TTS 3 (voxtral-mini-tts-3-0) in public preview costs $13 per 1 million characters. Voxtral TTS costs $16 per 1 million characters. Mistral Moderation 2 is free. Source: Mistral API pricing, read 2026-10-29.",
+      "text": "Prices are US dollars per 1 million tokens. Mistral Embed costs $0.10 per 1 million input tokens and Codestral Embed $0.15. OCR 3 (mistral-ocr-2512) costs $2 per 1,000 pages and $3 per 1,000 annotated pages. OCR 4.1 (mistral-ocr-4-1) costs $4 per 1,000 pages and $5 per 1,000 annotated pages. OCR 3 remains available. Voxtral Mini Transcribe 2 costs $0.003 per minute. Voxtral Mini Transcribe 3 costs $0.0035 per minute. Voxtral Mini Transcribe Realtime 3 costs $0.008 per minute. Voxtral TTS 3 (voxtral-mini-tts-3-0) in public preview costs $13 per 1 million characters. Voxtral TTS costs $16 per 1 million characters. Mistral Moderation 2 is free. Voxtral Small Transcribe 3 costs $0.004 per minute. The Voice Agents API costs $0.04 per minute with Mistral Small 4 and $0.08 per minute with larger models. Source: Mistral API pricing, read 2026-10-29 for other prices and 2026-11-04 for Voxtral Small Transcribe 3 and Voice Agents.",
       "links": [
         {
           "text": "Mistral API pricing",
@@ -115,7 +115,11 @@
   "answers": [
     {
       "heading": "Is the Mistral API free?",
-      "text": "Yes, within a monthly allowance. New accounts start in Mistral's Free mode, and every plan includes monthly usage shared across Studio, the API and Vibe Code. Mistral's pricing page listed $10 a month of API credits on the Free plan until 2026-10-07 and now states no amount. When the usage runs out, requests stop until the next billing period unless pay-as-you-go is on. Models whose names start with \"labs-\" are free, but experimental and not for production. To use Codestral in a code editor, an editor plugin calling the API is billed at the API price and draws on the plan's monthly usage. Mistral's own editor tool is Vibe Code. Mistral says the Free plan is for getting started with Vibe, and Pro gives full access to coding with Mistral Vibe. NVIDIA serves Mistral Large 4 on a free endpoint at build.nvidia.com with model ID mistralai/mistral-large-4-1t-a52b. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production."
+      "text": "Yes, within a monthly allowance. New accounts start in Mistral's Free mode, and every plan includes monthly usage shared across Studio, the API and Vibe Code. Mistral's pricing page listed $10 a month of API credits on the Free plan until 2026-10-07 and now states no amount. When the usage runs out, requests stop until the next billing period unless pay-as-you-go is enabled with prepaid credits. Models whose names start with \"labs-\" are free, but experimental and not for production. To use Codestral in a code editor, an editor plugin calling the API is billed at the API price and draws on the plan's monthly usage. Mistral's own editor tool is Vibe Code. Mistral says the Free plan is for getting started with Vibe, and Pro gives full access to coding with Mistral Vibe. NVIDIA serves Mistral Large 4 on a free endpoint at build.nvidia.com with model ID mistralai/mistral-large-4-1t-a52b. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production."
+    },
+    {
+      "heading": "How does Mistral's pay-as-you-go billing work?",
+      "text": "Pay-as-you-go uses prepaid credits. Your included monthly usage is consumed first. To use the API and Vibe Code beyond it, your Organization needs both pay-as-you-go enabled and a positive credit balance. When your balance reaches zero, API and Vibe Code requests beyond your included monthly usage fail with HTTP status 402. To restore access, add credits from the link in the error message. Auto Recharge charges your payment method when your balance falls below a set threshold. An Organization monthly spending limit caps API and Vibe spending. Each Workspace can have its own monthly spending limit. If the limit is reached, API access can be suspended until the next month begins or an admin increases the limit."
     },
     {
       "heading": "Who can use Mistral's API?",
@@ -127,16 +131,20 @@
     },
     {
       "heading": "What are the Mistral API rate limits?",
-      "text": "Mistral publishes no rate-limit numbers. Limits apply to each Workspace and are shared by every API key in it: requests per second, tokens per minute and tokens per month. Each organization sees its own limits in Admin Panel > API > Limits."
+      "text": "Mistral publishes no rate-limit numbers. Limits apply to each Workspace and are shared by every API key in it: requests per second, tokens per minute and tokens per month. Each organization sees its own limits in Admin Panel > API > Limits. Mistral's help center (2026-08-12) says Free mode has the lowest limits and enabling pay-as-you-go unlocks Tier 1. With pay-as-you-go, tiers upgrade automatically based on the cumulative billed amount: Tier 2 over $20 billed, Tier 3 over $100, Tier 4 over $500. Over $2,000 billed, contact support for higher limits. Adding credits does not raise your rate limits. Priority Tier has a 99.5% uptime SLA and needs setup with Mistral. Standard and Batch have no SLA."
+    },
+    {
+      "heading": "Where does Mistral process API requests?",
+      "text": "The default global endpoint is api.mistral.ai. Mistral's docs say: \"Mistral does not commit to a specific inference location for requests sent to this endpoint.\" The EU endpoint is api.eu.mistral.ai, processing inference in EU and EFTA countries. The US endpoint is api.us.mistral.ai, processing inference in the United States. Regional inference is billed at 1.1 times standard list pricing for input tokens, output tokens, cached reads and cache writes. On regional endpoints, function calling is the only supported tool. Agents, Batch and the Files API are not available, and available models vary by region."
     },
     {
       "heading": "Does Mistral train on my API data?",
-      "text": "On the Free plan, Mistral may use your API and Studio inputs and outputs to train its models. You can opt out in the Admin Panel under Privacy, Anonymous improvement data; that toggle is separate from the Vibe toggle. Mistral's Commercial Terms say opt-outs and zero data retention do not apply to \"Labs or Preview Models\", which they define as experimental, preview or pre-release models identified as such. Mistral Large 4 and DeepSeek V4.1 Flash are public previews. To keep an opt-out in force, use a generally available model or confirm with Mistral first."
+      "text": "On the Free plan, Mistral may use your API and Studio inputs and outputs to train its models. You can opt out in the Admin Panel under Privacy, Anonymous improvement data; that toggle is separate from the Vibe toggle. Mistral's Commercial Terms say opt-outs and zero data retention do not apply to \"Labs or Preview Models\", which they define as experimental, preview or pre-release models identified as such. Mistral Large 4 and DeepSeek V4.1 Flash are public previews. To keep an opt-out in force, use a generally available model or confirm with Mistral first. Zero Data Retention is available only with pay-as-you-go and only for stateless API calls. You request it from support. Mistral approves or denies each request. It does not cover Agents, batch files, conversations, libraries or the Files API."
     }
   ],
   "retirements": {
     "heading": "Which Mistral models are being retired?",
-    "intro": "Mistral deprecated Mistral Large 3 (mistral-large-2512), Mistral Medium 3.5 (mistral-medium-3-5) and Voxtral TTS (voxtral-mini-tts-2603) on 2026-10-31. All three retire on 2027-04-30; Mistral names Mistral Large 4 as the replacement for both text models and Voxtral TTS 3 for Voxtral TTS. Z.ai GLM 5.2 (zai-glm-5-2) retired on 2026-10-31; Mistral names GLM 5.3 as its replacement. Mistral gives 6 months' notice for generally available models and 1 month for public preview, Labs and third-party models. A request to a retired model fails with a 404 error.",
+    "intro": "Mistral deprecated Mistral Large 3 (mistral-large-2512), Mistral Medium 3.5 (mistral-medium-3-5), Voxtral TTS (voxtral-mini-tts-2603), Voxtral Mini Transcribe 2 (voxtral-mini-2602) and Voxtral Mini Transcribe Realtime (voxtral-mini-transcribe-realtime-2602) on 2026-10-31. All five retire on 2027-04-30. Mistral names Mistral Large 4 as the replacement for both text models and Voxtral TTS 3 for Voxtral TTS. Voxtral Mini Transcribe 3 replaces Voxtral Mini Transcribe 2, and Voxtral Mini Transcribe Realtime 3 replaces Voxtral Mini Transcribe Realtime. Z.ai GLM 5.2 (zai-glm-5-2) retired on 2026-10-31; Mistral names GLM 5.3 as its replacement. Mistral gives 6 months' notice for generally available models and 1 month for public preview, Labs and third-party models. A request to a retired model fails with a 404 error.",
     "columns": [
       "Model",
       "Retired",
@@ -163,6 +171,20 @@
         "replacement": "Voxtral TTS 3",
         "source": "https://docs.mistral.ai/models",
         "read_on": "2026-10-31"
+      },
+      {
+        "model": "Voxtral Mini Transcribe 2",
+        "retired": "2027-04-30 (scheduled)",
+        "replacement": "Voxtral Mini Transcribe 3",
+        "source": "https://docs.mistral.ai/models",
+        "read_on": "2026-11-04"
+      },
+      {
+        "model": "Voxtral Mini Transcribe Realtime",
+        "retired": "2027-04-30 (scheduled)",
+        "replacement": "Voxtral Mini Transcribe Realtime 3",
+        "source": "https://docs.mistral.ai/models",
+        "read_on": "2026-11-04"
       },
       {
         "model": "Z.ai GLM 5.2",
