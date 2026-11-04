@@ -34737,6 +34737,48 @@
           "quote": "In this guide, we'll walk you through the basics of using the SpaceXSI API, from creating an account to making your first request.",
           "url": "https://docs.x.ai/developers/quickstart",
           "read_on": "2026-10-22"
+        },
+        {
+          "text": "Every xAI API team has per-model rate limits on requests per second and tokens per minute. Tier 0 is default at $0, Tier 1 at $50, Tier 2 at $250, Tier 3 at $1,000, Tier 4 at $5,000, Enterprise on request. Tiers unlock automatically by cumulative spend since January 1, 2026, including prepaid credit purchases. Tiers never downgrade. Tier 0 allows 150 RPS and 50M TPM for grok-4.7, 37 RPS and 10M TPM for grok-4.3. A request over a limit returns HTTP 429. A team can request higher limits in the console.",
+          "quote": "Qualification is based on total revenue received through prepaid credit purchases or successfully fulfilled invoices.",
+          "url": "https://docs.x.ai/developers/rate-limits",
+          "read_on": "2026-11-04"
+        },
+        {
+          "text": "The global endpoint api.x.ai may route requests between regions, so the processing location is not guaranteed. The US endpoint is us.api.x.ai/v1. It serves grok-4.7 and grok-4.6 only, and a request for another model returns 404 there. It does not serve image, video, or voice APIs. Token usage costs 1.1 times global rates: grok-4.7 is $2.20 input and $6.60 output per 1M tokens under 200k prompt tokens. The US guarantee covers request handling, inference, moderation, and retained request data. Files, Collections, and server-side tools are outside it. xAI's docs describe no other regional endpoint.",
+          "quote": "The US endpoint currently serves two models, grok-4.7 and grok-4.6, and none of the image generation, video generation, or voice APIs.",
+          "url": "https://docs.x.ai/developers/advanced-api-usage/regions",
+          "read_on": "2026-11-04"
+        },
+        {
+          "text": "Zero Data Retention is a team-wide setting turned on by a team admin in the xAI Console. It disables the stateful Responses API, Files, Collections, the Batch API, deferred completions, and xAI-hosted image and video outputs. xAI does not recommend enabling it for most customers.",
+          "quote": "ZDR disables important API features that depend on stored data, including the stateful Responses API, Files and Collections, and the Batch API",
+          "url": "https://docs.x.ai/developers/faq/security",
+          "read_on": "2026-11-04"
+        },
+        {
+          "text": "Batch API requests do not count toward rate limits. Most complete within 24 hours. Processing time varies by system load and batch size. Completion time is best effort and not guaranteed.",
+          "quote": "Completion time is best effort and not guaranteed.",
+          "url": "https://docs.x.ai/developers/advanced-api-usage/batch-api",
+          "read_on": "2026-11-04"
+        },
+        {
+          "text": "xAI says it is SOC 2 Type 2 compliant. For a HIPAA Business Associate Agreement, xAI asks customers to fill in its BAA Questionnaire, reviews the answers and replies with next steps.",
+          "quote": "We are SOC 2 Type 2 compliant.",
+          "url": "https://docs.x.ai/developers/faq/security",
+          "read_on": "2026-11-04"
+        },
+        {
+          "text": "File storage costs $0.025 per GiB per day. Collection storage costs $0.10 per GiB per day. File downloads and collection downloads cost $0.20 per GiB downloaded.",
+          "quote": "Files and collections stored on the SpaceXSI platform are billed based on the amount of storage used.",
+          "url": "https://docs.x.ai/developers/pricing",
+          "read_on": "2026-11-04"
+        },
+        {
+          "text": "xAI partners with GitHub's Secret Scanning program to detect leaked keys. If a leak is found, xAI disables the key and notifies you by email.",
+          "quote": "If a leak is found, we disable the key and notify you via email.",
+          "url": "https://docs.x.ai/developers/faq/security",
+          "read_on": "2026-11-04"
         }
       ]
     },
