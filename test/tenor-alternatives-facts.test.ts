@@ -60,6 +60,14 @@ const BOTH_PROVIDERS_TERMS = [
   "Bots and server-side integrations: Klipy and GIPHY both require client-side calls; Klipy makes exceptions only with written approval. For bots, consider a self-hosted search index.",
 ];
 
+const PROVIDER_INTEGRATION_TERMS = [
+  "Ads: Klipy ads are off unless enabled per API key in the Partner Dashboard. The type field marks an ad object. Klipy's Ads API offers revenue for the app. (From docs.klipy.com/advertisements, read 2026-11-03.)",
+  "Attribution: GIPHY requires apps using its API or SDK to display “Powered By GIPHY” attribution marks where the API is utilized. (From GIPHY's API docs, read 2026-11-03.)",
+  "Content ratings: GIPHY API requests use a rating parameter. Acceptable values include g, pg, pg-13, r. If you do not specify a rating, GIPHY returns results from all ratings. Klipy’s Tenor-compatible endpoints use contentfilter, with accepted values off, low, medium, and high. The default value for contentfilter is off. Klipy’s Partner Panel blocks search terms and keywords globally or in selected countries. (From GIPHY's API docs and docs.klipy.com, read 2026-11-03.)",
+  "Keys: GIPHY requires one key per platform for iOS, Android, and Web. It also requires one key per section of an app. (From GIPHY's API docs, read 2026-11-03.)",
+  "Stickers and clips: Klipy’s Tenor-compatible endpoints return only GIFs unless searchfilter names another type. Accepted types are sticker, static, -static, ai-gif, emoji, clip. GIPHY supports GIF, Sticker, Clips with sound, and Emoji. (From docs.klipy.com and GIPHY's API docs, read 2026-11-03.)",
+];
+
 const INTEGRATION_RULES =
   "Caching, ordering and mixing: Klipy and GIPHY set the same rules for standard integrations. Load media from the URLs the API returns; do not cache, store or re-host the media, unless the provider has approved a caching integration. Do not reorder or filter Search and Trending results in your code; Klipy’s filters are set in its Partner Panel. Do not mix their GIFs with another provider’s in the same grid; Klipy allows it only with written approval. (From docs.klipy.com/integration-requirements and GIPHY’s API docs, read 2026-10-06.)";
 
@@ -206,6 +214,23 @@ describe("the Tenor alternatives guide states each provider's terms as the provi
   it("states Klipy's and GIPHY's client-side rule and production-key terms as the providers do", () => {
     const text = readable(served.get("/tenor-alternatives")!);
     assert.deepStrictEqual(BOTH_PROVIDERS_TERMS.filter((line) => !text.includes(line)), []);
+  });
+
+  for (const passage of PROVIDER_INTEGRATION_TERMS) {
+    it(`states the provider's ${passage.split(":")[0].toLowerCase()} rules in a labelled paragraph`, () => {
+      const html = served.get("/tenor-alternatives")!;
+      const paragraphs = [...html.matchAll(/<div class="context-box">([\s\S]*?)<\/div>/g)];
+      const paragraph = paragraphs.find(([, body]) => readable(body) === passage)?.[1];
+      assert.ok(paragraph, passage);
+      assert.ok(paragraph.includes(`<strong>${passage.split(":")[0]}:</strong>`));
+    });
+  }
+
+  it("places the five provider rules immediately after production keys and before migration paths", () => {
+    const html = served.get("/tenor-alternatives")!;
+    const section = html.split("<strong>Production keys:</strong>")[1]?.split('<h2 id="migration-paths">')[0] ?? "";
+    const paragraphs = [...section.matchAll(/<div class="context-box">([\s\S]*?)<\/div>/g)].map(([, body]) => readable(body));
+    assert.deepStrictEqual(paragraphs, PROVIDER_INTEGRATION_TERMS);
   });
 
   it("states Klipy's and GIPHY's caching, ordering and mixing rules after their client-side rule, naming both providers' docs and the day they were read", () => {
