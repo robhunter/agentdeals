@@ -4354,16 +4354,46 @@
       },
       "conditions": [
         {
-          "text": "Rate limits apply to the whole organization, not to each user or API key. A request over a limit gets a 429 Too Many Requests error.",
+          "text": "Groq rate limits apply to the whole organization, not per user or API key. A request over the limit returns a 429 Too Many Requests error. Cached tokens do not count toward rate limits.",
           "quote": "Rate limits apply at the organization level, not individual users.",
           "url": "https://console.groq.com/docs/rate-limits",
-          "read_on": "2026-10-05"
+          "read_on": "2026-11-04"
         },
         {
           "text": "You are billed only after you add a payment method and move to the paid Developer tier.",
           "quote": "To upgrade from the Free tier to the Developer tier, you'll need to provide a valid payment method (credit card, US bank account, or SEPA debit account).",
           "url": "https://console.groq.com/docs/billing-faqs",
           "read_on": "2026-10-05"
+        },
+        {
+          "text": "Groq does not charge at upgrade. It invoices at the end of each monthly billing cycle, and also when cumulative usage first reaches $1, $10, $100, $500, or $1,000. For India customers, the thresholds are $1, $10, and then $100 recurring. Groq bills only when usage reaches at least $0.50. Groq accepts credit cards, United States bank accounts, and SEPA debit accounts.",
+          "quote": "an invoice is automatically triggered and payment is deducted when your cumulative usage reaches specific thresholds: $1, $10, $100, $500, and $1,000.",
+          "url": "https://console.groq.com/docs/billing-faqs",
+          "read_on": "2026-11-04"
+        },
+        {
+          "text": "You can downgrade to Groq's Free tier at any time. You must pay a final invoice for any outstanding usage before the downgrade completes.",
+          "quote": "When you downgrade, we will issue a final invoice for any outstanding usage that has not yet been billed.",
+          "url": "https://console.groq.com/docs/billing-faqs",
+          "read_on": "2026-11-04"
+        },
+        {
+          "text": "Organization owners on Groq's paid tiers can set a monthly spend limit. It applies across all API keys. At the limit, API calls return a 400 with code blocked_api_access. Current spend updates every 10-15 minutes, so you might exceed the limit slightly. Limits reset on the 1st of each month. Email alerts can be set before the limit.",
+          "quote": "Spend limits automatically protect your budget by blocking API access when you reach your monthly cap.",
+          "url": "https://console.groq.com/docs/spend-limits",
+          "read_on": "2026-11-04"
+        },
+        {
+          "text": "Groq's flex processing is for paid customers only. It has 10x higher rate limits than on-demand processing. Pricing matches the on-demand tier. Set the service_tier parameter to flex. If flex capacity is unavailable, requests fail with status 498 and error capacity_exceeded.",
+          "quote": "If flex capacity is unavailable, requests will fail quickly with status 498 and error capacity_exceeded.",
+          "url": "https://console.groq.com/docs/flex-processing",
+          "read_on": "2026-11-04"
+        },
+        {
+          "text": "Groq's Performance tier provides a 99.9% availability SLA and 99% latency guarantee. It is available only on enterprise plans. Billing is based on provisioned throughput, not per-token usage. Uncached context length must be under 8,192 tokens.",
+          "quote": "It includes a 99.9% availability SLA and a 99% latency guarantee aligned to your enterprise agreement.",
+          "url": "https://console.groq.com/docs/performance-tier",
+          "read_on": "2026-11-04"
         },
         {
           "text": "Groq's Services Agreement does not permit it to train or fine-tune models on your inputs or outputs unless you give permission.",
@@ -4384,10 +4414,10 @@
           "read_on": "2026-10-29"
         },
         {
-          "text": "Groq does not keep inference requests by default. It may log inputs and outputs for up to 30 days to troubleshoot or investigate abuse; enabling Zero Data Retention in Data Controls stops this.",
-          "quote": "These logs are retained for up to 30 days, unless legally required to retain longer.",
+          "text": "Groq does not retain inference requests by default. Batch input and output files are kept for 30 days unless deleted earlier. Fine-tuning data is kept until deleted. Groq may log inference inputs and outputs for up to 30 days to troubleshoot errors or investigate abuse. Zero Data Retention stops this logging and disables the Batch API and fine-tuning.",
+          "quote": "Input and output files retained for 30 days unless deleted earlier by the customer.",
           "url": "https://console.groq.com/docs/your-data",
-          "read_on": "2026-10-05"
+          "read_on": "2026-11-04"
         },
         {
           "text": "Data Groq retains is stored in Google Cloud buckets in the United States.",
