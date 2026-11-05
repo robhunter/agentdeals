@@ -1317,6 +1317,7 @@ function buildChangingSoonSection(): string {
       `${namedWhileAheadOf("A change", today)} ${listOrderSentence("soonest-first")} ${atMostShownHere(UPCOMING_DEADLINES_ON_THE_HOME_PAGE)}`,
       [
         { when: "Every deadline we hold, including any this list is too short to reach, is on", text: "the deadline tracker", href: "/deadlines" },
+        { when: "", text: "View all changes", href: "/changes" },
       ],
       escHtmlServer,
     )}

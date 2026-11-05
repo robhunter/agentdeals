@@ -133,6 +133,8 @@ describe("the home page includes stated deadlines in its soonest five", () => {
       assert.ok(rows[3].body.indexOf("Free projects hold 1,000 rows.") > rows[3].body.indexOf(full));
       assert.ok(!rows[4].body.includes("Queues require a payment card."));
       assert.ok(!soon.includes("On the day its date arrives it moves to"));
+      const notice = soon.match(/<p class="dated-rule">([\s\S]*?)<\/p>/)?.[1] ?? "";
+      assert.match(notice, /href="\/changes"/);
       assert.match(soon, /href="\/deadlines"/);
       assert.ok(!soon.includes(NOTHING_CHANGING_SOON_HTML));
     });
