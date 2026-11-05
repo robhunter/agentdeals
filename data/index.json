@@ -35586,7 +35586,7 @@
     {
       "vendor": "Google Compute Engine",
       "category": "Cloud IaaS",
-      "description": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB North America egress. GPUs/TPUs excluded.",
+      "description": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB of outbound data transfer a month from North America to all destinations except China and Australia. GPUs/TPUs excluded.",
       "tier": "Always Free",
       "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
       "tags": [
@@ -35654,6 +35654,34 @@
           "quote": "The Free Tier has no end date, but Google reserves the right to change the offering, including changing or eliminating usage limits, with 30 days' advance notice.",
           "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
           "read_on": "2026-11-02"
+        },
+        {
+          "text": "The free 1 GB a month covers traffic from a VM in us-west1, us-central1 or us-east1 to visitors anywhere except China and Australia, including Europe, the rest of Asia, South America and Africa.",
+          "quote": "1 GB of outbound data transfer from North America to all region destinations (excluding China and Australia) per month.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "An e2-micro VM has 2 vCPUs that together sustain 25% of CPU time. It has 1 GB of memory and can burst to 100% for short periods.",
+          "quote": "e2-micro sustains 2 vCPUs, each for 12.5% of CPU time totaling 25% CPU time.",
+          "url": "https://docs.cloud.google.com/compute/docs/general-purpose-machines",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "While a billing account is a Free Trial account, you cannot add GPUs, use Google Cloud Marketplace, request a quota increase or create Windows Server VMs. Upgrading to a Paid billing account removes these restrictions.",
+          "quote": "While your billing account is a non-billable Free trial account, you can't do any of the following",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "After upgrading to a Paid billing account, the remaining $300 credit can still be used within the original 90 days from sign-up.",
+          "quote": "Your remaining credit is available for use on products and services covered by the Free Trial, but they must be consumed within the original 90 days period from your sign-up date.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-05",
+          "operating_detail": true
         }
       ],
       "official_mcp_servers": [
