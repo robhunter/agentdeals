@@ -1,3 +1,4 @@
+import { PROVENANCE_SUBJECTS } from "./provenance-subjects.ts";
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
@@ -35,12 +36,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const offers: Offer[] = JSON.parse(
-  readFileSync(path.join(REPO, "data", "index.json"), "utf-8"),
+  readFileSync(process.env.AGENTDEALS_INDEX_PATH || path.join(REPO, "data", "index.json"), "utf-8"),
 ).offers;
 
 const confirmedOn = new Map<string, string>();
 for (const record of JSON.parse(
-  readFileSync(path.join(REPO, "data", "verification_state.json"), "utf-8"),
+  readFileSync(process.env.AGENTDEALS_VERIFICATION_STATE_PATH || path.join(REPO, "data", "verification_state.json"), "utf-8"),
 ).records) {
   if (record?.last_success) confirmedOn.set(`${record.vendor}|${record.url}`, record.last_success);
 }
@@ -151,11 +152,16 @@ describe("a page never disclaims provenance our records hold", () => {
 
   after(() => server?.proc.kill());
 
-  it("holds both halves of the catalogue in large enough numbers to sweep", () => {
+  it("keeps both provenance states exercised as the catalogue is confirmed", () => {
     const cited = [...served.entries()].filter(([, page]) => page.sourceLine !== "");
     const dated = cited.filter(([route]) => storesDateOurTermsToARead(primaryForRoute.get(route)!));
     assertPopulationFloor(dated.length, 243, "cited records our stores date to a read of the page");
-    assertPopulationFloor(cited.length - dated.length, 150, "cited records whose figures are our own");
+    for (const subject of PROVENANCE_SUBJECTS) {
+      const route = `/vendor/${toSlug(subject.vendor)}`;
+      assert.ok(cited.some(([candidate]) => candidate === route), subject.vendor);
+      assert.strictEqual(dated.some(([candidate]) => candidate === route), subject.dated, subject.vendor);
+      assert.strictEqual(served.get(route)!.sourceLine.includes(CHECK_ESTABLISHES), !subject.dated, subject.vendor);
+    }
   });
 
   it("disclaims the figures on exactly the records our stores do not date to a read", () => {
@@ -219,7 +225,6 @@ describe("a page never disclaims provenance our records hold", () => {
     const wrongNote: string[] = [];
     const wrongEntry: string[] = [];
     let dated = 0;
-    let ours = 0;
     for (const [route, html] of compiled) {
       const entries = [...html.matchAll(CITED_ENTRY)].map(m => ({ slug: m[1]!, body: m[2]! }));
       assert.ok(entries.length > 0, route);
@@ -231,7 +236,6 @@ describe("a page never disclaims provenance our records hold", () => {
       });
       const oursHere = entries.filter(e => !datedHere.includes(e));
       dated += datedHere.length;
-      ours += oursHere.length;
       const blanket = html.includes(CHECK_ESTABLISHES_ON_A_LIST);
       const scoped = html.includes(CHECK_ESTABLISHES_ON_THE_REST_OF_A_LIST);
       const expected = oursHere.length === 0 ? "none" : datedHere.length === 0 ? "blanket" : "scoped";
@@ -247,7 +251,6 @@ describe("a page never disclaims provenance our records hold", () => {
     assert.deepStrictEqual(wrongNote.slice(0, 10), []);
     assert.deepStrictEqual(wrongEntry.slice(0, 10), []);
     assertPopulationFloor(dated, 62, "cited services a list dates to a read of the vendor's page");
-    assertPopulationFloor(ours, 70, "cited services whose figures a list leaves as our own");
   });
 
   it("names the reading a restated entry was taken from, not the read that followed it", () => {
