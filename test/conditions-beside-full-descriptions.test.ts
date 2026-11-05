@@ -111,7 +111,7 @@ function startServer(indexPath: string): Promise<{ proc: ChildProcess; base: str
 
 const ROUTES_NO_SITEMAP_LISTS = ["/", "/estimate", "/budget-builder", "/compare-tool", "/stack-check"];
 
-const ROUTES_QUOTING_THE_ONE_SENTENCE_THAT_NAMES_A_DEADLINE = new Set(["/deadlines", "/this-week", "/shutdowns"]);
+const ROUTES_QUOTING_THE_ONE_SENTENCE_THAT_NAMES_A_DEADLINE = new Set(["/deadlines", "/expiring", "/this-week", "/shutdowns"]);
 
 const scratchDescriptions = new Map(scratchOffers.map((offer, index) => [codeFor(index), offer.description]));
 
@@ -129,7 +129,7 @@ describe("a deadline quotation and a full listing description need different con
   const sentence = "The legacy runtime retires on 2026-11-01.";
 
   it("recognizes a sentence excerpt on past, current and future digest routes", () => {
-    for (const route of ["/deadlines", "/this-week", "/shutdowns", "/digest/2024-w47", digestRouteOfTheWeekHolding(TODAY), "/digest/2099-w01"]) {
+    for (const route of ["/deadlines", "/expiring", "/this-week", "/shutdowns", "/digest/2024-w47", digestRouteOfTheWeekHolding(TODAY), "/digest/2099-w01"]) {
       assert.ok(quotesLessThanTheWholeDescription(route, sentence, description), route);
       assert.ok(!quotesLessThanTheWholeDescription(route, asServed(description), description), route);
     }
@@ -398,7 +398,7 @@ describe("deadline and digest quotations retain operating details", () => {
     const marked = await startServer(scratchCatalogue("deadline-marked.json", [...catalogue.offers, offer]));
     const unmarked = await startServer(scratchCatalogue("deadline-unmarked.json", [...catalogue.offers, { ...offer, conditions: [noted] }]));
     try {
-      const routes = ["/deadlines", "/shutdowns", "/this-week", digestRouteOfTheWeekHolding(day), "/digest/2024-w47", "/digest/2099-w01"];
+      const routes = ["/deadlines", "/expiring", "/shutdowns", "/this-week", digestRouteOfTheWeekHolding(day), "/digest/2024-w47", "/digest/2099-w01"];
       let fullQuotationSeen = false;
       for (const route of routes) {
         const [left, right] = await Promise.all([fetch(marked.base + route), fetch(unmarked.base + route)]);
