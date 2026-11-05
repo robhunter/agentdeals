@@ -17764,7 +17764,8 @@
       "recorded_date": "2026-11-03",
       "date_source": "hand_written",
       "listing_effect": "none",
-      "what_ends": "Gemini 2.5 Pro (gemini-2.5-pro) and Gemini 2.5 Flash (gemini-2.5-flash) on the Gemini API"
+      "what_ends": "Gemini 2.5 Pro (gemini-2.5-pro) and Gemini 2.5 Flash (gemini-2.5-flash) on the Gemini API",
+      "announced_on": "2026-11-02"
     },
     {
       "vendor": "Cloudflare AI Search",
@@ -17778,7 +17779,8 @@
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-11-03",
-      "date_source": "vendor_page"
+      "date_source": "vendor_page",
+      "announced_on": "2026-11-02"
     },
     {
       "vendor": "xAI",
