@@ -1,3 +1,4 @@
+import { PROVENANCE_SUBJECTS } from "./provenance-subjects.ts";
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
@@ -16,6 +17,7 @@ const {
   pageQuoteHtml,
   readClauseHtml,
 } = await import("../dist/source-citation.js");
+const { RECORD_SOURCE_CLASS } = await import("../dist/change-citation.js");
 const { whereOurTermsCameFrom } = await import("../dist/read-date.js");
 const { NAMING_TOKENS_RECORDED_INSTEAD_OF_EVIDENCE, checkFinding } = await import("../dist/source-check.js");
 const { toSlug } = await import("../dist/vendor-slug.js");
@@ -26,7 +28,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const offers: Offer[] = JSON.parse(
-  readFileSync(path.join(REPO, "data", "index.json"), "utf-8"),
+  readFileSync(process.env.AGENTDEALS_INDEX_PATH || path.join(REPO, "data", "index.json"), "utf-8"),
 ).offers;
 
 const primaryFor = new Map<string, Offer>();
@@ -252,24 +254,30 @@ describe("nothing we serve attributes our own sentence to the page it cites", ()
 
   it("says on the page what a check establishes, wherever the limits beside a citation are our own", () => {
     const missing: string[] = [];
-    let stated = 0;
     for (const [route, page] of swept) {
       if (page.sourceLine === "") continue;
       if (whereOurTermsCameFrom(primaryForRoute.get(route))) continue;
-      if (page.sourceLine.includes(CHECK_ESTABLISHES)) stated++;
-      else missing.push(route);
+      if (!page.sourceLine.includes(CHECK_ESTABLISHES)) missing.push(route);
     }
     assert.deepStrictEqual(missing.slice(0, 10), []);
-    assertPopulationFloor(stated, 150, "vendor pages stating what their source check establishes");
+    for (const subject of PROVENANCE_SUBJECTS.filter(subject => !subject.dated)) {
+      const page = swept.get(`/vendor/${toSlug(subject.vendor)}`);
+      assert.ok(page?.sourceLine.includes(CHECK_ESTABLISHES), subject.vendor);
+    }
   });
 
-  it("says the same of the list of sources on every compiled comparison page", () => {
-    const missing = COMPILED_PAGES.filter(page => {
-      const html = rendered.get(page)!;
-      return !html.includes(CHECK_ESTABLISHES_ON_A_LIST)
-        && !html.includes(CHECK_ESTABLISHES_ON_THE_REST_OF_A_LIST);
-    });
-    assert.deepStrictEqual(missing, []);
+  it("scopes each compiled source list to the figures still our own", () => {
+    for (const route of COMPILED_PAGES) {
+      const html = rendered.get(route)!;
+      const entries = [...html.matchAll(/<li id="source-([a-z0-9-]+)">([\s\S]*?)<\/li>/g)];
+      assert.ok(entries.length > 0, route);
+      const dated = entries.filter(entry => {
+        const offer = primaryForRoute.get(`/vendor/${entry[1]}`);
+        return offer && entry[2]!.includes(`class="${RECORD_SOURCE_CLASS}"`) && whereOurTermsCameFrom(offer);
+      }).length;
+      assert.strictEqual(html.includes(CHECK_ESTABLISHES_ON_A_LIST), dated === 0, route);
+      assert.strictEqual(html.includes(CHECK_ESTABLISHES_ON_THE_REST_OF_A_LIST), dated > 0 && dated < entries.length, route);
+    }
   });
 
   it("keeps quoting the page where a record holds the page's own words", () => {
