@@ -1430,7 +1430,7 @@ describe("the rule that decides it is published where a reader can find it", () 
           states: atMostShownHere(UPCOMING_DEADLINES_ON_THE_HOME_PAGE),
           whenNoneQualify: stripTags(NOTHING_CHANGING_SOON_HTML),
           cap: UPCOMING_DEADLINES_ON_THE_HOME_PAGE,
-          qualifying: futureRecords.filter(changeTouchesTheListing).length + stated.length,
+          qualifying: futureRecords.filter(changeTouchesTheListing).length + stated.filter(deadline => !deadline.record || changeTouchesTheListing(deadline.record)).length,
         },
         {
           id: "recent-changes",

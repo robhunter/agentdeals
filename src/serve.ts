@@ -1284,9 +1284,10 @@ function buildChangingSoonWithNothingQualifying(): string {
 function buildChangingSoonSection(): string {
   const records = vendorRecordsDatedAfter(dealChanges, today);
   const upcomingDeadlines = deadlineLinesOf(
-    records.filter(changeTouchesTheListing),
+    records,
     deadlinesOurTextStates(dealChanges, records, today),
-  ).slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE);
+  ).filter(line => line.citedRecord === null || changeTouchesTheListing(line.citedRecord))
+    .slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE);
   if (upcomingDeadlines.length === 0) return buildChangingSoonWithNothingQualifying();
   const entries = upcomingDeadlines.map((c) => {
     const badge = c.citedRecord

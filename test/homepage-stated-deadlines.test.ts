@@ -10,6 +10,8 @@ const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const { UPCOMING_DEADLINES_ON_THE_HOME_PAGE, NOTHING_CHANGING_SOON_HTML } = await import("../dist/homepage-claims.js");
 const { changeTouchesTheListing } = await import("../dist/product-deprecation.js");
 const { changesTheVendorMade } = await import("../dist/data.js");
+const { deadlineTextsOf, statedDeadlines } = await import("../dist/stated-deadlines.js");
+const { recordsStillInForce } = await import("../dist/change-resolution.js");
 const TODAY = new Date().toISOString().slice(0, 10);
 const DAY = 86400000;
 const dateIn = (days: number) => new Date(Date.parse(`${TODAY}T00:00:00Z`) + days * DAY).toISOString().slice(0, 10);
@@ -83,10 +85,21 @@ function assertCountdowns(rows: ReturnType<typeof entries>) {
 
 describe("the home page includes stated deadlines in its soonest five", () => {
   it("matches the deadline tracker's first five qualifying vendor/date pairs on live data", async () => {
-    const records = changesTheVendorMade(JSON.parse(readFileSync(path.join(REPO, "data/deal_changes.json"), "utf8")).changes).filter(c => c.date > TODAY);
+    const changes = JSON.parse(readFileSync(path.join(REPO, "data/deal_changes.json"), "utf8")).changes;
+    const offers = JSON.parse(readFileSync(path.join(REPO, "data/index.json"), "utf8")).offers;
+    const records = changesTheVendorMade(changes).filter(c => c.date > TODAY);
+    const stated = statedDeadlines(
+      deadlineTextsOf(offers, changesTheVendorMade(recordsStillInForce(changes)).filter(c => c.date <= TODAY)),
+      records,
+      TODAY,
+    );
+    const recordByPair = new Map([
+      ...records.map(record => [pair(record), record] as const),
+      ...stated.flatMap(deadline => deadline.record ? [[pair(deadline), deadline.record] as const] : []),
+    ]);
     await withPages(null, null, (home, deadlines) => {
       const expected = entries(deadlines, "dl").filter(entry => {
-        const dated = records.find(record => pair(record) === pair(entry));
+        const dated = recordByPair.get(pair(entry));
         return !dated || changeTouchesTheListing(dated);
       }).slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE);
       const actual = entries(section(home), "cs");
@@ -111,13 +124,14 @@ describe("the home page includes stated deadlines in its soonest five", () => {
     const changes = [
       record("Recorded", 3, "The listed API retires."),
       record("Sibling", 2, "Another product retires.", { listing_effect: "none" }),
-      record("Discovered", -2, `The free plan retires on ${dateIn(4)}.`, { date_source: "discovered", listing_effect: "none" }),
+      record("Discovered", -2, `The free plan retires on ${dateIn(4)}.`, { date_source: "discovered", listing_effect: "narrows" }),
+      record("EarlierSibling", -3, `Another product retires on ${dateIn(2)}.`, { listing_effect: "none" }),
     ];
     await withPages(offers, changes, (home, deadlines) => {
       const soon = section(home);
       const rows = entries(soon, "cs");
       assert.deepEqual(rows.map(pair), ["Condition", "Recorded", "Discovered", "Whole", "Excerpt"].map((vendor, i) => pair({ vendor, date: dateIn([1, 3, 4, 5, 6][i]) })));
-      assert.deepEqual(rows.map(pair), entries(deadlines, "dl").filter(entry => entry.vendor !== "Sibling").slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE).map(pair));
+      assert.deepEqual(rows.map(pair), entries(deadlines, "dl").filter(entry => !["Sibling", "EarlierSibling"].includes(entry.vendor)).slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE).map(pair));
       assertCountdowns(rows);
       for (const row of rows) {
         const expected = entries(deadlines, "dl").find(entry => pair(entry) === pair(row))!;
