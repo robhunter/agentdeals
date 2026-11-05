@@ -322,7 +322,6 @@ describe("a catalogue in which no listing states conditions", () => {
 const GUIDES_KEEPING_OPERATING_DETAILS: Record<string, string> = {
   ...GUIDES_PRINTING_THEIR_VENDORS_CONDITIONS,
   "/gemini-api-pricing-2026": "Google Gemini API",
-  "/mistral-api-pricing-2026": "Mistral AI",
 };
 
 describe("operating details stay on the vendor page and that vendor's guide", () => {
@@ -359,7 +358,17 @@ describe("operating details stay on the vendor page and that vendor's guide", ()
     assert.deepStrictEqual([...new Set(unexpected)], []);
   });
 
-  it("keeps marked conditions on all four own-vendor guides and their vendor pages", async () => {
+  it("keeps the Mistral guide byte-identical when conditions are marked", async () => {
+    const offers = scratchOffers.map(offer => ({ ...offer, conditions: offer.conditions?.map(({ operating_detail, ...condition }) => condition) }));
+    const unmarked = await startServer(scratchCatalogue("unmarked-details.json", offers));
+    try {
+      const route = "/mistral-api-pricing-2026";
+      const [markedBody, plainBody] = await Promise.all([fetch(server.base + route).then(r => r.text()), fetch(unmarked.base + route).then(r => r.text())]);
+      assert.strictEqual(markedBody, plainBody);
+    } finally { unmarked.proc.kill(); }
+  });
+
+  it("keeps marked conditions on all three own-vendor guides and their vendor pages", async () => {
     for (const [route, vendor] of Object.entries(GUIDES_KEEPING_OPERATING_DETAILS)) {
       assert.ok(printed.get(route)?.has(vendor), `${route}: ${vendor}`);
       assert.ok(printed.get(`/vendor/${toSlug(vendor)}`)?.has(vendor), vendor);

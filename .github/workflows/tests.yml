@@ -62,8 +62,22 @@ jobs:
             echo "The suite wrote no floor log, so no margin can be read off this run."
           fi
 
+  marked-conditions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.1"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build
+      - name: Check mixed conditions on a temporary catalogue
+        run: node scripts/test-marked-conditions.mjs
+
   test:
-    needs: suite
+    needs: [suite, marked-conditions]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -71,8 +85,9 @@ jobs:
       - name: Pass only when every shard of the suite passed
         env:
           SHARDS: ${{ needs.suite.result }}
+          MARKED: ${{ needs.marked-conditions.result }}
         run: |
-          if [ "$SHARDS" != "success" ]; then
-            echo "::error title=Suite failed::At least one of the suite's three shards did not pass (result: $SHARDS)."
+          if [ "$SHARDS" != "success" ] || [ "$MARKED" != "success" ]; then
+            echo "::error title=Suite failed::The regular or marked-condition suite did not pass (shards: $SHARDS; marked: $MARKED)."
             exit 1
           fi

@@ -227,7 +227,7 @@ describe("#1317 the suite sees every commit that reaches main", () => {
   });
 
   it("runs the gate on the Node the suite is pinned to, so the suite can load its own test files", () => {
-    const pinned = nodeVersionsOf(source("tests.yml"));
+    const pinned = [...new Set(nodeVersionsOf(source("tests.yml")))];
     assert.strictEqual(pinned.length, 1, `tests.yml should pin one Node version, pins ${pinned.join(", ")}`);
     for (const file of GATED_WORKFLOWS) {
       assert.deepStrictEqual(
