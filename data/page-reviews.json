@@ -1925,23 +1925,23 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 110,
-      "table_figures_from_records": 61,
+      "table_figures": 113,
+      "table_figures_from_records": 64,
       "tables": [
         {
           "label": "Always Free Products",
-          "figures": 28,
-          "from_records": 2
+          "figures": 31,
+          "from_records": 3
         },
         {
           "label": "Free Trial & AI/ML Tools",
           "figures": 6,
-          "from_records": 1
+          "from_records": 2
         },
         {
           "label": "GCP vs AWS vs Others",
           "figures": 70,
-          "from_records": 53
+          "from_records": 54
         },
         {
           "label": "Recent GCP & Google Changes",

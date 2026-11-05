@@ -1,3 +1,4 @@
+import { announcementsInWeek, weeklyAnnouncementNote, weeklyAnnouncementHeading, announcementDateLabel, WEEKLY_ANNOUNCEMENTS_INTRO } from "./weekly-announcements.js";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -2147,6 +2148,9 @@ export interface FormattedWeeklyDigest {
   total_changes: number;
   changes_in_week: number;
   discovered_in_week: number;
+  announced_in_week?: number;
+  announced_changes?: DealChange[];
+  announcement_note?: string;
   summary: {
     free_tiers_removed: number;
     new_free_tiers: number;
@@ -2172,7 +2176,10 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
   const weekStartStr = week.start;
   const weekEndStr = week.end!;
 
-  const { dated: weekChanges, discovered: weekDiscovered } = changesInWindow(changesTheVendorMade(allChanges), week);
+  const vendorChanges = changesTheVendorMade(allChanges);
+  const announced = announcementsInWeek(vendorChanges, week);
+  const announcementNote = announced.length ? weeklyAnnouncementNote(announced.length) : "";
+  const { dated: weekChanges, discovered: weekDiscovered } = changesInWindow(vendorChanges, week);
   const sorted = [...weekChanges].sort((a, b) => scoreChange(b) - scoreChange(a));
   const topChanges = sorted.slice(0, limit);
   const discoveredChanges = [...weekDiscovered].sort((a, b) => scoreChange(b) - scoreChange(a)).slice(0, limit);
@@ -2215,6 +2222,7 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
   mdSections.push(`# This Week in Developer Pricing`);
   mdSections.push(`*${dateLabel}*`);
   mdSections.push(`> ${headline}`);
+  if (announcementNote) mdSections.push(announcementNote);
 
   if (losses.length > 0) {
     mdSections.push(`## Biggest Losses`);
@@ -2237,6 +2245,12 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
     mdSections.push(discoveredChanges.map(changeToMd).join("\n"));
   }
 
+  if (announced.length) {
+    mdSections.push(`## ${weeklyAnnouncementHeading(announced.length)}`);
+    mdSections.push(WEEKLY_ANNOUNCEMENTS_INTRO);
+    mdSections.push(announced.map(c => `- ${announcementDateLabel(c)} · **${c.vendor}** (${c.category}): ${changeSummaryMarkdown(c)}`).join("\n"));
+  }
+
   mdSections.push(`---`);
   mdSections.push(`[View all ${allChanges.length} changes](https://agentdeals.dev/changes) | Powered by [AgentDeals](https://agentdeals.dev)`);
 
@@ -2254,6 +2268,7 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
   htmlSections.push(`<h1>This Week in Developer Pricing</h1>`);
   htmlSections.push(`<p><em>${escHtml(dateLabel)}</em></p>`);
   htmlSections.push(`<blockquote><p>${escHtml(headline)}</p></blockquote>`);
+  if (announcementNote) htmlSections.push(`<p>${escHtml(announcementNote)}</p>`);
 
   if (losses.length > 0) {
     htmlSections.push(`<h2>Biggest Losses</h2>`);
@@ -2276,6 +2291,12 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
     htmlSections.push(`<ul>${discoveredChanges.map(changeToHtml).join("")}</ul>`);
   }
 
+  if (announced.length) {
+    htmlSections.push(`<h2>${escHtml(weeklyAnnouncementHeading(announced.length))}</h2>`);
+    htmlSections.push(`<p>${escHtml(WEEKLY_ANNOUNCEMENTS_INTRO)}</p>`);
+    htmlSections.push(`<ul>${announced.map(c => `<li>${escHtml(announcementDateLabel(c))} · <strong>${escHtml(c.vendor)}</strong> (${escHtml(c.category)}): ${changeSummaryHtml(c, escHtml)}</li>`).join("")}</ul>`);
+  }
+
   htmlSections.push(`<hr>`);
   htmlSections.push(`<p><a href="https://agentdeals.dev/changes">View all ${allChanges.length} changes</a> | Powered by <a href="https://agentdeals.dev">AgentDeals</a></p>`);
 
@@ -2287,6 +2308,7 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
     total_changes: allChanges.length,
     changes_in_week: weekChanges.length,
     discovered_in_week: weekDiscovered.length,
+    ...(announced.length ? { announced_in_week: announced.length, announced_changes: announced, announcement_note: announcementNote } : {}),
     summary,
     headline,
     top_changes: topChanges,

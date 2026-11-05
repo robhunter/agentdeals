@@ -3160,6 +3160,34 @@
           "quote": "First 100,000 included + $0.10 per additional bucket per month",
           "url": "https://developers.cloudflare.com/r2/pricing/",
           "read_on": "2026-10-31"
+        },
+        {
+          "text": "Public bucket access through an r2.dev subdomain is for testing. It has a variable rate limit. For production, connect a custom domain to the bucket.",
+          "quote": "Managed public bucket access through an r2.dev subdomain is not intended for production usage and has a variable rate limit applied to it.",
+          "url": "https://developers.cloudflare.com/r2/platform/limits/",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "An R2 object can be up to 5 TiB. Single-part uploads can be up to 5 GiB, and multipart uploads can reach 4.995 TiB.",
+          "quote": "5 GiB (single-part) / 4.995 TiB (multi-part)",
+          "url": "https://developers.cloudflare.com/r2/platform/limits/",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Infrequent Access storage has a 30-day minimum storage duration. An object deleted, moved or replaced sooner is charged for the full 30 days.",
+          "quote": "For objects stored in Infrequent Access storage, you will be charged for the object for the minimum storage duration even if the object was deleted, moved, or replaced before the specified duration.",
+          "url": "https://developers.cloudflare.com/r2/pricing/",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "DeleteObject, DeleteBucket and AbortMultipartUpload are free operations.",
+          "quote": "Free operations include DeleteObject, DeleteBucket and AbortMultipartUpload.",
+          "url": "https://developers.cloudflare.com/r2/pricing/",
+          "read_on": "2026-11-05",
+          "operating_detail": true
         }
       ]
     },
@@ -35558,7 +35586,7 @@
     {
       "vendor": "Google Compute Engine",
       "category": "Cloud IaaS",
-      "description": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB North America egress. GPUs/TPUs excluded.",
+      "description": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB of outbound data transfer a month from North America to all destinations except China and Australia. GPUs/TPUs excluded.",
       "tier": "Always Free",
       "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
       "tags": [
@@ -35626,6 +35654,34 @@
           "quote": "The Free Tier has no end date, but Google reserves the right to change the offering, including changing or eliminating usage limits, with 30 days' advance notice.",
           "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
           "read_on": "2026-11-02"
+        },
+        {
+          "text": "The free 1 GB a month covers traffic from a VM in us-west1, us-central1 or us-east1 to visitors anywhere except China and Australia, including Europe, the rest of Asia, South America and Africa.",
+          "quote": "1 GB of outbound data transfer from North America to all region destinations (excluding China and Australia) per month.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "An e2-micro VM has 2 vCPUs that together sustain 25% of CPU time. It has 1 GB of memory and can burst to 100% for short periods.",
+          "quote": "e2-micro sustains 2 vCPUs, each for 12.5% of CPU time totaling 25% CPU time.",
+          "url": "https://docs.cloud.google.com/compute/docs/general-purpose-machines",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "While a billing account is a Free Trial account, you cannot add GPUs, use Google Cloud Marketplace, request a quota increase or create Windows Server VMs. Upgrading to a Paid billing account removes these restrictions.",
+          "quote": "While your billing account is a non-billable Free trial account, you can't do any of the following",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "After upgrading to a Paid billing account, the remaining $300 credit can still be used within the original 90 days from sign-up.",
+          "quote": "Your remaining credit is available for use on products and services covered by the Free Trial, but they must be consumed within the original 90 days period from your sign-up date.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-05",
+          "operating_detail": true
         }
       ],
       "official_mcp_servers": [
@@ -36104,6 +36160,34 @@
           "quote": "The NVIDIA AI Enterprise 90-Day Trial is designed for production deployments and includes a license for commercial use",
           "url": "https://docs.api.nvidia.com/nim/docs/product",
           "read_on": "2026-10-29"
+        },
+        {
+          "text": "The free API service may be pre-release with reduced availability. It has no uptime guarantee and is not for production use. NVIDIA may end it at any time.",
+          "quote": "may have reduced or different security, privacy, availability, and reliability standards relative to commercial versions of NVIDIA services and content",
+          "url": "https://assets.ngc.nvidia.com/products/api-catalog/legal/NVIDIA%20API%20Trial%20Terms%20of%20Service.pdf",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "An API key is an NGC personal key with the Public API Endpoints service. You choose its expiration when you generate it: a preset period, a custom date, or never.",
+          "quote": "Choose a preset period, set a custom date, or select “never expire”.",
+          "url": "https://docs.nvidia.com/ngc/latest/ngc-user-guide.html",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Your rate limit is shown in the top-right of the build.nvidia.com dashboard.",
+          "quote": "Your personal rate limit is shown in the top-right of the dashboard.",
+          "url": "https://build.nvidia.com/api/runtime/content/help-center-faq.yaml",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "When you hit the rate limits, NVIDIA points you to the Deploy section of the model's page to use a partner's endpoint or run the NIM container yourself.",
+          "quote": "Once you hit rate limits, see the Deploy section to use partner endpoints or deploy a NIM locally.",
+          "url": "https://build.nvidia.com/api/runtime/content/help-center-faq.yaml",
+          "read_on": "2026-11-05",
+          "operating_detail": true
         }
       ],
       "free_plan_excerpt": {
@@ -36115,7 +36199,7 @@
     {
       "vendor": "Ollama Cloud",
       "category": "AI / ML",
-      "description": "Cloud-hosted Ollama for running open-source LLMs. Between October 26 and 27, 2026, Ollama replaced its Free plan, which included starter usage credits, with a $0 Pay as you go plan. Pay as you go charges per token for every cloud model, has no subscription and 3 concurrent requests. Running models on your own hardware is free. Ollama says Reflection's Beam (beam:cloud) is free on Ollama's cloud for a limited time, from 2026-10-16 (Ollama's blog). Ollama names no end date and does not say which plans this covers. Beam is an open-weight model with a 1M-token context window. Pro costs $20 a month with $60 of usage credits, Max $100 a month with $300. Team, in early access, costs $500 a month for unlimited users and includes $1,000 of usage credits a month, shared across the team. Per million input and output tokens, glm-5.3 costs $1.40 and $4.40, deepseek-v4-pro $1.32 and $3.96, and kimi-k3 $3.00 and $15.00. Usage is billed per million tokens at each model's rate, for example gpt-oss:120b at $0.15 input and $0.60 output, and some models, such as deepseek-v4.1-flash, cost half off-peak (outside 12:00 to 18:00 UTC on weekdays, and all weekend). To use cloud models without installing Ollama, send requests to https://ollama.com/api/chat with an API key from ollama.com in an \"Authorization: Bearer\" header, using the same model names, such as gpt-oss:120b; OpenAI and Anthropic clients also work.",
+      "description": "Cloud-hosted Ollama for running open-source LLMs. Between October 26 and 27, 2026, Ollama replaced its Free plan, which included starter usage credits, with a $0 Pay as you go plan. Pay as you go charges per token for every cloud model, has no subscription and 3 concurrent requests. Running models on your own hardware is free. Ollama says Reflection's Beam (beam:cloud) is free on Ollama's cloud for a limited time, from 2026-10-16 (Ollama's blog). Ollama names no end date and does not say which plans this covers. Beam is an open-weight model with a 1M-token context window. Pro costs $20 a month with $60 of usage credits, Max $100 a month with $300. Team, in early access, costs $500 a month for unlimited users and includes $1,000 of usage credits a month, shared across the team. Per million input and output tokens, glm-5.3 costs $1.40 and $4.40 and deepseek-v4-pro $1.32 and $3.96. Ollama Cloud serves kimi-k2.6 at $0.95 input and $4.00 output per million tokens, kimi-k2.7-code at $0.95 and $4.00, kimi-k3.1-pro at $2.00 and $10.00, and kimi-k3 at $3.00 and $15.00. kimi-k2.6 and kimi-k2.7-code are the cheapest Kimi models, and kimi-k3 is the most expensive. Usage is billed per million tokens at each model's rate, for example gpt-oss:120b at $0.15 input and $0.60 output, and some models, such as deepseek-v4.1-flash, cost half off-peak (outside 12:00 to 18:00 UTC on weekdays, and all weekend). To use cloud models without installing Ollama, send requests to https://ollama.com/api/chat with an API key from ollama.com in an \"Authorization: Bearer\" header, using the same model names, such as gpt-oss:120b; OpenAI and Anthropic clients also work.",
       "tier": "Pay-as-you-go",
       "url": "https://ollama.com/pricing",
       "tags": [
@@ -36178,6 +36262,34 @@
           "quote": "Purchased usage credits expire one year after they are added to your account",
           "url": "https://ollama.com/terms",
           "read_on": "2026-10-11"
+        },
+        {
+          "text": "Every plan, including Pay as you go, can buy usage credits. Ollama spends the plan's included credits first, then the purchased balance.",
+          "quote": "Ollama uses included plan credits first, then draws from the purchased usage credit balance.",
+          "url": "https://ollama.com/pricing",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Ollama sends an email when 90% of the plan's included monthly usage is used. The email can be turned off in settings.",
+          "quote": "On paid plans, Ollama sends an email reminder at 90% of your included monthly usage.",
+          "url": "https://ollama.com/pricing",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "A GET request to https://ollama.com/api/balance returns the account's included and purchased balances. The endpoint allows 10 requests per minute per user.",
+          "quote": "This endpoint allows 10 requests per minute per user, shared across API keys and devices.",
+          "url": "https://docs.ollama.com/api/balance",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "On the Team plan, usage beyond the included credits is paid from a shared team balance. A team can add a set amount to that balance and turn off automatic usage billing.",
+          "quote": "You can add a set amount to the balance and turn off automatic usage billing.",
+          "url": "https://ollama.com/pricing",
+          "read_on": "2026-11-05",
+          "operating_detail": true
         },
         {
           "text": "Pay as you go and Pro include 3 concurrent requests, and Max and Team 10. Requests beyond the limit are queued and processed when a slot is available. If the queue is full, requests are rejected.",
