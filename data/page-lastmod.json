@@ -3097,7 +3097,7 @@
       "changed": "2026-11-05"
     },
     "/digest/2026-w45": {
-      "hash": "358e8c7b136ab424",
+      "hash": "22ba6661fa2b7d3a",
       "changed": "2026-11-05"
     },
     "/digest/2026-w47": {
@@ -3105,8 +3105,8 @@
       "changed": "2026-11-03"
     },
     "/digest/2026-w49": {
-      "hash": "db6bf63fbc1750ab",
-      "changed": "2026-11-03"
+      "hash": "4dd4a8245c257d10",
+      "changed": "2026-11-05"
     },
     "/digest/2026-w50": {
       "hash": "04a2e9f8adb7d9ee",
@@ -3193,11 +3193,11 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "hash": "379292abb3bfaf46",
+      "hash": "598d15ccfcfbe53f",
       "changed": "2026-11-05"
     },
     "/events/google-io-2026": {
-      "hash": "daa5f0ff0810cbac",
+      "hash": "9d3bcedf43f23317",
       "changed": "2026-11-05"
     },
     "/events/microsoft-build-2026": {
@@ -3208,7 +3208,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "f6be1d15d3fe53b7",
+      "hash": "56787e3a64c720eb",
       "changed": "2026-11-05"
     },
     "/firebase-alternatives": {
@@ -3277,7 +3277,7 @@
       "changed": "2026-11-03"
     },
     "/gcp-free-tier-2026": {
-      "hash": "acae8585b891ba15",
+      "hash": "d5da95964059aa21",
       "changed": "2026-11-05"
     },
     "/gemini-api-pricing-2026": {
@@ -3353,7 +3353,7 @@
       "changed": "2026-11-05"
     },
     "/llm-api-pricing": {
-      "hash": "bc7c18257f0ffa9b",
+      "hash": "e47687fea2ddec60",
       "changed": "2026-11-05"
     },
     "/localstack-alternatives": {
@@ -3579,8 +3579,8 @@
       "daily": true
     },
     "/reports/2026-12": {
-      "hash": "b6302b4dff51ff1d",
-      "changed": "2026-11-03"
+      "hash": "4ed09797ae38080c",
+      "changed": "2026-11-05"
     },
     "/reports/2027-01": {
       "hash": "093eb760f56cc1e0",
