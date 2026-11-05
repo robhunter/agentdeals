@@ -197,7 +197,7 @@ describe("the storage scaling table publishes its rate card", () => {
     assert.strictEqual(row("Vercel Blob")("Free Storage").text, "1 GB");
     assert.strictEqual(row("Vercel Blob")("Free Egress").text, "10 GB/mo");
     assert.strictEqual(row("Pinata IPFS")("Free Storage").text, "1 GB");
-    assert.strictEqual(row("Google Cloud Storage")("Free Egress").text, "100 GB/mo from North America");
+    assert.strictEqual(row("Google Cloud Storage")("Free Egress").text, "100 GB/mo to anywhere except China and Australia");
   });
 
   it("carries the corrected service terms and excludes the withdrawn hand-written claims", () => {

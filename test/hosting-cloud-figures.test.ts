@@ -201,9 +201,14 @@ describe("a hosting or cloud free tier typed into a page states what the vendor'
 
   it("gives Google Cloud Storage the free egress its listing states, in the comparison row and the storage card", () => {
     const [egress] = listingFigures("Google Cloud Storage", /(\d+) GB North America egress/);
-    assert.strictEqual(rowStarting(tableRows(html[CLOUD], "CDN / Data Transfer"), "GCP", "Cloud Storage")[2], `${egress} GB egress from North America; Cloud CDN not free`);
+    const [storage] = listingFigures("Google Cloud Storage", /(\d+) GB(?:-months of Standard| regional) storage/);
+    const row = rowStarting(tableRows(html[CLOUD], "CDN / Data Transfer"), "GCP", "Cloud Storage");
+    assert.strictEqual(row[1], `Cloud Storage: ${storage} GB Standard in us-east1, us-west1 or us-central1`);
+    assert.strictEqual(row[2], `${egress} GB/mo free egress to anywhere except China and Australia, including Europe; Cloud CDN not free`);
     const card = cardText(html[STORAGE], "Google Cloud Storage");
-    assert.match(card, new RegExp(`${egress} GB egress from North America per month`), `the Cloud Storage card reads: ${card}`);
+    assert.ok(card.includes(`${storage} GB-months of Standard storage a month in us-east1, us-west1 and us-central1 only. 5,000 Class A ops, 50,000 Class B ops. The free ${egress} GB of egress a month covers data sent from those regions to visitors anywhere except China and Australia, including Europe.`), `the Cloud Storage card reads: ${card}`);
+    assert.ok(readableText(html[CLOUD]).includes(`Egress charges: $0.12/GB to internet past the free allowance (${egress} GB a month from Cloud Storage, 1 GB from Compute Engine), higher than AWS.`));
+    assert.match(html[CLOUD], /<strong>Egress charges:<\/strong> \$0\.12\/GB to internet past the free allowance/);
   });
 
   it("gives Azure its 100 GB of free outbound transfer and ties the 12 months to Blob Storage alone", () => {

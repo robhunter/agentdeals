@@ -1925,12 +1925,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 113,
+      "table_figures": 114,
       "table_figures_from_records": 64,
       "tables": [
         {
           "label": "Always Free Products",
-          "figures": 31,
+          "figures": 32,
           "from_records": 3
         },
         {

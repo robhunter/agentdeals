@@ -34276,7 +34276,7 @@ function buildGcpFreeTier2026Page(): string {
     { name: "Cloud Shell", slug: "google-cloud-shell", limits: "5 GB persistent home directory, web-based terminal with built-in tools", category: "Dev Tools", source: GOOGLE_FREE_TIER_LIST },
     { name: "BigQuery", slug: "google-cloud-bigquery", limits: "1 TiB queries/month, 10 GiB storage", category: "Analytics", source: GOOGLE_FREE_TIER_LIST },
     { name: "Firestore", slug: "firebase", limits: "1 GiB storage, 50K reads/day, 20K writes/day, 20K deletes/day", category: "Database", source: GOOGLE_FREE_TIER_LIST },
-    { name: "Cloud Storage", slug: "google-cloud-storage", limits: "5 GB-months Standard (us-west1, us-central1, us-east1), 5K Class A ops, 50K Class B ops", category: "Storage", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Storage", slug: "google-cloud-storage", limits: "5 GB-months Standard (us-west1, us-central1, us-east1), 5K Class A ops, 50K Class B ops, 100 GB egress a month to anywhere except China and Australia", category: "Storage", source: GOOGLE_FREE_TIER_LIST },
     { name: "Pub/Sub", slug: "google-cloud-pub-sub", limits: "10 GiB messages/month", category: "Messaging", source: GOOGLE_FREE_TIER_LIST },
     { name: "Datastream", slug: "google-cloud", limits: "100 GiB of change data capture a month per billing account (AlloyDB or Spanner to BigQuery)", category: "Data", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Build", slug: "google-cloud-build", limits: "2,500 build-minutes/month (e2-standard-2)", category: "CI/CD", source: GOOGLE_FREE_TIER_LIST },
@@ -34320,7 +34320,7 @@ function buildGcpFreeTier2026Page(): string {
   }
 
   const gotchas: GotchaItem[] = [
-    { title: "Egress charges", desc: "Premium Tier is the default. From us-central1 it costs $0.12 per GiB (up to 1,024 GiB) to North America, Europe and Asia (excluding Korea and Indonesia), and up to $0.23 elsewhere. The Free Tier covers 1 GB a month from North America to every destination except China and Australia, on Premium Tier only; Cloud Storage's Free Tier adds 100 GB. Standard Tier's first 200 GiB a month are free, per account. Cross-region transfer is also billed.", cost: "$0.12–0.23/GiB" },
+    { title: "Egress charges", desc: "Premium Tier is the default. From us-central1 it costs $0.12 per GiB (up to 1,024 GiB) to North America, Europe and Asia (excluding Korea and Indonesia), and up to $0.23 elsewhere. Compute Engine's Free Tier covers 1 GB a month from North America to every destination except China and Australia, on Premium Tier only. Cloud Storage's Free Tier covers 100 GB a month from buckets in us-west1, us-central1 or us-east1 to every destination except China and Australia, including Europe. Standard Tier's first 200 GiB a month are free, per account. Cross-region transfer is also billed.", cost: "$0.12–0.23/GiB" },
     { title: "e2-micro region restriction", desc: "The free e2-micro VM is only free in us-west1, us-central1, and us-east1. Launching in any other region (including Europe, Asia) will incur standard Compute Engine charges.", cost: "~$7/mo wrong region" },
     { title: "External IPv4 address", desc: "An external IPv4 address in use on a VM, including the free e2-micro, costs $0.005 an hour. The free tier covers one hour a month. A VM running all month pays about $3.65 for it. External IPv6 addresses are free. An ephemeral address is charged only while the VM runs.", cost: "~$3.65/mo always on", links: [{ text: "costs $0.005 an hour", url: "https://cloud.google.com/vpc/network-pricing" }] },
     { title: "Console disk default", desc: "The free tier covers 30 GB-months of standard persistent disk. A disk created in the Google Cloud console defaults to balanced persistent disk, which the free tier does not cover (about $0.10 per GiB a month in us-central1, about $3 for 30 GiB). Choose Standard persistent disk, or create the VM with the gcloud CLI, which defaults to standard.", cost: "~$3/mo for 30 GB", links: [{ text: "defaults to balanced persistent disk", url: "https://docs.cloud.google.com/compute/docs/disks/persistent-disks" }] },
@@ -36095,8 +36095,8 @@ ${globalNavCss()}
       </tr>
       <tr>
         <td class="provider-col">GCP</td>
-        <td>Cloud Storage: 5 GB regional</td>
-        <td>100 GB egress from North America; Cloud CDN not free</td>
+        <td>Cloud Storage: 5 GB Standard in us-east1, us-west1 or us-central1</td>
+        <td>100 GB/mo free egress to anywhere except China and Australia, including Europe; Cloud CDN not free</td>
         <td style="color:#3fb950">Always free (storage)</td>
       </tr>
       <tr>
@@ -36216,7 +36216,7 @@ ${globalNavCss()}
 
   <div class="diff-card" style="border-left-color:#d29922">
     <h3>GCP <span style="font-size:.75rem;color:#d29922;font-weight:400">Moderate gotchas</span></h3>
-    <p class="diff-desc"><strong>Egress charges:</strong> $0.12/GB to internet (higher than AWS). <strong>Firestore pricing confusion:</strong> Native mode vs Datastore mode have different pricing and limits. <strong>Region restrictions:</strong> Free e2-micro VM only in us-west1, us-central1, us-east1. <strong>Cloud SQL not free:</strong> Managed PostgreSQL/MySQL starts at $7/mo — use Firestore or an external DB.</p>
+    <p class="diff-desc"><strong>Egress charges:</strong> $0.12/GB to internet past the free allowance (100 GB a month from Cloud Storage, 1 GB from Compute Engine), higher than AWS. <strong>Firestore pricing confusion:</strong> Native mode vs Datastore mode have different pricing and limits. <strong>Region restrictions:</strong> Free e2-micro VM only in us-west1, us-central1, us-east1. <strong>Cloud SQL not free:</strong> Managed PostgreSQL/MySQL starts at $7/mo — use Firestore or an external DB.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
@@ -41306,7 +41306,7 @@ ${globalNavCss()}
         <td class="provider-col">Google Cloud Storage</td>
         <td>Object</td>
         <td>5 GB-mo</td>
-        <td>100 GB/mo from North America</td>
+        <td>100 GB/mo to anywhere except China and Australia</td>
         <td class="check">&#10003; Interop</td>
         <td class="partial">Cloud CDN sep.</td>
         <td class="check">&#10003;</td>
@@ -41475,7 +41475,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Google Cloud Storage</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 5 GB-months/month in US regions (us-east1, us-west1, us-central1). 5,000 Class A ops, 50,000 Class B ops, 100 GB egress from North America per month. <strong>Always Free</strong> &mdash; does not expire. S3 interoperability mode available. Egress at $0.12/GB is even more expensive than S3. Integrated with BigQuery, Cloud Functions, and other GCP services. Best for GCP-native apps or when you need the Always Free guarantee.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 GB-months of Standard storage a month in us-east1, us-west1 and us-central1 only. 5,000 Class A ops, 50,000 Class B ops. The free 100 GB of egress a month covers data sent from those regions to visitors anywhere except China and Australia, including Europe. <strong>Always Free</strong> &mdash; does not expire. S3 interoperability mode available. Egress at $0.12/GB is even more expensive than S3. Integrated with BigQuery, Cloud Functions, and other GCP services. Best for GCP-native apps or when you need the Always Free guarantee.</div>
   </div>
 
   <div class="diff-card">
