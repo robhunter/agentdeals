@@ -21,7 +21,7 @@ const env = { ...process.env, TZ: "UTC", AGENTDEALS_INDEX_PATH: indexPath, AGENT
 delete env.TEST_SHARD;
 const files = readdirSync(join(root, "test")).filter(name => name.endsWith(".test.ts")).filter(name => {
   const source = readFileSync(join(root, "test", name), "utf8");
-  return /withoutItsOwnConditions|plainConditionsByVendor|SoftwareApplication|nodeDescriptionOf|groq|mistral|google.gemini|xai|ollama.cloud|deepseek/i.test(source)
+  return /withoutItsOwnConditions|plainConditionsByVendor|SoftwareApplication|nodeDescriptionOf|groq|mistral|gemini|xai|ollama|deepseek/i.test(source)
     || /^(?:conditions-|page-data-provenance|page-lastmod|change-entry-date-provenance)/.test(name);
 }).sort();
 const run = args => {
