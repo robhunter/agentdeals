@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-04",
+  "generated": "2026-11-05",
   "pages": {
     "/": {
       "daily": true
@@ -30,7 +30,8 @@
       "changed": "2026-11-04"
     },
     "/alternative-to": {
-      "daily": true
+      "hash": "cfba35b254467b3d",
+      "changed": "2026-11-05"
     },
     "/alternative-to/360-monitoring": {
       "daily": true
@@ -3096,7 +3097,8 @@
       "changed": "2026-11-03"
     },
     "/digest/2026-w45": {
-      "daily": true
+      "hash": "892bf8d20393e8ce",
+      "changed": "2026-11-05"
     },
     "/digest/2026-w47": {
       "hash": "0009b800d774738a",
@@ -3613,7 +3615,8 @@
       "changed": "2026-10-31"
     },
     "/security-alternatives": {
-      "daily": true
+      "hash": "60c1d3fb85e33b09",
+      "changed": "2026-11-05"
     },
     "/security-free-tier-comparison-2026": {
       "hash": "92caec58f77b8a47",
@@ -3635,7 +3638,8 @@
       "changed": "2026-11-04"
     },
     "/stack-check": {
-      "daily": true
+      "hash": "20189dde41e548fd",
+      "changed": "2026-11-05"
     },
     "/stacks": {
       "hash": "afb7cc5e54e5b9d8",
@@ -3893,7 +3897,8 @@
       "changed": "2026-10-09"
     },
     "/trends/security": {
-      "daily": true
+      "hash": "d1e2ff3c178b7bc6",
+      "changed": "2026-11-05"
     },
     "/trends/server-management": {
       "hash": "2e33c16231999cde",
@@ -8283,7 +8288,8 @@
       "daily": true
     },
     "/vendor/semgrep": {
-      "daily": true
+      "hash": "1df3f0ea9044f70b",
+      "changed": "2026-11-05"
     },
     "/vendor/sendbird": {
       "hash": "36f5dd26af1b0a68",
