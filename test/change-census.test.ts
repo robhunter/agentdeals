@@ -57,7 +57,7 @@ const TRACKED_NOUN_PATTERNS = [
 ];
 
 const NAMES_A_WINDOW =
-  /Q[1-4]\s*20\d\d|\b20\d\d\s*[–—-]\s*20\d\d|last\s+\d+\s+days|this week|during\b|between\b|\bin\s+(?:week\s+\d+|20\d\d)\b|\bin\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\b/i;
+  /\bupcoming\b|Q[1-4]\s*20\d\d|\b20\d\d\s*[–—-]\s*20\d\d|last\s+\d+\s+days|this week|during\b|between\b|\bin\s+(?:week\s+\d+|20\d\d)\b|\bin\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\b/i;
 
 const COUNTS_SOMETHING_ELSE = /\bof\b/i;
 
