@@ -208,6 +208,68 @@
           "quote": "Sandboxes do not yet provide public URLs for accessing applications running inside them.",
           "url": "https://render.com/docs/sandboxes",
           "read_on": "2026-10-29"
+        },
+        {
+          "text": "Render offers Free instances only for static sites, web services, Postgres and Key Value. Background workers and cron jobs need a paid compute plan.",
+          "quote": "Other service types don't support Free instances.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05"
+        },
+        {
+          "text": "Render bills for build pipeline minutes used beyond the monthly included amount, unless the spend limit is reached. Without a payment method or at the limit, Render disables new builds for the rest of the month, and services keep running on their existing builds.",
+          "quote": "If you haven't added a payment method or you reach your spend limit, Render instead disables all new builds for your workspace for the remainder of the month.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Render free web services lack scaling beyond one instance, persistent disks, edge caching, one-off jobs, and SSH or dashboard shell access.",
+          "quote": "Free web services don't support the following features of paid compute plans:",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Render free web services cannot receive private network traffic. They can send private network requests to data stores and paid services in the same region.",
+          "quote": "Free web services can't receive private network traffic.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Render workspace plan upgrades do not remove free instance limits. A service's compute plan is changed separately.",
+          "quote": "Upgrading your workspace plan does not remove limitations on Free instances.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "While a Free web service is spun down, Render serves a standard disallow-all /robots.txt response. These requests do not reach the service or trigger a spin-up.",
+          "quote": "While a Free web service is spun down, incoming requests to the path /robots.txt automatically receive a standard \"disallow all\" response",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "A free Render Key Value instance loses its data when upgraded to a paid compute plan.",
+          "quote": "If you upgrade a Free Render Key Value instance to a paid compute plan, its data is lost during the upgrade process.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Render Free web services allow rollbacks to only the two most recent previous deploys.",
+          "quote": "Rollbacks (only to the two most recent previous deploys)",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Render may suspend free web services with unusually high outbound traffic, such as accessing external databases or APIs. Moving to a paid plan restores the service.",
+          "quote": "Render may suspend a Free web service that initiates an uncommonly high volume of traffic over the public internet.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
         }
       ],
       "official_mcp_servers": [
@@ -35832,7 +35894,7 @@
     {
       "vendor": "Google Cloud Storage",
       "category": "Storage",
-      "description": "Always Free: 5 GB regional storage (US regions), 5K Class A ops/month, 50K Class B ops/month, 100 GB North America egress",
+      "description": "Always Free: 5 GB-months of Standard storage in us-east1, us-west1 or us-central1 only, 5K Class A ops/month, 50K Class B ops/month, 100 GB North America egress. The free 100 GB a month covers data sent from a bucket in us-east1, us-west1 or us-central1 to visitors anywhere except China and Australia, including Europe.",
       "tier": "Always Free",
       "url": "https://cloud.google.com/storage/pricing",
       "tags": [
@@ -38085,7 +38147,7 @@
     {
       "vendor": "Amazon Kiro",
       "category": "AI Coding",
-      "description": "AI coding tool by AWS, with an IDE, a CLI and a web interface. Prompts run by default on Auto, \"an agent that uses a mix of different frontier models\", and users can pick Claude, GPT or open-weight models. KIRO FREE $0 per month 50 credits. KIRO PRO $20 per user / month 1,000 credits. KIRO PRO+ $40 per user / month 2,000 credits. KIRO PRO MAX $100 per user / month 5,000 credits. KIRO POWER $200 per user / month 10,000 credits. Add-on credits are $0.04/credit. From November 1, 2026, the first upgrade to Pro includes the rest of that month free and 500 trial credits. Trial credits are used after plan credits and expire after 12 months. On the free tier, unused trial credits carry over but can only be spent on free-tier models. Before November 1, 2026, the first upgrade includes a $20 discount. From that date, plan fees and credits are prorated.",
+      "description": "AI coding tool by AWS, with an IDE, a CLI and a web interface. Prompts run by default on Auto, \"an agent that uses a mix of different frontier models\", and users can pick Claude, GPT or open-weight models. KIRO FREE $0 per month 50 credits. KIRO PRO $20 per user / month 1,000 credits. KIRO PRO+ $40 per user / month 2,000 credits. KIRO PRO MAX $100 per user / month 5,000 credits. KIRO POWER $200 per user / month 10,000 credits. Add-on credits are $0.04/credit. Credit pooling is for teams of 2 or more. Each seat costs $20 per month and adds 500 credits a month to the shared pool. Admins can buy add-on credits for the pool at $0.04 per credit. From November 1, 2026, the first upgrade to Pro includes the rest of that month free and 500 trial credits. Trial credits are used after plan credits and expire after 12 months. On the free tier, unused trial credits carry over but can only be spent on free-tier models. Before November 1, 2026, the first upgrade includes a $20 discount. From that date, plan fees and credits are prorated.",
       "tier": "Free",
       "url": "https://kiro.dev/pricing",
       "tags": [

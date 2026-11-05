@@ -34276,7 +34276,7 @@ function buildGcpFreeTier2026Page(): string {
     { name: "Cloud Shell", slug: "google-cloud-shell", limits: "5 GB persistent home directory, web-based terminal with built-in tools", category: "Dev Tools", source: GOOGLE_FREE_TIER_LIST },
     { name: "BigQuery", slug: "google-cloud-bigquery", limits: "1 TiB queries/month, 10 GiB storage", category: "Analytics", source: GOOGLE_FREE_TIER_LIST },
     { name: "Firestore", slug: "firebase", limits: "1 GiB storage, 50K reads/day, 20K writes/day, 20K deletes/day", category: "Database", source: GOOGLE_FREE_TIER_LIST },
-    { name: "Cloud Storage", slug: "google-cloud-storage", limits: "5 GB-months Standard (us-west1, us-central1, us-east1), 5K Class A ops, 50K Class B ops", category: "Storage", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Storage", slug: "google-cloud-storage", limits: "5 GB-months Standard (us-west1, us-central1, us-east1), 5K Class A ops, 50K Class B ops, 100 GB egress a month to anywhere except China and Australia", category: "Storage", source: GOOGLE_FREE_TIER_LIST },
     { name: "Pub/Sub", slug: "google-cloud-pub-sub", limits: "10 GiB messages/month", category: "Messaging", source: GOOGLE_FREE_TIER_LIST },
     { name: "Datastream", slug: "google-cloud", limits: "100 GiB of change data capture a month per billing account (AlloyDB or Spanner to BigQuery)", category: "Data", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Build", slug: "google-cloud-build", limits: "2,500 build-minutes/month (e2-standard-2)", category: "CI/CD", source: GOOGLE_FREE_TIER_LIST },
@@ -34320,7 +34320,7 @@ function buildGcpFreeTier2026Page(): string {
   }
 
   const gotchas: GotchaItem[] = [
-    { title: "Egress charges", desc: "Premium Tier is the default. From us-central1 it costs $0.12 per GiB (up to 1,024 GiB) to North America, Europe and Asia (excluding Korea and Indonesia), and up to $0.23 elsewhere. The Free Tier covers 1 GB a month from North America to every destination except China and Australia, on Premium Tier only; Cloud Storage's Free Tier adds 100 GB. Standard Tier's first 200 GiB a month are free, per account. Cross-region transfer is also billed.", cost: "$0.12–0.23/GiB" },
+    { title: "Egress charges", desc: "Premium Tier is the default. From us-central1 it costs $0.12 per GiB (up to 1,024 GiB) to North America, Europe and Asia (excluding Korea and Indonesia), and up to $0.23 elsewhere. Compute Engine's Free Tier covers 1 GB a month from North America to every destination except China and Australia, on Premium Tier only. Cloud Storage's Free Tier covers 100 GB a month from buckets in us-west1, us-central1 or us-east1 to every destination except China and Australia, including Europe. Standard Tier's first 200 GiB a month are free, per account. Cross-region transfer is also billed.", cost: "$0.12–0.23/GiB" },
     { title: "e2-micro region restriction", desc: "The free e2-micro VM is only free in us-west1, us-central1, and us-east1. Launching in any other region (including Europe, Asia) will incur standard Compute Engine charges.", cost: "~$7/mo wrong region" },
     { title: "External IPv4 address", desc: "An external IPv4 address in use on a VM, including the free e2-micro, costs $0.005 an hour. The free tier covers one hour a month. A VM running all month pays about $3.65 for it. External IPv6 addresses are free. An ephemeral address is charged only while the VM runs.", cost: "~$3.65/mo always on", links: [{ text: "costs $0.005 an hour", url: "https://cloud.google.com/vpc/network-pricing" }] },
     { title: "Console disk default", desc: "The free tier covers 30 GB-months of standard persistent disk. A disk created in the Google Cloud console defaults to balanced persistent disk, which the free tier does not cover (about $0.10 per GiB a month in us-central1, about $3 for 30 GiB). Choose Standard persistent disk, or create the VM with the gcloud CLI, which defaults to standard.", cost: "~$3/mo for 30 GB", links: [{ text: "defaults to balanced persistent disk", url: "https://docs.cloud.google.com/compute/docs/disks/persistent-disks" }] },
@@ -36095,8 +36095,8 @@ ${globalNavCss()}
       </tr>
       <tr>
         <td class="provider-col">GCP</td>
-        <td>Cloud Storage: 5 GB regional</td>
-        <td>100 GB egress from North America; Cloud CDN not free</td>
+        <td>Cloud Storage: 5 GB Standard in us-east1, us-west1 or us-central1</td>
+        <td>100 GB/mo free egress to anywhere except China and Australia, including Europe; Cloud CDN not free</td>
         <td style="color:#3fb950">Always free (storage)</td>
       </tr>
       <tr>
@@ -36216,7 +36216,7 @@ ${globalNavCss()}
 
   <div class="diff-card" style="border-left-color:#d29922">
     <h3>GCP <span style="font-size:.75rem;color:#d29922;font-weight:400">Moderate gotchas</span></h3>
-    <p class="diff-desc"><strong>Egress charges:</strong> $0.12/GB to internet (higher than AWS). <strong>Firestore pricing confusion:</strong> Native mode vs Datastore mode have different pricing and limits. <strong>Region restrictions:</strong> Free e2-micro VM only in us-west1, us-central1, us-east1. <strong>Cloud SQL not free:</strong> Managed PostgreSQL/MySQL starts at $7/mo — use Firestore or an external DB.</p>
+    <p class="diff-desc"><strong>Egress charges:</strong> $0.12/GB to internet past the free allowance (100 GB a month from Cloud Storage, 1 GB from Compute Engine), higher than AWS. <strong>Firestore pricing confusion:</strong> Native mode vs Datastore mode have different pricing and limits. <strong>Region restrictions:</strong> Free e2-micro VM only in us-west1, us-central1, us-east1. <strong>Cloud SQL not free:</strong> Managed PostgreSQL/MySQL starts at $7/mo — use Firestore or an external DB.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
@@ -41306,7 +41306,7 @@ ${globalNavCss()}
         <td class="provider-col">Google Cloud Storage</td>
         <td>Object</td>
         <td>5 GB-mo</td>
-        <td>100 GB/mo from North America</td>
+        <td>100 GB/mo to anywhere except China and Australia</td>
         <td class="check">&#10003; Interop</td>
         <td class="partial">Cloud CDN sep.</td>
         <td class="check">&#10003;</td>
@@ -41475,7 +41475,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Google Cloud Storage</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 5 GB-months/month in US regions (us-east1, us-west1, us-central1). 5,000 Class A ops, 50,000 Class B ops, 100 GB egress from North America per month. <strong>Always Free</strong> &mdash; does not expire. S3 interoperability mode available. Egress at $0.12/GB is even more expensive than S3. Integrated with BigQuery, Cloud Functions, and other GCP services. Best for GCP-native apps or when you need the Always Free guarantee.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 GB-months of Standard storage a month in us-east1, us-west1 and us-central1 only. 5,000 Class A ops, 50,000 Class B ops. The free 100 GB of egress a month covers data sent from those regions to visitors anywhere except China and Australia, including Europe. <strong>Always Free</strong> &mdash; does not expire. S3 interoperability mode available. Egress at $0.12/GB is even more expensive than S3. Integrated with BigQuery, Cloud Functions, and other GCP services. Best for GCP-native apps or when you need the Always Free guarantee.</div>
   </div>
 
   <div class="diff-card">
@@ -49890,9 +49890,17 @@ function buildExpiringPage(): string {
   const todayMs = new Date(today + "T00:00:00Z").getTime();
 
   const thirtyDaysAgo = new Date(todayMs - 30 * 86400000).toISOString().slice(0, 10);
-  const upcoming = eventDated.filter(c => c.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+  const records = vendorRecordsDatedAfter(everyRecord, today);
+  const stated = deadlinesOurTextStates(everyRecord, records, today);
+  const upcoming = deadlineLinesOf([...records, ...eventDated.filter(c => c.date === today)], stated);
+  const upcomingRecords = new Set(upcoming.flatMap(line => line.citedRecord ? [line.citedRecord] : []));
+  for (const record of undatedChanges) {
+    const displayedDeadline = statedDeadlines(deadlineTextsOf([], [record]), [], today)
+      .some(deadline => upcoming.some(line => line.vendor === deadline.vendor && line.date === deadline.date));
+    if (displayedDeadline) upcomingRecords.add(record);
+  }
   const recent = eventDated.filter(c => c.date < today && c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
-  const recentlyDiscovered = undatedChanges.filter(c => c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
+  const recentlyDiscovered = undatedChanges.filter(c => c.date >= thirtyDaysAgo && !upcomingRecords.has(c)).sort((a, b) => b.date.localeCompare(a.date));
 
   const upcomingByMonth = new Map<string, typeof upcoming>();
   for (const c of upcoming) {
@@ -49917,24 +49925,24 @@ function buildExpiringPage(): string {
     return { text: `in ${diff} days`, urgent: false };
   }
 
-  function buildEntry(c: typeof allChanges[0], showCountdown: boolean): string {
-    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-    const impactColor = changeImpactColor(c.impact);
-    const dated = isEventDated(c);
-    const countdown = showCountdown && dated ? countdownLabel(c.date) : null;
+  function buildEntry(line: DeadlineLine, showCountdown: boolean): string {
+    const c = line.citedRecord;
+    const badge = c ? changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" } : null;
+    const dated = line.datedRecord ? isEventDated(line.datedRecord) : true;
+    const countdown = showCountdown ? countdownLabel(line.date) : null;
     const urgentClass = countdown?.urgent ? " entry-urgent" : "";
     return `      <div class="exp-entry${urgentClass}${dated ? "" : " exp-undated"}">
         <div class="exp-left">
           ${countdown ? `<div class="exp-countdown${countdown.urgent ? " exp-countdown-urgent" : ""}">${countdown.text}</div>` : ""}
-          <div class="exp-date${dated ? "" : " exp-date-unknown"}">${changeEntryDateLabel(c)}</div>
+          <div class="exp-date${dated ? "" : " exp-date-unknown"}">${escHtmlServer(line.dateLabel)}</div>
         </div>
         <div class="exp-right">
           <div class="exp-head">
-            <span class="badge" style="background:${badge.color}">${badge.label}</span>
-            ${changeVendorLinkHtml(c.vendor, ' class="exp-vendor"')}
-            <span class="exp-impact" style="color:${impactColor}">${c.impact}</span>
+            ${badge ? `<span class="badge" style="background:${badge.color}">${badge.label}</span>` : ""}
+            ${changeVendorLinkHtml(line.vendor, ' class="exp-vendor"')}
+            ${c ? `<span class="exp-impact" style="color:${changeImpactColor(c.impact)}">${c.impact}</span>` : ""}
           </div>
-          <div class="exp-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
+          <div class="exp-summary">${line.summaryHtml}</div>
         </div>
       </div>`;
   }
@@ -49946,8 +49954,6 @@ function buildExpiringPage(): string {
 ${entriesHtml}
     </div>`;
   }).join("\n");
-
-  const recentHtml = recent.length > 0 ? recent.map(c => buildEntry(c, false)).join("\n") : "";
 
   const totalUpcoming = upcoming.length;
   const urgentCount = upcoming.filter(c => {
@@ -49966,15 +49972,22 @@ ${entriesHtml}
     description: metaDesc,
     numberOfItems: totalUpcoming + recent.length + recentlyDiscovered.length,
     url: `${BASE_URL}/expiring`,
-    itemListElement: capListSections([upcoming, recent, recentlyDiscovered], 50).map((c, i) => ({
+    itemListElement: capListSections([
+      upcoming.map(line => {
+        const deadline = stated.find(s => s.vendor === line.vendor && s.date === line.date);
+        return { line, description: deadline ? statedSentenceWithAnyConditions(deadline) : line.sentence };
+      }),
+      recent.map(c => ({ line: recordDeadlineLine(c), description: c.summary })),
+      recentlyDiscovered.map(c => ({ line: recordDeadlineLine(c), description: c.summary })),
+    ], 50).map(({ line, description }, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
         "@type": "NewsArticle",
-        headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
-        description: c.summary,
-        ...changeDatePublished(c),
-        ...changeVendorUrlField(c.vendor),
+        headline: line.citedRecord ? `${line.vendor}: ${(changeTypeBadge[line.citedRecord.change_type] ?? { label: line.citedRecord.change_type }).label}` : line.vendor,
+        description,
+        ...(line.datedRecord ? changeDatePublished(line.datedRecord) : { datePublished: line.date }),
+        ...changeVendorUrlField(line.vendor),
         publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
       },
     })),
@@ -50050,7 +50063,7 @@ ${globalNavCss()}
   ${buildGlobalNav("expiring")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Expiring</div>
   <h1>Upcoming Free Tier Changes</h1>
-  <p class="page-intro">Free tiers disappearing, prices increasing, products shutting down. Don\u2019t get caught off guard.</p>
+  <p class="page-intro">${totalUpcoming} upcoming pricing changes tracked. Free tiers disappearing, prices increasing, products shutting down. Don\u2019t get caught off guard.</p>
   ${datedSectionNoticeHtml(
     `A change is grouped under the month its effective date falls in while that date is ${today} or later. A change whose effective date we do not hold is grouped instead by the day we discovered it, under Recently Discovered, and leaves that section 30 days after that day.`,
     [
@@ -50059,6 +50072,7 @@ ${globalNavCss()}
     ],
     escHtmlServer,
     ' class="page-intro dated-rule"',
+    statedDatesShownWhileLaterThan(today),
   )}
 
   <div class="stats-bar">
@@ -50088,14 +50102,14 @@ ${recent.length > 0 ? `  <div class="recent-section" id="recently-changed">
     <p class="recent-desc">${recent.length} pricing changes in the last 30 days.</p>
     <button class="recent-toggle" onclick="document.querySelector('.recent-entries').classList.toggle('show');this.textContent=this.textContent==='Show recent changes'?'Hide recent changes':'Show recent changes'">Show recent changes</button>
     <div class="recent-entries">
-${recent.map(c => buildEntry(c, false)).join("\n")}
+${recent.map(c => buildEntry(recordDeadlineLine(c), false)).join("\n")}
     </div>
   </div>` : ""}
 
 ${recentlyDiscovered.length > 0 ? `  <div class="recent-section">
     <h2>Recently Discovered</h2>
     <p class="recent-desc">${recentlyDiscovered.length} ${recentlyDiscovered.length === 1 ? "change" : "changes"} we found in the last 30 days whose effective date the vendor’s page does not state. They are dated by discovery and are not counted as upcoming or as recently changed.</p>
-${recentlyDiscovered.map(c => buildEntry(c, false)).join("\n")}
+${recentlyDiscovered.map(c => buildEntry(recordDeadlineLine(c), false)).join("\n")}
   </div>` : ""}
 
   <div class="mcp-cta">

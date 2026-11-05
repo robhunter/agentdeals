@@ -57,7 +57,7 @@ const TRACKED_NOUN_PATTERNS = [
 ];
 
 const NAMES_A_WINDOW =
-  /Q[1-4]\s*20\d\d|\b20\d\d\s*[–—-]\s*20\d\d|last\s+\d+\s+days|this week|during\b|between\b|\bin\s+(?:week\s+\d+|20\d\d)\b|\bin\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\b/i;
+  /\bupcoming\b|Q[1-4]\s*20\d\d|\b20\d\d\s*[–—-]\s*20\d\d|last\s+\d+\s+days|this week|during\b|between\b|\bin\s+(?:week\s+\d+|20\d\d)\b|\bin\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\b/i;
 
 const COUNTS_SOMETHING_ELSE = /\bof\b/i;
 
@@ -203,6 +203,15 @@ describe("every published total is the tracked count or names the slice it is", 
     }
     assert.ok(seen >= SURFACES_THAT_PUBLISH_A_TOTAL.length, `only ${seen} totals found, so the check proves nothing`);
     assert.deepStrictEqual(wrong, []);
+  });
+
+  it("distinguishes an upcoming subset from the whole log in the sentence that names it", () => {
+    for (const sentence of ["48 upcoming pricing changes tracked.", "48 pricing changes tracked are upcoming."]) {
+      assert.strictEqual(claimsTheWholeLog(sentence, sentence.indexOf("48")), false, sentence);
+    }
+    for (const sentence of ["470 pricing changes tracked.", "470 pricing changes tracked. 48 upcoming changes.", "48 upcoming changes. 470 pricing changes tracked."]) {
+      assert.strictEqual(claimsTheWholeLog(sentence, sentence.indexOf("470")), true, sentence);
+    }
   });
 
   it("reads a stat tile as one sentence, and does not read the tile beside it as part of the same one", () => {
