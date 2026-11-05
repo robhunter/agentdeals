@@ -220,9 +220,11 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
     assert.ok(dated, "the guide must name the models with a Gemini API shutdown date");
     assert.deepStrictEqual(modelsIn(dated[1]), ["gemini-2.5-pro", "gemini-2.5-flash"]);
     const october = retirementRecordDated("October 20, 2026");
-    assert.ok(october.summary.startsWith(
-      `On the Gemini API, ${dated[1]} can be used until ${longDate(dated[2])}, and gemini-2.5-flash-lite has no shutdown date.`,
-    ));
+    const shutdown = october.summary.match(/On the Gemini API, Google shuts down (.*?) on ([A-Z][a-z]+ \d{1,2}, \d{4})\./);
+    assert.ok(shutdown, "the record must state the Gemini API shutdown separately from Agent Platform");
+    assert.deepStrictEqual(modelsIn(shutdown[1]), modelsIn(dated[1]));
+    assert.strictEqual(shutdown[2], longDate(dated[2]));
+    assert.match(october.summary, /gemini-2\.5-flash-lite has no shutdown date on the Gemini API\./);
     assert.ok(text.includes("gemini-2.5-flash-lite and gemini-3.6-flash have no shutdown date."));
     assert.match(retirementRecordDated("November 19, 2026").summary, /^The Gemini API keeps serving gemini-3\.6-flash with no shutdown date\./);
     assert.doesNotMatch(text, /none of these four models has a shutdown date/);
@@ -235,9 +237,15 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
 
   it("preserves the October Agent Platform retirement while dating the later Gemini API announcement", async () => {
     const record = retirementRecordDated("October 20, 2026");
-    assert.strictEqual(record.summary,
-      "On the Gemini API, gemini-2.5-pro and gemini-2.5-flash can be used until December 1, 2026, and gemini-2.5-flash-lite has no shutdown date. " +
-      "On Gemini Enterprise Agent Platform (formerly Vertex AI) they can be called until October 20, 2026, when Google retires them. Google names gemini-3.8-flash as a replacement for all three.");
+    const retirement = record.summary.match(/On Gemini Enterprise Agent Platform \(formerly Vertex AI\), Google retired (.*?) on ([A-Z][a-z]+ \d{1,2}, \d{4})\./);
+    assert.ok(retirement, "the record must name the models retired on Agent Platform");
+    const stated = retirementsStated(page).find(({ day }) => day === longDate(record.date));
+    assert.ok(stated);
+    assert.deepStrictEqual(modelsIn(retirement[1]), stated.models);
+    assert.strictEqual(retirement[2], stated.day);
+    const replacement = record.summary.match(/Google names (gemini-[\d.]+-[a-z-]+) as a replacement for all three\./)?.[1];
+    assert.ok(replacement);
+    assert.ok(withoutTags(prepayParagraph(page)).includes(`Change the model ID to ${replacement} before moving;`));
     assert.ok(record.current_state.endsWith("Google's Gemini API deprecations page (last updated 2026-10-12) gave the three models no shutdown date; on 2026-11-02 Google set December 1, 2026 for gemini-2.5-pro and gemini-2.5-flash."));
     const response = await fetch(base + "/shutdowns");
     assert.strictEqual(response.status, 200);
