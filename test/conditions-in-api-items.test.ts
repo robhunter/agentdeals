@@ -48,7 +48,7 @@ const scratchOffers: Offer[] = catalogue.offers.map((offer: Offer, index: number
   if (offerRetired(offer) || supersedingChange(offer, changesByVendor.get(offer.vendor.toLowerCase()) ?? [])) {
     return { ...offer, conditions: [conditionNaming(`Zqs${code}`)] };
   }
-  const conditions = [conditionNaming(`Zqc${code}`)];
+  const conditions = [conditionNaming(`Zqc${code}`), { ...conditionNaming(`Zqo${code}`), operating_detail: true as const }];
   conditionsByCode.set(code, conditions);
   vendorByCode.set(code, offer.vendor);
   const listedOn = listedToday ? {} : { verifiedDate: TODAY };

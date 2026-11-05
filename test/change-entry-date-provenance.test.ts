@@ -86,9 +86,15 @@ function isDateField(text: string, date: string): boolean {
   return remainder.length <= FIELD_SLACK;
 }
 
+function withoutAtomTimestamps(body: string): string {
+  if (!/^(?:<\?xml[^>]*>\s*)?<feed\b[^>]*\bxmlns=["']http:\/\/www\.w3\.org\/2005\/Atom["']/.test(body.trimStart())) return body;
+  return body.replace(/<!\[CDATA\[[\s\S]*?\]\]>|<(updated|published)>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})<\/\1>/g,
+    node => node.startsWith("<![CDATA[") ? node : " ");
+}
+
 function dateFields(body: string, date: string): string[] {
   const found: string[] = [];
-  const withoutScripts = body.replace(/<script[\s\S]*?<\/script>/gi, " ");
+  const withoutScripts = withoutAtomTimestamps(body).replace(/<script[\s\S]*?<\/script>/gi, " ");
   for (const node of withoutScripts.matchAll(/>([^<>]*)</g)) {
     const text = node[1].trim();
     if (!text.includes(date)) continue;
@@ -97,6 +103,26 @@ function dateFields(body: string, date: string): string[] {
   }
   return found;
 }
+
+describe("Atom timestamp constructs and entry date captions", () => {
+  const day = "2026-11-01";
+  const timestamp = `${day}T12:00:00.000Z`;
+  const feed = (content: string) => `<feed xmlns="http://www.w3.org/2005/Atom"><updated>${timestamp}</updated><entry><published>${timestamp}</published>${content}</entry></feed>`;
+
+  it("does not require an entry caption inside typed Atom timestamps", () => {
+    assert.deepStrictEqual(dateFields(feed(""), day), []);
+  });
+
+  it("still sees unlabeled and labeled entry dates inside feed content", () => {
+    const content = `<![CDATA[<p>${day}</p><p>${EFFECTIVE_DATE_PREFIX} ${day}</p><updated>${timestamp}</updated>]]>`;
+    assert.deepStrictEqual(dateFields(feed(content), day), [day, `${EFFECTIVE_DATE_PREFIX} ${day}`, timestamp]);
+  });
+
+  it("keeps detecting timestamp-shaped date fields in ordinary HTML", () => {
+    assert.deepStrictEqual(dateFields(`<html><updated>${timestamp}</updated><p>${day}</p></html>`, day), [timestamp, day]);
+    assert.deepStrictEqual(dateFields(`<html>${feed("")}</html>`, day), [timestamp, timestamp]);
+  });
+});
 
 const BROWSER_ASSEMBLED = ["/compare-tool", "/stack-check"];
 

@@ -45,7 +45,7 @@ import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type Comp
 import { gateStatesAnEnding, publishedVendorLevel, restorationClause, restoredRemovalReason, vendorVerdictSentence, withheldRecordCountsOf, WITHHOLDING_BADGE_LABELS, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, emptyHistoryBesideARefusalSentence, notRatedTodaySentence, recordedLimitSentence, refusalWithholdsTheTerms, WE_PUBLISH_NO_REFUSED_CHANGE, withTheConfirmationWeHold, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierMayCarryAFreePlanExcerpt, tierRecordsAFreeTier, tierWhoseFreeOfferIsTheLicence } from "./free-tier-record.js";
 import { whyTheExcerptCannotStand } from "./free-plan-excerpt-rules.js";
-import { alternativesUnderTheVendorsRule, conditionRulingOut, conditionsBesideStoredTerms, conditionsInPlainText, conditionsForTheBrowser, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, rowSpanningTheTableHtml, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, trialProductionAnswer, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
+import { alternativesUnderTheVendorsRule, conditionRulingOut, conditionsBesideStoredTerms, conditionsForOtherPages, conditionsInPlainText, conditionsForTheBrowser, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, rowSpanningTheTableHtml, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, trialProductionAnswer, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
 import { officialMcpPassage, withOfficialMcpPassages } from "./official-mcp.js";
 import { conditionsField } from "./conditions-field.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
@@ -856,7 +856,7 @@ function supersedingChangeFor(offer: StoredTermsOf): DealChange | null {
   return supersedingChange(offer, changesFor(offer.vendor));
 }
 
-function publishedTermsText(offer: Offer, includeOfficialMcp = false): string {
+function publishedTermsText(offer: Offer, includeOfficialMcp = false, includeOperatingDetails = false): string {
   const superseded = supersedingChangeFor(offer);
   if (superseded) {
     const notice = supersededTermsNotice(offer.vendor, superseded);
@@ -864,7 +864,7 @@ function publishedTermsText(offer: Offer, includeOfficialMcp = false): string {
   }
   const unconfirmed = reasonWeCannotConfirmFor(offer);
   const terms = unconfirmed ? termsWithTheReasonWeCannotConfirmThem(offer.description, unconfirmed) : offer.description;
-  const conditions = conditionsBesideTheStoredTerms(offer);
+  const conditions = conditionsBesideTheStoredTerms(offer, includeOperatingDetails);
   if (includeOfficialMcp && offer.official_mcp_servers?.length) {
     const described = withOfficialMcpPassages(conditions.length ? closingTerms(terms) : terms, offer);
     return conditions.length ? `${described} ${conditionsInPlainText(conditions)}` : described;
@@ -872,17 +872,18 @@ function publishedTermsText(offer: Offer, includeOfficialMcp = false): string {
   return withConditionsAfter(terms, conditions);
 }
 
-function conditionsBesideTheStoredTerms(offer: StoredTermsOf): readonly ListingCondition[] {
-  return conditionsBesideStoredTerms(offer, changesFor(offer.vendor));
+function conditionsBesideTheStoredTerms(offer: StoredTermsOf, includeOperatingDetails = false): readonly ListingCondition[] {
+  const conditions = conditionsBesideStoredTerms(offer, changesFor(offer.vendor));
+  return includeOperatingDetails ? conditions : conditionsForOtherPages(conditions);
 }
 
-function conditionsAfterTheTermsHtml(offer: StoredTermsOf): string {
-  return conditionsHtml(conditionsBesideTheStoredTerms(offer), escHtmlServer);
+function conditionsAfterTheTermsHtml(offer: StoredTermsOf, includeOperatingDetails = false): string {
+  return conditionsHtml(conditionsBesideTheStoredTerms(offer, includeOperatingDetails), escHtmlServer);
 }
 
-function vendorPageConditionsHtml(vendorName: string): string {
+function vendorPageConditionsHtml(vendorName: string, includeOperatingDetails = false): string {
   const primary = vendorVerdictContext(vendorName, utcDate())?.primary;
-  return primary ? conditionsAfterTheTermsHtml(primary) : "";
+  return primary ? conditionsAfterTheTermsHtml(primary, includeOperatingDetails) : "";
 }
 
 function vendorPageConditionsHtmlForSlug(slug: string): string {
@@ -2421,8 +2422,8 @@ function listingEligibilityNoticeHtml(offer: Offer): string {
   return `<span class="listing-eligibility-restricted" style="display:block;margin-top:.3rem;color:#d29922">${escHtmlServer(gate.reason)}${conditionsHtml}</span>`;
 }
 
-function listingTermsAndNoticesHtml(offer: Offer, includeOfficialMcp = false): string {
-  return `${storedTermsHtml(offer)}${includeOfficialMcp ? officialMcpParagraphsHtml(offer) : ""}${conditionsAfterTheTermsHtml(offer)}${listingEligibilityNoticeHtml(offer)}${listingUnreachableNoticeHtml(offer)}${termsUnconfirmedNoticeHtml(offer)}`;
+function listingTermsAndNoticesHtml(offer: Offer, includeOfficialMcp = false, includeOperatingDetails = false): string {
+  return `${storedTermsHtml(offer)}${includeOfficialMcp ? officialMcpParagraphsHtml(offer) : ""}${conditionsAfterTheTermsHtml(offer, includeOperatingDetails)}${listingEligibilityNoticeHtml(offer)}${listingUnreachableNoticeHtml(offer)}${termsUnconfirmedNoticeHtml(offer)}`;
 }
 
 function buildCategoryPage(slug: string): string | null {
@@ -5517,11 +5518,11 @@ function freeTierSourceLineHtml(offer: Offer, changes: readonly DealChange[], se
   return `\n    <p class="free-tier-source-line" style="margin:.5rem 0 0;font-size:.8rem;color:var(--text-dim)">${read}.${scope}</p>`;
 }
 
-function listingInFullHtml(slug: string): string {
+function listingInFullHtml(slug: string, includeOperatingDetails = false): string {
   const record = offerForSlug(slug);
   if (!record) return "";
   return `<div class="context-box listing-in-full">
-    <strong>${handwrittenVendorLinkHtml(slug, record.vendor, ' style="color:var(--text)"')}</strong> &mdash; ${storedTermsHtml(record)}${conditionsAfterTheTermsHtml(record)}${freeTierSourceLineHtml(record, changesFor(record.vendor), utcDate())}
+    <strong>${handwrittenVendorLinkHtml(slug, record.vendor, ' style="color:var(--text)"')}</strong> &mdash; ${storedTermsHtml(record)}${conditionsAfterTheTermsHtml(record, includeOperatingDetails)}${freeTierSourceLineHtml(record, changesFor(record.vendor), utcDate())}
   </div>`;
 }
 
@@ -5570,7 +5571,7 @@ function otherListingHtml(slug: string, offer: Offer): string {
         </div>
       </div>
       <div class="desc-block">
-        <div class="desc-text">${listingTermsAndNoticesHtml(offer, true)}</div>
+        <div class="desc-text">${listingTermsAndNoticesHtml(offer, true, true)}</div>
       </div>
     </div>`;
 }
@@ -6047,7 +6048,7 @@ ${allCompareLinks.join("\n")}
     ...eventResolutionFields(c),
     description: c.summary,
   }));
-  const primaryDescribedAs = publishedTermsText(primary, true);
+  const primaryDescribedAs = publishedTermsText(primary, true, true);
   const jsonLd: Record<string, any> = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -19571,7 +19572,7 @@ ${globalNavCss()}
   <p class="section-intro">Every cloud price in this table includes the primary IPv4 address. Cloud servers include at least 20 TB of outgoing traffic a month in the EU, 1 TB in the US and 0.5 TB in Singapore; incoming traffic is free.</p>
   <p class="section-intro">A new AX42 dedicated server in Germany costs ${eur(HETZNER_AX42_GERMANY.newOrder)} a month and a new AX102 ${eur(HETZNER_AX102_GERMANY.newOrder)}, excluding IPv4. The one-off setup fee is €${HETZNER_AX42_GERMANY.setupFee} for an AX42 and €${HETZNER_AX102_GERMANY.setupFee} for an AX102. These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}.</p>
   <p class="section-intro">New accounts can get €50 of credit with Hetzner's sign-up code, valid only for the billing period in which it is redeemed.</p>
-  ${vendorPageConditionsHtml("Hetzner")}
+  ${vendorPageConditionsHtml("Hetzner", true)}
 
   <h2 id="april">2. What the April 1 Adjustment Did</h2>
   <p class="section-intro">The April 1, 2026 round is the one this page was first written about. It applied to all regions and all customers, new and existing, with no grandfathering. These are historical figures for that event, not current prices — for what a plan costs now, use the table above.</p>
@@ -20322,6 +20323,13 @@ function sitePageLinksHtml(text: string, links: readonly { text: string; path: s
   return html + textHtml(text.slice(from));
 }
 
+function operatingDetailsOnTheVendorsGuideHtml(slug: string): string {
+  const offer = offerForSlug(slug);
+  const details = offer ? conditionsBesideTheStoredTerms(offer, true).filter(condition => condition.operating_detail === true) : [];
+  return details.length ? `
+  <section class="operating-details"><h2>Operating details</h2>${conditionsHtml(details, escHtmlServer)}</section>` : "";
+}
+
 function buildMistralApiPricingPage(prices: MistralPrices = mistralPrices): string {
   const title = prices.title;
   const metaDesc = prices.meta_description;
@@ -20404,7 +20412,7 @@ ${globalNavCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; ${escHtmlServer(title)}</div>
   <article class="mistral-guide">
   <h1>${escHtmlServer(title)}</h1>
-  <p class="section-intro">${text(prices.lead)}</p>
+  <p class="section-intro">${text(prices.lead)}</p>${operatingDetailsOnTheVendorsGuideHtml("mistral-ai")}
 
   <h2>${text(prices.prices.heading)}</h2>
   <p class="section-intro">${text(prices.prices.intro)}</p>
@@ -23421,7 +23429,7 @@ ${globalNavCss()}
     ${rateLimitChange ? `<p><strong>From our tracker:</strong> ${changeSummaryHtml(rateLimitChange, escHtmlServer)}</p>` : ""}
   </div>
 
-  ${listingInFullHtml(listedInFull)}
+  ${listingInFullHtml(listedInFull, true)}
 
   <div class="toc">
     <h3>In This Guide</h3>
@@ -34346,7 +34354,7 @@ function buildGcpFreeTier2026Page(): string {
   ];
 
   const conditionsInTheLimitsCell = (vendorName: string) => {
-    const list = vendorPageConditionsHtml(vendorName);
+    const list = vendorPageConditionsHtml(vendorName, vendorName === "Google Compute Engine");
     return list ? `<div style="font-family:var(--sans)">${list}</div>` : "";
   };
 
@@ -46944,7 +46952,7 @@ function buildStackCheckPage(): string {
     var RATED_LEVELS = ${JSON.stringify(RATED_LEVELS)};
     ${isRated.toString()}
     ${gradeForStack.toString()}
-    ${conditionsForTheBrowser()}
+    ${conditionsForTheBrowser(offers.some(offer => conditionsOf(offer).some(condition => condition.operating_detail === true)))}
 
     function usePreset(services) {
       document.getElementById('stack-input').value = services;
@@ -47283,7 +47291,7 @@ ${globalNavCss()}
   var PRESETS = ${JSON.stringify(presetMatchups)};
   var NEG_TYPES = ${JSON.stringify([...NEGATIVE_CHANGE_TYPES])};
   var POS_TYPES = ${JSON.stringify([...POSITIVE_CHANGE_TYPES])};
-  ${conditionsForTheBrowser()}
+  ${conditionsForTheBrowser(offers.some(offer => conditionsOf(offer).some(condition => condition.operating_detail === true)))}
   var EFFECTIVE_DATE_PREFIX = ${JSON.stringify(EFFECTIVE_DATE_PREFIX)};
   var DISCOVERED_DATE_PREFIX = ${JSON.stringify(DISCOVERED_DATE_PREFIX)};
   var UNKNOWN_EFFECTIVE_DATE_MARKER = ${JSON.stringify(UNKNOWN_EFFECTIVE_DATE_MARKER)};
@@ -50432,12 +50440,12 @@ function comingUpSectionHtml(today: string, listedInTheWeek: ReadonlySet<DealCha
 }
 
 function conditionsAfterAWholeDescriptionHtml(deadline: StatedDeadline): string {
-  return quotesTheWholeDescription(deadline) ? conditionsAfterTheTermsHtml(deadline.listing) : "";
+  return quotesTheWholeDescription(deadline) ? conditionsAfterTheTermsHtml(deadline.listing, true) : "";
 }
 
 function statedSentenceWithAnyConditions(deadline: StatedDeadline): string {
   return quotesTheWholeDescription(deadline)
-    ? withConditionsAfter(deadline.sentence, conditionsBesideTheStoredTerms(deadline.listing))
+    ? withConditionsAfter(deadline.sentence, conditionsBesideTheStoredTerms(deadline.listing, true))
     : deadline.sentence;
 }
 
@@ -52843,7 +52851,7 @@ ${buildBrowseSection()}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>
-${conditionsForTheBrowser()}
+${conditionsForTheBrowser(offers.some(offer => conditionsOf(offer).some(condition => condition.operating_detail === true)))}
 function copyConfig(btn){
   var code=btn.parentElement.querySelector('code');
   if(!code)return;

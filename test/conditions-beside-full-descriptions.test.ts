@@ -14,6 +14,7 @@ type ListingCondition = import("../src/types.ts").ListingCondition;
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { offerRetired } = await import("../dist/retirement.js");
 const { LISTING_CONDITIONS_CLASS, VENDOR_CONDITIONS_ROW_CLASS } = await import("../dist/listing-conditions.js");
+const { toSlug } = await import("../dist/slug.js");
 const { isoWeekOf } = await import("../dist/change-dates.js");
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -43,6 +44,7 @@ function codeFor(index: number): string {
 const DESCRIPTION_TOKEN = "Zqd";
 const CONDITION_TOKEN = "Zqc";
 const SET_ASIDE_TOKEN = "Zqs";
+const OPERATING_TOKEN = "Zqo";
 const ANY_DESCRIPTION_TOKEN = /Zq[ds]([a-z]{3})\.(?!\.)/g;
 
 function withTokenAtTheEnd(description: string, token: string): string {
@@ -72,7 +74,7 @@ const scratchOffers: Offer[] = catalogue.offers.map((offer: Offer, index: number
   return {
     ...offer,
     description: withTokenAtTheEnd(offer.description, DESCRIPTION_TOKEN + code),
-    conditions: [conditionNaming(CONDITION_TOKEN + code)],
+    conditions: [conditionNaming(CONDITION_TOKEN + code), { ...conditionNaming(OPERATING_TOKEN + code), operating_detail: true }],
   };
 });
 
@@ -313,5 +315,93 @@ describe("a catalogue in which no listing states conditions", () => {
   it("prints no list of conditions on any route", () => {
     assertPopulationFloor(routesRead, 700, "routes read for a list of conditions");
     assert.deepStrictEqual(listed, []);
+  });
+});
+
+
+const GUIDES_KEEPING_OPERATING_DETAILS: Record<string, string> = {
+  ...GUIDES_PRINTING_THEIR_VENDORS_CONDITIONS,
+  "/gemini-api-pricing-2026": "Google Gemini API",
+  "/mistral-api-pricing-2026": "Mistral AI",
+};
+
+describe("operating details stay on the vendor page and that vendor's guide", () => {
+  let server: { proc: ChildProcess; base: string };
+  const printed = new Map<string, Set<string>>();
+  const unexpected: string[] = [];
+  let routesRead = 0;
+
+  before(async () => {
+    server = await startServer(scratchIndex);
+    const routes = new Set(await routesToRead(server.base));
+    const xml = await (await fetch(server.base + "/sitemap-vendors.xml")).text();
+    for (const match of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) routes.add(new URL(match[1]!).pathname);
+    for (const route of routes) {
+      const response = await fetch(server.base + route);
+      if (response.status !== 200) continue;
+      routesRead += 1;
+      const body = await response.text();
+      for (const match of body.matchAll(new RegExp(`${OPERATING_TOKEN}([a-z]{3})`, "g"))) {
+        const vendor = planted.get(match[1]!)!.vendor;
+        const allowed = route === `/vendor/${toSlug(vendor)}` || GUIDES_KEEPING_OPERATING_DETAILS[route] === vendor;
+        if (!allowed && !ROUTES_QUOTING_THE_ONE_SENTENCE_THAT_NAMES_A_DEADLINE.has(route) && !/^\/digest\/\d{4}-w\d{2}$/.test(route)) unexpected.push(`${route}: ${vendor}`);
+        const seen = printed.get(route) ?? new Set<string>();
+        seen.add(vendor);
+        printed.set(route, seen);
+      }
+    }
+  });
+
+  after(() => server?.proc.kill());
+
+  it("omits marked conditions on every other listing route, including structured data", () => {
+    assertPopulationFloor(routesRead, 1800, "routes read for operating details");
+    assert.deepStrictEqual([...new Set(unexpected)], []);
+  });
+
+  it("keeps marked conditions on all four own-vendor guides and their vendor pages", async () => {
+    for (const [route, vendor] of Object.entries(GUIDES_KEEPING_OPERATING_DETAILS)) {
+      assert.ok(printed.get(route)?.has(vendor), `${route}: ${vendor}`);
+      assert.ok(printed.get(`/vendor/${toSlug(vendor)}`)?.has(vendor), vendor);
+      const offer = scratchOffers.find(offer => offer.vendor === vendor)!;
+      const response = await fetch(server.base + `/api/details/${encodeURIComponent(vendor)}`);
+      const details = await response.json();
+      assert.deepStrictEqual(details.offer.conditions, offer.conditions, vendor);
+      const page = await (await fetch(server.base + `/vendor/${toSlug(vendor)}`)).text();
+      const token = OPERATING_TOKEN + codeFor(scratchOffers.indexOf(offer));
+      const structured = [...page.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(match => JSON.parse(match[1]!));
+      assert.ok(JSON.stringify(structured).includes(token), `${vendor}: structured conditions`);
+    }
+  });
+});
+
+
+describe("deadline and digest quotations retain operating details", () => {
+  it("keeps complete responses unchanged when only the condition marker changes", async () => {
+    const day = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+    const noted = conditionNaming("OperatingDetailsDeadline");
+    const offer: Offer = {
+      vendor: "Operating Details Deadline Co", category: "Databases", tier: "Free",
+      description: `The free API service shuts down on ${day}.`,
+      url: "https://conditions.example/api", tags: [], verifiedDate: TODAY,
+      conditions: [{ ...noted, operating_detail: true }],
+    };
+    const marked = await startServer(scratchCatalogue("deadline-marked.json", [...catalogue.offers, offer]));
+    const unmarked = await startServer(scratchCatalogue("deadline-unmarked.json", [...catalogue.offers, { ...offer, conditions: [noted] }]));
+    try {
+      const routes = ["/deadlines", "/shutdowns", "/this-week", digestRouteOfTheWeekHolding(day), "/digest/2024-w47", "/digest/2099-w01"];
+      let fullQuotationSeen = false;
+      for (const route of routes) {
+        const [left, right] = await Promise.all([fetch(marked.base + route), fetch(unmarked.base + route)]);
+        assert.strictEqual(left.status, right.status, route);
+        const [a, b] = await Promise.all([left.text(), right.text()]);
+        assert.strictEqual(a.replaceAll(marked.base, "BASE"), b.replaceAll(unmarked.base, "BASE"), route);
+        if (a.includes(offer.description) && a.includes(noted.text)) fullQuotationSeen = true;
+      }
+      assert.ok(fullQuotationSeen, "a whole-description quotation includes its marked condition");
+    } finally {
+      marked.proc.kill();
+      unmarked.proc.kill();
+    }
   });
 });

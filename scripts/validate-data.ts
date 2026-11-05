@@ -176,6 +176,9 @@ function conditionProblems(conditions: unknown): string[] {
     if (typeof fields.read_on === "string" && fields.read_on.trim() !== "" && !ISO_DATE_REGEX.test(fields.read_on)) {
       problems.push(`${at}.read_on is not YYYY-MM-DD: ${fields.read_on}`);
     }
+    if (Object.hasOwn(fields, "operating_detail") && fields.operating_detail !== true) {
+      problems.push(`${at}.operating_detail must be true when present`);
+    }
     if (fields.rules_out === undefined) return;
     if (!Array.isArray(fields.rules_out) || fields.rules_out.length === 0) {
       problems.push(`${at}.rules_out must be a non-empty list when present`);
