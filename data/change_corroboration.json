@@ -1,39 +1,6 @@
 {
   "held": [
     {
-      "vendor": "Crosswork",
-      "change_type": "restriction",
-      "impact": "medium",
-      "summary": "The Free plan now lists 'Up to 3 Collaborators' in addition to 3 projects and 1 GB storage.",
-      "previous_state": "Versatile project management platform. Free for up to 3 projects, unlimited users, 1 GB storage.",
-      "current_state": "Free $0 free forever: Unlimited Users, 3 Projects, Up to 3 Collaborators, 1 GB Storage",
-      "source_url": "https://crosswork.app/pricing",
-      "category": "Project Management",
-      "first_read_date": "2026-11-04"
-    },
-    {
-      "vendor": "embed.ly",
-      "change_type": "free_tier_removed",
-      "impact": "high",
-      "summary": "The page now shows only paid plans: API from $119/month and Cards at $19/month, with no free tier mentioned.",
-      "previous_state": "Provides APIs for embedding media in a webpage, responsive image scaling, and extracting elements from a webpage. Free for up to 5,000 URLs/month at 15 requests/second",
-      "current_state": "The page lists only paid plans: API from $119/month (with base quotas of 10,000 Embed URLs, 10,000 Extract URLs, and 25,000 Display images, and a rate limit of 50 URL requests per second) and Cards at $19/month. No free tier is mentioned.",
-      "source_url": "https://embed.ly/pricing",
-      "category": "Storage",
-      "first_read_date": "2026-11-04"
-    },
-    {
-      "vendor": "formspark.io",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "Free plan now allows 10 forms instead of unlimited forms; support is Community instead of Customer assistance team.",
-      "previous_state": "Form to Email service, free plan allows unlimited forms, 250 submissions per month, support by Customer assistance team.",
-      "current_state": "Free plan: 250 submissions, 10 forms, 5 team members, Community support.",
-      "source_url": "https://formspark.io/pricing",
-      "category": "Forms",
-      "first_read_date": "2026-11-04"
-    },
-    {
       "vendor": "Harness CI",
       "change_type": "pricing_restructured",
       "impact": "high",
@@ -45,37 +12,70 @@
       "first_read_date": "2026-11-01"
     },
     {
-      "vendor": "odrive",
+      "vendor": "Row Zero",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The Free tier now lists 1 workbook instead of the three free (forever) workbooks in previously info.",
+      "previous_state": "Blazingly fast, connected spreadsheet. Connect directly to data databases, S3, and APIs. Import, analyze, graph, and share millions of rows instantly. Three free (forever) workbooks.",
+      "current_state": "Free $0: 1 workbook, 10s of millions of rows, 400+ Excel-compatible functions, AI chat, pivot tables & charts, import XLSX/CSV/TXT/Parquet/JSONL, built-in data connectors, real-time collaboration, SOC 2/GDPR/HIPAA compliant.",
+      "source_url": "https://rowzero.com/pricing",
+      "category": "Analytics",
+      "first_read_date": "2026-11-05"
+    },
+    {
+      "vendor": "Stability AI",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "Stability AI's own page now redirects to docs.stability.ai. Stable Audio credit prices dropped: Stable Audio 3.0 is now 8 credits (was 26) and Stable Audio 2.5 is now 8 credits (was 20). All other stored prices (SDXL 1.0 from 0.9, SD 3.5 Flash 2.5, Stable Image Core 3, SD 3.5 Medium 3.5, SD 3.5 Large 6.5, Stable Image Ultra 8) and the 25 free credits / 1 credit = $0.01 terms remain consistent.",
+      "previous_state": "Developer Platform API is credit-priced at 1 credit = $0.01, with 25 free credits to start — a one-time $0.25 grant, not a monthly allowance. Per-image costs: SDXL 1.0 from 0.9 credits, Stable Diffusion 3.5 Flash 2.5, Stable Image Core 3, Stable Diffusion 3.5 Medium 3.5, Large 6.5, Stable Image Ultra 8. Stable Audio 2.5 is 20 credits and 3.0 is 26. platform.stability.ai/pricing, read 2026-09-19.",
+      "current_state": "1 credit = $0.01; new accounts get 25 free credits. Stable Audio 3.0 and Stable Audio 2.5 each cost 8 credits. Stable Image Ultra 8, Stable Diffusion 3.5 Large 6.5, Stable Diffusion 3.5 Large Turbo 4, Stable Diffusion 3.5 Medium 3.5, Stable Diffusion 3.5 Flash 2.5, Stable Image Core 3, SDXL 1.0 from 0.9 credits.",
+      "source_url": "https://platform.stability.ai/pricing",
+      "category": "AI / ML",
+      "first_read_date": "2026-11-05"
+    },
+    {
+      "vendor": "The Intercom Early Stage Program",
       "change_type": "pricing_restructured",
       "impact": "medium",
-      "summary": "The current pricing page now positions odrive as a Procore integration/sync product (Procore Documents & Drawings, SharePoint Sync, Server Sync), with a 30-day free trial, Standard at $20/user/month or $200/user/year for up to 25 users, and Enterprise at $25+/user/month. The general cloud-storage-provider unification positioning and the explicit 'no free plan since 2026-03-31' statement are no longer reflected on the page.",
-      "previous_state": "Cloud storage sync and unification platform — connects Google Drive, Dropbox, S3, OneDrive, and other providers into a single file manager. No free plan since 2026-03-31, when odrive ended free consumer accounts. New users get a 30-day free trial with no credit card; Standard is $20/user/month or $200/user/year.",
-      "current_state": "Free Trial: try everything free for 30 days, $0 for 30 days, no credit card required, 1 user, Full Procore integration, Project & Company Documents, Unlimited projects, Offline sync, Instant Access. Standard: $20/user/month, annual $200/user/year, up to 25 users, credit card billing, priority email support. Enterprise: $25+/user/month, unlimited users, unlimited projects and data, custom billing, Server Sync, SharePoint Sync, dedicated account manager, custom onboarding & training.",
-      "source_url": "https://www.odrive.com/pricing",
-      "category": "Storage",
-      "first_read_date": "2026-11-04"
+      "summary": "The current page says the Intercom Helpdesk starts from $65 per month. The page also adds year-by-year Fin outcome limits (300/150/75) and states Year 2 and Year 3 discounts are forfeited if switching plans.",
+      "previous_state": "Intercom Early Stage pricing starts at $33/month, with 93% off in the first year, 50% off in the second and 25% off in the third. The first year includes 300 Fin outcomes and 15 Fin qualifications per month. The discount does not apply to additional outcomes or qualifications; phone, SMS and WhatsApp are charged at list price.",
+      "current_state": "Early Stage pricing includes the Intercom Helpdesk from $65 per month, with 93% off in Year 1, 50% off in Year 2, and 25% off in Year 3. Year 1 includes 300 Fin outcomes and 15 Fin qualifications per month; Year 2 includes 150 Fin outcomes and 15 Fin qualifications; Year 3 includes 75 Fin outcomes and 15 Fin qualifications. Phone, SMS, and WhatsApp are charged at list price. Year 2 and Year 3 discounts are reserved for customers who stay on the program; switching to a self-serve or sales-led plan forfeits those savings.",
+      "source_url": "https://www.intercom.com/early-stage",
+      "category": "Startup Perks",
+      "first_read_date": "2026-11-05"
     },
     {
-      "vendor": "plot.ly",
+      "vendor": "Webstudio",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free Cloud plan's limits differ from previously: the page shows the Free plan has 1 custom domain (not 5), 250 MB asset storage (not 2 GB), and 100,000 page views/month (not 10,000). Unlimited projects and unlimited pages remain. The free tier's custom domain count and asset storage are lower than described.",
+      "previous_state": "Open-source alternative to Webflow. The free plan offers unlimited websites on their domain. Five websites with custom domains. Ten thousand page views/month. 2 GB asset storage.",
+      "current_state": "Free plan: wstd.io subdomain, unlimited projects, unlimited pages, 1 custom domain, 250 MB asset storage, 50 assets per project, 100,000 page views/month, 300 form submissions/month, 10 daily publishes.",
+      "source_url": "https://webstudio.is/pricing",
+      "category": "Design",
+      "first_read_date": "2026-11-05"
+    },
+    {
+      "vendor": "whimsical.com",
       "change_type": "pricing_restructured",
       "impact": "high",
-      "summary": "The stored free tier description says the free plan includes unlimited public files and ten private files. The current pricing page describes a completely different free plan: 10 Plotly credit trial, 1 Creator seat, 3 private viewers, and 10 Dash or Plotly Studio apps.",
-      "previous_state": "Graph and share your data. The free tier includes unlimited public files and ten private files",
-      "current_state": "Free plan: $0, no credit card required, 10 Plotly credit trial (additional credits $1 each), 1 Creator seat, 3 private viewers, 10 Dash or Plotly Studio apps, with Plotly Studio, custom app URLs, one-click publish from Dash, and Plotly-branded apps.",
-      "source_url": "https://plotly.com/pricing",
-      "category": "Storage",
-      "first_read_date": "2026-11-04"
+      "summary": "The page describes the Free plan as creating up to 50 board objects per month, 50 doc blocks per month, watermark on exports, 7-day version history, and 10 AI credits per member.",
+      "previous_state": "Collaborative flowcharts, wireframes, sticky notes and mind maps. Free plan: 3 team boards, 100 AI actions per editor.",
+      "current_state": "Free is $0/Month/Editor and includes: create up to 50 board objects per month, create up to 50 doc blocks per month, watermark on exports, 7-day version history, unlimited boards, unlimited workspace members, unlimited guests, and 10 AI credits per member with additional AI credits purchasable separately.",
+      "source_url": "https://whimsical.com/pricing",
+      "category": "Design",
+      "first_read_date": "2026-11-05"
     },
     {
-      "vendor": "Versoly",
+      "vendor": "Zeplin",
       "change_type": "limits_reduced",
-      "impact": "high",
-      "summary": "The free Starter plan no longer offers unlimited websites, 70+ blocks, five templates, custom CSS, favicon, SEO and forms as described. It is now limited to 3 static pages, 50 CMS items, 50 form submissions, and 1,000 visits/month, and the page states free sites get Versoly branding.",
-      "previous_state": "SaaS-focused website builder - unlimited websites, 70+ blocks, five templates, custom CSS, favicon, SEO and forms. No custom domain.",
-      "current_state": "Starter is $0 and includes a Versoly subdomain (versoly.page), 1,000 visits/month, 3 static pages, 50 CMS items, 50 form submissions, and 300+ blocks & templates. Custom domain requires upgrading to Mini ($9/mo) or higher.",
-      "source_url": "https://versoly.com/pricing",
-      "category": "Cloud Hosting",
-      "first_read_date": "2026-11-04"
+      "impact": "medium",
+      "summary": "The Free plan now includes AI Design Review (Beta) limited to 3 screen reviews/week and AI Organize (Beta) limited to 3 runs/week, plus Flow Boards are not available, Styleguides limited to 1, Components up to 100, Version History 30 days, Personal workspace, and publish access restricted to Owner.",
+      "previous_state": "Design handoff platform — 1 active project, unlimited members, style guide, component inspection, asset export. Integrates with Figma, Sketch, and Adobe XD",
+      "current_state": "Free plan: $0, 1 project, unlimited users, 100 screens to start, AI Design Review (Beta) 3 screens/week, AI Organize (Beta) 3 runs/week, Flow Boards not available, Styleguides 1, Components up to 100, Version History 30 days, Personal workspace, publish access Owner only.",
+      "source_url": "https://zeplin.io/pricing",
+      "category": "Design",
+      "first_read_date": "2026-11-05"
     }
   ],
   "resolved": [
@@ -3250,6 +3250,78 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-11-04 read it as limits_reduced too",
       "resolved_date": "2026-11-04"
+    },
+    {
+      "vendor": "Crosswork",
+      "change_type": "restriction",
+      "impact": "medium",
+      "summary": "The Free plan now lists 'Up to 3 Collaborators' in addition to 3 projects and 1 GB storage.",
+      "previous_state": "Versatile project management platform. Free for up to 3 projects, unlimited users, 1 GB storage.",
+      "source_url": "https://crosswork.app/pricing",
+      "first_read_date": "2026-11-04",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-05 read it as restriction too",
+      "resolved_date": "2026-11-05"
+    },
+    {
+      "vendor": "embed.ly",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The page now shows only paid plans: API from $119/month and Cards at $19/month, with no free tier mentioned.",
+      "previous_state": "Provides APIs for embedding media in a webpage, responsive image scaling, and extracting elements from a webpage. Free for up to 5,000 URLs/month at 15 requests/second",
+      "source_url": "https://embed.ly/pricing",
+      "first_read_date": "2026-11-04",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-05 read it as free_tier_removed too",
+      "resolved_date": "2026-11-05"
+    },
+    {
+      "vendor": "formspark.io",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "Free plan now allows 10 forms instead of unlimited forms; support is Community instead of Customer assistance team.",
+      "previous_state": "Form to Email service, free plan allows unlimited forms, 250 submissions per month, support by Customer assistance team.",
+      "source_url": "https://formspark.io/pricing",
+      "first_read_date": "2026-11-04",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-05 read a change the gate refused as states_no_terms",
+      "resolved_date": "2026-11-05"
+    },
+    {
+      "vendor": "odrive",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The current pricing page now positions odrive as a Procore integration/sync product (Procore Documents & Drawings, SharePoint Sync, Server Sync), with a 30-day free trial, Standard at $20/user/month or $200/user/year for up to 25 users, and Enterprise at $25+/user/month. The general cloud-storage-provider unification positioning and the explicit 'no free plan since 2026-03-31' statement are no longer reflected on the page.",
+      "previous_state": "Cloud storage sync and unification platform — connects Google Drive, Dropbox, S3, OneDrive, and other providers into a single file manager. No free plan since 2026-03-31, when odrive ended free consumer accounts. New users get a 30-day free trial with no credit card; Standard is $20/user/month or $200/user/year.",
+      "source_url": "https://www.odrive.com/pricing",
+      "first_read_date": "2026-11-04",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-05 read it as pricing_restructured too",
+      "resolved_date": "2026-11-05"
+    },
+    {
+      "vendor": "plot.ly",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The stored free tier description says the free plan includes unlimited public files and ten private files. The current pricing page describes a completely different free plan: 10 Plotly credit trial, 1 Creator seat, 3 private viewers, and 10 Dash or Plotly Studio apps.",
+      "previous_state": "Graph and share your data. The free tier includes unlimited public files and ten private files",
+      "source_url": "https://plotly.com/pricing",
+      "first_read_date": "2026-11-04",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-05 read it as pricing_restructured too",
+      "resolved_date": "2026-11-05"
+    },
+    {
+      "vendor": "Versoly",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free Starter plan no longer offers unlimited websites, 70+ blocks, five templates, custom CSS, favicon, SEO and forms as described. It is now limited to 3 static pages, 50 CMS items, 50 form submissions, and 1,000 visits/month, and the page states free sites get Versoly branding.",
+      "previous_state": "SaaS-focused website builder - unlimited websites, 70+ blocks, five templates, custom CSS, favicon, SEO and forms. No custom domain.",
+      "source_url": "https://versoly.com/pricing",
+      "first_read_date": "2026-11-04",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-05 read it as limits_reduced too",
+      "resolved_date": "2026-11-05"
     }
   ]
 }

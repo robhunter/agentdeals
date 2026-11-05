@@ -764,6 +764,18 @@
       "refused_date": "2026-10-09"
     },
     {
+      "vendor": "Avo",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 data)",
+      "summary": "Free tier now includes 2 editors (not 'two workspace members'), 5 stakeholder domains, 100k events observed in Inspector, and codegen for editors; the stored description's '1 hour data observability lookback' is not mentioned on the page.",
+      "previous_state": "Simplified analytics release workflow. Single-source-of-truth tracking plan, type-safe analytics tracking library, in-app debuggers, and data observability to catch all data issues before you release. Free for two workspace members and 1 hour data observability lookback.",
+      "current_state": "Free plan is $0, includes 2 editors, unlimited comment seats, 5 stakeholder domains, 100k events observed in Inspector, codegen included for editors, and schema sync to 1 downstream schema registry.",
+      "source_url": "https://avo.app/pricing",
+      "category": "Analytics",
+      "refused_date": "2026-11-05"
+    },
+    {
       "vendor": "Awardspace.com",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -790,15 +802,15 @@
     },
     {
       "vendor": "AWS",
-      "change_type": "limits_increased",
+      "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The current page clarifies the $100 + up to $100 is equivalent to a total of $200, but doesn't change the overall offer.",
-      "summary": "The free tier now offers up to $200 in credits over 6 months, instead of $100 + up to $100 more.",
+      "detail": "The report restates the same free-tier terms (credits, 6-month plan, always-free services) in different words; no substantive change.",
+      "summary": "The current page describes a Free plan with up to $200 in credits ($100 immediately plus up to $100 more), access to over 90 services for up to 6 months, and an 'Always free' category of 30+ services within monthly usage limits.",
       "previous_state": "Always-free tier includes Lambda (1M invocations/mo), DynamoDB (25 GB), CloudWatch. New accounts get $100 credit at sign-up + up to $100 more via activities, free plan for 6 months",
-      "current_state": "When you create a new AWS Free Tier account, you get $100 in credits immediately. As you explore key services, you can earn up to $100 more. That's up to $200 over 6 months to build, break things, and experiment with no charges and no surprise bills on the Free plan.",
+      "current_state": "New AWS Free Tier accounts get $100 in credits immediately and can earn up to $100 more, for up to $200 over 6 months on the Free plan; the account closes 6 months after opening or when credits run out, whichever comes first, and no charges apply unless converting to a Paid plan. The Free plan includes free usage of select services and access to over 90 services for up to 6 months, while 30+ AWS services are always free within monthly usage limits on both Free and Paid plans.",
       "source_url": "https://aws.amazon.com/free/",
       "category": "Cloud IaaS",
-      "refused_date": "2026-10-09"
+      "refused_date": "2026-11-05"
     },
     {
       "vendor": "Axiom",
@@ -1120,13 +1132,13 @@
       "vendor": "Brackets",
       "change_type": "rebranded",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-09-20 (no_price_signal) claimed the same change, rebranded, against the same stored description",
-      "summary": "Brackets is now called Phoenix Code and is the next generation of Brackets. The page recommends users upgrade to Phoenix Code.",
+      "detail": "the reading of this vendor refused on 2026-10-08 (repeats_a_refused_claim) claimed the same change, rebranded, against the same stored description",
+      "summary": "Brackets has been rebranded/superseded by Phoenix Code, and the page now recommends users upgrade to Phoenix Code rather than continuing with Brackets.",
       "previous_state": "Brackets is an open-source text editor specifically designed for web development. It is lightweight, easy to use, and highly customizable.",
-      "current_state": "Brackets recommends users upgrade to Phoenix Code – the new Brackets, built for you.",
+      "current_state": "Brackets is presented as a lightweight, powerful, modern open-source text editor with inline editors, live preview, and preprocessor support, but the page states Phoenix Code is the next generation of Brackets and recommends users upgrade to Phoenix Code.",
       "source_url": "http://brackets.io/",
       "category": "IDE & Code Editors",
-      "refused_date": "2026-10-08"
+      "refused_date": "2026-11-05"
     },
     {
       "vendor": "Braid",
@@ -2075,6 +2087,18 @@
       "source_url": "https://cloudinary.com/pricing",
       "category": "Storage",
       "refused_date": "2026-10-09"
+    },
+    {
+      "vendor": "CMYK Pantone",
+      "change_type": "rebranded",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names CMYK Pantone and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The stored deal info describes a free CMYK-to-Pantone converter from 'CMYK Pantone', but the current page is for 'Color Mapper', a free browser-based color toolkit. The page does not mention Pantone conversion at all; it offers CMYK/RGB/HEX/HSL/HSV conversion and other color tools, all free with no signup.",
+      "previous_state": "Easily convert CMYK values to the closest Pantone colors and other color models in seconds for free.",
+      "current_state": "Color Mapper is a free color toolkit with 18 converters between RGB, CMYK, HEX, HSL, and HSV, plus palette, gradient, contrast, gamut, and accessibility tools. Everything runs in the browser with no signup and no account required.",
+      "source_url": "https://www.cmyktopantone.com/",
+      "category": "Design",
+      "refused_date": "2026-11-05"
     },
     {
       "vendor": "cocalc.com",
@@ -4076,6 +4100,18 @@
       "collided_with": "formlets.com|record_corrected|2026-09-01|https://formlets.com/"
     },
     {
+      "vendor": "formspark.io",
+      "change_type": "limits_reduced",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "Free plan now lists 10 forms (stored info said unlimited forms); support is Community (stored info said Customer assistance team).",
+      "previous_state": "Form to Email service, free plan allows unlimited forms, 250 submissions per month, support by Customer assistance team.",
+      "current_state": "Free plan: $0, 250 submissions, 10 forms, 5 team members, Community support.",
+      "source_url": "https://formspark.io/pricing",
+      "category": "Forms",
+      "refused_date": "2026-11-05"
+    },
+    {
       "vendor": "Formspree",
       "change_type": "rebranded",
       "reason": "confirmed_unchanged",
@@ -4764,6 +4800,18 @@
       "source_url": "https://one.google.com/about/plans",
       "category": "Cloud Storage",
       "refused_date": "2026-10-16"
+    },
+    {
+      "vendor": "Google for Startups Cloud Program",
+      "change_type": "pricing_restructured",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (350,000 currency, 12 google), and drops 9 the stored description carried",
+      "summary": "The stored deal info describes a Start tier of up to $2,000 in Google Cloud credits for pre-funded startups and a Scale tier of up to $200,000 over 2 years, with AI-first startups getting $150,000 more (up to $350,000). The current page no longer presents a $2,000 Start tier as a credit amount; it describes a Prototyping stage with 'instant access' to a rapid prototyping environment (AI Studio) and no stated credit amount, while the Pre-Seed to Series A stage offers up to $350,000 in Cloud credits over two years. The page also adds benefits not in the stored info (monthly Google Maps Platform credits, Startup Success Managers, Customer Engineering teams) and states criteria of Pre-Seed to Series A funding and founding within the last 3-5 years.",
+      "previous_state": "Start tier: up to $2,000 in Google Cloud credits, valid for one year, for pre-funded startups. Scale tier: up to $200,000 over 2 years for startups with equity funding from pre-seed to Series A (year 1 covers usage up to $100,000; year 2 covers 20% of spend, up to $100,000 more). AI-first startups get $150,000 more, up to $350,000. Includes 12 months of Google Workspace Business Plus.",
+      "current_state": "The page describes a Prototyping stage for pre-funded builders and new Google Cloud customers founding digital-native products, offering instant access to a rapid prototyping environment (AI Studio) with API key management, experimentation with models like Gemini, Gemini Omni, and Nano Banana, and prompt-based Build mode, but no credit amount is stated for this stage. The Pre-Seed to Series A stage offers up to $350,000 in Cloud credits over two years, credits for frontier models like Gemini and Gemma, technical and product training, 12 months of Google Workspace Business Plus at no extra cost, monthly Google Maps Platform credits, and dedicated help from Startup Success Managers and Customer Engineering teams, with criteria of Pre-Seed to Series A funding and founding within the last 3-5 years.",
+      "source_url": "https://cloud.google.com/startup",
+      "category": "Startup Perks",
+      "refused_date": "2026-11-05"
     },
     {
       "vendor": "Google Gemini Embedding 2",
@@ -11296,6 +11344,18 @@
       "source_url": "https://ecosend.io/",
       "category": "Communication",
       "refused_date": "2026-09-15"
+    },
+    {
+      "vendor": "The GoSquared Early Stage Plan",
+      "change_type": "rebranded",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-28 (repeats_a_refused_reading) claimed the same change, rebranded, against the same stored description",
+      "summary": "The stored deal info says the GoSquared Early Stage Plan is retired and that gosquared.com/early-stage/ redirects to ecosend.io, an email marketing product with its own pricing and no startup offer. The current page confirms EcoSend is an email marketing platform with a free-forever tier, but it does not mention GoSquared, the Early Stage Plan, or any startup offer.",
+      "previous_state": "There is no early stage plan: gosquared.com/early-stage/ redirects to ecosend.io, an email marketing product with its own pricing and no startup offer. Checked 2026-09-02, GoSquared's analytics product is not sold at the destination. The former offer was all GoSquared features at a fixed low price for the first year.",
+      "current_state": "EcoSend is an email marketing platform offering a free-forever plan with no credit card required and cancel anytime, plus paid pricing tiers.",
+      "source_url": "https://ecosend.io/",
+      "category": "Communication",
+      "refused_date": "2026-11-05"
     },
     {
       "vendor": "The GoSquared Early Stage Plan",
