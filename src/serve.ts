@@ -1117,12 +1117,6 @@ function newestChangesInEffect<T extends DealChange>(changes: readonly T[]): T[]
 
 const recentChanges = newestChangesInEffect(changesTheVendorMade(dealChanges)).slice(0, RECENT_CHANGES_ON_THE_HOME_PAGE);
 
-const upcomingDeadlines = changesTheVendorMade(dealChanges)
-  .filter((c) => !hasAlreadyTakenEffect(c))
-  .filter(changeTouchesTheListing)
-  .sort((a, b) => a.date.localeCompare(b.date))
-  .slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE);
-
 const changeTypeBadge: Record<DealChange["change_type"], { label: string; color: string }> = {
   free_tier_removed: { label: "removed", color: "#f85149" },
   limits_reduced: { label: "reduced", color: "#d29922" },
@@ -1288,9 +1282,16 @@ function buildChangingSoonWithNothingQualifying(): string {
 }
 
 function buildChangingSoonSection(): string {
+  const records = vendorRecordsDatedAfter(dealChanges, today);
+  const upcomingDeadlines = deadlineLinesOf(
+    records.filter(changeTouchesTheListing),
+    deadlinesOurTextStates(dealChanges, records, today),
+  ).slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE);
   if (upcomingDeadlines.length === 0) return buildChangingSoonWithNothingQualifying();
-  const entries = upcomingDeadlines.slice(0, 5).map((c) => {
-    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+  const entries = upcomingDeadlines.map((c) => {
+    const badge = c.citedRecord
+      ? changeTypeBadge[c.citedRecord.change_type] ?? { label: c.citedRecord.change_type, color: "#8b949e" }
+      : null;
     const deadlineDate = new Date(c.date + "T00:00:00Z");
     const todayDate = new Date(today + "T00:00:00Z");
     const daysLeft = Math.ceil((deadlineDate.getTime() - todayDate.getTime()) / 86400000);
@@ -1299,11 +1300,11 @@ function buildChangingSoonSection(): string {
         <div class="cs-countdown${daysLeft <= 14 ? " cs-urgent" : ""}">${daysLeft}<span class="cs-unit">${daysLeft === 1 ? "day" : "days"}</span></div>
         <div class="cs-detail">
           <div class="cs-head">
-            <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
+            ${badge ? `<span class="change-badge" style="background:${badge.color}">${badge.label}</span>` : ""}
             ${changeVendorLinkHtml(c.vendor, ' class="cs-vendor"')}
-            <span class="cs-rel">${relTime}</span>
+            <span class="cs-rel">${escHtmlServer(c.dateLabel)} · ${relTime}</span>
           </div>
-          <div class="cs-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
+          <div class="cs-summary">${c.summaryHtml}</div>
         </div>
       </div>`;
   }).join("\n");
@@ -1315,7 +1316,6 @@ function buildChangingSoonSection(): string {
     ${datedSectionNoticeHtml(
       `${namedWhileAheadOf("A change", today)} ${listOrderSentence("soonest-first")} ${atMostShownHere(UPCOMING_DEADLINES_ON_THE_HOME_PAGE)}`,
       [
-        { when: "On the day its date arrives it moves to", text: "Recent pricing changes, below", href: "#recent-changes" },
         { when: "Every deadline we hold, including any this list is too short to reach, is on", text: "the deadline tracker", href: "/deadlines" },
       ],
       escHtmlServer,
