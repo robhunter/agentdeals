@@ -487,7 +487,7 @@ describe("the pricing page prices what Hetzner sells today", () => {
       ...volumeExamples(),
       ...STORAGE_BOX_EUROS_AS_WRITTEN,
       withoutIpv4(cheapestOf(COST_OPTIMIZED_LINE).eur),
-      ...[CHEAPER_VPS_IN_GERMANY.eightGb.eurPerMonth, CHEAPER_VPS_IN_GERMANY.eightGb.eurPerMonthOnA24MonthTerm, CHEAPER_VPS_IN_GERMANY.fourGb.eurPerMonth].map(price => `€${price.toFixed(2)}`),
+      ...[CHEAPER_VPS_IN_GERMANY.eightGb.eurPerMonth, CHEAPER_VPS_IN_GERMANY.eightGb.eurPerMonthOnA24MonthTerm, CHEAPER_VPS_IN_GERMANY.eightGb.eurSetupFeeOnAOneMonthTerm, CHEAPER_VPS_IN_GERMANY.fourGb.eurPerMonth].map(price => `€${price.toFixed(2)}`),
       ...[CHEAPER_VPS_IN_GERMANY.mostRamUnderTenEuros.eurPerMonth, CHEAPER_VPS_IN_GERMANY.fourGbProvidersEightGb.eurPerMonth].map(price => `€${price.toFixed(2)}`),
     ]);
     const quoted = new Set(eurosIn(visible(withoutItemsOrRowsHeadedByAnotherVendor(body))));
@@ -819,7 +819,7 @@ describe("the cheapest orderable EU plan for each memory size on /hetzner-pricin
   });
 });
 
-const CHEAPER_VPS_IN_GERMANY_AS_WRITTEN = "The cheapest paid VPS with 8 GB of RAM you can order in Germany today, of the providers we checked, is not at Hetzner: Contabo's Cloud VPS 4 (4 vCPU, 8 GB RAM, 100 GB SSD) is €5.50 a month with no setup fee and a one-month minimum term, or €4.40 a month on a 24-month term, against €35.99 for Hetzner's CPX32. The cheapest paid VPS with 4 GB of RAM you can order in Germany today, of the providers we checked, is OVHcloud's VPS-1 (2 vCores, 4 GB RAM, 40 GB NVMe) at €4.49 a month with no commitment or setup fee, against €19.99 for Hetzner's CPX22. Both prices are before VAT and include one IPv4 address, and Contabo's European Union region is its data centres in Germany. We checked Contabo, Hostinger, IONOS, netcup and OVHcloud on their own price pages on 2026-10-14.";
+const CHEAPER_VPS_IN_GERMANY_AS_WRITTEN = "The cheapest paid VPS with 8 GB of RAM you can order in Germany today, of the providers we checked, is not at Hetzner: Contabo's Cloud VPS 4 (4 vCPU, 8 GB RAM, 100 GB SSD) is €5.50 a month plus a one-time €2.00 setup fee on the one-month term, or €4.40 a month on a 24-month term with no setup fee, against €35.99 for Hetzner's CPX32. The cheapest paid VPS with 4 GB of RAM you can order in Germany today, of the providers we checked, is OVHcloud's VPS-1 (2 vCores, 4 GB RAM, 40 GB NVMe) at €4.49 a month with no commitment or setup fee, against €19.99 for Hetzner's CPX22. Both prices are before VAT and include one IPv4 address, and Contabo's European Union region is its data centres in Germany. We checked Contabo, Hostinger, IONOS, netcup and OVHcloud on their own price pages on 2026-10-14.";
 
 const sentenceForSize = (ram: number) => `The cheapest paid VPS with ${ram} GB of RAM you can order in Germany today`;
 
@@ -883,11 +883,11 @@ describe("the cheaper VPS in Germany than Hetzner's plan of the same memory size
     const readAgain = {
       ...CHEAPER_VPS_IN_GERMANY,
       readOn: "2026-11-02",
-      eightGb: { ...CHEAPER_VPS_IN_GERMANY.eightGb, eurPerMonth: 6.25, eurPerMonthOnA24MonthTerm: 5.1 },
+      eightGb: { ...CHEAPER_VPS_IN_GERMANY.eightGb, eurPerMonth: 6.25, eurPerMonthOnA24MonthTerm: 5.1, eurSetupFeeOnAOneMonthTerm: 3.25 },
       fourGb: { ...CHEAPER_VPS_IN_GERMANY.fourGb, eurPerMonth: 4.99 },
     };
     const paragraph = cheaperVpsInGermanyParagraph(HETZNER_CLOUD_PLANS, readAgain);
-    for (const figure of ["is €6.25 a month", "or €5.10 a month on a 24-month term", "at €4.99 a month", "on their own price pages on 2026-11-02."]) {
+    for (const figure of ["is €6.25 a month", "plus a one-time €3.25 setup fee on the one-month term", "or €5.10 a month on a 24-month term with no setup fee", "at €4.99 a month", "on their own price pages on 2026-11-02."]) {
       assert.ok(paragraph.includes(figure), `${figure}: ${paragraph}`);
     }
   });
