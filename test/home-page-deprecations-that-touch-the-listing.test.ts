@@ -47,9 +47,11 @@ async function serveHomeWith(changes: Record<string, unknown>[]): Promise<string
   const dir = mkdtempSync(path.join(tmpdir(), "home-deprecations-"));
   const changesPath = path.join(dir, "changes.json");
   writeFileSync(changesPath, JSON.stringify({ changes }));
+  const indexPath = path.join(dir, "index.json");
+  writeFileSync(indexPath, JSON.stringify({ offers: [] }));
   const proc: ChildProcess = spawn("node", [path.join(REPO, "dist", "serve.js")], {
     stdio: ["pipe", "pipe", "pipe"],
-    env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changesPath },
+    env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_INDEX_PATH: indexPath, AGENTDEALS_CHANGES_PATH: changesPath },
   });
   try {
     const port = await new Promise<number>((resolve, reject) => {
@@ -60,7 +62,7 @@ async function serveHomeWith(changes: Record<string, unknown>[]): Promise<string
       });
       proc.on("error", (err) => { clearTimeout(timeout); reject(err); });
     });
-    return await fetch(`http://localhost:${port}/`).then((r) => r.text());
+    return await fetch(`http://localhost:${port}/`, { redirect: "error" }).then((r) => r.text());
   } finally {
     proc.kill();
     rmSync(dir, { recursive: true, force: true });

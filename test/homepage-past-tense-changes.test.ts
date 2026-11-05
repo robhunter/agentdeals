@@ -92,14 +92,16 @@ function serveHomePage(changes: unknown[]): Promise<{ proc: ChildProcess; tmp: s
   const tmp = mkdtempSync(path.join(tmpdir(), "homepage-past-tense-"));
   const changesPath = path.join(tmp, "changes.json");
   writeFileSync(changesPath, JSON.stringify({ changes }, null, 2));
+  const indexPath = path.join(tmp, "index.json");
+  writeFileSync(indexPath, JSON.stringify({ offers: [] }));
   return new Promise<{ proc: ChildProcess; port: number }>((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
       env: {
         ...process.env,
         PORT: "0",
-        BASE_URL: "http://localhost:3000",
-        AGENTDEALS_CHANGES_PATH: changesPath,
+        BASE_URL: "http://localhost",
+        AGENTDEALS_INDEX_PATH: indexPath, AGENTDEALS_CHANGES_PATH: changesPath,
       },
     });
     const timeout = setTimeout(() => {
@@ -120,7 +122,7 @@ function serveHomePage(changes: unknown[]): Promise<{ proc: ChildProcess; tmp: s
   }).then(async ({ proc, port }) => ({
     proc,
     tmp,
-    html: await (await fetch(`http://localhost:${port}/`)).text(),
+    html: await (await fetch(`http://localhost:${port}/`, { redirect: "error" })).text(),
   }));
 }
 

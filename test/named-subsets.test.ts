@@ -24,6 +24,8 @@ import {
 } from "../dist/data.js";
 import { substitutesFor } from "../dist/product-role.js";
 import { changeTouchesTheListing } from "../dist/product-deprecation.js";
+import { deadlineTextsOf, statedDeadlines } from "../dist/stated-deadlines.js";
+import { recordsStillInForce } from "../dist/change-resolution.js";
 import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, ANNOUNCED_HEADING } from "../dist/change-dates.js";
 import { NOTHING_CHANGING_SOON_HTML, RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, atMostShownHere, onlyTheMostRecentShown } from "../dist/homepage-claims.js";
 import { CUTS_THIS_YEAR_HEADING } from "../dist/free-tier-tracker.js";
@@ -304,7 +306,7 @@ function elementAt(body: string, at: number, tag: string): string {
 }
 
 function quotedDateVendorsByHeading(body: string): Record<string, string[]> {
-  const cards = [...body.matchAll(/<div\b[^>]*class="dl-card\b[^"]*"[^>]*>/g)]
+  const cards = [...body.matchAll(/<div\b[^>]*class="(?:dl-card|cs-entry)\b[^"]*"[^>]*>/g)]
     .map(match => ({ at: match.index!, html: elementAt(body, match.index!, "div") }));
   for (const list of body.matchAll(/<ul class="coming-up-list">([\s\S]*?)<\/ul>/g)) {
     const starts = list.index! + list[0].indexOf(list[1]!);
@@ -318,7 +320,7 @@ function quotedDateVendorsByHeading(body: string): Record<string, string[]> {
   for (const card of cards) {
     const heading = headings.filter(h => h.at < card.at).pop()?.text;
     if (heading === undefined) continue;
-    const vendor = card.html.match(/<a\b[^>]*href="\/vendor\/([a-z0-9-]+)"[^>]*class="(?:dl-vendor|change-vendor)"[^>]*>/)?.[1];
+    const vendor = card.html.match(/<a\b[^>]*href="\/vendor\/([a-z0-9-]+)"[^>]*class="(?:dl-vendor|cs-vendor|change-vendor)"[^>]*>/)?.[1];
     if (!vendor) continue;
     const quoted = /<a\b[^>]*class="record-source"[^>]*>/.test(card.html)
       && !/<a\b[^>]*class="change-source"[^>]*>/.test(card.html);
@@ -672,6 +674,7 @@ describe("a quoted deadline can leave without a change-log entry", () => {
 
   for (const [layout, render] of [
     ["tracker card", (slug: string, kind: string) => card(slug, kind)],
+    ["home-page entry", (slug: string, kind: string) => card(slug, kind).replace("dl-card urgency-warning", "cs-entry").replace("dl-vendor", "cs-vendor")],
     ["coming-up item", (slug: string, kind: string) => `<ul class="coming-up-list">${item(slug, kind)}</ul>`],
   ] as const) {
     it(`lets a quoted date leave a ${layout} without a change-log entry`, () => {
@@ -1414,6 +1417,12 @@ describe("the rule that decides it is published where a reader can find it", () 
       const body = await (await fetch(`${base}/`)).text();
       const onThisDay = new Date().toISOString().slice(0, 10);
       const held = loadDealChanges();
+      const futureRecords = changesTheVendorMade(held).filter(change => change.date > onThisDay);
+      const stated = statedDeadlines(
+        deadlineTextsOf(loadOffers(), changesTheVendorMade(recordsStillInForce(held)).filter(change => change.date <= onThisDay)),
+        futureRecords,
+        onThisDay,
+      );
       const sections = [
         {
           id: "changing-soon",
@@ -1421,7 +1430,7 @@ describe("the rule that decides it is published where a reader can find it", () 
           states: atMostShownHere(UPCOMING_DEADLINES_ON_THE_HOME_PAGE),
           whenNoneQualify: stripTags(NOTHING_CHANGING_SOON_HTML),
           cap: UPCOMING_DEADLINES_ON_THE_HOME_PAGE,
-          qualifying: held.filter(change => change.date > onThisDay && changeTouchesTheListing(change)).length,
+          qualifying: futureRecords.filter(changeTouchesTheListing).length + stated.filter(deadline => !deadline.record || changeTouchesTheListing(deadline.record)).length,
         },
         {
           id: "recent-changes",
