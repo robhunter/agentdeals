@@ -17779,6 +17779,22 @@
       "alternatives": [],
       "recorded_date": "2026-11-03",
       "date_source": "vendor_page"
+    },
+    {
+      "vendor": "xAI",
+      "change_type": "product_deprecated",
+      "date": "2026-11-02",
+      "date_source": "vendor_page",
+      "summary": "xAI's API keeps running. xAI retired the grok-imagine-image-quality image model on 2026-11-02. Requests to grok-imagine-image-quality and grok-imagine-image-pro are now served by grok-imagine-image-2.0 at low quality, at a lower per-image price, and need no changes.",
+      "what_ends": "grok-imagine-image-quality",
+      "listing_effect": "none",
+      "previous_state": "grok-imagine-image-quality cost $0.05 per image at 1K resolution, and requests to grok-imagine-image-pro were served by it.",
+      "current_state": "\"Requests to grok-imagine-image-quality and grok-imagine-image-pro are now served by grok-imagine-image-2.0-low: grok-imagine-image-2.0 with quality set to low, at a lower per-image price. No request changes are needed.\" (docs.x.ai/developers/release-notes, November 2, read 2026-11-05)",
+      "impact": "low",
+      "source_url": "https://docs.x.ai/developers/release-notes",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-05"
     }
   ]
 }
