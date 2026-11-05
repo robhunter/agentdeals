@@ -5067,7 +5067,7 @@ function buildThisWeekPage(weeksAgo: number): string {
   const title = weeksAgo === 0
     ? `This Week in Developer Pricing \u2014 ${dateRange} \u2014 AgentDeals`
     : `Developer Pricing: ${dateRange} \u2014 AgentDeals`;
-  const metaDesc = headline + (digest.announcement_note ? ` ${digest.announcement_note}` : "");
+  const metaDesc = headline + (digest.announcement_note ? `${headline.endsWith(".") ? " " : ". "}${digest.announcement_note}` : "");
   const canonicalPath = weeksAgo === 0 ? "/this-week" : `/this-week?week=${weeksAgo}`;
 
   const negativeTypes = NEGATIVE_CHANGE_TYPES;

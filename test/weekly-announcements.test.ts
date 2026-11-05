@@ -135,6 +135,41 @@ describe("weekly vendor announcements", () => {
     });
   });
 
+  it("separates headline and announcement sentences on every page description", async () => {
+    const records = [
+      { ...change("Effective Vendor", "2026-11-03"), change_type: "product_deprecated" },
+      change("Future Vendor", "2026-12-01", "2026-11-02"),
+      { ...change("Previous Effective", "2026-10-28"), change_type: "product_deprecated" },
+      change("Previous Announcement", "2026-12-02", "2026-10-27"),
+    ];
+    const sentence = "1 change announced this week takes effect later.";
+    const assertDescriptions = (html: string, expected: string) => {
+      assert.equal(unescapeXml(html.match(/<meta name="description" content="([^"]*)"/)![1]!), expected, "meta description");
+      assert.equal(unescapeXml(html.match(/<meta property="og:description" content="([^"]*)"/)![1]!), expected, "Open Graph description");
+      const article = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(m => JSON.parse(m[1]!)).find(value => value["@type"] === "Article");
+      assert.equal(article.description, expected, "structured description");
+      assert.equal(text(html.match(/<p class="page-claim">([\s\S]*?)<\/p>/)![1]!), expected, "visible page claim");
+    };
+    await withServer(records, async get => {
+      const expected = `1 product deprecated across 1 developer tool pricing change. ${sentence}`;
+      for (const route of ["/this-week", "/this-week?week=0", "/this-week?week=1"]) assertDescriptions(await get(route), expected);
+      for (const route of ["/digest/2026-w45", "/digest/2026-w44"]) {
+        const html = await get(route);
+        const description = unescapeXml(html.match(/<meta name="description" content="([^"]*)"/)![1]!);
+        assert.ok(description.endsWith(`. ${sentence}`));
+        assert.ok(!description.includes(`.. ${sentence}`));
+      }
+    });
+    await withServer([...records, change("Scheduled Vendor", "2026-11-06")], async get => {
+      assertDescriptions(await get("/this-week"), `2 developer tool pricing changes tracked this week. 1 scheduled for 2026-11-05 or later. ${sentence}`);
+    });
+    await withServer([change("Only Announcement", "2026-12-01", "2026-11-02")], async get => {
+      const digest = JSON.parse(await get("/api/digest/weekly"));
+      assert.equal(digest.headline, "0 developer tool pricing changes tracked this week");
+      assertDescriptions(await get("/this-week"), `${digest.headline}. ${sentence}`);
+    });
+  });
+
   it("keeps every announcement despite effective-list limits", async () => {
     const records = Array.from({ length: 55 }, (_, n) => change(`Announcement ${n}`, `2026-12-${String(n % 28 + 1).padStart(2, "0")}`, "2026-11-02"));
     await withServer(records, async get => {
