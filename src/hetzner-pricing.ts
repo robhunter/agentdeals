@@ -175,7 +175,7 @@ export interface VpsOrderableInGermany extends VpsPlanWeChecked {
 export interface CheaperVpsInGermany {
   readOn: string;
   providersChecked: readonly string[];
-  eightGb: VpsOrderableInGermany & { eurPerMonthOnA24MonthTerm: number };
+  eightGb: VpsOrderableInGermany & { eurPerMonthOnA24MonthTerm: number; eurSetupFeeOnAOneMonthTerm: number };
   fourGb: VpsOrderableInGermany;
   mostRamUnderTenEuros: VpsPlanWeChecked;
   fourGbProvidersEightGb: VpsPlanWeChecked;
@@ -184,7 +184,7 @@ export interface CheaperVpsInGermany {
 export const CHEAPER_VPS_IN_GERMANY: CheaperVpsInGermany = {
   readOn: "2026-10-14",
   providersChecked: ["Contabo", "Hostinger", "IONOS", "netcup", "OVHcloud"],
-  eightGb: { provider: "Contabo", plan: "Cloud VPS 4", spec: "4 vCPU, 8 GB RAM, 100 GB SSD", ram: 8, eurPerMonth: 5.5, eurPerMonthOnA24MonthTerm: 4.4 },
+  eightGb: { provider: "Contabo", plan: "Cloud VPS 4", spec: "4 vCPU, 8 GB RAM, 100 GB SSD", ram: 8, eurPerMonth: 5.5, eurPerMonthOnA24MonthTerm: 4.4, eurSetupFeeOnAOneMonthTerm: 2 },
   fourGb: { provider: "OVHcloud", plan: "VPS-1", spec: "2 vCores, 4 GB RAM, 40 GB NVMe", ram: 4, eurPerMonth: 4.49 },
   mostRamUnderTenEuros: { provider: "Contabo", plan: "Cloud VPS 6", ram: 12, eurPerMonth: 7.5 },
   fourGbProvidersEightGb: { provider: "OVHcloud", plan: "VPS-2", ram: 8, eurPerMonth: 8.49 },
@@ -205,7 +205,7 @@ export function hetznerPlanTheOtherProviderUndercuts(
 }
 
 function cheaperEightGbVpsSentence(other: CheaperVpsInGermany["eightGb"], hetzner: HetznerPlan): string {
-  return `The cheapest paid VPS with ${other.ram} GB of RAM you can order in Germany today, of the providers we checked, is not at Hetzner: ${other.provider}'s ${other.plan} (${other.spec}) is ${euros(other.eurPerMonth)} a month with no setup fee and a one-month minimum term, or ${euros(other.eurPerMonthOnA24MonthTerm)} a month on a 24-month term, against ${euros(hetzner.eur)} for Hetzner's ${hetzner.sku}.`;
+  return `The cheapest paid VPS with ${other.ram} GB of RAM you can order in Germany today, of the providers we checked, is not at Hetzner: ${other.provider}'s ${other.plan} (${other.spec}) is ${euros(other.eurPerMonth)} a month plus a one-time ${euros(other.eurSetupFeeOnAOneMonthTerm)} setup fee on the one-month term, or ${euros(other.eurPerMonthOnA24MonthTerm)} a month on a 24-month term with no setup fee, against ${euros(hetzner.eur)} for Hetzner's ${hetzner.sku}.`;
 }
 
 function cheaperFourGbVpsSentence(other: VpsOrderableInGermany, hetzner: HetznerPlan): string {
