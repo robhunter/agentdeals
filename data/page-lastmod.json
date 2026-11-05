@@ -1363,7 +1363,7 @@
       "changed": "2026-11-02"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "596abd5f20cb7b7e",
+      "hash": "b68bc2e926410b4b",
       "changed": "2026-11-05"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -3277,7 +3277,7 @@
       "changed": "2026-11-03"
     },
     "/gcp-free-tier-2026": {
-      "hash": "08bba2c32ef96eb9",
+      "hash": "a33d315f6009f6ce",
       "changed": "2026-11-05"
     },
     "/gemini-api-pricing-2026": {
@@ -3678,8 +3678,8 @@
       "changed": "2026-11-05"
     },
     "/storage-comparison-2026": {
-      "hash": "adc98a7a79fdfedf",
-      "changed": "2026-11-03"
+      "hash": "da330cf09c50d247",
+      "changed": "2026-11-05"
     },
     "/supabase-vs-firebase": {
       "hash": "11776d11a5fd37f7",

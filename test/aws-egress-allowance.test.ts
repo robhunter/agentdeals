@@ -42,7 +42,8 @@ const GRANT_NEAR_EGRESS = new RegExp(
 const GRANT_CALLED_FREE = new RegExp(`free[^.]{0,60}${GRANT_GB}\\s?GB|${GRANT_GB}\\s?GB[^.]{0,60}free`, "i");
 
 function publishesTheGrant(block: string): boolean {
-  return NAMES_AWS.test(block) && EGRESS.test(block) && GRANT_CALLED_FREE.test(block);
+  const withoutCloudStorageQuota = block.replaceAll(`${GRANT_GB} GB a month from Cloud Storage`, "");
+  return NAMES_AWS.test(block) && EGRESS.test(block) && GRANT_CALLED_FREE.test(withoutCloudStorageQuota);
 }
 
 const BLOCK_END = /<\/(?:td|th|p|li|dd|dt|h[1-6]|div|figcaption|caption|option|summary|blockquote)>/g;
@@ -185,6 +186,10 @@ describe("AWS's monthly internet egress allowance is published as the standing g
       !publishesTheGrant(`Comparison of storage free tiers — S3 egress tax breakdown, zero-egress providers, and scaling costs at ${GRANT_GB}GB/1TB/10TB/100TB`),
       "a scale label reads as a statement of the grant",
     );
+    const cloudStorageQuota = `Egress charges: $0.12/GB to internet past the free allowance (${GRANT_GB} GB a month from Cloud Storage, 1 GB from Compute Engine), higher than AWS.`;
+    assert.ok(!publishesTheGrant(cloudStorageQuota), "a Cloud Storage quota compared with AWS reads as an AWS allowance");
+    assert.ok(publishesTheGrant(`${cloudStorageQuota} ${monthlyEgressGrantSentence(S3)}.`), "an AWS allowance after a Cloud Storage comparison is missed");
+    assert.ok(publishesTheGrant(`${monthlyEgressGrantSentence(S3)}. ${cloudStorageQuota}`), "an AWS allowance before a Cloud Storage comparison is missed");
   });
 
   it("states no expiry on the allowance anywhere it is published", () => {
