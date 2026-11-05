@@ -49890,9 +49890,17 @@ function buildExpiringPage(): string {
   const todayMs = new Date(today + "T00:00:00Z").getTime();
 
   const thirtyDaysAgo = new Date(todayMs - 30 * 86400000).toISOString().slice(0, 10);
-  const upcoming = eventDated.filter(c => c.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+  const records = vendorRecordsDatedAfter(everyRecord, today);
+  const stated = deadlinesOurTextStates(everyRecord, records, today);
+  const upcoming = deadlineLinesOf([...records, ...eventDated.filter(c => c.date === today)], stated);
+  const upcomingRecords = new Set(upcoming.flatMap(line => line.citedRecord ? [line.citedRecord] : []));
+  for (const record of undatedChanges) {
+    const displayedDeadline = statedDeadlines(deadlineTextsOf([], [record]), [], today)
+      .some(deadline => upcoming.some(line => line.vendor === deadline.vendor && line.date === deadline.date));
+    if (displayedDeadline) upcomingRecords.add(record);
+  }
   const recent = eventDated.filter(c => c.date < today && c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
-  const recentlyDiscovered = undatedChanges.filter(c => c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
+  const recentlyDiscovered = undatedChanges.filter(c => c.date >= thirtyDaysAgo && !upcomingRecords.has(c)).sort((a, b) => b.date.localeCompare(a.date));
 
   const upcomingByMonth = new Map<string, typeof upcoming>();
   for (const c of upcoming) {
@@ -49917,24 +49925,24 @@ function buildExpiringPage(): string {
     return { text: `in ${diff} days`, urgent: false };
   }
 
-  function buildEntry(c: typeof allChanges[0], showCountdown: boolean): string {
-    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-    const impactColor = changeImpactColor(c.impact);
-    const dated = isEventDated(c);
-    const countdown = showCountdown && dated ? countdownLabel(c.date) : null;
+  function buildEntry(line: DeadlineLine, showCountdown: boolean): string {
+    const c = line.citedRecord;
+    const badge = c ? changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" } : null;
+    const dated = line.datedRecord ? isEventDated(line.datedRecord) : true;
+    const countdown = showCountdown ? countdownLabel(line.date) : null;
     const urgentClass = countdown?.urgent ? " entry-urgent" : "";
     return `      <div class="exp-entry${urgentClass}${dated ? "" : " exp-undated"}">
         <div class="exp-left">
           ${countdown ? `<div class="exp-countdown${countdown.urgent ? " exp-countdown-urgent" : ""}">${countdown.text}</div>` : ""}
-          <div class="exp-date${dated ? "" : " exp-date-unknown"}">${changeEntryDateLabel(c)}</div>
+          <div class="exp-date${dated ? "" : " exp-date-unknown"}">${escHtmlServer(line.dateLabel)}</div>
         </div>
         <div class="exp-right">
           <div class="exp-head">
-            <span class="badge" style="background:${badge.color}">${badge.label}</span>
-            ${changeVendorLinkHtml(c.vendor, ' class="exp-vendor"')}
-            <span class="exp-impact" style="color:${impactColor}">${c.impact}</span>
+            ${badge ? `<span class="badge" style="background:${badge.color}">${badge.label}</span>` : ""}
+            ${changeVendorLinkHtml(line.vendor, ' class="exp-vendor"')}
+            ${c ? `<span class="exp-impact" style="color:${changeImpactColor(c.impact)}">${c.impact}</span>` : ""}
           </div>
-          <div class="exp-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
+          <div class="exp-summary">${line.summaryHtml}</div>
         </div>
       </div>`;
   }
@@ -49946,8 +49954,6 @@ function buildExpiringPage(): string {
 ${entriesHtml}
     </div>`;
   }).join("\n");
-
-  const recentHtml = recent.length > 0 ? recent.map(c => buildEntry(c, false)).join("\n") : "";
 
   const totalUpcoming = upcoming.length;
   const urgentCount = upcoming.filter(c => {
@@ -49966,15 +49972,22 @@ ${entriesHtml}
     description: metaDesc,
     numberOfItems: totalUpcoming + recent.length + recentlyDiscovered.length,
     url: `${BASE_URL}/expiring`,
-    itemListElement: capListSections([upcoming, recent, recentlyDiscovered], 50).map((c, i) => ({
+    itemListElement: capListSections([
+      upcoming.map(line => {
+        const deadline = stated.find(s => s.vendor === line.vendor && s.date === line.date);
+        return { line, description: deadline ? statedSentenceWithAnyConditions(deadline) : line.sentence };
+      }),
+      recent.map(c => ({ line: recordDeadlineLine(c), description: c.summary })),
+      recentlyDiscovered.map(c => ({ line: recordDeadlineLine(c), description: c.summary })),
+    ], 50).map(({ line, description }, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
         "@type": "NewsArticle",
-        headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
-        description: c.summary,
-        ...changeDatePublished(c),
-        ...changeVendorUrlField(c.vendor),
+        headline: line.citedRecord ? `${line.vendor}: ${(changeTypeBadge[line.citedRecord.change_type] ?? { label: line.citedRecord.change_type }).label}` : line.vendor,
+        description,
+        ...(line.datedRecord ? changeDatePublished(line.datedRecord) : { datePublished: line.date }),
+        ...changeVendorUrlField(line.vendor),
         publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
       },
     })),
@@ -50050,7 +50063,7 @@ ${globalNavCss()}
   ${buildGlobalNav("expiring")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Expiring</div>
   <h1>Upcoming Free Tier Changes</h1>
-  <p class="page-intro">Free tiers disappearing, prices increasing, products shutting down. Don\u2019t get caught off guard.</p>
+  <p class="page-intro">${totalUpcoming} upcoming pricing changes tracked. Free tiers disappearing, prices increasing, products shutting down. Don\u2019t get caught off guard.</p>
   ${datedSectionNoticeHtml(
     `A change is grouped under the month its effective date falls in while that date is ${today} or later. A change whose effective date we do not hold is grouped instead by the day we discovered it, under Recently Discovered, and leaves that section 30 days after that day.`,
     [
@@ -50059,6 +50072,7 @@ ${globalNavCss()}
     ],
     escHtmlServer,
     ' class="page-intro dated-rule"',
+    statedDatesShownWhileLaterThan(today),
   )}
 
   <div class="stats-bar">
@@ -50088,14 +50102,14 @@ ${recent.length > 0 ? `  <div class="recent-section" id="recently-changed">
     <p class="recent-desc">${recent.length} pricing changes in the last 30 days.</p>
     <button class="recent-toggle" onclick="document.querySelector('.recent-entries').classList.toggle('show');this.textContent=this.textContent==='Show recent changes'?'Hide recent changes':'Show recent changes'">Show recent changes</button>
     <div class="recent-entries">
-${recent.map(c => buildEntry(c, false)).join("\n")}
+${recent.map(c => buildEntry(recordDeadlineLine(c), false)).join("\n")}
     </div>
   </div>` : ""}
 
 ${recentlyDiscovered.length > 0 ? `  <div class="recent-section">
     <h2>Recently Discovered</h2>
     <p class="recent-desc">${recentlyDiscovered.length} ${recentlyDiscovered.length === 1 ? "change" : "changes"} we found in the last 30 days whose effective date the vendor’s page does not state. They are dated by discovery and are not counted as upcoming or as recently changed.</p>
-${recentlyDiscovered.map(c => buildEntry(c, false)).join("\n")}
+${recentlyDiscovered.map(c => buildEntry(recordDeadlineLine(c), false)).join("\n")}
   </div>` : ""}
 
   <div class="mcp-cta">
