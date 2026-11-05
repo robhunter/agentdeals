@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { isAnnouncementDate } from "../dist/weekly-announcements.js";
 import { readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
@@ -105,6 +106,7 @@ interface DealChange {
   change_type: string;
   reports?: string;
   date: string;
+  announced_on?: string;
   summary: string;
   previous_state: string;
   current_state: string;
@@ -324,6 +326,14 @@ function validateDealChanges(changes: DealChange[]): ValidationError[] {
         field: "date",
         message: `Invalid date format (expected YYYY-MM-DD): ${change.date}`,
       });
+    }
+
+    if (Object.hasOwn(change, "announced_on")) {
+      if (!isAnnouncementDate(change.announced_on)) {
+        errors.push({ file: "data/deal_changes.json", index: i, vendor, field: "announced_on", message: "announced_on must be a valid calendar date (YYYY-MM-DD)" });
+      } else if (change.announced_on > change.date) {
+        errors.push({ file: "data/deal_changes.json", index: i, vendor, field: "announced_on", message: "announced_on must not be later than date" });
+      }
     }
 
     if (change.source_url && !URL_REGEX.test(change.source_url)) {
