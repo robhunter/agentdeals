@@ -35699,7 +35699,7 @@
     {
       "vendor": "Google Cloud Storage",
       "category": "Storage",
-      "description": "Always Free: 5 GB regional storage (US regions), 5K Class A ops/month, 50K Class B ops/month, 100 GB North America egress",
+      "description": "Always Free: 5 GB-months of Standard storage in us-east1, us-west1 or us-central1 only, 5K Class A ops/month, 50K Class B ops/month, 100 GB North America egress. The free 100 GB a month covers data sent from a bucket in us-east1, us-west1 or us-central1 to visitors anywhere except China and Australia, including Europe.",
       "tier": "Always Free",
       "url": "https://cloud.google.com/storage/pricing",
       "tags": [
