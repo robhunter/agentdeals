@@ -49894,10 +49894,10 @@ function buildExpiringPage(): string {
   const stated = deadlinesOurTextStates(everyRecord, records, today);
   const upcoming = deadlineLinesOf([...records, ...eventDated.filter(c => c.date === today)], stated);
   const upcomingRecords = new Set(upcoming.flatMap(line => line.citedRecord ? [line.citedRecord] : []));
-  for (const deadline of statedDeadlines(deadlineTextsOf([], undatedChanges), [], today)) {
-    if (deadline.record && upcoming.some(line => line.vendor === deadline.vendor && line.date === deadline.date)) {
-      upcomingRecords.add(deadline.record);
-    }
+  for (const record of undatedChanges) {
+    const displayedDeadline = statedDeadlines(deadlineTextsOf([], [record]), [], today)
+      .some(deadline => upcoming.some(line => line.vendor === deadline.vendor && line.date === deadline.date));
+    if (displayedDeadline) upcomingRecords.add(record);
   }
   const recent = eventDated.filter(c => c.date < today && c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
   const recentlyDiscovered = undatedChanges.filter(c => c.date >= thirtyDaysAgo && !upcomingRecords.has(c)).sort((a, b) => b.date.localeCompare(a.date));

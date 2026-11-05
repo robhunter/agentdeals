@@ -115,6 +115,7 @@ describe("expiring month groups include the deadline tracker's stated dates", ()
     const record = (name: string, date: string, summary: string, extra = {}) => ({ vendor: name, category: "Messaging", change_type: "product_deprecated", impact: "high", date, summary, previous_state: "Available", current_state: "Retiring", source_url: recordUrl, alternatives: [], recorded_date: dateIn(-2), date_source: "vendor_page", listing_effect: "none", ...extra });
     changes.changes = [
       record(recordVendor, dateIn(-2), `The free plan retires on ${dateIn(20)}.`, { date_source: "discovered", discontinued_date: dateIn(20) }),
+      record(recordVendor, dateIn(-3), `The free plan retires on ${dateIn(20)}.`, { date_source: "discovered", discontinued_date: dateIn(20) }),
       record(vendor, dateIn(-2), sentence, { date_source: "discovered", discontinued_date: dateIn(10) }),
       record("Month Fixture Other", dateIn(-2), "The product was deprecated.", { date_source: "discovered" }),
       record("Month Fixture Today", TODAY, "The new limits take effect today."),
