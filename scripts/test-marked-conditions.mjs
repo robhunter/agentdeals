@@ -22,14 +22,14 @@ delete env.TEST_SHARD;
 const files = readdirSync(join(root, "test")).filter(name => name.endsWith(".test.ts")).filter(name => {
   const source = readFileSync(join(root, "test", name), "utf8");
   return /withoutItsOwnConditions|plainConditionsByVendor|SoftwareApplication|nodeDescriptionOf|groq|mistral|gemini|xai|ollama|deepseek/i.test(source)
-    || /^(?:conditions-|page-data-provenance|page-lastmod|change-entry-date-provenance)/.test(name);
+    || /^(?:conditions-|page-data-provenance|page-lastmod|change-entry-date-provenance|data-push-(?:gate|holdback))/.test(name);
 }).sort();
 const run = args => {
   const result = spawnSync(process.execPath, args, { cwd: root, env, stdio: "inherit" });
   assert.equal(result.status, 0, `${args.join(" ")} failed`);
 };
 try {
-  writeFileSync(indexPath, JSON.stringify(index));
+  writeFileSync(indexPath, JSON.stringify(index, null, 2) + "\n");
   console.log(`Marked-condition fixture: ${mixed.length} mixed listings; ${files.length} test files.`);
   run(["scripts/sync-page-reviews.js"]);
   run(["--test", "--test-concurrency=1", ...files.map(name => `test/${name}`)]);
