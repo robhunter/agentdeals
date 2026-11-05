@@ -1,3 +1,4 @@
+import { announcementsInWeek, weeklyAnnouncementNote, weeklyAnnouncementHeading, announcementDateLabel, WEEKLY_ANNOUNCEMENTS_INTRO } from "./weekly-announcements.js";
 import { createServer as createHttpServer, ServerResponse, type IncomingMessage } from "node:http";
 import { readFileSync, existsSync, statSync, writeFileSync, writeSync } from "node:fs";
 import { randomUUID } from "node:crypto";
@@ -4814,6 +4815,9 @@ function buildDigestPage(weekKey: string): string | null {
   ].join(" and ");
   const comingUpHtml = weekKey === getCurrentWeekKey() ? comingUpSectionHtml(servedOn, new Set(weekRecords), "impact-section coming-up") : "";
   const window = isoWeekWindow(getWeekStart(year, week));
+  const announced = announcementsInWeek(changesTheVendorMade(trackedChanges(dealChanges)), window);
+  const announcementNote = announced.length ? weeklyAnnouncementNote(announced.length) : "";
+  const announcedHtml = weeklyAnnouncementsSectionHtml(announced, "impact-section");
   const dateRange = weekRangeLabel(window.start, window.end!);
   const discoveryNote = discovered.length > 0 ? coveringBracketedChanges(discoveryBatchNote(discovered.length, `during ${dateRange}`), discovered) : "";
   const discoveryClause = discovered.length > 0
@@ -4824,11 +4828,13 @@ function buildDigestPage(weekKey: string): string | null {
   const weekLine = stated.length > 0
     ? `${notStarted ? `Week ${week}, ${year} has not started. ` : ""}${eventCount} event${eventCount === 1 ? "" : "s"} ${notStarted ? "scheduled for" : "in"} week ${week}, ${year}: ${changes.length} change${changes.length === 1 ? "" : "s"} ${notStarted ? "scheduled" : "tracked"} and ${deadlineCounts}.`
     : notStarted ? weekNotStartedLine(year, week, changes.length) : `${changes.length} change${changes.length !== 1 ? "s" : ""} tracked in week ${week}, ${year}.`;
-  const metaDesc = stated.length > 0
+  const metaBase = stated.length > 0
     ? `${eventCount} event${eventCount === 1 ? "" : "s"} for developer tools during ${dateRange}: ${changes.length} pricing change${changes.length === 1 ? "" : "s"} ${notStarted ? "scheduled" : "tracked"} and ${deadlineCounts}.${discoveryClause}`
     : changes.length > 0
     ? `${changes.length} pricing changes ${notStarted ? "scheduled" : "tracked"} for developer tools during ${dateRange}. ${changes.filter(c => c.impact === "high").length} high-impact changes.${discoveryClause}`
     : `No pricing changes tracked for developer tools during ${dateRange}.${discoveryClause}`;
+
+  const metaDesc = metaBase + (announcementNote ? ` ${announcementNote}` : "");
 
   const byCountLabel = new Map<string, { count: number; color: string }>();
   for (const c of changes) {
@@ -4955,17 +4961,17 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-<style>${digestCss}${comingUpHtml ? COMING_UP_CSS : ""}</style>
+<style>${digestCss}${comingUpHtml || announcedHtml ? COMING_UP_CSS : ""}</style>
 </head>
 <body>
 <div class="container">
   ${buildGlobalNav("digest")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/digest/archive">Digest</a> &rsaquo; ${weekKey}</div>
   <h1>Pricing Changes: ${dateRange}</h1>
-  <p class="page-meta">${escHtmlServer(weekLine)}${discoveryClause}</p>
+  <p class="page-meta">${escHtmlServer(weekLine)}${discoveryClause}</p>${announcementNote ? `\n  <p>${escHtmlServer(announcementNote)}</p>` : ""}
 ${statsHtml}
 ${bodyHtml}
-${trendingHtml}${comingUpHtml}
+${trendingHtml}${announcedHtml}${comingUpHtml}
 
   <div class="rss-cta">
     <p>Get pricing changes delivered automatically</p>
@@ -5061,7 +5067,7 @@ function buildThisWeekPage(weeksAgo: number): string {
   const title = weeksAgo === 0
     ? `This Week in Developer Pricing \u2014 ${dateRange} \u2014 AgentDeals`
     : `Developer Pricing: ${dateRange} \u2014 AgentDeals`;
-  const metaDesc = headline;
+  const metaDesc = headline + (digest.announcement_note ? ` ${digest.announcement_note}` : "");
   const canonicalPath = weeksAgo === 0 ? "/this-week" : `/this-week?week=${weeksAgo}`;
 
   const negativeTypes = NEGATIVE_CHANGE_TYPES;
@@ -5125,7 +5131,7 @@ function buildThisWeekPage(weeksAgo: number): string {
     </section>`
     : "";
 
-  const contentHtml = [changesHtml, firstReadHtml].filter(Boolean).join("\n");
+  const contentHtml = [changesHtml, firstReadHtml, weeklyAnnouncementsSectionHtml(digest.announced_changes ?? [], "tw-section")].filter(Boolean).join("\n");
 
   const comingUpHtml = weeksAgo === 0
     ? comingUpSectionHtml(new Date().toISOString().slice(0, 10), new Set([...digest.top_changes, ...digest.discovered_changes]), "tw-section tw-coming-up")
@@ -5161,7 +5167,7 @@ function buildThisWeekPage(weeksAgo: number): string {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: `This Week in Developer Pricing: ${dateRange}`,
-    description: headline,
+    description: metaDesc,
     url: `${BASE_URL}${canonicalPath}`,
     datePublished: digest.week_of,
     dateModified: digest.week_ending ?? digest.week_of,
@@ -5220,14 +5226,14 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 ${feedLinkTag(PER_CHANGE_FEED)}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-<style>${thisWeekCss}${comingUpHtml ? COMING_UP_CSS : ""}</style>
+<style>${thisWeekCss}${comingUpHtml || digest.announced_changes?.length ? COMING_UP_CSS : ""}</style>
 </head>
 <body>
 <div class="container">
   ${buildGlobalNav("this-week")}
   <span class="tw-date">${escHtmlServer(dateRange)}</span>
   <h1>This Week in Developer Pricing</h1>
-  <p class="tw-headline">${escHtmlServer(headline)}</p>
+  <p class="tw-headline">${escHtmlServer(headline)}</p>${digest.announcement_note ? `\n  <p>${escHtmlServer(digest.announcement_note)}</p>` : ""}
 ${summaryBar}${calendarNotice ? `
 ${calendarNotice}` : ""}
 ${contentHtml}${comingUpHtml}
@@ -50416,6 +50422,18 @@ function comingUpLines(today: string, listedInTheWeek: ReadonlySet<DealChange>):
     .filter(line => line.datedRecord === null || !listedInTheWeek.has(line.datedRecord));
 }
 
+function weeklyAnnouncementsSectionHtml(changes: readonly DealChange[], sectionClass: string): string {
+  if (!changes.length) return "";
+  return `
+  <section class="${sectionClass} weekly-announcements">
+    <h2>${escHtmlServer(weeklyAnnouncementHeading(changes.length))}</h2>
+    <p>${escHtmlServer(WEEKLY_ANNOUNCEMENTS_INTRO)}</p>
+    <ul class="coming-up-list">
+      ${changes.map(c => `<li><span class="coming-up-date">${escHtmlServer(announcementDateLabel(c))}</span> ${changeVendorLinkHtml(c.vendor, ' class="change-vendor"')}: ${changeSummaryHtml(c, escHtmlServer)}</li>`).join("\n      ")}
+    </ul>
+  </section>`;
+}
+
 function comingUpSectionHtml(today: string, listedInTheWeek: ReadonlySet<DealChange>, sectionClass: string): string {
   const lines = comingUpLines(today, listedInTheWeek);
   if (lines.length === 0) return "";
@@ -54569,16 +54587,16 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     const entryUpdates: string[] = [];
     for (let w = 0; w < 4; w++) {
       const digest = getFormattedWeeklyDigest(w, 50);
-      if (digest.top_changes.length === 0) continue;
+      if (digest.top_changes.length === 0 && !digest.announced_changes?.length) continue;
       const weekUrl = w === 0 ? `${baseUrl}/this-week` : `${baseUrl}/this-week?week=${w}`;
-      const newestChange = latestChangeDate(digest.top_changes) ?? digest.week_of;
+      const newestChange = latestChangeDate([...digest.top_changes, ...(digest.announced_changes ?? []).map(c => ({ date: c.announced_on }))]) ?? digest.week_of;
       const pubDate = feedEntryUpdated(newestChange, servedAt);
       entryUpdates.push(pubDate);
       const title = `Week of ${weekRangeLabel(digest.week_of, digest.week_ending)}: ${digest.headline}`;
       weekEntries.push(`  <entry>
     <title>${escXml(title)}</title>
     <link href="${escXml(weekUrl)}" rel="alternate"/>
-${digestSourceXml([...digest.top_changes, ...digest.discovered_changes], escXml)}
+${digestSourceXml([...digest.top_changes, ...digest.discovered_changes, ...(digest.announced_changes ?? [])], escXml)}
     <id>urn:agentdeals:weekly-digest:${digest.week_of}</id>
     <updated>${pubDate}</updated>
     <author><name>AgentDeals</name></author>
