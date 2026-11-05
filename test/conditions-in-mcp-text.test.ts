@@ -56,7 +56,7 @@ const scratchOffers: Offer[] = catalogue.offers.map((offer: Offer, index: number
   const { conditions: _stored, ...withoutConditions } = offer;
   const description = `${offer.description.endsWith(".") ? offer.description.slice(0, -1) : offer.description} Zqd${code}.`;
   return role === "conditions"
-    ? { ...withoutConditions, description, conditions: [conditionNaming(`Zqc${code}`)] }
+    ? { ...withoutConditions, description, conditions: [conditionNaming(`Zqc${code}`), { ...conditionNaming(`Zqo${code}`), operating_detail: true }] }
     : { ...withoutConditions, description } as Offer;
 });
 
@@ -161,7 +161,7 @@ function checksOn(read: () => Map<string, string>, floors: { conditioned: number
     it("follows each full description with the listing's conditions in plain text, before the next listing begins", () => {
       const missing = [...read()]
         .flatMap(([uri, text]) => descriptionsPrinted(uri, text))
-        .filter(one => one.role === "conditions" && !one.after.includes(` ${conditionsInPlainText([conditionNaming(`Zqc${one.code}`)])}`))
+        .filter(one => one.role === "conditions" && !one.after.includes(` ${conditionsInPlainText([conditionNaming(`Zqc${one.code}`), { ...conditionNaming(`Zqo${one.code}`), operating_detail: true }])}`))
         .map(one => `${one.where}: ${vendorByCode.get(one.code)}`);
       assert.deepStrictEqual(missing, []);
     });

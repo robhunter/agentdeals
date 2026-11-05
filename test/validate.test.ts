@@ -115,6 +115,13 @@ describe("validate-data", () => {
       assert.deepStrictEqual(conditionErrors([{ ...stated, rules_out: ["production", "commercial use"] }]), []);
     });
 
+    it("accepts only true as an operating detail marker", () => {
+      assert.deepStrictEqual(conditionErrors([{ ...stated, operating_detail: true }]), []);
+      for (const marker of [false, null, undefined, 0, 1, "true", [], {}]) {
+        assert.deepStrictEqual(conditionErrors([{ ...stated, operating_detail: marker }]), ["conditions[0].operating_detail must be true when present"]);
+      }
+    });
+
     it("accepts a listing without the field", () => {
       assert.deepStrictEqual(validateOffers([makeOffer()]), []);
     });
