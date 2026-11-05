@@ -423,3 +423,39 @@ describe("a comparison naming a listing whose terms the catalogue's own records 
     assert.deepStrictEqual(alerts, []);
   });
 });
+
+
+describe("browser cards omit operating details while the API retains them", () => {
+  let marked: { child: ChildProcess; base: string };
+
+  before(async () => {
+    const markedPath = path.join(dir, "marked.json");
+    writeFileSync(markedPath, JSON.stringify({ ...catalogue, offers: scratchOffers.map((offer, index) => ({
+      ...offer,
+      conditions: [...offer.conditions!, { ...conditionNaming(`Zqm${codeFor(index)}`), operating_detail: true }],
+    })) }));
+    marked = await startServer({ AGENTDEALS_INDEX_PATH: markedPath });
+  });
+  after(() => marked?.child.kill());
+
+  for (const [route, functionName, search, element] of [
+    ["/", "renderCards", "", "deal-cards"],
+    ["/compare-tool", "renderComparison", "?a=Groq&b=Mistral%20AI", "results"],
+    ["/stack-check", "renderResults", "?s=No%20Such%20Vendor", "gaps-list"],
+  ]) {
+    it(`filters marked details from the rendered ${route} cards`, async () => {
+      const html = await (await fetch(marked.base + route)).text();
+      let responses = 0;
+      const pageFetch = forwardedTo(url => url, data => {
+        assert.ok(JSON.stringify(data).includes("Zqm"), "the API still carries marked details");
+        responses += 1;
+      }, marked.base);
+      const { elements, alerts } = runScriptDefining(html, functionName!, search!, pageFetch);
+      const cards = await rendered(elements, element!);
+      assert.ok(responses > 0);
+      assert.match(cards, ANY_TOKEN, "unmarked conditions remain visible");
+      assert.ok(!cards.includes("Zqm"), "operating details do not appear in the cards");
+      assert.deepStrictEqual(alerts, []);
+    });
+  }
+});

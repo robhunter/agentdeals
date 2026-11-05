@@ -23,6 +23,10 @@ export function conditionsBesidePublishedTerms(item: Pick<Offer, "tier" | "condi
   return offerRetired(item) || item.terms_superseded ? [] : conditionsOf(item);
 }
 
+export function conditionsForOtherPages(conditions: readonly ListingCondition[]): readonly ListingCondition[] {
+  return conditions.filter(condition => condition.operating_detail !== true);
+}
+
 function rulesOut(condition: ListingCondition, use: UseAVendorRulesOut): boolean {
   return (condition.rules_out ?? []).includes(use);
 }
@@ -103,10 +107,16 @@ export function conditionsHtmlBesidePublishedTerms(item: Pick<Offer, "tier" | "c
   return conditionsHtml(conditionsBesidePublishedTerms(item), markupEscaped);
 }
 
-export function conditionsForTheBrowser(): string {
-  return [
+function conditionsHtmlForOtherPages(item: Pick<Offer, "tier" | "conditions"> & { terms_superseded?: unknown }): string {
+  return conditionsHtml(conditionsForOtherPages(conditionsBesidePublishedTerms(item)), markupEscaped);
+}
+
+export function conditionsForTheBrowser(omitOperatingDetails = false): string {
+  const functions = [
     `var LISTING_CONDITIONS_CLASS = ${JSON.stringify(LISTING_CONDITIONS_CLASS)};`,
     `var RETIRED_TIER = ${RETIRED_TIER};`,
     ...[citationLabel, offerRetired, conditionsOf, conditionsBesidePublishedTerms, conditionsHtml, markupEscaped, conditionsHtmlBesidePublishedTerms].map(String),
-  ].join("\n");
+  ];
+  if (omitOperatingDetails) functions.push(String(conditionsForOtherPages), `conditionsHtmlBesidePublishedTerms = ${String(conditionsHtmlForOtherPages)};`);
+  return functions.join("\n");
 }

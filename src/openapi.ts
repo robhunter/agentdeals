@@ -33,6 +33,7 @@ const LISTING_CONDITIONS_PROPERTY = {
       quote: { type: "string" },
       url: { type: "string", format: "uri" },
       read_on: { type: "string", format: "date" },
+      operating_detail: { type: "boolean", enum: [true], description: "Operating details are included on the vendor page, its own guide and API/MCP responses; other pages omit them." },
       rules_out: { type: "array", items: { type: "string", enum: [...USES_A_VENDOR_CAN_RULE_OUT] } }
     },
     required: ["text", "quote", "url", "read_on"]

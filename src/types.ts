@@ -97,6 +97,7 @@ export interface ListingCondition {
   url: string;
   read_on: string;
   rules_out?: UseAVendorRulesOut[];
+  operating_detail?: true;
 }
 
 export type FreeGround = "licence" | "plan";
