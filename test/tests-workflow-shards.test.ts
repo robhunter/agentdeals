@@ -44,9 +44,10 @@ describe("the Tests workflow runs the whole suite in shards", () => {
     assert.match(workflow, /^ {6}fail-fast: false$/m);
   });
 
-  it("reports one check named test, which passes only when every shard passed", () => {
-    assert.match(workflow, /^ {2}test:\n {4}needs: suite\n/m);
+  it("requires every shard and the marked-condition suite before the test check passes", () => {
+    assert.match(workflow, /^ {2}test:\n {4}needs: \[suite, marked-conditions\]\n/m);
     assert.match(workflow, /^ {10}SHARDS: \$\{\{ needs\.suite\.result \}\}$/m);
-    assert.match(workflow, /if \[ "\$SHARDS" != "success" \]; then\n\s+echo "::error[^\n]*\n\s+exit 1\n/);
+    assert.match(workflow, /^ {10}MARKED: \$\{\{ needs\.marked-conditions\.result \}\}$/m);
+    assert.match(workflow, /if \[ "\$SHARDS" != "success" \] \|\| \[ "\$MARKED" != "success" \]; then\n\s+echo "::error[^\n]*\n\s+exit 1\n/);
   });
 });
