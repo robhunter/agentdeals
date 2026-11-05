@@ -199,9 +199,9 @@
         },
         {
           "text": "A Hobby workspace allows 100 concurrent sandboxes. Each sandbox can run continuously for 24 hours; on Pro and above there is no limit on session length.",
-          "quote": "Sandboxes can indefinitely on Pro and above",
+          "quote": "Maximum session length (How long a sandbox can run continuously before it ends.) | 24 hours | No limit",
           "url": "https://render.com/pricing",
-          "read_on": "2026-11-03"
+          "read_on": "2026-11-05"
         },
         {
           "text": "Render Sandboxes is in public beta. During the beta, sandboxes have no public URL and no private network to other Render services.",
@@ -557,6 +557,48 @@
           "quote": "The maximum file size for a single Cloudflare Pages site asset is 25 MiB.",
           "url": "https://developers.cloudflare.com/pages/platform/limits/",
           "read_on": "2026-10-29"
+        },
+        {
+          "text": "Cloudflare limits how many new Pages projects an account can create in its first 48 hours, and does not publish the number. If an account is blocked, the block lifts automatically once the 48 hours have passed.",
+          "quote": "In order to protect against abuse of the service, Cloudflare limits the number of new Pages projects you can create within your first 48 hours of using the service.",
+          "url": "https://developers.cloudflare.com/pages/platform/limits/",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "A _redirects file can contain up to 2,100 redirects, no more than 2,000 static and 100 dynamic. Cloudflare recommends Bulk Redirects for more.",
+          "quote": "A _redirects file can have a maximum of 2,000 static redirects and 100 dynamic redirects, for a combined total of 2,100 redirects.",
+          "url": "https://developers.cloudflare.com/pages/platform/limits/",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "A _headers file can have up to 100 header rules. Each header can be up to 2,000 characters long.",
+          "quote": "A _headers file can have a maximum of 100 header rules.",
+          "url": "https://developers.cloudflare.com/pages/platform/limits/",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "A Pages project can have any number of preview deployments active at once. Any number of users can manage a Pages site from the dashboard.",
+          "quote": "You can have an unlimited number of preview deployments active on your project at a time.",
+          "url": "https://developers.cloudflare.com/pages/platform/limits/",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "To request a higher limit, submit Cloudflare's Limit Increase Request Form. Cloudflare contacts you if the limit can be raised.",
+          "quote": "If the limit can be increased, Cloudflare will contact you with next steps.",
+          "url": "https://developers.cloudflare.com/pages/platform/limits/",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "For more than 100 sites, Cloudflare points to Workers for Platforms, which has no project limit, or Workers Static Assets, which runs each site as its own Worker. Workers have a separate limit of 100 on the Free plan and 500 on paid plans.",
+          "quote": "The Workers project limit (100 on Free, 500 on paid plans) is separate from the Pages project limit.",
+          "url": "https://developers.cloudflare.com/pages/platform/limits/",
+          "read_on": "2026-11-05",
+          "operating_detail": true
         },
         {
           "text": "Pages Functions requests are billed as Workers requests. The Workers Paid plan has a $5 minimum monthly charge per account. It includes 10 million requests and 30 million CPU milliseconds per month. Overages are $0.30 per million requests and $0.02 per million CPU milliseconds.",
@@ -4369,31 +4411,36 @@
           "text": "Groq does not charge at upgrade. It invoices at the end of each monthly billing cycle, and also when cumulative usage first reaches $1, $10, $100, $500, or $1,000. For India customers, the thresholds are $1, $10, and then $100 recurring. Groq bills only when usage reaches at least $0.50. Groq accepts credit cards, United States bank accounts, and SEPA debit accounts.",
           "quote": "an invoice is automatically triggered and payment is deducted when your cumulative usage reaches specific thresholds: $1, $10, $100, $500, and $1,000.",
           "url": "https://console.groq.com/docs/billing-faqs",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "You can downgrade to Groq's Free tier at any time. You must pay a final invoice for any outstanding usage before the downgrade completes.",
           "quote": "When you downgrade, we will issue a final invoice for any outstanding usage that has not yet been billed.",
           "url": "https://console.groq.com/docs/billing-faqs",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "Organization owners on Groq's paid tiers can set a monthly spend limit. It applies across all API keys. At the limit, API calls return a 400 with code blocked_api_access. Current spend updates every 10-15 minutes, so you might exceed the limit slightly. Limits reset on the 1st of each month. Email alerts can be set before the limit.",
           "quote": "Spend limits automatically protect your budget by blocking API access when you reach your monthly cap.",
           "url": "https://console.groq.com/docs/spend-limits",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "Groq's flex processing is for paid customers only. It has 10x higher rate limits than on-demand processing. Pricing matches the on-demand tier. Set the service_tier parameter to flex. If flex capacity is unavailable, requests fail with status 498 and error capacity_exceeded.",
           "quote": "If flex capacity is unavailable, requests will fail quickly with status 498 and error capacity_exceeded.",
           "url": "https://console.groq.com/docs/flex-processing",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "Groq's Performance tier provides a 99.9% availability SLA and 99% latency guarantee. It is available only on enterprise plans. Billing is based on provisioned throughput, not per-token usage. Uncached context length must be under 8,192 tokens.",
           "quote": "It includes a 99.9% availability SLA and a 99% latency guarantee aligned to your enterprise agreement.",
           "url": "https://console.groq.com/docs/performance-tier",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "Groq's Services Agreement does not permit it to train or fine-tune models on your inputs or outputs unless you give permission.",
@@ -4529,13 +4576,15 @@
           "text": "Google's billing FAQ says switching from Prepay to Postpay is not supported. The same doc's refunds section says an account that meets Google's criteria can manually upgrade from Prepay to Postpay, which closes the Prepay account and refunds unused prepaid credits; eligible new projects can choose Postpay at setup. Google publishes no criteria.",
           "quote": "When a Prepay account switches to the Postpay account type (after you meet the criteria and manually upgrade your account), the Prepay account is closed and any remaining prepaid credits are automatically refunded to the payment method on file.",
           "url": "https://ai.google.dev/gemini-api/docs/billing",
-          "read_on": "2026-11-01"
+          "read_on": "2026-11-01",
+          "operating_detail": true
         },
         {
           "text": "Impress Watch reported the cutover date as 2026-10-12.",
           "quote": "10月12日までに切り替えとクレジット購入を行なわなかった場合、サービスが中断される。",
           "url": "https://www.watch.impress.co.jp/docs/news/2132505.html",
-          "read_on": "2026-10-07"
+          "read_on": "2026-10-07",
+          "operating_detail": true
         },
         {
           "text": "When the Prepay balance reaches $0, every API key in every project on the billing account stops working until credits are added; requests then fail with an HTTP 402 Payment Required error.",
@@ -4547,7 +4596,8 @@
           "text": "Google's steps for switching to Prepay tell you to set up auto-reload on the AI Studio Billing page to top up your credit balance when it runs low.",
           "quote": "To prevent service interruptions after switching, configure auto-reload to top up your credit balance when it runs low.",
           "url": "https://ai.google.dev/gemini-api/docs/billing",
-          "read_on": "2026-10-07"
+          "read_on": "2026-10-07",
+          "operating_detail": true
         },
         {
           "text": "The monthly Google Cloud credits from Google AI Pro or Ultra are eligible Google Cloud credits. On the Prepay billing plan, these credits pay for Gemini API usage only after you buy Prepay credits in AI Studio. With a $0 Prepay balance, requests fail even with unused Google Cloud credits, according to a Google staff member on discuss.ai.google.dev.",
@@ -4571,7 +4621,8 @@
           "text": "Developers on Google's AI developer forum report projects dropping to Tier 1 after switching to Prepay or after a Prepay payment. Tier 1's $250 monthly cap includes prior spend, so projects can pause with a 429 error despite available credits. Google staff ask users to report this with the Gemini API Tier Downgrade Report Form.",
           "quote": "Sincere apologies for this issue. Please use this form to report sudden tier downgrades, our team will look into it",
           "url": "https://discuss.ai.google.dev/t/prepay-migration-demoted-tier-3-tier-1-and-the-tier-1-cap-was-applied-retroactively-to-pre-migration-spend/179550",
-          "read_on": "2026-10-10"
+          "read_on": "2026-10-10",
+          "operating_detail": true
         }
       ],
       "free_plan_excerpt": {
@@ -4640,7 +4691,8 @@
           "text": "The API opt-out toggle is under Anonymous improvement data, in the Privacy menu of the Admin panel, and is separate from the Vibe training toggle, so opting out of one does not opt out of the other.",
           "quote": "Vibe and API opt-out toggles are separate. Opting out of one does not opt you out of the other",
           "url": "https://help.mistral.ai/en/articles/455207-can-i-opt-out-of-my-input-or-output-data-being-used-for-training",
-          "read_on": "2026-10-05"
+          "read_on": "2026-10-05",
+          "operating_detail": true
         },
         {
           "text": "Mistral may train on inputs and outputs from Labs or Preview Models, which its Commercial Terms define as experimental, preview or pre-release models identified as such, including those with the \"labs\" prefix, even if you opted out or use zero data retention. Mistral Large 4 is a public preview.",
@@ -4652,7 +4704,8 @@
           "text": "Le Chat is now called Vibe. \"Vibe is the new name for what you knew as le Chat.\" Accounts and plans moved over. A Le Chat Pro subscription is now Mistral Pro.",
           "quote": "Vibe is the new name for what you knew as le Chat",
           "url": "https://help.mistral.ai/en/articles/682992-le-chat-is-now-vibe",
-          "read_on": "2026-10-21"
+          "read_on": "2026-10-21",
+          "operating_detail": true
         },
         {
           "text": "Pay-as-you-go uses prepaid credits. Your monthly usage is consumed first. API and Vibe Code requests beyond it fail with HTTP 402 if your credit balance is zero. Add credits to restore access. Auto Recharge charges your payment method when your balance falls below a set threshold.",
@@ -4664,31 +4717,36 @@
           "text": "An Organization monthly spending limit caps API and Vibe spending. Each Workspace can have its own monthly spending limit, no higher than the Organization's. By default Workspaces have no cap. If the limit is reached, API access can be suspended until the next month begins or an admin increases the limit.",
           "quote": "If the limit is reached, API access can be suspended until the next month begins or an admin increases the limit.",
           "url": "https://docs.mistral.ai/admin/billing-usage/billing",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "Free mode has the lowest limits. Enabling pay-as-you-go unlocks Tier 1. Tiers upgrade automatically with the cumulative billed amount: Tier 2 over $20 billed, Tier 3 over $100, Tier 4 over $500. Over $2,000 billed, contact support. Adding credits does not raise your rate limits. Article dated August 12, 2026.",
           "quote": "Adding credits does not raise your rate limits",
           "url": "https://help.mistral.ai/en/articles/698531-why-am-i-hitting-api-rate-limits-and-how-do-i-increase-them",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "The global endpoint api.mistral.ai has no committed inference location. Regional endpoints api.eu.mistral.ai and api.us.mistral.ai are billed at 1.1 times standard pricing. They support function calling as the only tool and do not offer Agents, Batch or the Files API.",
           "quote": "Mistral does not commit to a specific inference location for requests sent to this endpoint.",
           "url": "https://docs.mistral.ai/inference/regional-inference",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "Zero Data Retention requires pay-as-you-go and applies only to stateless API calls. Mistral reviews each request and approves or denies it. Not available for agents, conversations, libraries, batch files, or the Files API.",
           "quote": "Zero Data Retention (ZDR) is available only with pay-as-you-go and only for stateless API calls.",
           "url": "https://help.mistral.ai/en/articles/347612-can-i-activate-zero-data-retention-zdr",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "Only Priority Tier has an uptime SLA of 99.5%. It requires account setup with Mistral and custom per-model limits. Standard and Batch tiers have no SLA.",
           "quote": "Priority Tier requires account setup with Mistral.",
           "url": "https://docs.mistral.ai/inference/priority-tier",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         }
       ],
       "free_plan_excerpt": {
@@ -34772,43 +34830,50 @@
           "text": "Every xAI API team has per-model rate limits on requests per second and tokens per minute. Tier 0 is default at $0, Tier 1 at $50, Tier 2 at $250, Tier 3 at $1,000, Tier 4 at $5,000, Enterprise on request. Tiers unlock automatically by cumulative spend since January 1, 2026, including prepaid credit purchases. Tiers never downgrade. Tier 0 allows 150 RPS and 50M TPM for grok-4.7, 37 RPS and 10M TPM for grok-4.3. A request over a limit returns HTTP 429. A team can request higher limits in the console.",
           "quote": "Qualification is based on total revenue received through prepaid credit purchases or successfully fulfilled invoices.",
           "url": "https://docs.x.ai/developers/rate-limits",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "The global endpoint api.x.ai may route requests between regions, so the processing location is not guaranteed. The US endpoint is us.api.x.ai/v1. It serves grok-4.7 and grok-4.6 only, and a request for another model returns 404 there. It does not serve image, video, or voice APIs. Token usage costs 1.1 times global rates: grok-4.7 is $2.20 input and $6.60 output per 1M tokens under 200k prompt tokens. The US guarantee covers request handling, inference, moderation, and retained request data. Files, Collections, and server-side tools are outside it. xAI's docs describe no other regional endpoint.",
           "quote": "The US endpoint currently serves two models, grok-4.7 and grok-4.6, and none of the image generation, video generation, or voice APIs.",
           "url": "https://docs.x.ai/developers/advanced-api-usage/regions",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "Zero Data Retention is a team-wide setting turned on by a team admin in the xAI Console. It disables the stateful Responses API, Files, Collections, the Batch API, deferred completions, and xAI-hosted image and video outputs. xAI does not recommend enabling it for most customers.",
           "quote": "ZDR disables important API features that depend on stored data, including the stateful Responses API, Files and Collections, and the Batch API",
           "url": "https://docs.x.ai/developers/faq/security",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "Batch API requests do not count toward rate limits. Most complete within 24 hours. Processing time varies by system load and batch size. Completion time is best effort and not guaranteed.",
           "quote": "Completion time is best effort and not guaranteed.",
           "url": "https://docs.x.ai/developers/advanced-api-usage/batch-api",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "xAI says it is SOC 2 Type 2 compliant. For a HIPAA Business Associate Agreement, xAI asks customers to fill in its BAA Questionnaire, reviews the answers and replies with next steps.",
           "quote": "We are SOC 2 Type 2 compliant.",
           "url": "https://docs.x.ai/developers/faq/security",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "File storage costs $0.025 per GiB per day. Collection storage costs $0.10 per GiB per day. File downloads and collection downloads cost $0.20 per GiB downloaded.",
           "quote": "Files and collections stored on the SpaceXSI platform are billed based on the amount of storage used.",
           "url": "https://docs.x.ai/developers/pricing",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         },
         {
           "text": "xAI partners with GitHub's Secret Scanning program to detect leaked keys. If a leak is found, xAI disables the key and notifies you by email.",
           "quote": "If a leak is found, we disable the key and notify you via email.",
           "url": "https://docs.x.ai/developers/faq/security",
-          "read_on": "2026-11-04"
+          "read_on": "2026-11-04",
+          "operating_detail": true
         }
       ]
     },
@@ -36124,7 +36189,8 @@
           "text": "Since January 16, 2026 (Ollama v0.14.0), Ollama's API accepts Anthropic Messages API requests, which Ollama says lets Claude Code run on its local and cloud models. Ollama's docs: \"Ollama connects Claude Code to local and cloud models through its Anthropic-compatible API.\" `ollama launch claude` sets it up. Without installing Ollama, Claude Code can be pointed at https://ollama.com with an Ollama API key. Hosted web search and advanced tool controls are not fully supported.",
           "quote": "Ollama connects Claude Code to local and cloud models through its Anthropic-compatible API.",
           "url": "https://docs.ollama.com/integrations/claude-code",
-          "read_on": "2026-10-22"
+          "read_on": "2026-10-22",
+          "operating_detail": true
         }
       ]
     },
@@ -36329,7 +36395,8 @@
           "text": "DeepSeek's API accepts Anthropic-format requests at https://api.deepseek.com/anthropic. DeepSeek documents running Claude Code on it with a DeepSeek API key. Claude model names are mapped: claude-opus to deepseek-v4-pro, billed at the V4 Pro price; claude-sonnet and claude-haiku to deepseek-flash. Claude Code's web search runs through DeepSeek and adds model token costs. This is paid usage from the prepaid balance, since there is no free tier.",
           "quote": "our API has added support for the Anthropic API format, with the base_url being https://api.deepseek.com/anthropic.",
           "url": "https://api-docs.deepseek.com/guides/anthropic_api",
-          "read_on": "2026-10-22"
+          "read_on": "2026-10-22",
+          "operating_detail": true
         },
         {
           "text": "DeepSeek's Terms of Use, which also govern its API, let DeepSeek use inputs and outputs, de-identified and \"to a minimal extent\", to develop or improve its services and the technologies behind them. The terms say a user opts out by turning off \"Improve the model for everyone\".",
@@ -38273,7 +38340,7 @@
     {
       "vendor": "Together AI",
       "category": "AI / ML",
-      "description": "Inference API for open-source models, billed per token. Together AI does not currently offer free trials; access requires a minimum $15 credit purchase for an organization's first purchase ($5 for later purchases), and the platform is fully prepaid. gpt-oss-120B $0.15/$0.60 (per 1M tokens). Together deprecated Llama 3.3 70B (meta-llama/Llama-3.3-70B-Instruct-Turbo) and removed it from serverless inference on 2026-10-22; Together's deprecations page (docs.together.ai/docs/deprecations) recommends meta-models/Muse-Glimmer-30B ($0.35/$1.50) or a dedicated endpoint instead. Together also removed deepseek-ai/DeepSeek-V4-Flash-0731 from serverless on 2026-10-22; its recommended replacement, deepseek-ai/DeepSeek-V4.1-Flash, costs $0.30/$1.20. DeepSeek V4 Pro is served today as deepseek-ai/DeepSeek-V4-Pro-0813 ($1.32/$3.96); the earlier ID deepseek-ai/DeepSeek-V4-Pro was removed on 2026-08-27. Kimi K3 (moonshotai/Kimi-K3, $3.00/$15.00) is the Kimi model Together serves today; moonshotai/Kimi-K2.7-Code was removed on 2026-08-27, moonshotai/Kimi-K2.6 on 2026-08-19 and moonshotai/Kimi-K2.5 on 2026-05-21. Together also removed these models from serverless inference in 2026, so requests for them fail: openai/gpt-oss-20b on 2026-09-15 (Together recommends Qwen/Qwen3.5-9B); google/gemma-4-31B-it on 2026-09-15 (recommended: zai-org/GLM-5.3-Flash); zai-org/GLM-5.1 on 2026-07-10; Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8 on 2026-06-04; deepseek-ai/DeepSeek-R1 on 2026-05-14; deepseek-ai/DeepSeek-V3.1 on 2026-05-14; meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8 on 2026-03-31; meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo on 2026-03-06; meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo on 2026-02-25; meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo on 2026-02-06; meta-llama/Llama-4-Scout-17B-16E-Instruct on 2026-02-06. Together's deprecations page says a model can still appear in catalog listings during a transition, and that the runtime API and that page are the source of truth.",
+      "description": "Inference API for open-source models, billed per token. Together AI does not currently offer free trials; access requires a minimum $15 credit purchase for an organization's first purchase ($5 for later purchases), and the platform is fully prepaid. gpt-oss-120B $0.15/$0.60 (per 1M tokens). Together deprecated Llama 3.3 70B (meta-llama/Llama-3.3-70B-Instruct-Turbo) and removed it from serverless inference on 2026-10-22; Together's deprecations page (docs.together.ai/docs/deprecations) recommends meta-models/Muse-Glimmer-30B ($0.35/$1.50) or a dedicated endpoint instead. Together also removed deepseek-ai/DeepSeek-V4-Flash-0731 from serverless on 2026-10-22; its recommended replacement, deepseek-ai/DeepSeek-V4.1-Flash, costs $0.30/$1.20. DeepSeek V4 Pro is served today as deepseek-ai/DeepSeek-V4-Pro-0813 ($1.32/$3.96); the earlier ID deepseek-ai/DeepSeek-V4-Pro was removed on 2026-08-27. Together AI serverless serves Kimi K3 (moonshotai/Kimi-K3) at $3.00/$15.00 and Kimi K3.1 Pro (moonshotai/Kimi-K3.1-Pro) at $2.00/$10.00; moonshotai/Kimi-K2.7-Code was removed on 2026-08-27, moonshotai/Kimi-K2.6 on 2026-08-19 and moonshotai/Kimi-K2.5 on 2026-05-21. Together also removed these models from serverless inference in 2026, so requests for them fail: openai/gpt-oss-20b on 2026-09-15 (Together recommends Qwen/Qwen3.5-9B); google/gemma-4-31B-it on 2026-09-15 (recommended: zai-org/GLM-5.3-Flash); zai-org/GLM-5.1 on 2026-07-10; Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8 on 2026-06-04; deepseek-ai/DeepSeek-R1 on 2026-05-14; deepseek-ai/DeepSeek-V3.1 on 2026-05-14; meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8 on 2026-03-31; meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo on 2026-03-06; meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo on 2026-02-25; meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo on 2026-02-06; meta-llama/Llama-4-Scout-17B-16E-Instruct on 2026-02-06. Together's deprecations page says a model can still appear in catalog listings during a transition, and that the runtime API and that page are the source of truth.",
       "conditions": [
         {
           "text": "By default, Together stores prompts and responses and may use them for product improvements. Organization admins can turn storage off in privacy settings, enabling zero data retention.",
@@ -38328,7 +38395,7 @@
     {
       "vendor": "Fireworks AI",
       "category": "AI / ML",
-      "description": "Inference platform for open models, with serverless per-token pricing and on-demand GPU deployments billed per GPU second. Fireworks offers $1 in free credits to get started. Accounts with no payment method, or with no credits, are limited to 10 requests per minute, and an account without a payment method is suspended when the $1 credit runs out until one is added. Serverless prices: OpenAI GPT OSS 120B $0.15/$0.60 (per 1M tokens); MiniMax M3 $0.30/$1.20 (per 1M tokens); GLM 5.3 $1.40/$4.40 (per 1M tokens); Kimi K3 $3.00/$15.00 (per 1M tokens). Batch inference costs 50% of serverless prices. Image generation and audio inference were deprecated on June 10, 2026. Fireworks removed these models from serverless in 2026, so serverless requests for them fail (dedicated deployments are unaffected), according to its changelog (docs.fireworks.ai/updates/changelog): DeepSeek V4 Pro (0813) (accounts/fireworks/models/deepseek-v4-pro-0813) on 2026-09-25, replaced by DeepSeek V4.1 Flash $0.30/$1.20 (deepseek-v4p1-flash); DeepSeek V4 Flash (0731) (deepseek-v4-flash-0731) on 2026-09-25, replaced by DeepSeek V4.1 Flash; GLM 5.2 (glm-5p2) on 2026-09-25, replaced by GLM 5.3 (glm-5p3); Kimi K2.6 (kimi-k2p6) on 2026-09-25, replaced by GLM 5.3 or Kimi K3 (kimi-k3); Kimi K2.7 Code (kimi-k2p7-code) on 2026-09-25, replaced by GLM 5.3 or Kimi K3; Muse Glimmer 30B (muse-glimmer-30b) on 2026-09-25, replaced by NVIDIA Nemotron 3.5 Lightning 30B A3B $0.05/$0.20 (nemotron-lightning-3p5-30b-a3b); GPT OSS 20B (gpt-oss-20b) on 2026-08-27, replaced by GPT OSS 120B or Qwen3 8B; MiniMax M2.7 (minimax-m2p7) on 2026-08-27, replaced by MiniMax M3; Kimi K2.5 (kimi-k2p5) on 2026-06-26; Qwen 3.6 Plus (qwen3p6-plus) on 2026-06-26, replaced by Qwen 3.7 Plus; MiniMax M2.5 (minimax-m2p5) on 2026-06-17. Kimi K3 (kimi-k3) is the Kimi model on Fireworks serverless today.",
+      "description": "Inference platform for open models, with serverless per-token pricing and on-demand GPU deployments billed per GPU second. Fireworks offers $1 in free credits to get started. Accounts with no payment method, or with no credits, are limited to 10 requests per minute, and an account without a payment method is suspended when the $1 credit runs out until one is added. Serverless prices: OpenAI GPT OSS 120B $0.15/$0.60 (per 1M tokens); MiniMax M3 $0.30/$1.20 (per 1M tokens); GLM 5.3 $1.40/$4.40 (per 1M tokens); Kimi K3 $3.00/$15.00 (per 1M tokens); Kimi K3.1 Pro $2.00/$10.00 (per 1M tokens). Batch inference costs 50% of serverless prices. Image generation and audio inference were deprecated on June 10, 2026. Fireworks removed these models from serverless in 2026, so serverless requests for them fail (dedicated deployments are unaffected), according to its changelog (docs.fireworks.ai/updates/changelog): DeepSeek V4 Pro (0813) (accounts/fireworks/models/deepseek-v4-pro-0813) on 2026-09-25, replaced by DeepSeek V4.1 Flash $0.30/$1.20 (deepseek-v4p1-flash); DeepSeek V4 Flash (0731) (deepseek-v4-flash-0731) on 2026-09-25, replaced by DeepSeek V4.1 Flash; GLM 5.2 (glm-5p2) on 2026-09-25, replaced by GLM 5.3 (glm-5p3); Kimi K2.6 (kimi-k2p6) on 2026-09-25, replaced by GLM 5.3 or Kimi K3 (kimi-k3); Kimi K2.7 Code (kimi-k2p7-code) on 2026-09-25, replaced by GLM 5.3 or Kimi K3; Muse Glimmer 30B (muse-glimmer-30b) on 2026-09-25, replaced by NVIDIA Nemotron 3.5 Lightning 30B A3B $0.05/$0.20 (nemotron-lightning-3p5-30b-a3b); GPT OSS 20B (gpt-oss-20b) on 2026-08-27, replaced by GPT OSS 120B or Qwen3 8B; MiniMax M2.7 (minimax-m2p7) on 2026-08-27, replaced by MiniMax M3; Kimi K2.5 (kimi-k2p5) on 2026-06-26; Qwen 3.6 Plus (qwen3p6-plus) on 2026-06-26, replaced by Qwen 3.7 Plus; MiniMax M2.5 (minimax-m2p5) on 2026-06-17. Fireworks serverless serves Kimi K3 (kimi-k3) at $3.00/$15.00 and Kimi K3.1 Pro (kimi-k3p1-pro) at $2.00/$10.00.",
       "tier": "Free Credits",
       "url": "https://fireworks.ai/pricing",
       "tags": [
