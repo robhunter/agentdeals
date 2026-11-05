@@ -83,6 +83,8 @@ describe("the machine-readable change lists carry the entries the pages carry", 
   before(async () => {
     tmp = mkdtempSync(path.join(tmpdir(), "change-structured-data-"));
     const changesPath = path.join(tmp, "changes.json");
+    const indexPath = path.join(tmp, "index.json");
+    writeFileSync(indexPath, JSON.stringify({ offers: [] }));
     writeFileSync(changesPath, JSON.stringify({ changes: fixtureChanges() }, null, 2));
     const started = await new Promise<{ proc: ChildProcess; port: number }>((resolve, reject) => {
       const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
@@ -92,6 +94,7 @@ describe("the machine-readable change lists carry the entries the pages carry", 
           PORT: "0",
           BASE_URL: "http://localhost:3000",
           AGENTDEALS_CHANGES_PATH: changesPath,
+          AGENTDEALS_INDEX_PATH: indexPath,
         },
       });
       const timeout = setTimeout(() => {

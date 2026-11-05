@@ -205,6 +205,15 @@ describe("every published total is the tracked count or names the slice it is", 
     assert.deepStrictEqual(wrong, []);
   });
 
+  it("distinguishes an upcoming subset from the whole log in the sentence that names it", () => {
+    for (const sentence of ["48 upcoming pricing changes tracked.", "48 pricing changes tracked are upcoming."]) {
+      assert.strictEqual(claimsTheWholeLog(sentence, sentence.indexOf("48")), false, sentence);
+    }
+    for (const sentence of ["470 pricing changes tracked.", "470 pricing changes tracked. 48 upcoming changes.", "48 upcoming changes. 470 pricing changes tracked."]) {
+      assert.strictEqual(claimsTheWholeLog(sentence, sentence.indexOf("470")), true, sentence);
+    }
+  });
+
   it("reads a stat tile as one sentence, and does not read the tile beside it as part of the same one", () => {
     const inForce = sliceById("in_force");
     const superseded = inForce.of(dealChanges).length;
