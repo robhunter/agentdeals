@@ -17813,6 +17813,35 @@
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-11-05"
+    },
+    {
+      "vendor": "staticforms.xyz",
+      "change_type": "limits_reduced",
+      "date": "2026-10-30",
+      "date_source": "hand_written",
+      "summary": "By October 30, 2026, Static Forms (staticforms.xyz, now at staticforms.dev) had cut its Free plan from 500 submissions a month to 250 submissions every 30 days. Its home page offered 500 submissions per month on August 28, 2026; its pricing page and a blog post dated October 30, 2026 give 250 every 30 days.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free: 500 submissions per month, with submission storage for 1 year (staticforms.dev, archived 2026-08-28).",
+      "current_state": "Free: 250 submissions every 30 days, forever, with 1 year of submission storage (staticforms.dev/pricing, read 2026-11-05).",
+      "impact": "medium",
+      "source_url": "https://www.staticforms.dev/pricing",
+      "category": "Forms",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-04",
+      "archive_check": {
+        "checked": "2026-11-05",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-28",
+            "first_new": "2026-10-30",
+            "last_old_capture": "https://web.archive.org/web/20260828131310/https://staticforms.dev/",
+            "first_new_capture": null
+          }
+        ]
+      }
     }
   ]
 }

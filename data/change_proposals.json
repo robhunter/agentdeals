@@ -1,326 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-11-04/jam/limits_increased",
-      "proposed_on": "2026-11-04",
-      "vendor": "Jam",
-      "change_type": "limits_increased",
-      "date": "2026-11-04",
-      "date_source": "discovered",
-      "summary": "The Free plan's recording limit is now 5 minutes (matching previously). The Team plan's recording limit is 15 minutes on the pricing page. The page confirms 'Connect Jira, Linear and more', 'Debug Jams via MCP', and 'Webhooks' on Free. The page shows the Free plan now has 'AI summaries 30 / month' and 'Creator seats 5'. Previously's Team plan details (unlimited Jams, 150 Recording Links) match the page.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Bug reports with console logs, network requests and device details captured in one click, from a browser extension or the Jam for Mac app. The Free plan is $0 with 30 Jams a month, 5 Recording Links and recordings up to 5 minutes; it includes Jira and Linear integrations, webhooks and debugging Jams through Jam's MCP server. Team is $14 per creator a month, billed yearly, with unlimited Jams and 150 Recording Links.",
-      "current_state": "Free plan is $0 with 30 Jams/month, 5 Recording Links, recordings up to 5 minutes, Jira/Linear integrations, MCP debugging, webhooks, 30 AI summaries/month, and 5 creator seats. Team is $14 per creator/month billed yearly with unlimited Jams, 150 Recording Links, recordings up to 15 minutes, 200 AI summaries, access controls, and backend logging.",
-      "impact": "low",
-      "source_url": "https://jam.dev/pricing",
-      "category": "Error Tracking",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-04",
-      "restatement": [
-        {
-          "url": "https://jam.dev/pricing",
-          "description": "Free plan is $0 with 30 Jams/month, 5 Recording Links, recordings up to 5 minutes, Jira/Linear integrations, MCP debugging, webhooks, 30 AI summaries/month, and 5 creator seats. Team is $14 per creator/month billed yearly with unlimited Jams, 150 Recording Links, recordings up to 15 minutes, 200 AI summaries, access controls, and backend logging."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-04/waiverstevie-com/rebranded",
-      "proposed_on": "2026-11-04",
-      "vendor": "WaiverStevie.com",
-      "change_type": "rebranded",
-      "date": "2026-11-04",
-      "date_source": "discovered",
-      "summary": "The vendor has rebranded from WaiverStevie.com to WaiverCat, and the free tier now explicitly states that all PDFs are watermarked. The paid tiers (Basic $15/mo for 250 signatures, Premium $25/mo for 500 signatures) and the $0.06 per signature rate remain the same.",
-      "tier": "Free",
-      "tier_direction": "unchanged",
-      "previous_state": "Now WaiverCat — A free account is available with no stated signature limits, but all PDFs are watermarked. Usage beyond the free account is $0.06 per signature. Basic is $15/mo for 250 signatures and Premium is $25/mo for 500 signatures.",
-      "current_state": "A free account is available with API access, custom fields, chained signatures, mobile signature, and text/email notifications, but all PDFs are watermarked. Paid plans are Basic at $15/mo for 250 signatures and Premium at $25/mo for 500 signatures, with a per-signature rate of $0.06.",
-      "impact": "low",
-      "source_url": "https://waivercat.com/pricing/",
-      "category": "Forms",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-04",
-      "restatement": [
-        {
-          "url": "https://waivercat.com/pricing/",
-          "description": "Now WaiverCat — A free account is available with API access, custom fields, chained signatures, mobile signature, and text/email notifications, but all PDFs are watermarked. Paid plans are Basic at $15/mo for 250 signatures and Premium at $25/mo for 500 signatures, with a per-signature rate of $0.06."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-04/flat-social/pricing_restructured",
-      "proposed_on": "2026-11-04",
-      "vendor": "flat.social",
-      "change_type": "pricing_restructured",
-      "date": "2026-11-04",
-      "date_source": "discovered",
-      "summary": "Free tier now caps concurrent users at 5 instead of 8",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "Interactive customizable spaces for team meetings & happy hours socials. Unlimited meetings, free up to 8 concurrent users.",
-      "current_state": "Free $0 forever, up to 5 people at once, unlimited session length, spatial audio + video rooms, your own maps & look, embed button for your site",
-      "impact": "medium",
-      "source_url": "https://flat.social/pricing",
-      "category": "Team Collaboration",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-04",
-      "restatement": [
-        {
-          "url": "https://flat.social/pricing",
-          "description": "Interactive customizable spaces for team meetings & happy hours socials — Free $0 forever, up to 5 people at once, unlimited session length, spatial audio + video rooms, your own maps & look, embed button for your site"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-04/gridlastic-com/limits_reduced",
-      "proposed_on": "2026-11-04",
-      "vendor": "gridlastic.com",
-      "change_type": "limits_reduced",
-      "date": "2026-11-04",
-      "date_source": "discovered",
-      "summary": "The free plan now lists 5 free grid starts instead of the stored 4 grid starts, and the page no longer states the 4 simultaneous selenium nodes or 4,000 test minutes/month limits.",
-      "tier": "Free Plan",
-      "tier_direction": "narrowed",
-      "previous_state": "Selenium Grid testing with a free plan of up to 4 simultaneous selenium nodes/10 grid starts/4,000 test minutes/month",
-      "current_state": "Free Plan is $0 per month and includes 5 free grid starts; the free account plan limits the selenium grid run time to 2 hours per grid start.",
-      "impact": "medium",
-      "source_url": "https://www.gridlastic.com/pricing.html",
-      "category": "Testing",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-04",
-      "restatement": [
-        {
-          "url": "https://www.gridlastic.com/pricing.html",
-          "description": "Free Plan is $0 per month and includes 5 free grid starts; the free account plan limits the selenium grid run time to 2 hours per grid start."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-04/staticforms-xyz/limits_reduced",
-      "proposed_on": "2026-11-04",
-      "vendor": "staticforms.xyz",
-      "change_type": "limits_reduced",
-      "date": "2026-11-04",
-      "date_source": "discovered",
-      "summary": "staticforms.xyz's own page now redirects to staticforms.dev. The free plan's submission limit has been reduced from 500 per month to 250 submissions every 30 days.",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "Free plan, 500 a month",
-      "current_state": "Free: 250 submissions every 30 days on one form.",
-      "impact": "medium",
-      "source_url": "https://www.staticforms.xyz/",
-      "category": "Forms",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-04",
-      "restatement": [
-        {
-          "url": "https://www.staticforms.xyz/",
-          "description": "Free: 250 submissions every 30 days on one form."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-05/elevenlabs/limits_increased",
-      "proposed_on": "2026-11-05",
-      "vendor": "ElevenLabs",
-      "change_type": "limits_increased",
-      "date": "2026-11-05",
-      "date_source": "discovered",
-      "summary": "The page confirms. The page also states that unused credits roll over for up to two months on paid plans (up to 2× monthly quota, max 3× balance) as long as the subscription stays active. Additionally, the page shows a promotional $1 first month for Starter (then $6/month) and $11 first month for Creator (then $22/month). Is consistent with the stored Starter price of $6/month. The free tier still exists at $0/month with 10,000 credits and 3 Projects in Studio, and no commercial licence, matching previously.",
-      "tier": "Starter",
-      "tier_direction": "unchanged",
-      "previous_state": "Free plan at $0 per month: 10,000 credits per month and 3 Projects in Studio, with Text to Speech, Speech to Text, Sound Effects, Voice Design, Music, Productions and Image. No commercial licence on the free plan — that starts at Starter, $6 per month for 30,000 credits. Unused credits do not roll over on the free plan, and cancelling a paid plan drops the account back to it. elevenlabs.io/pricing, read 2026-09-19.",
-      "current_state": "Free plan is $0/mo with 10,000 credits per month, 3 Projects in Studio, and no commercial license. Starter is $1 for the first month then $6 per month, includes commercial license, Instant Voice Cloning, 20 Projects in Studio, Music commercial use, Dubbing Studio, Image & Video, and 30k credits per month. Unused credits roll over for up to two months (up to 2× monthly quota, max 3× balance) on active paid subscriptions; rollover does not apply to the Free plan. Downgrading or cancelling forfeits unused credits at the end of the cycle.",
-      "impact": "low",
-      "source_url": "https://elevenlabs.io/pricing",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-05",
-      "restatement": [
-        {
-          "url": "https://elevenlabs.io/pricing",
-          "description": "Free plan is $0/mo with 10,000 credits per month, 3 Projects in Studio, and no commercial license. Starter is $1 for the first month then $6 per month, includes commercial license, Instant Voice Cloning, 20 Projects in Studio, Music commercial use, Dubbing Studio, Image & Video, and 30k credits per month. Unused credits roll over for up to two months (up to 2× monthly quota, max 3× balance) on active paid subscriptions; rollover does not apply to the Free plan. Downgrading or cancelling forfeits unused credits at the end of the cycle."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-05/atlassian-for-startups/new_free_tier",
-      "proposed_on": "2026-11-05",
-      "vendor": "Atlassian for Startups",
-      "change_type": "new_free_tier",
-      "date": "2026-11-05",
-      "date_source": "discovered",
-      "summary": "The page now states eligible startups get the Premium edition of Atlassian products for $0 for 12 months for up to 50 users.",
-      "tier": "Atlassian for Startups",
-      "tier_direction": "narrowed",
-      "previous_state": "50 seats free for 12 months — Jira Premium, Confluence Premium, Loom Business + AI, Jira Product Discovery, Compass, Bitbucket Premium. Dedicated CSM and onboarding",
-      "current_state": "Eligible startups can get the Premium edition of Atlassian products for $0 for 12 months for up to 50 users, with conditions applying. Per-product limits shown: up to 50 seats for Jira, Confluence, Loom, and Bitbucket; up to 10 seats for Jira Service Management and Customer Service Management; up to 10 creator seats and unlimited contributor seats for Jira Product Discovery.",
-      "impact": "medium",
-      "source_url": "https://www.atlassian.com/software/startups",
-      "category": "Startup Perks",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-05",
-      "restatement": [
-        {
-          "url": "https://www.atlassian.com/software/startups",
-          "refused": "tier_is_not_one_we_record_as_free"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-05/readme/limits_increased",
-      "proposed_on": "2026-11-05",
-      "vendor": "ReadMe",
-      "change_type": "limits_increased",
-      "date": "2026-11-05",
-      "date_source": "discovered",
-      "summary": "Starter plan now lists a custom domain as included. The page also shows 7-day documentation metrics and 24-hour request history, and Ask AI remains a $150/mo add-on.",
-      "tier": "Starter",
-      "tier_direction": "widened",
-      "previous_state": "API documentation platform Starter plan — 1 project, 1 API reference, 1 published version, 1 admin seat, 24-hour request log retention, AI Dropdown / LLMs.txt / MCP Server included (Ask AI is a $150/mo add-on), ReadMe branding (cannot remove). No custom domain, no custom CSS/HTML/JS",
-      "current_state": "Starter is $0/month and includes custom domain, bi-directional sync, interactive API reference, usage analytics, markdown editor, customizable themes, AI Dropdown, LLMs.txt, MCP Server, and Ask AI ($150/mo) as an add-on. It lists 1 project, 1 published version, 1 admin, 7 days documentation metrics, and 24 hours request history.",
-      "impact": "medium",
-      "source_url": "https://readme.com/pricing",
-      "category": "Documentation",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-05",
-      "restatement": [
-        {
-          "url": "https://readme.com/pricing",
-          "description": "Starter is $0/month and includes custom domain, bi-directional sync, interactive API reference, usage analytics, markdown editor, customizable themes, AI Dropdown, LLMs.txt, MCP Server, and Ask AI ($150/mo) as an add-on. It lists 1 project, 1 published version, 1 admin, 7 days documentation metrics, and 24 hours request history."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-05/crosswork/restriction",
-      "proposed_on": "2026-11-05",
-      "vendor": "Crosswork",
-      "change_type": "restriction",
-      "date": "2026-11-05",
-      "date_source": "discovered",
-      "summary": "The Free plan now limits collaborators to 3.",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "Versatile project management platform. Free for up to 3 projects, unlimited users, 1 GB storage.",
-      "current_state": "Free $0 free forever includes Unlimited Users, 3 Projects, Up to 3 Collaborators, and 1 GB Storage.",
-      "impact": "medium",
-      "source_url": "https://crosswork.app/pricing",
-      "category": "Project Management",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-05",
-      "restatement": [
-        {
-          "url": "https://crosswork.app/pricing",
-          "description": "Versatile project management platform — Free $0 free forever includes Unlimited Users, 3 Projects, Up to 3 Collaborators, and 1 GB Storage."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-05/embed-ly/free_tier_removed",
-      "proposed_on": "2026-11-05",
-      "vendor": "embed.ly",
-      "change_type": "free_tier_removed",
-      "date": "2026-11-05",
-      "date_source": "discovered",
-      "summary": "The stored free tier (free for up to 5,000 URLs/month at 15 requests/second) no longer exists. The pricing page now shows only paid plans: API from $119/month (with base quotas of 10,000 Embed URLs, 10,000 Extract URLs, and 25,000 Display images, and a 50 URLs/second rate limit) and Cards at $19/month. No free tier is mentioned.",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "Provides APIs for embedding media in a webpage, responsive image scaling, and extracting elements from a webpage. Free for up to 5,000 URLs/month at 15 requests/second",
-      "current_state": "The page lists only paid plans: API from $119/month with base quotas of 10,000 Embed URLs, 10,000 Extract URLs, and 25,000 Display images, plus a 50 URL requests per second rate limit; and Cards at $19/month. No free plan is described.",
-      "impact": "high",
-      "source_url": "https://embed.ly/pricing",
-      "category": "Storage",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-05",
-      "restatement": [
-        {
-          "url": "https://embed.ly/pricing",
-          "refused": "reading_describes_the_page_not_the_terms"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-05/odrive/pricing_restructured",
-      "proposed_on": "2026-11-05",
-      "vendor": "odrive",
-      "change_type": "pricing_restructured",
-      "date": "2026-11-05",
-      "date_source": "discovered",
-      "summary": "The current pricing page now presents odrive as a Procore-focused sync product (Procore integration, Server Sync, SharePoint Sync) with a 30-day free trial, Standard at $20/user/month or $200/user/year, and Enterprise at $25+/user/month. The general cloud-storage unification positioning and the specific 2026-03-31 free-plan end date are not reflected on the page.",
-      "tier": "Free Trial",
-      "tier_direction": "unchanged",
-      "previous_state": "Cloud storage sync and unification platform — connects Google Drive, Dropbox, S3, OneDrive, and other providers into a single file manager. No free plan since 2026-03-31, when odrive ended free consumer accounts. New users get a 30-day free trial with no credit card; Standard is $20/user/month or $200/user/year.",
-      "current_state": "Free Trial: try everything free for 30 days, $0 for 30 days, no credit card required, 1 user, Full Procore integration, Project & Company Documents, Unlimited projects, Offline sync. Standard: $20/user/month, annual $200/user/year, up to 25 users, credit card billing, priority email support. Enterprise: $25+/user/month, unlimited users, unlimited projects and data, custom billing, Server Sync, SharePoint Sync, dedicated account manager, custom onboarding & training.",
-      "impact": "medium",
-      "source_url": "https://www.odrive.com/pricing",
-      "category": "Storage",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-05",
-      "restatement": []
-    },
-    {
-      "proposal_id": "2026-11-05/plot-ly/pricing_restructured",
-      "proposed_on": "2026-11-05",
-      "vendor": "plot.ly",
-      "change_type": "pricing_restructured",
-      "date": "2026-11-05",
-      "date_source": "discovered",
-      "summary": "The stored free tier description says the free plan includes unlimited public files and ten private files. The current pricing page describes a different free plan: $0 with a 10 Plotly credit trial, 1 Creator seat, 3 private viewers, and 10 Dash or Plotly Studio apps.",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "Graph and share your data. The free tier includes unlimited public files and ten private files",
-      "current_state": "Free plan is $0 with no credit card required, includes a 10 Plotly credit trial (additional credits $1 each), 1 Creator seat, 3 private viewers, and 10 Dash or Plotly Studio apps, with features including Plotly Studio, custom app URLs, one-click publish from Dash, and Plotly-branded apps.",
-      "impact": "medium",
-      "source_url": "https://plotly.com/pricing",
-      "category": "Storage",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-05",
-      "restatement": [
-        {
-          "url": "https://plotly.com/pricing",
-          "description": "Graph and share your data — Free plan is $0 with no credit card required, includes a 10 Plotly credit trial (additional credits $1 each), 1 Creator seat, 3 private viewers, and 10 Dash or Plotly Studio apps, with features including Plotly Studio, custom app URLs, one-click publish from Dash, and Plotly-branded apps."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-05/versoly/limits_reduced",
-      "proposed_on": "2026-11-05",
-      "vendor": "Versoly",
-      "change_type": "limits_reduced",
-      "date": "2026-11-05",
-      "date_source": "discovered",
-      "summary": "The free Starter plan no longer offers unlimited websites, 70+ blocks, five templates, custom CSS, favicon, SEO and forms as described. It is now limited to 1,000 visits/month, 3 static pages, 50 CMS items, and 50 form submissions, and the page states free sites get Versoly branding.",
-      "tier": "Starter",
-      "tier_direction": "narrowed",
-      "previous_state": "SaaS-focused website builder - unlimited websites, 70+ blocks, five templates, custom CSS, favicon, SEO and forms. No custom domain.",
-      "current_state": "Starter is $0 and includes a Versoly subdomain (versoly.page), 1,000 visits/month, 3 static pages, 50 CMS items, 50 form submissions, and 300+ blocks & templates; free sites have Versoly branding added.",
-      "impact": "high",
-      "source_url": "https://versoly.com/pricing",
-      "category": "Cloud Hosting",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-05",
-      "restatement": [
-        {
-          "url": "https://versoly.com/pricing",
-          "description": "SaaS-focused website builder — Starter is $0 and includes a Versoly subdomain (versoly.page), 1,000 visits/month, 3 static pages, 50 CMS items, 50 form submissions, and 300+ blocks & templates; free sites have Versoly branding added."
-        }
-      ]
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
@@ -1961,6 +1640,325 @@
       ],
       "dropped_on": "2026-11-03",
       "drop_reason": "Undated and mixed: qase.io/pricing (read 2026-11-03) gives Free up to 4 users (our listing says 3) and also caps it at 2 projects and 30-day test history; the page gives no date. No readers in 7 days. The listing description is updated from the vendor page instead."
+    },
+    {
+      "proposal_id": "2026-11-04/jam/limits_increased",
+      "proposed_on": "2026-11-04",
+      "vendor": "Jam",
+      "change_type": "limits_increased",
+      "date": "2026-11-04",
+      "date_source": "discovered",
+      "summary": "The Free plan's recording limit is now 5 minutes (matching previously). The Team plan's recording limit is 15 minutes on the pricing page. The page confirms 'Connect Jira, Linear and more', 'Debug Jams via MCP', and 'Webhooks' on Free. The page shows the Free plan now has 'AI summaries 30 / month' and 'Creator seats 5'. Previously's Team plan details (unlimited Jams, 150 Recording Links) match the page.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Bug reports with console logs, network requests and device details captured in one click, from a browser extension or the Jam for Mac app. The Free plan is $0 with 30 Jams a month, 5 Recording Links and recordings up to 5 minutes; it includes Jira and Linear integrations, webhooks and debugging Jams through Jam's MCP server. Team is $14 per creator a month, billed yearly, with unlimited Jams and 150 Recording Links.",
+      "current_state": "Free plan is $0 with 30 Jams/month, 5 Recording Links, recordings up to 5 minutes, Jira/Linear integrations, MCP debugging, webhooks, 30 AI summaries/month, and 5 creator seats. Team is $14 per creator/month billed yearly with unlimited Jams, 150 Recording Links, recordings up to 15 minutes, 200 AI summaries, access controls, and backend logging.",
+      "impact": "low",
+      "source_url": "https://jam.dev/pricing",
+      "category": "Error Tracking",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-04",
+      "restatement": [
+        {
+          "url": "https://jam.dev/pricing",
+          "description": "Free plan is $0 with 30 Jams/month, 5 Recording Links, recordings up to 5 minutes, Jira/Linear integrations, MCP debugging, webhooks, 30 AI summaries/month, and 5 creator seats. Team is $14 per creator/month billed yearly with unlimited Jams, 150 Recording Links, recordings up to 15 minutes, 200 AI summaries, access controls, and backend logging."
+        }
+      ],
+      "dropped_on": "2026-11-05",
+      "drop_reason": "Not a change: jam.dev/pricing (read 2026-11-05) gives Free 30 Jams, 5 Recording Links, recordings up to 5 minutes, Jira and Linear, MCP debugging and webhooks, as our listing does. The page's Free card names no AI summaries or creator seats, and gives no date. 2 people a week."
+    },
+    {
+      "proposal_id": "2026-11-04/waiverstevie-com/rebranded",
+      "proposed_on": "2026-11-04",
+      "vendor": "WaiverStevie.com",
+      "change_type": "rebranded",
+      "date": "2026-11-04",
+      "date_source": "discovered",
+      "summary": "The vendor has rebranded from WaiverStevie.com to WaiverCat, and the free tier now explicitly states that all PDFs are watermarked. The paid tiers (Basic $15/mo for 250 signatures, Premium $25/mo for 500 signatures) and the $0.06 per signature rate remain the same.",
+      "tier": "Free",
+      "tier_direction": "unchanged",
+      "previous_state": "Now WaiverCat — A free account is available with no stated signature limits, but all PDFs are watermarked. Usage beyond the free account is $0.06 per signature. Basic is $15/mo for 250 signatures and Premium is $25/mo for 500 signatures.",
+      "current_state": "A free account is available with API access, custom fields, chained signatures, mobile signature, and text/email notifications, but all PDFs are watermarked. Paid plans are Basic at $15/mo for 250 signatures and Premium at $25/mo for 500 signatures, with a per-signature rate of $0.06.",
+      "impact": "low",
+      "source_url": "https://waivercat.com/pricing/",
+      "category": "Forms",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-04",
+      "restatement": [
+        {
+          "url": "https://waivercat.com/pricing/",
+          "description": "Now WaiverCat — A free account is available with API access, custom fields, chained signatures, mobile signature, and text/email notifications, but all PDFs are watermarked. Paid plans are Basic at $15/mo for 250 signatures and Premium at $25/mo for 500 signatures, with a per-signature rate of $0.06."
+        }
+      ],
+      "dropped_on": "2026-11-05",
+      "drop_reason": "Not a change: our listing already says 'Now WaiverCat' and that all PDFs are watermarked; waivercat.com/pricing (read 2026-11-05) matches it, with Basic $15 and Premium $25 a month."
+    },
+    {
+      "proposal_id": "2026-11-04/flat-social/pricing_restructured",
+      "proposed_on": "2026-11-04",
+      "vendor": "flat.social",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-04",
+      "date_source": "discovered",
+      "summary": "Free tier now caps concurrent users at 5 instead of 8",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Interactive customizable spaces for team meetings & happy hours socials. Unlimited meetings, free up to 8 concurrent users.",
+      "current_state": "Free $0 forever, up to 5 people at once, unlimited session length, spatial audio + video rooms, your own maps & look, embed button for your site",
+      "impact": "medium",
+      "source_url": "https://flat.social/pricing",
+      "category": "Team Collaboration",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-04",
+      "restatement": [
+        {
+          "url": "https://flat.social/pricing",
+          "description": "Interactive customizable spaces for team meetings & happy hours socials — Free $0 forever, up to 5 people at once, unlimited session length, spatial audio + video rooms, your own maps & look, embed button for your site"
+        }
+      ],
+      "dropped_on": "2026-11-05",
+      "drop_reason": "Undated: flat.social/pricing already gave Free 'Up to 5 people at once' in the Internet Archive's 2026-09-17 capture, so the cap from 8 is no event on 2026-11-04. Listing description corrected instead. No readers in 7 days."
+    },
+    {
+      "proposal_id": "2026-11-04/gridlastic-com/limits_reduced",
+      "proposed_on": "2026-11-04",
+      "vendor": "gridlastic.com",
+      "change_type": "limits_reduced",
+      "date": "2026-11-04",
+      "date_source": "discovered",
+      "summary": "The free plan now lists 5 free grid starts instead of the stored 4 grid starts, and the page no longer states the 4 simultaneous selenium nodes or 4,000 test minutes/month limits.",
+      "tier": "Free Plan",
+      "tier_direction": "narrowed",
+      "previous_state": "Selenium Grid testing with a free plan of up to 4 simultaneous selenium nodes/10 grid starts/4,000 test minutes/month",
+      "current_state": "Free Plan is $0 per month and includes 5 free grid starts; the free account plan limits the selenium grid run time to 2 hours per grid start.",
+      "impact": "medium",
+      "source_url": "https://www.gridlastic.com/pricing.html",
+      "category": "Testing",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-04",
+      "restatement": [
+        {
+          "url": "https://www.gridlastic.com/pricing.html",
+          "description": "Free Plan is $0 per month and includes 5 free grid starts; the free account plan limits the selenium grid run time to 2 hours per grid start."
+        }
+      ],
+      "dropped_on": "2026-11-05",
+      "drop_reason": "Undated: gridlastic.com/pricing has given the Free plan 5 free grid starts and 2 parallel nodes in every Internet Archive capture from 2025-11-23 to 2026-09-04; our listing's 10 grid starts and 4,000 minutes were never on it in that window. Listing description corrected instead. No readers in 7 days."
+    },
+    {
+      "proposal_id": "2026-11-05/elevenlabs/limits_increased",
+      "proposed_on": "2026-11-05",
+      "vendor": "ElevenLabs",
+      "change_type": "limits_increased",
+      "date": "2026-11-05",
+      "date_source": "discovered",
+      "summary": "The page confirms. The page also states that unused credits roll over for up to two months on paid plans (up to 2× monthly quota, max 3× balance) as long as the subscription stays active. Additionally, the page shows a promotional $1 first month for Starter (then $6/month) and $11 first month for Creator (then $22/month). Is consistent with the stored Starter price of $6/month. The free tier still exists at $0/month with 10,000 credits and 3 Projects in Studio, and no commercial licence, matching previously.",
+      "tier": "Starter",
+      "tier_direction": "unchanged",
+      "previous_state": "Free plan at $0 per month: 10,000 credits per month and 3 Projects in Studio, with Text to Speech, Speech to Text, Sound Effects, Voice Design, Music, Productions and Image. No commercial licence on the free plan — that starts at Starter, $6 per month for 30,000 credits. Unused credits do not roll over on the free plan, and cancelling a paid plan drops the account back to it. elevenlabs.io/pricing, read 2026-09-19.",
+      "current_state": "Free plan is $0/mo with 10,000 credits per month, 3 Projects in Studio, and no commercial license. Starter is $1 for the first month then $6 per month, includes commercial license, Instant Voice Cloning, 20 Projects in Studio, Music commercial use, Dubbing Studio, Image & Video, and 30k credits per month. Unused credits roll over for up to two months (up to 2× monthly quota, max 3× balance) on active paid subscriptions; rollover does not apply to the Free plan. Downgrading or cancelling forfeits unused credits at the end of the cycle.",
+      "impact": "low",
+      "source_url": "https://elevenlabs.io/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-05",
+      "restatement": [
+        {
+          "url": "https://elevenlabs.io/pricing",
+          "description": "Free plan is $0/mo with 10,000 credits per month, 3 Projects in Studio, and no commercial license. Starter is $1 for the first month then $6 per month, includes commercial license, Instant Voice Cloning, 20 Projects in Studio, Music commercial use, Dubbing Studio, Image & Video, and 30k credits per month. Unused credits roll over for up to two months (up to 2× monthly quota, max 3× balance) on active paid subscriptions; rollover does not apply to the Free plan. Downgrading or cancelling forfeits unused credits at the end of the cycle."
+        }
+      ],
+      "dropped_on": "2026-11-05",
+      "drop_reason": "Not a change: elevenlabs.io/pricing (read 2026-11-05) gives Free 10k credits a month and Starter $6, as our listing does; the reading adds a first-month promotion and paid-plan rollover, which are not free-tier terms."
+    },
+    {
+      "proposal_id": "2026-11-05/atlassian-for-startups/new_free_tier",
+      "proposed_on": "2026-11-05",
+      "vendor": "Atlassian for Startups",
+      "change_type": "new_free_tier",
+      "date": "2026-11-05",
+      "date_source": "discovered",
+      "summary": "The page now states eligible startups get the Premium edition of Atlassian products for $0 for 12 months for up to 50 users.",
+      "tier": "Atlassian for Startups",
+      "tier_direction": "narrowed",
+      "previous_state": "50 seats free for 12 months — Jira Premium, Confluence Premium, Loom Business + AI, Jira Product Discovery, Compass, Bitbucket Premium. Dedicated CSM and onboarding",
+      "current_state": "Eligible startups can get the Premium edition of Atlassian products for $0 for 12 months for up to 50 users, with conditions applying. Per-product limits shown: up to 50 seats for Jira, Confluence, Loom, and Bitbucket; up to 10 seats for Jira Service Management and Customer Service Management; up to 10 creator seats and unlimited contributor seats for Jira Product Discovery.",
+      "impact": "medium",
+      "source_url": "https://www.atlassian.com/software/startups",
+      "category": "Startup Perks",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-05",
+      "restatement": [
+        {
+          "url": "https://www.atlassian.com/software/startups",
+          "refused": "tier_is_not_one_we_record_as_free"
+        }
+      ],
+      "dropped_on": "2026-11-05",
+      "drop_reason": "Not a change: atlassian.com/software/startups (read 2026-11-05) gives Premium for $0 for 12 months for up to 50 users, as our listing does. The reading adds per-product seat caps the page gives no date for. No readers in 7 days."
+    },
+    {
+      "proposal_id": "2026-11-05/readme/limits_increased",
+      "proposed_on": "2026-11-05",
+      "vendor": "ReadMe",
+      "change_type": "limits_increased",
+      "date": "2026-11-05",
+      "date_source": "discovered",
+      "summary": "Starter plan now lists a custom domain as included. The page also shows 7-day documentation metrics and 24-hour request history, and Ask AI remains a $150/mo add-on.",
+      "tier": "Starter",
+      "tier_direction": "widened",
+      "previous_state": "API documentation platform Starter plan — 1 project, 1 API reference, 1 published version, 1 admin seat, 24-hour request log retention, AI Dropdown / LLMs.txt / MCP Server included (Ask AI is a $150/mo add-on), ReadMe branding (cannot remove). No custom domain, no custom CSS/HTML/JS",
+      "current_state": "Starter is $0/month and includes custom domain, bi-directional sync, interactive API reference, usage analytics, markdown editor, customizable themes, AI Dropdown, LLMs.txt, MCP Server, and Ask AI ($150/mo) as an add-on. It lists 1 project, 1 published version, 1 admin, 7 days documentation metrics, and 24 hours request history.",
+      "impact": "medium",
+      "source_url": "https://readme.com/pricing",
+      "category": "Documentation",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-05",
+      "restatement": [
+        {
+          "url": "https://readme.com/pricing",
+          "description": "Starter is $0/month and includes custom domain, bi-directional sync, interactive API reference, usage analytics, markdown editor, customizable themes, AI Dropdown, LLMs.txt, MCP Server, and Ask AI ($150/mo) as an add-on. It lists 1 project, 1 published version, 1 admin, 7 days documentation metrics, and 24 hours request history."
+        }
+      ],
+      "dropped_on": "2026-11-05",
+      "drop_reason": "Undated: readme.com/pricing (read 2026-11-05) lists Custom domain on the Starter plan, and our 2026-10-09 listing said no custom domain; no capture between them could be read (the Internet Archive timed out). Listing description corrected instead. 1 person a week."
+    },
+    {
+      "proposal_id": "2026-11-05/crosswork/restriction",
+      "proposed_on": "2026-11-05",
+      "vendor": "Crosswork",
+      "change_type": "restriction",
+      "date": "2026-11-05",
+      "date_source": "discovered",
+      "summary": "The Free plan now limits collaborators to 3.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Versatile project management platform. Free for up to 3 projects, unlimited users, 1 GB storage.",
+      "current_state": "Free $0 free forever includes Unlimited Users, 3 Projects, Up to 3 Collaborators, and 1 GB Storage.",
+      "impact": "medium",
+      "source_url": "https://crosswork.app/pricing",
+      "category": "Project Management",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-05",
+      "restatement": [
+        {
+          "url": "https://crosswork.app/pricing",
+          "description": "Versatile project management platform — Free $0 free forever includes Unlimited Users, 3 Projects, Up to 3 Collaborators, and 1 GB Storage."
+        }
+      ],
+      "dropped_on": "2026-11-05",
+      "drop_reason": "Undated: crosswork.app/pricing (read 2026-11-05) gives Free unlimited users, 3 projects, up to 3 collaborators and 1 GB storage, and gives no date for the collaborator cap; a restriction verdict would never lapse. Listing description now names the cap. No readers in 7 days."
+    },
+    {
+      "proposal_id": "2026-11-05/embed-ly/free_tier_removed",
+      "proposed_on": "2026-11-05",
+      "vendor": "embed.ly",
+      "change_type": "free_tier_removed",
+      "date": "2026-11-05",
+      "date_source": "discovered",
+      "summary": "The stored free tier (free for up to 5,000 URLs/month at 15 requests/second) no longer exists. The pricing page now shows only paid plans: API from $119/month (with base quotas of 10,000 Embed URLs, 10,000 Extract URLs, and 25,000 Display images, and a 50 URLs/second rate limit) and Cards at $19/month. No free tier is mentioned.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Provides APIs for embedding media in a webpage, responsive image scaling, and extracting elements from a webpage. Free for up to 5,000 URLs/month at 15 requests/second",
+      "current_state": "The page lists only paid plans: API from $119/month with base quotas of 10,000 Embed URLs, 10,000 Extract URLs, and 25,000 Display images, plus a 50 URL requests per second rate limit; and Cards at $19/month. No free plan is described.",
+      "impact": "high",
+      "source_url": "https://embed.ly/pricing",
+      "category": "Storage",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-05",
+      "restatement": [
+        {
+          "url": "https://embed.ly/pricing",
+          "refused": "reading_describes_the_page_not_the_terms"
+        }
+      ],
+      "dropped_on": "2026-11-05",
+      "drop_reason": "Undated: embed.ly/pricing (read 2026-11-05) lists only paid plans (API from $119 a month, Cards $19 a month) and gives no date for a free plan ending; our 5,000-URL listing came from a bulk import. Listing moved to Retired with the read, no dated removal. No readers in 7 days."
+    },
+    {
+      "proposal_id": "2026-11-05/odrive/pricing_restructured",
+      "proposed_on": "2026-11-05",
+      "vendor": "odrive",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-05",
+      "date_source": "discovered",
+      "summary": "The current pricing page now presents odrive as a Procore-focused sync product (Procore integration, Server Sync, SharePoint Sync) with a 30-day free trial, Standard at $20/user/month or $200/user/year, and Enterprise at $25+/user/month. The general cloud-storage unification positioning and the specific 2026-03-31 free-plan end date are not reflected on the page.",
+      "tier": "Free Trial",
+      "tier_direction": "unchanged",
+      "previous_state": "Cloud storage sync and unification platform — connects Google Drive, Dropbox, S3, OneDrive, and other providers into a single file manager. No free plan since 2026-03-31, when odrive ended free consumer accounts. New users get a 30-day free trial with no credit card; Standard is $20/user/month or $200/user/year.",
+      "current_state": "Free Trial: try everything free for 30 days, $0 for 30 days, no credit card required, 1 user, Full Procore integration, Project & Company Documents, Unlimited projects, Offline sync. Standard: $20/user/month, annual $200/user/year, up to 25 users, credit card billing, priority email support. Enterprise: $25+/user/month, unlimited users, unlimited projects and data, custom billing, Server Sync, SharePoint Sync, dedicated account manager, custom onboarding & training.",
+      "impact": "medium",
+      "source_url": "https://www.odrive.com/pricing",
+      "category": "Storage",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-05",
+      "restatement": [],
+      "dropped_on": "2026-11-05",
+      "drop_reason": "Not a change to the terms we list: odrive.com/pricing (read 2026-11-05) gives a 30-day free trial and Standard at $20 per user a month or $200 a year, as our listing does. The page now sells Procore sync; description updated."
+    },
+    {
+      "proposal_id": "2026-11-05/plot-ly/pricing_restructured",
+      "proposed_on": "2026-11-05",
+      "vendor": "plot.ly",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-05",
+      "date_source": "discovered",
+      "summary": "The stored free tier description says the free plan includes unlimited public files and ten private files. The current pricing page describes a different free plan: $0 with a 10 Plotly credit trial, 1 Creator seat, 3 private viewers, and 10 Dash or Plotly Studio apps.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Graph and share your data. The free tier includes unlimited public files and ten private files",
+      "current_state": "Free plan is $0 with no credit card required, includes a 10 Plotly credit trial (additional credits $1 each), 1 Creator seat, 3 private viewers, and 10 Dash or Plotly Studio apps, with features including Plotly Studio, custom app URLs, one-click publish from Dash, and Plotly-branded apps.",
+      "impact": "medium",
+      "source_url": "https://plotly.com/pricing",
+      "category": "Storage",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-05",
+      "restatement": [
+        {
+          "url": "https://plotly.com/pricing",
+          "description": "Graph and share your data — Free plan is $0 with no credit card required, includes a 10 Plotly credit trial (additional credits $1 each), 1 Creator seat, 3 private viewers, and 10 Dash or Plotly Studio apps, with features including Plotly Studio, custom app URLs, one-click publish from Dash, and Plotly-branded apps."
+        }
+      ],
+      "dropped_on": "2026-11-05",
+      "drop_reason": "Undated: plotly.com/pricing (read 2026-11-05) gives Free a 10-credit trial, 1 Creator seat, 3 private viewers and 10 apps; our listing's 'unlimited public files and ten private files' came from a bulk import, and no date is known. Listing description corrected instead. No readers in 7 days."
+    },
+    {
+      "proposal_id": "2026-11-05/versoly/limits_reduced",
+      "proposed_on": "2026-11-05",
+      "vendor": "Versoly",
+      "change_type": "limits_reduced",
+      "date": "2026-11-05",
+      "date_source": "discovered",
+      "summary": "The free Starter plan no longer offers unlimited websites, 70+ blocks, five templates, custom CSS, favicon, SEO and forms as described. It is now limited to 1,000 visits/month, 3 static pages, 50 CMS items, and 50 form submissions, and the page states free sites get Versoly branding.",
+      "tier": "Starter",
+      "tier_direction": "narrowed",
+      "previous_state": "SaaS-focused website builder - unlimited websites, 70+ blocks, five templates, custom CSS, favicon, SEO and forms. No custom domain.",
+      "current_state": "Starter is $0 and includes a Versoly subdomain (versoly.page), 1,000 visits/month, 3 static pages, 50 CMS items, 50 form submissions, and 300+ blocks & templates; free sites have Versoly branding added.",
+      "impact": "high",
+      "source_url": "https://versoly.com/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-05",
+      "restatement": [
+        {
+          "url": "https://versoly.com/pricing",
+          "description": "SaaS-focused website builder — Starter is $0 and includes a Versoly subdomain (versoly.page), 1,000 visits/month, 3 static pages, 50 CMS items, 50 form submissions, and 300+ blocks & templates; free sites have Versoly branding added."
+        }
+      ],
+      "dropped_on": "2026-11-05",
+      "drop_reason": "Undated: versoly.com/pricing (read 2026-11-05) gives Starter 1,000 visits a month, 3 static pages, 50 CMS items and 50 form submissions; our listing's 'unlimited websites' came from a bulk import, and no date is known. Listing description corrected instead. No readers in 7 days."
     }
   ]
 }

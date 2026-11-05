@@ -1679,7 +1679,8 @@
       "source_url": "https://www.staticforms.xyz/",
       "record_date": "2026-09-01",
       "change_type": "limits_reduced",
-      "summary": "staticforms.xyz's own page now redirects to staticforms.dev. The free plan now offers 500 submissions per month instead of 250."
+      "summary": "staticforms.xyz's own page now redirects to staticforms.dev. The free plan now offers 500 submissions per month instead of 250.",
+      "reverted_on": "2026-11-05"
     },
     {
       "vendor": "WaiverStevie.com",

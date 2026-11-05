@@ -7167,7 +7167,7 @@
     {
       "vendor": "ReadMe",
       "category": "Documentation",
-      "description": "API documentation platform Starter plan — 1 project, 1 API reference, 1 published version, 1 admin seat, 24-hour request log retention, AI Dropdown / LLMs.txt / MCP Server included (Ask AI is a $150/mo add-on), ReadMe branding (cannot remove). No custom domain, no custom CSS/HTML/JS",
+      "description": "API documentation platform Starter plan — 1 project, 1 API reference, 1 published version, 1 admin seat, 24-hour request log retention, AI Dropdown / LLMs.txt / MCP Server included (Ask AI is a $150/mo add-on), ReadMe branding (cannot remove). Includes a custom domain; no custom CSS/HTML/JS",
       "tier": "Free",
       "url": "https://readme.com/pricing",
       "tags": [
@@ -16211,7 +16211,7 @@
     {
       "vendor": "flat.social",
       "category": "Team Collaboration",
-      "description": "Interactive customizable spaces for team meetings & happy hours socials. Unlimited meetings, free up to 8 concurrent users.",
+      "description": "Interactive customizable spaces for team meetings & happy hours socials. The Free plan is $0 forever for up to 5 people at once, with unlimited session length, spatial audio and video rooms, your own maps and an embed button for your site.",
       "tier": "Free",
       "url": "https://flat.social/pricing",
       "tags": [
@@ -18392,7 +18392,7 @@
     {
       "vendor": "gridlastic.com",
       "category": "Testing",
-      "description": "Selenium Grid testing with a free plan of up to 4 simultaneous selenium nodes/10 grid starts/4,000 test minutes/month",
+      "description": "Selenium Grid testing on AWS. The Free plan is $0 a month with 5 grid starts every 30 days, each running up to 2 hours, and 2 parallel selenium nodes.",
       "tier": "Free",
       "url": "https://www.gridlastic.com/pricing.html",
       "tags": [
@@ -23423,7 +23423,7 @@
     {
       "vendor": "staticforms.xyz",
       "category": "Forms",
-      "description": "Free plan, 500 a month",
+      "description": "250 form submissions every 30 days on one form on the Free plan, with 1 year of submission storage. Static Forms is a form backend for static sites, now at staticforms.dev; paid plans start at $4 a month billed annually.",
       "tier": "Free",
       "url": "https://www.staticforms.xyz/",
       "tags": [
@@ -23440,13 +23440,6 @@
           "Agency Plan USD 19",
           "USD 192"
         ]
-      },
-      "restated_from": {
-        "reading_date": "2026-09-01",
-        "source_url": "https://www.staticforms.xyz/",
-        "record_date": "2026-09-01",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
       },
       "free_plan_excerpt": {
         "text": "Free: 250 submissions every 30 days on one form.",
@@ -26008,7 +26001,7 @@
     {
       "vendor": "Versoly",
       "category": "Cloud Hosting",
-      "description": "SaaS-focused website builder - unlimited websites, 70+ blocks, five templates, custom CSS, favicon, SEO and forms. No custom domain.",
+      "description": "SaaS-focused website builder. The Starter plan is $0 with a versoly.page subdomain, 1,000 visits a month, 3 static pages, 50 CMS items, 50 form submissions and 300+ blocks and templates; published Starter sites show a small Versoly branding popup.",
       "tier": "Free",
       "url": "https://versoly.com/pricing",
       "tags": [
@@ -27205,7 +27198,7 @@
     {
       "vendor": "Crosswork",
       "category": "Project Management",
-      "description": "Versatile project management platform. Free for up to 3 projects, unlimited users, 1 GB storage.",
+      "description": "Versatile project management platform. Free forever for unlimited users, 3 projects, up to 3 collaborators and 1 GB storage.",
       "tier": "Free",
       "url": "https://crosswork.app/pricing",
       "tags": [
@@ -28006,8 +27999,8 @@
     {
       "vendor": "embed.ly",
       "category": "Storage",
-      "description": "Provides APIs for embedding media in a webpage, responsive image scaling, and extracting elements from a webpage. Free for up to 5,000 URLs/month at 15 requests/second",
-      "tier": "Free",
+      "description": "APIs for embedding media in a webpage, responsive image scaling and extracting elements from a webpage, formerly with a free plan. No free tier. embed.ly/pricing, read 2026-11-05, lists two paid plans: the API from $119 a month with 10,000 Embed URLs, 10,000 Extract URLs and 25,000 Display URLs, and Cards at $19 a month.",
+      "tier": "Retired",
       "url": "https://embed.ly/pricing",
       "tags": [
         "storage",
@@ -28446,7 +28439,7 @@
     {
       "vendor": "plot.ly",
       "category": "Storage",
-      "description": "Graph and share your data. The free tier includes unlimited public files and ten private files",
+      "description": "Graph and share your data. Plotly's Free plan is $0 with no credit card required: a 10 Plotly credit trial (additional credits are $1 each), 1 Creator seat, 3 private viewers and 10 Dash or Plotly Studio apps.",
       "tier": "Free",
       "url": "https://plotly.com/pricing",
       "tags": [
@@ -28758,7 +28751,7 @@
     {
       "vendor": "odrive",
       "category": "Storage",
-      "description": "Cloud storage sync and unification platform — connects Google Drive, Dropbox, S3, OneDrive, and other providers into a single file manager. No free plan since 2026-03-31, when odrive ended free consumer accounts. New users get a 30-day free trial with no credit card; Standard is $20/user/month or $200/user/year.",
+      "description": "File sync for Procore: syncs Procore project and company documents for offline use; Enterprise adds file server and SharePoint sync to Procore. No free plan since 2026-03-31, when odrive ended free consumer accounts. New users get a 30-day free trial with no credit card; Standard is $20/user/month or $200/user/year.",
       "tier": "Trial",
       "url": "https://www.odrive.com/pricing",
       "tags": [
