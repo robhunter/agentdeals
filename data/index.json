@@ -208,6 +208,68 @@
           "quote": "Sandboxes do not yet provide public URLs for accessing applications running inside them.",
           "url": "https://render.com/docs/sandboxes",
           "read_on": "2026-10-29"
+        },
+        {
+          "text": "Render offers Free instances only for static sites, web services, Postgres and Key Value. Background workers and cron jobs need a paid compute plan.",
+          "quote": "Other service types don't support Free instances.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05"
+        },
+        {
+          "text": "Render bills for build pipeline minutes used beyond the monthly included amount, unless the spend limit is reached. Without a payment method or at the limit, Render disables new builds for the rest of the month, and services keep running on their existing builds.",
+          "quote": "If you haven't added a payment method or you reach your spend limit, Render instead disables all new builds for your workspace for the remainder of the month.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Render free web services lack scaling beyond one instance, persistent disks, edge caching, one-off jobs, and SSH or dashboard shell access.",
+          "quote": "Free web services don't support the following features of paid compute plans:",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Render free web services cannot receive private network traffic. They can send private network requests to data stores and paid services in the same region.",
+          "quote": "Free web services can't receive private network traffic.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Render workspace plan upgrades do not remove free instance limits. A service's compute plan is changed separately.",
+          "quote": "Upgrading your workspace plan does not remove limitations on Free instances.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "While a Free web service is spun down, Render serves a standard disallow-all /robots.txt response. These requests do not reach the service or trigger a spin-up.",
+          "quote": "While a Free web service is spun down, incoming requests to the path /robots.txt automatically receive a standard \"disallow all\" response",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "A free Render Key Value instance loses its data when upgraded to a paid compute plan.",
+          "quote": "If you upgrade a Free Render Key Value instance to a paid compute plan, its data is lost during the upgrade process.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Render Free web services allow rollbacks to only the two most recent previous deploys.",
+          "quote": "Rollbacks (only to the two most recent previous deploys)",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
+        },
+        {
+          "text": "Render may suspend free web services with unusually high outbound traffic, such as accessing external databases or APIs. Moving to a paid plan restores the service.",
+          "quote": "Render may suspend a Free web service that initiates an uncommonly high volume of traffic over the public internet.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-11-05",
+          "operating_detail": true
         }
       ],
       "official_mcp_servers": [
