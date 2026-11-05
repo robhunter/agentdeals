@@ -8,7 +8,10 @@ export function plainConditionsByVendor(listings: readonly Listing[]): Map<strin
   const byVendor = new Map<string, string[]>();
   for (const listing of listings) {
     if (!listing.conditions?.length) continue;
-    byVendor.set(listing.vendor, [...(byVendor.get(listing.vendor) ?? []), ` ${conditionsInPlainText(listing.conditions)}`]);
+    const otherPages = listing.conditions.filter(condition => condition.operating_detail !== true);
+    const forms = [listing.conditions, otherPages].filter(conditions => conditions.length > 0)
+      .map(conditions => ` ${conditionsInPlainText(conditions)}`);
+    byVendor.set(listing.vendor, [...new Set([...(byVendor.get(listing.vendor) ?? []), ...forms])].sort((a, b) => b.length - a.length));
   }
   return byVendor;
 }

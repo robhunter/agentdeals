@@ -20323,13 +20323,6 @@ function sitePageLinksHtml(text: string, links: readonly { text: string; path: s
   return html + textHtml(text.slice(from));
 }
 
-function operatingDetailsOnTheVendorsGuideHtml(slug: string): string {
-  const offer = offerForSlug(slug);
-  const details = offer ? conditionsBesideTheStoredTerms(offer, true).filter(condition => condition.operating_detail === true) : [];
-  return details.length ? `
-  <section class="operating-details"><h2>Operating details</h2>${conditionsHtml(details, escHtmlServer)}</section>` : "";
-}
-
 function buildMistralApiPricingPage(prices: MistralPrices = mistralPrices): string {
   const title = prices.title;
   const metaDesc = prices.meta_description;
@@ -20412,7 +20405,7 @@ ${globalNavCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; ${escHtmlServer(title)}</div>
   <article class="mistral-guide">
   <h1>${escHtmlServer(title)}</h1>
-  <p class="section-intro">${text(prices.lead)}</p>${operatingDetailsOnTheVendorsGuideHtml("mistral-ai")}
+  <p class="section-intro">${text(prices.lead)}</p>
 
   <h2>${text(prices.prices.heading)}</h2>
   <p class="section-intro">${text(prices.prices.intro)}</p>
