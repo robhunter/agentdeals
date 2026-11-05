@@ -17795,6 +17795,22 @@
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-11-05"
+    },
+    {
+      "vendor": "Mistral AI",
+      "change_type": "product_deprecated",
+      "date": "2027-04-30",
+      "date_source": "vendor_page",
+      "summary": "Mistral's API keeps running. Mistral Large 3 (mistral-large-2512), Mistral Medium 3.5 (mistral-medium-3-5), Voxtral TTS (voxtral-mini-tts-2603), Voxtral Mini Transcribe 2 (voxtral-mini-2602) and Voxtral Mini Transcribe Realtime (voxtral-mini-transcribe-realtime-2602) can be called until April 30, 2027, when Mistral retires them. Mistral's replacements: Mistral Large 4 for Mistral Large 3 and Mistral Medium 3.5, Voxtral TTS 3 for Voxtral TTS, Voxtral Mini Transcribe 3 for Voxtral Mini Transcribe 2, and Voxtral Mini Transcribe Realtime 3 for Voxtral Mini Transcribe Realtime.",
+      "what_ends": "Mistral Large 3, Mistral Medium 3.5, Voxtral TTS, Voxtral Mini Transcribe 2 and Voxtral Mini Transcribe Realtime",
+      "listing_effect": "none",
+      "previous_state": "Mistral Large 3, Mistral Medium 3.5, Voxtral TTS, Voxtral Mini Transcribe 2 and Voxtral Mini Transcribe Realtime were current Mistral API models.",
+      "current_state": "Mistral's models page lists all five as deprecated on 10/31/2026 with a retirement date of 4/30/2027 (docs.mistral.ai/models, read 2026-11-05).",
+      "impact": "medium",
+      "source_url": "https://docs.mistral.ai/models",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-05"
     }
   ]
 }
