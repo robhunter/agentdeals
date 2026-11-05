@@ -22,11 +22,11 @@
       "changed": "2026-11-05"
     },
     "/ai-free-tiers": {
-      "hash": "66d34ae5a7672e70",
+      "hash": "c9943c36df650e9c",
       "changed": "2026-11-05"
     },
     "/ai-ml-alternatives": {
-      "hash": "964554aa547c57f3",
+      "hash": "246b0befded25479",
       "changed": "2026-11-05"
     },
     "/alternative-to": {
@@ -1108,7 +1108,7 @@
       "changed": "2026-11-03"
     },
     "/category/ai-ml": {
-      "hash": "5f5c0c8a24cf1b6b",
+      "hash": "327a34148d5b0523",
       "changed": "2026-11-05"
     },
     "/category/analytics": {
@@ -1148,8 +1148,8 @@
       "changed": "2026-11-05"
     },
     "/category/cloud-iaas": {
-      "hash": "b904d7583d8c708b",
-      "changed": "2026-11-03"
+      "hash": "05f74602f4cb6c27",
+      "changed": "2026-11-05"
     },
     "/category/cloud-storage": {
       "hash": "c84480da43b16ed9",
@@ -3097,7 +3097,7 @@
       "changed": "2026-11-03"
     },
     "/digest/2026-w45": {
-      "hash": "49c097ec09cfdd73",
+      "hash": "358e8c7b136ab424",
       "changed": "2026-11-05"
     },
     "/digest/2026-w47": {
@@ -3208,7 +3208,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "c2d67d2c87d59e84",
+      "hash": "09bca02d6b8c0fbf",
       "changed": "2026-11-05"
     },
     "/firebase-alternatives": {
@@ -3243,7 +3243,7 @@
       "changed": "2026-11-05"
     },
     "/free-llm-apis": {
-      "hash": "cfb748a10a2a9a04",
+      "hash": "42c3f8b8a118f447",
       "changed": "2026-11-05"
     },
     "/free-nextjs-stack": {
@@ -3277,7 +3277,7 @@
       "changed": "2026-11-03"
     },
     "/gcp-free-tier-2026": {
-      "hash": "fe1adcd6a2de1bc4",
+      "hash": "08bba2c32ef96eb9",
       "changed": "2026-11-05"
     },
     "/gemini-api-pricing-2026": {
@@ -3329,7 +3329,7 @@
       "changed": "2026-11-05"
     },
     "/hetzner-alternatives": {
-      "hash": "d26716382b19adcc",
+      "hash": "c9e7a12bdf2c369d",
       "changed": "2026-11-05"
     },
     "/hetzner-pricing-2026": {
@@ -3337,7 +3337,7 @@
       "changed": "2026-11-05"
     },
     "/hosting-alternatives": {
-      "hash": "6b8b040e2073d42a",
+      "hash": "f082765f0e4fe356",
       "changed": "2026-11-05"
     },
     "/hosting-free-tier-comparison-2026": {
@@ -3353,7 +3353,7 @@
       "changed": "2026-11-05"
     },
     "/llm-api-pricing": {
-      "hash": "c8d0f863d3702de5",
+      "hash": "87cccfa898944881",
       "changed": "2026-11-05"
     },
     "/localstack-alternatives": {
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-05"
     },
     "/stack-check": {
-      "hash": "97b2da067f5d8b89",
+      "hash": "dbdb7cba472255c9",
       "changed": "2026-11-05"
     },
     "/stacks": {
@@ -4845,7 +4845,7 @@
       "changed": "2026-11-05"
     },
     "/vendor/cloudflare-r2": {
-      "hash": "915ef01c9d9e6294",
+      "hash": "852a419da4e104f9",
       "changed": "2026-11-05"
     },
     "/vendor/cloudflare-sandboxes": {
@@ -6064,7 +6064,7 @@
       "daily": true
     },
     "/vendor/google-compute-engine": {
-      "hash": "42535ffb7a8c039c",
+      "hash": "b57a405e194ba9cb",
       "changed": "2026-11-05"
     },
     "/vendor/google-content-api-for-shopping": {
