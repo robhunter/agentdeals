@@ -42492,7 +42492,7 @@ function buildAnalyticsFreeTierComparison2026Page(): string {
   const slug = "analytics-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
   const GA4_SAMPLING_DOC = { url: "https://support.google.com/analytics/answer/13331292", readOn: "2026-10-07" };
-  const AMPLITUDE_PRICING = { url: "https://amplitude.com/pricing", readOn: "2026-10-07" };
+  const AMPLITUDE_PRICING = { url: "https://amplitude.com/pricing", readOn: "2026-11-06" };
 
   const analyticsVendorKeywords = ["PostHog", "Mixpanel", "Amplitude", "Plausible", "Google Analytics", "Umami", "Matomo", "Heap", "June", "Countly", "Fathom", "Simple Analytics", "Pirsch", "Pendo"];
   const analyticsChanges = dealChanges.filter((c: any) =>
@@ -42834,17 +42834,17 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>PostHog</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1M events/month, 5K session replays, 1M feature flag evaluations, experiments billed with feature flags, and 1,500 survey responses a month. Open-source, self-hostable. The only platform that bundles analytics, session replay, feature flags, A/B testing, and surveys into a single free tier. EU and US cloud hosting. Beyond the free tier, PostHog charges $0.00005 an event from 1M to 2M events a month and $0.0000343 from 2M to 15M, falling with volume; events with person profiles (identified events) cost $0.000198 more each from 1M to 2M. The free tier resets monthly and unused quota doesn't roll over. Best for teams that want a single platform for product analytics + experimentation.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 1M events/month, 5K session replays, 1M feature flag evaluations, experiments billed with feature flags, and 1,500 survey responses a month. Open-source, self-hostable. PostHog and Amplitude include analytics, session replay, feature flags, A/B testing, and surveys in their free plans. PostHog allows 1,500 survey responses and experiments billed with flags; Amplitude allows 1 active experiment and 1 guide or survey. EU and US cloud hosting. Beyond the free tier, PostHog charges $0.00005 an event from 1M to 2M events a month and $0.0000343 from 2M to 15M, falling with volume; events with person profiles (identified events) cost $0.000198 more each from 1M to 2M. The free tier resets monthly and unused quota doesn't roll over. Best for teams that want a single platform for product analytics + experimentation.</div>
   </div>
 
   <div class="diff-card">
     <h3>Mixpanel</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1M events/month. Polished UI focused on behavioral analytics: funnels, retention, cohorts, user flows. Free plan: 10K session replays a month, up to 10 active feature flags, data kept 2 years by default. Changed pricing from MTU-based to event-based, simplifying the model. EU data residency available. Powerful query builder and segmentation. Best for teams that want focused behavioral analytics with a refined UI.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 1M events/month. Polished UI focused on behavioral analytics: funnels, retention, cohorts, user flows. Free plan: 10K session replays a month, up to 10 active feature flags, experiments for up to 1,000 monthly experiment users, data kept 2 years by default. Changed pricing from MTU-based to event-based, simplifying the model. EU data residency available. Powerful query builder and segmentation. Best for teams that want focused behavioral analytics with a refined UI.</div>
   </div>
 
   <div class="diff-card">
     <h3>Amplitude</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 2M events a month, 10K session replays a month, 1 year of data access and 10 saved charts, no credit card (<a href="${AMPLITUDE_PRICING.url}" rel="nofollow noopener">${escHtmlServer(citationLabel(AMPLITUDE_PRICING.url))}</a>, read ${AMPLITUDE_PRICING.readOn}).</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 2M events a month, 10K session replays a month, unlimited feature flags, 1 active feature experiment, 1 active web experiment, 1 live guide or survey, 1 year of data access and 10 saved charts, no credit card (<a href="${AMPLITUDE_PRICING.url}" rel="nofollow noopener">${escHtmlServer(citationLabel(AMPLITUDE_PRICING.url))}</a>, read ${AMPLITUDE_PRICING.readOn}).</div>
   </div>
 
   <div class="diff-card">
@@ -42893,7 +42893,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>PostHog &mdash; The All-in-One Standard</h3>
-    <div class="diff-desc">PostHog is the only platform offering <strong>analytics + session replays + feature flags + A/B testing + surveys</strong> in a single free tier. This is its defining advantage. Instead of stitching together Mixpanel (analytics) + FullStory (replays) + LaunchDarkly (flags) + Optimizely (experiments), PostHog does it all. The trade-off: each individual module may not be best-in-class (Mixpanel's behavioral analytics UI is more polished, FullStory's replays are richer), but the integration advantage is substantial. One SDK, one data model, one billing meter.</div>
+    <div class="diff-desc">Both PostHog and Amplitude offer analytics, session replays, feature flags, A/B testing, and surveys in a single free tier. Instead of stitching together Mixpanel (analytics) + FullStory (replays) + LaunchDarkly (flags) + Optimizely (experiments), PostHog does it all. The trade-off: each individual module may not be best-in-class (Mixpanel's behavioral analytics UI is more polished, FullStory's replays are richer), but the integration advantage is substantial. One SDK, one data model, one billing meter.</div>
   </div>
 
   <div class="context-box">
@@ -43056,7 +43056,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Most generous free tier &rarr; PostHog</strong>
-      <p>1M events + 5K replays + 1M feature flags free. No other platform matches this breadth. Open-source, self-hostable. The clear winner for startups that want analytics + experimentation in one tool.</p>
+      <p>1M events + 5K replays + 1M feature flags free. Open-source, self-hostable. The clear winner for startups that want analytics + experimentation in one tool.</p>
     </div>
 
     <div class="verdict-item">
