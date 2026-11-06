@@ -841,7 +841,7 @@
       "changed": "2026-11-06"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
-      "hash": "666bfdb506a4f449",
+      "hash": "66d650dfe6c7da50",
       "changed": "2026-11-06"
     },
     "/badges": {
@@ -4845,7 +4845,7 @@
       "changed": "2026-11-06"
     },
     "/vendor/cloudflare-r2": {
-      "hash": "e3c1e748ca0127ee",
+      "hash": "e8f1d2c780683c12",
       "changed": "2026-11-06"
     },
     "/vendor/cloudflare-sandboxes": {

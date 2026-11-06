@@ -3270,6 +3270,13 @@
           "operating_detail": true
         },
         {
+          "text": "An R2 bucket can be created in the EU jurisdiction, which guarantees its objects are stored in the European Union. The jurisdiction is set when the bucket is created and cannot be changed afterwards. Location hints such as Western Europe are best effort, not a guarantee.",
+          "quote": "Jurisdictional Restrictions guarantee objects in a bucket are stored within a specific jurisdiction. … eu | European Union … Keep in mind Location Hints are a best effort and not a guarantee … Once an R2 bucket is created, the jurisdiction cannot be changed.",
+          "url": "https://developers.cloudflare.com/r2/reference/data-location/",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
           "text": "DeleteObject, DeleteBucket and AbortMultipartUpload are free operations.",
           "quote": "Free operations include DeleteObject, DeleteBucket and AbortMultipartUpload.",
           "url": "https://developers.cloudflare.com/r2/pricing/",
