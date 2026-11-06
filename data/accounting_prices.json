@@ -50,7 +50,7 @@
         "cells": [
           "Top 3 reports (profit and loss, balance sheet, account quick report). No mobile app, no third-party integrations, no automatic sales tax",
           "Up to 1,000 expenses a year; 50 receipt autoscans a month",
-          "Receipt capture needs Pro"
+          "Receipt capture needs Pro or the Receipts plan ($8 a month, $72 a year)"
         ]
       },
       {
@@ -90,6 +90,12 @@
           "label": "waveapps.com/pricing",
           "urls": [
             "https://www.waveapps.com/pricing"
+          ]
+        },
+        {
+          "label": "waveapps.com/receipts",
+          "urls": [
+            "https://www.waveapps.com/receipts"
           ]
         },
         {
@@ -543,6 +549,10 @@
         {
           "url": "https://www.waveapps.com/pricing",
           "covers": "plans"
+        },
+        {
+          "url": "https://www.waveapps.com/receipts",
+          "covers": "Receipts plan, read 2026-11-06"
         },
         {
           "url": "https://support.waveapps.com/hc/en-us/articles/26449863006612-FAQ-Plans-for-legacy-businesses",
