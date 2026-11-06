@@ -3407,7 +3407,7 @@
           "read_on": "2026-10-23"
         },
         {
-          "text": "An agent can provision a Cloudinary Claimable Cloud with no account. It expires in 24 hours if unclaimed and is deleted. Media delivery is limited to the provisioning machine's IP and up to three others, and usage caps are lower until a person claims it. Claiming converts it to a Free plan account with the same credentials.",
+          "text": "Cloudinary launched Claimable Clouds on August 5, 2026. Its docs say: \"A Claimable Cloud is a working Cloudinary environment that an AI agent can provision on a user's behalf, with no signup and no existing credentials.\" A Claimable Cloud expires in 24 hours if unclaimed and is deleted. Media delivery is limited to the provisioning machine's IP and up to three others, and usage caps are lower until a person claims it. Claiming converts it to a Free plan account with the same credentials.",
           "quote": "A Claimable Cloud is a working Cloudinary environment that an AI agent can provision on a user's behalf, with no signup and no existing credentials. The returned credentials work immediately, media delivery is restricted to the IP addresses supplied at provisioning, and the cloud expires at the end of the 24-hour claim window unless the user claims it. … its usage caps are lower than those of a regular free account. Claiming converts it to a free Cloudinary account with the free plan's regular limits.",
           "url": "https://cloudinary.com/documentation/claimable_cloud_provisioning",
           "read_on": "2026-11-06"
