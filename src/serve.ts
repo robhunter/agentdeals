@@ -3940,7 +3940,7 @@ function buildComparisonPage(slug: string): string | null {
   const descBlockHtml = (offer: Offer, superseded: typeof supersededA) =>
     superseded
       ? `<div class="desc-block terms-superseded-text"><strong>${storedTermsLabel(superseded)}:</strong> ${supersededTermsNoticeHtml(offer.vendor, superseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></div>`
-      : `<div class="desc-block">${publishedTermsHtml(offer)}${conditionsAfterTheTermsHtml(offer)}</div>`;
+      : `<div class="desc-block">${publishedTermsHtml(offer)}${conditionsAfterTheTermsHtml(offer, true)}</div>`;
 
   const changesHtml = (changes: typeof a.deal_changes, vendor: string) => {
     if (changes.length === 0) return `<p style="color:var(--text-dim);font-size:.85rem">No recorded pricing changes for ${escHtmlServer(vendor)}.</p>`;
@@ -4625,7 +4625,7 @@ ${vsVerdictLapseLine(a.vendor)}      <div class="detail-row"><span class="detail
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(a))}</span></div>
       <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${stabilityRowValue(riskA)}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${vendorMadeA.length} recorded</span></div>
-      <div class="desc-block">${publishedTermsHtml(a)}${conditionsAfterTheTermsHtml(a)}</div>
+      <div class="desc-block">${publishedTermsHtml(a)}${conditionsAfterTheTermsHtml(a, true)}</div>
     </div>
     <div class="vendor-col">
       <h3><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB)} ${publishedStabilityBadge(riskB)}</h3>
@@ -4635,7 +4635,7 @@ ${vsVerdictLapseLine(b.vendor)}      <div class="detail-row"><span class="detail
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(b))}</span></div>
       <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${stabilityRowValue(riskB)}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${vendorMadeB.length} recorded</span></div>
-      <div class="desc-block">${publishedTermsHtml(b)}${conditionsAfterTheTermsHtml(b)}</div>
+      <div class="desc-block">${publishedTermsHtml(b)}${conditionsAfterTheTermsHtml(b, true)}</div>
     </div>
   </div>
 
@@ -21890,8 +21890,8 @@ ${globalNavCss()}
       </tbody>
     </table>
   </div>
-  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)}${conditionsAfterTheTermsHtml(supabaseOffer)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile →</a></div>` : ""}
-  ${firebaseOffer ? `<div class="context-box"><strong>Firebase verified data:</strong> ${publishedTermsHtml(firebaseOffer)}${conditionsAfterTheTermsHtml(firebaseOffer)} <br>Verified: ${escHtmlServer(firebaseOffer.verifiedDate)} &middot; <a href="/vendor/firebase">Full profile →</a></div>` : ""}
+  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)}${conditionsAfterTheTermsHtml(supabaseOffer, true)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile →</a></div>` : ""}
+  ${firebaseOffer ? `<div class="context-box"><strong>Firebase verified data:</strong> ${publishedTermsHtml(firebaseOffer)}${conditionsAfterTheTermsHtml(firebaseOffer, true)} <br>Verified: ${escHtmlServer(firebaseOffer.verifiedDate)} &middot; <a href="/vendor/firebase">Full profile →</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these architectural differences matter for your long-term stack choice.</p>
@@ -22212,8 +22212,8 @@ ${globalNavCss()}
       </tbody>
     </table>
   </div>
-  ${vercelOffer ? `<div class="context-box"><strong>Vercel verified data:</strong> ${publishedTermsHtml(vercelOffer)}${conditionsAfterTheTermsHtml(vercelOffer)} <br>Verified: ${escHtmlServer(vercelOffer.verifiedDate)} &middot; <a href="/vendor/vercel">Full profile &rarr;</a></div>` : ""}
-  ${netlifyOffer ? `<div class="context-box"><strong>Netlify verified data:</strong> ${publishedTermsHtml(netlifyOffer)}${conditionsAfterTheTermsHtml(netlifyOffer)} <br>Verified: ${escHtmlServer(netlifyOffer.verifiedDate)} &middot; <a href="/vendor/netlify">Full profile &rarr;</a></div>` : ""}
+  ${vercelOffer ? `<div class="context-box"><strong>Vercel verified data:</strong> ${publishedTermsHtml(vercelOffer)}${conditionsAfterTheTermsHtml(vercelOffer, true)} <br>Verified: ${escHtmlServer(vercelOffer.verifiedDate)} &middot; <a href="/vendor/vercel">Full profile &rarr;</a></div>` : ""}
+  ${netlifyOffer ? `<div class="context-box"><strong>Netlify verified data:</strong> ${publishedTermsHtml(netlifyOffer)}${conditionsAfterTheTermsHtml(netlifyOffer, true)} <br>Verified: ${escHtmlServer(netlifyOffer.verifiedDate)} &middot; <a href="/vendor/netlify">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these structural differences matter for your hosting choice.</p>
@@ -22527,8 +22527,8 @@ ${globalNavCss()}
       </tbody>
     </table>
   </div>
-  ${neonOffer ? `<div class="context-box"><strong>Neon verified data:</strong> ${publishedTermsHtml(neonOffer)}${conditionsAfterTheTermsHtml(neonOffer)} <br>Verified: ${escHtmlServer(neonOffer.verifiedDate)} &middot; <a href="/vendor/neon">Full profile &rarr;</a></div>` : ""}
-  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)}${conditionsAfterTheTermsHtml(supabaseOffer)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile &rarr;</a></div>` : ""}
+  ${neonOffer ? `<div class="context-box"><strong>Neon verified data:</strong> ${publishedTermsHtml(neonOffer)}${conditionsAfterTheTermsHtml(neonOffer, true)} <br>Verified: ${escHtmlServer(neonOffer.verifiedDate)} &middot; <a href="/vendor/neon">Full profile &rarr;</a></div>` : ""}
+  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)}${conditionsAfterTheTermsHtml(supabaseOffer, true)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these architectural differences shape which platform fits your use case.</p>
@@ -22841,8 +22841,8 @@ ${globalNavCss()}
       </tbody>
     </table>
   </div>
-  ${railwayOffer ? `<div class="context-box"><strong>Railway verified data:</strong> ${publishedTermsHtml(railwayOffer)}${conditionsAfterTheTermsHtml(railwayOffer)} <br>Verified: ${escHtmlServer(railwayOffer.verifiedDate)} &middot; <a href="/vendor/railway">Full profile &rarr;</a></div>` : ""}
-  ${renderOffer ? `<div class="context-box"><strong>Render verified data:</strong> ${publishedTermsHtml(renderOffer)}${conditionsAfterTheTermsHtml(renderOffer)} <br>Verified: ${escHtmlServer(renderOffer.verifiedDate)} &middot; <a href="/vendor/render">Full profile &rarr;</a></div>` : ""}
+  ${railwayOffer ? `<div class="context-box"><strong>Railway verified data:</strong> ${publishedTermsHtml(railwayOffer)}${conditionsAfterTheTermsHtml(railwayOffer, true)} <br>Verified: ${escHtmlServer(railwayOffer.verifiedDate)} &middot; <a href="/vendor/railway">Full profile &rarr;</a></div>` : ""}
+  ${renderOffer ? `<div class="context-box"><strong>Render verified data:</strong> ${publishedTermsHtml(renderOffer)}${conditionsAfterTheTermsHtml(renderOffer, true)} <br>Verified: ${escHtmlServer(renderOffer.verifiedDate)} &middot; <a href="/vendor/render">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these structural differences define the Railway vs Render choice.</p>
@@ -23159,8 +23159,8 @@ ${globalNavCss()}
       </tbody>
     </table>
   </div>
-  ${datadogOffer ? `<div class="context-box"><strong>Datadog verified data:</strong> ${publishedTermsHtml(datadogOffer)}${conditionsAfterTheTermsHtml(datadogOffer)} <br>Verified: ${escHtmlServer(datadogOffer.verifiedDate)} &middot; <a href="/vendor/datadog">Full profile &rarr;</a></div>` : ""}
-  ${newRelicOffer ? `<div class="context-box"><strong>New Relic verified data:</strong> ${publishedTermsHtml(newRelicOffer)}${conditionsAfterTheTermsHtml(newRelicOffer)} <br>Verified: ${escHtmlServer(newRelicOffer.verifiedDate)} &middot; <a href="/vendor/new-relic">Full profile &rarr;</a></div>` : ""}
+  ${datadogOffer ? `<div class="context-box"><strong>Datadog verified data:</strong> ${publishedTermsHtml(datadogOffer)}${conditionsAfterTheTermsHtml(datadogOffer, true)} <br>Verified: ${escHtmlServer(datadogOffer.verifiedDate)} &middot; <a href="/vendor/datadog">Full profile &rarr;</a></div>` : ""}
+  ${newRelicOffer ? `<div class="context-box"><strong>New Relic verified data:</strong> ${publishedTermsHtml(newRelicOffer)}${conditionsAfterTheTermsHtml(newRelicOffer, true)} <br>Verified: ${escHtmlServer(newRelicOffer.verifiedDate)} &middot; <a href="/vendor/new-relic">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these structural differences define the Datadog vs New Relic choice.</p>
