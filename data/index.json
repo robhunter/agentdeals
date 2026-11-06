@@ -22432,7 +22432,47 @@
         "checked": "2026-10-31",
         "outcome": "states_a_free_price",
         "detail": "the page names ImprovMX and states its price in words as \"free tier\", and its markup carries no structured data"
-      }
+      },
+      "conditions": [
+        {
+          "text": "ImprovMX's Free plan cannot send mail: its SMTP sending allowance is 0, and sending through ImprovMX's SMTP needs a paid plan.",
+          "quote": "Free accounts Receiving: 500 emails / day Sending: 0 Light accounts Receiving: 150,000 emails per account / month Sending: 750 emails per account / month via SMTP",
+          "url": "https://improvmx.com/guides/sending-receiving-limits/",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "When a Free domain reaches 500 emails in a day, ImprovMX stops processing its mail until 00:00 UTC, and mail received in the meantime is bounced to senders with an over-quota message asking them to try again later. ImprovMX emails a warning near the limit and another at it.",
+          "quote": "You get an email when you are close to your limit and another when you hit it. After that, we stop processing mail for that domain until your quota resets: at 00:00 UTC for free accounts, or on your next billing date for paid plans. Mail received after that is bounced to senders with a short over-quota message asking them to try again later.",
+          "url": "https://improvmx.com/guides/sending-receiving-limits/",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "ImprovMX allows one free account per user; creating several free accounts is prohibited.",
+          "quote": "Use ImprovMX to create multiple free accounts … For Free Account Users: You are limited to a single free account.",
+          "url": "https://improvmx.com/transparency/terms-of-service/",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "Gmail's \"Send mail as\" can be used to reply from an ImprovMX address until January 2027, when Google removes \"Send as\" for non-Google addresses; Google says it will restrict new set-ups of the feature before then.",
+          "quote": "Starting January 2027: … You will no longer be able to send mail from third-party email accounts in Gmail on the web or in the Gmail mobile apps. … Prior to January 2027, we will restrict new configurations of this feature.",
+          "url": "https://support.google.com/mail/answer/17101213",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "ImprovMX forwards emails of up to 50 MB including attachments, and refuses some attachment types, such as .bat and .exe files.",
+          "quote": "We forward emails with attachments for up to 50Mb per email (including message and attached files). … Here are the extensions that are not allowed on ImprovMX: … .bat … .exe",
+          "url": "https://improvmx.com/guides/what-are-the-allowed-attachments/",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "ImprovMX's API is included on the Free plan. Its rate limits apply across the whole account: 150 GET requests and 60 POST, PUT or DELETE requests a minute.",
+          "quote": "ImprovMX set rate limits on API methods. These limits are set across the entire account. Method Rate Limit (per minute) GET 150 POST 60 PUT 60 DELETE 60",
+          "url": "https://improvmx.com/guides/api-rate-limits/",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "Inboxes App",
