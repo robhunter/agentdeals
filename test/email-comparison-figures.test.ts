@@ -174,6 +174,12 @@ describe("an email free tier typed into a page states what the vendor's own reco
     assert.deepStrictEqual(cells.slice(2, 4), ["300/day (~9K/mo)", "300/day"]);
   });
 
+  it("bounds Brevo's free contact storage in the frontend stack", () => {
+    const text = readableText(html["/free-frontend-stack"]);
+    assert.match(text, /Brevo offers 300 emails\/day and up to 100,000 contacts\./);
+    assert.doesNotMatch(text, /Brevo offers[^.]*no subscriber limits/);
+  });
+
   it("bounds Brevo's free contact storage in both alternatives introductions", () => {
     for (const route of ["/email-service-alternatives", "/email-alternatives"]) {
       assert.match(readableText(html[route]), /Brevo provides 300\/day and up to 100,000 contacts/);

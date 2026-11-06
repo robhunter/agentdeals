@@ -17003,7 +17003,7 @@ function buildFreeFrontendStackPage(): string {
       icon: "✉️",
       recommended: { vendor: "Resend", why: "3,000 emails/month, 100 emails/day on the free tier. Modern developer-first email API with React Email support, deliverability insights, and simple SDK. Perfect for transactional emails and small newsletters." },
       alternatives: ["Buttondown", "Mailchimp", "Brevo"],
-      outgrow: "When you exceed 3K emails/month or need dedicated IP. Buttondown offers 100 subscribers free for newsletters specifically. Mailchimp gives 250 contacts with marketing automation. Brevo offers 300 emails/day with no subscriber limits.",
+      outgrow: "When you exceed 3K emails/month or need dedicated IP. Buttondown offers 100 subscribers free for newsletters specifically. Mailchimp gives 250 contacts with marketing automation. Brevo offers 300 emails/day and up to 100,000 contacts.",
       relatedPage: "/email-alternatives",
     },
     {

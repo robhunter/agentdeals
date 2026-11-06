@@ -92,7 +92,7 @@ type Retired = { what: string; pattern: RegExp; replacedBy: RegExp; vendorRecord
 const RETIRED_FIGURES: Retired[] = [
   {
     what: "Brevo's hand-typed marketing allowance stated without a contact limit",
-    pattern: /Brevo provides 300\/day with unlimited contacts|Brevo offers 300 emails\/day with unlimited contacts and automation|Brevo offers the most generous marketing free tier with 300 emails\/day and unlimited contacts|Brevo — 300\/day, unlimited contacts, full automation/i,
+    pattern: /Brevo provides 300\/day with unlimited contacts|Brevo offers 300 emails\/day with unlimited contacts and automation|Brevo offers the most generous marketing free tier with 300 emails\/day and unlimited contacts|Brevo — 300\/day, unlimited contacts, full automation|Brevo offers 300 emails\/day with no subscriber limits/i,
     replacedBy: /Brevo (?:provides|offers)[^.]*up to 100,000 contacts/,
   },
   {
@@ -574,7 +574,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
 
   it("states the current figure on every page that carried a retired one", async () => {
     const carried: Record<string, string[]> = {
-      "Brevo's hand-typed marketing allowance stated without a contact limit": ["/email-alternatives", "/email-service-alternatives"],
+      "Brevo's hand-typed marketing allowance stated without a contact limit": ["/email-alternatives", "/email-service-alternatives", "/free-frontend-stack"],
       "Azure's previous startup entry offer stated as current": ["/startup-credits", "/azure-free-tier-2026"],
       "Redis Cloud advanced capabilities restricted to paid tiers": ["/database-pricing"],
       "Clerk free auth stated as 10K MAU": ["/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/security-alternatives"],
