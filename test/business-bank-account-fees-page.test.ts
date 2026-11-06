@@ -295,7 +295,7 @@ describe("a data file the business bank account guide can be built from", () => 
 
   it("is refused when a free account row lacks a cell for a column", () => {
     const text = variant((fees) => { fees.free_accounts.rows[2].cells.pop(); });
-    assert.throws(() => parseBankingFees(text, "scratch.json"), /^Error: scratch\.json free_accounts\.rows\[2\] needs one cell for each of the 5 columns after the first/);
+    assert.throws(() => parseBankingFees(text, "scratch.json"), new RegExp(String.raw`^Error: scratch\.json free_accounts\.rows\[2\] needs one cell for each of the ${committed.free_accounts.columns.length - 1} columns after the first`));
   });
 
   it("is refused when a read day or the publication day is not a calendar day", () => {
