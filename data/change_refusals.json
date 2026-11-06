@@ -1107,6 +1107,18 @@
     {
       "vendor": "bonsai.io",
       "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-11 (repeats_a_refused_reading) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The Free Sandbox plan (125 MB memory, 125 MB storage, 35K documents, free forever) is no longer listed on the pricing page. The page now shows only paid plans: Staging at $15/mo (1 GB storage, 256 MB memory, 100k documents), Standard tiers from $20–$400/mo, Business from $600–$2,500/mo, and Enterprise starting at $5,500/mo. No free tier is mentioned.",
+      "previous_state": "Free Sandbox plan: 125 MB memory, 125 MB storage, 35K documents. Free forever. Managed Elasticsearch.",
+      "current_state": "The pricing page lists only paid plans: Staging $15/mo (1 GB storage, 256 MB memory, 100k documents), Standard Fir $20/mo, Standard Elm $50/mo, Standard Cork $150/mo, Standard Teak $250/mo, Standard Oak $400/mo, Business L starting at $600/mo, Business XL starting at $850/mo, Business 2X starting at $1,700/mo, and Enterprise starting at $5,500/mo. No free plan is shown.",
+      "source_url": "https://bonsai.io/pricing",
+      "category": "Search",
+      "refused_date": "2026-11-06"
+    },
+    {
+      "vendor": "bonsai.io",
+      "change_type": "free_tier_removed",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-09-21 (no_baseline) stated the same 4 figures, so the page showed these terms before the date this record gives",
       "summary": "The free tier is no longer available. The lowest tier is now the 'Staging' plan at $15/month with 1 GB storage and 256 MB memory.",
@@ -1859,15 +1871,15 @@
     },
     {
       "vendor": "Cloudcraft",
-      "change_type": "pricing_model_change",
+      "change_type": "pricing_restructured",
       "reason": "no_price_signal",
       "detail": "the page read carries no price signal — no amount, named tier or metered rate in 829 characters, so it states no terms to have changed",
-      "summary": "Cloudcraft is now free with any Datadog subscription and includes unlimited users and diagrams.",
+      "summary": "Cloudcraft's free tier is no longer a standalone free plan with a single user and a 12x15 component grid; it is now free only with any Datadog subscription and offers unlimited users and unlimited diagrams.",
       "previous_state": "AWS/Azure architecture diagramming — Free plan: single user only, manual diagrams limited to a 12x15 component grid, unlimited private diagrams, PNG/PDF/SVG export, private shared links, basic cost calculations. No live-scan/auto-discovery, team management, infinite canvas, version history, API access, or SSO.",
-      "current_state": "Cloudcraft is free in Datadog. Unlimited users · Unlimited diagrams Diagram your entire infrastructure with any Datadog subscription",
+      "current_state": "Cloudcraft is free with any Datadog subscription, with unlimited users and unlimited diagrams.",
       "source_url": "https://www.cloudcraft.co/pricing",
       "category": "Diagramming",
-      "refused_date": "2026-09-25"
+      "refused_date": "2026-11-06"
     },
     {
       "vendor": "Cloudcraft",
@@ -2737,6 +2749,18 @@
       "source_url": "https://www.cursor.com/pricing",
       "category": "AI Coding",
       "refused_date": "2026-10-15"
+    },
+    {
+      "vendor": "Cursor",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-15 (confirmed_unchanged) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "Cursor's pricing page now shows the Free tier as part of an X Subscription with limited AI usage, limited agent requests, and limited Chat requests, and paid plans are Plus $8/month, Premium $30/month, Super $100/month, and Ultra $200/month. The stored description says Free is $0 with limited Agent and Chat usage, and paid plans are Plus $8/month, Premium $30/month (4x Plus's usage), Super $100/month (15x), and Ultra $200/month (50x), or $80, $300, $1,000 and $2,000 a year. The page confirms the Free tier still exists and the monthly prices match, but it does not state the annual prices, the shared weekly pool with Grok, the specific model coverage, the third-party model restrictions for Free and Plus, the Teams seat prices, or the legacy subscriber terms described in the stored info.",
+      "previous_state": "AI code editor built on VS Code. Since 2026-10-12, Cursor's pricing docs (cursor.com/docs/models-and-pricing) say: \"Cursor is sold as part of The X Subscription, one subscription for Grok, Cursor, and X.\" Free is $0, with limited Agent and Chat usage. Paid plans are Plus $8/month, Premium $30/month (4x Plus's usage), Super $100/month (15x) and Ultra $200/month (50x), or $80, $300, $1,000 and $2,000 a year. Each paid plan's usage is one weekly pool shared with Grok, covering Grok 4.7, Grok 4.6, Grok 4.5 and Cursor's Composer 2.5. Claude, GPT, Gemini and other third-party models are outside every plan's pool: on Premium and above they cost the model's API list price, paid from prepaid credit, and Free and Plus cannot use them or your own API keys. Teams seats are $30, $100 or $200 per user a month, and on Teams and Enterprise third-party models cost API list price plus the Cursor Token Rate. Existing Hobby, Pro ($20), Pro+ ($60), Ultra and Teams Standard and Premium subscribers keep their plans, with monthly usage pools and included third-party usage, until they choose to switch. Cursor announced the change on its forum on 2026-10-12 (forum.cursor.com/t/introducing-the-x-subscription/174450).",
+      "current_state": "Free is $0/month and includes limited AI usage, limited agent requests, and limited Chat requests, plus X features such as post, reply, and follow. Paid plans are Plus $8/month, Premium $30/month, Super $100/month, and Ultra $200/month.",
+      "source_url": "https://www.cursor.com/pricing",
+      "category": "AI Coding",
+      "refused_date": "2026-11-06"
     },
     {
       "vendor": "dAppling Network",
@@ -4269,6 +4293,18 @@
       "source_url": "https://gatling.io/pricing",
       "category": "Testing",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Gcore DNS",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-21 (unquantified_limit) claimed the same change, limits_increased, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored description says the free Managed DNS tier includes 10,000,000 requests, but the page now shows the FREE plan has Unlimited requests included; the 10,000,000 request figure now belongs to the PRO plan.",
+      "previous_state": "Managed DNS has a free tier with unlimited zones, Anycast across 210+ PoPs, DDoS protection, IPv4/IPv6, 10,000,000 requests included, and costs €0.20 per 1,000,000 requests over that limit. It also limits dynamic RRset to 1 per zone.",
+      "current_state": "Managed DNS FREE is €0/mo with Anycast DNS across 210+ PoPs, 200 Tbps network, DDoS-protected DNS, IPv4/IPv6, Unlimited requests included, Unlimited zones, 1 Dynamic RRset per zone, Dynamic RRset size of 3 records, minimum TTL 120s, and knowledge base support.",
+      "source_url": "https://gcore.com/pricing/edge-network",
+      "category": "DNS & Domain Management",
+      "refused_date": "2026-11-06"
     },
     {
       "vendor": "Gcore DNS",
@@ -7254,6 +7290,18 @@
       "source_url": "https://www.meilisearch.com/",
       "category": "Search",
       "refused_date": "2026-10-07"
+    },
+    {
+      "vendor": "Mendix",
+      "change_type": "limits_increased",
+      "reason": "no_baseline",
+      "detail": "limits_increased claimed, and the clause that named the terms the change was measured on was dropped — what is left states no earlier figure and nothing the stored description measured",
+      "summary": "The Free plan still exists at $0/month, but the page now lists 'Up to 3' environments per app for Free (stored info said 1 sandbox environment per app), and it no longer mentions the 0.5 GB storage / 1 GB RAM per app limits or shared database tenancy.",
+      "previous_state": "Low-code development platform — Free plan: 1 sandbox environment per app on Mendix Cloud, 0.5 GB storage and 1 GB RAM per app, shared database tenancy, unlimited local development. Studio and Studio Pro IDEs included. Community support (no SLA or uptime guarantee). Suited for demos, prototypes, and small apps.",
+      "current_state": "Free plan starting at $0/month; includes Agile Project Management, Collaborative Development, and Mendix Cloud deployment; 'Up to 3' environments per app; no Project Dashboard, Private Marketplace, Ops Dashboard, IDP Integration, Vertical/Horizontal Scalability, HA/Fallback, Multi-region failover, Support Plan, or Uptime Guarantee; Online Academy available.",
+      "source_url": "https://www.mendix.com/pricing/",
+      "category": "Low-Code Platforms",
+      "refused_date": "2026-11-06"
     },
     {
       "vendor": "Mendix",
@@ -11371,15 +11419,15 @@
     },
     {
       "vendor": "The Intercom Early Stage Program",
-      "change_type": "limits_reduced",
+      "change_type": "pricing_restructured",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as The Intercom Early Stage Program|record_corrected|2026-09-19|https://www.intercom.com/early-stage",
-      "summary": "The starting price is now $65/month instead of $33/month. The number of Fin outcomes and qualifications available in years 2 and 3 have been reduced.",
+      "summary": "The current page states the Intercom Helpdesk starts from $65 per month. The page also adds year-by-year Fin outcome limits (300/150/75) and states Year 2 and Year 3 discounts are forfeited if switching plans.",
       "previous_state": "Intercom Early Stage pricing starts at $33/month, with 93% off in the first year, 50% off in the second and 25% off in the third. The first year includes 300 Fin outcomes and 15 Fin qualifications per month. The discount does not apply to additional outcomes or qualifications; phone, SMS and WhatsApp are charged at list price.",
-      "current_state": "Intercom Early Stage pricing includes 300 free Fin outcomes,15 free sales qualifications per month, and the Intercom Helpdesk from $65 per month. Year 1 includes 300 Fin outcomes and 15 Fin qualifications. Year 2 includes 150 Fin outcomes and 15 Fin qualifications. Year 3 includes 75 Fin outcomes and 15 Fin qualifications.",
+      "current_state": "Early Stage pricing includes the Intercom Helpdesk from $65 per month, with 93% off in Year 1, 50% off in Year 2, and 25% off in Year 3. Year 1 includes 300 Fin outcomes and 15 Fin qualifications per month; Year 2 includes 150 Fin outcomes and 15 Fin qualifications; Year 3 includes 75 Fin outcomes and 15 Fin qualifications. Phone, SMS, and WhatsApp are charged at list price. Year 2 and Year 3 discounts are reserved for customers who stay on the program; switching to a self-serve or sales-led plan forfeits those savings.",
       "source_url": "https://www.intercom.com/early-stage",
       "category": "Startup Perks",
-      "refused_date": "2026-10-09",
+      "refused_date": "2026-11-06",
       "collided_with": "The Intercom Early Stage Program|record_corrected|2026-09-19|https://www.intercom.com/early-stage"
     },
     {
@@ -12343,6 +12391,18 @@
       "category": "AI / ML",
       "refused_date": "2026-09-20",
       "collided_with": "Weights & Biases|restriction|2026-09-03|https://wandb.ai/site/pricing/"
+    },
+    {
+      "vendor": "whimsical.com",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 3 team against 50 board/mo",
+      "summary": "The Free plan no longer offers 3 team boards and 100 AI actions per editor; it now limits users to 50 board objects per month and 50 doc blocks per month, with only 10 AI credits per member.",
+      "previous_state": "Collaborative flowcharts, wireframes, sticky notes and mind maps. Free plan: 3 team boards, 100 AI actions per editor.",
+      "current_state": "Free plan is $0/month/editor and includes: create up to 50 board objects per month, create up to 50 doc blocks per month, watermark on exports, 7-day version history, 5MB per file uploads with 1GB total storage, unlimited boards, unlimited workspace members, unlimited guests, and 10 AI credits per member (additional AI credits purchasable separately).",
+      "source_url": "https://whimsical.com/pricing",
+      "category": "Design",
+      "refused_date": "2026-11-06"
     },
     {
       "vendor": "Whitespace",

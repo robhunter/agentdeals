@@ -1,5 +1,126 @@
 {
-  "proposals": [],
+  "proposals": [
+    {
+      "proposal_id": "2026-11-06/proton-vpn/limits_increased",
+      "proposed_on": "2026-11-06",
+      "vendor": "Proton VPN",
+      "change_type": "limits_increased",
+      "date": "2026-11-06",
+      "date_source": "discovered",
+      "summary": "The free plan now lists servers in 10 countries (randomly selected) instead of 5 countries as stored.",
+      "tier": "Proton Free",
+      "tier_direction": "widened",
+      "previous_state": "No data or time limits and no speed cap, though Proton rates free speeds as medium (paid plans reach up to 10 Gbps). Servers in 5 countries, randomly selected. 1 device at a time. No ads. The same no-logs policy and VPN protocols as paid plans, including the Stealth protocol and Kill Switch. Streaming sites are not blocked on free, but Proton guarantees streaming only on paid plans. No Secure Core and no BitTorrent (P2P) on free.",
+      "current_state": "Proton Free is $0.00/month, requires no credit card, secures 1 device at a time, has Medium VPN speed, and connects to servers in 10 countries (randomly selected). It has no time, speed, or data limits, no ads, the same security/no-logs policy as paid plans, and streaming sites are not blocked but streaming is only guaranteed on paid plans. BitTorrent requires a paid plan.",
+      "impact": "low",
+      "source_url": "https://protonvpn.com/free-vpn/free-vs-paid",
+      "category": "VPN & Privacy",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-06",
+      "restatement": [
+        {
+          "url": "https://protonvpn.com/free-vpn/free-vs-paid",
+          "description": "Proton Free is $0.00/month, requires no credit card, secures 1 device at a time, has Medium VPN speed, and connects to servers in 10 countries (randomly selected). It has no time, speed, or data limits, no ads, the same security/no-logs policy as paid plans, and streaming sites are not blocked but streaming is only guaranteed on paid plans. BitTorrent requires a paid plan."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-06/row-zero/limits_reduced",
+      "proposed_on": "2026-11-06",
+      "vendor": "Row Zero",
+      "change_type": "limits_reduced",
+      "date": "2026-11-06",
+      "date_source": "discovered",
+      "summary": "The Free plan now includes only 1 workbook instead of three free forever workbooks, and the 400+ functions/AI/connectors features are limited to the Free tier while Pro adds Unlimited workbooks and Business tier exists.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Blazingly fast, connected spreadsheet. Connect directly to data databases, S3, and APIs. Import, analyze, graph, and share millions of rows instantly. Three free (forever) workbooks.",
+      "current_state": "Free $0: 1 workbook, 10s of millions of rows, 400+ Excel-compatible functions, AI chat, pivot tables & charts, import XLSX, CSV, TXT, Parquet, JSONL, etc., built-in data connectors, real-time collaboration, SOC 2, GDPR, and HIPAA compliant.",
+      "impact": "medium",
+      "source_url": "https://rowzero.com/pricing",
+      "category": "Analytics",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-06",
+      "restatement": [
+        {
+          "url": "https://rowzero.com/pricing",
+          "description": "Blazingly fast, connected spreadsheet — Free $0: 1 workbook, 10s of millions of rows, 400+ Excel-compatible functions, AI chat, pivot tables & charts, import XLSX, CSV, TXT, Parquet, JSONL, etc., built-in data connectors, real-time collaboration, SOC 2, GDPR, and HIPAA compliant."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-06/stability-ai/pricing_restructured",
+      "proposed_on": "2026-11-06",
+      "vendor": "Stability AI",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-06",
+      "date_source": "discovered",
+      "summary": "Stability AI's own page now redirects to docs.stability.ai. Stable Audio credit prices dropped: Stable Audio 3.0 is now 8 credits (was 26) and Stable Audio 2.5 is now 8 credits (was 20).",
+      "tier": "Stable Audio",
+      "tier_direction": "unchanged",
+      "previous_state": "Developer Platform API is credit-priced at 1 credit = $0.01, with 25 free credits to start — a one-time $0.25 grant, not a monthly allowance. Per-image costs: SDXL 1.0 from 0.9 credits, Stable Diffusion 3.5 Flash 2.5, Stable Image Core 3, Stable Diffusion 3.5 Medium 3.5, Large 6.5, Stable Image Ultra 8. Stable Audio 2.5 is 20 credits and 3.0 is 26. platform.stability.ai/pricing, read 2026-09-19.",
+      "current_state": "Stable Audio 3.0 and Stable Audio 2.5 each cost 8 credits; 1 credit equals $0.01 and new users get 25 free credits.",
+      "impact": "low",
+      "source_url": "https://platform.stability.ai/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-06",
+      "restatement": []
+    },
+    {
+      "proposal_id": "2026-11-06/webstudio/limits_reduced",
+      "proposed_on": "2026-11-06",
+      "vendor": "Webstudio",
+      "change_type": "limits_reduced",
+      "date": "2026-11-06",
+      "date_source": "discovered",
+      "summary": "The page shows Free with unlimited projects/pages on a wstd.io subdomain, 1 custom domain, 250 MB asset storage, and 100,000 page views/month. Custom domains and 20 GB storage are now Pro features.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Open-source alternative to Webflow. The free plan offers unlimited websites on their domain. Five websites with custom domains. Ten thousand page views/month. 2 GB asset storage.",
+      "current_state": "Free Cloud plan: wstd.io subdomain, unlimited projects, unlimited pages, 1 custom domain, 250 MB asset storage, 50 assets per project, 100,000 page views/month, 300 form submissions/month, 10 daily publishes. Pro is $15/month billed yearly with unlimited sites with custom domains, 100,000 page views per month with overages, and 20 GB asset storage.",
+      "impact": "medium",
+      "source_url": "https://webstudio.is/pricing",
+      "category": "Design",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-06",
+      "restatement": [
+        {
+          "url": "https://webstudio.is/pricing",
+          "description": "Open-source alternative to Webflow — Free Cloud plan: wstd.io subdomain, unlimited projects, unlimited pages, 1 custom domain, 250 MB asset storage, 50 assets per project, 100,000 page views/month, 300 form submissions/month, 10 daily publishes. Pro is $15/month billed yearly with unlimited sites with custom domains, 100,000 page views per month with overages, and 20 GB asset storage."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-06/zeplin/limits_reduced",
+      "proposed_on": "2026-11-06",
+      "vendor": "Zeplin",
+      "change_type": "limits_reduced",
+      "date": "2026-11-06",
+      "date_source": "discovered",
+      "summary": "Zeplin's Free plan now includes AI Design Review (Beta) limited to 3 screen reviews/week and AI Organize (Beta) limited to 3 organization runs/week, plus 100 screens, 1 styleguide, up to 100 components, and 30-day version history.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Design handoff platform — 1 active project, unlimited members, style guide, component inspection, asset export. Integrates with Figma, Sketch, and Adobe XD",
+      "current_state": "Free plan: $0, 1 project, unlimited users, 100 screens, AI Design Review (Beta) 3 screens/week, AI Organize (Beta) 3 runs/week, 1 styleguide, up to 100 components, 30-day version history, personal workspace, Owner/Member roles, no Flow Boards, no SSO/MFA/SCIM, no activity logs, no invoiced billing, chat & email support, group training sessions.",
+      "impact": "medium",
+      "source_url": "https://zeplin.io/pricing",
+      "category": "Design",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-06",
+      "restatement": [
+        {
+          "url": "https://zeplin.io/pricing",
+          "description": "Design handoff platform — Free plan: $0, 1 project, unlimited users, 100 screens, AI Design Review (Beta) 3 screens/week, AI Organize (Beta) 3 runs/week, 1 styleguide, up to 100 components, 30-day version history, personal workspace, Owner/Member roles, no Flow Boards, no SSO/MFA/SCIM, no activity logs, no invoiced billing, chat & email support, group training sessions."
+        }
+      ]
+    }
+  ],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
