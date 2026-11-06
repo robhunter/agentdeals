@@ -3270,6 +3270,13 @@
           "operating_detail": true
         },
         {
+          "text": "An R2 bucket can be created in the EU jurisdiction, which guarantees its objects are stored in the European Union. The jurisdiction is set when the bucket is created and cannot be changed afterwards. Location hints such as Western Europe are best effort, not a guarantee.",
+          "quote": "Jurisdictional Restrictions guarantee objects in a bucket are stored within a specific jurisdiction. … eu | European Union … Keep in mind Location Hints are a best effort and not a guarantee … Once an R2 bucket is created, the jurisdiction cannot be changed.",
+          "url": "https://developers.cloudflare.com/r2/reference/data-location/",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
           "text": "DeleteObject, DeleteBucket and AbortMultipartUpload are free operations.",
           "quote": "Free operations include DeleteObject, DeleteBucket and AbortMultipartUpload.",
           "url": "https://developers.cloudflare.com/r2/pricing/",
@@ -31918,6 +31925,67 @@
           "quote": "GoatCounter.com is currently offered for free for reasonable public usage. Running your personal website or small-to-medium business on it is fine, but sending millions of pageviews/day isn’t.",
           "url": "https://www.goatcounter.com/terms",
           "read_on": "2026-10-18"
+        },
+        {
+          "text": "GoatCounter.com accounts must be registered by a human; automated registration is not allowed. Automated processes may use an account after a human has registered it.",
+          "quote": "You must also be a human, accounts registered through automated means are not permitted. Accounts utilized by an automated process are permitted, so long as the initial account registration was manually performed by a human.",
+          "url": "https://www.goatcounter.com/help/terms",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "GoatCounter does not store visitors' IP addresses, full User-Agent headers or tracker IDs, and stores nothing in their browsers (no cookies or localStorage). GoatCounter states a GDPR consent notice is probably not required, and says this is not legal advice.",
+          "quote": "In short, GoatCounter doesn’t store IP addresses, the full User-Agent header, or any tracker ID. It also doesn’t store any information in the browser with cookies, localStorage, cache, or any other method.",
+          "url": "https://www.goatcounter.com/help/privacy",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "GoatCounter.com may change its terms with at least two weeks' notice, sent to the account's email address.",
+          "quote": "We may make changes to these terms with at least two weeks notice. Notice will be sent to the email on file for your account.",
+          "url": "https://www.goatcounter.com/help/terms",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "For a site sending millions of pageviews, GoatCounter.com says it would rather contact the owner to discuss options than shut down the account. Self-hosting is the option for heavier use.",
+          "quote": "if you’re sending many (millions) of pageviews then I’d rather contact you to discuss options than just shut down the account",
+          "url": "https://www.goatcounter.com/help/faq",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "The GoatCounter API is accessed with a key created in the account and can manage sites and users and export data. Its rate limit is 4 requests per second.",
+          "quote": "The GoatCounter API can be used to manage sites, users, export data, or build your own dashboard. … To use the API create a key in your account … The rate limit is 4 requests per second",
+          "url": "https://www.goatcounter.com/help/api",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "GoatCounter.com stores data on servers at Hetzner Online GmbH in Finland and Germany, and is operated by Martin Tournoij in Ireland.",
+          "quote": "Data is stored on servers at Hetzner Online GmbH in Finland and Germany. GoatCounter.com is operated by Martin Tournoij, located in Ireland.",
+          "url": "https://www.goatcounter.com/help/privacy",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "Deleting a GoatCounter.com account (Settings, Delete Account) permanently deletes all its data; some may remain in backups for up to 30 days.",
+          "quote": "You can remove all data from the site settings … which will permanently delete all data. Some data may be retained in backups for up to 30 days.",
+          "url": "https://www.goatcounter.com/help/privacy",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "GoatCounter states most ad blockers block goatcounter.com and estimates that about a third of pageviews are missed because of them. A custom domain does not prevent this. The workarounds are self-hosting or importing pageviews from web server logfiles.",
+          "quote": "Most of them block goatcounter.com … By my estimate about a third of pageviews are missed due to adblockers … Note that Custom domains will not prevent adblockers from recognizing GoatCounter",
+          "url": "https://www.goatcounter.com/help/faq",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "Each domain needs its own GoatCounter site; the sites share the same user and login.",
+          "quote": "Create a new site for every domain; this is a completely separate site which has the same user, login, etc.",
+          "url": "https://www.goatcounter.com/help/domains",
+          "read_on": "2026-11-06",
+          "operating_detail": true
         }
       ]
     },
