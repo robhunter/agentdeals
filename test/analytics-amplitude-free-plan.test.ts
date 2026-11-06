@@ -136,13 +136,32 @@ describe(`${PAGE} states Amplitude's Free plan and GA4's sampling quota as the v
     assert.ok(card, "no Amplitude card");
     assert.deepStrictEqual([row, card].filter(html => html.includes("caution-badge")), [], "Amplitude still carries a caution badge");
     const cardText = body.match(/<h3>Amplitude\b(?:(?!<\/h3>)[\s\S])*<\/h3>\s*<div class="diff-desc">([\s\S]*?)<\/div>/)?.[1] ?? "";
-    assert.strictEqual(plain(cardText), "Free tier: 2M events a month, 10K session replays a month, 1 year of data access and 10 saved charts, no credit card (amplitude.com/pricing, read 2026-10-07).");
+    assert.strictEqual(plain(cardText), "Free tier: 2M events a month, 10K session replays a month, unlimited feature flags, 1 active feature experiment, 1 active web experiment, 1 live guide or survey, 1 year of data access and 10 saved charts, no credit card (amplitude.com/pricing, read 2026-11-06).");
     assert.match(cardText, /<a href="https:\/\/amplitude\.com\/pricing" rel="nofollow noopener">/);
     assert.deepStrictEqual(cells.slice(1, 5), ["2M events/mo", "✓ 10K/mo", "✓ Unlimited", "1 year"]);
   });
 
   it("puts 2M events a month on Amplitude's stat card", () => {
     assert.match(body, /<div class="stat-number green">2M<\/div><div class="stat-label">Amplitude Free Events\/mo<\/div>/);
+  });
+
+  it("names both free analytics bundles and their experiment and survey allowances in PostHog's card", () => {
+    const card = body.match(/<h3>PostHog\b(?:(?!<\/h3>)[\s\S])*<\/h3>\s*<div class="diff-desc">([\s\S]*?)<\/div>/)?.[1];
+    assert.ok(card);
+    assert.ok(plain(card).includes("PostHog and Amplitude include analytics, session replay, feature flags, A/B testing, and surveys in their free plans. PostHog allows 1,500 survey responses and experiments billed with flags; Amplitude allows 1 active experiment and 1 guide or survey."));
+    assert.ok(plain(card).includes("1M events/month, 5K session replays, 1M feature flag evaluations, experiments billed with feature flags, and 1,500 survey responses a month."));
+  });
+
+  it("includes Amplitude beside PostHog in the all-in-one explanation", () => {
+    const card = body.match(/<div class="diff-desc">Both PostHog and Amplitude[\s\S]*?<\/div>/)?.[0];
+    assert.ok(card);
+    assert.ok(plain(card).startsWith("Both PostHog and Amplitude offer analytics, session replays, feature flags, A/B testing, and surveys in a single free tier."));
+    assert.ok(plain(card).endsWith("One SDK, one data model, one billing meter."));
+  });
+
+  it("retains the PostHog free-tier recommendation without claiming exclusive breadth", () => {
+    assert.ok(plain(body).includes("1M events + 5K replays + 1M feature flags free. Open-source, self-hostable. The clear winner for startups that want analytics + experimentation in one tool."));
+    assert.doesNotMatch(plain(html), /The only platform that bundles analytics|PostHog is the only platform offering|No other platform matches this breadth|This is its defining advantage\./i);
   });
 
   it("states GA4's sampling quota with Google's page and the day it was read", () => {
@@ -195,7 +214,7 @@ describe(`${PAGE} states Amplitude's Free plan and GA4's sampling quota as the v
     assert.strictEqual(plain(card), "June shut down its product after joining Amplitude in August 2025.");
     assert.doesNotMatch(html, /Startup-friendly auto-reports|No session replay \(they partner with other tools\)|unlimited retention on its free plan/);
     for (const sentence of [
-      "Free plan: 10K session replays a month, up to 10 active feature flags, data kept 2 years by default.",
+      "Free plan: 10K session replays a month, up to 10 active feature flags, experiments for up to 1,000 monthly experiment users, data kept 2 years by default.",
       "Session replay is a paid add-on on Pro and Premier.",
       "Pricing: No free plan; a 30-day trial, then from $6/month for 10K pageviews.",
       "From $20/month (100K pageviews). A free plan for hobby sites: 5 websites, the latest month of data, badge required.",
