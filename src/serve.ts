@@ -8101,7 +8101,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     title: "Email Service Alternatives — Best Free Transactional Email APIs for 2026",
     metaDesc: "SendGrid retired its free plan in 2025. Compare free alternatives: Resend (3K/mo), Mailjet (6K/mo), Brevo (300/day), Postmark, Loops, AhaSend. [[freshness]]",
     contextHtml: `<p><strong>Transactional email</strong> — password resets, order confirmations, verification codes — is non-negotiable infrastructure for any app. SendGrid retired its free plan in 2025; new accounts get a 60-day trial at 100 emails a day. Mailgun still has a free plan with 100 emails a day.</p>
-    <p>The good news: several developer-focused alternatives now offer generous free tiers. <strong>Resend</strong> gives you 3,000 emails/month with a modern React Email integration. <strong>Mailjet</strong> offers 6,000/month (200/day cap). <strong>Brevo</strong> provides 300/day with unlimited contacts. And newer entrants like <strong>Loops</strong> and <strong>AhaSend</strong> are competing hard on developer experience and pricing.</p>
+    <p>The good news: several developer-focused alternatives now offer generous free tiers. <strong>Resend</strong> gives you 3,000 emails/month with a modern React Email integration. <strong>Mailjet</strong> offers 6,000/month (200/day cap). <strong>Brevo</strong> provides 300/day and up to 100,000 contacts. And newer entrants like <strong>Loops</strong> and <strong>AhaSend</strong> are competing hard on developer experience and pricing.</p>
     <p>Below are the best free email services for developers in 2026, compared by volume limits, API quality, and what you actually get for free.</p>`,
     tag: "email-service-alternative",
     primaryVendor: "SendGrid",
@@ -13951,7 +13951,7 @@ ${globalNavCss()}
   <h1>Best Free Email Tools for Developers</h1>
 
   <div class="context">
-    <p>Email infrastructure is one of the most fragmented developer tool categories. SendGrid retired its free plan in 2025, and its trial allows 100 emails a day for 60 days. Mailgun's free plan allows 100 emails a day. But the alternatives have never been better — <strong>Resend</strong> offers 3,000 emails/month with a modern developer experience, <strong>Brevo</strong> provides 300/day with unlimited contacts, and <strong>Mailjet</strong> gives you 6,000/month.</p>
+    <p>Email infrastructure is one of the most fragmented developer tool categories. SendGrid retired its free plan in 2025, and its trial allows 100 emails a day for 60 days. Mailgun's free plan allows 100 emails a day. But the alternatives have never been better — <strong>Resend</strong> offers 3,000 emails/month with a modern developer experience, <strong>Brevo</strong> provides 300/day and up to 100,000 contacts, and <strong>Mailjet</strong> gives you 6,000/month.</p>
     <p>This page compares every free email tool in our index — <strong>${emailOffers.length} tools</strong> across transactional APIs, marketing platforms, verification services, forwarding/alias tools, and more. Whether you need a SendGrid alternative or free email aliases for privacy, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -13962,7 +13962,7 @@ ${globalNavCss()}
 ${buildCards(transactionalApis)}
 
   <h2>Email Marketing &amp; Newsletter Platforms</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">Platforms for email marketing campaigns, newsletters, and subscriber management. Brevo offers 300 emails/day with unlimited contacts and automation. Substack provides unlimited free newsletters with built-in monetization.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Platforms for email marketing campaigns, newsletters, and subscriber management. Brevo offers 300 emails/day, up to 100,000 contacts and automation for up to 2,000 contacts. Substack provides unlimited free newsletters with built-in monetization.</p>
 ${buildCards(marketingNewsletter)}
 
   <h2>Email Verification &amp; Deliverability</h2>
@@ -14092,7 +14092,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Resend leads the modern transactional email space with React Email integration and 3K emails/month free. Brevo offers the most generous marketing free tier with 300 emails/day and unlimited contacts. For privacy, SimpleLogin and AnonAddy are both open source with self-hosting options. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Resend leads the modern transactional email space with React Email integration and 3K emails/month free. Brevo offers the most generous marketing free tier with 300 emails/day and up to 100,000 contacts. For privacy, SimpleLogin and AnonAddy are both open source with self-hosting options. [[freshness]]</p>
 
   <h2>Which Free Email Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -14104,7 +14104,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/substack">Substack</a> — unlimited free subscribers with built-in monetization. <a href="/vendor/buttondown">Buttondown</a> — 100 subscribers free. <a href="/vendor/emailoctopus">EmailOctopus</a> — 2,500 subscribers, 10K emails/mo.</dd>
 
       <dt>Need email marketing with automation?</dt>
-      <dd><a href="/vendor/brevo">Brevo</a> — 300/day, unlimited contacts, full automation. <a href="/vendor/mailchimp">Mailchimp</a> — 250 contacts with landing pages. <a href="/vendor/loops">Loops</a> — 1,000 contacts, modern UI built for SaaS.</dd>
+      <dd><a href="/vendor/brevo">Brevo</a> — 300/day, up to 100,000 contacts, automation for up to 2,000 contacts. <a href="/vendor/mailchimp">Mailchimp</a> — 250 contacts with landing pages. <a href="/vendor/loops">Loops</a> — 1,000 contacts, modern UI built for SaaS.</dd>
 
       <dt>Want to protect your inbox with aliases?</dt>
       <dd><a href="/vendor/simplelogin">SimpleLogin</a> — 10 aliases, open source, ProtonMail-owned. <a href="/vendor/anonaddy">AnonAddy</a> — unlimited aliases, open source, self-hostable. <a href="/vendor/improvmx">ImprovMX</a> — 25 aliases for custom domains.</dd>
@@ -17003,7 +17003,7 @@ function buildFreeFrontendStackPage(): string {
       icon: "✉️",
       recommended: { vendor: "Resend", why: "3,000 emails/month, 100 emails/day on the free tier. Modern developer-first email API with React Email support, deliverability insights, and simple SDK. Perfect for transactional emails and small newsletters." },
       alternatives: ["Buttondown", "Mailchimp", "Brevo"],
-      outgrow: "When you exceed 3K emails/month or need dedicated IP. Buttondown offers 100 subscribers free for newsletters specifically. Mailchimp gives 250 contacts with marketing automation. Brevo offers 300 emails/day with no subscriber limits.",
+      outgrow: "When you exceed 3K emails/month or need dedicated IP. Buttondown offers 100 subscribers free for newsletters specifically. Mailchimp gives 250 contacts with marketing automation. Brevo offers 300 emails/day and up to 100,000 contacts.",
       relatedPage: "/email-alternatives",
     },
     {
@@ -39380,7 +39380,7 @@ ${globalNavCss()}
         <td>All-in-One</td>
         <td>300/day (~9K/mo)</td>
         <td>300/day</td>
-        <td>Unlimited</td>
+        <td>Up to 100,000</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
         <td class="check">&#10003;</td>

@@ -168,6 +168,34 @@ describe("an email free tier typed into a page states what the vendor's own reco
     assert.match(card, new RegExp(`up to ${contacts} contacts`), `Mailjet's card reads: ${card}`);
   });
 
+  it("bounds Brevo's free contact storage in the comparison table", () => {
+    const cells = rowCells(html[COMPARISON], "Brevo");
+    assert.strictEqual(cells[4], "Up to 100,000");
+    assert.deepStrictEqual(cells.slice(2, 4), ["300/day (~9K/mo)", "300/day"]);
+  });
+
+  it("bounds Brevo's free contact storage in the frontend stack", () => {
+    const text = readableText(html["/free-frontend-stack"]);
+    assert.match(text, /Brevo offers 300 emails\/day and up to 100,000 contacts\./);
+    assert.doesNotMatch(text, /Brevo offers[^.]*no subscriber limits/);
+  });
+
+  it("bounds Brevo's free contact storage in both alternatives introductions", () => {
+    for (const route of ["/email-service-alternatives", "/email-alternatives"]) {
+      assert.match(readableText(html[route]), /Brevo provides 300\/day and up to 100,000 contacts/);
+    }
+  });
+
+  it("distinguishes Brevo's contact storage from its automation allowance", () => {
+    const text = readableText(html["/email-alternatives"]);
+    assert.match(text, /Brevo offers 300 emails\/day, up to 100,000 contacts and automation for up to 2,000 contacts\./);
+    assert.match(text, /Brevo — 300\/day, up to 100,000 contacts, automation for up to 2,000 contacts\./);
+  });
+
+  it("bounds Brevo's free contact storage in the marketing conclusion", () => {
+    assert.match(readableText(html["/email-alternatives"]), /Brevo offers the most generous marketing free tier with 300 emails\/day and up to 100,000 contacts\./);
+  });
+
   it("gives Sweego the daily allowance its record states", () => {
     const [daily] = recordFigures("Sweego", /(\d[\d,]*) emails\/day/);
     const cells = rowCells(html[COMPARISON], "Sweego");
