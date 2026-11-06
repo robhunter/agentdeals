@@ -1088,7 +1088,7 @@
       "daily": true
     },
     "/brevo-vs-resend": {
-      "hash": "ad81bbba4028ba6d",
+      "hash": "d371d8df65c8d9c3",
       "changed": "2026-11-06"
     },
     "/budget-builder": {
@@ -1208,7 +1208,7 @@
       "changed": "2026-11-06"
     },
     "/category/email": {
-      "hash": "e35510f1ddbf2c3f",
+      "hash": "4a7a51c98fa688d5",
       "changed": "2026-11-06"
     },
     "/category/error-tracking": {
@@ -1391,8 +1391,8 @@
       "changed": "2026-11-03"
     },
     "/compare/10minutemail-vs-resend": {
-      "hash": "a60aeca940168af2",
-      "changed": "2026-11-03"
+      "hash": "0aa127f381a3d286",
+      "changed": "2026-11-06"
     },
     "/compare/adapty-io-vs-coinmarketcap": {
       "hash": "1cc72cc2b3a80e99",
@@ -1931,8 +1931,8 @@
       "changed": "2026-10-12"
     },
     "/compare/emaillabs-io-vs-resend": {
-      "hash": "11cbbb76badad82d",
-      "changed": "2026-11-02"
+      "hash": "e01360eca029193f",
+      "changed": "2026-11-06"
     },
     "/compare/exa-vs-letta": {
       "hash": "c880a10c06da4108",
@@ -2555,8 +2555,8 @@
       "changed": "2026-11-06"
     },
     "/compare/resend-vs-mail-tester-com": {
-      "hash": "86cf956ea2eee3af",
-      "changed": "2026-11-02"
+      "hash": "8b2bbca537c9af5c",
+      "changed": "2026-11-06"
     },
     "/compare/resmush-it-vs-wormhol-org": {
       "hash": "72c22cbf6c93f3ce",
@@ -3169,15 +3169,15 @@
       "changed": "2026-11-03"
     },
     "/email-alternatives": {
-      "hash": "70aff0ba15965446",
+      "hash": "3c7d17de728f82c1",
       "changed": "2026-11-06"
     },
     "/email-comparison-2026": {
-      "hash": "8a31b09486247b37",
+      "hash": "30bb022a3c647472",
       "changed": "2026-11-06"
     },
     "/email-service-alternatives": {
-      "hash": "b0fbeb76782ab261",
+      "hash": "0017ee21c444f1f3",
       "changed": "2026-11-06"
     },
     "/embed": {
@@ -3185,7 +3185,7 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "00d46652c022b81d",
+      "hash": "31b70959fe475222",
       "changed": "2026-11-06"
     },
     "/events": {
@@ -3227,19 +3227,19 @@
       "changed": "2026-11-06"
     },
     "/free-django-stack": {
-      "hash": "7e5b12d6e646c528",
+      "hash": "6fc266bb6388479e",
       "changed": "2026-11-06"
     },
     "/free-fastapi-stack": {
-      "hash": "b9de5ff7690f6735",
+      "hash": "3c912b3fc2cd1fb7",
       "changed": "2026-11-06"
     },
     "/free-frontend-stack": {
-      "hash": "c361594e0cd9d059",
+      "hash": "5cb2cf7ce64da4ee",
       "changed": "2026-11-06"
     },
     "/free-go-stack": {
-      "hash": "cc82a4d74f72d588",
+      "hash": "c280341c3b848c29",
       "changed": "2026-11-06"
     },
     "/free-llm-apis": {
@@ -3247,15 +3247,15 @@
       "changed": "2026-11-06"
     },
     "/free-nextjs-stack": {
-      "hash": "a559a7a32a9b51fc",
+      "hash": "5f921534d24ee2c3",
       "changed": "2026-11-06"
     },
     "/free-saas-stack": {
-      "hash": "8b1634e6c8a826ef",
+      "hash": "1f302d1a3ceb10ae",
       "changed": "2026-11-06"
     },
     "/free-startup-stack": {
-      "hash": "c552de25ba23fecb",
+      "hash": "008265443d04ef80",
       "changed": "2026-11-06"
     },
     "/free-tier-facts-ai-models-get-wrong": {
@@ -3405,8 +3405,8 @@
       "changed": "2026-11-03"
     },
     "/postmark-vs-resend": {
-      "hash": "90e3a466c1831c65",
-      "changed": "2026-11-05"
+      "hash": "2a978c06cdaa8420",
+      "changed": "2026-11-06"
     },
     "/press": {
       "hash": "a2157fffe6e2dcfe",
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-06"
     },
     "/stack-check": {
-      "hash": "a84f9bb43245e8b4",
+      "hash": "66f620298ba61867",
       "changed": "2026-11-06"
     },
     "/stacks": {
@@ -3654,12 +3654,12 @@
       "changed": "2026-11-02"
     },
     "/stacks/open-source": {
-      "hash": "c598f27ff84d22ae",
-      "changed": "2026-11-03"
+      "hash": "15ae3668964f53b7",
+      "changed": "2026-11-06"
     },
     "/stacks/saas-mvp": {
-      "hash": "e89345e9805c5659",
-      "changed": "2026-11-02"
+      "hash": "795c52c340199a54",
+      "changed": "2026-11-06"
     },
     "/stacks/side-project": {
       "hash": "c0fa4fcdaa670591",
@@ -4493,7 +4493,7 @@
       "daily": true
     },
     "/vendor/brevo": {
-      "hash": "38ab18c86ecb168a",
+      "hash": "52a988ec4fcafbfc",
       "changed": "2026-11-06"
     },
     "/vendor/brex-partner-perks": {
@@ -8081,7 +8081,7 @@
       "changed": "2026-11-06"
     },
     "/vendor/resend": {
-      "hash": "e287e669cfa31de9",
+      "hash": "494ca47db0d58d5a",
       "changed": "2026-11-06"
     },
     "/vendor/resizeappicon-com": {
