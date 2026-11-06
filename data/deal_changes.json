@@ -17049,7 +17049,7 @@
       "vendor": "Google Gemini API",
       "change_type": "product_deprecated",
       "date": "2026-10-20",
-      "summary": "On the Gemini API, gemini-2.5-pro and gemini-2.5-flash can be used until December 1, 2026, and gemini-2.5-flash-lite has no shutdown date. On Gemini Enterprise Agent Platform (formerly Vertex AI) they can be called until October 20, 2026, when Google retires them. Google names gemini-3.8-flash as a replacement for all three.",
+      "summary": "On Gemini Enterprise Agent Platform (formerly Vertex AI), Google retired gemini-2.5-pro, gemini-2.5-flash and gemini-2.5-flash-lite on October 20, 2026. Google names gemini-3.8-flash as a replacement for all three. On the Gemini API, Google shuts down gemini-2.5-pro and gemini-2.5-flash on December 1, 2026. gemini-2.5-flash-lite has no shutdown date on the Gemini API.",
       "previous_state": "gemini-2.5-pro, gemini-2.5-flash and gemini-2.5-flash-lite could be called on Gemini Enterprise Agent Platform (formerly Vertex AI).",
       "current_state": "Google's Agent Platform model versions page (last updated 2026-10-15) lists October 20, 2026 as the retirement date for gemini-2.5-pro, gemini-2.5-flash and gemini-2.5-flash-lite, with gemini-3.8-flash first among the replacements for each. Google's Gemini API deprecations page (last updated 2026-10-12) gave the three models no shutdown date; on 2026-11-02 Google set December 1, 2026 for gemini-2.5-pro and gemini-2.5-flash.",
       "impact": "medium",
