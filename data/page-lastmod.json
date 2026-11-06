@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-05",
+  "generated": "2026-11-06",
   "pages": {
     "/": {
       "daily": true
@@ -797,8 +797,8 @@
       "changed": "2026-11-05"
     },
     "/analytics-free-tier-comparison-2026": {
-      "hash": "1a66532d5a7d93ee",
-      "changed": "2026-11-03"
+      "hash": "5c5d3269edd55e0c",
+      "changed": "2026-11-06"
     },
     "/api-development-alternatives": {
       "hash": "06d71c956812f4f4",
@@ -3247,8 +3247,8 @@
       "changed": "2026-11-05"
     },
     "/free-nextjs-stack": {
-      "hash": "8d2cdfb0d230f09e",
-      "changed": "2026-11-05"
+      "hash": "41cb8b067b1686e0",
+      "changed": "2026-11-06"
     },
     "/free-saas-stack": {
       "hash": "3b0d8925bb438ad0",
