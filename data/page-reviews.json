@@ -3241,13 +3241,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 93,
-      "table_figures_from_records": 32,
+      "table_figures": 95,
+      "table_figures_from_records": 34,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 44,
-          "from_records": 11
+          "figures": 46,
+          "from_records": 13
         },
         {
           "label": "Media & Image CDN",

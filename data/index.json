@@ -3405,6 +3405,45 @@
           "quote": "No credit card required",
           "url": "https://cloudinary.com/pricing",
           "read_on": "2026-10-23"
+        },
+        {
+          "text": "An agent can provision a Cloudinary Claimable Cloud with no account. It expires in 24 hours if unclaimed and is deleted. Media delivery is limited to the provisioning machine's IP and up to three others, and usage caps are lower until a person claims it. Claiming converts it to a Free plan account with the same credentials.",
+          "quote": "A Claimable Cloud is a working Cloudinary environment that an AI agent can provision on a user's behalf, with no signup and no existing credentials. The returned credentials work immediately, media delivery is restricted to the IP addresses supplied at provisioning, and the cloud expires at the end of the 24-hour claim window unless the user claims it. … its usage caps are lower than those of a regular free account. Claiming converts it to a free Cloudinary account with the free plan's regular limits.",
+          "url": "https://cloudinary.com/documentation/claimable_cloud_provisioning",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "Cloudinary's usage limits are soft: warnings come near 90% of a quota, and an account that stays over after repeated notices may be disabled. A disabled account cannot upload or create new transformations; delivery may continue for a time but can also be blocked.",
+          "quote": "which means that exceeding 100% of your plan quota does not result in immediate service interruption. … If usage remains above the quota after repeated notifications, your account may be … Updates to assets are blocked, including uploads and generating new transformed assets. Asset delivery may continue temporarily, but delivery can also be blocked if the account remains disabled.",
+          "url": "https://cloudinary.com/documentation/programmable_media_asset_usage_data",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "A disabled Cloudinary account can be restored within 30 days by choosing a plan that covers its usage. After 30 days, its environments, assets, metadata and settings are permanently removed.",
+          "quote": "To re-enable your account, please select an appropriate plan from your Settings page, after logging in to Cloudinary. … After an account is cancelled or disabled, admins have 30 days to restore it. After 30 days, all product environments and their assets, metadata, and settings are permanently removed.",
+          "url": "https://cloudinary.com/documentation/ts_why_is_my_account_disabled_and_how_can_i_recover_my_disabled_account",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "Cloudinary counts usage over a rolling 30-day window: current storage plus the last 30 days of transformations and bandwidth. There is no monthly reset date.",
+          "quote": "All of our plans are calculated by examining your current storage usage as well as the last 30 days of transformations and bandwidth usage, and comparing that to your plan's quota.",
+          "url": "https://cloudinary.com/documentation/ts_why_is_my_account_disabled_and_how_can_i_recover_my_disabled_account",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "The Free plan caps image and raw files at 10 MB, video files at 100 MB, images at 25 megapixels, and the Admin API at 500 requests an hour.",
+          "quote": "Max image file size 10 MB … Max video file size 100 MB … Max raw file size 10 MB … Max image megapixels 25 MP … Admin API - Hourly requests 500",
+          "url": "https://cloudinary.com/pricing/compare-plans",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "One credit also equals 500 seconds of SD or 250 seconds of HD video processing. A transformation is counted when a derived asset is first created; later views of it do not add to the count.",
+          "quote": "1 Credit equals 1000 transformations or 1GB of managed storage or 1GB of viewing bandwidth or 500 SD video seconds or 250 HD video processing seconds. … Images and videos accessed subsequently to initial creation, do not increment the monthly transformations count",
+          "url": "https://cloudinary.com/pricing/compare-plans",
+          "read_on": "2026-11-06",
+          "operating_detail": true
         }
       ]
     },
@@ -22393,7 +22432,47 @@
         "checked": "2026-10-31",
         "outcome": "states_a_free_price",
         "detail": "the page names ImprovMX and states its price in words as \"free tier\", and its markup carries no structured data"
-      }
+      },
+      "conditions": [
+        {
+          "text": "ImprovMX's Free plan cannot send mail: its SMTP sending allowance is 0, and sending through ImprovMX's SMTP needs a paid plan.",
+          "quote": "Free accounts Receiving: 500 emails / day Sending: 0 Light accounts Receiving: 150,000 emails per account / month Sending: 750 emails per account / month via SMTP",
+          "url": "https://improvmx.com/guides/sending-receiving-limits/",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "When a Free domain reaches 500 emails in a day, ImprovMX stops processing its mail until 00:00 UTC, and mail received in the meantime is bounced to senders with an over-quota message asking them to try again later. ImprovMX emails a warning near the limit and another at it.",
+          "quote": "You get an email when you are close to your limit and another when you hit it. After that, we stop processing mail for that domain until your quota resets: at 00:00 UTC for free accounts, or on your next billing date for paid plans. Mail received after that is bounced to senders with a short over-quota message asking them to try again later.",
+          "url": "https://improvmx.com/guides/sending-receiving-limits/",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "ImprovMX allows one free account per user; creating several free accounts is prohibited.",
+          "quote": "Use ImprovMX to create multiple free accounts … For Free Account Users: You are limited to a single free account.",
+          "url": "https://improvmx.com/transparency/terms-of-service/",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "Gmail's \"Send mail as\" can be used to reply from an ImprovMX address until January 2027, when Google removes \"Send as\" for non-Google addresses; Google says it will restrict new set-ups of the feature before then.",
+          "quote": "Starting January 2027: … You will no longer be able to send mail from third-party email accounts in Gmail on the web or in the Gmail mobile apps. … Prior to January 2027, we will restrict new configurations of this feature.",
+          "url": "https://support.google.com/mail/answer/17101213",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "ImprovMX forwards emails of up to 50 MB including attachments, and refuses some attachment types, such as .bat and .exe files.",
+          "quote": "We forward emails with attachments for up to 50Mb per email (including message and attached files). … Here are the extensions that are not allowed on ImprovMX: … .bat … .exe",
+          "url": "https://improvmx.com/guides/what-are-the-allowed-attachments/",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "ImprovMX's API is included on the Free plan. Its rate limits apply across the whole account: 150 GET requests and 60 POST, PUT or DELETE requests a minute.",
+          "quote": "ImprovMX set rate limits on API methods. These limits are set across the entire account. Method Rate Limit (per minute) GET 150 POST 60 PUT 60 DELETE 60",
+          "url": "https://improvmx.com/guides/api-rate-limits/",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "Inboxes App",
