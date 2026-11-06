@@ -39774,6 +39774,11 @@
             "subtype": "web_search_api",
             "source_url": "https://docs.jina.ai/",
             "source_quote": "Given a search term, get an LLM-friendly version of all websites in the search results."
+          },
+          {
+            "subtype": "embeddings_api",
+            "source_url": "https://jina.ai/embeddings/",
+            "source_quote": "Top-performing multimodal multilingual long-context embeddings for search, RAG and agent applications."
           }
         ],
         "reviewed": "2026-09-27"
