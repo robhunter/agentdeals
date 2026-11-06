@@ -5040,7 +5040,7 @@
     {
       "vendor": "PostHog",
       "category": "Analytics",
-      "description": "Product analytics — 1M events/month, 5K session replays, 1M feature flag requests, 100K error events, A/B testing. No credit card required",
+      "description": "Product analytics — 1M events/month, 5K session replays, 1M feature flag requests, 100K error tracking exceptions, A/B testing. No credit card required",
       "tier": "Free",
       "url": "https://posthog.com/pricing",
       "tags": [
@@ -5053,9 +5053,9 @@
       ],
       "verifiedDate": "2026-11-02",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-06",
         "outcome": "ok",
-        "detail": "the page names PostHog as \"posthog\" and states \"100K events/month\""
+        "detail": "the page names PostHog as \"posthog\" and states \"$0\""
       },
       "free_plan_excerpt": {
         "text": "Free No credit card, not a trial. This is 97% of companies . Full monthly free tier on every product Unlimited team members 1 project, 1-year data retention Community support Usage stops at the free tier limits, so you can",
