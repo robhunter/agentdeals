@@ -3940,7 +3940,7 @@ function buildComparisonPage(slug: string): string | null {
   const descBlockHtml = (offer: Offer, superseded: typeof supersededA) =>
     superseded
       ? `<div class="desc-block terms-superseded-text"><strong>${storedTermsLabel(superseded)}:</strong> ${supersededTermsNoticeHtml(offer.vendor, superseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></div>`
-      : `<div class="desc-block">${publishedTermsHtml(offer)}${conditionsAfterTheTermsHtml(offer)}</div>`;
+      : `<div class="desc-block">${publishedTermsHtml(offer)}${conditionsAfterTheTermsHtml(offer, true)}</div>`;
 
   const changesHtml = (changes: typeof a.deal_changes, vendor: string) => {
     if (changes.length === 0) return `<p style="color:var(--text-dim);font-size:.85rem">No recorded pricing changes for ${escHtmlServer(vendor)}.</p>`;
@@ -4625,7 +4625,7 @@ ${vsVerdictLapseLine(a.vendor)}      <div class="detail-row"><span class="detail
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(a))}</span></div>
       <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${stabilityRowValue(riskA)}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${vendorMadeA.length} recorded</span></div>
-      <div class="desc-block">${publishedTermsHtml(a)}${conditionsAfterTheTermsHtml(a)}</div>
+      <div class="desc-block">${publishedTermsHtml(a)}${conditionsAfterTheTermsHtml(a, true)}</div>
     </div>
     <div class="vendor-col">
       <h3><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB)} ${publishedStabilityBadge(riskB)}</h3>
@@ -4635,7 +4635,7 @@ ${vsVerdictLapseLine(b.vendor)}      <div class="detail-row"><span class="detail
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(b))}</span></div>
       <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${stabilityRowValue(riskB)}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${vendorMadeB.length} recorded</span></div>
-      <div class="desc-block">${publishedTermsHtml(b)}${conditionsAfterTheTermsHtml(b)}</div>
+      <div class="desc-block">${publishedTermsHtml(b)}${conditionsAfterTheTermsHtml(b, true)}</div>
     </div>
   </div>
 
@@ -8101,7 +8101,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     title: "Email Service Alternatives — Best Free Transactional Email APIs for 2026",
     metaDesc: "SendGrid retired its free plan in 2025. Compare free alternatives: Resend (3K/mo), Mailjet (6K/mo), Brevo (300/day), Postmark, Loops, AhaSend. [[freshness]]",
     contextHtml: `<p><strong>Transactional email</strong> — password resets, order confirmations, verification codes — is non-negotiable infrastructure for any app. SendGrid retired its free plan in 2025; new accounts get a 60-day trial at 100 emails a day. Mailgun still has a free plan with 100 emails a day.</p>
-    <p>The good news: several developer-focused alternatives now offer generous free tiers. <strong>Resend</strong> gives you 3,000 emails/month with a modern React Email integration. <strong>Mailjet</strong> offers 6,000/month (200/day cap). <strong>Brevo</strong> provides 300/day with unlimited contacts. And newer entrants like <strong>Loops</strong> and <strong>AhaSend</strong> are competing hard on developer experience and pricing.</p>
+    <p>The good news: several developer-focused alternatives now offer generous free tiers. <strong>Resend</strong> gives you 3,000 emails/month with a modern React Email integration. <strong>Mailjet</strong> offers 6,000/month (200/day cap). <strong>Brevo</strong> provides 300/day and up to 100,000 contacts. And newer entrants like <strong>Loops</strong> and <strong>AhaSend</strong> are competing hard on developer experience and pricing.</p>
     <p>Below are the best free email services for developers in 2026, compared by volume limits, API quality, and what you actually get for free.</p>`,
     tag: "email-service-alternative",
     primaryVendor: "SendGrid",
@@ -10903,7 +10903,7 @@ function buildHostingAlternativesPage(): string {
   const metaDesc = "Compare 30+ free hosting options — Railway, Render, Vercel, Netlify, Cloudflare, Fly.io, Oracle Cloud, and more. Exact free tier limits by hosting type. [[freshness]]";
   const slug = "hosting-alternatives";
 
-  const hostingOffers = offers.filter(o => o.category === "Cloud Hosting" || o.category === "Cloud IaaS");
+  const hostingOffers = offers.filter(o => (o.category === "Cloud Hosting" || o.category === "Cloud IaaS") && o.vendor !== "Koyeb");
   const enrichedAll = enrichOffers(hostingOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
@@ -11078,7 +11078,7 @@ ${buildCards(serverless)}
 ${containerDedicated.length > 0 ? `
   <h2>Container Hosting</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">Run Docker containers in the cloud. Many PaaS platforms above also support containers — these are dedicated container runtimes.</p>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem"><strong>Note:</strong> <a href="/vendor/railway">Railway</a>, <a href="/vendor/render">Render</a>, <a href="/vendor/fly-io">Fly.io</a>, and <a href="/vendor/koyeb">Koyeb</a> (listed under PaaS above) also support Docker containers natively.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem"><strong>Note:</strong> <a href="/vendor/railway">Railway</a>, <a href="/vendor/render">Render</a>, and <a href="/vendor/fly-io">Fly.io</a> (listed under PaaS above) also support Docker containers natively.</p>
 ${buildCards(containerDedicated)}
 ` : ""}
 
@@ -13951,7 +13951,7 @@ ${globalNavCss()}
   <h1>Best Free Email Tools for Developers</h1>
 
   <div class="context">
-    <p>Email infrastructure is one of the most fragmented developer tool categories. SendGrid retired its free plan in 2025, and its trial allows 100 emails a day for 60 days. Mailgun's free plan allows 100 emails a day. But the alternatives have never been better — <strong>Resend</strong> offers 3,000 emails/month with a modern developer experience, <strong>Brevo</strong> provides 300/day with unlimited contacts, and <strong>Mailjet</strong> gives you 6,000/month.</p>
+    <p>Email infrastructure is one of the most fragmented developer tool categories. SendGrid retired its free plan in 2025, and its trial allows 100 emails a day for 60 days. Mailgun's free plan allows 100 emails a day. But the alternatives have never been better — <strong>Resend</strong> offers 3,000 emails/month with a modern developer experience, <strong>Brevo</strong> provides 300/day and up to 100,000 contacts, and <strong>Mailjet</strong> gives you 6,000/month.</p>
     <p>This page compares every free email tool in our index — <strong>${emailOffers.length} tools</strong> across transactional APIs, marketing platforms, verification services, forwarding/alias tools, and more. Whether you need a SendGrid alternative or free email aliases for privacy, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -13962,7 +13962,7 @@ ${globalNavCss()}
 ${buildCards(transactionalApis)}
 
   <h2>Email Marketing &amp; Newsletter Platforms</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">Platforms for email marketing campaigns, newsletters, and subscriber management. Brevo offers 300 emails/day with unlimited contacts and automation. Substack provides unlimited free newsletters with built-in monetization.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Platforms for email marketing campaigns, newsletters, and subscriber management. Brevo offers 300 emails/day, up to 100,000 contacts and automation for up to 2,000 contacts. Substack provides unlimited free newsletters with built-in monetization.</p>
 ${buildCards(marketingNewsletter)}
 
   <h2>Email Verification &amp; Deliverability</h2>
@@ -14092,7 +14092,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Resend leads the modern transactional email space with React Email integration and 3K emails/month free. Brevo offers the most generous marketing free tier with 300 emails/day and unlimited contacts. For privacy, SimpleLogin and AnonAddy are both open source with self-hosting options. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Resend leads the modern transactional email space with React Email integration and 3K emails/month free. Brevo offers the most generous marketing free tier with 300 emails/day and up to 100,000 contacts. For privacy, SimpleLogin and AnonAddy are both open source with self-hosting options. [[freshness]]</p>
 
   <h2>Which Free Email Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -14104,7 +14104,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/substack">Substack</a> — unlimited free subscribers with built-in monetization. <a href="/vendor/buttondown">Buttondown</a> — 100 subscribers free. <a href="/vendor/emailoctopus">EmailOctopus</a> — 2,500 subscribers, 10K emails/mo.</dd>
 
       <dt>Need email marketing with automation?</dt>
-      <dd><a href="/vendor/brevo">Brevo</a> — 300/day, unlimited contacts, full automation. <a href="/vendor/mailchimp">Mailchimp</a> — 250 contacts with landing pages. <a href="/vendor/loops">Loops</a> — 1,000 contacts, modern UI built for SaaS.</dd>
+      <dd><a href="/vendor/brevo">Brevo</a> — 300/day, up to 100,000 contacts, automation for up to 2,000 contacts. <a href="/vendor/mailchimp">Mailchimp</a> — 250 contacts with landing pages. <a href="/vendor/loops">Loops</a> — 1,000 contacts, modern UI built for SaaS.</dd>
 
       <dt>Want to protect your inbox with aliases?</dt>
       <dd><a href="/vendor/simplelogin">SimpleLogin</a> — 10 aliases, open source, ProtonMail-owned. <a href="/vendor/anonaddy">AnonAddy</a> — unlimited aliases, open source, self-hostable. <a href="/vendor/improvmx">ImprovMX</a> — 25 aliases for custom domains.</dd>
@@ -17003,7 +17003,7 @@ function buildFreeFrontendStackPage(): string {
       icon: "✉️",
       recommended: { vendor: "Resend", why: "3,000 emails/month, 100 emails/day on the free tier. Modern developer-first email API with React Email support, deliverability insights, and simple SDK. Perfect for transactional emails and small newsletters." },
       alternatives: ["Buttondown", "Mailchimp", "Brevo"],
-      outgrow: "When you exceed 3K emails/month or need dedicated IP. Buttondown offers 100 subscribers free for newsletters specifically. Mailchimp gives 250 contacts with marketing automation. Brevo offers 300 emails/day with no subscriber limits.",
+      outgrow: "When you exceed 3K emails/month or need dedicated IP. Buttondown offers 100 subscribers free for newsletters specifically. Mailchimp gives 250 contacts with marketing automation. Brevo offers 300 emails/day and up to 100,000 contacts.",
       relatedPage: "/email-alternatives",
     },
     {
@@ -21890,8 +21890,8 @@ ${globalNavCss()}
       </tbody>
     </table>
   </div>
-  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)}${conditionsAfterTheTermsHtml(supabaseOffer)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile →</a></div>` : ""}
-  ${firebaseOffer ? `<div class="context-box"><strong>Firebase verified data:</strong> ${publishedTermsHtml(firebaseOffer)}${conditionsAfterTheTermsHtml(firebaseOffer)} <br>Verified: ${escHtmlServer(firebaseOffer.verifiedDate)} &middot; <a href="/vendor/firebase">Full profile →</a></div>` : ""}
+  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)}${conditionsAfterTheTermsHtml(supabaseOffer, true)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile →</a></div>` : ""}
+  ${firebaseOffer ? `<div class="context-box"><strong>Firebase verified data:</strong> ${publishedTermsHtml(firebaseOffer)}${conditionsAfterTheTermsHtml(firebaseOffer, true)} <br>Verified: ${escHtmlServer(firebaseOffer.verifiedDate)} &middot; <a href="/vendor/firebase">Full profile →</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these architectural differences matter for your long-term stack choice.</p>
@@ -22212,8 +22212,8 @@ ${globalNavCss()}
       </tbody>
     </table>
   </div>
-  ${vercelOffer ? `<div class="context-box"><strong>Vercel verified data:</strong> ${publishedTermsHtml(vercelOffer)}${conditionsAfterTheTermsHtml(vercelOffer)} <br>Verified: ${escHtmlServer(vercelOffer.verifiedDate)} &middot; <a href="/vendor/vercel">Full profile &rarr;</a></div>` : ""}
-  ${netlifyOffer ? `<div class="context-box"><strong>Netlify verified data:</strong> ${publishedTermsHtml(netlifyOffer)}${conditionsAfterTheTermsHtml(netlifyOffer)} <br>Verified: ${escHtmlServer(netlifyOffer.verifiedDate)} &middot; <a href="/vendor/netlify">Full profile &rarr;</a></div>` : ""}
+  ${vercelOffer ? `<div class="context-box"><strong>Vercel verified data:</strong> ${publishedTermsHtml(vercelOffer)}${conditionsAfterTheTermsHtml(vercelOffer, true)} <br>Verified: ${escHtmlServer(vercelOffer.verifiedDate)} &middot; <a href="/vendor/vercel">Full profile &rarr;</a></div>` : ""}
+  ${netlifyOffer ? `<div class="context-box"><strong>Netlify verified data:</strong> ${publishedTermsHtml(netlifyOffer)}${conditionsAfterTheTermsHtml(netlifyOffer, true)} <br>Verified: ${escHtmlServer(netlifyOffer.verifiedDate)} &middot; <a href="/vendor/netlify">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these structural differences matter for your hosting choice.</p>
@@ -22527,8 +22527,8 @@ ${globalNavCss()}
       </tbody>
     </table>
   </div>
-  ${neonOffer ? `<div class="context-box"><strong>Neon verified data:</strong> ${publishedTermsHtml(neonOffer)}${conditionsAfterTheTermsHtml(neonOffer)} <br>Verified: ${escHtmlServer(neonOffer.verifiedDate)} &middot; <a href="/vendor/neon">Full profile &rarr;</a></div>` : ""}
-  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)}${conditionsAfterTheTermsHtml(supabaseOffer)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile &rarr;</a></div>` : ""}
+  ${neonOffer ? `<div class="context-box"><strong>Neon verified data:</strong> ${publishedTermsHtml(neonOffer)}${conditionsAfterTheTermsHtml(neonOffer, true)} <br>Verified: ${escHtmlServer(neonOffer.verifiedDate)} &middot; <a href="/vendor/neon">Full profile &rarr;</a></div>` : ""}
+  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)}${conditionsAfterTheTermsHtml(supabaseOffer, true)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these architectural differences shape which platform fits your use case.</p>
@@ -22841,8 +22841,8 @@ ${globalNavCss()}
       </tbody>
     </table>
   </div>
-  ${railwayOffer ? `<div class="context-box"><strong>Railway verified data:</strong> ${publishedTermsHtml(railwayOffer)}${conditionsAfterTheTermsHtml(railwayOffer)} <br>Verified: ${escHtmlServer(railwayOffer.verifiedDate)} &middot; <a href="/vendor/railway">Full profile &rarr;</a></div>` : ""}
-  ${renderOffer ? `<div class="context-box"><strong>Render verified data:</strong> ${publishedTermsHtml(renderOffer)}${conditionsAfterTheTermsHtml(renderOffer)} <br>Verified: ${escHtmlServer(renderOffer.verifiedDate)} &middot; <a href="/vendor/render">Full profile &rarr;</a></div>` : ""}
+  ${railwayOffer ? `<div class="context-box"><strong>Railway verified data:</strong> ${publishedTermsHtml(railwayOffer)}${conditionsAfterTheTermsHtml(railwayOffer, true)} <br>Verified: ${escHtmlServer(railwayOffer.verifiedDate)} &middot; <a href="/vendor/railway">Full profile &rarr;</a></div>` : ""}
+  ${renderOffer ? `<div class="context-box"><strong>Render verified data:</strong> ${publishedTermsHtml(renderOffer)}${conditionsAfterTheTermsHtml(renderOffer, true)} <br>Verified: ${escHtmlServer(renderOffer.verifiedDate)} &middot; <a href="/vendor/render">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these structural differences define the Railway vs Render choice.</p>
@@ -23159,8 +23159,8 @@ ${globalNavCss()}
       </tbody>
     </table>
   </div>
-  ${datadogOffer ? `<div class="context-box"><strong>Datadog verified data:</strong> ${publishedTermsHtml(datadogOffer)}${conditionsAfterTheTermsHtml(datadogOffer)} <br>Verified: ${escHtmlServer(datadogOffer.verifiedDate)} &middot; <a href="/vendor/datadog">Full profile &rarr;</a></div>` : ""}
-  ${newRelicOffer ? `<div class="context-box"><strong>New Relic verified data:</strong> ${publishedTermsHtml(newRelicOffer)}${conditionsAfterTheTermsHtml(newRelicOffer)} <br>Verified: ${escHtmlServer(newRelicOffer.verifiedDate)} &middot; <a href="/vendor/new-relic">Full profile &rarr;</a></div>` : ""}
+  ${datadogOffer ? `<div class="context-box"><strong>Datadog verified data:</strong> ${publishedTermsHtml(datadogOffer)}${conditionsAfterTheTermsHtml(datadogOffer, true)} <br>Verified: ${escHtmlServer(datadogOffer.verifiedDate)} &middot; <a href="/vendor/datadog">Full profile &rarr;</a></div>` : ""}
+  ${newRelicOffer ? `<div class="context-box"><strong>New Relic verified data:</strong> ${publishedTermsHtml(newRelicOffer)}${conditionsAfterTheTermsHtml(newRelicOffer, true)} <br>Verified: ${escHtmlServer(newRelicOffer.verifiedDate)} &middot; <a href="/vendor/new-relic">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these structural differences define the Datadog vs New Relic choice.</p>
@@ -39380,7 +39380,7 @@ ${globalNavCss()}
         <td>All-in-One</td>
         <td>300/day (~9K/mo)</td>
         <td>300/day</td>
-        <td>Unlimited</td>
+        <td>Up to 100,000</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
         <td class="check">&#10003;</td>

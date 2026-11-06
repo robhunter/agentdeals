@@ -941,7 +941,7 @@
     },
     {
       "vendor": "Koyeb",
-      "category": "Databases",
+      "category": "Cloud Hosting",
       "description": "Serverless platform for web services, workers and Postgres databases. No free plan for new users since February 2026: new organizations must subscribe to Pro ($29 a month plus compute, with $10 of compute included) or a higher plan. Every plan can run one small Postgres instance (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hours of compute a month) at no extra charge. Organizations already on the Starter plan keep it.",
       "tier": "Legacy Free",
       "url": "https://www.koyeb.com/pricing",
@@ -958,15 +958,15 @@
         "detail": "the page names Koyeb as \"koyeb\" and states \"$ 29\" and \"$10\" and \"$ 10.0\""
       },
       "product_subtypes": {
-        "taxonomy": "Databases",
+        "taxonomy": "Cloud Hosting",
         "labels": [
           {
-            "subtype": "relational",
+            "subtype": "container_app",
             "source_url": "https://www.koyeb.com/pricing",
-            "source_quote": "Serverless Postgres — Fully managed, highly available, and scalable serverless Postgres databases billed by the second."
+            "source_quote": "When you deploy an app, we automatically deploy inside of secure VMs running on high-performance bare metal servers."
           }
         ],
-        "reviewed": "2026-08-31"
+        "reviewed": "2026-11-06"
       },
       "conditions": [
         {
@@ -3117,7 +3117,7 @@
     {
       "vendor": "Brevo",
       "category": "Email",
-      "description": "300 emails/day, unlimited contacts (fair use policy), marketing automation, segmentation, landing pages. Formerly Sendinblue",
+      "description": "300 emails/day, up to 100,000 contacts, marketing automation for up to 2,000 contacts, segmentation and signup forms; landing pages need the Standard plan. Formerly Sendinblue",
       "tier": "Free",
       "url": "https://www.brevo.com/pricing/",
       "tags": [
@@ -3316,6 +3316,26 @@
           "quote": "No credit card required.",
           "url": "https://www.backblaze.com/sign-up/cloud-storage",
           "read_on": "2026-10-23"
+        },
+        {
+          "text": "Making a bucket public needs a payment history on file, or a small card payment that Backblaze credits to the account balance. Private buckets need neither.",
+          "quote": "If this is your first time creating a public bucket, complete the following tasks to ensure that you have the correct permissions to create a public bucket: … Have a payment history on file, or use the credit card form to pay a small fee that is credited to your account balance.",
+          "url": "https://www.backblaze.com/docs/cloud-storage-create-and-manage-buckets",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "B2 charges no minimum storage duration fees. Storage is billed by the byte-hour, so a file deleted after a few days is billed only for the hours it was stored.",
+          "quote": "billed monthly, based on the amount of data stored per byte-hour over the last month … No minimum storage duration fees",
+          "url": "https://www.backblaze.com/cloud-storage/pricing",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "A B2 account stores all its data in one region, chosen when the account is created: US East, US West, EU Central (Amsterdam) or Canada East. The region cannot be changed afterwards. Backblaze's docs say storage costs do not change by region.",
+          "quote": "After you create your Backblaze B2 account, you cannot change your selected region. … Whether you choose US East, US West, EU Central, or CA East, your data storage costs do not change.",
+          "url": "https://www.backblaze.com/docs/cloud-storage-data-regions",
+          "read_on": "2026-11-06",
+          "operating_detail": true
         }
       ]
     },
@@ -8408,6 +8428,19 @@
           "quote": "Build a \"claim\" URL. Send the user to it and Formspree creates the form (after they sign in or sign up) with the fields, validation, and integrations you specified.",
           "url": "https://formspree.io/ai/",
           "read_on": "2026-10-30"
+        },
+        {
+          "text": "The Free plan lacks a custom thank-you page for non-AJAX forms (visitors see Formspree's own thank-you page), autoresponses, plugins such as Google Sheets, submission export and search, API access, and multiple notification emails. Personal adds the thank-you page, plugins, export, search and multiple notification emails. Autoresponses and API access start on Professional, not Personal. The Free plan includes AJAX submissions, custom reCAPTCHA and domain restriction.",
+          "quote": "For non-AJAX forms: By default, a user is shown a Formspree \"Thank You\" page after submission. You can provide an alternative URL per form to use instead.",
+          "url": "https://formspree.io/plans",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "Personal is $15/month or $120/year for 200 submissions/month. Professional is $30/month or $240/year for 2,000 submissions/month. Business is $90/month or $720/year for 20,000 submissions/month. Prices are in US dollars.",
+          "quote": "Monthly: $15/month - Yearly: $120/year ($10/month billed annually)",
+          "url": "https://formspree.io/plans",
+          "read_on": "2026-11-06",
+          "operating_detail": true
         }
       ],
       "free_plan_excerpt": {
@@ -24082,8 +24115,8 @@
     {
       "vendor": "Pollinations.AI",
       "category": "AI / ML",
-      "description": "Pollen credits earned by completing quests. No credit card is required. On 2026-10-11, the nine setup quests paid 3 Pollen in total, worth about $3 because 1 Pollen is worth about $1. The documented API for text, image, audio and video requires a GitHub sign-in and an API key. Free use draws from Quest Pollen, with no promise of future grants. Paid-only models, such as Claude models, DeepSeek V4 Pro and Gemini 4 Argon, need purchased Pollen. On Pollinations, Kimi K3.1 Pro (moonshotai/kimi-k3.1-pro) and Google's Gemini 3.8 Flash (google/gemini-3.8-flash) are also paid-only; Kimi K3 (moonshotai/kimi-k3) is not. To run Claude Code on free Quest Pollen, run \"polli harness claude-code on\", start Claude Code with \"claude --settings ~/.pollinations/claude-code.json\", and use a model that is not paid-only. Quest Pollen pays for any model that Pollinations' live catalog (enter.pollinations.ai/models) does not mark paid-only. On 2026-10-18, more than 30 text models were not paid-only, among them GPT-6 Sol, GPT-6.1 Sol, GPT-6 Luna, GLM 5.3, Kimi K3, DeepSeek V4 Flash and DeepSeek V4.1 Flash. The command \"polli harness claude-code on\" connects Claude Code to Pollinations and uses openai/gpt-6-sol unless you specify another model. Pollinations' harness documentation says the command writes \"a Claude Code settings file\" and: \"Claude Code reads the file only when launched with --settings; plain claude keeps your native login and ~/.claude settings.\" (From https://github.com/pollinations/pollinations/blob/main/CODING_HARNESSES.md, read 2026-10-20.) GPT-6 Sol costs 2 Pollen per million input tokens and 10 Pollen per million output tokens. GPT-5 Nano costs 0.0375 and 0.30. GPT-OSS 20B costs 0.05 and 0.18. NVIDIA Nemotron 3.5 Lightning costs 0.05 and 0.20. Adding --model <id> to \"polli harness claude-code on\" picks another model. Older keyless endpoints for image and text still answered on 2026-10-05, but the current docs do not cover them and state no terms for them. The documented API is OpenAI-compatible at the base URL https://gen.pollinations.ai/v1, with an API key from https://enter.pollinations.ai/keys. Pollinations' MCP documentation gives this Claude Code command: \"claude mcp add --transport http pollinations https://gen.pollinations.ai/mcp/pollinations --header 'Authorization: Bearer YOUR_KEY'\". Its tools include generateImage, generateText, generateVideo, generateAudio, listModels and getBalance. \"Calls use the same Pollen wallet as the Pollinations API.\" The \"polli harness claude-code on\" command runs Claude Code itself on a Pollinations model; the MCP server gives an agent Pollinations tools. Model IDs of some of the models Quest Pollen can pay for: openai/gpt-6-sol, openai/gpt-6.1-sol, openai/gpt-6-luna, z-ai/glm-5.3, moonshotai/kimi-k3, deepseek/deepseek-v4-flash, deepseek/deepseek-v4.1-flash, openai/gpt-5-nano, openai/gpt-oss-20b, nvidia/nemotron-3.5-lightning.",
-      "tier": "Free Credits",
+      "description": "Keyless Classic API: one image model and GPT-OSS 20B text, free, no sign-up, rate-limited per IP. Every other model needs an API key and Pollen, and free Pollen comes only from quests. No credit card is required. On 2026-10-11, the nine setup quests paid 3 Pollen in total, worth about $3 because 1 Pollen is worth about $1. The documented API for text, image, audio and video requires a GitHub sign-in and an API key. On the keyed API, free use draws from Quest Pollen, with no promise of future grants. Paid-only models, such as Claude models, DeepSeek V4 Pro and Gemini 4 Argon, need purchased Pollen. On Pollinations, Kimi K3.1 Pro (moonshotai/kimi-k3.1-pro) and Google's Gemini 3.8 Flash (google/gemini-3.8-flash) are also paid-only; Kimi K3 (moonshotai/kimi-k3) is not. To run Claude Code on free Quest Pollen, run \"polli harness claude-code on\", start Claude Code with \"claude --settings ~/.pollinations/claude-code.json\", and use a model that is not paid-only. Quest Pollen pays for any model that Pollinations' live catalog (enter.pollinations.ai/models) does not mark paid-only. On 2026-10-18, more than 30 text models were not paid-only, among them GPT-6 Sol, GPT-6.1 Sol, GPT-6 Luna, GLM 5.3, Kimi K3, DeepSeek V4 Flash and DeepSeek V4.1 Flash. The command \"polli harness claude-code on\" connects Claude Code to Pollinations and uses openai/gpt-6-sol unless you specify another model. Pollinations' harness documentation says the command writes \"a Claude Code settings file\" and: \"Claude Code reads the file only when launched with --settings; plain claude keeps your native login and ~/.claude settings.\" (From https://github.com/pollinations/pollinations/blob/main/CODING_HARNESSES.md, read 2026-10-20.) GPT-6 Sol costs 2 Pollen per million input tokens and 10 Pollen per million output tokens. GPT-5 Nano costs 0.0375 and 0.30. GPT-OSS 20B costs 0.05 and 0.18. NVIDIA Nemotron 3.5 Lightning costs 0.05 and 0.20. Adding --model <id> to \"polli harness claude-code on\" picks another model. The documented API is OpenAI-compatible at the base URL https://gen.pollinations.ai/v1, with an API key from https://enter.pollinations.ai/keys. Pollinations' MCP documentation gives this Claude Code command: \"claude mcp add --transport http pollinations https://gen.pollinations.ai/mcp/pollinations --header 'Authorization: Bearer YOUR_KEY'\". Its tools include generateImage, generateText, generateVideo, generateAudio, listModels and getBalance. \"Calls use the same Pollen wallet as the Pollinations API.\" The \"polli harness claude-code on\" command runs Claude Code itself on a Pollinations model; the MCP server gives an agent Pollinations tools. Model IDs of some of the models Quest Pollen can pay for: openai/gpt-6-sol, openai/gpt-6.1-sol, openai/gpt-6-luna, z-ai/glm-5.3, moonshotai/kimi-k3, deepseek/deepseek-v4-flash, deepseek/deepseek-v4.1-flash, openai/gpt-5-nano, openai/gpt-oss-20b, nvidia/nemotron-3.5-lightning.",
+      "tier": "Free",
       "url": "https://github.com/pollinations/pollinations/blob/main/enter.pollinations.ai/POLLEN_FAQ.md",
       "tags": [
         "ai",
@@ -24104,6 +24137,11 @@
             "subtype": "image_video_generation",
             "source_url": "https://pollinations.ai/",
             "source_quote": "Generate images, text, audio and video with state-of-the-art AI models"
+          },
+          {
+            "subtype": "model_gateway",
+            "source_url": "https://github.com/pollinations/pollinations",
+            "source_quote": "All models, one place: Flux, GPT, Claude, Gemini, Seedream, and more"
           }
         ],
         "reviewed": "2026-09-01"
@@ -24136,6 +24174,12 @@
         }
       ],
       "conditions": [
+        {
+          "text": "Pollinations' Classic API needs no sign-up and no key. image.pollinations.ai (one image model; JPEGs up to 768 × 768 with a small Pollinations logo) and text.pollinations.ai (GPT-OSS 20B, with an OpenAI-compatible endpoint at text.pollinations.ai/openai) are free and rate-limited per IP address: one image request at a time, at least 45 seconds apart, and one text request at a time, at least 30 seconds apart. Past the limit they return HTTP 402 with a Retry-After header. Pollinations runs it on a best-effort basis with no uptime guarantee, and says limits and models can change. Every other model needs a key from enter.pollinations.ai.",
+          "quote": "Free · no signup · rate-limited. The Classic API is kept stable for existing apps. … Image size. At most 768 × 768 pixels in area … One model. Every image is a JPEG with a small Pollinations logo in the corner. … the available model (GPT-OSS 20B) … Images | One at a time, at least 45 seconds apart … Text | One at a time, at least 30 seconds apart … Beyond the limit you get 402 Payment Required, with a Retry-After header … Best effort. There is no uptime guarantee, and limits, models and behaviour can change.",
+          "url": "https://github.com/pollinations/pollinations/blob/master/APIDOCS.md",
+          "read_on": "2026-11-06"
+        },
         {
           "text": "Pollinations' API docs publish no fixed request rate for secret keys, which carry their own model permissions and budgets. A request can get HTTP 429 with a Retry-After header saying how long to wait.",
           "quote": "Secret keys have configurable model permissions, account permissions, and budgets. … Watch 429 and 503. A Retry-After header tells you how long to back off.",
@@ -30505,7 +30549,7 @@
     {
       "vendor": "Webstudio",
       "category": "Design",
-      "description": "Open-source alternative to Webflow. The free plan offers unlimited websites on their domain. Five websites with custom domains. Ten thousand page views/month. 2 GB asset storage.",
+      "description": "Open-source alternative to Webflow. The free Cloud plan has unlimited projects and pages on a wstd.io subdomain, with no custom domain, 250 MB asset storage, 50 assets per project, 300 form submissions a month and 10 publishes a day; Webstudio's pricing table lists Free publishing as staging only. Custom domains need Pro ($15 a month billed yearly, with 100,000 page views a month).",
       "tier": "Free",
       "url": "https://webstudio.is/pricing",
       "tags": [
@@ -30552,7 +30596,7 @@
     {
       "vendor": "Zeplin",
       "category": "Design",
-      "description": "Design handoff platform — 1 active project, unlimited members, style guide, component inspection, asset export. Integrates with Figma, Sketch, and Adobe XD",
+      "description": "Design handoff platform — Free: 1 project, unlimited users, up to 100 screens, 1 styleguide with up to 100 components, 30-day version history, and AI Beta features limited to 3 screen reviews and 3 organization runs a week. Integrates with Figma, Sketch, and Adobe XD",
       "tier": "Free",
       "url": "https://zeplin.io/pricing",
       "tags": [
@@ -32037,7 +32081,7 @@
     {
       "vendor": "Row Zero",
       "category": "Analytics",
-      "description": "Blazingly fast, connected spreadsheet. Connect directly to data databases, S3, and APIs. Import, analyze, graph, and share millions of rows instantly. Three free (forever) workbooks.",
+      "description": "Blazingly fast, connected spreadsheet. Connect directly to databases, S3, and APIs. The Free plan has 1 workbook (up to 5 GB, tens of millions of rows), 400+ Excel-compatible functions, AI chat, pivot tables and charts, built-in data connectors and real-time collaboration. Pro adds unlimited workbooks.",
       "tier": "Free",
       "url": "https://rowzero.com/pricing",
       "tags": [
@@ -37811,7 +37855,7 @@
     {
       "vendor": "Proton VPN",
       "category": "VPN & Privacy",
-      "description": "No data or time limits and no speed cap, though Proton rates free speeds as medium (paid plans reach up to 10 Gbps). Servers in 5 countries, randomly selected. 1 device at a time. No ads. The same no-logs policy and VPN protocols as paid plans, including the Stealth protocol and Kill Switch. Streaming sites are not blocked on free, but Proton guarantees streaming only on paid plans. No Secure Core and no BitTorrent (P2P) on free.",
+      "description": "No data or time limits and no speed cap, though Proton rates free speeds as medium (paid plans reach up to 10 Gbps). Servers in 10 countries, randomly selected. 1 device at a time. No ads. The same no-logs policy and VPN protocols as paid plans, including the Stealth protocol and Kill Switch. Streaming sites are not blocked on free, but Proton guarantees streaming only on paid plans. No Secure Core and no BitTorrent (P2P) on free.",
       "tier": "Free",
       "url": "https://protonvpn.com/free-vpn/free-vs-paid",
       "tags": [
@@ -39214,7 +39258,7 @@
     {
       "vendor": "Stability AI",
       "category": "AI / ML",
-      "description": "Developer Platform API is credit-priced at 1 credit = $0.01, with 25 free credits to start — a one-time $0.25 grant, not a monthly allowance. Per-image costs: SDXL 1.0 from 0.9 credits, Stable Diffusion 3.5 Flash 2.5, Stable Image Core 3, Stable Diffusion 3.5 Medium 3.5, Large 6.5, Stable Image Ultra 8. Stable Audio 2.5 is 20 credits and 3.0 is 26. platform.stability.ai/pricing, read 2026-09-19.",
+      "description": "Developer Platform API is credit-priced at 1 credit = $0.01, with 25 free credits to start — a one-time $0.25 grant, not a monthly allowance. Per-image costs: SDXL 1.0 from 0.9 credits, Stable Diffusion 3.5 Flash 2.5, Stable Image Core 3, Stable Diffusion 3.5 Medium 3.5, Large 6.5, Stable Image Ultra 8. Stable Audio 2.5 and 3.0 are 8 credits each. docs.stability.ai/pricing, read 2026-11-06.",
       "tier": "Free Credits",
       "url": "https://platform.stability.ai/pricing",
       "tags": [
@@ -39807,6 +39851,11 @@
             "subtype": "web_search_api",
             "source_url": "https://docs.jina.ai/",
             "source_quote": "Given a search term, get an LLM-friendly version of all websites in the search results."
+          },
+          {
+            "subtype": "embeddings_api",
+            "source_url": "https://jina.ai/embeddings/",
+            "source_quote": "Top-performing multimodal multilingual long-context embeddings for search, RAG and agent applications."
           }
         ],
         "reviewed": "2026-09-27"
