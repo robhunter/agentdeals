@@ -17452,7 +17452,7 @@ function buildFreeNextjsStackPage(): string {
     { layer: "Email", vendor: "Resend", freeLimit: "3,000 emails/mo", firstPaid: "Pro $20/mo", gets: "50,000 emails/mo, custom domains, analytics", hitFirst: false },
     { layer: "Storage", vendor: "Cloudflare R2", freeLimit: "10 GB", firstPaid: "$0.015/GB/mo", gets: "Unlimited storage, still zero egress", hitFirst: false },
     { layer: "Monitoring", vendor: "Sentry", freeLimit: "5,000 errors/mo", firstPaid: "Team $26/mo", gets: "50,000 errors, unlimited members, integrations", hitFirst: false },
-    { layer: "Analytics", vendor: "PostHog", freeLimit: "1M events/mo", firstPaid: "$0.00031/event", gets: "Pay-as-you-go beyond 1M, group analytics", hitFirst: false },
+    { layer: "Analytics", vendor: "PostHog", freeLimit: "1M events/mo", firstPaid: "$0.00005/event", gets: "Pay-as-you-go beyond 1M, group analytics", hitFirst: false },
     { layer: "Search", vendor: "Algolia", freeLimit: "50,000 records", firstPaid: "Grow, $0.50 per 1K requests past 10K", gets: "100,000 records, then $0.40 per 1K records", hitFirst: false },
     { layer: "Jobs", vendor: "Inngest", freeLimit: "50,000 executions/mo", firstPaid: "Pro from $99/mo", gets: "1M executions, 100+ concurrent steps", hitFirst: false },
     { layer: "CI/CD", vendor: "GitHub Actions", freeLimit: "2,000 min/mo", firstPaid: "Team $4/user/mo", gets: "3,000 min/mo, required reviewers", hitFirst: false },
@@ -42834,7 +42834,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>PostHog</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1M events/month, 5K session replays, 1M feature flag evaluations, experiments billed with feature flags, and 1,500 survey responses a month. Open-source, self-hostable. The only platform that bundles analytics, session replay, feature flags, A/B testing, and surveys into a single free tier. EU and US cloud hosting. Transparent usage-based pricing beyond free tier ($0.00031/event). The free tier resets monthly and unused quota doesn't roll over. Best for teams that want a single platform for product analytics + experimentation.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 1M events/month, 5K session replays, 1M feature flag evaluations, experiments billed with feature flags, and 1,500 survey responses a month. Open-source, self-hostable. The only platform that bundles analytics, session replay, feature flags, A/B testing, and surveys into a single free tier. EU and US cloud hosting. Beyond the free tier, PostHog charges $0.00005 an event from 1M to 2M events a month and $0.0000343 from 2M to 15M, falling with volume; events with person profiles (identified events) cost $0.000198 more each from 1M to 2M. The free tier resets monthly and unused quota doesn't roll over. Best for teams that want a single platform for product analytics + experimentation.</div>
   </div>
 
   <div class="diff-card">
@@ -42997,43 +42997,45 @@ ${globalNavCss()}
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$9/mo</td>
+        <td>$49/mo</td>
       </tr>
       <tr>
         <td><strong>2M events/mo</strong></td>
-        <td>~$31</td>
-        <td>~$24</td>
+        <td>$50/mo</td>
+        <td>$259/mo</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free, sampled)</td>
-        <td>~$19/mo</td>
+        <td>$89/mo</td>
       </tr>
       <tr>
         <td><strong>10M events/mo</strong></td>
-        <td>~$450</td>
-        <td class="expensive">~$1,000+</td>
-        <td class="expensive">Custom ($1,500+)</td>
+        <td>$324/mo</td>
+        <td class="expensive">$1,176/mo</td>
+        <td class="expensive">$720/mo</td>
         <td class="cheapest">$0 (free, heavily sampled)</td>
-        <td>~$69/mo</td>
+        <td>$169/mo</td>
       </tr>
       <tr>
         <td><strong>50M events/mo</strong></td>
-        <td>~$1,400</td>
-        <td class="expensive">Custom ($5,000+)</td>
-        <td class="expensive">Custom ($8,000+)</td>
+        <td>$1,528/mo</td>
+        <td class="expensive">Custom</td>
+        <td class="expensive">$4,140/mo</td>
         <td class="cheapest">$0 (free, data quality issues)</td>
-        <td>~$199/mo</td>
+        <td>Custom</td>
       </tr>
       <tr>
         <td><strong>100M events/mo</strong></td>
-        <td>~$2,000</td>
-        <td class="expensive">Custom ($10,000+)</td>
-        <td class="expensive">Custom ($15,000+)</td>
+        <td>$2,618/mo</td>
+        <td class="expensive">Custom</td>
+        <td class="expensive">Custom</td>
         <td>$0 or GA360 ($150K+/yr)</td>
-        <td>~$399/mo</td>
+        <td>Custom</td>
       </tr>
     </tbody>
   </table>
   </div>
+
+  <p>Prices are each vendor's published prices for monthly billing, read 2026-11-05. PostHog's column is for anonymous events; events with person profiles cost more, $248 a month at 2M and $1,080 at 10M. Mixpanel costs $185 and $840 a month at 2M and 10M billed yearly, and sells only Enterprise above 20M. Amplitude sells only its Growth plan above 70M, and Plausible quotes custom prices above 10M pageviews.</p>
 
   <div class="context-box">
     <strong>Free plans count events:</strong> Amplitude's Free plan includes 2M events a month; PostHog and Mixpanel include 1M. Amplitude's paid Plus plan is sized in MTUs or events.

@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-05",
+  "measured_on": "2026-11-06",
   "pages": [
     {
       "path": "/agent-payments",
@@ -198,7 +198,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 37,
+      "table_figures": 32,
       "table_figures_from_records": 3,
       "tables": [
         {
@@ -213,7 +213,7 @@
         },
         {
           "label": "The Analytics Cost Trap",
-          "figures": 26,
+          "figures": 21,
           "from_records": 0
         },
         {
