@@ -10903,7 +10903,7 @@ function buildHostingAlternativesPage(): string {
   const metaDesc = "Compare 30+ free hosting options — Railway, Render, Vercel, Netlify, Cloudflare, Fly.io, Oracle Cloud, and more. Exact free tier limits by hosting type. [[freshness]]";
   const slug = "hosting-alternatives";
 
-  const hostingOffers = offers.filter(o => o.category === "Cloud Hosting" || o.category === "Cloud IaaS");
+  const hostingOffers = offers.filter(o => (o.category === "Cloud Hosting" || o.category === "Cloud IaaS") && o.vendor !== "Koyeb");
   const enrichedAll = enrichOffers(hostingOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
@@ -11078,7 +11078,7 @@ ${buildCards(serverless)}
 ${containerDedicated.length > 0 ? `
   <h2>Container Hosting</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">Run Docker containers in the cloud. Many PaaS platforms above also support containers — these are dedicated container runtimes.</p>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem"><strong>Note:</strong> <a href="/vendor/railway">Railway</a>, <a href="/vendor/render">Render</a>, <a href="/vendor/fly-io">Fly.io</a>, and <a href="/vendor/koyeb">Koyeb</a> (listed under PaaS above) also support Docker containers natively.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem"><strong>Note:</strong> <a href="/vendor/railway">Railway</a>, <a href="/vendor/render">Render</a>, and <a href="/vendor/fly-io">Fly.io</a> (listed under PaaS above) also support Docker containers natively.</p>
 ${buildCards(containerDedicated)}
 ` : ""}
 
