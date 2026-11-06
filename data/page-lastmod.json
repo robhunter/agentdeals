@@ -841,8 +841,8 @@
       "changed": "2026-11-06"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
-      "hash": "2c0a358f03215d81",
-      "changed": "2026-11-02"
+      "hash": "3cecf6fc97b8407d",
+      "changed": "2026-11-06"
     },
     "/badges": {
       "daily": true
@@ -1367,8 +1367,8 @@
       "changed": "2026-11-06"
     },
     "/cloudflare-pages-vs-vercel": {
-      "hash": "a0f082d413e0f171",
-      "changed": "2026-11-02"
+      "hash": "c35c5338fd737056",
+      "changed": "2026-11-06"
     },
     "/cloudinary-vs-imagekit": {
       "hash": "af03825d7849d945",
@@ -1667,16 +1667,16 @@
       "changed": "2026-11-01"
     },
     "/compare/cloudflare-pages-vs-netlify": {
-      "hash": "69eb8057496dec38",
-      "changed": "2026-11-03"
+      "hash": "673ec0e2a87f204f",
+      "changed": "2026-11-06"
     },
     "/compare/cloudflare-pages-vs-render": {
-      "hash": "34204f382bd84e20",
-      "changed": "2026-11-05"
+      "hash": "f82c3cf6023f5434",
+      "changed": "2026-11-06"
     },
     "/compare/cloudflare-pages-vs-vercel": {
-      "hash": "fa572a9da114b545",
-      "changed": "2026-11-03"
+      "hash": "9b62d32e84b00b5b",
+      "changed": "2026-11-06"
     },
     "/compare/cloudflare-vectorize-vs-convex": {
       "hash": "6812b21e80202996",
@@ -2415,8 +2415,8 @@
       "changed": "2026-11-03"
     },
     "/compare/netlify-vs-render": {
-      "hash": "3673cd1ad85ce338",
-      "changed": "2026-11-05"
+      "hash": "375f10eca75294e7",
+      "changed": "2026-11-06"
     },
     "/compare/netlify-vs-vercel": {
       "hash": "0907bd88ed6c8180",
@@ -2543,8 +2543,8 @@
       "changed": "2026-11-03"
     },
     "/compare/railway-vs-render": {
-      "hash": "54e4d21b4a15ca2d",
-      "changed": "2026-11-05"
+      "hash": "f7de7f2411dbedaa",
+      "changed": "2026-11-06"
     },
     "/compare/railway-vs-supabase": {
       "hash": "64edb7bb6531718a",
@@ -2559,8 +2559,8 @@
       "changed": "2026-10-19"
     },
     "/compare/render-vs-vercel": {
-      "hash": "1ed0d6b6f27b65a0",
-      "changed": "2026-11-05"
+      "hash": "cc08fadeb41db9eb",
+      "changed": "2026-11-06"
     },
     "/compare/resend-vs-mail-tester-com": {
       "hash": "86cf956ea2eee3af",
@@ -3297,12 +3297,12 @@
       "changed": "2026-11-06"
     },
     "/groq-vs-hugging-face": {
-      "hash": "b19fbd860bd853fe",
-      "changed": "2026-11-05"
+      "hash": "fe077d97ed850219",
+      "changed": "2026-11-06"
     },
     "/groq-vs-mistral-ai": {
-      "hash": "5956119c4a5d9ce0",
-      "changed": "2026-11-05"
+      "hash": "051d8dcf34dc1893",
+      "changed": "2026-11-06"
     },
     "/guides": {
       "hash": "7a92aabfb38ffb2a",
@@ -3385,8 +3385,8 @@
       "changed": "2026-11-03"
     },
     "/netlify-vs-render": {
-      "hash": "9575b0111a812593",
-      "changed": "2026-11-05"
+      "hash": "54e14184e2d63932",
+      "changed": "2026-11-06"
     },
     "/openai-assistants-alternatives": {
       "hash": "44e04200e9e7786a",
@@ -3432,7 +3432,7 @@
       "changed": "2026-11-06"
     },
     "/railway-vs-render": {
-      "hash": "7fee15bc61dfe163",
+      "hash": "6133888fc30917f8",
       "changed": "2026-11-06"
     },
     "/redis-alternatives": {

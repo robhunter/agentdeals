@@ -324,7 +324,7 @@ const GUIDES_KEEPING_OPERATING_DETAILS: Record<string, string> = {
   "/gemini-api-pricing-2026": "Google Gemini API",
 };
 
-describe("operating details stay on the vendor page and that vendor's guide", () => {
+describe("operating details stay on vendor pages, their guides and their pair comparisons", () => {
   let server: { proc: ChildProcess; base: string };
   const printed = new Map<string, Set<string>>();
   const unexpected: string[] = [];
@@ -342,7 +342,9 @@ describe("operating details stay on the vendor page and that vendor's guide", ()
       const body = await response.text();
       for (const match of body.matchAll(new RegExp(`${OPERATING_TOKEN}([a-z]{3})`, "g"))) {
         const vendor = planted.get(match[1]!)!.vendor;
-        const allowed = route === `/vendor/${toSlug(vendor)}` || GUIDES_KEEPING_OPERATING_DETAILS[route] === vendor;
+        const pair = route.replace(/^\/compare\//, "").replace(/^\//, "").split("-vs-");
+        const allowed = route === `/vendor/${toSlug(vendor)}` || GUIDES_KEEPING_OPERATING_DETAILS[route] === vendor
+          || (pair.length === 2 && pair.includes(toSlug(vendor)));
         if (!allowed && !ROUTES_QUOTING_THE_ONE_SENTENCE_THAT_NAMES_A_DEADLINE.has(route) && !/^\/digest\/\d{4}-w\d{2}$/.test(route)) unexpected.push(`${route}: ${vendor}`);
         const seen = printed.get(route) ?? new Set<string>();
         seen.add(vendor);
