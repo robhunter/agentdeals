@@ -3,7 +3,7 @@
   "title": "Business Bank Accounts 2026: Free Plans, Fees and Changes",
   "meta_description": "Mercury and Brex send domestic wires for $0 on free accounts. Found Plus now costs $35 a month. northone.com redirects to Relay.",
   "lead": "Mercury and Brex send domestic wires for $0 on their free accounts. Relay Starter charges $8. Bluevine, Found and Lili charge $15. Novo charges up to $45. Found Plus now costs $35 a month, up from $19.99 in early 2026. Relay's $30 plan is now Grow and charges $5 per domestic wire. northone.com now redirects to Relay's site.",
-  "read_line": "Fees read on each bank's own pages on 2026-10-08.",
+  "read_line": "Fees read on each bank's own pages on 2026-10-08. International wires and who can open an account read on 2026-11-06.",
   "free_accounts": {
     "heading": "Free business accounts",
     "intro": "Each row is a free plan with no monthly fee. The columns are the fees and terms that differ.",
@@ -13,7 +13,9 @@
       "Same-day ACH",
       "Cash deposits",
       "Interest",
-      "Deposit insurance"
+      "Deposit insurance",
+      "International and incoming wires",
+      "Who can open"
     ],
     "rows": [
       {
@@ -23,7 +25,9 @@
           "$0",
           "Not accepted",
           "None stated; Treasury, an investment account, needs a $250K Mercury balance",
-          "Up to $5M through partner banks and their sweep networks"
+          "Up to $5M through partner banks and their sweep networks",
+          "Sending abroad: $0 in US dollars; a 1% currency exchange fee in other currencies. Receiving a domestic wire: $0. Receiving an international wire: not on Mercury's pricing page",
+          "US-registered companies with owners anywhere; no US citizenship or residence needed. Not sole proprietorships"
         ]
       },
       {
@@ -33,7 +37,9 @@
           "$1",
           "Up to $4.95 at Green Dot retailers; $0 at Allpoint ATMs",
           "1.19% APY on savings",
-          "Up to $3M per business"
+          "Up to $3M per business",
+          "Sending abroad: $25 by SWIFT, or $5 by local network in EUR, CAD, AUD or GBP, plus currency exchange from as little as 1%. Receiving a domestic or international wire: $0",
+          "Owners who are citizens and residents of over 200 countries, if the business has an operating presence in the US. Sole proprietors apply with an SSN and no EIN"
         ]
       },
       {
@@ -43,7 +49,9 @@
           "$10",
           "At Green Dot retailers and Allpoint+ ATMs",
           "1.3% APY on up to $250K, in months you spend $500 on the debit card or receive $2,500 in customer payments",
-          "Up to $3M"
+          "Up to $3M",
+          "Sending abroad: $25 in US dollars; $25 plus 1.5% in other currencies. Receiving a domestic wire: $0. Receiving an international wire: $15",
+          "US-registered businesses; an owner without an SSN applies with a passport and the business's EIN. Sole proprietors can apply with their SSN instead of an EIN"
         ]
       },
       {
@@ -53,7 +61,9 @@
           "1.5% (minimum $0.50, maximum $20)",
           "Not in Novo's fee schedule",
           "None (0% APY)",
-          "Up to $5M per depositor through Middlesex Federal Savings and other banks in its sweep network"
+          "Up to $5M per depositor through Middlesex Federal Savings and other banks in its sweep network",
+          "Sending abroad: through Wise in the Novo app, at Wise's fee for the destination. Receiving a domestic or international wire: $0",
+          "Owners who live in the US and have an SSN. Sole proprietors also need an EIN"
         ]
       },
       {
@@ -63,7 +73,9 @@
           "1% for same- or next-day transfers (minimum $0.50, maximum $25)",
           "$2 each",
           "None",
-          "Up to $250,000"
+          "Up to $250,000",
+          "Sending abroad: not offered; Found sends domestic wires only. Receiving an international wire: no Found fee",
+          "Owners with an SSN (an ITIN is not accepted) and a US residential address. Sole proprietors can use their SSN instead of an EIN"
         ]
       },
       {
@@ -73,7 +85,9 @@
           "1.5% (minimum $0.50, maximum $20)",
           "No Lili fee; retailers charge up to $4.95",
           "2.25% APY on savings up to $500,000",
-          "Up to $3M"
+          "Up to $3M",
+          "Sending abroad: $25 plus a 1% commission in the exchange rate, for LLCs, corporations and partnerships only. Receiving a domestic wire: $0. Receiving an international wire: $15",
+          "Owners with an SSN, or citizens of one of 20 supported countries who own a US-registered LLC, corporation or partnership. Sole proprietors apply with their SSN; an EIN is optional"
         ]
       },
       {
@@ -83,7 +97,9 @@
           "$0",
           "Not stated on Brex's pages",
           "Brex Treasury, a money market fund that is not FDIC-insured",
-          "Up to $6M in Brex Vault"
+          "Up to $6M in Brex Vault",
+          "Sending abroad: no Brex fee, in US dollars or local currency; Brex sets the exchange rate. Receiving a domestic or international wire: no Brex fee; international wires arrive in US dollars only",
+          "Companies with a US EIN, US incorporation, US operations and a US physical address. Not sole proprietorships"
         ]
       }
     ]
@@ -433,7 +449,7 @@
       "sources": [
         {
           "url": "https://mercury.com/pricing",
-          "covers": "plans, fees, Treasury minimum"
+          "covers": "plans, fees, Treasury minimum; international wires and incoming domestic wires, read 2026-11-06"
         },
         {
           "url": "https://mercury.com/faq",
@@ -450,6 +466,14 @@
         {
           "url": "https://web.archive.org/web/20250904062916/https://mercury.com/pricing",
           "covers": "annual billing, Treasury $250K"
+        },
+        {
+          "url": "https://support.mercury.com/hc/en-us/articles/28770467511060-Eligibility-and-requirements-for-opening-a-Mercury-account",
+          "covers": "owners outside the US, read 2026-11-06"
+        },
+        {
+          "url": "https://support.mercury.com/hc/en-us/articles/53169863094164-Company-structures-Mercury-supports",
+          "covers": "sole proprietorships, read 2026-11-06"
         }
       ]
     },
@@ -459,7 +483,7 @@
       "sources": [
         {
           "url": "https://relayfi.com/pricing/",
-          "covers": "plans, fees, APY"
+          "covers": "plans, fees, APY; international and incoming wires, read 2026-11-06"
         },
         {
           "url": "https://web.archive.org/web/20250320085342/https://relayfi.com/pricing/",
@@ -480,6 +504,14 @@
         {
           "url": "https://relayfi.com/hc/en-us/articles/35671952781204-Overview-of-Relay-Subscription-Plans/",
           "covers": "updated 2026-08-11, same-day ACH $1/$0.50/included"
+        },
+        {
+          "url": "https://relayfi.com/faqs",
+          "covers": "owners outside the US, read 2026-11-06"
+        },
+        {
+          "url": "https://support.relayfi.com/hc/en-us/articles/38049251551636-Required-Documents-and-Organization-Details-to-Open-a-Relay-Account-by-Entity-Type",
+          "covers": "sole proprietors, read 2026-11-06"
         }
       ]
     },
@@ -489,7 +521,7 @@
       "sources": [
         {
           "url": "https://www.bluevine.com/business-checking/plans-and-pricing",
-          "covers": "plans, fees, APY"
+          "covers": "plans, fees, APY; international and incoming wires, read 2026-11-06"
         },
         {
           "url": "https://web.archive.org/web/20250313054029/https://www.bluevine.com/business-checking/plans-and-pricing",
@@ -506,6 +538,14 @@
         {
           "url": "https://www.bluevine.com/newsroom/valley-national-bancorp-bluevine-acquisition-faq",
           "covers": "\"Nothing changes today\""
+        },
+        {
+          "url": "https://www.bluevine.com/il/us-business-banking-for-international-owners",
+          "covers": "owners outside the US, read 2026-11-06"
+        },
+        {
+          "url": "https://www.bluevine.com/help-center/getting-started/how-to-apply-business-checking-account",
+          "covers": "SSN instead of an EIN, read 2026-11-06"
         }
       ]
     },
@@ -516,6 +556,22 @@
         {
           "url": "https://www.novo.co/legal/fee-schedule",
           "covers": "Fee Schedule 2026, revised 2026-02-26; deposit insurance from the page's banking disclosure, read 2026-10-22"
+        },
+        {
+          "url": "https://www.novo.co/help/do-i-need-an-ssn-or-can-i-use-an-ein-to-apply-for-an-account",
+          "covers": "owners who live in the US, read 2026-11-06"
+        },
+        {
+          "url": "https://www.novo.co/help/what-is-a-sole-proprietorship",
+          "covers": "sole proprietors' EIN, read 2026-11-06"
+        },
+        {
+          "url": "https://www.novo.co/help/what-is-the-fee-for-international-wires",
+          "covers": "international wires through Wise, read 2026-11-06"
+        },
+        {
+          "url": "https://www.novo.co/help/what-is-the-fee-for-domestic-wires",
+          "covers": "incoming wires, read 2026-11-06"
         }
       ]
     },
@@ -542,6 +598,18 @@
         {
           "url": "https://web.archive.org/web/20260417174353/https://found.com/pricing",
           "covers": "Plus $35"
+        },
+        {
+          "url": "https://found.com/help/getting-started/why-do-i-need-an-ssn-for-opening-a-business-account",
+          "covers": "SSN and sole proprietors, read 2026-11-06"
+        },
+        {
+          "url": "https://found.com/help/payments-transactions/how-do-i-send-a-wire-transfer",
+          "covers": "no international wires, read 2026-11-06"
+        },
+        {
+          "url": "https://found.com/help/funding-your-found-account/wire-transfers",
+          "covers": "incoming international wires, read 2026-11-06"
         }
       ]
     },
@@ -555,11 +623,19 @@
         },
         {
           "url": "https://lili.co/legal-documents/sunrise-account-agreement",
-          "covers": "fee schedule"
+          "covers": "fee schedule; international and incoming wires, read 2026-11-06"
         },
         {
           "url": "https://web.archive.org/web/20250616103709/https://lili.co/plans",
           "covers": "3.00% APY, paid plans only"
+        },
+        {
+          "url": "https://support.lili.co/hc/en-us/articles/8993238767258-Can-non-U-S-citizens-open-a-Lili-account",
+          "covers": "owners outside the US, read 2026-11-06"
+        },
+        {
+          "url": "https://support.lili.co/hc/en-us/articles/5497857720730-Can-I-apply-for-an-account-with-an-EIN-instead-of-an-SSN",
+          "covers": "sole proprietors, read 2026-11-06"
         }
       ]
     },
@@ -573,7 +649,7 @@
         },
         {
           "url": "https://www.brex.com/support/cost-of-brex-services",
-          "covers": "no wire fees"
+          "covers": "no wire fees; international wires, read 2026-11-06"
         },
         {
           "url": "https://www.brex.com/product/business-account",
@@ -582,6 +658,18 @@
         {
           "url": "https://www.brex.com/journal/capital-one-completes-acquisition-of-brex",
           "covers": "2026-04-07"
+        },
+        {
+          "url": "https://www.brex.com/support/brex-account-requirements",
+          "covers": "who can apply, read 2026-11-06"
+        },
+        {
+          "url": "https://www.brex.com/support/submitting-an-application",
+          "covers": "sole proprietorships, read 2026-11-06"
+        },
+        {
+          "url": "https://www.brex.com/support/domestic-and-international-wires",
+          "covers": "receiving international wires in US dollars, read 2026-11-06"
         }
       ]
     },
