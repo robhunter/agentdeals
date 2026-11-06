@@ -841,8 +841,8 @@
       "changed": "2026-11-06"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
-      "hash": "2c0a358f03215d81",
-      "changed": "2026-11-02"
+      "hash": "a5a31093f3ad3e36",
+      "changed": "2026-11-06"
     },
     "/badges": {
       "daily": true
@@ -1312,8 +1312,8 @@
       "changed": "2026-11-03"
     },
     "/category/storage": {
-      "hash": "ea5b728bc025c721",
-      "changed": "2026-11-05"
+      "hash": "9ef35604801791e4",
+      "changed": "2026-11-06"
     },
     "/category/team-collaboration": {
       "hash": "91cbadcddeb91838",
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-06"
     },
     "/stack-check": {
-      "hash": "f26c58edf283a86d",
+      "hash": "89cb4a1797d16825",
       "changed": "2026-11-06"
     },
     "/stacks": {
@@ -3674,12 +3674,12 @@
       "changed": "2026-11-06"
     },
     "/storage-alternatives": {
-      "hash": "a9aba95c37521abf",
+      "hash": "04090222dc48860c",
       "changed": "2026-11-06"
     },
     "/storage-comparison-2026": {
-      "hash": "6dd8950b03cd1b15",
-      "changed": "2026-11-05"
+      "hash": "32e3a738f0db955a",
+      "changed": "2026-11-06"
     },
     "/supabase-vs-firebase": {
       "hash": "f36670ad0921925c",
@@ -4331,7 +4331,7 @@
       "changed": "2026-11-06"
     },
     "/vendor/backblaze-b2": {
-      "hash": "7a01b5e0c4c6fd65",
+      "hash": "adc1019e4ae64860",
       "changed": "2026-11-06"
     },
     "/vendor/backgroundstyler-com": {

@@ -3311,6 +3311,26 @@
           "quote": "No credit card required.",
           "url": "https://www.backblaze.com/sign-up/cloud-storage",
           "read_on": "2026-10-23"
+        },
+        {
+          "text": "Making a bucket public needs a payment history on file, or a small card payment that Backblaze credits to the account balance. Private buckets need neither.",
+          "quote": "If this is your first time creating a public bucket, complete the following tasks to ensure that you have the correct permissions to create a public bucket: … Have a payment history on file, or use the credit card form to pay a small fee that is credited to your account balance.",
+          "url": "https://www.backblaze.com/docs/cloud-storage-create-and-manage-buckets",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "B2 charges no minimum storage duration fees. Storage is billed by the byte-hour, so a file deleted after a few days is billed only for the hours it was stored.",
+          "quote": "billed monthly, based on the amount of data stored per byte-hour over the last month … No minimum storage duration fees",
+          "url": "https://www.backblaze.com/cloud-storage/pricing",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "A B2 account stores all its data in one region, chosen when the account is created: US East, US West, EU Central (Amsterdam) or Canada East. The region cannot be changed afterwards. Backblaze's docs say storage costs do not change by region.",
+          "quote": "After you create your Backblaze B2 account, you cannot change your selected region. … Whether you choose US East, US West, EU Central, or CA East, your data storage costs do not change.",
+          "url": "https://www.backblaze.com/docs/cloud-storage-data-regions",
+          "read_on": "2026-11-06",
+          "operating_detail": true
         }
       ]
     },
