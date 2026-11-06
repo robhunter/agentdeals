@@ -3405,6 +3405,45 @@
           "quote": "No credit card required",
           "url": "https://cloudinary.com/pricing",
           "read_on": "2026-10-23"
+        },
+        {
+          "text": "An agent can provision a Cloudinary Claimable Cloud with no account. It expires in 24 hours if unclaimed and is deleted. Media delivery is limited to the provisioning machine's IP and up to three others, and usage caps are lower until a person claims it. Claiming converts it to a Free plan account with the same credentials.",
+          "quote": "A Claimable Cloud is a working Cloudinary environment that an AI agent can provision on a user's behalf, with no signup and no existing credentials. The returned credentials work immediately, media delivery is restricted to the IP addresses supplied at provisioning, and the cloud expires at the end of the 24-hour claim window unless the user claims it. … its usage caps are lower than those of a regular free account. Claiming converts it to a free Cloudinary account with the free plan's regular limits.",
+          "url": "https://cloudinary.com/documentation/claimable_cloud_provisioning",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "Cloudinary's usage limits are soft: warnings come near 90% of a quota, and an account that stays over after repeated notices may be disabled. A disabled account cannot upload or create new transformations; delivery may continue for a time but can also be blocked.",
+          "quote": "which means that exceeding 100% of your plan quota does not result in immediate service interruption. … If usage remains above the quota after repeated notifications, your account may be … Updates to assets are blocked, including uploads and generating new transformed assets. Asset delivery may continue temporarily, but delivery can also be blocked if the account remains disabled.",
+          "url": "https://cloudinary.com/documentation/programmable_media_asset_usage_data",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "A disabled Cloudinary account can be restored within 30 days by choosing a plan that covers its usage. After 30 days, its environments, assets, metadata and settings are permanently removed.",
+          "quote": "To re-enable your account, please select an appropriate plan from your Settings page, after logging in to Cloudinary. … After an account is cancelled or disabled, admins have 30 days to restore it. After 30 days, all product environments and their assets, metadata, and settings are permanently removed.",
+          "url": "https://cloudinary.com/documentation/ts_why_is_my_account_disabled_and_how_can_i_recover_my_disabled_account",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "Cloudinary counts usage over a rolling 30-day window: current storage plus the last 30 days of transformations and bandwidth. There is no monthly reset date.",
+          "quote": "All of our plans are calculated by examining your current storage usage as well as the last 30 days of transformations and bandwidth usage, and comparing that to your plan's quota.",
+          "url": "https://cloudinary.com/documentation/ts_why_is_my_account_disabled_and_how_can_i_recover_my_disabled_account",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "The Free plan caps image and raw files at 10 MB, video files at 100 MB, images at 25 megapixels, and the Admin API at 500 requests an hour.",
+          "quote": "Max image file size 10 MB … Max video file size 100 MB … Max raw file size 10 MB … Max image megapixels 25 MP … Admin API - Hourly requests 500",
+          "url": "https://cloudinary.com/pricing/compare-plans",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "One credit also equals 500 seconds of SD or 250 seconds of HD video processing. A transformation is counted when a derived asset is first created; later views of it do not add to the count.",
+          "quote": "1 Credit equals 1000 transformations or 1GB of managed storage or 1GB of viewing bandwidth or 500 SD video seconds or 250 HD video processing seconds. … Images and videos accessed subsequently to initial creation, do not increment the monthly transformations count",
+          "url": "https://cloudinary.com/pricing/compare-plans",
+          "read_on": "2026-11-06",
+          "operating_detail": true
         }
       ]
     },
