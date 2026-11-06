@@ -24112,6 +24112,12 @@
       ],
       "conditions": [
         {
+          "text": "Pollinations' Classic API needs no sign-up and no key. image.pollinations.ai (one image model; JPEGs up to 768 × 768 with a small Pollinations logo) and text.pollinations.ai (GPT-OSS 20B, with an OpenAI-compatible endpoint at text.pollinations.ai/openai) are free and rate-limited per IP address: one image request at a time, at least 45 seconds apart, and one text request at a time, at least 30 seconds apart. Past the limit they return HTTP 402 with a Retry-After header. Pollinations runs it on a best-effort basis with no uptime guarantee, and says limits and models can change. Every other model needs a key from enter.pollinations.ai.",
+          "quote": "Free · no signup · rate-limited. The Classic API is kept stable for existing apps. … Image size. At most 768 × 768 pixels in area … One model. Every image is a JPEG with a small Pollinations logo in the corner. … the available model (GPT-OSS 20B) … Images | One at a time, at least 45 seconds apart … Text | One at a time, at least 30 seconds apart … Beyond the limit you get 402 Payment Required, with a Retry-After header … Best effort. There is no uptime guarantee, and limits, models and behaviour can change.",
+          "url": "https://github.com/pollinations/pollinations/blob/master/APIDOCS.md",
+          "read_on": "2026-11-06"
+        },
+        {
           "text": "Pollinations' API docs publish no fixed request rate for secret keys, which carry their own model permissions and budgets. A request can get HTTP 429 with a Retry-After header saying how long to wait.",
           "quote": "Secret keys have configurable model permissions, account permissions, and budgets. … Watch 429 and 503. A Retry-After header tells you how long to back off.",
           "url": "https://github.com/pollinations/pollinations/blob/main/APIDOCS.md",

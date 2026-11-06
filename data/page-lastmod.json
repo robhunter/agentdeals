@@ -22,11 +22,11 @@
       "changed": "2026-11-06"
     },
     "/ai-free-tiers": {
-      "hash": "1f2647c723892af8",
+      "hash": "d7d292985075dcb2",
       "changed": "2026-11-06"
     },
     "/ai-ml-alternatives": {
-      "hash": "b753af0f5cc927b3",
+      "hash": "c059b4431dd4fff7",
       "changed": "2026-11-06"
     },
     "/alternative-to": {
@@ -1088,8 +1088,8 @@
       "daily": true
     },
     "/brevo-vs-resend": {
-      "hash": "9066cfae19a5a4a0",
-      "changed": "2026-11-05"
+      "hash": "ad81bbba4028ba6d",
+      "changed": "2026-11-06"
     },
     "/budget-builder": {
       "hash": "409cef529a43a1c8",
@@ -1108,7 +1108,7 @@
       "changed": "2026-11-05"
     },
     "/category/ai-ml": {
-      "hash": "ec6e5aec63e5687d",
+      "hash": "e505bf6a5b58b7cf",
       "changed": "2026-11-06"
     },
     "/category/analytics": {
@@ -1208,8 +1208,8 @@
       "changed": "2026-11-03"
     },
     "/category/email": {
-      "hash": "a4604ce88b7c97cc",
-      "changed": "2026-11-05"
+      "hash": "450dfb999a94cbc2",
+      "changed": "2026-11-06"
     },
     "/category/error-tracking": {
       "hash": "d616ade2f2de6626",
@@ -1220,8 +1220,8 @@
       "changed": "2026-11-03"
     },
     "/category/forms": {
-      "hash": "c3b98d9de674438b",
-      "changed": "2026-11-05"
+      "hash": "3ac5c90719ca7a5a",
+      "changed": "2026-11-06"
     },
     "/category/headless-cms": {
       "hash": "bf9f7189f27c328a",
@@ -3169,7 +3169,7 @@
       "changed": "2026-11-03"
     },
     "/email-alternatives": {
-      "hash": "33d0f31fbed8dbe1",
+      "hash": "12322c85f3ccc544",
       "changed": "2026-11-06"
     },
     "/email-comparison-2026": {
@@ -3177,15 +3177,15 @@
       "changed": "2026-11-05"
     },
     "/email-service-alternatives": {
-      "hash": "c0c21775956bb500",
-      "changed": "2026-11-05"
+      "hash": "3bb6be7e26bd2636",
+      "changed": "2026-11-06"
     },
     "/embed": {
       "hash": "0f2a7d35b82e440f",
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "dae285db7aa337dc",
+      "hash": "5888f556ce14a4a3",
       "changed": "2026-11-06"
     },
     "/events": {
@@ -3243,7 +3243,7 @@
       "changed": "2026-11-06"
     },
     "/free-llm-apis": {
-      "hash": "e34c2b914b34a9af",
+      "hash": "c1786d472816edc1",
       "changed": "2026-11-06"
     },
     "/free-nextjs-stack": {
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-06"
     },
     "/stack-check": {
-      "hash": "e41972cc12c58071",
+      "hash": "bf66af903c6558e0",
       "changed": "2026-11-06"
     },
     "/stacks": {
@@ -3662,8 +3662,8 @@
       "changed": "2026-11-02"
     },
     "/stacks/side-project": {
-      "hash": "1774c8df1a2c487c",
-      "changed": "2026-11-05"
+      "hash": "c0fa4fcdaa670591",
+      "changed": "2026-11-06"
     },
     "/startup-credits": {
       "hash": "8afcb99c834dd93c",
@@ -4493,7 +4493,7 @@
       "daily": true
     },
     "/vendor/brevo": {
-      "hash": "520f03930789f331",
+      "hash": "abfb48ede5d15635",
       "changed": "2026-11-06"
     },
     "/vendor/brex-partner-perks": {
@@ -5774,7 +5774,7 @@
       "changed": "2026-11-06"
     },
     "/vendor/formspree": {
-      "hash": "bdeafb5487d53809",
+      "hash": "1e4b0f6502c4fe0d",
       "changed": "2026-11-06"
     },
     "/vendor/formsubmit-co": {
