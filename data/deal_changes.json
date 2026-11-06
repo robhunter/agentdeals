@@ -14600,9 +14600,9 @@
       "vendor": "OpenAI",
       "change_type": "product_deprecated",
       "date": "2026-12-01",
-      "summary": "The OpenAI API keeps running. The gpt-image-1-mini, gpt-image-1.5 and chatgpt-image-latest models can be called until December 1, 2026. OpenAI's substitutes are gpt-image-2.5-sunburst or gpt-image-2.5-flare.",
+      "summary": "The OpenAI API keeps running. The gpt-image-1-mini, gpt-image-1.5 and chatgpt-image-latest models can be called until December 1, 2026. OpenAI's substitutes are gpt-image-2.6-sunburst or gpt-image-2.6-flare.",
       "previous_state": "gpt-image-1-mini, gpt-image-1.5 and chatgpt-image-latest were callable in the OpenAI API at pay-as-you-go rates.",
-      "current_state": "OpenAI's deprecations page (notice of 2026-06-02) lists December 1, 2026 as the date the three models are removed from the API.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-06-02) lists December 1, 2026 as the date the three models are removed from the API. Read on 2026-11-06, its recommended replacement for each is gpt-image-2.6-sunburst or gpt-image-2.6-flare.",
       "impact": "low",
       "source_url": "https://developers.openai.com/api/docs/deprecations",
       "category": "AI / ML",
@@ -17842,6 +17842,23 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Google Gemini API",
+      "change_type": "product_deprecated",
+      "date": "2026-12-03",
+      "summary": "Google shuts down Gemini Omni 1.1 Flash (gemini-omni-1.1-flash) on the Gemini API on December 3, 2026. It can be used until that date. After the shutdown, requests that still name gemini-omni-1.1-flash are answered by a different model, gemini-omni-1.2-flash, billed at Gemini Omni 1.2 Flash rates. Google released Gemini Omni 1.2 Flash on 2026-11-05. The Gemini API keeps running.",
+      "previous_state": "gemini-omni-1.1-flash could be called on the Gemini API's paid tier, with no shutdown date.",
+      "current_state": "Google's deprecations page lists December 3, 2026 as the shutdown date for gemini-omni-1.1-flash, with gemini-omni-1.2-flash as the replacement. Google's release notes of November 5, 2026: \"Effective December 3, 2026, API requests to gemini-omni-1.1-flash will automatically route to gemini-omni-1.2-flash at Gemini Omni 1.2 Flash rates.\"",
+      "impact": "low",
+      "source_url": "https://aistudio.google.com/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-06",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "Gemini Omni 1.1 Flash (gemini-omni-1.1-flash) on the Gemini API",
+      "announced_on": "2026-11-05"
     }
   ]
 }
