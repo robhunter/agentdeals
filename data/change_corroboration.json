@@ -1,6 +1,17 @@
 {
   "held": [
     {
+      "vendor": "cacoo.com",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "Free plan sheet limit changed from 6 sheets to 1 sheet",
+      "previous_state": "Online real-time diagrams (flowchart, UML, network). Free plan: unlimited users, 6 sheets max, real-time editing, PNG export, templates & shapes, comment & chat, code-to-graph, kanban tool, media library. In-app video chat limited to 3 users; 50 activity entries per diagram; no revision history or premium templates.",
+      "current_state": "Free plan: unlimited users, 1 sheet, templates & shapes, PNG exports, real-time editing, in-app video chat, comment & chat, follow mode, code-to-graph, kanban tool, media library, Cacoo Academy; activity entries per diagram up to 50; in-app video up to 3 users",
+      "source_url": "https://nulab.com/pricing/cacoo/",
+      "category": "Diagramming",
+      "first_read_date": "2026-11-06"
+    },
+    {
       "vendor": "Harness CI",
       "change_type": "pricing_restructured",
       "impact": "high",
@@ -10,72 +21,6 @@
       "source_url": "https://www.harness.io/pricing",
       "category": "CI/CD",
       "first_read_date": "2026-11-01"
-    },
-    {
-      "vendor": "Row Zero",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The Free tier now lists 1 workbook instead of the three free (forever) workbooks in previously info.",
-      "previous_state": "Blazingly fast, connected spreadsheet. Connect directly to data databases, S3, and APIs. Import, analyze, graph, and share millions of rows instantly. Three free (forever) workbooks.",
-      "current_state": "Free $0: 1 workbook, 10s of millions of rows, 400+ Excel-compatible functions, AI chat, pivot tables & charts, import XLSX/CSV/TXT/Parquet/JSONL, built-in data connectors, real-time collaboration, SOC 2/GDPR/HIPAA compliant.",
-      "source_url": "https://rowzero.com/pricing",
-      "category": "Analytics",
-      "first_read_date": "2026-11-05"
-    },
-    {
-      "vendor": "Stability AI",
-      "change_type": "pricing_restructured",
-      "impact": "low",
-      "summary": "Stability AI's own page now redirects to docs.stability.ai. Stable Audio credit prices dropped: Stable Audio 3.0 is now 8 credits (was 26) and Stable Audio 2.5 is now 8 credits (was 20). All other stored prices (SDXL 1.0 from 0.9, SD 3.5 Flash 2.5, Stable Image Core 3, SD 3.5 Medium 3.5, SD 3.5 Large 6.5, Stable Image Ultra 8) and the 25 free credits / 1 credit = $0.01 terms remain consistent.",
-      "previous_state": "Developer Platform API is credit-priced at 1 credit = $0.01, with 25 free credits to start — a one-time $0.25 grant, not a monthly allowance. Per-image costs: SDXL 1.0 from 0.9 credits, Stable Diffusion 3.5 Flash 2.5, Stable Image Core 3, Stable Diffusion 3.5 Medium 3.5, Large 6.5, Stable Image Ultra 8. Stable Audio 2.5 is 20 credits and 3.0 is 26. platform.stability.ai/pricing, read 2026-09-19.",
-      "current_state": "1 credit = $0.01; new accounts get 25 free credits. Stable Audio 3.0 and Stable Audio 2.5 each cost 8 credits. Stable Image Ultra 8, Stable Diffusion 3.5 Large 6.5, Stable Diffusion 3.5 Large Turbo 4, Stable Diffusion 3.5 Medium 3.5, Stable Diffusion 3.5 Flash 2.5, Stable Image Core 3, SDXL 1.0 from 0.9 credits.",
-      "source_url": "https://platform.stability.ai/pricing",
-      "category": "AI / ML",
-      "first_read_date": "2026-11-05"
-    },
-    {
-      "vendor": "The Intercom Early Stage Program",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The current page says the Intercom Helpdesk starts from $65 per month. The page also adds year-by-year Fin outcome limits (300/150/75) and states Year 2 and Year 3 discounts are forfeited if switching plans.",
-      "previous_state": "Intercom Early Stage pricing starts at $33/month, with 93% off in the first year, 50% off in the second and 25% off in the third. The first year includes 300 Fin outcomes and 15 Fin qualifications per month. The discount does not apply to additional outcomes or qualifications; phone, SMS and WhatsApp are charged at list price.",
-      "current_state": "Early Stage pricing includes the Intercom Helpdesk from $65 per month, with 93% off in Year 1, 50% off in Year 2, and 25% off in Year 3. Year 1 includes 300 Fin outcomes and 15 Fin qualifications per month; Year 2 includes 150 Fin outcomes and 15 Fin qualifications; Year 3 includes 75 Fin outcomes and 15 Fin qualifications. Phone, SMS, and WhatsApp are charged at list price. Year 2 and Year 3 discounts are reserved for customers who stay on the program; switching to a self-serve or sales-led plan forfeits those savings.",
-      "source_url": "https://www.intercom.com/early-stage",
-      "category": "Startup Perks",
-      "first_read_date": "2026-11-05"
-    },
-    {
-      "vendor": "Webstudio",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The free Cloud plan's limits differ from previously: the page shows the Free plan has 1 custom domain (not 5), 250 MB asset storage (not 2 GB), and 100,000 page views/month (not 10,000). Unlimited projects and unlimited pages remain. The free tier's custom domain count and asset storage are lower than described.",
-      "previous_state": "Open-source alternative to Webflow. The free plan offers unlimited websites on their domain. Five websites with custom domains. Ten thousand page views/month. 2 GB asset storage.",
-      "current_state": "Free plan: wstd.io subdomain, unlimited projects, unlimited pages, 1 custom domain, 250 MB asset storage, 50 assets per project, 100,000 page views/month, 300 form submissions/month, 10 daily publishes.",
-      "source_url": "https://webstudio.is/pricing",
-      "category": "Design",
-      "first_read_date": "2026-11-05"
-    },
-    {
-      "vendor": "whimsical.com",
-      "change_type": "pricing_restructured",
-      "impact": "high",
-      "summary": "The page describes the Free plan as creating up to 50 board objects per month, 50 doc blocks per month, watermark on exports, 7-day version history, and 10 AI credits per member.",
-      "previous_state": "Collaborative flowcharts, wireframes, sticky notes and mind maps. Free plan: 3 team boards, 100 AI actions per editor.",
-      "current_state": "Free is $0/Month/Editor and includes: create up to 50 board objects per month, create up to 50 doc blocks per month, watermark on exports, 7-day version history, unlimited boards, unlimited workspace members, unlimited guests, and 10 AI credits per member with additional AI credits purchasable separately.",
-      "source_url": "https://whimsical.com/pricing",
-      "category": "Design",
-      "first_read_date": "2026-11-05"
-    },
-    {
-      "vendor": "Zeplin",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The Free plan now includes AI Design Review (Beta) limited to 3 screen reviews/week and AI Organize (Beta) limited to 3 runs/week, plus Flow Boards are not available, Styleguides limited to 1, Components up to 100, Version History 30 days, Personal workspace, and publish access restricted to Owner.",
-      "previous_state": "Design handoff platform — 1 active project, unlimited members, style guide, component inspection, asset export. Integrates with Figma, Sketch, and Adobe XD",
-      "current_state": "Free plan: $0, 1 project, unlimited users, 100 screens to start, AI Design Review (Beta) 3 screens/week, AI Organize (Beta) 3 runs/week, Flow Boards not available, Styleguides 1, Components up to 100, Version History 30 days, Personal workspace, publish access Owner only.",
-      "source_url": "https://zeplin.io/pricing",
-      "category": "Design",
-      "first_read_date": "2026-11-05"
     }
   ],
   "resolved": [
@@ -3322,6 +3267,78 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-11-05 read it as limits_reduced too",
       "resolved_date": "2026-11-05"
+    },
+    {
+      "vendor": "Row Zero",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The Free tier now lists 1 workbook instead of the three free (forever) workbooks in previously info.",
+      "previous_state": "Blazingly fast, connected spreadsheet. Connect directly to data databases, S3, and APIs. Import, analyze, graph, and share millions of rows instantly. Three free (forever) workbooks.",
+      "source_url": "https://rowzero.com/pricing",
+      "first_read_date": "2026-11-05",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-06 read it as limits_reduced too",
+      "resolved_date": "2026-11-06"
+    },
+    {
+      "vendor": "Stability AI",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "Stability AI's own page now redirects to docs.stability.ai. Stable Audio credit prices dropped: Stable Audio 3.0 is now 8 credits (was 26) and Stable Audio 2.5 is now 8 credits (was 20). All other stored prices (SDXL 1.0 from 0.9, SD 3.5 Flash 2.5, Stable Image Core 3, SD 3.5 Medium 3.5, SD 3.5 Large 6.5, Stable Image Ultra 8) and the 25 free credits / 1 credit = $0.01 terms remain consistent.",
+      "previous_state": "Developer Platform API is credit-priced at 1 credit = $0.01, with 25 free credits to start — a one-time $0.25 grant, not a monthly allowance. Per-image costs: SDXL 1.0 from 0.9 credits, Stable Diffusion 3.5 Flash 2.5, Stable Image Core 3, Stable Diffusion 3.5 Medium 3.5, Large 6.5, Stable Image Ultra 8. Stable Audio 2.5 is 20 credits and 3.0 is 26. platform.stability.ai/pricing, read 2026-09-19.",
+      "source_url": "https://platform.stability.ai/pricing",
+      "first_read_date": "2026-11-05",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-06 read it as pricing_restructured too",
+      "resolved_date": "2026-11-06"
+    },
+    {
+      "vendor": "The Intercom Early Stage Program",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The current page says the Intercom Helpdesk starts from $65 per month. The page also adds year-by-year Fin outcome limits (300/150/75) and states Year 2 and Year 3 discounts are forfeited if switching plans.",
+      "previous_state": "Intercom Early Stage pricing starts at $33/month, with 93% off in the first year, 50% off in the second and 25% off in the third. The first year includes 300 Fin outcomes and 15 Fin qualifications per month. The discount does not apply to additional outcomes or qualifications; phone, SMS and WhatsApp are charged at list price.",
+      "source_url": "https://www.intercom.com/early-stage",
+      "first_read_date": "2026-11-05",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-06 read it as pricing_restructured too",
+      "resolved_date": "2026-11-06"
+    },
+    {
+      "vendor": "Webstudio",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free Cloud plan's limits differ from previously: the page shows the Free plan has 1 custom domain (not 5), 250 MB asset storage (not 2 GB), and 100,000 page views/month (not 10,000). Unlimited projects and unlimited pages remain. The free tier's custom domain count and asset storage are lower than described.",
+      "previous_state": "Open-source alternative to Webflow. The free plan offers unlimited websites on their domain. Five websites with custom domains. Ten thousand page views/month. 2 GB asset storage.",
+      "source_url": "https://webstudio.is/pricing",
+      "first_read_date": "2026-11-05",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-06 read it as limits_reduced too",
+      "resolved_date": "2026-11-06"
+    },
+    {
+      "vendor": "whimsical.com",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The page describes the Free plan as creating up to 50 board objects per month, 50 doc blocks per month, watermark on exports, 7-day version history, and 10 AI credits per member.",
+      "previous_state": "Collaborative flowcharts, wireframes, sticky notes and mind maps. Free plan: 3 team boards, 100 AI actions per editor.",
+      "source_url": "https://whimsical.com/pricing",
+      "first_read_date": "2026-11-05",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-06 read a change the gate refused as measures_the_opposite",
+      "resolved_date": "2026-11-06"
+    },
+    {
+      "vendor": "Zeplin",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The Free plan now includes AI Design Review (Beta) limited to 3 screen reviews/week and AI Organize (Beta) limited to 3 runs/week, plus Flow Boards are not available, Styleguides limited to 1, Components up to 100, Version History 30 days, Personal workspace, and publish access restricted to Owner.",
+      "previous_state": "Design handoff platform — 1 active project, unlimited members, style guide, component inspection, asset export. Integrates with Figma, Sketch, and Adobe XD",
+      "source_url": "https://zeplin.io/pricing",
+      "first_read_date": "2026-11-05",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-06 read it as limits_reduced too",
+      "resolved_date": "2026-11-06"
     }
   ]
 }
