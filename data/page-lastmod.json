@@ -1144,7 +1144,7 @@
       "changed": "2026-11-06"
     },
     "/category/cloud-hosting": {
-      "hash": "051c5575a52b79cc",
+      "hash": "75ae49f372e8590a",
       "changed": "2026-11-06"
     },
     "/category/cloud-iaas": {
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-06"
     },
     "/stack-check": {
-      "hash": "1f9fbcc321105bad",
+      "hash": "20fd5ece760702eb",
       "changed": "2026-11-06"
     },
     "/stacks": {
@@ -4405,7 +4405,7 @@
       "changed": "2026-11-06"
     },
     "/vendor/bismuth-cloud": {
-      "hash": "4e58d920c198c583",
+      "hash": "351c3bf583bc3ae3",
       "changed": "2026-11-06"
     },
     "/vendor/bitbucket-pipelines": {
@@ -4744,7 +4744,7 @@
       "daily": true
     },
     "/vendor/claw-cloud": {
-      "hash": "e89157aba25cb995",
+      "hash": "8ecb7ac3b525d2d6",
       "changed": "2026-11-06"
     },
     "/vendor/clerk": {
@@ -5140,7 +5140,7 @@
       "changed": "2026-11-06"
     },
     "/vendor/cstate": {
-      "hash": "c644c703fb736286",
+      "hash": "889d31f031c92a67",
       "changed": "2026-11-06"
     },
     "/vendor/cube": {
@@ -5546,7 +5546,7 @@
       "changed": "2026-11-06"
     },
     "/vendor/engagespot-co": {
-      "hash": "b441e2338411bee5",
+      "hash": "5f82de1cf5ac5379",
       "changed": "2026-11-06"
     },
     "/vendor/ente": {
@@ -5562,11 +5562,11 @@
       "changed": "2026-11-06"
     },
     "/vendor/etlr": {
-      "hash": "9d13e442a3f3c063",
+      "hash": "8462b4854f261139",
       "changed": "2026-11-06"
     },
     "/vendor/evernote": {
-      "hash": "11526cbb93d28754",
+      "hash": "58fe7a781aea634a",
       "changed": "2026-11-06"
     },
     "/vendor/everystep-automation-com": {
@@ -6111,7 +6111,7 @@
       "daily": true
     },
     "/vendor/google-vertex-ai-agent-engine": {
-      "hash": "085206f5296801e4",
+      "hash": "22aa214a4eaecde0",
       "changed": "2026-11-06"
     },
     "/vendor/goreportcard-com": {
@@ -6737,7 +6737,7 @@
       "daily": true
     },
     "/vendor/langtrace": {
-      "hash": "6e141b943129ef61",
+      "hash": "07c56407450d57fa",
       "changed": "2026-11-06"
     },
     "/vendor/langwatch": {
@@ -7255,7 +7255,7 @@
       "daily": true
     },
     "/vendor/moss-sh": {
-      "hash": "3f773ee26e61b53c",
+      "hash": "ff9d5a89c7053e44",
       "changed": "2026-11-06"
     },
     "/vendor/mossaik": {
@@ -7878,7 +7878,7 @@
       "changed": "2026-11-06"
     },
     "/vendor/proxysentry": {
-      "hash": "2b79656077a12f86",
+      "hash": "a47415ddd6de50a6",
       "changed": "2026-11-06"
     },
     "/vendor/public-cloud-threat-intelligence": {
@@ -8503,7 +8503,7 @@
       "daily": true
     },
     "/vendor/soos": {
-      "hash": "4bf6e8855e82fe4a",
+      "hash": "8f5c32c06b32cae3",
       "changed": "2026-11-06"
     },
     "/vendor/sourceforge": {
@@ -9174,7 +9174,7 @@
       "changed": "2026-11-06"
     },
     "/vendor/uuid-generator": {
-      "hash": "485968b1e737a086",
+      "hash": "6a00fb67bf4392be",
       "changed": "2026-11-06"
     },
     "/vendor/uxtweak-com": {
@@ -9282,7 +9282,7 @@
       "changed": "2026-11-06"
     },
     "/vendor/volaryddns": {
-      "hash": "e31f976bb44d6349",
+      "hash": "383edd98e2f6bedd",
       "changed": "2026-11-06"
     },
     "/vendor/volume": {
@@ -9325,7 +9325,7 @@
       "changed": "2026-11-06"
     },
     "/vendor/wdrfree-svg": {
-      "hash": "f5c0f4fa04fd2e8b",
+      "hash": "f13f707cf73464cb",
       "changed": "2026-11-06"
     },
     "/vendor/we-team": {
@@ -9415,7 +9415,7 @@
       "changed": "2026-11-06"
     },
     "/vendor/whitespace": {
-      "hash": "49b943c5140e41a7",
+      "hash": "601229419faf21c1",
       "changed": "2026-11-06"
     },
     "/vendor/windmill-dev": {
