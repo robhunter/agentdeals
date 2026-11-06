@@ -1312,7 +1312,7 @@
       "changed": "2026-11-06"
     },
     "/category/storage": {
-      "hash": "d0fd48b702fc5a75",
+      "hash": "51c2d94838b52a5a",
       "changed": "2026-11-06"
     },
     "/category/team-collaboration": {
@@ -1371,7 +1371,7 @@
       "changed": "2026-11-06"
     },
     "/cloudinary-vs-imagekit": {
-      "hash": "d6d9ac7bc403523a",
+      "hash": "154f2e569a1e4b30",
       "changed": "2026-11-06"
     },
     "/company-formation-pricing-2026": {
@@ -3185,7 +3185,7 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "8555732fb1ebe09f",
+      "hash": "00d46652c022b81d",
       "changed": "2026-11-06"
     },
     "/events": {
@@ -3235,7 +3235,7 @@
       "changed": "2026-11-06"
     },
     "/free-frontend-stack": {
-      "hash": "d11c680ba3265453",
+      "hash": "c361594e0cd9d059",
       "changed": "2026-11-06"
     },
     "/free-go-stack": {
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-06"
     },
     "/stack-check": {
-      "hash": "8c1611232b47d61f",
+      "hash": "a84f9bb43245e8b4",
       "changed": "2026-11-06"
     },
     "/stacks": {
@@ -3674,11 +3674,11 @@
       "changed": "2026-11-06"
     },
     "/storage-alternatives": {
-      "hash": "5653d33c7f6a904e",
+      "hash": "95d117fdd322a0d9",
       "changed": "2026-11-06"
     },
     "/storage-comparison-2026": {
-      "hash": "b720f8e5cd23e98d",
+      "hash": "52288d3a97c1a6ef",
       "changed": "2026-11-06"
     },
     "/supabase-vs-firebase": {
@@ -4865,7 +4865,7 @@
       "daily": true
     },
     "/vendor/cloudinary": {
-      "hash": "767f2c5bcf223e65",
+      "hash": "597ecee5d97b41ec",
       "changed": "2026-11-06"
     },
     "/vendor/cloudmersive": {
