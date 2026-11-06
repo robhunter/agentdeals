@@ -3003,6 +3003,18 @@
           "quote": "The free plan includes 3,000 emails per month, 1,000 contacts, and a 100 emails/day limit. No credit card required.",
           "url": "https://resend.com/agents",
           "read_on": "2026-10-23"
+        },
+        {
+          "text": "Resend launched Inboxes on October 22, 2026. \"An inbox sends and receives email at an address on one of your domains.\" Every plan includes 3 Inboxes. Inboxes can be used by agents to receive tasks and updates.",
+          "quote": "Today we're announcing Inboxes. … An inbox sends and receives email at an address on one of your domains, like support@example.com. … Agents: give each AI agent its own address to receive tasks, approvals, and updates. … You can start for free with up to 3 inboxes today.",
+          "url": "https://resend.com/blog/announcing-inboxes",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "Broadcasts sent through the /broadcasts API or the dashboard do not count against the 3,000 transactional emails a month. Marketing plans are limited by contacts, not email volume. Emails sent or received through an inbox count towards the transactional emails quota.",
+          "quote": "Broadcast emails sent through the /broadcasts API or through the Broadcasts interface in the dashboard do not count against your transactional email limits. … marketing plans are not limited by the number of emails you can send, but only by the number of contacts you have. … Inboxes do not come with a separate email allowance: every email sent or received through an inbox counts towards your transactional emails quota.",
+          "url": "https://resend.com/pricing",
+          "read_on": "2026-11-06"
         }
       ],
       "tags": [
@@ -3156,6 +3168,18 @@
           "quote": "Do I have to enter my credit card details to sign up? No. We only need your email address and the name of your organization",
           "url": "https://www.brevo.com/pricing/",
           "read_on": "2026-10-23"
+        },
+        {
+          "text": "Brevo requires account approval before sending. After approval, the Free plan allows up to 300 emails per day.",
+          "quote": "When you create an account, you will automatically have a Free plan to upload your contacts. Once we approve your account for sending, you can start sending up to 300 emails per day.",
+          "url": "https://www.brevo.com/pricing/",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "On the Free plan, the Brevo logo is always displayed in the email footer.",
+          "quote": "If you have a free plan, the logo will always be displayed in your footer.",
+          "url": "https://help.brevo.com/hc/en-us/articles/209429285-Will-my-contacts-know-that-I-m-using-Brevo",
+          "read_on": "2026-11-06"
         }
       ]
     },
