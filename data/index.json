@@ -8391,6 +8391,19 @@
           "quote": "Build a \"claim\" URL. Send the user to it and Formspree creates the form (after they sign in or sign up) with the fields, validation, and integrations you specified.",
           "url": "https://formspree.io/ai/",
           "read_on": "2026-10-30"
+        },
+        {
+          "text": "The Free plan lacks a custom thank-you page for non-AJAX forms (visitors see Formspree's own thank-you page), autoresponses, plugins such as Google Sheets, submission export and search, API access, and multiple notification emails. Personal adds the thank-you page, plugins, export, search and multiple notification emails. Autoresponses and API access start on Professional, not Personal. The Free plan includes AJAX submissions, custom reCAPTCHA and domain restriction.",
+          "quote": "For non-AJAX forms: By default, a user is shown a Formspree \"Thank You\" page after submission. You can provide an alternative URL per form to use instead.",
+          "url": "https://formspree.io/plans",
+          "read_on": "2026-11-06"
+        },
+        {
+          "text": "Personal is $15/month or $120/year for 200 submissions/month. Professional is $30/month or $240/year for 2,000 submissions/month. Business is $90/month or $720/year for 20,000 submissions/month. Prices are in US dollars.",
+          "quote": "Monthly: $15/month - Yearly: $120/year ($10/month billed annually)",
+          "url": "https://formspree.io/plans",
+          "read_on": "2026-11-06",
+          "operating_detail": true
         }
       ],
       "free_plan_excerpt": {
