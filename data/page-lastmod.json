@@ -14,8 +14,8 @@
       "changed": "2026-11-03"
     },
     "/agent-stack": {
-      "hash": "80eb572e35950bad",
-      "changed": "2026-11-02"
+      "hash": "380ecc7768dcb1ca",
+      "changed": "2026-11-06"
     },
     "/ai-coding-tools-pricing": {
       "hash": "c0a34f567631621c",
@@ -789,15 +789,15 @@
       "changed": "2026-11-03"
     },
     "/amplitude-vs-posthog": {
-      "hash": "f4b90a0b950a2bcb",
-      "changed": "2026-11-03"
+      "hash": "1db37e8119b10d2a",
+      "changed": "2026-11-06"
     },
     "/analytics-alternatives": {
-      "hash": "75c01f1943838e4a",
-      "changed": "2026-11-05"
+      "hash": "30b9c98d0fd04967",
+      "changed": "2026-11-06"
     },
     "/analytics-free-tier-comparison-2026": {
-      "hash": "5c5d3269edd55e0c",
+      "hash": "6c951081872d547d",
       "changed": "2026-11-06"
     },
     "/api-development-alternatives": {
@@ -1112,8 +1112,8 @@
       "changed": "2026-11-05"
     },
     "/category/analytics": {
-      "hash": "7098f27e1d33ae7b",
-      "changed": "2026-11-05"
+      "hash": "9b9cca13af8c9f04",
+      "changed": "2026-11-06"
     },
     "/category/api-development": {
       "hash": "01f34be33efe23f5",
@@ -3185,8 +3185,8 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "3be292922c057dc9",
-      "changed": "2026-11-05"
+      "hash": "dae285db7aa337dc",
+      "changed": "2026-11-06"
     },
     "/events": {
       "hash": "10c036e7bfb60e32",
@@ -3235,8 +3235,8 @@
       "changed": "2026-11-05"
     },
     "/free-frontend-stack": {
-      "hash": "636082979033fefc",
-      "changed": "2026-11-05"
+      "hash": "2a4008408b3e3558",
+      "changed": "2026-11-06"
     },
     "/free-go-stack": {
       "hash": "a688f202df831af1",
@@ -3247,16 +3247,16 @@
       "changed": "2026-11-05"
     },
     "/free-nextjs-stack": {
-      "hash": "41cb8b067b1686e0",
+      "hash": "ad172035bc6c085d",
       "changed": "2026-11-06"
     },
     "/free-saas-stack": {
-      "hash": "3b0d8925bb438ad0",
-      "changed": "2026-11-05"
+      "hash": "3f93117cd8e30029",
+      "changed": "2026-11-06"
     },
     "/free-startup-stack": {
-      "hash": "96278a7b79ecc000",
-      "changed": "2026-11-05"
+      "hash": "24f7a3a7322e33cc",
+      "changed": "2026-11-06"
     },
     "/free-tier-facts-ai-models-get-wrong": {
       "hash": "ba028b553d6bdb14",
@@ -7808,8 +7808,8 @@
       "changed": "2026-11-05"
     },
     "/vendor/posthog": {
-      "hash": "039e5f819b16c0a6",
-      "changed": "2026-11-05"
+      "hash": "035ace64af5e4e5c",
+      "changed": "2026-11-06"
     },
     "/vendor/postman": {
       "daily": true
