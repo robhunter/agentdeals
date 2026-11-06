@@ -24079,6 +24079,11 @@
             "subtype": "image_video_generation",
             "source_url": "https://pollinations.ai/",
             "source_quote": "Generate images, text, audio and video with state-of-the-art AI models"
+          },
+          {
+            "subtype": "model_gateway",
+            "source_url": "https://github.com/pollinations/pollinations",
+            "source_quote": "All models, one place: Flux, GPT, Claude, Gemini, Seedream, and more"
           }
         ],
         "reviewed": "2026-09-01"
