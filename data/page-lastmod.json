@@ -22,16 +22,16 @@
       "changed": "2026-11-06"
     },
     "/ai-free-tiers": {
-      "hash": "d7d292985075dcb2",
+      "hash": "65e4602838e0c7e3",
       "changed": "2026-11-06"
     },
     "/ai-ml-alternatives": {
-      "hash": "c059b4431dd4fff7",
+      "hash": "51f6ca1b6b8c440c",
       "changed": "2026-11-06"
     },
     "/alternative-to": {
-      "hash": "84b82f9266743daf",
-      "changed": "2026-11-05"
+      "hash": "d5762005aa2d2a8c",
+      "changed": "2026-11-06"
     },
     "/alternative-to/360-monitoring": {
       "daily": true
@@ -1108,7 +1108,7 @@
       "changed": "2026-11-05"
     },
     "/category/ai-ml": {
-      "hash": "e505bf6a5b58b7cf",
+      "hash": "f6be4bb057e2c76b",
       "changed": "2026-11-06"
     },
     "/category/analytics": {
@@ -3029,8 +3029,8 @@
       "changed": "2026-10-31"
     },
     "/digest/2026-w28": {
-      "hash": "4c89f2084dfed0a6",
-      "changed": "2026-10-21"
+      "hash": "a2900996c5f6cc6e",
+      "changed": "2026-11-06"
     },
     "/digest/2026-w29": {
       "hash": "c9be15986bfbb199",
@@ -3243,7 +3243,7 @@
       "changed": "2026-11-06"
     },
     "/free-llm-apis": {
-      "hash": "c1786d472816edc1",
+      "hash": "eff2eaa3dc7bb3e4",
       "changed": "2026-11-06"
     },
     "/free-nextjs-stack": {
@@ -3560,8 +3560,8 @@
       "changed": "2026-11-02"
     },
     "/reports/2026-07": {
-      "hash": "d019e2903d095e25",
-      "changed": "2026-10-31"
+      "hash": "21cd0371f178e4f2",
+      "changed": "2026-11-06"
     },
     "/reports/2026-08": {
       "hash": "fc2f893bee65b0b0",
@@ -3634,11 +3634,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "50c7963d46606f7c",
+      "hash": "27064bc09ff9c4e9",
       "changed": "2026-11-06"
     },
     "/stack-check": {
-      "hash": "bf66af903c6558e0",
+      "hash": "f26c58edf283a86d",
       "changed": "2026-11-06"
     },
     "/stacks": {
@@ -3670,7 +3670,7 @@
       "changed": "2026-11-06"
     },
     "/state-of-free-tiers": {
-      "hash": "a8a8ea2a28a6586d",
+      "hash": "2f7dde9ff6d76ac5",
       "changed": "2026-11-06"
     },
     "/storage-alternatives": {
@@ -3952,8 +3952,8 @@
       "changed": "2026-11-06"
     },
     "/vendor": {
-      "hash": "d0545f6d44fe29a7",
-      "changed": "2026-11-05"
+      "hash": "0cd997e69320eb1d",
+      "changed": "2026-11-06"
     },
     "/vendor/10minutemail": {
       "hash": "31c6fed511b52dbc",
