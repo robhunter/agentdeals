@@ -2719,6 +2719,7 @@
       ],
       "vendors_tabulated": [
         "fly-io",
+        "koyeb",
         "netlify",
         "vercel"
       ],
@@ -2731,8 +2732,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 71,
-      "table_figures_from_records": 28,
+      "table_figures": 76,
+      "table_figures_from_records": 33,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -2746,8 +2747,8 @@
         },
         {
           "label": "5. Other PaaS Alternatives",
-          "figures": 29,
-          "from_records": 28
+          "figures": 34,
+          "from_records": 33
         }
       ],
       "reads_changes": true,
