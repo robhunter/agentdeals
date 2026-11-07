@@ -36496,6 +36496,44 @@
           "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
           "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
           "read_on": "2026-10-07"
+        },
+        {
+          "text": "If you do not upgrade to a Paid billing account by the end of the 90-day trial or after spending the $300 credit, your Free Trial billing account closes and all its resources stop, including Cloud Storage buckets. They are permanently deleted after a 30-day grace period without an upgrade. After upgrading, the Free Tier still applies.",
+          "quote": "If you don't upgrade to a Paid billing account before 90 days pass or if you spend the $300 in free credit, then your Free Trial billing account will be closed and all of its associated projects and resources will be stopped.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Free Tier monthly usage limits are calculated per billing account.",
+          "quote": "there are monthly usage limits that are calculated per billing account",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Google Cloud's terms prohibit creating multiple projects to simulate a single project or circumvent usage limits.",
+          "quote": "in a manner intended to avoid incurring Fees (including creating multiple Customer Applications, Accounts, or Projects to simulate or act as a single Customer Application, Account, or Project (respectively)) or to circumvent Service-specific usage limits or quotas",
+          "url": "https://cloud.google.com/terms",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "The Free Tier has no end date. Google may change or eliminate its usage limits with 30 days' advance notice.",
+          "quote": "The Free Tier has no end date, but Google reserves the right to change the offering, including changing or eliminating usage limits, with 30 days' advance notice.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Soft delete is enabled by default for all buckets that support it, with a default retention duration of 7 days. Retention duration can be customized from 7 to 90 days, or set to 0 to disable soft delete. Storage charges apply to soft-deleted objects until they are permanently deleted, the same as for live objects.",
+          "quote": "Soft-deleted objects continue to accrue storage charges until their retention period expires and they're permanently deleted.",
+          "url": "https://cloud.google.com/storage/docs/soft-delete",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Always Free quotas apply to usage in us-west1, us-central1 and us-east1, aggregated across these three regions. Always Free quotas do not apply to Rapid Storage class.",
+          "quote": "Usage is aggregated across these 3 regions.",
+          "url": "https://cloud.google.com/storage/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
         }
       ]
     },

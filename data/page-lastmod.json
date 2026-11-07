@@ -1312,8 +1312,8 @@
       "changed": "2026-11-06"
     },
     "/category/storage": {
-      "hash": "51c2d94838b52a5a",
-      "changed": "2026-11-06"
+      "hash": "a05c20655a603a94",
+      "changed": "2026-11-07"
     },
     "/category/team-collaboration": {
       "hash": "4d2b36d8c5b81c9d",
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-06"
     },
     "/stack-check": {
-      "hash": "e42cb9f5ce37ff5c",
+      "hash": "c7526b03e6fdfc1e",
       "changed": "2026-11-07"
     },
     "/stacks": {
@@ -3674,12 +3674,12 @@
       "changed": "2026-11-06"
     },
     "/storage-alternatives": {
-      "hash": "95d117fdd322a0d9",
-      "changed": "2026-11-06"
+      "hash": "59029704770c8c4f",
+      "changed": "2026-11-07"
     },
     "/storage-comparison-2026": {
-      "hash": "52288d3a97c1a6ef",
-      "changed": "2026-11-06"
+      "hash": "2b02e4218b39f905",
+      "changed": "2026-11-07"
     },
     "/supabase-vs-firebase": {
       "hash": "3740abc8bd069848",
@@ -6057,8 +6057,8 @@
       "changed": "2026-11-06"
     },
     "/vendor/google-cloud-storage": {
-      "hash": "030e3e4348e13539",
-      "changed": "2026-11-06"
+      "hash": "9b878c92122ec679",
+      "changed": "2026-11-07"
     },
     "/vendor/google-colab": {
       "daily": true
