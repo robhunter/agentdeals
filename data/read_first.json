@@ -536,6 +536,26 @@
       "vendor": "EmailJS",
       "tier": "Free",
       "since": "2026-11-08"
+    },
+    {
+      "vendor": "Pinata IPFS",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "CertKit",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Uptimia",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Bench",
+      "tier": "Startup Discount",
+      "since": "2026-11-08"
     }
   ]
 }
