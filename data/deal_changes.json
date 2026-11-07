@@ -17917,6 +17917,35 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Screenshotlayer",
+      "change_type": "restriction",
+      "date": "2026-11-07",
+      "date_source": "hand_written",
+      "summary": "Screenshotlayer limited its Free Plan to non-commercial use between 2026-08-20 and 2026-11-07. Its limit stayed at 100 snapshots a month, and its paid plans are licensed for commercial use.",
+      "tier": "Free Plan",
+      "tier_direction": "narrowed",
+      "previous_state": "Free Plan: 100 snapshots a month, with no commercial-use terms on the plan or anywhere on the pricing page (screenshotlayer.com/pricing, archived 2026-08-20).",
+      "current_state": "Free Plan marked \"Non-Commercial Use\": \"This plan is for non-commercial use only.\" Paid plans: \"This plan is licensed for commercial use.\" (screenshotlayer.com/pricing, read 2026-11-07).",
+      "impact": "medium",
+      "source_url": "https://screenshotlayer.com/pricing",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-07",
+      "archive_check": {
+        "checked": "2026-11-07",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-20",
+            "first_new": "2026-11-07",
+            "last_old_capture": "https://web.archive.org/web/20260820171356/https://screenshotlayer.com/pricing",
+            "first_new_capture": null
+          }
+        ]
+      }
     }
   ]
 }

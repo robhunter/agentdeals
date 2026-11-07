@@ -11396,7 +11396,7 @@
     {
       "vendor": "Screenshotlayer",
       "category": "Dev Utilities",
-      "description": "Website screenshot capture API — free tier: 100 screenshots/month. Supports PNG, JPEG, GIF output. No HTTPS encryption or CDN on free tier. Paid plans from $19.99/mo for 10K captures",
+      "description": "Website screenshot capture API — free tier: 100 screenshots/month, for non-commercial use only. Supports PNG, JPEG, GIF output. Paid plans from $19.99/mo for 10K captures, licensed for commercial use",
       "tier": "Free",
       "url": "https://screenshotlayer.com/pricing",
       "tags": [
@@ -16854,7 +16854,7 @@
     {
       "vendor": "Miro",
       "category": "Diagramming",
-      "description": "Collaborative whiteboard — 3 editable boards, unlimited team members, 10 AI credits/month, 5 Talktracks, 160+ app integrations including Zoom, Slack, and Google Drive",
+      "description": "Collaborative whiteboard — 3 editable boards, unlimited team members, 10 AI credits/month, 5 Talktracks, 250+ app integrations including Microsoft, Slack, Google, and Adobe",
       "tier": "Free",
       "url": "https://miro.com/pricing",
       "tags": [
@@ -32807,7 +32807,7 @@
     {
       "vendor": "FullStory.com",
       "category": "Analytics",
-      "description": "30,000 sessions/month with 12 months data retention and three user seats.",
+      "description": "30,000 sessions/month with 12 months data retention and up to 10 users.",
       "tier": "Free",
       "url": "https://www.fullstory.com/pricing",
       "tags": [
