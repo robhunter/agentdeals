@@ -780,6 +780,24 @@
           "quote": "Sandboxes are available on every plan.",
           "url": "https://docs.railway.com/sandboxes",
           "read_on": "2026-11-03"
+        },
+        {
+          "text": "SMTP is only available on Railway's Pro plan and above. SMTP is disabled on the Free, Trial, and Hobby plans. Those plans must use transactional email services with HTTPS APIs.",
+          "quote": "SMTP is only available on the Pro plan and above.",
+          "url": "https://docs.railway.com/networking/outbound-networking",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "The Limited Trial for trial accounts not verified through GitHub has restricted outbound network access and only a limited set of ports. Verification is an automated process at railway.com/verify. Railway does not respond to requests for verification. The Hobby plan unlocks the full experience.",
+          "quote": "Specifically, services on the Limited Trial have restricted outbound network access and only a limited set of ports are available.",
+          "url": "https://docs.railway.com/pricing/free-trial",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Railway deletes stateful volumes created by Trial accounts 30 days after the expiration of the trial credits. An upgrade retains the data.",
+          "quote": "Railway deletes stateful volumes created by Trial accounts 30 days after the expiration of your credits.",
+          "url": "https://docs.railway.com/pricing/free-trial",
+          "read_on": "2026-11-07"
         }
       ],
       "restatement_reverted": {
@@ -974,6 +992,69 @@
           "quote": "We require a credit card to prevent fraud and abuse.",
           "url": "https://www.koyeb.com/docs/faqs/pricing",
           "read_on": "2026-10-22"
+        },
+        {
+          "text": "Koyeb verifies the card with a $29 pre-authorization hold, cancelled immediately, and charges the pro-rated amount for the selected plan at sign-up. Account validation usually takes a few minutes and can take up to 3 business days.",
+          "quote": "We verify the card you enter by placing a $29 pre-authorization hold and immediately canceling it. … Right after we place the $29 pre-authorization hold to verify your card, we also charge you the pro-rated amount for the plan you select. … This process usually only takes a few minutes and but occasionally can take up to 3 business days.",
+          "url": "https://www.koyeb.com/docs/faqs/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb bills GPU instances by the second. The cheapest GPU, the RTX-4000-SFF-ADA, costs $0.50 an hour. The L4 costs $0.70 an hour. The A100 costs $1.60 an hour. The H100 costs $2.50 an hour. The H200 costs $3.00 an hour. The B200 costs $5.50 an hour.",
+          "quote": "Only pay for what you use, by the second. … RTX-4000-SFF-ADA 20GB VRAM … $0.50 /hr … L4 24GB VRAM … $0.70 /hr … A100 80GB VRAM … $1.60 /hr … H100 80GB VRAM … $2.50 /hr … H200 141GB VRAM … $3.00 /hr … B200 180GB VRAM … $5.50 /hr",
+          "url": "https://www.koyeb.com/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb's Scale-to-Zero is in public preview and requires a Standard CPU or GPU instance with minimum instances set to zero. The default idle period is 5 minutes; the Pro plan allows up to 6 hours, Scale and Enterprise up to 12 hours.",
+          "quote": "Scale-to-Zero is currently in public preview. To enable Scale-to-Zero on your Services, you need to use a Standard CPU or GPU Instance and set the minimum number of Instances to zero. … Standard CPU and GPU Instances default idle period is set to 5 minutes. … For organizations on the Pro plan: up to 6 hours … For organizations on the Scale or Enterprise plan: up to 12 hours",
+          "url": "https://www.koyeb.com/docs/run-and-scale/scale-to-zero",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb's Agent Skills and MCP server (@koyeb/mcp-server) let coding agents such as Claude Code, Codex and Cursor create apps, manage services and inspect deployments. The MCP server takes a Koyeb API token.",
+          "quote": "Coding agents can interact with Koyeb to create apps, manage services, and inspect deployments without leaving your editor. There are two integration paths: Agent Skills … MCP server … The skills are authored in the Agent Skills open format and work with Agent Skills-compatible products, including VS Code, Cursor, Codex, Mistral Vibe, Claude Code, and OpenCode. … provide a Koyeb API token via the KOYEB_TOKEN environment variable",
+          "url": "https://www.koyeb.com/docs/integrations/coding-agents",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb Sandboxes run AI-generated and untrusted code in isolated environments. They are created with the Koyeb Python or JavaScript SDK and a Koyeb API token.",
+          "quote": "Sandboxes provide fully isolated, secure environments to safely execute AI-generated and untrusted code at scale. … Sandboxes are created programmatically using the Koyeb Python SDK. Calls to the Koyeb Python SDK must be authenticated using a Koyeb API Token.",
+          "url": "https://www.koyeb.com/docs/sandboxes/sandbox-lifecycle",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb has no spending limit feature yet.",
+          "quote": "We are working on a spending limits feature and hope to offer it soon.",
+          "url": "https://www.koyeb.com/docs/faqs/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb does not charge for paused services.",
+          "quote": "Will I be charged if my Services are paused? No, you will only be charged for unpaused Services.",
+          "url": "https://www.koyeb.com/docs/faqs/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb's Scale plan has a 99.9% uptime SLA and its Enterprise plan 99.99%. The Pro plan lists no SLA.",
+          "quote": "Scale $299/mo +compute … 99.9% uptime SLA … Enterprise Custom +compute … 99.99% uptime SLA",
+          "url": "https://www.koyeb.com/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Early-stage startups can get up to $30k in Koyeb credits.",
+          "quote": "Early stage startup Get up to $30k in credits to accelerate your go-to-market with high-performance cloud infrastructure.",
+          "url": "https://www.koyeb.com/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
         }
       ]
     },
@@ -10224,6 +10305,69 @@
           "quote": "Create your account Username: Email: Password: Password (again):",
           "url": "https://www.pythonanywhere.com/registration/register/beginner/",
           "read_on": "2026-10-22"
+        },
+        {
+          "text": "Free accounts reach only allowlisted sites, through the HTTP proxy at proxy.server:3128. The requests library uses the proxy with no set-up; other libraries need configuring for it, and some do not work through it (libraries that use httplib2 on Python 3, such as twilio). \"[Errno 111] Connection refused\" suggests a library that is not using the proxy. Paid accounts have unrestricted internet access.",
+          "quote": "This is an HTTP proxy at proxy.server:3128.",
+          "url": "https://help.pythonanywhere.com/pages/403ForbiddenError/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Free PythonAnywhere accounts can access api.openai.com, api.anthropic.com, .googleapis.com, api.groq.com, api.mistral.ai, api.deepseek.com, openrouter.ai, api.together.xyz, api.x.ai and api-inference.huggingface.co. Paid accounts have unrestricted access.",
+          "quote": "The following sites are allowlisted for free PythonAnywhere accounts.",
+          "url": "https://www.pythonanywhere.com/whitelist/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Connections to external databases, such as a Postgres server run by another service, require any paid PythonAnywhere plan. PythonAnywhere's own Postgres is a paid add-on.",
+          "quote": "If you have a paid plan, you can connect to databases outside PythonAnywhere.",
+          "url": "https://help.pythonanywhere.com/pages/KindsOfDatabases/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Custom domains are on paid plans only, from the $10-a-month Developer plan. The free Beginner plan's web app runs at your-username.pythonanywhere.com only.",
+          "quote": "All paid plans support custom domains for all of your web apps.",
+          "url": "https://www.pythonanywhere.com/pricing/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "SSH access (ssh.pythonanywhere.com) is on paid plans only. The free Beginner plan has no SSH access.",
+          "quote": "You get unrestricted Internet access from your applications, unlimited in-browser Python, Bash and database consoles, and full SSH access to your account.",
+          "url": "https://www.pythonanywhere.com/pricing/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "The free Beginner plan's web app gets 1 web worker. Requests queue while the worker is busy. The Developer plan gets 3 web workers per web app.",
+          "quote": "If you only have one worker (or if all of your workers are busy) then requests are queued up and served when a worker becomes available.",
+          "url": "https://www.pythonanywhere.com/pricing/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Always-on tasks are only in paid accounts. The Developer plan allows one always-on task. The Beginner plan has none.",
+          "quote": "Warning -- this will only work in paid accounts",
+          "url": "https://help.pythonanywhere.com/pages/AlwaysOnTasks/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "PythonAnywhere counts 100 CPU-seconds daily for consoles, scheduled tasks, and always-on tasks. Web apps are not counted. Exceeding the limit places processes in the tarpit, where they run at lower priority. Tarpit counters reset daily. \"Being in the tarpit does not affect your web apps.\" PythonAnywhere may kill tarpitted processes if they impact others, especially past ten times the quota.",
+          "quote": "Being in the tarpit does not affect your web apps.",
+          "url": "https://www.pythonanywhere.com/tarpit/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "All paid plans have a 30-day money-back guarantee. Billing is monthly, with cancellation at any time. The minimum contract length is one month.",
+          "quote": "All of our paid plans come with a no-quibble 30-day money-back guarantee",
+          "url": "https://www.pythonanywhere.com/pricing/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
         }
       ],
       "free_plan_excerpt": {
@@ -10718,6 +10862,59 @@
           "quote": "This will result in a 402 Payment Required error",
           "url": "https://developers.deepgram.com/docs/errors",
           "read_on": "2026-10-23"
+        },
+        {
+          "text": "Rate limits apply per project, not per account or API key. Creating additional projects under the same account does not grant additional concurrency. Secondary projects on a self-serve account are limited to a single concurrent stream. Using additional projects or accounts to work around the limits is detected and violates Deepgram's Terms of Service.",
+          "quote": "Secondary projects created on a self-serve account are limited to a single concurrent stream by design.",
+          "url": "https://developers.deepgram.com/reference/api-rate-limits",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Pay as You Go allows up to 45 concurrent Voice Agent API connections. Aura and Aura-2 REST TTS allow 15 concurrent requests. Aura and Aura-2 streaming TTS allow 45 concurrent requests. Flux TTS REST allows 15 concurrent requests in North America and 5 in Europe, Australia and India.",
+          "quote": "Up to 45 concurrent connections",
+          "url": "https://developers.deepgram.com/reference/api-rate-limits",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Deepgram offers a dedicated EU endpoint at api.eu.deepgram.com for data processing within the European Union. Pay as You Go limits apply to this endpoint, and also to api.au.deepgram.com and api.in.deepgram.com.",
+          "quote": "We offer a dedicated EU endpoint to ensure data processing stays within the European Union (api.eu.deepgram.com).",
+          "url": "https://deepgram.com/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Deepgram's terms, section 2.4, forbid use of the Services or any Output \"for competitive purposes, including model training, benchmarking and other competitive analysis, or developing competing models, products or services\".",
+          "quote": "use or access our Services or any Output for competitive purposes, including model training, benchmarking and other competitive analysis, or developing competing models, products or services",
+          "url": "https://deepgram.com/terms",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Deepgram's terms, section 2.4, prohibit resale or redistribution of the Services on a stand-alone basis. Integration into the user's own Application is allowed when the Application contributes material independent functionality beyond Deepgram's Services.",
+          "quote": "Resell, redistribute, or make available any portion of our Services on a stand-alone basis.",
+          "url": "https://deepgram.com/terms",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Refund requests for unused credits purchased within the last 30 days go to consolebilling@deepgram.com. Deepgram reviews each account and processes eligible refunds.",
+          "quote": "To request a refund for unused credits purchased within the last 30 days, please contact",
+          "url": "https://deepgram.com/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Self-hosted deployment through Amazon SageMaker requires only an AWS account. Deployment with Docker/Podman or Kubernetes requires a Deepgram Enterprise Plan.",
+          "quote": "is the fastest path and requires only an AWS account, while deploying with Docker/Podman or Kubernetes requires a Deepgram Enterprise Plan.",
+          "url": "https://developers.deepgram.com/docs/self-hosted-introduction",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Deepgram on Amazon SageMaker is billed through AWS Marketplace. The monthly cost is the AWS charge for the instances that run the endpoint plus Deepgram's license charge for the audio or text processed.",
+          "quote": "Your monthly cost is the AWS charge for the instances that run the endpoint plus the Deepgram license charge for the audio or text you process.",
+          "url": "https://developers.deepgram.com/docs/amazon-sagemaker",
+          "read_on": "2026-11-07",
+          "operating_detail": true
         }
       ]
     },
@@ -11199,7 +11396,7 @@
     {
       "vendor": "Screenshotlayer",
       "category": "Dev Utilities",
-      "description": "Website screenshot capture API — free tier: 100 screenshots/month. Supports PNG, JPEG, GIF output. No HTTPS encryption or CDN on free tier. Paid plans from $19.99/mo for 10K captures",
+      "description": "Website screenshot capture API — free tier: 100 screenshots/month, for non-commercial use only. Supports PNG, JPEG, GIF output. Paid plans from $19.99/mo for 10K captures, licensed for commercial use",
       "tier": "Free",
       "url": "https://screenshotlayer.com/pricing",
       "tags": [
@@ -16657,7 +16854,7 @@
     {
       "vendor": "Miro",
       "category": "Diagramming",
-      "description": "Collaborative whiteboard — 3 editable boards, unlimited team members, 10 AI credits/month, 5 Talktracks, 160+ app integrations including Zoom, Slack, and Google Drive",
+      "description": "Collaborative whiteboard — 3 editable boards, unlimited team members, 10 AI credits/month, 5 Talktracks, 250+ app integrations including Microsoft, Slack, Google, and Adobe",
       "tier": "Free",
       "url": "https://miro.com/pricing",
       "tags": [
@@ -32610,7 +32807,7 @@
     {
       "vendor": "FullStory.com",
       "category": "Analytics",
-      "description": "30,000 sessions/month with 12 months data retention and three user seats.",
+      "description": "30,000 sessions/month with 12 months data retention and up to 10 users.",
       "tier": "Free",
       "url": "https://www.fullstory.com/pricing",
       "tags": [
@@ -36397,6 +36594,44 @@
           "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
           "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
           "read_on": "2026-10-07"
+        },
+        {
+          "text": "If you do not upgrade to a Paid billing account by the end of the 90-day trial or after spending the $300 credit, your Free Trial billing account closes and all its resources stop, including Cloud Storage buckets. They are permanently deleted after a 30-day grace period without an upgrade. After upgrading, the Free Tier still applies.",
+          "quote": "If you don't upgrade to a Paid billing account before 90 days pass or if you spend the $300 in free credit, then your Free Trial billing account will be closed and all of its associated projects and resources will be stopped.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Free Tier monthly usage limits are calculated per billing account.",
+          "quote": "there are monthly usage limits that are calculated per billing account",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Google Cloud's terms prohibit creating multiple projects to simulate a single project or circumvent usage limits.",
+          "quote": "in a manner intended to avoid incurring Fees (including creating multiple Customer Applications, Accounts, or Projects to simulate or act as a single Customer Application, Account, or Project (respectively)) or to circumvent Service-specific usage limits or quotas",
+          "url": "https://cloud.google.com/terms",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "The Free Tier has no end date. Google may change or eliminate its usage limits with 30 days' advance notice.",
+          "quote": "The Free Tier has no end date, but Google reserves the right to change the offering, including changing or eliminating usage limits, with 30 days' advance notice.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Soft delete is enabled by default for all buckets that support it, with a default retention duration of 7 days. Retention duration can be customized from 7 to 90 days, or set to 0 to disable soft delete. Storage charges apply to soft-deleted objects until they are permanently deleted, the same as for live objects.",
+          "quote": "Soft-deleted objects continue to accrue storage charges until their retention period expires and they're permanently deleted.",
+          "url": "https://cloud.google.com/storage/docs/soft-delete",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Always Free quotas apply to usage in us-west1, us-central1 and us-east1, aggregated across these three regions. Always Free quotas do not apply to Rapid Storage class.",
+          "quote": "Usage is aggregated across these 3 regions.",
+          "url": "https://cloud.google.com/storage/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
         }
       ]
     },
