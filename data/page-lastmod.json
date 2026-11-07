@@ -30,7 +30,7 @@
       "changed": "2026-11-07"
     },
     "/alternative-to": {
-      "hash": "8658ee05ce652626",
+      "hash": "e936f3e338d980f7",
       "changed": "2026-11-07"
     },
     "/alternative-to/360-monitoring": {
@@ -3073,8 +3073,8 @@
       "changed": "2026-11-03"
     },
     "/digest/2026-w39": {
-      "hash": "6e0f4fa44510b42c",
-      "changed": "2026-11-03"
+      "hash": "5221dd140730ba2b",
+      "changed": "2026-11-07"
     },
     "/digest/2026-w40": {
       "hash": "78cb2a0f5e108f76",
@@ -3085,8 +3085,8 @@
       "changed": "2026-10-21"
     },
     "/digest/2026-w42": {
-      "hash": "460f3c9c253a37a2",
-      "changed": "2026-11-03"
+      "hash": "e71ede745720b833",
+      "changed": "2026-11-07"
     },
     "/digest/2026-w43": {
       "hash": "041ec24198aed9c7",
@@ -3157,7 +3157,7 @@
       "changed": "2026-10-31"
     },
     "/digest/archive": {
-      "hash": "22577dfaef482193",
+      "hash": "9d72b13acdf41973",
       "changed": "2026-11-07"
     },
     "/digitalocean-free-tier-2026": {
@@ -3208,7 +3208,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "a596c63f69dadbdf",
+      "hash": "dcf7137947446947",
       "changed": "2026-11-07"
     },
     "/firebase-alternatives": {
@@ -3263,7 +3263,7 @@
       "changed": "2026-10-29"
     },
     "/free-tier-risk": {
-      "hash": "c70569b6293c3eb6",
+      "hash": "c91a7414bcb24bb8",
       "changed": "2026-11-07"
     },
     "/free-tier-tracker": {
@@ -3420,7 +3420,7 @@
       "changed": "2026-10-09"
     },
     "/project-management-alternatives": {
-      "hash": "e06761b4ba046c87",
+      "hash": "2fcf7610d408bb69",
       "changed": "2026-11-07"
     },
     "/q1-2026-developer-pricing-report": {
@@ -3444,7 +3444,7 @@
       "changed": "2026-10-15"
     },
     "/reports": {
-      "hash": "677b5ef6885ced88",
+      "hash": "619a158b4c58f10c",
       "changed": "2026-11-07"
     },
     "/reports/2022-11": {
@@ -3572,8 +3572,8 @@
       "changed": "2026-11-03"
     },
     "/reports/2026-10": {
-      "hash": "de07bdb22ba00bea",
-      "changed": "2026-11-06"
+      "hash": "e32e872d10a54720",
+      "changed": "2026-11-07"
     },
     "/reports/2026-11": {
       "daily": true
@@ -3634,11 +3634,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "999b99f4e72ae057",
+      "hash": "7cdb566bc5637e2a",
       "changed": "2026-11-07"
     },
     "/stack-check": {
-      "hash": "2d4f9216f87ecc6a",
+      "hash": "04745343b88fdcb2",
       "changed": "2026-11-07"
     },
     "/stacks": {
@@ -3670,7 +3670,7 @@
       "changed": "2026-11-07"
     },
     "/state-of-free-tiers": {
-      "hash": "e09dfa5ecb827e11",
+      "hash": "c1588f5bc84bf764",
       "changed": "2026-11-07"
     },
     "/storage-alternatives": {
@@ -3885,8 +3885,8 @@
       "changed": "2026-10-25"
     },
     "/trends/project-management": {
-      "hash": "8a9be0ac50d78cb9",
-      "changed": "2026-11-04"
+      "hash": "4b86c8d821e21610",
+      "changed": "2026-11-07"
     },
     "/trends/search": {
       "hash": "5e5bb8f612de8483",
@@ -8787,7 +8787,7 @@
       "changed": "2026-11-07"
     },
     "/vendor/taskade-com": {
-      "hash": "43007547b9331148",
+      "hash": "43ab4d51810456cf",
       "changed": "2026-11-07"
     },
     "/vendor/tavily-ai": {
