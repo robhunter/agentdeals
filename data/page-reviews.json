@@ -28,8 +28,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 2,
-      "table_figures_from_records": 2,
+      "table_figures": 1,
+      "table_figures_from_records": 1,
       "tables": [
         {
           "label": "Protocol Comparison",
@@ -38,11 +38,11 @@
         },
         {
           "label": "All Payment-Enabled Services",
-          "figures": 2,
-          "from_records": 2
+          "figures": 1,
+          "from_records": 1
         }
       ],
-      "reads_changes": true,
+      "reads_changes": false,
       "data_source": "catalogue",
       "data_source_reason": null
     },
@@ -3241,8 +3241,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 97,
-      "table_figures_from_records": 36,
+      "table_figures": 96,
+      "table_figures_from_records": 35,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -3261,8 +3261,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 19,
-          "from_records": 19
+          "figures": 18,
+          "from_records": 18
         }
       ],
       "reads_changes": true,
@@ -3577,7 +3577,7 @@
           "from_records": 0
         }
       ],
-      "reads_changes": true,
+      "reads_changes": false,
       "data_source": "catalogue",
       "data_source_reason": null
     }

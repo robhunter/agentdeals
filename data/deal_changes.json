@@ -7125,6 +7125,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-07",
+        "detail": "Retracted 2026-11-07: not a change by Pinata. The terms this record calls previous were our own text from a 2026-03-02 bulk import. Pinata's pricing page showed the same Free plan, with 500 files, 1 GB storage, 1 gateway, 10 GB bandwidth and 10K requests a month, in Internet Archive copies from 2025-01-16, 2026-03-06 and 2026-08-03.",
+        "source_url": "https://web.archive.org/web/20260306210048/https://pinata.cloud/pricing"
       }
     },
     {
