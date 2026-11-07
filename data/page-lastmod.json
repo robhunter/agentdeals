@@ -22,12 +22,12 @@
       "changed": "2026-11-06"
     },
     "/ai-free-tiers": {
-      "hash": "f0e0aa2173a5e511",
-      "changed": "2026-11-06"
+      "hash": "fc5541d51e36a4c2",
+      "changed": "2026-11-07"
     },
     "/ai-ml-alternatives": {
-      "hash": "f5754ce2de1b5953",
-      "changed": "2026-11-06"
+      "hash": "fa922e570bce6c91",
+      "changed": "2026-11-07"
     },
     "/alternative-to": {
       "hash": "d5762005aa2d2a8c",
@@ -1108,8 +1108,8 @@
       "changed": "2026-11-06"
     },
     "/category/ai-ml": {
-      "hash": "999f04517a0a5665",
-      "changed": "2026-11-06"
+      "hash": "4f1bf6d932062a96",
+      "changed": "2026-11-07"
     },
     "/category/analytics": {
       "hash": "925ff8ee4cc6e9af",
@@ -3219,8 +3219,8 @@
       "daily": true
     },
     "/free-ai-stack": {
-      "hash": "a59aeec0a4f8a98d",
-      "changed": "2026-11-06"
+      "hash": "9a79685381e4b247",
+      "changed": "2026-11-07"
     },
     "/free-devops-stack": {
       "hash": "cae6f87a3af247f6",
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-06"
     },
     "/stack-check": {
-      "hash": "7da0cd4737ece6cb",
+      "hash": "e42cb9f5ce37ff5c",
       "changed": "2026-11-07"
     },
     "/stacks": {

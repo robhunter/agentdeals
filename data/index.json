@@ -10842,6 +10842,59 @@
           "quote": "This will result in a 402 Payment Required error",
           "url": "https://developers.deepgram.com/docs/errors",
           "read_on": "2026-10-23"
+        },
+        {
+          "text": "Rate limits apply per project, not per account or API key. Creating additional projects under the same account does not grant additional concurrency. Secondary projects on a self-serve account are limited to a single concurrent stream. Using additional projects or accounts to work around the limits is detected and violates Deepgram's Terms of Service.",
+          "quote": "Secondary projects created on a self-serve account are limited to a single concurrent stream by design.",
+          "url": "https://developers.deepgram.com/reference/api-rate-limits",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Pay as You Go allows up to 45 concurrent Voice Agent API connections. Aura and Aura-2 REST TTS allow 15 concurrent requests. Aura and Aura-2 streaming TTS allow 45 concurrent requests. Flux TTS REST allows 15 concurrent requests in North America and 5 in Europe, Australia and India.",
+          "quote": "Up to 45 concurrent connections",
+          "url": "https://developers.deepgram.com/reference/api-rate-limits",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Deepgram offers a dedicated EU endpoint at api.eu.deepgram.com for data processing within the European Union. Pay as You Go limits apply to this endpoint, and also to api.au.deepgram.com and api.in.deepgram.com.",
+          "quote": "We offer a dedicated EU endpoint to ensure data processing stays within the European Union (api.eu.deepgram.com).",
+          "url": "https://deepgram.com/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Deepgram's terms, section 2.4, forbid use of the Services or any Output \"for competitive purposes, including model training, benchmarking and other competitive analysis, or developing competing models, products or services\".",
+          "quote": "use or access our Services or any Output for competitive purposes, including model training, benchmarking and other competitive analysis, or developing competing models, products or services",
+          "url": "https://deepgram.com/terms",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Deepgram's terms, section 2.4, prohibit resale or redistribution of the Services on a stand-alone basis. Integration into the user's own Application is allowed when the Application contributes material independent functionality beyond Deepgram's Services.",
+          "quote": "Resell, redistribute, or make available any portion of our Services on a stand-alone basis.",
+          "url": "https://deepgram.com/terms",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Refund requests for unused credits purchased within the last 30 days go to consolebilling@deepgram.com. Deepgram reviews each account and processes eligible refunds.",
+          "quote": "To request a refund for unused credits purchased within the last 30 days, please contact",
+          "url": "https://deepgram.com/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Self-hosted deployment through Amazon SageMaker requires only an AWS account. Deployment with Docker/Podman or Kubernetes requires a Deepgram Enterprise Plan.",
+          "quote": "is the fastest path and requires only an AWS account, while deploying with Docker/Podman or Kubernetes requires a Deepgram Enterprise Plan.",
+          "url": "https://developers.deepgram.com/docs/self-hosted-introduction",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Deepgram on Amazon SageMaker is billed through AWS Marketplace. The monthly cost is the AWS charge for the instances that run the endpoint plus Deepgram's license charge for the audio or text processed.",
+          "quote": "Your monthly cost is the AWS charge for the instances that run the endpoint plus the Deepgram license charge for the audio or text you process.",
+          "url": "https://developers.deepgram.com/docs/amazon-sagemaker",
+          "read_on": "2026-11-07",
+          "operating_detail": true
         }
       ]
     },
