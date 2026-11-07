@@ -1088,7 +1088,7 @@
       "daily": true
     },
     "/brevo-vs-resend": {
-      "hash": "efdec2ccd052be1c",
+      "hash": "49d0e2c897f52e40",
       "changed": "2026-11-07"
     },
     "/budget-builder": {
@@ -4493,8 +4493,8 @@
       "daily": true
     },
     "/vendor/brevo": {
-      "hash": "52a988ec4fcafbfc",
-      "changed": "2026-11-06"
+      "hash": "8866e0ece8543394",
+      "changed": "2026-11-07"
     },
     "/vendor/brex-partner-perks": {
       "hash": "b4619b6cd973646c",

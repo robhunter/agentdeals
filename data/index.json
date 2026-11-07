@@ -3201,6 +3201,13 @@
           "quote": "If you have a free plan, the logo will always be displayed in your footer.",
           "url": "https://help.brevo.com/hc/en-us/articles/209429285-Will-my-contacts-know-that-I-m-using-Brevo",
           "read_on": "2026-11-06"
+        },
+        {
+          "text": "Brevo stores transactional logs indefinitely by default. An account can set a retention rule of 1 to 24 months. Brevo deletes email events older than 24 months for accounts with more than 10 million email events.",
+          "quote": "Transactional logs and email previews are stored indefinitely by default. If you never configure a retention rule, your logs will not be automatically deleted. … You can store logs for anywhere between 1 and 24 months. … If your account has sent more than 10 million email events, an additional platform-wide policy applies: any events older than 24 months will be automatically deleted, regardless of your custom settings.",
+          "url": "https://help.brevo.com/hc/en-us/articles/4415743225746-Configure-a-custom-retention-period-for-your-transactional-logs-and-email-previews",
+          "read_on": "2026-11-07",
+          "operating_detail": true
         }
       ]
     },
