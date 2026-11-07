@@ -531,6 +531,11 @@
       "vendor": "Storj",
       "tier": "Trial",
       "since": "2026-11-02"
+    },
+    {
+      "vendor": "EmailJS",
+      "tier": "Free",
+      "since": "2026-11-08"
     }
   ]
 }

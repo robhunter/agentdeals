@@ -1208,8 +1208,8 @@
       "changed": "2026-11-06"
     },
     "/category/email": {
-      "hash": "4a7a51c98fa688d5",
-      "changed": "2026-11-06"
+      "hash": "b62de6f195cd8ff5",
+      "changed": "2026-11-07"
     },
     "/category/error-tracking": {
       "hash": "2033f61202a80939",
@@ -3169,8 +3169,8 @@
       "changed": "2026-11-03"
     },
     "/email-alternatives": {
-      "hash": "3c7d17de728f82c1",
-      "changed": "2026-11-06"
+      "hash": "50c1ad94431e705c",
+      "changed": "2026-11-07"
     },
     "/email-comparison-2026": {
       "hash": "30bb022a3c647472",
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-06"
     },
     "/stack-check": {
-      "hash": "1044bffce7a073f8",
+      "hash": "bd7ab65164193259",
       "changed": "2026-11-07"
     },
     "/stacks": {
@@ -5511,8 +5511,8 @@
       "changed": "2026-11-06"
     },
     "/vendor/emailjs": {
-      "hash": "035b2a7431f6db20",
-      "changed": "2026-11-06"
+      "hash": "1c8b27eb2785f8c9",
+      "changed": "2026-11-07"
     },
     "/vendor/emaillabs-io": {
       "hash": "d33935a40cfe45bb",
