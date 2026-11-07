@@ -974,6 +974,69 @@
           "quote": "We require a credit card to prevent fraud and abuse.",
           "url": "https://www.koyeb.com/docs/faqs/pricing",
           "read_on": "2026-10-22"
+        },
+        {
+          "text": "Koyeb verifies the card with a $29 pre-authorization hold, cancelled immediately, and charges the pro-rated amount for the selected plan at sign-up. Account validation usually takes a few minutes and can take up to 3 business days.",
+          "quote": "We verify the card you enter by placing a $29 pre-authorization hold and immediately canceling it. … Right after we place the $29 pre-authorization hold to verify your card, we also charge you the pro-rated amount for the plan you select. … This process usually only takes a few minutes and but occasionally can take up to 3 business days.",
+          "url": "https://www.koyeb.com/docs/faqs/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb bills GPU instances by the second. The cheapest GPU, the RTX-4000-SFF-ADA, costs $0.50 an hour. The L4 costs $0.70 an hour. The A100 costs $1.60 an hour. The H100 costs $2.50 an hour. The H200 costs $3.00 an hour. The B200 costs $5.50 an hour.",
+          "quote": "Only pay for what you use, by the second. … RTX-4000-SFF-ADA 20GB VRAM … $0.50 /hr … L4 24GB VRAM … $0.70 /hr … A100 80GB VRAM … $1.60 /hr … H100 80GB VRAM … $2.50 /hr … H200 141GB VRAM … $3.00 /hr … B200 180GB VRAM … $5.50 /hr",
+          "url": "https://www.koyeb.com/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb's Scale-to-Zero is in public preview and requires a Standard CPU or GPU instance with minimum instances set to zero. The default idle period is 5 minutes; the Pro plan allows up to 6 hours, Scale and Enterprise up to 12 hours.",
+          "quote": "Scale-to-Zero is currently in public preview. To enable Scale-to-Zero on your Services, you need to use a Standard CPU or GPU Instance and set the minimum number of Instances to zero. … Standard CPU and GPU Instances default idle period is set to 5 minutes. … For organizations on the Pro plan: up to 6 hours … For organizations on the Scale or Enterprise plan: up to 12 hours",
+          "url": "https://www.koyeb.com/docs/run-and-scale/scale-to-zero",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb's Agent Skills and MCP server (@koyeb/mcp-server) let coding agents such as Claude Code, Codex and Cursor create apps, manage services and inspect deployments. The MCP server takes a Koyeb API token.",
+          "quote": "Coding agents can interact with Koyeb to create apps, manage services, and inspect deployments without leaving your editor. There are two integration paths: Agent Skills … MCP server … The skills are authored in the Agent Skills open format and work with Agent Skills-compatible products, including VS Code, Cursor, Codex, Mistral Vibe, Claude Code, and OpenCode. … provide a Koyeb API token via the KOYEB_TOKEN environment variable",
+          "url": "https://www.koyeb.com/docs/integrations/coding-agents",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb Sandboxes run AI-generated and untrusted code in isolated environments. They are created with the Koyeb Python or JavaScript SDK and a Koyeb API token.",
+          "quote": "Sandboxes provide fully isolated, secure environments to safely execute AI-generated and untrusted code at scale. … Sandboxes are created programmatically using the Koyeb Python SDK. Calls to the Koyeb Python SDK must be authenticated using a Koyeb API Token.",
+          "url": "https://www.koyeb.com/docs/sandboxes/sandbox-lifecycle",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb has no spending limit feature yet.",
+          "quote": "We are working on a spending limits feature and hope to offer it soon.",
+          "url": "https://www.koyeb.com/docs/faqs/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb does not charge for paused services.",
+          "quote": "Will I be charged if my Services are paused? No, you will only be charged for unpaused Services.",
+          "url": "https://www.koyeb.com/docs/faqs/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Koyeb's Scale plan has a 99.9% uptime SLA and its Enterprise plan 99.99%. The Pro plan lists no SLA.",
+          "quote": "Scale $299/mo +compute … 99.9% uptime SLA … Enterprise Custom +compute … 99.99% uptime SLA",
+          "url": "https://www.koyeb.com/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Early-stage startups can get up to $30k in Koyeb credits.",
+          "quote": "Early stage startup Get up to $30k in credits to accelerate your go-to-market with high-performance cloud infrastructure.",
+          "url": "https://www.koyeb.com/pricing",
+          "read_on": "2026-11-07",
+          "operating_detail": true
         }
       ]
     },
