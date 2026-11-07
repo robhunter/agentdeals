@@ -1,5 +1,129 @@
 {
-  "proposals": [],
+  "proposals": [
+    {
+      "proposal_id": "2026-11-07/screenshotlayer/record_corrected",
+      "proposed_on": "2026-11-07",
+      "vendor": "Screenshotlayer",
+      "change_type": "record_corrected",
+      "date": "2026-11-07",
+      "date_source": "discovered",
+      "summary": "Free tier still exists at 100 snapshots/month. Lists 256-bit HTTPS Encryption as a feature and states paid plans 'ensure secure datastreams via 256-bit HTTPS Encryption'. The free plan's feature set is described as limited, and the page does not confirm the free tier lacks HTTPS.",
+      "tier": "Free Plan",
+      "tier_direction": "unchanged",
+      "previous_state": "Website screenshot capture API — free tier: 100 screenshots/month. Supports PNG, JPEG, GIF output. No HTTPS encryption or CDN on free tier. Paid plans from $19.99/mo for 10K captures",
+      "current_state": "Free Plan is $0.00/mo with 100 Snapshots, overage fees apply, no support, CDN support, advanced features, and full customization; paid plans start at $19.99/mo for 10,000 snapshots and include 256-bit HTTPS Encryption.",
+      "impact": "low",
+      "source_url": "https://screenshotlayer.com/pricing",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-07",
+      "restatement": [
+        {
+          "url": "https://screenshotlayer.com/pricing",
+          "description": "Website screenshot capture API — Free Plan is $0.00/mo with 100 Snapshots, overage fees apply, no support, CDN support, advanced features, and full customization; paid plans start at $19.99/mo for 10,000 snapshots and include 256-bit HTTPS Encryption."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-07/miro/limits_increased",
+      "proposed_on": "2026-11-07",
+      "vendor": "Miro",
+      "change_type": "limits_increased",
+      "date": "2026-11-07",
+      "date_source": "discovered",
+      "summary": "The Free plan's AI credits and integrations count differ from previously: the page lists 'Explore AI' with no stated monthly AI credit allowance for Free, and '250+ integrations' instead of 160+.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Collaborative whiteboard — 3 editable boards, unlimited team members, 10 AI credits/month, 5 Talktracks, 160+ app integrations including Zoom, Slack, and Google Drive",
+      "current_state": "Free plan: 3 editable boards, 7000+ templates, formats incl. Docs, Tables, Slides, and Kanban, Explore AI (generate diagrams, tables, summaries, remove image backgrounds, connect tools like Claude, Cursor, or Copilot via MCP), 250+ integrations (Microsoft, Slack, Google, Adobe). No AI credit amount or Talktracks limit is stated for Free.",
+      "impact": "low",
+      "source_url": "https://miro.com/pricing",
+      "category": "Diagramming",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-07",
+      "restatement": [
+        {
+          "url": "https://miro.com/pricing",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "10 credits per month"
+          ]
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-07/transfernow/limits_increased",
+      "proposed_on": "2026-11-07",
+      "vendor": "transfernow",
+      "change_type": "limits_increased",
+      "date": "2026-11-07",
+      "date_source": "discovered",
+      "summary": "The current pricing page lists '100 GB of storage' under TransferNow Free. The Starter plan is also now 3 €/month on a 2-year plan with 10 GB per transfer, 100 GB of storage, and 30-day availability, matching the stored Starter details. The Free tier's storage terms differ.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "TransferNow Free includes 5 GB per transfer with files available for 7 days and requires no sign-up. The Free plan has no account storage. Starter costs 3 euros a month on a 2-year plan and adds 10 GB per transfer, 100 GB of storage, and 30-day file availability.",
+      "current_state": "TransferNow Free includes 5 GB per transfer, 100 GB of storage, retention up to 7 days, no sign-up, and no account storage is not stated; the page lists 100 GB of storage for Free.",
+      "impact": "medium",
+      "source_url": "https://www.transfernow.net/en/prices",
+      "category": "Storage",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-07",
+      "restatement": [
+        {
+          "url": "https://www.transfernow.net/en/prices",
+          "refused": "reading_describes_the_page_not_the_terms"
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-07/fullstory-com/limits_increased",
+      "proposed_on": "2026-11-07",
+      "vendor": "FullStory.com",
+      "change_type": "limits_increased",
+      "date": "2026-11-07",
+      "date_source": "discovered",
+      "summary": "The current pricing page states FullstoryFree supports up to 10 users.",
+      "tier": "FullstoryFree",
+      "tier_direction": "widened",
+      "previous_state": "30,000 sessions/month with 12 months data retention and three user seats.",
+      "current_state": "FullstoryFree includes 30,000 monthly sessions, 12 months of analytics retention, and access for up to 10 users.",
+      "impact": "low",
+      "source_url": "https://www.fullstory.com/pricing",
+      "category": "Analytics",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-07",
+      "restatement": []
+    },
+    {
+      "proposal_id": "2026-11-07/cacoo-com/limits_reduced",
+      "proposed_on": "2026-11-07",
+      "vendor": "cacoo.com",
+      "change_type": "limits_reduced",
+      "date": "2026-11-07",
+      "date_source": "discovered",
+      "summary": "Free plan sheet limit changed from 6 sheets to 1 sheet",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Online real-time diagrams (flowchart, UML, network). Free plan: unlimited users, 6 sheets max, real-time editing, PNG export, templates & shapes, comment & chat, code-to-graph, kanban tool, media library. In-app video chat limited to 3 users; 50 activity entries per diagram; no revision history or premium templates.",
+      "current_state": "Free plan: Unlimited users, 1 sheet, Templates & shapes, PNG exports, Real-time editing, In-app video chat, Comment & chat, Follow mode, Code-to-graph, Kanban tool, Media library, Cacoo Academy; activity entries per diagram up to 50; in-app video up to 3 users",
+      "impact": "high",
+      "source_url": "https://nulab.com/pricing/cacoo/",
+      "category": "Diagramming",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-07",
+      "restatement": [
+        {
+          "url": "https://nulab.com/pricing/cacoo/",
+          "description": "Online real-time diagrams (flowchart, UML, network) — Free plan: Unlimited users, 1 sheet, Templates & shapes, PNG exports, Real-time editing, In-app video chat, Comment & chat, Follow mode, Code-to-graph, Kanban tool, Media library, Cacoo Academy; activity entries per diagram up to 50; in-app video up to 3 users"
+        }
+      ]
+    }
+  ],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
