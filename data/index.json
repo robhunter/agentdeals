@@ -780,6 +780,24 @@
           "quote": "Sandboxes are available on every plan.",
           "url": "https://docs.railway.com/sandboxes",
           "read_on": "2026-11-03"
+        },
+        {
+          "text": "SMTP is only available on Railway's Pro plan and above. SMTP is disabled on the Free, Trial, and Hobby plans. Those plans must use transactional email services with HTTPS APIs.",
+          "quote": "SMTP is only available on the Pro plan and above.",
+          "url": "https://docs.railway.com/networking/outbound-networking",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "The Limited Trial for trial accounts not verified through GitHub has restricted outbound network access and only a limited set of ports. Verification is an automated process at railway.com/verify. Railway does not respond to requests for verification. The Hobby plan unlocks the full experience.",
+          "quote": "Specifically, services on the Limited Trial have restricted outbound network access and only a limited set of ports are available.",
+          "url": "https://docs.railway.com/pricing/free-trial",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Railway deletes stateful volumes created by Trial accounts 30 days after the expiration of the trial credits. An upgrade retains the data.",
+          "quote": "Railway deletes stateful volumes created by Trial accounts 30 days after the expiration of your credits.",
+          "url": "https://docs.railway.com/pricing/free-trial",
+          "read_on": "2026-11-07"
         }
       ],
       "restatement_reverted": {

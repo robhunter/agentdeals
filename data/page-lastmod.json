@@ -829,15 +829,15 @@
       "changed": "2026-11-01"
     },
     "/aws-app-runner-migration": {
-      "hash": "0529a51e83c6ec6b",
+      "hash": "ee8f008bb604bdbc",
       "changed": "2026-11-07"
     },
     "/aws-free-tier-2026": {
-      "hash": "6589ba35b641aa7a",
+      "hash": "39bbaec78e1a2939",
       "changed": "2026-11-07"
     },
     "/azure-free-tier-2026": {
-      "hash": "d89090a1982547db",
+      "hash": "721511b0b07aa84a",
       "changed": "2026-11-07"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -1144,7 +1144,7 @@
       "changed": "2026-11-06"
     },
     "/category/cloud-hosting": {
-      "hash": "d5a099f20397c793",
+      "hash": "2f8bf3cd580d0dc4",
       "changed": "2026-11-07"
     },
     "/category/cloud-iaas": {
@@ -2407,8 +2407,8 @@
       "changed": "2026-11-07"
     },
     "/compare/netlify-vs-railway": {
-      "hash": "f80db13af1787baa",
-      "changed": "2026-11-06"
+      "hash": "e41d9e2052cc525b",
+      "changed": "2026-11-07"
     },
     "/compare/netlify-vs-render": {
       "hash": "316bb95e8a7a6916",
@@ -2535,12 +2535,12 @@
       "changed": "2026-10-22"
     },
     "/compare/railway-vs-render": {
-      "hash": "261ab4655d071bb5",
+      "hash": "12e7cf36ea481d99",
       "changed": "2026-11-07"
     },
     "/compare/railway-vs-supabase": {
-      "hash": "64edb7bb6531718a",
-      "changed": "2026-11-03"
+      "hash": "c1f1547432e1a39b",
+      "changed": "2026-11-07"
     },
     "/compare/rapidapi-vs-treblle": {
       "hash": "e8d90e27bc40d8a9",
@@ -3161,7 +3161,7 @@
       "changed": "2026-11-06"
     },
     "/digitalocean-free-tier-2026": {
-      "hash": "c8243109374aff19",
+      "hash": "d9fd5344cabc170f",
       "changed": "2026-11-07"
     },
     "/disclosure": {
@@ -3185,7 +3185,7 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "b5dddf3b172db255",
+      "hash": "e946b66f5feaa3ed",
       "changed": "2026-11-07"
     },
     "/events": {
@@ -3277,7 +3277,7 @@
       "changed": "2026-11-03"
     },
     "/gcp-free-tier-2026": {
-      "hash": "e6a3a475787f6055",
+      "hash": "cdb1d496e5558bb7",
       "changed": "2026-11-07"
     },
     "/gemini-api-pricing-2026": {
@@ -3293,8 +3293,8 @@
       "changed": "2026-11-05"
     },
     "/google-developer-program-2026": {
-      "hash": "0bcbe344fbcb98d8",
-      "changed": "2026-11-06"
+      "hash": "14d293f67ab06980",
+      "changed": "2026-11-07"
     },
     "/groq-vs-hugging-face": {
       "hash": "fe077d97ed850219",
@@ -3325,27 +3325,27 @@
       "changed": "2026-11-03"
     },
     "/heroku-alternatives": {
-      "hash": "419101613b8e37d3",
+      "hash": "40d92e113a39e6d7",
       "changed": "2026-11-07"
     },
     "/hetzner-alternatives": {
-      "hash": "27ab0e504f1ea3f1",
+      "hash": "6b28c7cc2ab3b751",
       "changed": "2026-11-07"
     },
     "/hetzner-pricing-2026": {
-      "hash": "4520a77bd3fdef67",
+      "hash": "a3f802056ff34e0f",
       "changed": "2026-11-07"
     },
     "/hosting-alternatives": {
-      "hash": "9b5545595441f8cb",
+      "hash": "81ecc6299b028125",
       "changed": "2026-11-07"
     },
     "/hosting-free-tier-comparison-2026": {
-      "hash": "65b2296676c5a3e8",
+      "hash": "4ecae89568edcbe2",
       "changed": "2026-11-07"
     },
     "/hosting-pricing": {
-      "hash": "3ec44da81e402eb5",
+      "hash": "8bec7ae17baa66f3",
       "changed": "2026-11-07"
     },
     "/ide-code-editors-alternatives": {
@@ -3432,7 +3432,7 @@
       "changed": "2026-11-06"
     },
     "/railway-vs-render": {
-      "hash": "b734699f85c4042f",
+      "hash": "72af7dfd0f47cd3e",
       "changed": "2026-11-07"
     },
     "/redis-alternatives": {
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-06"
     },
     "/stack-check": {
-      "hash": "bd7ab65164193259",
+      "hash": "7da0cd4737ece6cb",
       "changed": "2026-11-07"
     },
     "/stacks": {
@@ -9663,11 +9663,11 @@
       "changed": "2026-11-06"
     },
     "/vercel-alternatives": {
-      "hash": "7363e1da01fe2202",
+      "hash": "a4c182f8786f4c9f",
       "changed": "2026-11-07"
     },
     "/vercel-vs-netlify": {
-      "hash": "9341d402bb21ca5c",
+      "hash": "eac9f87bce521a95",
       "changed": "2026-11-07"
     },
     "/whatsapp-business-api-pricing-2026": {
