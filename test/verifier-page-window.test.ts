@@ -20,7 +20,7 @@ for (const [name, reader, label] of [
 ] as const) {
   describe(`${name} page window`, () => {
     it("receives the saved storage table past the former cut", async () => {
-      assert.ok(page.indexOf("Class B Operations 50,000") > 45_000);
+      assert.equal(page.indexOf("Class B Operations 50,000"), 45_502);
       const prompt = await outgoing(reader, page);
       assert.ok(prompt.includes(page));
       assert.ok(prompt.includes("Class B Operations 50,000"));
