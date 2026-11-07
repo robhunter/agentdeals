@@ -2523,6 +2523,18 @@
     {
       "vendor": "Crisp",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-16 (repeats_a_refused_reading) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "Crisp's Free plan still exists with 2 seats and unlimited conversations, but the page now states 100 customer profiles (contacts), down from the 100 contacts in the stored info it is consistent, however the description details differ; the free tier also now explicitly includes no AI credits.",
+      "previous_state": "Customer messaging platform — 2 seats, 100 contacts, unlimited conversations. Website chat widget, shared inbox, desktop/mobile apps",
+      "current_state": "Free Forever plan for solopreneurs and entrepreneurs: 2 seats included, no AI credits included, 100 Customer Profiles, unlimited conversations, 0 sub-inboxes, website chat widget, shared inbox, mobile apps, desktop apps, chat SDKs, contact form, e-commerce integrations (Shopify, Adobe, WooCommerce, Prestashop), push notifications.",
+      "source_url": "https://crisp.chat/en/pricing/",
+      "category": "Messaging",
+      "refused_date": "2026-11-07"
+    },
+    {
+      "vendor": "Crisp",
+      "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-09-09 (states_no_difference) stated the same 2 figures, so the page showed these terms before the date this record gives",
       "summary": "The free tier now includes a limit of 100 customer profiles, whereas previously it was unlimited conversations. The free tier also now includes features like mobile apps and a chat SDK, which were not mentioned in the stored deal info.",
@@ -2615,6 +2627,18 @@
       "source_url": "https://cronitor.io/pricing",
       "category": "Monitoring",
       "refused_date": "2026-10-07"
+    },
+    {
+      "vendor": "Crowdin",
+      "change_type": "pricing_model_change",
+      "reason": "confirmed_unchanged",
+      "detail": "The report only restates the stored CDN detail and adds no new or conflicting terms.",
+      "summary": "The page also mentions CDN for Translations is free up to 1M requests / 10GB. Is a feature, not a limit of the free tier itself.",
+      "previous_state": "Localization management. The Free plan is $0 a month: 60,000 hosted words, 1 private project, unlimited public projects, 1 integration, unlimited translators and Crowdin AI. Users on the Free plan donate their translations to Crowdin's translation memory. Pro starts at $50 a month (2 private projects), Team at $150 and Team+ at $450. Open-source and non-profit projects can apply for a free Open Source License. The CDN for over-the-air translations is free up to 1M requests and 10 GB of data transfer. CLI, GitHub integration, REST API",
+      "current_state": "Start free is available, and there is a 2 months FREE offer for indie developers and crowdsourcing.",
+      "source_url": "https://crowdin.com/pricing",
+      "category": "Localization",
+      "refused_date": "2026-11-07"
     },
     {
       "vendor": "crypteron.com",
@@ -4499,6 +4523,18 @@
       "refused_date": "2026-10-20"
     },
     {
+      "vendor": "GitGuardian",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already listed ggshield CLI/pre-commit hooks and VSCode extension as included, but the live page now marks CLI/pre-commit hooks as 'Limited'; however, the report's claimed removals of 550+ secret types and VSCode extension are not supported by the current page text, and the historical-scan wording difference is only phrasing.",
+      "summary": "The free Starter plan no longer lists the 550+ secret types, CLI (ggshield) pre-commit hooks, or VSCode extension as included features. The page now shows ggshield CLI + pre-commit hooks and AI IDE hooks as 'Limited' on Starter, and the free plan's historical scan detection is described as 'Up to 500 historical scan detection' while previously '500 historical scan detections'.",
+      "previous_state": "Secrets detection for up to 25 developers — 550+ secret types, unlimited real-time scanning, 500 historical scan detections, CLI (ggshield) for pre-commit hooks, VSCode extension, 10K API calls/month",
+      "current_state": "Starter is $0, includes Internal Secrets Monitoring, up to 25 devs, unlimited real-time scanning, up to 500 historical scan detection, and 10K API calls/month; ggshield CLI + pre-commit hooks and AI IDE hooks are listed as 'Limited' on Starter.",
+      "source_url": "https://www.gitguardian.com/pricing",
+      "category": "Security",
+      "refused_date": "2026-11-07"
+    },
+    {
       "vendor": "GitHub Actions",
       "change_type": "pricing_restructured",
       "reason": "repeats_a_refused_reading",
@@ -5984,13 +6020,13 @@
       "vendor": "ipinfo.io",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-09-22 (same_transition_graded_differently) stated the same 2 figures, so the page showed these terms before the date this record gives",
-      "summary": "The IPinfo Lite plan now has a limit of 50 API requests per month, whereas the stored information states unlimited requests.",
+      "detail": "the reading of this page refused on 2026-10-15 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The IPinfo Lite free plan now lists a 50 API requests/month limit for web lookups, whereas the stored deal info describes it as having unlimited requests.",
       "previous_state": "IP geolocation and data API. IPinfo Lite (free plan): unlimited requests, country and continent-level geolocation only (no city/region/postal code), ASN name and domain. Does NOT include company, carrier, or privacy/anonymity detection (paid plans only). Community support.",
-      "current_state": "IPinfo Lite $0 /mo Free forever · no credit card Geolocation Country level ASN Name and domain only Web lookups 50 API req / mo Unlimited Country-level only",
+      "current_state": "IPinfo Lite is $0/mo, free forever, no credit card. It includes country-level geolocation, ASN name and domain only, and 50 API requests per month for web lookups. It is community-supported and requires attribution.",
       "source_url": "https://ipinfo.io/pricing",
       "category": "Maps/Geolocation",
-      "refused_date": "2026-10-15"
+      "refused_date": "2026-11-07"
     },
     {
       "vendor": "ipinfo.io",
@@ -6575,6 +6611,18 @@
       "source_url": "https://localazy.com/pricing",
       "category": "Localization",
       "refused_date": "2026-09-22"
+    },
+    {
+      "vendor": "localazy.com",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-22 (measures_no_change) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free plan now lists 'Up to 200 source keys' instead of the stored 1000 source language strings; the 1,000-key allowance now appears on the paid Professional plan.",
+      "previous_state": "Free for 1000 source language strings, unlimited languages, unlimited contributors, startup and open source deals",
+      "current_state": "Free plan: 'Small project = free plan!' with 'Up to 200 source keys', 'All essential localization features', 'Unlimited seats & languages', and 'No credit card required!'. Paid plans: Professional $34/mo ($408 billed annually) with 1,000 source keys and 12,000 words translated with Localazy AI; Autopilot $78/mo ($936 billed annually) with 3,500 source keys and 32,000 words; Business $175/mo ($2,100 billed annually) with 10,000 source keys and 68,000 words; Enterprise tailored with SSO, high-volume translation services, SLA/priority support, Localization Manager, initial setup & configuration, backup & restore, audit logs, ISO 27001, SOC2, GDPR.",
+      "source_url": "https://localazy.com/pricing",
+      "category": "Localization",
+      "refused_date": "2026-11-07"
     },
     {
       "vendor": "localazy.com",
@@ -7896,6 +7944,18 @@
       "source_url": "https://nordpass.com/plans/",
       "category": "Password Managers",
       "refused_date": "2026-10-16"
+    },
+    {
+      "vendor": "NordPass",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-16 (repeats_a_refused_claim) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The stored free-tier description says the free plan offers unlimited passwords on 1 device at a time, password generator, import/export, and AutoFill, with no passkey storage, item sharing, email masking, password health, or data breach scanner. The current page's Free plan still exists at $0.00/month for 1 user account and includes Autosave & autofill and Secure storage, but it now lists Access on multiple devices, Password Health, Data Breach Scanner, NordPass Authenticator, and File Attachments as not included. The FAQ also says Free offers unlimited password storage, automatic sync across devices, autosave, autofill, and MFA, which conflicts with the feature table's 'Access on multiple devices' not included.",
+      "previous_state": "Unlimited passwords on 1 device at a time. Password generator. Import/export. AutoFill. No passkey storage, no item sharing, no email masking, no password health, no data breach scanner on free.",
+      "current_state": "Free is $0.00/month for a lifetime, 1 user account, no credit card required. Included: Autosave & autofill, Secure storage. Not included: Access on multiple devices, Password Health, Data Breach Scanner, NordPass Authenticator, File Attachments. The FAQ says Free offers unlimited password storage, automatic sync across devices, autosave, autofill, and multi-factor authentication.",
+      "source_url": "https://nordpass.com/plans/",
+      "category": "Password Managers",
+      "refused_date": "2026-11-07"
     },
     {
       "vendor": "NordPass",
@@ -9230,6 +9290,18 @@
       "refused_date": "2026-10-16"
     },
     {
+      "vendor": "Proton Pass",
+      "change_type": "limits_reduced",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored description says the free tier has 'Integrated 2FA/TOTP' and 'Vault sharing,' but the current pricing page lists the integrated 2FA authenticator and secure vault sharing as paid features (Pass Plus), not included in Proton Free.",
+      "previous_state": "Unlimited logins, notes, and devices. 10 hide-my-email aliases. Integrated 2FA/TOTP. Passkey support. Vault sharing. End-to-end encrypted. Web, browser extension, mobile, and desktop apps. No credit card storage or unlimited aliases on free.",
+      "current_state": "Proton Free is $0.00/month with no credit card required, unlimited logins, notes and credit cards, unlimited devices, browser/mobile/desktop apps, password generator, 10 hide-my-email aliases, alerts for weak and reused passwords, passkeys supported on all devices, easy password import, 1 GB storage, 1 user, 2 vaults, secure sharing with 2 others, and end-to-end encryption. Integrated 2FA and secure vault sharing are listed as paid features (Pass Plus).",
+      "source_url": "https://proton.me/pass/pricing",
+      "category": "Password Managers",
+      "refused_date": "2026-11-07"
+    },
+    {
       "vendor": "pubnub.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -9910,13 +9982,13 @@
       "vendor": "ruttl.com",
       "change_type": "pricing_restructured",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-09-07 (confirmed_unchanged) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
-      "summary": "The free tier now has a limit of 1 user, and the price for the Pro tier is now $18/month/user.",
+      "detail": "the reading of this vendor refused on 2026-10-16 (repeats_a_refused_claim) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "Pro plan price increased from $15/user/month to $18/user/month; free Basic tier limits and features otherwise match.",
       "previous_state": "All-in-one visual feedback tool to collect digital feedback and review websites, PDFs, and images. Free plan: 1 project, 5 pages, 5 users, unlimited guests; integrations with Trello, Slack, Asana, and Jira. Pro begins at $15/user/month.",
-      "current_state": "The Basic plan is free per month/user and includes up to 5 users, 1 project, 5 pages, and unlimited guests. The Pro plan is $18/month/user.",
+      "current_state": "Basic is Free /month/user with up to 5 users, 1 project, 5 pages, unlimited guests, all project types, and Trello, Slack, Asana and Jira integrations. Pro is $18 /month/user with 1 admin + up to 50 users, unlimited projects, unlimited pages, unlimited guests, all project types, and all integrations.",
       "source_url": "https://ruttl.com/pricing/",
       "category": "Communication",
-      "refused_date": "2026-10-16"
+      "refused_date": "2026-11-07"
     },
     {
       "vendor": "Rybbit",
@@ -10471,6 +10543,18 @@
       "refused_date": "2026-10-25"
     },
     {
+      "vendor": "smartforms.dev",
+      "change_type": "limits_reduced",
+      "reason": "null_comparison",
+      "detail": "summary states \"rather than\" between two values of 250 and no stored quantity is absent from the current state",
+      "summary": "The free tier's file storage/bandwidth limit is now described as 250MB Bandwidth/Month rather than 250MB file storage, and the free plan no longer lists Zapier integration, CSV/JSON export, or single email notifications; it now lists multiple e-mail notifications, webhooks, spam protection, and white-labeled solution.",
+      "previous_state": "Powerful and easy form backend for your website, forever free plan allows 50 submissions per month, 250MB file storage, Zapier integration, CSV/JSON export, custom redirect, custom response page, Telegram & Slack bot, single email notifications.",
+      "current_state": "Free forever plan: 50 Submissions/Month, 250MB Bandwidth/Month, custom response page, Telegram & Slack bot, spam protection, custom redirect, multiple e-mail notifications, custom success page, webhooks, white-labeled solution.",
+      "source_url": "https://smartforms.dev/pricing",
+      "category": "Forms",
+      "refused_date": "2026-11-07"
+    },
+    {
       "vendor": "smartlook.com",
       "change_type": "product_deprecated",
       "reason": "restates_stored_quantities",
@@ -10509,15 +10593,15 @@
     },
     {
       "vendor": "smartmockups.com",
-      "change_type": "limits_increased",
+      "change_type": "rebranded",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-23 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The free tier now allows up to 2,500 mockups, whereas the stored information states 200 free mockups.",
+      "detail": "the reading of this page refused on 2026-10-30 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal is for smartmockups.com, but the pricing page is now Canva Mockups (Canva appears to have absorbed/rebranded smartmockups). The free tier now allows up to 2,500 mockups for free, not 200.",
       "previous_state": "Create product mockups, 200 free mockups.",
       "current_state": "As a Canva Free user, you can create and use up to 2,500 mockups for free. If you exceed this total number of uses, you will need a Canva Pro account to create and use more mockups.",
       "source_url": "https://smartmockups.com/",
       "category": "Design",
-      "refused_date": "2026-10-30"
+      "refused_date": "2026-11-07"
     },
     {
       "vendor": "SmartParse",
@@ -12268,6 +12352,18 @@
       "source_url": "https://we.team/",
       "category": "Storage",
       "refused_date": "2026-10-12"
+    },
+    {
+      "vendor": "WeatherXu",
+      "change_type": "restriction",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The Free tier now includes a 'Non-Commercial Use Only' restriction that was not mentioned in the stored deal info.",
+      "previous_state": "Global weather data including current conditions, hourly and daily forecasts, and weather alerts via our API. Integrating AI models and ML systems to analyze and combine multiple weather models to deliver improved forecast accuracy. Free tier includes 10,000 API calls/month.",
+      "current_state": "Free plan: 10,000 API calls/month, $0/month, Real-time weather data, Basic forecasting, Non-Commercial Use Only",
+      "source_url": "https://weatherxu.com/pricing",
+      "category": "Dev Utilities",
+      "refused_date": "2026-11-07"
     },
     {
       "vendor": "WebComponents.dev",
