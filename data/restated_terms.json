@@ -2446,7 +2446,8 @@
       "source_url": "https://www.taskade.com/",
       "record_date": "2026-09-21",
       "change_type": "pricing_restructured",
-      "summary": "The free plan now has limited AI credits (50,000/month) and basic views. The page highlights a new 'Genesis' AI app builder with various paid plans and features, and the free plan is now positioned as a starting point with limitations."
+      "summary": "The free plan now has limited AI credits (50,000/month) and basic views. The page highlights a new 'Genesis' AI app builder with various paid plans and features, and the free plan is now positioned as a starting point with limitations.",
+      "reverted_on": "2026-11-07"
     },
     {
       "vendor": "Ollama Cloud",

@@ -801,7 +801,7 @@
       "changed": "2026-11-07"
     },
     "/api-development-alternatives": {
-      "hash": "2c7103ca39a0b7cc",
+      "hash": "7eb4ac5f703024db",
       "changed": "2026-11-07"
     },
     "/api-development-free-tier-comparison-2026": {
@@ -1116,8 +1116,8 @@
       "changed": "2026-11-07"
     },
     "/category/api-development": {
-      "hash": "5124109cf09cfc7d",
-      "changed": "2026-11-06"
+      "hash": "5baa5c56adad578c",
+      "changed": "2026-11-07"
     },
     "/category/api-gateway": {
       "hash": "b4f56acb65185643",
@@ -1176,7 +1176,7 @@
       "changed": "2026-11-06"
     },
     "/category/databases": {
-      "hash": "e5403ec81441cf3e",
+      "hash": "a91a2ce8a217c510",
       "changed": "2026-11-07"
     },
     "/category/design": {
@@ -1208,7 +1208,7 @@
       "changed": "2026-11-06"
     },
     "/category/email": {
-      "hash": "ac4ff29c02a83cab",
+      "hash": "9374bceb1706e4ba",
       "changed": "2026-11-07"
     },
     "/category/error-tracking": {
@@ -1280,8 +1280,8 @@
       "changed": "2026-11-07"
     },
     "/category/project-management": {
-      "hash": "839412ce86a1fab7",
-      "changed": "2026-11-06"
+      "hash": "7aa3462a4791b680",
+      "changed": "2026-11-07"
     },
     "/category/search": {
       "hash": "4c1efe6acbc63af3",
@@ -1683,7 +1683,7 @@
       "changed": "2026-11-02"
     },
     "/compare/cockroachdb-vs-neon": {
-      "hash": "ffe34ab33fca7bba",
+      "hash": "2eaebfc484155ffb",
       "changed": "2026-11-07"
     },
     "/compare/codeberg-vs-gitgud": {
@@ -2403,7 +2403,7 @@
       "changed": "2026-11-02"
     },
     "/compare/neon-vs-supabase": {
-      "hash": "8c34f77da8fb52cd",
+      "hash": "cd4ccc84ebf0f27f",
       "changed": "2026-11-07"
     },
     "/compare/netlify-vs-railway": {
@@ -2710,7 +2710,7 @@
       "changed": "2026-11-05"
     },
     "/database-alternatives": {
-      "hash": "02513008ef01b0dc",
+      "hash": "40f27e7883468cfe",
       "changed": "2026-11-07"
     },
     "/database-free-tier-comparison-2026": {
@@ -3169,7 +3169,7 @@
       "changed": "2026-11-03"
     },
     "/email-alternatives": {
-      "hash": "f36bd91c35e07e17",
+      "hash": "61eab904ef37cedb",
       "changed": "2026-11-07"
     },
     "/email-comparison-2026": {
@@ -3185,7 +3185,7 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "92044e50bab2ed9e",
+      "hash": "c82b3fcc5394eb19",
       "changed": "2026-11-07"
     },
     "/events": {
@@ -3227,11 +3227,11 @@
       "changed": "2026-11-07"
     },
     "/free-django-stack": {
-      "hash": "f5757e62e922eb34",
+      "hash": "6ac1c060eb230fdf",
       "changed": "2026-11-07"
     },
     "/free-fastapi-stack": {
-      "hash": "15f2cd791f9b484a",
+      "hash": "2342b11ba7e50be0",
       "changed": "2026-11-07"
     },
     "/free-frontend-stack": {
@@ -3239,7 +3239,7 @@
       "changed": "2026-11-07"
     },
     "/free-go-stack": {
-      "hash": "9ce2e205c24c19dd",
+      "hash": "43443943fbedac46",
       "changed": "2026-11-07"
     },
     "/free-llm-apis": {
@@ -3247,11 +3247,11 @@
       "changed": "2026-11-07"
     },
     "/free-nextjs-stack": {
-      "hash": "118b4fe6fc30787a",
+      "hash": "9dd220fb039e56a0",
       "changed": "2026-11-07"
     },
     "/free-saas-stack": {
-      "hash": "41e87fdc08649da6",
+      "hash": "a00b4a2daa3c10a9",
       "changed": "2026-11-07"
     },
     "/free-startup-stack": {
@@ -3365,7 +3365,7 @@
       "changed": "2026-11-04"
     },
     "/mongodb-alternatives": {
-      "hash": "64e86d3ace43ec4e",
+      "hash": "41bf3e80725c5c79",
       "changed": "2026-11-07"
     },
     "/monitoring-alternatives": {
@@ -3377,11 +3377,11 @@
       "changed": "2026-11-07"
     },
     "/neon-vs-supabase": {
-      "hash": "ea6e1f0d9eae03e3",
+      "hash": "6c2a7a032dd9df9f",
       "changed": "2026-11-07"
     },
     "/neon-vs-turso": {
-      "hash": "73aaf15e0827e965",
+      "hash": "636bf275b127a6cf",
       "changed": "2026-11-07"
     },
     "/netlify-vs-render": {
@@ -3420,7 +3420,7 @@
       "changed": "2026-10-09"
     },
     "/project-management-alternatives": {
-      "hash": "a3d06dc55f6f8228",
+      "hash": "e06761b4ba046c87",
       "changed": "2026-11-07"
     },
     "/q1-2026-developer-pricing-report": {
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-07"
     },
     "/stack-check": {
-      "hash": "759cc2d2e2805dd9",
+      "hash": "2d4f9216f87ecc6a",
       "changed": "2026-11-07"
     },
     "/stacks": {
@@ -7638,7 +7638,7 @@
       "changed": "2026-11-07"
     },
     "/vendor/pdfbolt": {
-      "hash": "94b69b1f172eb2cf",
+      "hash": "543c1d74fb078ad5",
       "changed": "2026-11-07"
     },
     "/vendor/pdfendpoint-com": {
@@ -8787,7 +8787,7 @@
       "changed": "2026-11-07"
     },
     "/vendor/taskade-com": {
-      "hash": "b53e045ac1c38543",
+      "hash": "43007547b9331148",
       "changed": "2026-11-07"
     },
     "/vendor/tavily-ai": {
