@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-06",
+  "generated": "2026-11-07",
   "pages": {
     "/": {
       "daily": true
@@ -1088,8 +1088,8 @@
       "daily": true
     },
     "/brevo-vs-resend": {
-      "hash": "d371d8df65c8d9c3",
-      "changed": "2026-11-06"
+      "hash": "efdec2ccd052be1c",
+      "changed": "2026-11-07"
     },
     "/budget-builder": {
       "hash": "c489286bcd53d8c5",
@@ -1391,8 +1391,8 @@
       "changed": "2026-11-03"
     },
     "/compare/10minutemail-vs-resend": {
-      "hash": "0aa127f381a3d286",
-      "changed": "2026-11-06"
+      "hash": "1bcfb96cc9583ad0",
+      "changed": "2026-11-07"
     },
     "/compare/adapty-io-vs-coinmarketcap": {
       "hash": "1cc72cc2b3a80e99",
@@ -1931,8 +1931,8 @@
       "changed": "2026-10-12"
     },
     "/compare/emaillabs-io-vs-resend": {
-      "hash": "e01360eca029193f",
-      "changed": "2026-11-06"
+      "hash": "18ff839b8b8ad8aa",
+      "changed": "2026-11-07"
     },
     "/compare/exa-vs-letta": {
       "hash": "c880a10c06da4108",
@@ -2555,8 +2555,8 @@
       "changed": "2026-11-06"
     },
     "/compare/resend-vs-mail-tester-com": {
-      "hash": "8b2bbca537c9af5c",
-      "changed": "2026-11-06"
+      "hash": "de931fbdac72f859",
+      "changed": "2026-11-07"
     },
     "/compare/resmush-it-vs-wormhol-org": {
       "hash": "72c22cbf6c93f3ce",
@@ -3405,8 +3405,8 @@
       "changed": "2026-11-03"
     },
     "/postmark-vs-resend": {
-      "hash": "2a978c06cdaa8420",
-      "changed": "2026-11-06"
+      "hash": "fe867218c655d490",
+      "changed": "2026-11-07"
     },
     "/press": {
       "hash": "a2157fffe6e2dcfe",
@@ -8081,8 +8081,8 @@
       "changed": "2026-11-06"
     },
     "/vendor/resend": {
-      "hash": "494ca47db0d58d5a",
-      "changed": "2026-11-06"
+      "hash": "4ab5ef69560088d5",
+      "changed": "2026-11-07"
     },
     "/vendor/resizeappicon-com": {
       "hash": "c3f7930ed13838af",
