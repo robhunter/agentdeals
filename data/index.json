@@ -22324,9 +22324,9 @@
     {
       "vendor": "EmailJS",
       "category": "Email",
-      "description": "This is not an entire email server; this is just an email client that you can use to send emails right from the client without exposing your credentials, the free tier has 200 monthly requests, 2 email templates, Requests up to 50Kb, Limited contacts history.",
+      "description": "200 requests a month, 2 email templates, requests up to 50 KB, 500 saved contacts, 7 days of email history and no attachments. EmailJS sends email from client-side code through an email service the user connects, such as Gmail, Outlook or a transactional email service, and keeps the service's credentials on its servers.",
       "tier": "Free",
-      "url": "https://www.emailjs.com/",
+      "url": "https://www.emailjs.com/pricing/",
       "tags": [
         "email",
         "free-for-dev"
@@ -22337,7 +22337,80 @@
         "outcome": "ok",
         "detail": "the page names EmailJS, renders \"free tier\" and no amount, and its markup states 1 typed price (USD 0)",
         "read": "markup"
-      }
+      },
+      "conditions": [
+        {
+          "text": "EmailJS's Free plan needs no credit card.",
+          "quote": "No credit card is required. You only need to provide your name and email address to create a free account and start sending emails directly from your application code.",
+          "url": "https://www.emailjs.com/pricing/",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "EmailJS does not charge automatic overage fees. Once the monthly request limit is reached, additional requests are dropped. Notification emails are sent at 80%, 95% and 100% of the quota.",
+          "quote": "To prevent unexpected overage charges, EmailJS does not charge automatic overage fees. Instead, once you hit 100% of your plan's monthly request limit, additional API requests will be safely dropped by our servers. … We will send you multiple email notifications when your account reaches 80%, 95% and 100% of your quota so you have plenty of time to upgrade.",
+          "url": "https://www.emailjs.com/pricing/",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "EmailJS's Free plan adds the \"Email sent via EmailJS.com\" footer to emails. Paid plans remove it.",
+          "quote": "Remove EmailJS logo (Your emails don't have the \"Email sent via EmailJS.com\" footer) [Free: -; Personal, Professional, Business: ✓]",
+          "url": "https://www.emailjs.com/pricing/",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "EmailJS accounts registered by \"bots\" or automated methods are not authorized and will be terminated.",
+          "quote": "Accounts registered by \"bots\" or automated methods are not authorized and will be terminated.",
+          "url": "https://www.emailjs.com/legal/terms-of-service/",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Multiple free EmailJS accounts held by one individual or organization are not acceptable use. Free accounts can only be created and maintained by their effective users.",
+          "quote": "Having multiple free accounts is not considered acceptable use of our service (e.g. bulk-signups, a large number of free accounts created by a single organization or individual). Free accounts can also only be created and maintained by their effective users.",
+          "url": "https://www.emailjs.com/legal/terms-of-service/",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "EmailJS may delete a free account inactive for over one year.",
+          "quote": "We reserve the right to delete free accounts that are inactive for over one year. The Company has no obligation to store or forward the contents of terminated accounts, and all data will be permanently erased immediately upon termination.",
+          "url": "https://www.emailjs.com/legal/terms-of-service/",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "API requests from non-browser applications, such as a Node.js server, are disabled by default. They are enabled under Account, Security in the EmailJS dashboard.",
+          "quote": "By default, API requests are disabled for non-browser applications. You need to activate them through Account:Security.",
+          "url": "https://github.com/emailjs-com/emailjs-nodejs",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "EmailJS's send API has a rate limit of 1 request per second.",
+          "quote": "Rate Limit 1 request per second",
+          "url": "https://www.emailjs.com/docs/rest-api/send/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Each EmailJS auto-reply uses one more request from the monthly quota.",
+          "quote": "Auto-Reply will consume an additional request quota.",
+          "url": "https://www.emailjs.com/docs/user-guide/auto-reply/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "The domain allowlist, attachments (up to 500 KB) and footer removal start on the Personal plan at $9 a month with 2,000 requests.",
+          "quote": "Personal For Personal Use $ 9 /mo 2,000 monthly requests 6 email templates Whitelist Unlimited contacts Attachments up to 500kb Completely white label",
+          "url": "https://www.emailjs.com/pricing/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "EmailJS recommends personal email services such as Gmail only for development or very low volume. A personal email account could be blocked if it goes over its provider's daily limit.",
+          "quote": "Note, your personal email account could be blocked if you go over the daily limit of the email provider, and your email address could be flagged as spam if you send unsolicited emails to multiple recipients. Our general recommendation is to use personal email services only for development purposes or for very low volume usage.",
+          "url": "https://www.emailjs.com/docs/user-guide/connecting-email-services/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "EmailLabs.io",
