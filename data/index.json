@@ -3015,6 +3015,27 @@
           "quote": "Broadcast emails sent through the /broadcasts API or through the Broadcasts interface in the dashboard do not count against your transactional email limits. … marketing plans are not limited by the number of emails you can send, but only by the number of contacts you have. … Inboxes do not come with a separate email allowance: every email sent or received through an inbox counts towards your transactional emails quota.",
           "url": "https://resend.com/pricing",
           "read_on": "2026-11-06"
+        },
+        {
+          "text": "The default API rate limit is 10 requests per second per team across all API keys. The limit can be increased for trusted senders upon request.",
+          "quote": "The default maximum rate limit is 10 requests per second per team. This limit applies across all API keys associated with your team. This number can be increased for trusted senders upon request.",
+          "url": "https://resend.com/docs/api-reference/rate-limit",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "The API rate limit is the same on every plan and does not change when upgrading. The Batch Email API sends up to 100 emails per request, counting as one request against the limit.",
+          "quote": "The API rate limit (requests per second) is set per team and is the same on every plan, so upgrading doesn't change it. If you're hitting the limit, the Batch Email API sends up to 100 emails in one request, and each batch request counts as a single request against the limit.",
+          "url": "https://resend.com/pricing",
+          "read_on": "2026-11-06",
+          "operating_detail": true
+        },
+        {
+          "text": "The Free plan has a daily quota of 100 emails, reset at midnight UTC, not a rolling 24-hour window. Paid plans have no daily quota, only a monthly limit.",
+          "quote": "The daily quota applies only to the Free plan. It is a UTC calendar day (00:00–24:00 UTC) and resets at midnight UTC — not a rolling 24-hour window. Paid sending plans have no daily quota, only the monthly limit.",
+          "url": "https://resend.com/docs/api-reference/rate-limit",
+          "read_on": "2026-11-06",
+          "operating_detail": true
         }
       ],
       "tags": [
