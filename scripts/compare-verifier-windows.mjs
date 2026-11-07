@@ -7,18 +7,19 @@ import {verifyOfferAgainstPage as oldVerifier} from './verify-freshness-old-wind
 const output='verifier-window-comparison';
 const sets=JSON.parse(readFileSync(`${output}/sets.json`));
 const pages=JSON.parse(readFileSync(`${output}/pages.json`));
-const results=[];
+const results=JSON.parse(readFileSync(`${output}/seed-results.json`));
 const hash=text=>createHash('sha256').update(text).digest('hex');
 const tasks=[];
 for(const [set,entries] of Object.entries(sets)){
  assert.equal(entries.length,43);
  for(const {offer} of entries){
   const page=pages[offer.url]; assert.ok(page.ok,offer.url); assert.equal(hash(page.text),page.sha256);
-  for(const run of ['old-1','old-2','new']) tasks.push({set,offer,run});
+  for(const run of ['old-1','old-2','new']) if(!results.some(r=>r.set===set&&r.url===offer.url&&r.run===run)) tasks.push({set,offer,run});
  }
 }
-assert.equal(tasks.length,258);
-if(process.argv.includes('--preflight')){console.log('86 listings, 85 shared saved pages, 258 requests');process.exit(0)}
+assert.equal(results.length,255);
+assert.equal(tasks.length,3);
+if(process.argv.includes('--preflight')){console.log('86 listings, 86 shared saved pages, 255 preserved results and 3 replacement requests');process.exit(0)}
 let next=0;
 await Promise.all(Array.from({length:4},async()=>{
  while(next<tasks.length){

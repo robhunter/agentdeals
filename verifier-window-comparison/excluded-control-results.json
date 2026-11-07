@@ -1,0 +1,156 @@
+{
+  "reason": "The ordinary PostHog startups page has 9,827 characters and is outside the stated >12,000-character control population. The YC handbook listing is the matching long-page control.",
+  "results": [
+    {
+      "set": "control",
+      "vendor": "PostHog",
+      "tier": "Startup Credits",
+      "url": "https://posthog.com/startups",
+      "run": "old-2",
+      "started_at": "2026-11-07T18:08:17.113Z",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash",
+        "max_tokens": 400,
+        "temperature": 0,
+        "reasoning": {
+          "enabled": false
+        },
+        "prompt_sha256": "bd004dba61db0e8e6af1ab862bfa65f70535fc5c3214ee90ae888e1563037b5a",
+        "page_sha256": "182de8d9e173046e5357923fbb52a96c8efe83e613bd7e21cbf6fc11704693ff"
+      },
+      "generation_id": "gen-1794074897-uGyjPYxSN8L50rk0yw2j",
+      "usage": {
+        "prompt_tokens": 3033,
+        "completion_tokens": 6,
+        "total_tokens": 3039,
+        "cost": 0.00042714,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00042714,
+          "upstream_inference_prompt_cost": 0.00042462,
+          "upstream_inference_completions_cost": 2.52e-06
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "raw_content": "{\"status\":\"confirmed\"}",
+      "finish_reason": "stop",
+      "verdict": {
+        "status": "confirmed"
+      },
+      "finished_at": "2026-11-07T18:08:17.606Z"
+    },
+    {
+      "set": "control",
+      "vendor": "PostHog",
+      "tier": "Startup Credits",
+      "url": "https://posthog.com/startups",
+      "run": "old-1",
+      "started_at": "2026-11-07T18:08:17.057Z",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash",
+        "max_tokens": 400,
+        "temperature": 0,
+        "reasoning": {
+          "enabled": false
+        },
+        "prompt_sha256": "bd004dba61db0e8e6af1ab862bfa65f70535fc5c3214ee90ae888e1563037b5a",
+        "page_sha256": "182de8d9e173046e5357923fbb52a96c8efe83e613bd7e21cbf6fc11704693ff"
+      },
+      "generation_id": "gen-1794074897-tQnCdef2DMVHe25zly5y",
+      "usage": {
+        "prompt_tokens": 3033,
+        "completion_tokens": 6,
+        "total_tokens": 3039,
+        "cost": 0.000480348,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.000480348,
+          "upstream_inference_prompt_cost": 0.000473148,
+          "upstream_inference_completions_cost": 7.2e-06
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "raw_content": "{\"status\":\"confirmed\"}",
+      "finish_reason": "stop",
+      "verdict": {
+        "status": "confirmed"
+      },
+      "finished_at": "2026-11-07T18:08:18.351Z"
+    },
+    {
+      "set": "control",
+      "vendor": "PostHog",
+      "tier": "Startup Credits",
+      "url": "https://posthog.com/startups",
+      "run": "new",
+      "started_at": "2026-11-07T18:08:17.256Z",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash",
+        "max_tokens": 400,
+        "temperature": 0,
+        "reasoning": {
+          "enabled": false
+        },
+        "prompt_sha256": "2bbe541c8d4646ee0d71d4cbcd6a4de8d98e82d2966cad027bd12e6e387ad8a9",
+        "page_sha256": "182de8d9e173046e5357923fbb52a96c8efe83e613bd7e21cbf6fc11704693ff"
+      },
+      "generation_id": "gen-1794074897-WPt4qTSYuf1XWRaVQRxu",
+      "usage": {
+        "prompt_tokens": 3032,
+        "completion_tokens": 152,
+        "total_tokens": 3184,
+        "cost": 0.00014426,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00014426,
+          "upstream_inference_prompt_cost": 5.306e-05,
+          "upstream_inference_completions_cost": 9.12e-05
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "raw_content": "{\"status\":\"changed\",\"summary\":\"The stored deal info states that credits don't pay for AI tools since 2026-09-14. The current page states this restriction is in place and effective from September 14, 2026.\",\"change_type\":\"restriction\",\"tier\":\"Startup Credits\",\"tier_direction\":\"unchanged\",\"current_state\":\"From September 14, 2026, startup credits can no longer be used towards bills incurred on AI tools such as PostHog Desktop, the PostHog Slack app, Replay Vision, PostHog AI, and Inbox.\",\"impact\":\"medium\",\"effective_date\":\"2026-09-14\"}",
+      "finish_reason": "stop",
+      "verdict": {
+        "status": "changed",
+        "summary": "The stored deal info states that credits don't pay for AI tools since 2026-09-14. The current page states this restriction is in place and effective from September 14, 2026.",
+        "change_type": "restriction",
+        "tier": "Startup Credits",
+        "tier_direction": "unchanged",
+        "current_state": "From September 14, 2026, startup credits can no longer be used towards bills incurred on AI tools such as PostHog Desktop, the PostHog Slack app, Replay Vision, PostHog AI, and Inbox.",
+        "impact": "medium",
+        "effective_date": "2026-09-14"
+      },
+      "finished_at": "2026-11-07T18:08:18.485Z"
+    }
+  ]
+}

@@ -4246,34 +4246,36 @@
       "offer": {
         "vendor": "PostHog",
         "category": "Startup Perks",
-        "description": "$50,000 in PostHog credits for 12 months, plus $12,000 in partner perks, for companies less than 2 years old that have raised less than $5M. Apply from a PostHog account on a paid plan (billed for usage only) that uses the company's email domain and signed up on or after 2023-01-01. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). Y Combinator companies get a separate deal instead; the two don't stack.",
+        "description": "$50,000 a year in PostHog credits for Y Combinator companies in any batch, renewing automatically while the company has raised less than $25M. Apply through PostHog's YC page, linked from Bookface, from a PostHog account on the company's email domain. Not open to YC alumni who started another company, or to a YC company acquired by a non-YC parent. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). It doesn't stack with PostHog for Startups.",
         "tier": "Startup Credits",
-        "url": "https://posthog.com/startups",
+        "url": "https://posthog.com/handbook/marketing/startups",
         "tags": [
           "analytics",
           "product analytics",
           "session replay",
           "feature flags",
+          "yc",
           "startup credits"
         ],
         "verifiedDate": "2026-11-02",
         "eligibility": {
-          "type": "startup",
+          "type": "accelerator",
           "conditions": [
-            "Company less than 2 years old",
-            "Raised less than $5M",
-            "PostHog account on a paid plan, on the company's email domain, signed up on or after 2023-01-01"
+            "Y Combinator company, any batch",
+            "Raised less than $25M",
+            "PostHog account on the company's email domain",
+            "Not acquired by a non-YC parent"
           ],
-          "program": "PostHog for Startups"
+          "program": "PostHog for Y Combinator"
         },
         "source_check": {
           "checked": "2026-11-02",
           "outcome": "ok",
-          "detail": "the page names PostHog as \"posthog\" and states \"$50,000\" and \"$12,000\""
+          "detail": "the page names PostHog as \"posthog\" and states \"$50,000\""
         },
         "free_plan_excerpt": {
-          "text": "$50,000 in PostHog credits for 12 months $12,000 in benefits from partners we like Exclusive PostHog merch Apply now You'll need a PostHog account first",
-          "url": "https://posthog.com/startups",
+          "text": "$50,000 for 12 months",
+          "url": "https://posthog.com/handbook/marketing/startups",
           "read_on": "2026-11-02"
         }
       },
