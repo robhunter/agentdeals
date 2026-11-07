@@ -10267,6 +10267,69 @@
           "quote": "Create your account Username: Email: Password: Password (again):",
           "url": "https://www.pythonanywhere.com/registration/register/beginner/",
           "read_on": "2026-10-22"
+        },
+        {
+          "text": "Free accounts reach only allowlisted sites, through the HTTP proxy at proxy.server:3128. The requests library uses the proxy with no set-up; other libraries need configuring for it, and some do not work through it (libraries that use httplib2 on Python 3, such as twilio). \"[Errno 111] Connection refused\" suggests a library that is not using the proxy. Paid accounts have unrestricted internet access.",
+          "quote": "This is an HTTP proxy at proxy.server:3128.",
+          "url": "https://help.pythonanywhere.com/pages/403ForbiddenError/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Free PythonAnywhere accounts can access api.openai.com, api.anthropic.com, .googleapis.com, api.groq.com, api.mistral.ai, api.deepseek.com, openrouter.ai, api.together.xyz, api.x.ai and api-inference.huggingface.co. Paid accounts have unrestricted access.",
+          "quote": "The following sites are allowlisted for free PythonAnywhere accounts.",
+          "url": "https://www.pythonanywhere.com/whitelist/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Connections to external databases, such as a Postgres server run by another service, require any paid PythonAnywhere plan. PythonAnywhere's own Postgres is a paid add-on.",
+          "quote": "If you have a paid plan, you can connect to databases outside PythonAnywhere.",
+          "url": "https://help.pythonanywhere.com/pages/KindsOfDatabases/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Custom domains are on paid plans only, from the $10-a-month Developer plan. The free Beginner plan's web app runs at your-username.pythonanywhere.com only.",
+          "quote": "All paid plans support custom domains for all of your web apps.",
+          "url": "https://www.pythonanywhere.com/pricing/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "SSH access (ssh.pythonanywhere.com) is on paid plans only. The free Beginner plan has no SSH access.",
+          "quote": "You get unrestricted Internet access from your applications, unlimited in-browser Python, Bash and database consoles, and full SSH access to your account.",
+          "url": "https://www.pythonanywhere.com/pricing/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "The free Beginner plan's web app gets 1 web worker. Requests queue while the worker is busy. The Developer plan gets 3 web workers per web app.",
+          "quote": "If you only have one worker (or if all of your workers are busy) then requests are queued up and served when a worker becomes available.",
+          "url": "https://www.pythonanywhere.com/pricing/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "Always-on tasks are only in paid accounts. The Developer plan allows one always-on task. The Beginner plan has none.",
+          "quote": "Warning -- this will only work in paid accounts",
+          "url": "https://help.pythonanywhere.com/pages/AlwaysOnTasks/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "PythonAnywhere counts 100 CPU-seconds daily for consoles, scheduled tasks, and always-on tasks. Web apps are not counted. Exceeding the limit places processes in the tarpit, where they run at lower priority. Tarpit counters reset daily. \"Being in the tarpit does not affect your web apps.\" PythonAnywhere may kill tarpitted processes if they impact others, especially past ten times the quota.",
+          "quote": "Being in the tarpit does not affect your web apps.",
+          "url": "https://www.pythonanywhere.com/tarpit/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        },
+        {
+          "text": "All paid plans have a 30-day money-back guarantee. Billing is monthly, with cancellation at any time. The minimum contract length is one month.",
+          "quote": "All of our paid plans come with a no-quibble 30-day money-back guarantee",
+          "url": "https://www.pythonanywhere.com/pricing/",
+          "read_on": "2026-11-07",
+          "operating_detail": true
         }
       ],
       "free_plan_excerpt": {
