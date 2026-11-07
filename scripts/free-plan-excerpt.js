@@ -12,7 +12,7 @@ export function textTheReaderSees(pageText) {
 }
 
 export async function readFreePlanExcerpt(client, offer, pageText) {
-  return parseExcerptAnswer(await client.complete(excerptPrompt(offer, textTheReaderSees(pageText))));
+  return parseExcerptAnswer(await client.complete(excerptPrompt(offer, pageText)));
 }
 
 export function collapseWhitespace(text) {
@@ -62,7 +62,9 @@ export function withPlainMarks(text) {
   return Array.from(text, (character) => TYPOGRAPHIC_MARKS.get(character) ?? character).join("");
 }
 
-export function excerptPrompt(offer, pageText) {
+export function excerptPrompt(offer, wholePageText) {
+  const whole = String(wholePageText ?? "");
+  const pageText = textTheReaderSees(whole);
   return `You are copying, word for word, the part of a vendor's pricing page that states the terms of its free plan.
 
 THE PLAN:
@@ -70,7 +72,7 @@ THE PLAN:
 - Category: ${offer.category}
 - Plan: ${offer.tier}
 
-PAGE TEXT (truncated):
+PAGE TEXT (${pageText.length < whole.length ? "truncated" : "whole page"}):
 ${pageText}
 
 Find the words on this page that state the terms of this plan: its price, an allowance or limit, a credit amount, a duration, or who can get it. Copy them exactly as they appear, as one contiguous stretch of the page of at most ${MAX_FREE_PLAN_EXCERPT_LENGTH} characters. Never reword, never leave out words inside the stretch, and never join words that are apart on the page.

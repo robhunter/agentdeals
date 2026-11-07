@@ -1,0 +1,766 @@
+[
+  {
+    "vendor": "Google Cloud Storage",
+    "tier": "Always Free",
+    "url": "https://cloud.google.com/storage/pricing",
+    "source_chars": 81950,
+    "figures": [
+      {
+        "figure": "5 GB",
+        "source_offset": 45465,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "5K",
+        "source_offset": 45496,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "50K",
+        "source_offset": 45521,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "100 GB",
+        "source_offset": 45542,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "OpenAI",
+    "tier": "Pay-as-you-go",
+    "url": "https://developers.openai.com/api/docs/pricing",
+    "source_chars": 20604,
+    "figures": [
+      {
+        "figure": "1M",
+        "source_offset": 12911,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$10.00",
+        "source_offset": 13045,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$50.00",
+        "source_offset": 13052,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$2.00",
+        "source_offset": 13091,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Mapbox",
+    "tier": "Free",
+    "url": "https://www.mapbox.com/pricing",
+    "source_chars": 37280,
+    "figures": [
+      {
+        "figure": "25,000",
+        "source_offset": 17933,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Grafana k6 Cloud",
+    "tier": "Free",
+    "url": "https://grafana.com/pricing/",
+    "source_chars": 22636,
+    "figures": [
+      {
+        "figure": "500",
+        "source_offset": 17180,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Microsoft for Startups",
+    "tier": "Startup Credits",
+    "url": "https://www.microsoft.com/en-us/startups",
+    "source_chars": 19043,
+    "figures": [
+      {
+        "figure": "$150,000",
+        "source_offset": 15463,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "GitHub Actions",
+    "tier": "Free",
+    "url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
+    "source_chars": 15865,
+    "figures": [
+      {
+        "figure": "$0.002",
+        "source_offset": 12573,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Google Gemini API",
+    "tier": "Free (Reduced)",
+    "url": "https://ai.google.dev/pricing",
+    "source_chars": 95280,
+    "figures": [
+      {
+        "figure": "$0.0336",
+        "source_offset": 45623,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$0.0504",
+        "source_offset": 45655,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "2K",
+        "source_offset": 45339,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$0.113",
+        "source_offset": 45691,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Google Maps Platform",
+    "tier": "Free",
+    "url": "https://mapsplatform.google.com/pricing/",
+    "source_chars": 62986,
+    "figures": [
+      {
+        "figure": "10K",
+        "source_offset": 54616,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "5K",
+        "source_offset": 19560,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "1K",
+        "source_offset": 54966,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$300",
+        "source_offset": 15911,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Fastly",
+    "tier": "Free Developer",
+    "url": "https://www.fastly.com/pricing",
+    "source_chars": 20590,
+    "figures": [
+      {
+        "figure": "500,000",
+        "source_offset": 12324,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "OVHcloud",
+    "tier": "Paid",
+    "url": "https://www.ovhcloud.com/en/bare-metal/",
+    "source_chars": 46182,
+    "figures": [
+      {
+        "figure": "500",
+        "source_offset": 36982,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Akamai Cloud",
+    "tier": "Credits",
+    "url": "https://techdocs.akamai.com/cloud-computing/docs/referral-program",
+    "source_chars": 13970,
+    "figures": [
+      {
+        "figure": "$100",
+        "source_offset": 12579,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Amazon Cognito",
+    "tier": "Free",
+    "url": "https://aws.amazon.com/cognito/pricing/",
+    "source_chars": 35841,
+    "figures": [
+      {
+        "figure": "50,000",
+        "source_offset": 15632,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Amazon SES",
+    "tier": "Credits",
+    "url": "https://aws.amazon.com/ses/pricing/",
+    "source_chars": 19778,
+    "figures": [
+      {
+        "figure": "$200",
+        "source_offset": 16950,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "BackgroundStyler.com",
+    "tier": "Retired",
+    "url": "https://backgroundstyler.com",
+    "source_chars": 22332,
+    "figures": [
+      {
+        "figure": "200",
+        "source_offset": 20686,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Google Meet",
+    "tier": "Free",
+    "url": "https://workspace.google.com/products/meet/",
+    "source_chars": 42252,
+    "figures": [
+      {
+        "figure": "100",
+        "source_offset": 17316,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "MIT OpenCourseWare",
+    "tier": "Free",
+    "url": "https://ocw.mit.edu",
+    "source_chars": 449815,
+    "figures": [
+      {
+        "figure": "2,500",
+        "source_offset": 18574,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "MailerLite.com",
+    "tier": "Free",
+    "url": "https://www.mailerlite.com/pricing",
+    "source_chars": 26873,
+    "figures": [
+      {
+        "figure": "250",
+        "source_offset": 12573,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "ManageEngine Log360 Cloud",
+    "tier": "Free",
+    "url": "https://www.manageengine.com/cloud-siem/",
+    "source_chars": 19771,
+    "figures": [
+      {
+        "figure": "50 GB",
+        "source_offset": 13781,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "OpenAI Codex",
+    "tier": "Free",
+    "url": "https://developers.openai.com/codex/pricing/",
+    "source_chars": 29692,
+    "figures": [
+      {
+        "figure": "$0",
+        "source_offset": 13549,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$8",
+        "source_offset": 13679,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$20",
+        "source_offset": 13816,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "100",
+        "source_offset": 14143,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "PDFBolt",
+    "tier": "Free",
+    "url": "https://pdfbolt.com",
+    "source_chars": 21223,
+    "figures": [
+      {
+        "figure": "500",
+        "source_offset": 16828,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Railway Sandboxes",
+    "tier": "Free",
+    "url": "https://docs.railway.com/sandboxes",
+    "source_chars": 36399,
+    "figures": [
+      {
+        "figure": "2 GB",
+        "source_offset": 28224,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$50",
+        "source_offset": 34692,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$0.05",
+        "source_offset": 34877,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "1 GB",
+        "source_offset": 34935,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "WhatsApp Business Platform",
+    "tier": "Free",
+    "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+    "source_chars": 53887,
+    "figures": [
+      {
+        "figure": "1,000",
+        "source_offset": 20032,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "pubnub.com",
+    "tier": "Free",
+    "url": "https://www.pubnub.com/",
+    "source_chars": 30567,
+    "figures": [
+      {
+        "figure": "1 million",
+        "source_offset": 15750,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "taskade.com",
+    "tier": "Free",
+    "url": "https://www.taskade.com/",
+    "source_chars": 29881,
+    "figures": [
+      {
+        "figure": "50,000",
+        "source_offset": 16055,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Google Compute Engine",
+    "tier": "Always Free",
+    "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+    "source_chars": 33278,
+    "figures": [
+      {
+        "figure": "30 GB",
+        "source_offset": 27695,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "1 GB",
+        "source_offset": 25113,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Neon",
+    "tier": "Free",
+    "url": "https://neon.com/pricing",
+    "source_chars": 26369,
+    "figures": [
+      {
+        "figure": "$5",
+        "source_offset": 16499,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Brave Search API",
+    "tier": "Free",
+    "url": "https://brave.com/search/api/",
+    "source_chars": 52794,
+    "figures": [
+      {
+        "figure": "$5",
+        "source_offset": 46456,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$4",
+        "source_offset": 46897,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Cloudflare Workers",
+    "tier": "Free",
+    "url": "https://developers.cloudflare.com/workers/platform/pricing/",
+    "source_chars": 35273,
+    "figures": [
+      {
+        "figure": "1 GB",
+        "source_offset": 15151,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "1K",
+        "source_offset": 10389,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "5 GB",
+        "source_offset": 20019,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "5M",
+        "source_offset": 9287,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Cloudflare Workers",
+    "tier": "Student Program",
+    "url": "https://blog.cloudflare.com/workers-for-students/",
+    "source_chars": 23657,
+    "figures": [
+      {
+        "figure": "1M",
+        "source_offset": 12172,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "20M",
+        "source_offset": 12460,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "OCR.Space",
+    "tier": "Free",
+    "url": "https://ocr.space/ocrapi",
+    "source_chars": 30267,
+    "figures": [
+      {
+        "figure": "1,000",
+        "source_offset": 15401,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Fly.io",
+    "tier": "Legacy Free",
+    "url": "https://fly.io/docs/about/pricing/",
+    "source_chars": 147261,
+    "figures": [
+      {
+        "figure": "3 GB",
+        "source_offset": 31391,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Serper",
+    "tier": "Free Credits",
+    "url": "https://serper.dev/",
+    "source_chars": 95814,
+    "figures": [
+      {
+        "figure": "50,000",
+        "source_offset": 93257,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$1.00",
+        "source_offset": 93240,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "1,000",
+        "source_offset": 92842,
+        "verifier": true,
+        "excerpt": true
+      },
+      {
+        "figure": "$0.30",
+        "source_offset": 93747,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Amazon Lightsail",
+    "tier": "Credits",
+    "url": "https://aws.amazon.com/lightsail/pricing/",
+    "source_chars": 26691,
+    "figures": [
+      {
+        "figure": "$0.09",
+        "source_offset": 14422,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Exa",
+    "tier": "Free",
+    "url": "https://exa.ai/docs/admin/pricing",
+    "source_chars": 63904,
+    "figures": [
+      {
+        "figure": "402",
+        "source_offset": 57831,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Azure",
+    "tier": "Free Tier",
+    "url": "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account",
+    "source_chars": 28643,
+    "figures": [
+      {
+        "figure": "$200",
+        "source_offset": 17238,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Comet ML",
+    "tier": "Free",
+    "url": "https://www.comet.com/site/pricing/",
+    "source_chars": 22827,
+    "figures": [
+      {
+        "figure": "100GB",
+        "source_offset": 17418,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "GitHub",
+    "tier": "Student Pack",
+    "url": "https://education.github.com/pack",
+    "source_chars": 32327,
+    "figures": [
+      {
+        "figure": "100",
+        "source_offset": 7344,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Google for Startups Cloud Program",
+    "tier": "Startup Credits",
+    "url": "https://cloud.google.com/startup",
+    "source_chars": 49974,
+    "figures": [
+      {
+        "figure": "$100,000",
+        "source_offset": 12785,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Langfuse",
+    "tier": "Free",
+    "url": "https://langfuse.com/pricing",
+    "source_chars": 22976,
+    "figures": [
+      {
+        "figure": "1M",
+        "source_offset": 16496,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "MConverter",
+    "tier": "Free",
+    "url": "https://mconverter.eu/",
+    "source_chars": 29136,
+    "figures": [
+      {
+        "figure": "100 MB",
+        "source_offset": 28460,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Nx Cloud",
+    "tier": "Free",
+    "url": "https://nx.dev/ci",
+    "source_chars": 16902,
+    "figures": [
+      {
+        "figure": "50,000",
+        "source_offset": 14182,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Retool",
+    "tier": "Free",
+    "url": "https://retool.com/pricing",
+    "source_chars": 24283,
+    "figures": [
+      {
+        "figure": "5GB",
+        "source_offset": 12822,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  },
+  {
+    "vendor": "Stripe",
+    "tier": "Pay-as-you-go",
+    "url": "https://stripe.com/pricing",
+    "source_chars": 40615,
+    "figures": [
+      {
+        "figure": "$0.30",
+        "source_offset": 19455,
+        "verifier": true,
+        "excerpt": true
+      }
+    ]
+  }
+]
