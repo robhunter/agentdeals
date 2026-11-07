@@ -22,7 +22,10 @@ const { withoutARenderingClient } = await import("../scripts/rendered-page.js");
 const { priceSignals } = await import("../scripts/change-gate.js");
 const { classifySource, pageNamesVendor } = await import("../scripts/vendor-naming.js");
 
-const nav = (vendor: string) => `${vendor} Docs Blog Careers Support Community Login Sign up `.repeat(300);
+const nav = (vendor: string) => {
+  const item = `${vendor} Docs Blog Careers Support Community Login Sign up `;
+  return item.repeat(Math.ceil(MAX_PAGE_TEXT_LENGTH / item.length) + 1);
+};
 
 function pageStatingTermsAfterTheCut(vendor: string) {
   return `<html><body><nav>${nav(vendor)}</nav><main>${vendor} pricing. Free plan: $0 per month for up to 5 hosts.</main></body></html>`;
@@ -123,15 +126,15 @@ describe("the verifier prompt carries the limit, so the reader does not have to"
   }
 
   function pageTextIn(prompt: string) {
-    const start = prompt.indexOf("CURRENT PRICING PAGE TEXT (truncated):\n");
+    const start = prompt.indexOf("CURRENT PRICING PAGE TEXT (");
     assert.ok(start !== -1, "the prompt must label the page text for this assertion to mean anything");
-    const from = start + "CURRENT PRICING PAGE TEXT (truncated):\n".length;
+    const from = prompt.indexOf("):\n", start) + 3;
     const end = prompt.indexOf("\n\nCompare the stored deal info", from);
     assert.ok(end !== -1, "the prompt must close the page text block");
     return prompt.slice(from, end);
   }
 
-  it("sends no more page text than it ever did, however long the page is", async () => {
+  it("bounds the page text in its prompt", async () => {
     const { prompts, client } = promptCapturingClient();
     const whole = `${"a".repeat(MAX_PAGE_TEXT_LENGTH)}TAIL`;
     await verifyOfferAgainstPage(client, OFFER, whole);
@@ -216,7 +219,7 @@ describe("the character limit belongs to the verifier prompt alone", () => {
     const naming = files
       .filter((f) => readFileSync(path.join(SCRIPTS, f), "utf-8").includes("MAX_PAGE_TEXT_LENGTH"))
       .sort();
-    assert.deepStrictEqual(naming, ["archive-captures.js", "free-plan-excerpt.js", "verify-freshness.js", "whole-page-census.js"]);
+    assert.deepStrictEqual(naming, ["free-plan-excerpt.js", "verify-freshness.js", "whole-page-census.js"]);
   });
 
   it("applies the limit to the pages an archive reader is shown only inside the functions that build its prompts", () => {
@@ -226,9 +229,9 @@ describe("the character limit belongs to the verifier prompt alone", () => {
       const from = source.indexOf(builder);
       const to = source.indexOf("\n}\n", from);
       assert.ok(from !== -1 && to > from, builder);
-      assert.match(source.slice(from, to), /maxLength = MAX_PAGE_TEXT_LENGTH/, builder);
+      assert.match(source.slice(from, to), /maxLength = MAX_ARCHIVE_PAGE_TEXT_LENGTH/, builder);
     }
-    assert.strictEqual(source.split("MAX_PAGE_TEXT_LENGTH").length - 1, builders.length + 1);
+    assert.strictEqual(source.split("MAX_ARCHIVE_PAGE_TEXT_LENGTH").length - 1, builders.length + 1);
   });
 
   it("applies the limit inside the function that builds the prompt", () => {
