@@ -61,8 +61,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 20,
-      "table_figures_from_records": 20,
+      "table_figures": 18,
+      "table_figures_from_records": 18,
       "tables": [
         {
           "label": "RAG Agent",
@@ -71,8 +71,8 @@
         },
         {
           "label": "Autonomous Coding Agent",
-          "figures": 5,
-          "from_records": 5
+          "figures": 3,
+          "from_records": 3
         },
         {
           "label": "Data Pipeline Agent",
@@ -1364,13 +1364,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 16,
-      "table_figures_from_records": 16,
+      "table_figures": 15,
+      "table_figures_from_records": 15,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 16,
-          "from_records": 16
+          "figures": 15,
+          "from_records": 15
         },
         {
           "label": "Open-Source Self-Hosted Alternatives",
@@ -1406,18 +1406,18 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 32,
-      "table_figures_from_records": 13,
+      "table_figures": 31,
+      "table_figures_from_records": 12,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 13,
+          "figures": 12,
           "from_records": 7
         },
         {
           "label": "The First Paid Upgrade — What to Spend First",
           "figures": 19,
-          "from_records": 6
+          "from_records": 5
         }
       ],
       "reads_changes": true,
@@ -1448,18 +1448,18 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 31,
-      "table_figures_from_records": 13,
+      "table_figures": 30,
+      "table_figures_from_records": 12,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 13,
+          "figures": 12,
           "from_records": 7
         },
         {
           "label": "The First Paid Upgrade — What to Spend First",
           "figures": 18,
-          "from_records": 6
+          "from_records": 5
         }
       ],
       "reads_changes": true,
@@ -1534,18 +1534,18 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 29,
-      "table_figures_from_records": 12,
+      "table_figures": 28,
+      "table_figures_from_records": 11,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 12,
+          "figures": 11,
           "from_records": 6
         },
         {
           "label": "The First Paid Upgrade — What to Spend First",
           "figures": 17,
-          "from_records": 6
+          "from_records": 5
         }
       ],
       "reads_changes": true,
@@ -1578,18 +1578,18 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 30,
-      "table_figures_from_records": 11,
+      "table_figures": 29,
+      "table_figures_from_records": 10,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 11,
+          "figures": 10,
           "from_records": 7
         },
         {
           "label": "The First Paid Upgrade — What to Spend First",
           "figures": 19,
-          "from_records": 4
+          "from_records": 3
         }
       ],
       "reads_changes": true,
@@ -1622,13 +1622,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 41,
-      "table_figures_from_records": 13,
+      "table_figures": 40,
+      "table_figures_from_records": 12,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 13,
-          "from_records": 8
+          "figures": 12,
+          "from_records": 7
         },
         {
           "label": "The Growth Path — From $0 to $500/Month",
@@ -1671,13 +1671,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 11,
-      "table_figures_from_records": 11,
+      "table_figures": 10,
+      "table_figures_from_records": 10,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 11,
-          "from_records": 11
+          "figures": 10,
+          "from_records": 10
         }
       ],
       "reads_changes": true,
@@ -3008,13 +3008,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 30,
-      "table_figures_from_records": 2,
+      "table_figures": 29,
+      "table_figures_from_records": 1,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 30,
-          "from_records": 2
+          "figures": 29,
+          "from_records": 1
         }
       ],
       "reads_changes": false,
@@ -3038,13 +3038,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 28,
-      "table_figures_from_records": 4,
+      "table_figures": 27,
+      "table_figures_from_records": 3,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 28,
-          "from_records": 4
+          "figures": 27,
+          "from_records": 3
         }
       ],
       "reads_changes": false,
@@ -3068,13 +3068,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 34,
-      "table_figures_from_records": 6,
+      "table_figures": 33,
+      "table_figures_from_records": 5,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 34,
-          "from_records": 6
+          "figures": 33,
+          "from_records": 5
         }
       ],
       "reads_changes": false,
@@ -3098,13 +3098,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 35,
-      "table_figures_from_records": 7,
+      "table_figures": 34,
+      "table_figures_from_records": 6,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 35,
-          "from_records": 7
+          "figures": 34,
+          "from_records": 6
         }
       ],
       "reads_changes": false,

@@ -2389,9 +2389,30 @@
     {
       "vendor": "GitHub Actions",
       "category": "CI/CD",
-      "description": "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runners remain free — planned $0.002/min charge was postponed indefinitely after community backlash (March 2026). Hosted runner prices reduced 39% (Jan 2026)",
+      "description": "Free CI/CD for public repos (standard runners, unlimited minutes). Private repos on GitHub Free: $12 USD of included compute a month, which is 2,000 minutes on a standard Linux runner ($0.006/min), 1,200 on Windows ($0.010/min) or about 193 on macOS ($0.062/min). GitHub's billing docs gave the allowance as 2,000 minutes before a revision published on October 28, 2026. 500 MB artifact storage, 10 GB cache per repo. Self-hosted runners remain free — planned $0.002/min charge was postponed indefinitely after community backlash (March 2026). Hosted runner prices reduced 39% (Jan 2026)",
       "tier": "Free",
       "url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
+      "conditions": [
+        {
+          "text": "On every plan, standard GitHub-hosted runners in private repos and cloud sandbox compute and memory draw from the same included compute usage.",
+          "quote": "The following usage can draw from the same included compute usage: Standard GitHub-hosted runners for private or internal repositories, and cloud sandbox compute and memory",
+          "url": "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Without a valid payment method on file, GitHub blocks usage once the month's included compute usage is used up.",
+          "quote": "If your account does not have a valid payment method on file, usage is blocked once you consume the included compute usage.",
+          "url": "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+          "read_on": "2026-11-07"
+        },
+        {
+          "text": "Copilot code review runner costs draw from the included compute usage on private repositories, and are free on public repositories.",
+          "quote": "Copilot code review runner costs draw from the included compute usage on private repositories. For public repositories, this usage remains free.",
+          "url": "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+          "read_on": "2026-11-07",
+          "operating_detail": true
+        }
+      ],
       "tags": [
         "ci",
         "cd",

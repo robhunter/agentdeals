@@ -14,7 +14,7 @@
       "changed": "2026-11-03"
     },
     "/agent-stack": {
-      "hash": "66ec74ad57972eb4",
+      "hash": "1542c9761db2f990",
       "changed": "2026-11-07"
     },
     "/ai-coding-tools-pricing": {
@@ -1140,8 +1140,8 @@
       "changed": "2026-11-07"
     },
     "/category/ci-cd": {
-      "hash": "7e24cdb3d468df76",
-      "changed": "2026-11-06"
+      "hash": "3014c2cf345b103d",
+      "changed": "2026-11-07"
     },
     "/category/cloud-hosting": {
       "hash": "f8aa8e711364fb2e",
@@ -1347,20 +1347,20 @@
       "daily": true
     },
     "/ci-cd-alternatives": {
-      "hash": "132891baca5a1f74",
+      "hash": "5e0302444a525013",
       "changed": "2026-11-07"
     },
     "/ci-cd-pricing": {
-      "hash": "a925ffcc4bc05dc3",
+      "hash": "caa5e853c0b8c589",
       "changed": "2026-11-07"
     },
     "/cicd-free-tier-comparison-2026": {
-      "hash": "54c7eb6a07daac8e",
+      "hash": "a2013549c159b8c1",
       "changed": "2026-11-07"
     },
     "/circleci-vs-github-actions": {
-      "hash": "8568c2c6f5d039fa",
-      "changed": "2026-11-02"
+      "hash": "c224dc9a22ea279f",
+      "changed": "2026-11-07"
     },
     "/cloud-free-tier-comparison-2026": {
       "hash": "7641da273eb2d27f",
@@ -1627,8 +1627,8 @@
       "changed": "2026-10-31"
     },
     "/compare/circleci-vs-github-actions": {
-      "hash": "4958b227ad345d7c",
-      "changed": "2026-11-02"
+      "hash": "8d314aa19bd749ff",
+      "changed": "2026-11-07"
     },
     "/compare/circleci-vs-gitlab-ci": {
       "hash": "4d197dff5f02506b",
@@ -2063,8 +2063,8 @@
       "changed": "2026-11-06"
     },
     "/compare/github-actions-vs-gitlab-ci": {
-      "hash": "3561fc5daf5433b1",
-      "changed": "2026-11-05"
+      "hash": "1b11c1e90cbea4d5",
+      "changed": "2026-11-07"
     },
     "/compare/github-copilot-vs-windsurf": {
       "hash": "86f7b4f0ec0f3ccc",
@@ -3185,7 +3185,7 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "e946b66f5feaa3ed",
+      "hash": "92044e50bab2ed9e",
       "changed": "2026-11-07"
     },
     "/events": {
@@ -3201,7 +3201,7 @@
       "changed": "2026-11-07"
     },
     "/events/microsoft-build-2026": {
-      "hash": "258bf4f55638f2a0",
+      "hash": "19de59653e3bb388",
       "changed": "2026-11-07"
     },
     "/expiring": {
@@ -3223,15 +3223,15 @@
       "changed": "2026-11-07"
     },
     "/free-devops-stack": {
-      "hash": "42bac57712bec2dd",
+      "hash": "d8751d078a2a2585",
       "changed": "2026-11-07"
     },
     "/free-django-stack": {
-      "hash": "08bfa76a23de30ad",
+      "hash": "f5757e62e922eb34",
       "changed": "2026-11-07"
     },
     "/free-fastapi-stack": {
-      "hash": "69800ba47e6effa8",
+      "hash": "15f2cd791f9b484a",
       "changed": "2026-11-07"
     },
     "/free-frontend-stack": {
@@ -3239,7 +3239,7 @@
       "changed": "2026-11-07"
     },
     "/free-go-stack": {
-      "hash": "61be144e9d44e473",
+      "hash": "9ce2e205c24c19dd",
       "changed": "2026-11-07"
     },
     "/free-llm-apis": {
@@ -3247,15 +3247,15 @@
       "changed": "2026-11-07"
     },
     "/free-nextjs-stack": {
-      "hash": "7247fffd9ccb8245",
+      "hash": "118b4fe6fc30787a",
       "changed": "2026-11-07"
     },
     "/free-saas-stack": {
-      "hash": "c51efba7ceb28263",
+      "hash": "41e87fdc08649da6",
       "changed": "2026-11-07"
     },
     "/free-startup-stack": {
-      "hash": "f28aa17c4bcd59ba",
+      "hash": "c089ec1251efc4e4",
       "changed": "2026-11-07"
     },
     "/free-tier-facts-ai-models-get-wrong": {
@@ -3289,8 +3289,8 @@
       "changed": "2026-11-03"
     },
     "/github-actions-vs-gitlab-ci": {
-      "hash": "0332eedd535c7ffb",
-      "changed": "2026-11-05"
+      "hash": "f114c823c52674b7",
+      "changed": "2026-11-07"
     },
     "/google-developer-program-2026": {
       "hash": "2a74520775743e42",
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-07"
     },
     "/stack-check": {
-      "hash": "8935c1c026eda2df",
+      "hash": "759cc2d2e2805dd9",
       "changed": "2026-11-07"
     },
     "/stacks": {
@@ -3650,20 +3650,20 @@
       "changed": "2026-11-05"
     },
     "/stacks/api-first": {
-      "hash": "9a1cdfb8f2b06b7c",
-      "changed": "2026-11-02"
+      "hash": "1523dab538aa63d5",
+      "changed": "2026-11-07"
     },
     "/stacks/open-source": {
-      "hash": "15ae3668964f53b7",
-      "changed": "2026-11-06"
+      "hash": "bba93b119fc6e183",
+      "changed": "2026-11-07"
     },
     "/stacks/saas-mvp": {
-      "hash": "9b1309985a6039a8",
+      "hash": "8146d1e5218a33ab",
       "changed": "2026-11-07"
     },
     "/stacks/side-project": {
-      "hash": "c0fa4fcdaa670591",
-      "changed": "2026-11-06"
+      "hash": "257a1148ba728a59",
+      "changed": "2026-11-07"
     },
     "/startup-credits": {
       "hash": "dccf68ed04eff0f4",
