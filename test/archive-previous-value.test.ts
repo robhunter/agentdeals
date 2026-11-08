@@ -37,88 +37,114 @@ function oneSignalOptions(pages: Record<string, string | null>, answer: (page: P
     url: ONE_SIGNAL.source_url, textDay: "2026-09-20", recordDay: ONE_SIGNAL.date,
     today: "2026-11-08", todayText: `${NEW_MOBILE} ${FILLER}`, archive: archiveOf(pages),
     readPair: async () => ({ status: "same", old_terms: [NEW_MOBILE], new_terms: [NEW_MOBILE] }),
-    readStatedBefore: async () => ({ status: "stated", stated_then: [{ record: ONE_SIGNAL.summary, old: NEW_MOBILE }] }),
+    readStatedBefore: async (page: Page) => page.text.includes(NEW_MOBILE) ? { status: "stated", stated_then: [{ record: ONE_SIGNAL.summary, old: NEW_MOBILE }] } : { status: "unstated", why: "claim absent", review: [{ record: ONE_SIGNAL.summary, old: "" }] },
     readPreviousValue: previousValueReaderFor(client, ONE_SIGNAL),
     onRead: (read: unknown) => readings.push(read), readings,
   };
 }
 
-describe("an earlier capture of the value a record says changed", () => {
-  it("keeps OneSignal unsettled when its September agreement hides January's unlimited mobile push", async () => {
-    const options = oneSignalOptions({ "20260101120000": oldMobilePage, "20260301120000": `Application shell. ${FILLER}`, "20260917120000": NEW_MOBILE });
+describe("affirmative year-old evidence for a correction", () => {
+  it("keeps OneSignal unsettled when the recent agreement has no year-old witness", async () => {
+    const options = oneSignalOptions({ "20250101120000": oldMobilePage, "20260101120000": oldMobilePage, "20260917120000": NEW_MOBILE });
     const result = await settleAgainstCaptures(options);
     assert.strictEqual(result.outcome, "no_usable_capture");
-    assert.strictEqual(result.prior_capture.day, "2026-01-01");
-    assert.deepStrictEqual(result.previous_values, [{ previous: OLD_MOBILE, current: NEW_MOBILE, old: OLD_MOBILE }]);
-    assert.match(result.why, /earlier capture states the record's previous value/);
-    assert.ok(options.archive.fetched.includes("20260101120000"));
-    assert.strictEqual(options.readings.length, 3);
+    assert.deepStrictEqual(result.historical_proof.readings.map((row: any) => [row.day, row.verdict.status]), [["2025-01-01", "unstated"]]);
+    assert.ok(!options.archive.fetched.includes("20260101120000"));
   });
 
-  it("checks every earlier capture, including one between agreeing endpoints and one outside the text-day window", async () => {
-    const options = oneSignalOptions({ "20240101120000": NEW_MOBILE, "20260101120000": oldMobilePage, "20260917120000": NEW_MOBILE });
+  it("requires an affirmative reading rather than absence of the previous value", async () => {
+    const options = oneSignalOptions({ "20250101120000": "Free email only", "20260917120000": NEW_MOBILE });
     const result = await settleAgainstCaptures(options);
     assert.strictEqual(result.outcome, "no_usable_capture");
-    assert.strictEqual(result.prior_capture.day, "2026-01-01");
-    assert.deepStrictEqual(options.archive.fetched, ["20260917120000", "20240101120000", "20260101120000"]);
-    const restored = oneSignalOptions({ "20240101120000": oldMobilePage, "20260101120000": NEW_MOBILE, "20260917120000": NEW_MOBILE });
-    assert.strictEqual((await settleAgainstCaptures(restored)).prior_capture.day, "2024-01-01");
+    assert.strictEqual(result.historical_proof.readings[0].verdict.status, "unstated");
   });
 
-  it("retains ours when none of the earlier captures states a replaced value", async () => {
-    const options = oneSignalOptions({ "20240101120000": NEW_MOBILE, "20260101120000": NEW_MOBILE, "20260917120000": NEW_MOBILE });
-    const result = await settleAgainstCaptures(options);
-    assert.strictEqual(result.outcome, "ours");
-    assert.deepStrictEqual(result.stated_then, [{ record: ONE_SIGNAL.summary, old: NEW_MOBILE }]);
-    assert.strictEqual(options.readings.length, 4);
-  });
-
-  it("also checks captures after our text day but before the agreeing record-day capture", async () => {
-    const options = oneSignalOptions({ "20260101120000": NEW_MOBILE, "20260601120000": oldMobilePage, "20260925120000": NEW_MOBILE });
-    const result = await settleAgainstCaptures({ ...options, textDay: "2026-02-01" });
-    assert.strictEqual(result.outcome, "no_usable_capture");
-    assert.strictEqual(result.prior_capture.day, "2026-06-01");
-  });
-
-  it("keeps an unreadable earlier capture unsettled and never asks a model about an empty page", async () => {
-    const options = oneSignalOptions({ "20260101120000": null, "20260917120000": NEW_MOBILE }, () => assert.fail("unreadable page reached reader"));
-    const result = await settleAgainstCaptures(options);
-    assert.strictEqual(result.outcome, "no_usable_capture");
-    assert.match(result.why, /could not be read/);
-  });
-
-  it("keeps absent, malformed and ungrounded earlier-value readings unsettled", async () => {
-    for (const answer of [null, {}, { previous_values: [{ ...EARLIER_VALUE, old_page: "Unlimited push forever" }] }]) {
-      const options = oneSignalOptions({ "20260101120000": oldMobilePage, "20260917120000": NEW_MOBILE }, () => answer);
-      assert.strictEqual((await settleAgainstCaptures(options)).outcome, "no_usable_capture");
+  it("uses the run day for the inclusive 365-day boundary and stores the exact witness", async () => {
+    for (const [timestamp, expected] of [["20251108120000", "ours"], ["20251109120000", "no_usable_capture"]]) {
+      const options = oneSignalOptions({ [timestamp]: NEW_MOBILE, "20260917120000": NEW_MOBILE });
+      const result = await settleAgainstCaptures({ ...options, readPreviousValue: () => assert.fail("unneeded previous-value read") });
+      assert.strictEqual(result.outcome, expected);
+      assert.strictEqual(result.historical_proof.cutoff_day, "2025-11-08");
+      if (expected === "ours") {
+        assert.strictEqual(result.historical_proof.readings[0].day, "2025-11-08");
+        assert.match(result.historical_proof.readings[0].url, /20251108120000/);
+        assert.strictEqual(result.historical_proof.readings[0].verdict.stated_then[0].old, NEW_MOBILE);
+      }
     }
-    const options = oneSignalOptions({ "20260101120000": oldMobilePage, "20260917120000": NEW_MOBILE });
-    assert.strictEqual((await settleAgainstCaptures({ ...options, readPreviousValue: undefined })).outcome, "no_usable_capture");
   });
 
-  it("does not use a later capture as evidence of a change before our text", async () => {
-    const result = await settleAgainstCaptures(oneSignalOptions({ "20260917120000": NEW_MOBILE, "20261001120000": oldMobilePage }));
+  it("tries the three newest readable eligible captures, with no fourth reading", async () => {
+    for (const successAt of [1, 2, 3, 4]) {
+      const pages = Object.fromEntries([1, 2, 3, 4].map((n) => [`20250${6 - n}01120000`, n === successAt ? NEW_MOBILE : "Free email only"]));
+      const options = oneSignalOptions({ ...pages, "20260917120000": NEW_MOBILE });
+      const result = await settleAgainstCaptures(options);
+      assert.strictEqual(result.outcome, successAt <= 3 ? "ours" : "no_usable_capture");
+      assert.strictEqual(result.historical_proof.readings.length, Math.min(successAt, 3));
+      assert.deepStrictEqual(result.historical_proof.readings.map((row: any) => row.day), ["2025-05-01", "2025-04-01", "2025-03-01"].slice(0, Math.min(successAt, 3)));
+      assert.ok(!options.archive.fetched.includes("20250101120000"));
+    }
+  });
+
+  it("skips short pages and redirect shells without spending one of the three readings", async () => {
+    for (const shell of [
+      '<meta http-equiv="refresh" content="0;url=/plans">',
+      '<script>window.location.href = "/plans";</script>',
+      '<script>location.replace("/plans")</script>',
+      'tiny',
+    ]) {
+      const options = oneSignalOptions({ "20250101120000": NEW_MOBILE, "20251101120000": "shell", "20260917120000": NEW_MOBILE });
+      const native = options.archive.captureHtml;
+      options.archive.captureHtml = (capture: Capture) => capture.timestamp === "20251101120000" ? Promise.resolve({ html: shell.includes("<") ? shell + `<p>${FILLER}</p>` : shell }) : native(capture);
+      const result = await settleAgainstCaptures(options);
+      assert.strictEqual(result.outcome, "ours");
+      assert.strictEqual(result.historical_proof.skipped.length, 1);
+      assert.deepStrictEqual(result.historical_proof.readings.map((row: any) => row.day), ["2025-01-01"]);
+    }
+  });
+
+  it("reads page terms alongside a conditional sign-in redirect", async () => {
+    const options = oneSignalOptions({ "20250101120000": NEW_MOBILE, "20260917120000": NEW_MOBILE });
+    const native = options.archive.captureHtml;
+    options.archive.captureHtml = async (capture: Capture) => {
+      const response = await native(capture);
+      return { html: response.html + '<script>if(localStorage.getItem("has-public-session")){if(location.pathname==="/"){location.replace("https://app.example.com")}}</script>' };
+    };
+    const result = await settleAgainstCaptures(options);
     assert.strictEqual(result.outcome, "ours");
+    assert.deepStrictEqual(result.historical_proof.skipped, []);
   });
 
-  it("carries the record-specific reader through first-pass settlement and saves its evidence", async () => {
-    const options = oneSignalOptions({ "20260101120000": oldMobilePage, "20260917120000": NEW_MOBILE });
-    const report = await settleFirstReadings({
-      changes: [ONE_SIGNAL], offers: [], today: options.today, archive: options.archive,
-      fetchToday: async () => ({ ok: true, text: options.todayText }), textDayOf: () => options.textDay,
-      pairReaderForListing: () => options.readPair, statedReaderForRecord: () => options.readStatedBefore,
-      previousReaderForRecord: (record: typeof ONE_SIGNAL) => { assert.strictEqual(record, ONE_SIGNAL); return options.readPreviousValue; },
-      logReads: true,
-    });
-    assert.strictEqual(report.results[0].outcome, "no_usable_capture");
-    assert.ok(report.results[0].readings.some((read: { newer: string; verdict: { status: string } }) => read.newer === "the previous value" && read.verdict.status === "stated"));
+  it("refuses a failed Archive response instead of silently using an older capture", async () => {
+    const options = oneSignalOptions({ "20250101120000": NEW_MOBILE, "20251101120000": null, "20260917120000": NEW_MOBILE });
+    const result = await settleAgainstCaptures(options);
+    assert.strictEqual(result.outcome, "no_usable_capture");
+    assert.strictEqual(result.prior_capture.day, "2025-11-01");
+    assert.match(result.why, /Archive did not return/);
+    assert.ok(!options.archive.fetched.includes("20250101120000"));
+  });
+
+  it("counts an eligible settling capture once and reuses its stated-before reading", async () => {
+    const options = oneSignalOptions({ "20250101120000": NEW_MOBILE });
+    const result = await settleAgainstCaptures(options);
+    assert.strictEqual(result.outcome, "ours");
+    assert.strictEqual(result.reads, 2);
+    assert.strictEqual(result.historical_proof.readings[0].day, "2025-01-01");
+    assert.deepStrictEqual(options.archive.fetched, ["20250101120000"]);
+  });
+
+  it("does not accept malformed readings or removal evidence as an ordinary correction witness", async () => {
+    for (const status of ["unstated", "removal_stated", "unknown"]) {
+      const options = oneSignalOptions({ "20250101120000": NEW_MOBILE, "20260917120000": NEW_MOBILE });
+      const result = await settleAgainstCaptures({ ...options, readStatedBefore: (page: Page) => page.day === "2025-01-01" ? Promise.resolve({ status }) : options.readStatedBefore(page) });
+      assert.strictEqual(result.outcome, "no_usable_capture");
+    }
   });
 });
 
 describe("captures of a source URL and its destination", () => {
   const source = "https://archive-alias.example/pricing";
   const destination = "https://archive-alias.example/plans";
-  const january = "20260101120000";
+  const january = "20250101120000";
   const september = "20260917120000";
   const oldTerms = "Free plan: 3 projects";
   const newTerms = "Free plan: 1 project";
@@ -145,40 +171,31 @@ describe("captures of a source URL and its destination", () => {
         },
       },
       readPair: async () => ({ status: "same", old_terms: [newTerms], new_terms: [newTerms] }),
-      readStatedBefore: async () => ({ status: "stated", stated_then: [{ record: record.summary, old: newTerms }] }),
+      readStatedBefore: async (page: Page) => page.text.includes(newTerms) ? { status: "stated", stated_then: [{ record: record.summary, old: newTerms }] } : { status: "unstated", review: [] },
       readPreviousValue: previousValueReaderFor(client, record),
     });
     assert.deepStrictEqual(listed, [source, destination]);
     return { result, fetched };
   }
 
-  it("preserves an earlier source copy when the destination has a different page at the same instant", async () => {
-    const { result, fetched } = await settle({
-      [identity(source, january)]: oldTerms, [identity(destination, january)]: newTerms,
-      [identity(source, september)]: newTerms, [identity(destination, september)]: newTerms,
-    });
-    assert.strictEqual(result.outcome, "no_usable_capture");
-    assert.strictEqual(result.prior_capture.url, savedUrl(source, january));
-    assert.ok(fetched.includes(identity(source, january)));
-  });
-
-  it("reads each distinct copy instead of reusing another URL's cached text", async () => {
+  it("keeps a historical source witness when the destination has a different page at the same instant", async () => {
     const { result, fetched } = await settle({
       [identity(source, january)]: newTerms, [identity(destination, january)]: oldTerms,
       [identity(source, september)]: newTerms,
     });
-    assert.strictEqual(result.outcome, "no_usable_capture");
-    assert.strictEqual(result.prior_capture.url, savedUrl(destination, january));
-    assert.deepStrictEqual(fetched, [identity(source, september), identity(source, january), identity(destination, january)]);
+    assert.strictEqual(result.outcome, "ours");
+    assert.strictEqual(result.historical_proof.readings[0].url, savedUrl(source, january));
+    assert.ok(fetched.includes(identity(source, january)));
   });
 
-  it("excludes only the chosen copy when checking other captures at that instant", async () => {
+  it("reads a destination witness independently after the source copy does not state the claim", async () => {
     const { result, fetched } = await settle({
-      [identity(source, september)]: newTerms, [identity(destination, september)]: oldTerms,
+      [identity(source, january)]: oldTerms, [identity(destination, january)]: newTerms,
+      [identity(source, september)]: newTerms,
     });
-    assert.strictEqual(result.outcome, "no_usable_capture");
-    assert.strictEqual(result.prior_capture.url, savedUrl(destination, september));
-    assert.deepStrictEqual(fetched, [identity(source, september), identity(destination, september)]);
+    assert.strictEqual(result.outcome, "ours");
+    assert.strictEqual(result.historical_proof.readings[1].url, savedUrl(destination, january));
+    assert.deepStrictEqual(fetched, [identity(source, september), identity(source, january), identity(destination, january)]);
   });
 
   it("retains both URL copies through actual HTTP collection, model reading and the serial settlement report", async () => {
@@ -212,7 +229,7 @@ describe("captures of a source URL and its destination", () => {
         const answer = prompt.includes('"previous_values"')
           ? { previous_values: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].includes(oldTerms) ? [{ previous: oldTerms, current: newTerms, old_page: oldTerms }] : [] }
           : prompt.includes('"changes"')
-            ? { changes: [{ record: "now allows 1 project", old_page: newTerms }] }
+            ? { changes: [{ record: "now allows 1 project", old_page: prompt.split(/OLD PAGE \(saved [^)]*\):\n/)[1].includes(newTerms) ? newTerms : "" }] }
             : { old_terms: [newTerms], new_terms: [newTerms], same: true, differences: [] };
         response.setHeader("Content-Type", "application/json");
         response.end(JSON.stringify({ choices: [{ message: { content: JSON.stringify(answer) } }] }));
@@ -228,9 +245,8 @@ describe("captures of a source URL and its destination", () => {
       const destination = `${base}/plans`;
       const client = createVerifierClient({ apiKey: "local-fixture", baseUrl: base });
       const scenarios = [
-        { pages: { [identity(source, january)]: oldTerms, [identity(destination, january)]: newTerms, [identity(source, september)]: newTerms }, expected: savedUrl(source, january) },
-        { pages: { [identity(source, january)]: newTerms, [identity(destination, january)]: oldTerms, [identity(source, september)]: newTerms }, expected: savedUrl(destination, january) },
-        { pages: { [identity(source, september)]: newTerms, [identity(destination, september)]: oldTerms }, expected: savedUrl(destination, september) },
+        { pages: { [identity(source, january)]: newTerms, [identity(destination, january)]: oldTerms, [identity(source, september)]: newTerms }, expected: savedUrl(source, january) },
+        { pages: { [identity(source, january)]: oldTerms, [identity(destination, january)]: newTerms, [identity(source, september)]: newTerms }, expected: savedUrl(destination, january) },
       ];
       for (const scenario of scenarios) {
         pages = scenario.pages;
@@ -251,12 +267,11 @@ describe("captures of a source URL and its destination", () => {
           previousReaderForRecord: (record: unknown) => previousValueReaderFor(client, record),
           onSettled: (row: unknown) => progress.push(row),
         });
-        assert.strictEqual(report.results[0].outcome, "no_usable_capture");
-        assert.strictEqual(report.results[0].prior_capture.url, scenario.expected);
-        assert.strictEqual(report.results[0].previous_values[0].previous, oldTerms);
+        assert.strictEqual(report.results[0].outcome, "ours");
+        assert.strictEqual(report.results[0].historical_proof.readings.at(-1).url, scenario.expected);
         assert.strictEqual(progress.length, 1);
         assert.strictEqual(new Set(archived).size, archived.length);
-        assert.ok(modelPrompts.some((prompt) => prompt.includes('"previous_values"') && prompt.includes(oldTerms)));
+        assert.ok(modelPrompts.some((prompt) => prompt.includes("OLD PAGE (saved 2025-01-01")));
       }
     } finally {
       await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
@@ -312,7 +327,7 @@ describe("settling a review against the record's claim", () => {
   const review = { status: "review", old_terms: [NEW_MOBILE], new_terms: [NEW_MOBILE], review: [line], why: "a calculator line differs" };
 
   it("settles a review as ours only after the old capture states the claim, retaining both sets of lines", async () => {
-    const options = oneSignalOptions({ "20260917120000": NEW_MOBILE });
+    const options = oneSignalOptions({ "20250101120000": NEW_MOBILE, "20260917120000": NEW_MOBILE });
     const result = await settleAgainstCaptures({ ...options, readPair: async () => review });
     assert.strictEqual(result.outcome, "ours");
     assert.strictEqual(result.settled_from_review, true);
@@ -321,7 +336,7 @@ describe("settling a review against the record's claim", () => {
   });
 
   it("also settles today's review after an agreeing capture from before the record day", async () => {
-    const options = oneSignalOptions({ "20260917120000": NEW_MOBILE, "20260924120000": NEW_MOBILE });
+    const options = oneSignalOptions({ "20250101120000": NEW_MOBILE, "20260917120000": NEW_MOBILE, "20260924120000": NEW_MOBILE });
     const result = await settleAgainstCaptures({ ...options, readPair: async (_older: Page, newer: Page) => newer.page === "today" ? review : { status: "same", old_terms: [NEW_MOBILE], new_terms: [NEW_MOBILE] } });
     assert.strictEqual(result.outcome, "ours");
     assert.strictEqual(result.compared_with.page, "today");
@@ -340,17 +355,17 @@ describe("settling a review against the record's claim", () => {
     }
   });
 
-  it("runs the historical-value safeguard after a review and never turns the review into vendor_changed", async () => {
+  it("runs the historical-evidence safeguard after a review and never turns the review into vendor_changed", async () => {
     const options = oneSignalOptions({ "20260101120000": oldMobilePage, "20260917120000": NEW_MOBILE });
     const result = await settleAgainstCaptures({ ...options, readPair: async () => review });
     assert.strictEqual(result.outcome, "no_usable_capture");
     assert.strictEqual(result.settled_from_review, false);
-    assert.strictEqual(result.prior_capture.day, "2026-01-01");
+    assert.deepStrictEqual(result.historical_proof.readings, []);
     assert.deepStrictEqual(result.review, [line]);
   });
 
   it("keeps an already stated removal as a removal, retaining the review evidence", async () => {
-    const options = oneSignalOptions({ "20260917120000": NEW_MOBILE });
+    const options = oneSignalOptions({ "20250101120000": NEW_MOBILE, "20260917120000": NEW_MOBILE });
     const result = await settleAgainstCaptures({ ...options, readPair: async () => review, readStatedBefore: async () => ({ status: "removal_stated", stated_then: [{ record: "removed", old: "No free tier" }] }) });
     assert.strictEqual(result.outcome, "removal_stated_before");
     assert.strictEqual(result.settled_from_review, true);
@@ -358,10 +373,10 @@ describe("settling a review against the record's claim", () => {
   });
 
   it("retains review evidence when either subsequent reader fails", async () => {
-    for (const failing of ["stated", "previous"]) {
-      const options = oneSignalOptions({ "20260101120000": NEW_MOBILE, "20260917120000": NEW_MOBILE });
+    for (const failing of ["stated", "historical"]) {
+      const options = oneSignalOptions({ "20250101120000": NEW_MOBILE, "20260917120000": NEW_MOBILE });
       const fail = async () => { throw new Error("reader unavailable"); };
-      const result = await settleAgainstCaptures({ ...options, readPair: async () => review, ...(failing === "stated" ? { readStatedBefore: fail } : { readPreviousValue: fail }) });
+      const result = await settleAgainstCaptures({ ...options, readPair: async () => review, readStatedBefore: failing === "stated" ? fail : (page: Page) => page.day.startsWith("2025") ? fail() : options.readStatedBefore(page) });
       assert.strictEqual(result.outcome, "reader_failed");
       assert.deepStrictEqual(result.review, [line]);
       assert.strictEqual(result.review_reason, review.why);
@@ -374,13 +389,13 @@ type Fixture = { vendor: string; date: string; textDay: string; summary: string;
 const FIXTURES: Fixture[] = [
   { vendor: "Pinata IPFS", date: "2026-08-28", textDay: "2026-03-02", summary: "The free tier now offers 500 pinned files, 1GB storage, 1 gateway, 10GB bandwidth per month, and 10k requests per month.", previous_state: "1 GB storage free, along with access to API.", current_state: "500 pinned files, 1GB storage, 1 gateway, 10GB bandwidth per month, 10k requests per month", pages: { "20250116120000": "500 pinned files, 1GB storage, 1 gateway, 10GB bandwidth per month, 10k requests per month", "20260306210048": "500 pinned files, 1GB storage, 1 gateway, 10GB bandwidth per month, 10k requests per month", "20260803120000": "500 pinned files, 1GB storage, 1 gateway, 10GB bandwidth per month, 10k requests per month" }, terms: (text) => [text.split(" Pricing")[0]], expected: "ours" },
   { vendor: "GrowthBook", date: "2026-09-09", textDay: "2026-06-16", summary: "The free plans now have a limit of 1 project.", previous_state: "Unlimited projects", current_state: "1 project", pages: { "20260616120000": "Unlimited projects", "20260824143854": "1 project" }, terms: (text) => [text.includes("Unlimited projects") ? "Unlimited projects" : "1 project"], expected: "vendor_changed" },
-  { vendor: "Stream", date: "2026-09-12", textDay: "2026-02-26", summary: "The Chat component now has a limit of 2,000 monthly active users and 100 concurrent connections.", previous_state: "Maker Account free: 2,000 monthly active users", current_state: "2,000 monthly active users and 100 concurrent connections", pages: { "20251208195711": "2,000 monthly active users and 100 concurrent connections Five or less team members Less than $100k in funding Less than $10k/mo revenue Low-priority Support", "20260911120000": "2,000 monthly active users and 100 concurrent connections Five or less team members Less than $100k in funding Less than $10k/mo revenue" }, terms: () => ["2,000 monthly active users", "100 concurrent connections"], review: "Low-priority Support", expected: "ours" },
-  { vendor: "Codecov", date: "2026-09-02", textDay: "2026-03-02", summary: "The Team plan is now $5 per user/month, down from the stored $12 per user/month.", previous_state: "Developer plan free", current_state: "Team $5 per user/month for up to 10 users", pages: { "20260302120000": "Team $5 per user/month for up to 10 users Sentry integration", "20260829152010": "Team $5 per user/month for up to 10 users" }, terms: () => ["Team $5 per user/month for up to 10 users"], review: "Sentry integration", expected: "ours" },
+  { vendor: "Stream", date: "2026-09-12", textDay: "2026-02-26", summary: "The Chat component now has a limit of 2,000 monthly active users and 100 concurrent connections.", previous_state: "Maker Account free: 2,000 monthly active users", current_state: "2,000 monthly active users and 100 concurrent connections", pages: { "20251208195711": "2,000 monthly active users and 100 concurrent connections Five or less team members Less than $100k in funding Less than $10k/mo revenue Low-priority Support", "20260911120000": "2,000 monthly active users and 100 concurrent connections Five or less team members Less than $100k in funding Less than $10k/mo revenue" }, terms: () => ["2,000 monthly active users", "100 concurrent connections"], review: "Low-priority Support", expected: "no_usable_capture" },
+  { vendor: "Codecov", date: "2026-09-02", textDay: "2026-03-02", summary: "The Team plan is now $5 per user/month, down from the stored $12 per user/month.", previous_state: "Developer plan free", current_state: "Team $5 per user/month for up to 10 users", pages: { "20260302120000": "Team $5 per user/month for up to 10 users Sentry integration", "20260829152010": "Team $5 per user/month for up to 10 users" }, terms: () => ["Team $5 per user/month for up to 10 users"], review: "Sentry integration", expected: "no_usable_capture" },
 ];
 
 describe("first-pass records with archive excerpt fixtures", () => {
   const mapbox = RECORDS.find((record: { vendor: string }) => record.vendor === "Mapbox");
-  FIXTURES.push({ vendor: "Mapbox", date: mapbox.date, textDay: "2026-02-25", summary: mapbox.summary, previous_state: mapbox.previous_state, current_state: mapbox.current_state, pages: { "20260225071916": mapbox.current_state + " Total: $ 0", "20260827001036": mapbox.current_state }, terms: () => [mapbox.current_state], review: "Total: $ 0", expected: "ours" });
+  FIXTURES.push({ vendor: "Mapbox", date: mapbox.date, textDay: "2026-02-25", summary: mapbox.summary, previous_state: mapbox.previous_state, current_state: mapbox.current_state, pages: { "20260225071916": mapbox.current_state + " Total: $ 0", "20260827001036": mapbox.current_state }, terms: () => [mapbox.current_state], review: "Total: $ 0", expected: "no_usable_capture" });
   const mux = RECORDS.find((record: { vendor: string }) => record.vendor === "Mux");
   FIXTURES.push({ vendor: "Mux", date: mux.date, textDay: "2026-02-13", summary: mux.summary, previous_state: mux.previous_state, current_state: mux.current_state, pages: { "20260213120000": "100K free monthly video delivery minutes", "20260909120000": "100K free monthly video delivery minutes 100K free monthly Mux Robots units" }, terms: () => ["100K free monthly video delivery minutes"], addedReview: "100K free monthly Mux Robots units", expected: "no_usable_capture" });
   for (const fixture of FIXTURES) {

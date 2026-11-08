@@ -221,12 +221,12 @@ const clientAnswering = (changes: Change[], prompts: string[] = []) => ({
 });
 
 describe("settling a record whose terms the capture and the record's day agree on", () => {
-  it("calls it ours once the reader finds the line, and keeps the line in the result", async () => {
+  it("keeps a recent agreement unsettled without year-old evidence", async () => {
     const prompts: string[] = [];
     const { settled, reads } = settleWithOneCapture(ONESIGNAL, ONESIGNAL_CAPTURE, statedBeforeReaderFor(clientAnswering(ONESIGNAL_ANSWER, prompts), ONESIGNAL));
     const result = await settled;
-    assert.strictEqual(result.outcome, "ours");
-    assert.deepStrictEqual(result.stated_then.map((change: { old: string }) => change.old), ONESIGNAL_ANSWER.map((change) => change.old_page));
+    assert.strictEqual(result.outcome, "no_usable_capture");
+    assert.deepStrictEqual(result.historical_proof.readings, []);
     assert.deepStrictEqual(reads, ["capture 2026-02-09 | today", "capture 2026-02-09 | the record"]);
     assert.strictEqual(result.reads, 2);
     assert.ok(prompts[0].includes("OLD PAGE (saved 2026-02-09, truncated):"));

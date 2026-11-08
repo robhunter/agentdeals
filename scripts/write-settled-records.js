@@ -6,6 +6,7 @@ import { differenceInOurTextSummary, OURS_ARCHIVE_OUTCOME } from "../dist/change
 export const STATED_THEN_SEPARATOR = " · ";
 
 export const NOT_WRITTEN = {
+  vendorChangesHeld: "vendor changes await verification of both bracket claims",
   askedAgain: "the reader failed or the Archive did not answer: the next run asks again",
   noRecordKey: "the result names no record key",
   noSuchRecord: "no record of this vendor has this key",
@@ -33,7 +34,7 @@ export function archiveCheckFor(record, result, checked) {
   if (result.outcome === "vendor_changed") return { ...check, brackets: result.brackets.map(storedBracket) };
   if (result.outcome === OURS_ARCHIVE_OUTCOME) {
     const { capture_day, capture, stated_then } = theCopyFromOurTextDay(result);
-    return { ...check, capture_day, recorded_as: record.change_type, capture, stated_then };
+    return { ...check, capture_day, recorded_as: record.change_type, capture, stated_then, ...(result.historical_proof ? { historical_proof: result.historical_proof } : {}) };
   }
   if (result.outcome === "removal_stated_before") return { ...check, ...theCopyFromOurTextDay(result) };
   return check;
@@ -86,7 +87,7 @@ function whyNotWritten(result, matches, changes) {
   return null;
 }
 
-export function writeSettledRecords(changes, reports) {
+export function writeSettledRecords(changes, reports, { holdVendorChanges = false } = {}) {
   const matching = recordsByVendorAndKey(changes);
   const settled = [...changes];
   const written = [];
@@ -97,7 +98,7 @@ export function writeSettledRecords(changes, reports) {
     for (const result of report.results) {
       const subject = { vendor: result.vendor, date: result.date, change_type: result.change_type, outcome: result.outcome };
       const matches = matching.get(vendorAndKey(result.vendor, result.record_key)) ?? [];
-      const why = whyNotWritten(result, matches, settled);
+      const why = holdVendorChanges && result.outcome === "vendor_changed" ? NOT_WRITTEN.vendorChangesHeld : whyNotWritten(result, matches, settled);
       if (why) {
         notWritten.push({ ...subject, why });
         continue;
@@ -122,11 +123,12 @@ export function countsByOutcome(entries) {
 }
 
 function main() {
-  const reportFiles = process.argv.slice(2);
+  const args = process.argv.slice(2);
+  const reportFiles = args.filter((arg) => arg !== "--hold-vendor-changes");
   if (reportFiles.length === 0) throw new Error("give one or more settle reports: node scripts/write-settled-records.js settled-first-readings.json");
   const log = readChangeLog(CHANGES_PATH);
   const reports = reportFiles.map((file) => JSON.parse(readFileSync(file, "utf-8")));
-  const { changes, written, not_written, review } = writeSettledRecords(log.changes, reports);
+  const { changes, written, not_written, review } = writeSettledRecords(log.changes, reports, { holdVendorChanges: args.includes("--hold-vendor-changes") });
   writeFileSync(CHANGES_PATH, `${JSON.stringify({ ...log, changes }, null, 2)}\n`);
   console.log(`Wrote an archive check on ${written.length} records to ${CHANGES_PATH}`);
   for (const [outcome, count] of countsByOutcome(written)) console.log(`  ${outcome}: ${count}`);

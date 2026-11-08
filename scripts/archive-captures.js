@@ -660,6 +660,8 @@ export function previousValueReaderFor(client, record) {
 export const CAPTURE_WINDOW_DAYS = 60;
 export const MAX_READS_PER_BRACKET = 12;
 export const MAX_MOVES_BRACKETED = 3;
+export const OURS_MIN_CAPTURE_AGE_DAYS = 365;
+export const OURS_MAX_HISTORICAL_READINGS = 3;
 
 export function oldCaptureCandidates(captures, textDay, windowDays = CAPTURE_WINDOW_DAYS) {
   let before = null;
@@ -783,11 +785,18 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
   const captures = listed.captures;
 
   const texts = new Map();
+  const captureProblems = new Map();
   const pageOf = async (capture) => {
     const key = captureUrl(capture);
     if (!texts.has(key)) {
       const stored = await archive.captureHtml(capture);
-      const text = stored.unavailable ? "" : stripHtml(stored.html);
+      const redirect = !stored.unavailable && (
+        /<meta\b[^>]*http-equiv\s*=\s*["']?refresh\b/i.test(stored.html) ||
+        [...stored.html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)].some((match) => /^\s*(?:(?:window|document|self|top)\.)?location(?:(?:\.href)?\s*=\s*["'][^"']+["']|\.(?:replace|assign)\s*\(\s*["'][^"']+["']\s*\))\s*;?\s*$/i.test(match[1]))
+      );
+      const text = stored.unavailable || redirect ? "" : stripHtml(stored.html);
+      if (stored.unavailable) captureProblems.set(key, { unavailable: stored.unavailable });
+      else if (redirect || text.length < MIN_PAGE_TEXT_LENGTH) captureProblems.set(key, { skipped: redirect ? "redirect shell" : "too little page text" });
       texts.set(key, text.length >= MIN_PAGE_TEXT_LENGTH ? text : null);
     }
     const text = texts.get(key);
@@ -855,19 +864,25 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       const before = await statedBefore(old);
       if (before.status === "removal_stated") return { outcome: "removal_stated_before", compared_with: comparedWith, stated_then: before.stated_then, why: `the ${old.page} already states the removal, so it predates our text: to be dated` };
       if (before.status !== "stated") return { outcome: "no_usable_capture", compared_with: comparedWith, review: before.review, why: `the ${old.page} states the plan's terms as the page did on the record's day, but ${before.why}` };
-      const earlierCaptures = captures.filter((capture) => captureUrl(capture) !== captureUrl(old.capture) && dayOfTimestamp(capture.timestamp) <= judgedOn && (!comparison.capture || capture.timestamp < comparison.capture.timestamp));
-      for (const capture of earlierCaptures) {
+      const cutoff = new Date(Date.parse(`${today}T00:00:00Z`) - OURS_MIN_CAPTURE_AGE_DAYS * 86_400_000).toISOString().slice(0, 10);
+      const eligible = captures.filter((capture) => dayOfTimestamp(capture.timestamp) <= cutoff).sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+      const candidates = old.day <= cutoff ? [old.capture, ...eligible.filter((capture) => captureUrl(capture) !== captureUrl(old.capture))] : eligible;
+      const historicalProof = { minimum_age_days: OURS_MIN_CAPTURE_AGE_DAYS, cutoff_day: cutoff, readings: [], skipped: [] };
+      for (const capture of candidates) {
+        const witness = { day: dayOfTimestamp(capture.timestamp), url: archivedCopyUrl(capture) };
         const earlier = await pageOf(capture);
-        const historical = { prior_capture: { day: dayOfTimestamp(capture.timestamp), url: archivedCopyUrl(capture) } };
-        if (!earlier) return { outcome: "no_usable_capture", ...historical, why: "a capture before the agreeing capture could not be read, so an earlier vendor change cannot be excluded" };
-        if (!readPreviousValue) return { outcome: "no_usable_capture", ...historical, why: "no reader checked earlier captures for the record's previous value" };
-        reads++;
-        const previous = await readPreviousValue(earlier);
-        onRead({ older: earlier.page, newer: "the previous value", verdict: previous });
-        if (previous?.status === "stated") return { outcome: "no_usable_capture", ...historical, previous_values: previous.previous_values, why: "an earlier capture states the record's previous value, so the difference cannot be called ours" };
-        if (previous?.status !== "not_stated") return { outcome: "no_usable_capture", ...historical, why: `an earlier vendor change could not be excluded: ${previous?.why ?? "the earlier-value reader returned no verdict"}` };
+        if (!earlier) {
+          const problem = captureProblems.get(captureUrl(capture));
+          if (problem?.unavailable) return { outcome: "no_usable_capture", compared_with: comparedWith, historical_proof: historicalProof, prior_capture: witness, why: `the Archive did not return an eligible historical capture: ${problem.unavailable}` };
+          historicalProof.skipped.push({ ...witness, why: problem?.skipped ?? "unreadable capture" });
+          continue;
+        }
+        const historical = await statedBefore(earlier);
+        historicalProof.readings.push({ ...witness, verdict: historical });
+        if (historical.status === "stated") return { outcome: "ours", compared_with: comparedWith, terms_then: verdict.old_terms, stated_then: before.stated_then, historical_proof: historicalProof, later_moves: laterMoves };
+        if (historicalProof.readings.length >= OURS_MAX_HISTORICAL_READINGS) break;
       }
-      return { outcome: "ours", compared_with: comparedWith, terms_then: verdict.old_terms, stated_then: before.stated_then, later_moves: laterMoves };
+      return { outcome: "no_usable_capture", compared_with: comparedWith, historical_proof: historicalProof, why: "none of the three newest readable year-old captures states what the record calls new" };
     };
     const agreed = async (verdict, laterMoves = [], comparison = end) => {
       if (verdict.status !== "review") return agreement(verdict, laterMoves, comparison);
