@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const { writeReviewedArchive, reviewedRecordKey } = await import("../scripts/write-reviewed-archive.js");
+const { writeReviewedArchive, reviewedRecordKey, directionReviewsAfterWrite } = await import("../scripts/write-reviewed-archive.js");
 const { correctionUsesListingPage, requireListingPage, settleFirstReadings } = await import("../scripts/settle-discovered-records.js");
 const { archiveSettlementSummary } = await import("../scripts/run-archive-settlement.js");
 type Row = Record<string, any>;
@@ -58,6 +58,20 @@ describe("corrections use a vendor listing's page", () => {
 });
 
 describe("writing the exact reviewed archive report", () => {
+  it("retires only replaced keys, preserving reviews of another type, day, source or vendor", () => {
+    const original = record({ change_type: "pricing_restructured" });
+    const corrected = record({ change_type: "record_corrected" });
+    const siblings = [record(), record({ date: "2026-09-02" }), record({ source_url: "https://example.test/other" }), record({ vendor: "Other" })];
+    const entries = [original, ...siblings].map(row => ({ ...row, tier_direction: "widened", finding: "The allowance increased" }));
+    const review = { reviewed: "2026-09-10", review: "Stored comparison", directions: entries };
+    const updated = directionReviewsAfterWrite(review, [original, ...siblings], [corrected, ...siblings]);
+    assert.deepEqual(updated, { ...review, directions: entries.slice(1) });
+    assert.deepEqual(review.directions, entries);
+    assert.deepEqual(directionReviewsAfterWrite(review, [original, ...siblings], [original, ...siblings]), review);
+    assert.deepEqual(directionReviewsAfterWrite(review, siblings, siblings), review);
+    assert.throws(() => directionReviewsAfterWrite({ directions: "invalid" }, [original], [corrected]), /directions array/);
+  });
+
   it("keys approval by vendor, date and type, preserving corrected current text and every unapproved record", () => {
     const current = record({ summary: "Corrected summary", current_state: "Corrected terms", archive_check: { outcome: "no_usable_capture" } });
     const unrelated = record({ vendor: "Unapproved" });
@@ -104,12 +118,15 @@ describe("writing the exact reviewed archive report", () => {
       mkdirSync(path.join(scratch, "data"));
       const log = path.join(scratch, "data/deal_changes.json");
       const reviewFile = path.join(scratch, "reviewed.json");
+      const directionsFile = path.join(scratch, "data/change_directions.json");
+      const directions = { reviewed: "2026-09-02", review: "Stored direction readings", directions: [record(), record({ vendor: "Unapproved" }), record({ change_type: "pricing_restructured" })].map(row => ({ ...row, tier_direction: "unchanged", finding: "The allowance stayed the same" })) };
       const seed = () => writeFileSync(log, JSON.stringify({ changes: [record({ current_state: "Corrected terms" }), record({ vendor: "Unapproved" })] }));
       seed();
+      writeFileSync(directionsFile, JSON.stringify(directions));
       writeFileSync(path.join(scratch, "data/index.json"), JSON.stringify({ offers }));
       writeFileSync(reviewFile, JSON.stringify(report()));
       git("init", "-q"); git("config", "user.name", "Fixture"); git("config", "user.email", "fixture@example.test"); git("add", "."); git("commit", "-qm", "Reviewed report");
-      const run = () => spawnSync(process.execPath, [script, "reviewed.json"], { cwd: scratch, env: { ...process.env, AGENTDEALS_CHANGES_PATH: log, OPENROUTER_API_KEY: "", NODE_OPTIONS: "" }, encoding: "utf8" });
+      const run = () => spawnSync(process.execPath, [script, "reviewed.json"], { cwd: scratch, env: { ...process.env, AGENTDEALS_CHANGES_PATH: log, AGENTDEALS_CHANGE_DIRECTIONS_PATH: directionsFile, OPENROUTER_API_KEY: "", NODE_OPTIONS: "" }, encoding: "utf8" });
       let completed = run();
       assert.equal(completed.status, 0, completed.stderr);
       assert.match(completed.stdout, /exactly 1 reviewed corrections/);
@@ -117,18 +134,35 @@ describe("writing the exact reviewed archive report", () => {
       assert.equal(written[0].current_state, "Corrected terms");
       assert.equal(written[0].change_type, "record_corrected");
       assert.equal(written[1].change_type, "limits_reduced");
+      assert.deepEqual(JSON.parse(readFileSync(directionsFile, "utf8")), { ...directions, directions: directions.directions.slice(1) });
+      const workflow = readFileSync(new URL("../.github/workflows/archive-settlement.yml", import.meta.url), "utf8");
+      const gate = workflow.match(/bash scripts\/gate-data-push\.sh([\s\S]*?)(?=\n      - name:)/)?.[1] ?? "";
+      const committable = new Set(gate.match(/\bdata\/[a-zA-Z0-9_./-]+\.json\b/g) ?? []);
+      const changedPaths = git("diff", "--name-only").toString().trim().split("\n").filter(file => file.startsWith("data/"));
+      assert.ok(changedPaths.length > 0);
+      for (const file of changedPaths) assert.ok(committable.has(file), `${file} changed outside the writing gate's committed paths`);
       seed();
       const before = readFileSync(log);
+      const directionsBefore = readFileSync(directionsFile);
       writeFileSync(reviewFile, JSON.stringify(report([result({ vendor: "Unapproved" })])));
       completed = run();
       assert.equal(completed.status, 1);
       assert.match(completed.stderr, /committed bytes/);
       assert.deepEqual(readFileSync(log), before);
+      assert.deepEqual(readFileSync(directionsFile), directionsBefore);
       writeFileSync(reviewFile, JSON.stringify(report([result(), result({ vendor: "Missing" })])));
       git("add", "reviewed.json"); git("commit", "-qm", "Unmatched key");
       completed = run();
       assert.equal(completed.status, 1);
       assert.match(completed.stderr, /found 0/);
+      assert.deepEqual(readFileSync(log), before);
+      assert.deepEqual(readFileSync(directionsFile), directionsBefore);
+      writeFileSync(reviewFile, JSON.stringify(report()));
+      git("add", "reviewed.json"); git("commit", "-qm", "Restore approval");
+      writeFileSync(directionsFile, JSON.stringify({ directions: "invalid" }));
+      completed = run();
+      assert.equal(completed.status, 1);
+      assert.match(completed.stderr, /directions array/);
       assert.deepEqual(readFileSync(log), before);
     } finally { rmSync(scratch, { recursive: true, force: true }); }
   });

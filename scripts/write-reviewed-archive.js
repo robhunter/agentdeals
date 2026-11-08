@@ -1,6 +1,7 @@
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { reviewKey } from "../dist/change-direction-review.js";
 import { CHANGES_PATH, readChangeLog } from "./change-log.js";
 import { correctionUsesListingPage, needsArchiveCheck, recordKey } from "./settle-discovered-records.js";
 import { writeSettledRecords } from "./write-settled-records.js";
@@ -31,6 +32,13 @@ export function writeReviewedArchive(changes, report, offers) {
   return written;
 }
 
+export function directionReviewsAfterWrite(review, before, after) {
+  if (!Array.isArray(review?.directions)) throw new Error("the direction review must contain a directions array");
+  const held = new Set(before.map(reviewKey));
+  const remaining = new Set(after.map(reviewKey));
+  return { ...review, directions: review.directions.filter((entry) => !held.has(reviewKey(entry)) || remaining.has(reviewKey(entry))) };
+}
+
 function main() {
   const [file, ...extra] = process.argv.slice(2);
   if (!file || extra.length) throw new Error("give one committed reviewed report: node scripts/write-reviewed-archive.js <report.json>");
@@ -40,7 +48,15 @@ function main() {
   const log = readChangeLog(CHANGES_PATH);
   const offers = JSON.parse(readFileSync("data/index.json", "utf8")).offers;
   const written = writeReviewedArchive(log.changes, report, offers);
+  const directionsPath = process.env.AGENTDEALS_CHANGE_DIRECTIONS_PATH || resolve("data/change_directions.json");
+  const hasDirections = existsSync(directionsPath);
+  const review = hasDirections ? JSON.parse(readFileSync(directionsPath, "utf8")) : null;
+  const directions = hasDirections ? directionReviewsAfterWrite(review, log.changes, written.changes) : null;
   writeFileSync(CHANGES_PATH, JSON.stringify({ ...log, changes: written.changes }, null, 2) + "\n");
+  if (directions && directions.directions.length !== review.directions.length) {
+    writeFileSync(directionsPath, JSON.stringify(directions, null, 2) + "\n");
+    console.log(`Retired ${review.directions.length - directions.directions.length} direction reviews of replaced records`);
+  }
   console.log(`Wrote exactly ${written.written.length} reviewed corrections from ${file}`);
   for (const record of written.written) console.log(`${record.vendor} ${record.date} ${record.change_type}`);
 }
