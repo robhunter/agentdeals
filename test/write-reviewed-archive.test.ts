@@ -190,6 +190,8 @@ describe("writing reviewed vendor changes", () => {
     assert.deepEqual(changes, before);
     assert.deepEqual(written.changes[1].archive_check.brackets.map((b: Row) => b.last_old), ["2026-07-02"]);
     assert.equal(written.changes[3].archive_check.brackets[0].first_new, null);
+    const changedListingUrl = [{ vendor: "microlink.io", url: "https://microlink.io/pricing" }];
+    assert.deepEqual(writeReviewedArchive(changes, approvedVendorChanges, changedListingUrl).changes, written.changes.slice(0, 4));
   });
 
   it("refuses stale terms, changed checks and settled records before writing any approved row", () => {
@@ -215,6 +217,7 @@ describe("writing reviewed vendor changes", () => {
       (r: Row) => { r.results[0].brackets[0].first_new = r.results[0].brackets[0].last_old; },
       (r: Row) => { r.results[3].date_from_captures = "2026-09-01"; },
       (r: Row) => { r.results[3].outcome = "ours"; },
+      (r: Row) => { r.results[3].source_url = "https://other.test/"; },
       (r: Row) => { r.today = "invalid"; },
       (r: Row) => { r.version = 1; },
     ];

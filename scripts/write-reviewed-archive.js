@@ -38,7 +38,7 @@ export function writeReviewedArchive(changes, report, offers) {
       }
       const dated = result.brackets.map((bracket) => bracket.first_new ?? report.today).sort()[0];
       if (result.date_from_captures !== dated) throw new Error(`reviewed date differs from its brackets: ${key}`);
-      if (!correctionUsesListingPage(record, offers) || record.source_url !== result.source_url) throw new Error(`reviewed source is not the current listing page: ${key}`);
+      if (record.source_url !== result.source_url) throw new Error(`reviewed source differs from the approved record: ${key}`);
       return { ...result, record_key: recordKey(record) };
     }
     if (result.outcome !== "ours") throw new Error(`only reviewed corrections may be written: ${key}`);
