@@ -30,7 +30,7 @@ import {
 import { resetVerificationStateCache } from "../dist/verification-state.js";
 import { rankOffers } from "../dist/ranking.js";
 import type { Offer } from "../dist/types.js";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, recordsInTheCatalogue } from "./population-floor.ts";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -287,7 +287,7 @@ describe("the catalogue as it stands", () => {
 
   it("says the read found the terms we published that day on every record it restated them for, where no confirmation or earlier read stands behind the terms", () => {
     const restated = settled.filter((o) => settledFromStore(o) === RESTATED && !o.restated_from && confirmationDate(o) === null);
-    assertPopulationFloor(restated.length, 10, "records whose last read restated the terms we publish, with no confirmation or earlier read behind them");
+    assertCoversPopulation(enriched.length, recordsInTheCatalogue(), "catalogue records checked for a read that restated their terms");
     const wrong = restated
       .map((o) => ({ o, note: lastReadNote(o, null, refusals.get(o.vendor.trim().toLowerCase()) ?? []) }))
       .filter(({ o, note }) => note !== readFoundTheTermsWePublished(o.last_read_date!))
