@@ -17,8 +17,8 @@ export const NOT_WRITTEN = {
 
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
 
-function storedBracket({ last_old, first_new, last_old_capture = null, first_new_capture = null }) {
-  return { last_old, first_new, last_old_capture, first_new_capture };
+function storedBracket({ last_old, first_new, last_old_capture = null, first_new_capture = null, claim_proof }) {
+  return { last_old, first_new, last_old_capture, first_new_capture, ...(claim_proof ? { claim_proof } : {}) };
 }
 
 function theCopyFromOurTextDay(result) {

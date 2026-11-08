@@ -694,7 +694,30 @@ function showsNoMove(verdict) {
   return verdict?.status === "same" || verdict?.status === "absent";
 }
 
-async function bracketMoves({ from, until, pool, compare, pageOf, statesWhatTheRecordCallsNew = async () => null, planNotOfferedAtStart = false }) {
+export function bracketStatesRecord(bracket) {
+  const older = bracket.claim_proof?.older?.verdict;
+  const newer = bracket.claim_proof?.newer?.verdict;
+  return older?.status === "stated" && older.previous_values?.length > 0 &&
+    ["stated", "removal_stated"].includes(newer?.status) && newer.stated_then?.length > 0;
+}
+
+export async function readBracketClaims(older, newer, readPreviousValue, readStatedBefore) {
+  const witness = async (page, read) => {
+    let verdict;
+    try {
+      verdict = read ? await read(page) : { status: "unknown", why: "no reader was supplied for this endpoint" };
+    } catch (error) {
+      verdict = { status: "unknown", why: `the endpoint reader failed: ${error?.message ?? error}` };
+    }
+    return { day: page.day, url: page.capture ? archivedCopyUrl(page.capture) : null, verdict };
+  };
+  return {
+    older: await witness(older, readPreviousValue),
+    newer: await witness(newer, readStatedBefore),
+  };
+}
+
+async function bracketMoves({ from, until, pool, compare, pageOf, readClaims, statesWhatTheRecordCallsNew = async () => null, planNotOfferedAtStart = false }) {
   const brackets = [];
   let start = from;
   let candidates = pool;
@@ -740,6 +763,7 @@ async function bracketMoves({ from, until, pool, compare, pageOf, statesWhatTheR
       last_old_capture: lastOld.capture ? archivedCopyUrl(lastOld.capture) : null,
       first_new_capture: firstNew.capture ? archivedCopyUrl(firstNew.capture) : null,
       narrowed_to_adjacent_captures: hi - lo <= 1,
+      claim_proof: await readClaims(lastOld, firstNew),
     });
     if (hi === candidates.length) return { brackets, moves_complete: true };
     const onward = await compare(firstNew, until);
@@ -832,6 +856,23 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     if (verdict.status === "stated" || verdict.status === "removal_stated") return true;
     return verdict.status === "unstated" && verdict.review?.length > 0 ? false : null;
   };
+  const previousValueReadings = new Map();
+  const previousValue = async (older) => {
+    const key = older.capture ? captureUrl(older.capture) : older.page;
+    if (!previousValueReadings.has(key)) {
+      reads++;
+      let verdict;
+      try {
+        verdict = readPreviousValue ? await readPreviousValue(older) : { status: "unknown", why: "no earlier-value reader was supplied" };
+      } catch (error) {
+        verdict = { status: "unknown", why: `the earlier-value reader failed: ${error?.message ?? error}` };
+      }
+      onRead({ older: older.page, newer: "the record's previous values", verdict });
+      previousValueReadings.set(key, verdict);
+    }
+    return previousValueReadings.get(key);
+  };
+  const readClaims = (older, newer) => readBracketClaims(older, newer, previousValue, statedBefore);
 
   const describePage = (page) => ({ page: page.page, ...describeDay(page.day, judgedOn, sideOfRecordDay(page.day, judgedOn)) });
   const forReview = (page, verdict) => ({ outcome: "no_usable_capture", compared_with: describePage(page), review: verdict.review, why: verdict.why });
@@ -908,15 +949,27 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       if (now.status === "review") return agreed(now, [], todayPage);
       if (now.status !== "differ") return unsettled({ outcome: "no_usable_capture", compared_with: comparedWith, why: `the capture before the record's day states the old capture's terms, but the reader could not compare today's page: ${now.why}` });
       deciding = now;
-      moves = await bracketMoves({ from: end, until: todayPage, pool: captures.filter((capture) => capture.timestamp > end.capture.timestamp), compare, pageOf, statesWhatTheRecordCallsNew });
+      moves = await bracketMoves({ from: end, until: todayPage, pool: captures.filter((capture) => capture.timestamp > end.capture.timestamp), compare, pageOf, readClaims, statesWhatTheRecordCallsNew });
     } else {
       const pool = captures.filter((capture) => capture.timestamp > old.capture.timestamp && (!end.capture || capture.timestamp < end.capture.timestamp));
-      moves = await bracketMoves({ from: old, until: end, pool, compare, pageOf, statesWhatTheRecordCallsNew, planNotOfferedAtStart: first.plan === "appeared" });
+      moves = await bracketMoves({ from: old, until: end, pool, compare, pageOf, readClaims, statesWhatTheRecordCallsNew, planNotOfferedAtStart: first.plan === "appeared" });
     }
     const placed = moves.brackets.map((bracket) => ({ ...bracket, relative_to_record: placeBesideRecord(bracket, judgedOn, today) }));
-    const recordMoves = placed.filter((bracket) => bracket.relative_to_record !== "after");
-    const laterMoves = placed.filter((bracket) => bracket.relative_to_record === "after");
-    if (recordMoves.length === 0) return agreed(deciding, laterMoves);
+    const unverified = placed.filter((bracket) => !bracketStatesRecord(bracket));
+    const verified = placed.filter(bracketStatesRecord);
+    const recordMoves = verified.filter((bracket) => bracket.relative_to_record !== "after");
+    const laterMoves = verified.filter((bracket) => bracket.relative_to_record === "after");
+    if (recordMoves.length === 0) {
+      if (unverified.length > 0) return {
+        outcome: "no_usable_capture",
+        compared_with: comparedWith,
+        why: "neither endpoint pair establishes the record's earlier value and new claim",
+        differences: deciding.differences,
+        unverified_brackets: unverified,
+        later_moves: laterMoves,
+      };
+      return agreed(deciding, laterMoves);
+    }
     return {
       outcome: "vendor_changed",
       compared_with: comparedWith,
@@ -927,6 +980,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       differences: deciding.differences,
       direction: deciding.direction,
       brackets: recordMoves,
+      ...(unverified.length ? { unverified_brackets: unverified } : {}),
       later_moves: laterMoves,
       moves_complete: moves.moves_complete,
       date: recordMoves.length === 1 && moves.moves_complete ? recordMoves[0].first_new : null,
