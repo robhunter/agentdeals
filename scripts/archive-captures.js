@@ -790,7 +790,10 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     const key = captureUrl(capture);
     if (!texts.has(key)) {
       const stored = await archive.captureHtml(capture);
-      const redirect = !stored.unavailable && /<meta\b[^>]*http-equiv\s*=\s*["']?refresh\b|(?:window\.|document\.)?location(?:\.href)?\s*=\s*["'][^"']+["']|location\.(?:replace|assign)\s*\(\s*["']/i.test(stored.html);
+      const redirect = !stored.unavailable && (
+        /<meta\b[^>]*http-equiv\s*=\s*["']?refresh\b/i.test(stored.html) ||
+        [...stored.html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)].some((match) => /^\s*(?:(?:window|document|self|top)\.)?location(?:(?:\.href)?\s*=\s*["'][^"']+["']|\.(?:replace|assign)\s*\(\s*["'][^"']+["']\s*\))\s*;?\s*$/i.test(match[1]))
+      );
       const text = stored.unavailable || redirect ? "" : stripHtml(stored.html);
       if (stored.unavailable) captureProblems.set(key, { unavailable: stored.unavailable });
       else if (redirect || text.length < MIN_PAGE_TEXT_LENGTH) captureProblems.set(key, { skipped: redirect ? "redirect shell" : "too little page text" });

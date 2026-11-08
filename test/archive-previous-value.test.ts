@@ -102,6 +102,18 @@ describe("affirmative year-old evidence for a correction", () => {
     }
   });
 
+  it("reads page terms alongside a conditional sign-in redirect", async () => {
+    const options = oneSignalOptions({ "20250101120000": NEW_MOBILE, "20260917120000": NEW_MOBILE });
+    const native = options.archive.captureHtml;
+    options.archive.captureHtml = async (capture: Capture) => {
+      const response = await native(capture);
+      return { html: response.html + '<script>if(localStorage.getItem("has-public-session")){if(location.pathname==="/"){location.replace("https://app.example.com")}}</script>' };
+    };
+    const result = await settleAgainstCaptures(options);
+    assert.strictEqual(result.outcome, "ours");
+    assert.deepStrictEqual(result.historical_proof.skipped, []);
+  });
+
   it("refuses a failed Archive response instead of silently using an older capture", async () => {
     const options = oneSignalOptions({ "20250101120000": NEW_MOBILE, "20251101120000": null, "20260917120000": NEW_MOBILE });
     const result = await settleAgainstCaptures(options);
