@@ -45,6 +45,21 @@ export function archiveSettlementSummary(report) {
   const table = (results) => ["| Vendor | Record day | Type | Outcome | Reason |", "|---|---|---|---|---|", ...rows(results)];
   const lines = [`### Archive settlement: ${report.results.length} unsettled first readings`, "", ...table(report.results)];
   if (report.audit) lines.push("", `### Existing corrections audited: ${report.audit.results.length}`, "", `${report.audit.results.filter((result) => result.verdict_changed).length} verdicts differ from the earlier ours outcome. Audit results are not written by this run.`, "", ...table(report.audit.results));
+  lines.push("", reviewCorrectionsSummary(report));
+  return lines.join("\n") + "\n";
+}
+
+export function reviewCorrectionsSummary(report) {
+  const reviewed = [
+    ...report.results.map((result) => ({ pass: "unsettled", ...result })),
+    ...(report.audit?.results ?? []).map((result) => ({ pass: "audit", ...result })),
+  ].filter((result) => result.settled_from_review && result.outcome === "ours");
+  const lines = [`### Review records settled as our corrections: ${reviewed.length}`, "", "| Pass | Vendor | Record day | Stated-before lines | Review lines |", "|---|---|---|---|---|"];
+  for (const result of reviewed) {
+    const stated = result.stated_then.map((line) => `${line.record}: ${line.old}`).join("; ");
+    const review = (result.review ?? []).map((line) => `${line.old ?? ""} → ${line.new ?? ""}: ${line.why ?? ""}`).join("; ");
+    lines.push(`| ${[result.pass, result.vendor, result.date, stated, review].map(tableCell).join(" | ")} |`);
+  }
   return lines.join("\n") + "\n";
 }
 
@@ -70,6 +85,7 @@ async function main() {
   });
   writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
   writeFileSync(`${out}.md`, archiveSettlementSummary(report));
+  writeFileSync(`${out}.review.md`, reviewCorrectionsSummary(report));
   console.log(`Report: ${out}`);
 }
 

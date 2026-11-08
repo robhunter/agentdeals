@@ -54,6 +54,9 @@ using their original records from that revision. Audit results are reported sepa
 and are never written by `node scripts/write-settled-records.js <report.json>`. The
 scheduled writer replaces unsettled checks only with settled verdicts, then submits
 the data through the data gate.
+For the first writing run, dispatch with `report_pr` set to the implementation PR:
+the job posts every review settled as a correction, with both sets of quoted lines,
+before invoking the writer. An unsuccessful comment prevents that run's write.
 
 ### HTTP Transport
 

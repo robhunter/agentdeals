@@ -9,6 +9,10 @@ on:
         description: "Optional commit before archive corrections were written, to audit their original records"
         required: false
         default: ""
+      report_pr:
+        description: "PR to receive the full review-to-correction list before this run writes data"
+        required: false
+        default: ""
 
 permissions:
   actions: write
@@ -46,6 +50,15 @@ jobs:
           node scripts/run-archive-settlement.js --out "$RUNNER_TEMP/archive-settlement.json" ${AUDIT_REF:+--audit-ours-from "$AUDIT_REF"}
           cat "$RUNNER_TEMP/archive-settlement.json.md" >> "$GITHUB_STEP_SUMMARY"
           git diff --exit-code -- data
+
+      - name: List corrections settled from reviews on the requested pull request before writing
+        if: inputs.report_pr != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPORT_PR: ${{ inputs.report_pr }}
+        run: |
+          [[ "$REPORT_PR" =~ ^[1-9][0-9]*$ ]]
+          gh pr comment "$REPORT_PR" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/archive-settlement.json.review.md"
 
       - name: Write settled results over missing or unsettled archive checks
         run: |

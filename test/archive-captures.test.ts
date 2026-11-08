@@ -1119,8 +1119,8 @@ describe("settling a first reading's difference against the page as the Archive 
     assert.deepStrictEqual(settled.tried, [{ day: "2026-02-10", gap_days: 5, side: "before", why: 'the capture settles nothing: "10,000 calls a month" occurs more than once on the old page, so it cannot refute the difference' }]);
   });
 
-  it("puts a record on the review list, never ours, when the only differences on the record's day are lines one page states", async () => {
-    const { result } = settle({ todayTerms: "A_bandwidth", termsOn: (day) => (day <= "2026-06-09" ? "A" : "A_bandwidth"), reader: linesPairReader() });
+  it("keeps review lines when the older capture does not state the recorded claim", async () => {
+    const { result } = settle({ todayTerms: "A_bandwidth", termsOn: (day) => (day <= "2026-06-09" ? "A" : "A_bandwidth"), reader: linesPairReader(), statedBefore: statesTheRecordWhere(() => false) });
     const settled = await result;
     assert.strictEqual(settled.outcome, "no_usable_capture");
     assert.deepStrictEqual(settled.review, [{ old: "", new: "bandwidth", why: "one page states it" }]);
@@ -1128,8 +1128,8 @@ describe("settling a first reading's difference against the page as the Archive 
     assert.deepStrictEqual(settled.capture, { day: "2026-02-15", gap_days: 0, side: "before", url: "https://web.archive.org/web/20260215120000/https://example.com/pricing" });
   });
 
-  it("puts a record on the review list when the capture before the record's day agrees but today's page differs only by lines one page states", async () => {
-    const { result } = settle({ todayTerms: "A_bandwidth", days: everyDay("2026-01-01", "2026-08-20"), termsOn: () => "A", reader: linesPairReader() });
+  it("keeps today's review lines when the older capture does not state the recorded claim", async () => {
+    const { result } = settle({ todayTerms: "A_bandwidth", days: everyDay("2026-01-01", "2026-08-20"), termsOn: () => "A", reader: linesPairReader(), statedBefore: statesTheRecordWhere(() => false) });
     const settled = await result;
     assert.strictEqual(settled.outcome, "no_usable_capture");
     assert.strictEqual(settled.compared_with.page, "today");

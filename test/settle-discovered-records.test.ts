@@ -262,7 +262,7 @@ describe("settling the backlog", () => {
       captureHtml: async () => ({ html: `<html><body><p>TERMS=A</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
     };
     const report = await settleFirstReadings({
-      statedReaderForRecord: () => statesItAlready,
+      statedReaderForRecord: (record: { vendor: string }) => record.vendor === "Epsilon" ? statesItAlready : async () => ({ status: "unstated", review: [{ record: "B", old: "" }] }),
       previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
       offers: [],
