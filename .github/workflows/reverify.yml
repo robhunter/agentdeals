@@ -3,13 +3,14 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "smoke (OneSignal and Mapbox) or backlog (all unsettled and the 42 corrections)"
+        description: "smoke, backlog, or mapbox-window (saved captures; no Archive calls)"
         required: true
         default: smoke
 permissions:
   contents: read
+  actions: read
 concurrency:
-  group: archive-settlement
+  group: ${{ inputs.mode == 'mapbox-window' && 'archive-window-replay' || 'archive-settlement' }}
   cancel-in-progress: false
 jobs:
   evaluate:
@@ -26,11 +27,21 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - name: Download the saved captures for the prompt-window replay
+        if: inputs.mode == 'mapbox-window'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh run download 42446506294 --name archive-settlement-evaluation --dir prior-evaluation
       - name: Read the records without writing catalogue data
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           ARCHIVE_EVAL_MODE: ${{ inputs.mode }}
-        run: node scripts/evaluate-archive.mjs
+        run: |
+          if [ "$ARCHIVE_EVAL_MODE" = "mapbox-window" ]; then
+            node scripts/replay-mapbox-window.mjs
+          else
+            node scripts/evaluate-archive.mjs
+          fi
       - name: Ensure catalogue bytes were preserved
         if: always()
         run: git diff --exit-code -- data
