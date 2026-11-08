@@ -1245,9 +1245,9 @@
       "vendor": "Terragrunt Scale",
       "change_type": "new_free_tier",
       "date": "2025-12-15",
-      "summary": "Gruntwork launches free tier for Terragrunt Scale IaC orchestration platform, positioned as HCP Terraform free tier alternative ahead of HashiCorp March 31, 2026 EOL. Includes GitOps, drift detection, and module update automation",
+      "summary": "Gruntwork announced a free tier for Terragrunt Scale and opened a waitlist for it, saying it would process applications in the new year. It positioned the tier as an alternative to the HCP Terraform free tier ahead of HashiCorp's March 31, 2026 end of life for that tier, \"with matching or higher limits compared to HCP Terraform\". Includes GitOps, drift detection, and module update automation",
       "previous_state": "No free tier — Team plan at $500/month",
-      "current_state": "Free tier with limits matching or exceeding HCP Terraform (500+ managed resources, GitOps, drift detection, Patcher)",
+      "current_state": "Free tier announced with a waitlist, \"for personal or small commercial use-cases\", with limits described as matching or higher than HCP Terraform's and no figure given (GitOps, drift detection, Patcher)",
       "impact": "medium",
       "source_url": "https://www.gruntwork.io/blog/announcing-the-terragrunt-scale-free-tier",
       "category": "Infrastructure",
@@ -9481,20 +9481,22 @@
     },
     {
       "vendor": "Terragrunt Scale",
-      "change_type": "pricing_restructured",
+      "change_type": "new_free_tier",
       "date": "2026-05-21",
-      "date_source": "discovered",
-      "summary": "The free tier now has a limit of 25 infrastructure units, down from \"500+ managed resources\" or matching HCP Terraform's free tier.",
-      "previous_state": "IaC orchestration platform by Gruntwork — free tier with GitOps from GitHub/GitLab, dependency-ordered plan/apply, drift detection, and module update automation. Limits match or exceed HCP Terraform free tier (500+ managed resources). Positioned as HCP Terraform alternative",
-      "current_state": "All plans include unlimited runs and resources. Free Forever $0 Free Up to 25 infrastructure units* For individuals, start-ups, or teams looking to try before buying Terragrunt-native IaC Pipeline Unlimited Runs Unlimited Resources (no RUM) Community Support",
-      "impact": "high",
+      "date_source": "hand_written",
+      "summary": "Terragrunt Scale's pricing page added a Free Forever plan at $0, with up to 25 infrastructure units, between the Internet Archive's copies of 2026-03-18 and 2026-05-21. The copy of 2026-03-18 lists only Team, at \"$500/mo*\", and Enterprise. Gruntwork had opened a waitlist for the free tier on 2025-12-15.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "No free plan: Team (\"$500/mo*\") and Enterprise; \"Get unlimited runs, runners, and resources with either plan.\" (terragrunt.com/terragrunt-scale, archived 2026-03-18)",
+      "current_state": "\"Free Forever\", \"$0\": \"Up to 25 infrastructure units*\", \"For individuals, start-ups, or teams looking to try before buying\"; \"All plans include unlimited runs and resources.\" (terragrunt.com/terragrunt-scale, archived 2026-05-21)",
+      "impact": "medium",
       "source_url": "https://terragrunt.com/terragrunt-scale",
       "category": "Infrastructure",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-02",
       "archive_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-11-08",
         "outcome": "vendor_changed",
         "brackets": [
           {
@@ -9505,6 +9507,19 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Terragrunt Scale",
+      "change_type": "record_corrected",
+      "date": "2026-11-08",
+      "summary": "Data correction - between the Internet Archive's copies of 2026-03-18 and 2026-05-21, Terragrunt Scale's pricing page added its Free plan, with up to 25 infrastructure units. We had recorded this as a cut from 500+ managed resources, a figure Gruntwork never published: its post of 2025-12-15 promised limits matching or higher than HCP Terraform's and gave no number.",
+      "previous_state": "Recorded 2026-09-02 as pricing_restructured: a limit of 25 infrastructure units, down from 500+ managed resources",
+      "current_state": "new_free_tier, between 2026-03-18 and 2026-05-21 from Internet Archive copies of terragrunt.com/terragrunt-scale",
+      "impact": "low",
+      "source_url": "https://terragrunt.com/terragrunt-scale",
+      "category": "Infrastructure",
+      "recorded_date": "2026-11-08",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Crystallize",
@@ -10545,9 +10560,9 @@
       "vendor": "Uploadcare",
       "change_type": "limits_increased",
       "date": "2026-05-17",
-      "date_source": "discovered",
-      "summary": "The free tier now includes 1,000 operations per month and a 500 MB max file size, instead of 100 MB. It also includes features like uploading widget, basic image transformations, and adaptive bitrate streaming.",
-      "previous_state": "File uploading API and image CDN — free tier for small-scale projects with file upload widget, image transformations, adaptive delivery. 100 MB file size limit. Usage resets monthly",
+      "date_source": "hand_written",
+      "summary": "Uploadcare raised its Free plan's max file size from 10 MB to 500 MB and added adaptive bitrate streaming, between the Internet Archive's copies of 2026-04-12 and 2026-05-17. The plan kept 1,000 operations per month and personal use only.",
+      "previous_state": "Free, $0: 1,000 operations per month, \"10 MB max file size\", uploading widget and API, basic image transformations; \"Personal use only\" (uploadcare.com/pricing, archived 2026-04-12)",
       "current_state": "Free tier includes 1,000 operations per month, 500 MB max file size, uploading widget, basic image transformations, and adaptive bitrate streaming. Personal use only.",
       "impact": "medium",
       "source_url": "https://uploadcare.com/pricing/",
@@ -10566,7 +10581,9 @@
             "first_new_capture": "https://web.archive.org/web/20260517044833/https://uploadcare.com/pricing/"
           }
         ]
-      }
+      },
+      "tier": "Free",
+      "tier_direction": "widened"
     },
     {
       "vendor": "DBOS",
