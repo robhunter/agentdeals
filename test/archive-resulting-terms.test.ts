@@ -21,6 +21,7 @@ describe("an archived endpoint states the resulting terms", () => {
     assert.equal(verdict.status, "stated");
     assert.deepEqual(verdict.stated_then.map((row: { old: string }) => row.old), changes.map(row => row.old_page));
     assert.equal(judgeStatedBefore({ changes: changes.slice(0, 1) }, record, page).status, "unstated");
+    assert.equal(judgeStatedBefore({ changes: [{ record: "500K", old_page: "500k events ingested" }, { record: "500MB", old_page: "500MB" }] }, record, page).status, "stated");
   });
 
   it("still requires every distinct new figure from the summary and reading", () => {
@@ -49,6 +50,24 @@ describe("an archived endpoint states the resulting terms", () => {
     assert.equal(judgeStatedBefore({ changes: [{ record: "from $0.50 to $1.25", old_page: "$1.25 per month" }] }, row, "$1.25 per month").status, "stated");
   });
 
+  it("retains a new eligibility deadline introduced by before", () => {
+    const row = { ...record, summary: "Free access requires signing up before 2027-01-01.", current_state: "Free access requires signing up before 2027-01-01." };
+    assert.equal(judgeStatedBefore({ changes: [{ record: row.summary, old_page: "Free access" }] }, row, "Free access").status, "unstated");
+  });
+
+  it("retains a new condition after a clause quoting the old allowance", () => {
+    const row = { ...record, summary: "Storage is 500MB instead of 100MB, with 60-day retention.", current_state: "500MB storage with 60-day retention." };
+    assert.equal(judgeStatedBefore({ changes: [{ record: "500MB", old_page: "500MB storage" }] }, row, "500MB storage").status, "unstated");
+  });
+
+  it("does not treat an observation of missing text as a resulting allowance", () => {
+    const omission = "The number of users is no longer listed as a limit for the Hobby tier.";
+    const row = { ...record, summary: `${record.summary} ${omission}` };
+    assert.equal(judgeStatedBefore({ changes: [...changes, { record: omission, old_page: "" }] }, row, page).status, "stated");
+    const onlyOmission = { ...row, summary: "The free tier no longer explicitly mentions a limit of three free projects." };
+    assert.equal(judgeStatedBefore({ changes: [{ record: onlyOmission.summary, old_page: "" }] }, onlyOmission, page).status, "unstated");
+  });
+
   it("requires an affirmative removal rather than an omitted plan", () => {
     const row = { ...record, change_type: "free_tier_removed", summary: "The free tier is removed. Previously 100K events.", current_state: "No free tier. Paid plans start at $10." };
     const answer = { changes: [{ record: "The free tier is removed", old_page: "No free tier." }, { record: "Previously 100K events.", old_page: "" }] };
@@ -75,9 +94,9 @@ describe("a quoted earlier qualitative feature", () => {
   });
 
   it("refuses a single generic word, a paraphrase and an unchanged feature", () => {
-    for (const patch of [{ previous: "models" }, { old_page: "Access models in the cloud" }, { current: "cloud models" }]) {
+    for (const patch of [{ previous: "models" }, { previous: "Free plan", old_page: "Free plan" }, { old_page: "Access models in the cloud" }, { current: "cloud models" }]) {
       const answer = { previous_values: [{ ...value, ...patch }] };
-      assert.equal(judgePreviousValue(answer, row, "Access cloud models. Access models in the cloud.").status, "unknown");
+      assert.equal(judgePreviousValue(answer, row, "Free plan. Access cloud models. Access models in the cloud.").status, "unknown");
     }
   });
 
@@ -85,6 +104,7 @@ describe("a quoted earlier qualitative feature", () => {
     assert.equal(judgePreviousValue({ previous_values: [{ previous: "100K events", current: "500K events", old_page: "500K events" }] }, record, "500K events").status, "unknown");
     const prompt = previousValuePrompt(row, { day: "2026-08-27", text: "Access cloud models" });
     assert.ok(prompt.includes("smallest fragment naming that value"));
-    assert.ok(prompt.includes("qualitative feature can be an earlier value"));
+    assert.ok(prompt.includes("qualitative feature without a number"));
+    assert.ok(prompt.includes("stop after the first clear witness"));
   });
 });

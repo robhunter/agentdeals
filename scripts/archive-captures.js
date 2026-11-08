@@ -546,7 +546,7 @@ ${record.current_state}
 OLD PAGE (saved ${older.day}, truncated):
 ${clip(older.text)}
 
-Step 1. List only the resulting terms THE RECORD calls new: each resulting price, limit, included feature or condition, who can get the plan, and any product or plan it says has ended or is ending. THE NEW DESCRIPTION gives context, not additional claims to check. Copy a short exact fragment of THE RECORD for each resulting term. In "from X to Y", check Y, never X. Exclude previous-term clauses introduced by "before", "previously", "instead of" or "down from", and sentences about archive copies, changelogs or our evidence. Do not ask the page to describe the transition or say that a limit increased. For a removal, keep the removal claim; the page must state the removal, not merely omit the old plan.
+Step 1. List only the resulting terms THE RECORD calls new: each resulting price, limit, included feature or condition, who can get the plan, and any product or plan it says has ended or is ending. THE NEW DESCRIPTION gives context, not additional claims to check. Copy a short exact fragment of THE RECORD for each resulting term. In "from X to Y", check Y, never X. Exclude previous-term clauses introduced by "before", "previously", "instead of" or "down from", and sentences about archive copies, changelogs or our evidence. A statement that an old limit is no longer listed or mentioned is an observation about missing text, not a resulting allowance: omit it, without inferring an unlimited allowance. Do not ask the page to describe the transition or say that a limit increased. For a removal, keep the removal claim; the page must state the removal, not merely omit the old plan.
 Step 2. For each change, copy the words on OLD PAGE that already state the same thing, exactly as they appear on that page, as one short fragment. Never reword the fragment, and never join words that are apart on the page. If OLD PAGE does not state it, leave it empty.
 
 Respond with exactly one JSON object and no other text:
@@ -572,9 +572,11 @@ function removalUnstatedBecause(changeType, changes) {
 
 export function resultingTermsIn(summary) {
   return String(summary ?? "").split(/(?<=[.!?])\s+(?=[A-Z])/).map((sentence) => sentence
+    .replace(/^[^;]*\bno longer\s+(?:explicitly\s+)?(?:listed|mentioned|specified|mentions?|lists?|specifies)\b[^;]*/gi, "")
     .replace(/\bfrom\s+[^;]+?\s+to\s+/gi, "to ")
-    .replace(/\b(?:before|previously)\b[^;]*/gi, "")
-    .replace(/\b(?:instead of|down from)\s+[^;]*/gi, "")
+    .replace(/(^|[;,(])\s*before\b[^;]*/gi, "$1")
+    .replace(/\bpreviously\b[^;]*/gi, "")
+    .replace(/\b(?:instead of|down from)\s+.*?(?=;|,\s+(?:and|with|including)\b|$)/gi, "")
     .replace(/\b(?:the Internet Archive(?:'s|’s)? copy|its changelog|the changelog)\b[^;]*/gi, "")
   ).join(" ");
 }
@@ -634,8 +636,8 @@ ${record.current_state}
 ARCHIVED PAGE (saved ${older.day}):
 ${String(older.text ?? "").slice(0, maxLength)}
 
-Find only earlier values that THE RECORD says were replaced or removed. Do not include a value that is unchanged, or a limit merely absent from THE PREVIOUS DESCRIPTION. All quoted fragments must refer to the same plan and feature; a different plan's price is not evidence.
-For each earlier value still stated on ARCHIVED PAGE, copy three short exact fragments: the earlier value from THE PREVIOUS DESCRIPTION or THE RECORD, its replacement from THE NEW DESCRIPTION, and the earlier value from ARCHIVED PAGE. Use the smallest fragment naming that value, without unrelated limits or extra parenthetical values. A qualitative feature can be an earlier value: quote its shared feature words exactly, rather than a whole description whose other features the page does not state. Do not join separated words. Give an empty list if the page states no such earlier value.
+Find only one earlier value that THE RECORD says was replaced or removed. One supported value is sufficient: stop after the first clear witness. Do not include a value that is unchanged, or a limit merely absent from THE PREVIOUS DESCRIPTION. All quoted fragments must refer to the same plan and feature; a different plan's price is not evidence.
+Copy three short exact fragments: the earlier value from THE PREVIOUS DESCRIPTION or THE RECORD, its replacement from THE NEW DESCRIPTION, and the earlier value from ARCHIVED PAGE. Use the smallest fragment naming that value, without unrelated limits or extra parenthetical values. For a qualitative feature without a number, the earlier fragment must occur word for word in both THE RECORD or THE PREVIOUS DESCRIPTION and ARCHIVED PAGE. For example, quote "cloud models" against "Access cloud models", rather than a whole description naming individual models or other features. Generic words such as "Free plan" alone do not state a feature. Do not join separated words. Give an empty list if the page states no such earlier value.
 
 Respond with exactly one JSON object and no other text:
 {"previous_values":[{"previous":"<earlier value copied from the previous description or record>","current":"<replacement copied from the new description>","old_page":"<earlier value copied from the archived page>"}]}`;
@@ -659,7 +661,7 @@ export function judgePreviousValue(answer, record, olderText, maxLength = PREVIO
     if (!page.includes(comparableText(old))) return unknown("the earlier value is not quoted from the capture");
     const was = termsOfLine(previous);
     if (comparableText(previous) === comparableText(replacement) || (was.values.length > 0 && sameTerms(was, termsOfLine(replacement)))) return unknown("the quoted earlier and replacement values do not differ");
-    const qualitativeValueStated = was.words.length >= 2 && comparableText(old).includes(comparableText(previous));
+    const qualitativeValueStated = was.words.filter((word) => !["free", "plan", "tier"].includes(word)).length >= 2 && comparableText(old).includes(comparableText(previous));
     if (was.values.length === 0 ? !qualitativeValueStated : valuesMissingFrom(was.values, valuesStated(old)).length > 0) return unknown("the capture's words do not state the quoted earlier value");
     values.push({ previous, current: replacement, old });
   }
