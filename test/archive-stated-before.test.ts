@@ -45,7 +45,7 @@ const IPWHO_CAPTURE = `IP Geolocation API. Fast, enterprise grade API at non-ent
 const statusOf = (record: ChangeRecord, changes: Change[], page: string) => judgeStatedBefore({ changes }, record, page);
 
 describe("a line on the old capture that already states what the record calls new", () => {
-  it("is found for each of OneSignal's limits on its capture from before the record, so the difference is ours", () => {
+  it("is found for each of OneSignal's limits on its capture from before the record", () => {
     const verdict = statusOf(ONESIGNAL, ONESIGNAL_ANSWER, ONESIGNAL_CAPTURE);
     assert.strictEqual(verdict.status, "stated");
     assert.deepStrictEqual(verdict.stated_then.map((change: { old: string }) => change.old), ONESIGNAL_ANSWER.map((change) => change.old_page));

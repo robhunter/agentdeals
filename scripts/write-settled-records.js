@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { CHANGES_PATH, CORRECTION_TO_OUR_OWN_RECORD, readChangeLog } from "./change-log.js";
-import { recordKey, reviewList, worthAskingAgain } from "./settle-discovered-records.js";
+import { needsArchiveCheck, recordKey, reviewList, SETTLED_ARCHIVE_OUTCOMES, worthAskingAgain } from "./settle-discovered-records.js";
 import { differenceInOurTextSummary, OURS_ARCHIVE_OUTCOME } from "../dist/change-confirmation.js";
 
 export const STATED_THEN_SEPARATOR = " · ";
@@ -81,7 +81,7 @@ function whyNotWritten(result, matches, changes) {
   if (!result.record_key) return NOT_WRITTEN.noRecordKey;
   if (matches.length === 0) return NOT_WRITTEN.noSuchRecord;
   if (matches.length > 1) return NOT_WRITTEN.severalRecords;
-  if (changes[matches[0]].archive_check) return NOT_WRITTEN.alreadyChecked;
+  if (changes[matches[0]].archive_check && !(needsArchiveCheck(changes[matches[0]]) && SETTLED_ARCHIVE_OUTCOMES.includes(result.outcome))) return NOT_WRITTEN.alreadyChecked;
   if (changes[matches[0]].resolution) return NOT_WRITTEN.noLongerInForce;
   return null;
 }

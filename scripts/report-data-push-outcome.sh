@@ -28,6 +28,7 @@ commit_subject_of_the_job() {
     "Page dates") echo "data(auto): page dates" ;;
     "Analytics rollup") echo "data(auto): analytics rollup" ;;
     "AI and LLM index") echo "data(auto): AI and LLM free-tier index" ;;
+    "Weekly archive settlement") echo "data(auto): archive settlement" ;;
     *) echo "" ;;
   esac
 }

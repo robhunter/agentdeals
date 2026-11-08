@@ -603,6 +603,60 @@ export function statedBeforeReaderFor(client, record) {
   return async (older) => judgeStatedBefore(parseStatedBeforeAnswer(await client.complete(statedBeforePrompt(record, older))), record, older.text);
 }
 
+export const PREVIOUS_VALUE_MAX_PAGE_TEXT_LENGTH = 100_000;
+
+export function previousValuePrompt(record, older, maxLength = PREVIOUS_VALUE_MAX_PAGE_TEXT_LENGTH) {
+  return `You are checking whether an archived page states an earlier value that a change record says changed.
+
+THE RECORD (${record.date}):
+${record.summary}
+
+THE PREVIOUS DESCRIPTION:
+${record.previous_state}
+
+THE NEW DESCRIPTION:
+${record.current_state}
+
+ARCHIVED PAGE (saved ${older.day}):
+${String(older.text ?? "").slice(0, maxLength)}
+
+Find only earlier values that THE RECORD says were replaced or removed. Do not include a value that is unchanged, or a limit merely absent from THE PREVIOUS DESCRIPTION. All quoted fragments must refer to the same plan and feature; a different plan's price is not evidence.
+For each earlier value still stated on ARCHIVED PAGE, copy three short exact fragments: the earlier value from THE PREVIOUS DESCRIPTION or THE RECORD, its replacement from THE NEW DESCRIPTION, and the earlier value from ARCHIVED PAGE. Do not join separated words. Give an empty list if the page states no such earlier value.
+
+Respond with exactly one JSON object and no other text:
+{"previous_values":[{"previous":"<earlier value copied from the previous description or record>","current":"<replacement copied from the new description>","old_page":"<earlier value copied from the archived page>"}]}`;
+}
+
+export function judgePreviousValue(answer, record, olderText, maxLength = PREVIOUS_VALUE_MAX_PAGE_TEXT_LENGTH) {
+  const unknown = (why) => ({ status: "unknown", why });
+  if (!Array.isArray(answer?.previous_values)) return unknown("the earlier-value reader's answer could not be parsed");
+  const page = comparableText(String(olderText ?? "").slice(0, maxLength));
+  const before = comparableText(record.previous_state);
+  const summary = comparableText(record.summary);
+  const current = comparableText(record.current_state);
+  const values = [];
+  for (const value of answer.previous_values) {
+    const previous = String(value?.previous ?? "").trim();
+    const replacement = String(value?.current ?? "").trim();
+    const old = String(value?.old_page ?? "").trim();
+    if (![previous, replacement, old].every((words) => comparableText(words))) return unknown("an earlier-value fragment is empty");
+    if (!before.includes(comparableText(previous)) && !summary.includes(comparableText(previous))) return unknown("the earlier value is not quoted from the record");
+    if (!current.includes(comparableText(replacement))) return unknown("the replacement is not quoted from the new description");
+    if (!page.includes(comparableText(old))) return unknown("the earlier value is not quoted from the capture");
+    const was = termsOfLine(previous);
+    if (sameTerms(was, termsOfLine(replacement))) return unknown("the quoted earlier and replacement values do not differ");
+    if (was.values.length === 0 || valuesMissingFrom(was.values, valuesStated(old)).length > 0) return unknown("the capture's words do not state the quoted earlier value");
+    values.push({ previous, current: replacement, old });
+  }
+  if (values.length > 0) return { status: "stated", previous_values: values };
+  if (String(olderText ?? "").length > maxLength) return unknown("the earlier-value reader did not see the whole capture");
+  return { status: "not_stated" };
+}
+
+export function previousValueReaderFor(client, record) {
+  return async (older) => judgePreviousValue(parseAnswerHolding(await client.complete(previousValuePrompt(record, older)), "previous_values"), record, older.text);
+}
+
 export const CAPTURE_WINDOW_DAYS = 60;
 export const MAX_READS_PER_BRACKET = 12;
 export const MAX_MOVES_BRACKETED = 3;
@@ -719,7 +773,7 @@ function sideOfRecordDay(day, recordDay) {
   return day < recordDay ? "before" : day > recordDay ? "after" : "on";
 }
 
-export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay, todayText, today, archive, readPair, readStatedBefore, onRead = () => {}, windowDays = CAPTURE_WINDOW_DAYS }) {
+export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay, todayText, today, archive, readPair, readStatedBefore, readPreviousValue, onRead = () => {}, windowDays = CAPTURE_WINDOW_DAYS }) {
   let reads = 0;
   if (!textDay) return { outcome: "text_day_unknown", reads };
   const judgedOn = recordDay && recordDay < today ? recordDay : today;
@@ -800,6 +854,18 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       const before = await statedBefore(old);
       if (before.status === "removal_stated") return { outcome: "removal_stated_before", compared_with: comparedWith, stated_then: before.stated_then, why: `the ${old.page} already states the removal, so it predates our text: to be dated` };
       if (before.status !== "stated") return { outcome: "no_usable_capture", compared_with: comparedWith, review: before.review, why: `the ${old.page} states the plan's terms as the page did on the record's day, but ${before.why}` };
+      const earlierCaptures = captures.filter((capture) => capture.timestamp !== old.capture.timestamp && dayOfTimestamp(capture.timestamp) <= judgedOn && (!end.capture || capture.timestamp < end.capture.timestamp));
+      for (const capture of earlierCaptures) {
+        const earlier = await pageOf(capture);
+        const historical = { prior_capture: { day: dayOfTimestamp(capture.timestamp), url: archivedCopyUrl(capture) } };
+        if (!earlier) return { outcome: "no_usable_capture", ...historical, why: "a capture before the agreeing capture could not be read, so an earlier vendor change cannot be excluded" };
+        if (!readPreviousValue) return { outcome: "no_usable_capture", ...historical, why: "no reader checked earlier captures for the record's previous value" };
+        reads++;
+        const previous = await readPreviousValue(earlier);
+        onRead({ older: earlier.page, newer: "the previous value", verdict: previous });
+        if (previous?.status === "stated") return { outcome: "no_usable_capture", ...historical, previous_values: previous.previous_values, why: "an earlier capture states the record's previous value, so the difference cannot be called ours" };
+        if (previous?.status !== "not_stated") return { outcome: "no_usable_capture", ...historical, why: `an earlier vendor change could not be excluded: ${previous?.why ?? "the earlier-value reader returned no verdict"}` };
+      }
       return { outcome: "ours", compared_with: comparedWith, terms_then: verdict.old_terms, stated_then: before.stated_then, later_moves: laterMoves };
     };
 

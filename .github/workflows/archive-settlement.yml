@@ -1,0 +1,103 @@
+name: Weekly archive settlement
+
+on:
+  schedule:
+    - cron: "0 20 * * 0"
+  workflow_dispatch:
+    inputs:
+      audit_ref:
+        description: "Optional commit before archive corrections were written, to audit their original records"
+        required: false
+        default: ""
+
+permissions:
+  actions: write
+  contents: write
+  issues: write
+
+concurrency:
+  group: archive-settlement
+  cancel-in-progress: false
+
+jobs:
+  settle:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.1"
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Settle every missing or unsettled first reading in one process
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          AUDIT_REF: ${{ inputs.audit_ref }}
+        run: |
+          node scripts/run-archive-settlement.js --out "$RUNNER_TEMP/archive-settlement.json" ${AUDIT_REF:+--audit-ours-from "$AUDIT_REF"}
+          cat "$RUNNER_TEMP/archive-settlement.json.md" >> "$GITHUB_STEP_SUMMARY"
+          git diff --exit-code -- data
+
+      - name: Write settled results over missing or unsettled archive checks
+        run: |
+          node scripts/write-settled-records.js "$RUNNER_TEMP/archive-settlement.json"
+          echo "written=true" >> "$GITHUB_OUTPUT"
+
+      - name: Run the suite, then push to main only if it is green
+        id: gate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GATE_UPDATE_PAGE_LASTMOD: "1"
+          GATE_REGENERATE_LLM_INDEX: "1"
+          GATE_SYNC_PAGE_REVIEWS: "1"
+        run: |
+          bash scripts/gate-data-push.sh \
+            data-quarantine/archive-settlement \
+            "data(auto): archive settlement of first readings" \
+            data/deal_changes.json data/page-lastmod.json data/page-reviews.json artifacts/free-llm-api-index/README.md
+
+      - name: Say where it can be seen what the gate did with this run's data
+        if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.drifted_guards != '' || steps.gate.outputs.pushed_commit != '' || steps.gate.outputs.pushed_nothing == 'true' || steps.gate.outputs.held_back_vendors != '')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QUARANTINED: ${{ steps.gate.outputs.quarantined }}
+          QUARANTINE_REF: ${{ steps.gate.outputs.quarantine_ref }}
+          QUARANTINE_REASON: ${{ steps.gate.outputs.quarantine_reason }}
+          PUSHED_OVER_FAILURES: ${{ steps.gate.outputs.pushed_over_failures }}
+          NON_BLOCKING_FILES: ${{ steps.gate.outputs.non_blocking_files }}
+          HELD_BACK_VENDORS: ${{ steps.gate.outputs.held_back_vendors }}
+          DRIFTED_GUARDS_BODY: ${{ steps.gate.outputs.drifted_guards_body }}
+          PUSHED_COMMIT: ${{ steps.gate.outputs.pushed_commit }}
+          PUSHED_NOTHING: ${{ steps.gate.outputs.pushed_nothing }}
+        run: |
+          if [ "$QUARANTINED" = "true" ]; then
+            bash scripts/report-data-push-outcome.sh "Weekly archive settlement" refused "$QUARANTINE_REF" "$QUARANTINE_REASON"
+            exit 0
+          fi
+          if [ -n "$HELD_BACK_VENDORS" ]; then
+            bash scripts/report-data-push-outcome.sh "Weekly archive settlement" held-back-a-vendor "$HELD_BACK_VENDORS"
+          fi
+          if [ -n "$DRIFTED_GUARDS_BODY" ] && [ -s "$DRIFTED_GUARDS_BODY" ]; then
+            bash scripts/report-data-push-outcome.sh "Weekly archive settlement" drifted-a-guard "$(cat "$DRIFTED_GUARDS_BODY")"
+          fi
+          if [ "$PUSHED_OVER_FAILURES" = "true" ]; then
+            bash scripts/report-data-push-outcome.sh "Weekly archive settlement" shipped-over-failures "$NON_BLOCKING_FILES"
+          fi
+          if [ -n "$PUSHED_COMMIT" ] || [ "$PUSHED_NOTHING" = "true" ]; then
+            bash scripts/report-data-push-outcome.sh "Weekly archive settlement" reached-main "$PUSHED_COMMIT"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: archive-settlement
+          path: ${{ runner.temp }}/archive-settlement.json*

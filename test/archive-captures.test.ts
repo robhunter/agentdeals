@@ -848,6 +848,7 @@ function settle(options: { textDay?: string | null; recordDay?: string; todayTer
       archive,
       readPair: reader.readPair,
       readStatedBefore: options.statedBefore ?? statesItAlready,
+      readPreviousValue: async () => ({ status: "not_stated" }),
     }),
   };
 }
@@ -880,6 +881,7 @@ function settlePlanPages(options: { plan: string; instead: string; offeredOn: (d
     archive,
     readPair: pairedReaderFor(client, { vendor: "Example", category: "Databases", tier: "Free" }),
     readStatedBefore: statesItAlready,
+    readPreviousValue: async () => ({ status: "not_stated" }),
   });
 }
 

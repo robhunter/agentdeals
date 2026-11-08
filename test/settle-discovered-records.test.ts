@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-const { firstReadingsInForce, splitOf, listingFor, settleFirstReadings, SPLIT, badgesByRecord, recordKey, inShard, parseShard, reviewList } = await import("../scripts/settle-discovered-records.js");
+const { firstReadingsInForce, needsArchiveCheck, splitOf, listingFor, settleFirstReadings, SPLIT, badgesByRecord, recordKey, inShard, parseShard, reviewList } = await import("../scripts/settle-discovered-records.js");
 
 type Change = Record<string, unknown>;
 
@@ -12,6 +12,26 @@ function change(fields: Change): Change {
 }
 
 describe("the first readings the archive check settles", () => {
+  it("retries a missing or unsettled check while preserving settled and unknown outcomes", () => {
+    assert.strictEqual(needsArchiveCheck({}), true);
+    for (const outcome of ["no_usable_capture", "page_unreadable_today", "text_day_unknown", "reader_failed"]) assert.strictEqual(needsArchiveCheck({ archive_check: { outcome } }), true);
+    for (const outcome of ["ours", "vendor_changed", "removal_stated_before", "future_outcome"]) assert.strictEqual(needsArchiveCheck({ archive_check: { outcome } }), false);
+  });
+
+  it("selects the unsettled backlog after classifying first readings over the full history", async () => {
+    const record = (vendor: string, outcome?: string) => change({ vendor, date: "2026-09-01", date_source: "discovered", previous_state: `${vendor} before`, current_state: `${vendor} after`, ...(outcome ? { archive_check: { outcome } } : {}) });
+    const changes = [record("Missing"), ...["no_usable_capture", "page_unreadable_today", "text_day_unknown", "reader_failed", "ours", "vendor_changed", "removal_stated_before", "unknown"].map((outcome) => record(outcome, outcome))];
+    changes.push(change({ vendor: "ours", date: "2026-09-02", date_source: "discovered", previous_state: "ours after", current_state: "later reading" }));
+    changes.push({ ...record("Retracted"), resolution: { state: "retracted" } });
+    const fetched: string[] = [];
+    const report = await settleFirstReadings({
+      changes, offers: [], today: "2026-11-08", unsettledOnly: true,
+      fetchToday: async (url: string) => { fetched.push(url); return { ok: false, error: "HTTP 403" }; },
+    });
+    assert.deepStrictEqual(report.results.map((result: { vendor: string }) => result.vendor), ["Missing", "no_usable_capture", "page_unreadable_today", "text_day_unknown", "reader_failed"]);
+    assert.strictEqual(fetched.length, 5);
+  });
+
   it("takes discovered records in force whose before is our catalogue text, not an earlier reading of ours", () => {
     const changes = [
       change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "our Alpha text", current_state: "Alpha read once" }),
@@ -193,6 +213,7 @@ describe("settling the backlog", () => {
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
       offers,
       today: "2026-09-28",
@@ -242,6 +263,7 @@ describe("settling the backlog", () => {
     };
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
       offers: [],
       today: "2026-09-28",
@@ -283,6 +305,7 @@ describe("settling the backlog", () => {
     };
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
       offers: [],
       today: "2026-09-28",
@@ -337,6 +360,7 @@ describe("settling the backlog", () => {
     };
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
       offers,
       today: "2026-09-28",
@@ -379,6 +403,7 @@ describe("records the Archive did not answer", () => {
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
       offers: [],
       today: "2026-09-28",
@@ -405,6 +430,7 @@ describe("checking the method on records whose outcome is already known", () => 
     assert.deepStrictEqual(firstReadingsInForce(changes, { includeResolved: true }).map((c: Change) => c.vendor), ["Alpha", "Beta"]);
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
       offers: [],
       today: "2026-09-28",
@@ -425,6 +451,7 @@ describe("the readings behind each outcome", () => {
     const run = (logReads: boolean) =>
       settleFirstReadings({
         statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async () => ({ status: "not_stated" }),
         changes,
         offers: [],
         today: "2026-09-28",
@@ -461,6 +488,7 @@ describe("a reader that fails on one record", () => {
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
       offers: [{ vendor: "Alpha", tier: "Free", category: "Databases" }],
       today: "2026-09-28",
@@ -481,6 +509,7 @@ describe("a reader that fails on one record", () => {
   it("is reported as a reader failure, with the reader's error, when the second ask fails too", async () => {
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes: [change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B" })],
       offers: [],
       today: "2026-09-28",
@@ -510,6 +539,7 @@ describe("each result names its record and the archived copy that settled it", (
     };
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
       offers: [],
       today: "2026-09-28",
