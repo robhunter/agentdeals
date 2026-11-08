@@ -7616,7 +7616,7 @@
     {
       "vendor": "Inngest",
       "change_type": "limits_increased",
-      "date": "2026-08-28",
+      "date": "2026-07-05",
       "date_source": "discovered",
       "summary": "The event limit has increased from 100K to 500K, and the span data ingested limit has increased from 100MB to 500MB. The number of users is no longer listed as a limit for the Hobby tier.",
       "previous_state": "Serverless workflow orchestration — 50K function executions/month, 100K events, 5 concurrent steps, 3 users, unlimited environments",
@@ -7628,8 +7628,49 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-06-06",
+            "first_new": "2026-07-05",
+            "last_old_capture": "https://web.archive.org/web/20260606102026/https://www.inngest.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260705013804/https://www.inngest.com/pricing",
+            "claim_proof": {
+              "older": {
+                "day": "2026-06-06",
+                "url": "https://web.archive.org/web/20260606102026/https://www.inngest.com/pricing",
+                "verdict": {
+                  "status": "stated",
+                  "previous_values": [
+                    {
+                      "previous": "100K events",
+                      "current": "500k events ingested",
+                      "old": "100k/mo included"
+                    }
+                  ]
+                }
+              },
+              "newer": {
+                "day": "2026-07-05",
+                "url": "https://web.archive.org/web/20260705013804/https://www.inngest.com/pricing",
+                "verdict": {
+                  "status": "stated",
+                  "stated_then": [
+                    {
+                      "record": "increased from 100K to 500K",
+                      "old": "500k events ingested"
+                    },
+                    {
+                      "record": "increased from 100MB to 500MB",
+                      "old": "500 MB span data ingested"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
       }
     },
     {
@@ -8510,7 +8551,7 @@
     {
       "vendor": "microlink.io",
       "change_type": "limits_reduced",
-      "date": "2026-08-28",
+      "date": "2026-07-23",
       "date_source": "discovered",
       "summary": "The free tier now offers 25 requests per day, down from 50.",
       "previous_state": "It turns any website into data such as metatags normalization, beauty link previews, scraping capabilities, or screenshots as a service. 50 requests per day, every day free.",
@@ -8522,8 +8563,45 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-07-02",
+            "first_new": "2026-07-23",
+            "last_old_capture": "https://web.archive.org/web/20260702160856/https://microlink.io/",
+            "first_new_capture": "https://web.archive.org/web/20260723220244/https://microlink.io/",
+            "claim_proof": {
+              "older": {
+                "day": "2026-07-02",
+                "url": "https://web.archive.org/web/20260702160856/https://microlink.io/",
+                "verdict": {
+                  "status": "stated",
+                  "previous_values": [
+                    {
+                      "previous": "50 requests per day",
+                      "current": "25 requests per day",
+                      "old": "50 requests per day"
+                    }
+                  ]
+                }
+              },
+              "newer": {
+                "day": "2026-07-23",
+                "url": "https://web.archive.org/web/20260723220244/https://microlink.io/",
+                "verdict": {
+                  "status": "stated",
+                  "stated_then": [
+                    {
+                      "record": "25 requests per day",
+                      "old": "25 requests per day"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
       }
     },
     {
@@ -8719,7 +8797,7 @@
     {
       "vendor": "BugBug",
       "change_type": "limits_reduced",
-      "date": "2026-08-28",
+      "date": "2026-08-18",
       "date_source": "discovered",
       "summary": "The free plan now has limits: 15 tests, 4 test suites, 1 user, and 1 project.",
       "previous_state": "Lightweight test automation tool for web applications. It is easy to learn and doesn't require coding. You can run unlimited tests on your own computer for free. You also get cloud monitoring and CI/CD integration for an additional monthly fee.",
@@ -8731,8 +8809,57 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-06-22",
+            "first_new": "2026-08-18",
+            "last_old_capture": "https://web.archive.org/web/20260622064530/https://bugbug.io/",
+            "first_new_capture": "https://web.archive.org/web/20260818121132/https://bugbug.io/",
+            "claim_proof": {
+              "older": {
+                "day": "2026-06-22",
+                "url": "https://web.archive.org/web/20260622064530/https://bugbug.io/",
+                "verdict": {
+                  "status": "stated",
+                  "previous_values": [
+                    {
+                      "previous": "unlimited tests",
+                      "current": "15 tests",
+                      "old": "Unlimited tests"
+                    }
+                  ]
+                }
+              },
+              "newer": {
+                "day": "2026-08-18",
+                "url": "https://web.archive.org/web/20260818121132/https://bugbug.io/",
+                "verdict": {
+                  "status": "stated",
+                  "stated_then": [
+                    {
+                      "record": "15 tests",
+                      "old": "15 tests"
+                    },
+                    {
+                      "record": "4 test suites",
+                      "old": "4 test suites"
+                    },
+                    {
+                      "record": "1 user",
+                      "old": "1 user"
+                    },
+                    {
+                      "record": "1 project",
+                      "old": "1 project"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
       }
     },
     {
@@ -15668,8 +15795,45 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-30",
       "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-28",
+            "first_new": null,
+            "last_old_capture": "https://web.archive.org/web/20260828130347/https://www.tracelog.io/",
+            "first_new_capture": null,
+            "claim_proof": {
+              "older": {
+                "day": "2026-08-28",
+                "url": "https://web.archive.org/web/20260828130347/https://www.tracelog.io/",
+                "verdict": {
+                  "status": "stated",
+                  "previous_values": [
+                    {
+                      "previous": "5,000",
+                      "current": "10,000",
+                      "old": "5k"
+                    }
+                  ]
+                }
+              },
+              "newer": {
+                "day": "2026-11-08",
+                "url": null,
+                "verdict": {
+                  "status": "stated",
+                  "stated_then": [
+                    {
+                      "record": "10,000 sessions/month",
+                      "old": "up to 10,000 sessions a month"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
       }
     },
     {

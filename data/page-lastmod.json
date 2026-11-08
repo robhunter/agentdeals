@@ -30,7 +30,7 @@
       "changed": "2026-11-08"
     },
     "/alternative-to": {
-      "hash": "fcb9a0433724dfa2",
+      "hash": "08be6206f80d334e",
       "changed": "2026-11-08"
     },
     "/alternative-to/360-monitoring": {
@@ -797,8 +797,8 @@
       "changed": "2026-11-08"
     },
     "/analytics-free-tier-comparison-2026": {
-      "hash": "e6cf339857df5f0f",
-      "changed": "2026-11-07"
+      "hash": "99e66f7acc4a01e0",
+      "changed": "2026-11-08"
     },
     "/api-development-alternatives": {
       "hash": "024e33c30563f782",
@@ -3025,8 +3025,8 @@
       "changed": "2026-10-21"
     },
     "/digest/2026-w27": {
-      "hash": "ea6ea820701bd0c8",
-      "changed": "2026-10-31"
+      "hash": "55c809d5f084bd0e",
+      "changed": "2026-11-08"
     },
     "/digest/2026-w28": {
       "hash": "a2900996c5f6cc6e",
@@ -3037,8 +3037,8 @@
       "changed": "2026-10-21"
     },
     "/digest/2026-w30": {
-      "hash": "3f3c4f04e23cb2c5",
-      "changed": "2026-10-31"
+      "hash": "0ac4f8cd2209e8fe",
+      "changed": "2026-11-08"
     },
     "/digest/2026-w31": {
       "hash": "7bb0b0bd57cfe3d4",
@@ -3053,11 +3053,11 @@
       "changed": "2026-10-21"
     },
     "/digest/2026-w34": {
-      "hash": "8bb9c193fa6c86fa",
-      "changed": "2026-11-05"
+      "hash": "0a9d3929c6e9ffe1",
+      "changed": "2026-11-08"
     },
     "/digest/2026-w35": {
-      "hash": "e6aab9bb8b83c6fc",
+      "hash": "9ed3bcedb95c99ac",
       "changed": "2026-11-08"
     },
     "/digest/2026-w36": {
@@ -3077,8 +3077,8 @@
       "changed": "2026-11-08"
     },
     "/digest/2026-w40": {
-      "hash": "78cb2a0f5e108f76",
-      "changed": "2026-10-30"
+      "hash": "5ad8d4801f5406ec",
+      "changed": "2026-11-08"
     },
     "/digest/2026-w41": {
       "hash": "16155929e4a3762d",
@@ -3156,7 +3156,7 @@
       "changed": "2026-10-31"
     },
     "/digest/archive": {
-      "hash": "b314b13d94898b05",
+      "hash": "5fb3d0a20df9d7d7",
       "changed": "2026-11-08"
     },
     "/digitalocean-free-tier-2026": {
@@ -3261,7 +3261,7 @@
       "changed": "2026-10-29"
     },
     "/free-tier-risk": {
-      "hash": "b6dd1beb4fcecd6e",
+      "hash": "b44b98a4aada9cd1",
       "changed": "2026-11-08"
     },
     "/free-tier-tracker": {
@@ -3621,7 +3621,7 @@
       "changed": "2026-11-08"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "5395d36ddb7db61c",
+      "hash": "03cf1a7f8317e226",
       "changed": "2026-11-08"
     },
     "/setup": {
@@ -3632,11 +3632,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "7f44ae7cc7df55eb",
+      "hash": "ac3055e12f85cd47",
       "changed": "2026-11-08"
     },
     "/stack-check": {
-      "hash": "f7fa26da514c6824",
+      "hash": "8ad5a33053fd4a57",
       "changed": "2026-11-08"
     },
     "/stacks": {
@@ -3668,7 +3668,7 @@
       "changed": "2026-11-08"
     },
     "/state-of-free-tiers": {
-      "hash": "fa058358f9ab5756",
+      "hash": "1d0d0bcac0da4a3c",
       "changed": "2026-11-08"
     },
     "/storage-alternatives": {
@@ -3696,11 +3696,11 @@
       "changed": "2026-11-06"
     },
     "/testing-alternatives": {
-      "hash": "69c4e6885f165cdd",
+      "hash": "be7afb1189c743ea",
       "changed": "2026-11-08"
     },
     "/testing-free-tier-comparison-2026": {
-      "hash": "55fe1cdeee77d84b",
+      "hash": "2fa7b71229257c56",
       "changed": "2026-11-08"
     },
     "/this-week": {
@@ -3717,8 +3717,8 @@
       "daily": true
     },
     "/trends/analytics": {
-      "hash": "6f6dea251aeac9b8",
-      "changed": "2026-11-05"
+      "hash": "3524a392bc6f4468",
+      "changed": "2026-11-08"
     },
     "/trends/api-development": {
       "hash": "c2c0625e4c7b28b5",
@@ -3732,8 +3732,8 @@
       "daily": true
     },
     "/trends/background-jobs": {
-      "hash": "f392a77c83ac37f4",
-      "changed": "2026-10-09"
+      "hash": "f6fb6fe7f2e4afb1",
+      "changed": "2026-11-08"
     },
     "/trends/browser-automation": {
       "hash": "a8db079b0c57d375",
@@ -3938,8 +3938,8 @@
       "changed": "2026-10-09"
     },
     "/trends/web-scraping": {
-      "hash": "7ebdc43aad1db2db",
-      "changed": "2026-11-07"
+      "hash": "9f055564b0077334",
+      "changed": "2026-11-08"
     },
     "/trends/workflow-automation": {
       "hash": "77aa809fc8099a1b",
@@ -4558,7 +4558,7 @@
       "changed": "2026-11-08"
     },
     "/vendor/bugbug": {
-      "hash": "8f6b18fc81bf043b",
+      "hash": "aeac1e5bce833d84",
       "changed": "2026-11-08"
     },
     "/vendor/bugfender-com": {
@@ -6453,7 +6453,7 @@
       "changed": "2026-11-08"
     },
     "/vendor/inngest": {
-      "hash": "f20a5f8e55eb807c",
+      "hash": "ac3c92ec18e338de",
       "changed": "2026-11-08"
     },
     "/vendor/insomnia": {
@@ -7132,7 +7132,7 @@
       "changed": "2026-11-08"
     },
     "/vendor/microlink-io": {
-      "hash": "ec84ffadc0c4501c",
+      "hash": "6697628bdfd80f74",
       "changed": "2026-11-08"
     },
     "/vendor/microsoft-ajax": {
@@ -8969,7 +8969,7 @@
       "changed": "2026-11-08"
     },
     "/vendor/tracelog": {
-      "hash": "58c7fa112dacc62f",
+      "hash": "1a0b89c32e08fbe5",
       "changed": "2026-11-08"
     },
     "/vendor/trackingplan": {
