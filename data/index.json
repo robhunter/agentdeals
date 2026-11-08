@@ -6803,7 +6803,15 @@
         "text": "Free $0/mo For individuals and organizations just starting out Get started now Access to: All channels Basic automation & analytics OneSignal AI & MCP Basic personalization",
         "url": "https://onesignal.com/pricing",
         "read_on": "2026-11-02"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Above 1,000 monthly active users, OneSignal pauses mobile push and in-app messages on the Free plan until the account upgrades; web push and email keep working under the Free plan's limits.",
+          "quote": "For accounts above the limit, mobile push and in-app messages will pause until you upgrade. Other channels, including web push and email will keep working under the existing plan limits.",
+          "url": "https://onesignal.com/blog/whats-changing-on-onesignals-free-plan/",
+          "read_on": "2026-11-08"
+        }
+      ]
     },
     {
       "vendor": "n8n",

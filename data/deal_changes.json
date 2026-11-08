@@ -13512,23 +13512,45 @@
     {
       "vendor": "OneSignal",
       "change_type": "limits_reduced",
-      "date": "2026-09-25",
-      "date_source": "discovered",
-      "summary": "The free tier now has limits on monthly active users for mobile push notifications (up to 1,000) and web push notifications (max 10,000 subscribers per send). Email sends are limited to 10,000/month.",
+      "date": "2026-09-01",
+      "date_source": "vendor_page",
+      "summary": "OneSignal limited mobile push and in-app messaging on its Free plan to organizations with up to 1,000 monthly active users, from September 1, 2026 for new customers and October 1, 2026 for existing customers. Above the limit, mobile push and in-app messages pause until the account upgrades; web push and email keep working under the existing limits. Mobile push had been unlimited on Free.",
       "tier": "Free",
       "tier_direction": "narrowed",
-      "previous_state": "Push notification platform — Free access to: 10,000/mo Free Email Sends Unlimited Mobile Push Sends. Web Push Notifications Max 10,000 subscribers per send.",
+      "previous_state": "Free: Unlimited Mobile Push Sends. Web Push Notifications Max 10,000 subscribers per send. 10,000/mo Free Email Sends.",
       "current_state": "Free $0/mo. Access to: All channels, Basic automation & analytics, OneSignal AI & MCP, Basic personalization. Mobile Push Notifications for organizations with up to 1,000 monthly active users. Web Push Notifications Max 10,000 subscribers per send. Email 10,000 sends / month.",
       "impact": "high",
-      "source_url": "https://onesignal.com/pricing",
+      "source_url": "https://onesignal.com/blog/whats-changing-on-onesignals-free-plan/",
       "category": "Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-25",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-04",
+            "first_new": "2026-09-07",
+            "last_old_capture": "https://web.archive.org/web/20260804172328/https://onesignal.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260907165917/https://onesignal.com/pricing"
+          }
+        ]
       }
+    },
+    {
+      "vendor": "OneSignal",
+      "change_type": "record_corrected",
+      "date": "2026-11-08",
+      "summary": "Data correction - OneSignal's 1,000 monthly-active-user limit on Free mobile push took effect on September 1, 2026 for new customers and October 1, 2026 for existing customers, not on 2026-09-25, the day our re-read found it. Our record also listed the Free plan's web push and email limits as new; they did not change.",
+      "previous_state": "Recorded 2026-09-25 as: The free tier now has limits on monthly active users for mobile push notifications (up to 1,000) and web push notifications (max 10,000 subscribers per send). Email sends are limited to 10,000/month.",
+      "current_state": "\"These changes take effect for new customers on September 1, 2026, and for existing customers on October 1, 2026.\"",
+      "impact": "medium",
+      "source_url": "https://onesignal.com/blog/whats-changing-on-onesignals-free-plan/",
+      "category": "Messaging",
+      "alternatives": [],
+      "recorded_date": "2026-11-08",
+      "date_source": "hand_written"
     },
     {
       "vendor": "podio.com",
