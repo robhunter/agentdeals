@@ -5459,7 +5459,7 @@
     {
       "vendor": "Doppler",
       "category": "Secrets Management",
-      "description": "Secrets management — up to 3 users, 10 projects, 4 environments per project. CLI, SDKs, and integrations included",
+      "description": "Secrets management — free for 3 users, $8 a month per additional user (Doppler: \"AI agents and non-human identities ride free\"). 10 projects, 4 environments per project, 3 days of activity logs. CLI, SDKs, and integrations included",
       "tier": "Free",
       "url": "https://www.doppler.com/pricing",
       "tags": [
@@ -28348,7 +28348,7 @@
     {
       "vendor": "Shake",
       "category": "Mobile Development",
-      "description": "In-app bug reporting and feedback tool for mobile apps — The Free plan is $0 forever and includes 20 bug reports per month, unlimited crash reports, unlimited app users, limited integrations, 3 team seats, 10,000 app installs, 1 month data retention, 1,000 logs in activity history, AI debugging, MCP server access, and access to the Slack community.",
+      "description": "In-app bug reporting and feedback tool for mobile apps — The Free plan is $0 forever and includes 20 bug reports per month, unlimited crash reports, unlimited app users, limited integrations, 3 team seats, 1 app on the dashboard, 10,000 app installs, 1 month data retention, 1,000 logs in activity history, AI debugging, MCP server access, and access to the Slack community.",
       "tier": "Free",
       "url": "https://www.shakebugs.com/pricing",
       "tags": [
@@ -28360,13 +28360,6 @@
         "checked": "2026-10-22",
         "outcome": "ok",
         "detail": "the page names Shake as \"shake\" and states \"$0\""
-      },
-      "restated_from": {
-        "reading_date": "2026-09-09",
-        "source_url": "https://www.shakebugs.com/pricing",
-        "record_date": "2026-09-09",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-20"
       }
     },
     {

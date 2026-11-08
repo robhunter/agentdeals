@@ -1930,7 +1930,8 @@
       "source_url": "https://www.shakebugs.com/pricing",
       "record_date": "2026-09-09",
       "change_type": "limits_increased",
-      "summary": "The free tier now has unlimited bug and crash reports, 10,000 app installs, and access to the Slack community."
+      "summary": "The free tier now has unlimited bug and crash reports, 10,000 app installs, and access to the Slack community.",
+      "reverted_on": "2026-11-08"
     },
     {
       "vendor": "file.io",
