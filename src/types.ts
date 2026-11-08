@@ -244,6 +244,10 @@ export interface ArchiveBracket {
   first_new: string | null;
   last_old_capture?: string | null;
   first_new_capture?: string | null;
+  claim_proof?: {
+    older: { day: string; url: string | null; verdict: Record<string, unknown> };
+    newer: { day: string; url: string | null; verdict: Record<string, unknown> };
+  };
 }
 
 export interface ArchiveCheck {

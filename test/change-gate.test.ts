@@ -603,7 +603,7 @@ describe("a recorded change must describe a change", () => {
     });
 
     it("says a page longer than the verifier's prompt limit was also read whole", async () => {
-      const page = await readWith(html(2000));
+      const page = await readWith(html(Math.ceil(MAX_PAGE_TEXT_LENGTH / "pricing detail ".length) + 1));
       assert.strictEqual(page.ok, true);
       assert.strictEqual(page.truncated, false);
       assert.ok(page.text.length > MAX_PAGE_TEXT_LENGTH);

@@ -1,7 +1,9 @@
 import { execFileSync } from "node:child_process";
 import { readDeprecation } from "../dist/product-deprecation.js";
 import { descriptionDeniesFreeTier } from "../dist/ranking.js";
-import { MAX_PAGE_TEXT_LENGTH, MIN_PAGE_TEXT_LENGTH, stripHtml } from "./verify-freshness.js";
+import { MIN_PAGE_TEXT_LENGTH, stripHtml } from "./verify-freshness.js";
+
+export const MAX_ARCHIVE_PAGE_TEXT_LENGTH = 12_000;
 
 const CDX_ENDPOINT = "https://web.archive.org/cdx/search/cdx";
 const WAYBACK = "https://web.archive.org/web";
@@ -186,7 +188,7 @@ export function comparableText(text) {
   return decodedText(text).replace(/[\s\u200B-\u200D\u2060\uFEFF]+/g, "");
 }
 
-export function pairedPrompt(listing, older, newer, maxLength = MAX_PAGE_TEXT_LENGTH) {
+export function pairedPrompt(listing, older, newer, maxLength = MAX_ARCHIVE_PAGE_TEXT_LENGTH) {
   const clip = (text) => String(text ?? "").slice(0, maxLength);
   return `You are comparing two copies of the same web page, saved on different days, to find out whether the terms of one plan changed between them.
 
@@ -531,7 +533,7 @@ export function pairedReaderFor(client, listing) {
   return async (older, newer) => judgePair(parsePairedAnswer(await client.complete(pairedPrompt(listing, older, newer))), older.text, newer.text);
 }
 
-export function statedBeforePrompt(record, older, maxLength = MAX_PAGE_TEXT_LENGTH) {
+export function statedBeforePrompt(record, older, maxLength = MAX_ARCHIVE_PAGE_TEXT_LENGTH) {
   const clip = (text) => String(text ?? "").slice(0, maxLength);
   return `You are checking whether an old copy of a web page already said what a change record calls new.
 
@@ -603,9 +605,65 @@ export function statedBeforeReaderFor(client, record) {
   return async (older) => judgeStatedBefore(parseStatedBeforeAnswer(await client.complete(statedBeforePrompt(record, older))), record, older.text);
 }
 
+export const PREVIOUS_VALUE_MAX_PAGE_TEXT_LENGTH = 100_000;
+
+export function previousValuePrompt(record, older, maxLength = PREVIOUS_VALUE_MAX_PAGE_TEXT_LENGTH) {
+  return `You are checking whether an archived page states an earlier value that a change record says changed.
+
+THE RECORD (${record.date}):
+${record.summary}
+
+THE PREVIOUS DESCRIPTION:
+${record.previous_state}
+
+THE NEW DESCRIPTION:
+${record.current_state}
+
+ARCHIVED PAGE (saved ${older.day}):
+${String(older.text ?? "").slice(0, maxLength)}
+
+Find only earlier values that THE RECORD says were replaced or removed. Do not include a value that is unchanged, or a limit merely absent from THE PREVIOUS DESCRIPTION. All quoted fragments must refer to the same plan and feature; a different plan's price is not evidence.
+For each earlier value still stated on ARCHIVED PAGE, copy three short exact fragments: the earlier value from THE PREVIOUS DESCRIPTION or THE RECORD, its replacement from THE NEW DESCRIPTION, and the earlier value from ARCHIVED PAGE. Do not join separated words. Give an empty list if the page states no such earlier value.
+
+Respond with exactly one JSON object and no other text:
+{"previous_values":[{"previous":"<earlier value copied from the previous description or record>","current":"<replacement copied from the new description>","old_page":"<earlier value copied from the archived page>"}]}`;
+}
+
+export function judgePreviousValue(answer, record, olderText, maxLength = PREVIOUS_VALUE_MAX_PAGE_TEXT_LENGTH) {
+  const unknown = (why) => ({ status: "unknown", why });
+  if (!Array.isArray(answer?.previous_values)) return unknown("the earlier-value reader's answer could not be parsed");
+  const page = comparableText(String(olderText ?? "").slice(0, maxLength));
+  const before = comparableText(record.previous_state);
+  const summary = comparableText(record.summary);
+  const current = comparableText(record.current_state);
+  const values = [];
+  for (const value of answer.previous_values) {
+    const previous = String(value?.previous ?? "").trim();
+    const replacement = String(value?.current ?? "").trim();
+    const old = String(value?.old_page ?? "").trim();
+    if (![previous, replacement, old].every((words) => comparableText(words))) return unknown("an earlier-value fragment is empty");
+    if (!before.includes(comparableText(previous)) && !summary.includes(comparableText(previous))) return unknown("the earlier value is not quoted from the record");
+    if (!current.includes(comparableText(replacement))) return unknown("the replacement is not quoted from the new description");
+    if (!page.includes(comparableText(old))) return unknown("the earlier value is not quoted from the capture");
+    const was = termsOfLine(previous);
+    if (sameTerms(was, termsOfLine(replacement))) return unknown("the quoted earlier and replacement values do not differ");
+    if (was.values.length === 0 || valuesMissingFrom(was.values, valuesStated(old)).length > 0) return unknown("the capture's words do not state the quoted earlier value");
+    values.push({ previous, current: replacement, old });
+  }
+  if (values.length > 0) return { status: "stated", previous_values: values };
+  if (String(olderText ?? "").length > maxLength) return unknown("the earlier-value reader did not see the whole capture");
+  return { status: "not_stated" };
+}
+
+export function previousValueReaderFor(client, record) {
+  return async (older) => judgePreviousValue(parseAnswerHolding(await client.complete(previousValuePrompt(record, older)), "previous_values"), record, older.text);
+}
+
 export const CAPTURE_WINDOW_DAYS = 60;
 export const MAX_READS_PER_BRACKET = 12;
 export const MAX_MOVES_BRACKETED = 3;
+export const OURS_MIN_CAPTURE_AGE_DAYS = 365;
+export const OURS_MAX_HISTORICAL_READINGS = 3;
 
 export function oldCaptureCandidates(captures, textDay, windowDays = CAPTURE_WINDOW_DAYS) {
   let before = null;
@@ -636,7 +694,30 @@ function showsNoMove(verdict) {
   return verdict?.status === "same" || verdict?.status === "absent";
 }
 
-async function bracketMoves({ from, until, pool, compare, pageOf, statesWhatTheRecordCallsNew = async () => null, planNotOfferedAtStart = false }) {
+export function bracketStatesRecord(bracket) {
+  const older = bracket.claim_proof?.older?.verdict;
+  const newer = bracket.claim_proof?.newer?.verdict;
+  return older?.status === "stated" && older.previous_values?.length > 0 &&
+    ["stated", "removal_stated"].includes(newer?.status) && newer.stated_then?.length > 0;
+}
+
+export async function readBracketClaims(older, newer, readPreviousValue, readStatedBefore) {
+  const witness = async (page, read) => {
+    let verdict;
+    try {
+      verdict = read ? await read(page) : { status: "unknown", why: "no reader was supplied for this endpoint" };
+    } catch (error) {
+      verdict = { status: "unknown", why: `the endpoint reader failed: ${error?.message ?? error}` };
+    }
+    return { day: page.day, url: page.capture ? archivedCopyUrl(page.capture) : null, verdict };
+  };
+  return {
+    older: await witness(older, readPreviousValue),
+    newer: await witness(newer, readStatedBefore),
+  };
+}
+
+async function bracketMoves({ from, until, pool, compare, pageOf, readClaims, statesWhatTheRecordCallsNew = async () => null, planNotOfferedAtStart = false }) {
   const brackets = [];
   let start = from;
   let candidates = pool;
@@ -682,6 +763,7 @@ async function bracketMoves({ from, until, pool, compare, pageOf, statesWhatTheR
       last_old_capture: lastOld.capture ? archivedCopyUrl(lastOld.capture) : null,
       first_new_capture: firstNew.capture ? archivedCopyUrl(firstNew.capture) : null,
       narrowed_to_adjacent_captures: hi - lo <= 1,
+      claim_proof: await readClaims(lastOld, firstNew),
     });
     if (hi === candidates.length) return { brackets, moves_complete: true };
     const onward = await compare(firstNew, until);
@@ -707,8 +789,8 @@ async function capturesOfEither(archive, urls, fromDay, toDay) {
     if (listed.unavailable) return listed;
     captures.push(...listed.captures);
   }
-  const byTimestamp = new Map(captures.map((capture) => [capture.timestamp, capture]));
-  return { captures: [...byTimestamp.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp)) };
+  const byUrl = new Map(captures.map((capture) => [captureUrl(capture), capture]));
+  return { captures: [...byUrl.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp)) };
 }
 
 function describeDay(day, reference, side) {
@@ -719,7 +801,7 @@ function sideOfRecordDay(day, recordDay) {
   return day < recordDay ? "before" : day > recordDay ? "after" : "on";
 }
 
-export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay, todayText, today, archive, readPair, readStatedBefore, onRead = () => {}, windowDays = CAPTURE_WINDOW_DAYS }) {
+export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay, todayText, today, archive, readPair, readStatedBefore, readPreviousValue, onRead = () => {}, windowDays = CAPTURE_WINDOW_DAYS }) {
   let reads = 0;
   if (!textDay) return { outcome: "text_day_unknown", reads };
   const judgedOn = recordDay && recordDay < today ? recordDay : today;
@@ -729,13 +811,21 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
   const captures = listed.captures;
 
   const texts = new Map();
+  const captureProblems = new Map();
   const pageOf = async (capture) => {
-    if (!texts.has(capture.timestamp)) {
+    const key = captureUrl(capture);
+    if (!texts.has(key)) {
       const stored = await archive.captureHtml(capture);
-      const text = stored.unavailable ? "" : stripHtml(stored.html);
-      texts.set(capture.timestamp, text.length >= MIN_PAGE_TEXT_LENGTH ? text : null);
+      const redirect = !stored.unavailable && (
+        /<meta\b[^>]*http-equiv\s*=\s*["']?refresh\b/i.test(stored.html) ||
+        [...stored.html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)].some((match) => /^\s*(?:(?:window|document|self|top)\.)?location(?:(?:\.href)?\s*=\s*["'][^"']+["']|\.(?:replace|assign)\s*\(\s*["'][^"']+["']\s*\))\s*;?\s*$/i.test(match[1]))
+      );
+      const text = stored.unavailable || redirect ? "" : stripHtml(stored.html);
+      if (stored.unavailable) captureProblems.set(key, { unavailable: stored.unavailable });
+      else if (redirect || text.length < MIN_PAGE_TEXT_LENGTH) captureProblems.set(key, { skipped: redirect ? "redirect shell" : "too little page text" });
+      texts.set(key, text.length >= MIN_PAGE_TEXT_LENGTH ? text : null);
     }
-    const text = texts.get(capture.timestamp);
+    const text = texts.get(key);
     const day = dayOfTimestamp(capture.timestamp);
     return text === null ? null : { page: `capture ${day}`, day, text, capture };
   };
@@ -752,7 +842,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
   const statedBeforeReadings = new Map();
   const statedBefore = async (older) => {
     if (!readStatedBefore) return { status: "unstated", why: "no reader was asked for a line that already states what the record calls new", review: [] };
-    const key = older.capture?.timestamp ?? older.page;
+    const key = older.capture ? captureUrl(older.capture) : older.page;
     if (!statedBeforeReadings.has(key)) {
       reads++;
       const verdict = await readStatedBefore(older);
@@ -766,6 +856,33 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     if (verdict.status === "stated" || verdict.status === "removal_stated") return true;
     return verdict.status === "unstated" && verdict.review?.length > 0 ? false : null;
   };
+  const previousValueReadings = new Map();
+  const previousValue = async (older) => {
+    const key = older.capture ? captureUrl(older.capture) : older.page;
+    if (!previousValueReadings.has(key)) {
+      reads++;
+      let verdict;
+      try {
+        verdict = readPreviousValue ? await readPreviousValue(older) : { status: "unknown", why: "no earlier-value reader was supplied" };
+      } catch (error) {
+        verdict = { status: "unknown", why: `the earlier-value reader failed: ${error?.message ?? error}` };
+      }
+      onRead({ older: older.page, newer: "the record's previous values", verdict });
+      previousValueReadings.set(key, verdict);
+    }
+    return previousValueReadings.get(key);
+  };
+  const bracketStatedBefore = async (page) => {
+    try {
+      return await statedBefore(page);
+    } catch (error) {
+      const verdict = { status: "unknown", why: `the new-claim reader failed: ${error?.message ?? error}` };
+      onRead({ older: page.page, newer: "the record", verdict });
+      statedBeforeReadings.set(page.capture ? captureUrl(page.capture) : page.page, verdict);
+      return verdict;
+    }
+  };
+  const readClaims = (older, newer) => readBracketClaims(older, newer, previousValue, bracketStatedBefore);
 
   const describePage = (page) => ({ page: page.page, ...describeDay(page.day, judgedOn, sideOfRecordDay(page.day, judgedOn)) });
   const forReview = (page, verdict) => ({ outcome: "no_usable_capture", compared_with: describePage(page), review: verdict.review, why: verdict.why });
@@ -784,8 +901,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
         continue;
       }
       const verdict = await compare(old, page);
-      if (verdict.status === "review") return forReview(page, verdict);
-      if (verdict.status === "same" || verdict.status === "differ") {
+      if (verdict.status === "same" || verdict.status === "differ" || verdict.status === "review") {
         end = page;
         first = verdict;
         break;
@@ -795,32 +911,75 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     }
     if (!end) return unsettled({ outcome: "no_usable_capture", why: `no reading of the page on the record's day settles it (${unreadable.join("; ")})` });
     const comparedWith = describePage(end);
-    const agreed = async (verdict, laterMoves = []) => {
+    const agreement = async (verdict, laterMoves, comparison) => {
+      const comparedWith = describePage(comparison);
       if (side !== "before") return { next: true, why: "the capture states the terms the page stated on the record's day, but a capture after our text's day cannot show the difference was ours" };
       const before = await statedBefore(old);
       if (before.status === "removal_stated") return { outcome: "removal_stated_before", compared_with: comparedWith, stated_then: before.stated_then, why: `the ${old.page} already states the removal, so it predates our text: to be dated` };
       if (before.status !== "stated") return { outcome: "no_usable_capture", compared_with: comparedWith, review: before.review, why: `the ${old.page} states the plan's terms as the page did on the record's day, but ${before.why}` };
-      return { outcome: "ours", compared_with: comparedWith, terms_then: verdict.old_terms, stated_then: before.stated_then, later_moves: laterMoves };
+      const cutoff = new Date(Date.parse(`${today}T00:00:00Z`) - OURS_MIN_CAPTURE_AGE_DAYS * 86_400_000).toISOString().slice(0, 10);
+      const eligible = captures.filter((capture) => dayOfTimestamp(capture.timestamp) <= cutoff).sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+      const candidates = old.day <= cutoff ? [old.capture, ...eligible.filter((capture) => captureUrl(capture) !== captureUrl(old.capture))] : eligible;
+      const historicalProof = { minimum_age_days: OURS_MIN_CAPTURE_AGE_DAYS, cutoff_day: cutoff, readings: [], skipped: [] };
+      for (const capture of candidates) {
+        const witness = { day: dayOfTimestamp(capture.timestamp), url: archivedCopyUrl(capture) };
+        const earlier = await pageOf(capture);
+        if (!earlier) {
+          const problem = captureProblems.get(captureUrl(capture));
+          if (problem?.unavailable) return { outcome: "no_usable_capture", compared_with: comparedWith, historical_proof: historicalProof, prior_capture: witness, why: `the Archive did not return an eligible historical capture: ${problem.unavailable}` };
+          historicalProof.skipped.push({ ...witness, why: problem?.skipped ?? "unreadable capture" });
+          continue;
+        }
+        const historical = await statedBefore(earlier);
+        historicalProof.readings.push({ ...witness, verdict: historical });
+        if (historical.status === "stated") return { outcome: "ours", compared_with: comparedWith, terms_then: verdict.old_terms, stated_then: before.stated_then, historical_proof: historicalProof, later_moves: laterMoves };
+        if (historicalProof.readings.length >= OURS_MAX_HISTORICAL_READINGS) break;
+      }
+      return { outcome: "no_usable_capture", compared_with: comparedWith, historical_proof: historicalProof, why: "none of the three newest readable year-old captures states what the record calls new" };
+    };
+    const agreed = async (verdict, laterMoves = [], comparison = end) => {
+      if (verdict.status !== "review") return agreement(verdict, laterMoves, comparison);
+      try {
+        const before = await statedBefore(old);
+        if (side !== "before" || !["stated", "removal_stated"].includes(before.status)) return forReview(comparison, verdict);
+        const result = await agreement(verdict, laterMoves, comparison);
+        return { ...result, compared_with: result.compared_with ?? describePage(comparison), review: verdict.review, review_reason: verdict.why, settled_from_review: ["ours", "removal_stated_before"].includes(result.outcome) };
+      } catch (error) {
+        return { outcome: "reader_failed", compared_with: describePage(comparison), review: verdict.review, review_reason: verdict.why, why: `the reader failed: ${error?.message ?? error}` };
+      }
     };
 
     let deciding = first;
     let moves;
+    if (first.status === "review") return agreed(first);
     if (first.status === "same") {
       if (!(end.capture && end.day < judgedOn)) return agreed(first);
       const now = await compare(old, todayPage);
       if (now.status === "same") return agreed(first);
-      if (now.status === "review") return forReview(todayPage, now);
+      if (now.status === "review") return agreed(now, [], todayPage);
       if (now.status !== "differ") return unsettled({ outcome: "no_usable_capture", compared_with: comparedWith, why: `the capture before the record's day states the old capture's terms, but the reader could not compare today's page: ${now.why}` });
       deciding = now;
-      moves = await bracketMoves({ from: end, until: todayPage, pool: captures.filter((capture) => capture.timestamp > end.capture.timestamp), compare, pageOf, statesWhatTheRecordCallsNew });
+      moves = await bracketMoves({ from: end, until: todayPage, pool: captures.filter((capture) => capture.timestamp > end.capture.timestamp), compare, pageOf, readClaims, statesWhatTheRecordCallsNew });
     } else {
       const pool = captures.filter((capture) => capture.timestamp > old.capture.timestamp && (!end.capture || capture.timestamp < end.capture.timestamp));
-      moves = await bracketMoves({ from: old, until: end, pool, compare, pageOf, statesWhatTheRecordCallsNew, planNotOfferedAtStart: first.plan === "appeared" });
+      moves = await bracketMoves({ from: old, until: end, pool, compare, pageOf, readClaims, statesWhatTheRecordCallsNew, planNotOfferedAtStart: first.plan === "appeared" });
     }
     const placed = moves.brackets.map((bracket) => ({ ...bracket, relative_to_record: placeBesideRecord(bracket, judgedOn, today) }));
-    const recordMoves = placed.filter((bracket) => bracket.relative_to_record !== "after");
-    const laterMoves = placed.filter((bracket) => bracket.relative_to_record === "after");
-    if (recordMoves.length === 0) return agreed(deciding, laterMoves);
+    const unverified = placed.filter((bracket) => !bracketStatesRecord(bracket));
+    const verified = placed.filter(bracketStatesRecord);
+    const recordMoves = verified.filter((bracket) => bracket.relative_to_record !== "after");
+    const laterMoves = verified.filter((bracket) => bracket.relative_to_record === "after");
+    if (recordMoves.length === 0) {
+      if (unverified.length > 0) return {
+        outcome: "no_usable_capture",
+        compared_with: comparedWith,
+        why: "no bracket's endpoints establish the record's earlier value and new claim",
+        differences: deciding.differences,
+        unverified_brackets: unverified,
+        later_moves: laterMoves,
+      };
+      return agreed(deciding, laterMoves);
+    }
     return {
       outcome: "vendor_changed",
       compared_with: comparedWith,
@@ -831,6 +990,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       differences: deciding.differences,
       direction: deciding.direction,
       brackets: recordMoves,
+      ...(unverified.length ? { unverified_brackets: unverified } : {}),
       later_moves: laterMoves,
       moves_complete: moves.moves_complete,
       date: recordMoves.length === 1 && moves.moves_complete ? recordMoves[0].first_new : null,

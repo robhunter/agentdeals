@@ -210,6 +210,75 @@ describe("writing a settled record into the change log", () => {
 describe("finding the record a result settles", () => {
   const unconfirmed = { outcome: "no_usable_capture", why: "no capture settled it", reads: 1, tried: [], split: SPLIT.noCapture };
 
+  it("replaces each unsettled archive check only with a settled verdict", () => {
+    const outcomes = [
+      { outcome: "ours", capture: theCopyFromOurTextDay("2026-02-01"), stated_then: statedThen, text_day: "2026-02-10", split: SPLIT.ours },
+      vendorChanged([bracket("2026-02-01", "2026-08-01", "before")], "2026-08-01"),
+      { outcome: "removal_stated_before", capture: theCopyFromOurTextDay("2026-02-01"), stated_then: statedThen, split: SPLIT.removalStatedBefore },
+    ];
+    for (const outcome of ["no_usable_capture", "page_unreadable_today", "text_day_unknown", "reader_failed"]) {
+      for (const replacement of outcomes) {
+        const record = reading({ archive_check: { checked: "2026-10-02", outcome } });
+        const result = writeOne(record, replacement);
+        assert.strictEqual(result.written.length, 1, `${outcome} -> ${replacement.outcome}`);
+        assert.strictEqual(result.changes[0].archive_check.outcome, replacement.outcome);
+        assert.strictEqual(result.changes[0].archive_check.checked, CHECKED);
+        assert.strictEqual(record.archive_check.outcome, outcome);
+        assert.strictEqual(result.changes[0].change_type, replacement.outcome === "ours" ? "record_corrected" : record.change_type);
+        assert.strictEqual(result.changes[0].date, replacement.outcome === "vendor_changed" ? "2026-08-01" : record.date);
+      }
+    }
+  });
+
+  it("holds vendor changes while preserving correction writes and all measured lines", () => {
+    const vendorRecord = reading({ archive_check: { checked: "2026-10-02", outcome: "no_usable_capture" } });
+    const correctionRecord = reading({ vendor: "Beta" });
+    const vendorResult = resultFor(vendorRecord, { ...vendorChanged([bracket("2026-02-01", "2026-08-01", "before")]), differences: [{ old: "3 projects", new: "1 project" }] });
+    const historical = { minimum_age_days: 365, cutoff_day: "2025-10-03", readings: [{ day: "2025-01-01", url: copyOf("2025-01-01"), verdict: { status: "stated", stated_then: statedThen } }], skipped: [] };
+    const correctionResult = resultFor(correctionRecord, { outcome: "ours", capture: theCopyFromOurTextDay("2026-02-01"), stated_then: statedThen, historical_proof: historical, text_day: "2026-02-10" });
+    const report = { today: CHECKED, results: [vendorResult, correctionResult] };
+    const before = JSON.stringify(report);
+    const held = writeSettledRecords([vendorRecord, correctionRecord], [report], { holdVendorChanges: true });
+    assert.strictEqual(held.changes[0], vendorRecord);
+    assert.strictEqual(held.not_written[0].why, NOT_WRITTEN.vendorChangesHeld);
+    assert.deepStrictEqual(held.changes[1].archive_check.historical_proof, historical);
+    assert.strictEqual(held.written.length, 1);
+    assert.strictEqual(JSON.stringify(report), before);
+    assert.strictEqual(writeSettledRecords([vendorRecord], [{ today: CHECKED, results: [vendorResult] }]).written.length, 1);
+  });
+
+  it("preserves settled and unknown checks under every replacement, and unsettled checks under another unsettled answer", () => {
+    const replacements = [unconfirmed, { outcome: "ours", capture: theCopyFromOurTextDay("2026-02-01"), stated_then: statedThen }, vendorChanged([])];
+    for (const outcome of ["ours", "vendor_changed", "removal_stated_before", "future_outcome"]) {
+      const record = reading({ archive_check: { checked: "2026-10-02", outcome } });
+      for (const replacement of replacements) {
+        const result = writeOne(record, replacement);
+        assert.strictEqual(result.changes[0], record);
+        assert.deepStrictEqual(result.not_written.map((entry: Change) => entry.why), [NOT_WRITTEN.alreadyChecked]);
+      }
+    }
+    for (const outcome of ["no_usable_capture", "page_unreadable_today", "text_day_unknown", "reader_failed"]) {
+      const record = reading({ archive_check: { checked: "2026-10-02", outcome } });
+      for (const next of ["no_usable_capture", "page_unreadable_today", "text_day_unknown", "reader_failed", "future_outcome"]) {
+        const result = writeOne(record, { ...unconfirmed, outcome: next });
+        assert.strictEqual(result.changes[0], record);
+        assert.strictEqual(result.written.length, 0);
+      }
+    }
+  });
+
+  it("writes a newly settled result once across reports and leaves a retracted unsettled record alone", () => {
+    const record = reading({ archive_check: { checked: "2026-10-02", outcome: "no_usable_capture" } });
+    const result = resultFor(record, vendorChanged([bracket("2026-02-01", "2026-08-01", "before")]));
+    const twice = writeSettledRecords([record], [{ today: CHECKED, results: [result] }, { today: CHECKED, results: [result] }]);
+    assert.strictEqual(twice.written.length, 1);
+    assert.strictEqual(twice.not_written[0].why, NOT_WRITTEN.alreadyChecked);
+    const retracted = { ...record, resolution: { state: "retracted" } };
+    const kept = writeOne(retracted, vendorChanged([]));
+    assert.strictEqual(kept.changes[0], retracted);
+    assert.strictEqual(kept.not_written[0].why, NOT_WRITTEN.noLongerInForce);
+  });
+
   it("matches the vendor as well as the record's key, which two vendors' records can share", () => {
     const generic = { change_type: "product_deprecated", summary: "Removed: source page no longer accessible", date: "2026-04-12" };
     const alpha = reading({ vendor: "Alpha", ...generic });
@@ -293,7 +362,7 @@ describe("writing the report a settle run produced", () => {
     const termsOn = (url: string, day: string) => (url === urlOf("Alpha") && day <= "2026-05-01" ? "A" : "B");
     const archive = {
       captures: async (url: string) => ({
-        captures: url === urlOf("Delta") ? [] : ["20260201120000", "20260501120000", "20260502120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })),
+        captures: url === urlOf("Delta") ? [] : ["20250901120000", "20260201120000", "20260501120000", "20260502120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })),
       }),
       captureHtml: async ({ timestamp, original }: { timestamp: string; original: string }) => ({
         html: page(termsOn(original, `${timestamp.slice(0, 4)}-${timestamp.slice(4, 6)}-${timestamp.slice(6, 8)}`)),
@@ -306,11 +375,12 @@ describe("writing the report a settle run produced", () => {
     };
     const report = await settleFirstReadings({
       changes,
-      offers: [],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
       archive,
       pairReaderForListing: termsPairReader,
       statedReaderForRecord,
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       fetchToday: async (url: string) => (url === urlOf("Gamma") ? { ok: false, error: "HTTP 403" } : { ok: true, text: "TERMS=B" }),
       textDayOf: () => "2026-02-10",
       badgeSetBy: (record: Change) => ({ Gamma: "risky", Delta: "caution", Zeta: "risky" } as Record<string, string>)[record.vendor] ?? null,
@@ -335,6 +405,7 @@ describe("writing the report a settle run produced", () => {
       first_new: "2026-05-02",
       last_old_capture: "https://web.archive.org/web/20260501120000/https://alpha.example/pricing",
       first_new_capture: "https://web.archive.org/web/20260502120000/https://alpha.example/pricing",
+      claim_proof: report.results.find((result: Change) => result.vendor === "Alpha").brackets[0].claim_proof,
     }]);
 
     assert.strictEqual(byVendor.Beta.change_type, "record_corrected");
@@ -346,6 +417,7 @@ describe("writing the report a settle run produced", () => {
       recorded_as: "limits_reduced",
       capture: "https://web.archive.org/web/20260201120000/https://beta.example/pricing",
       stated_then: "TERMS=B",
+      historical_proof: report.results.find((result: Change) => result.vendor === "Beta").historical_proof,
     });
     assert.strictEqual(changeEntryDateLabel(byVendor.Beta), "recorded 2026-09-02 · corrected 2026-09-28");
 
@@ -373,6 +445,12 @@ describe("writing the report a settle run produced", () => {
       const reportFile = path.join(dir, "settled-first-readings.json");
       writeFileSync(log, `${JSON.stringify({ changes: [record, untouched] }, null, 2)}\n`);
       writeFileSync(reportFile, JSON.stringify({ today: CHECKED, results: [resultFor(record, vendorChanged([bracket("2026-06-15", "2026-06-16", "before")], "2026-06-16"))] }));
+      const before = readFileSync(log, "utf-8");
+      const held = spawnSync("node", ["scripts/write-settled-records.js", reportFile, "--hold-vendor-changes"], { cwd: REPO, env: { ...process.env, AGENTDEALS_CHANGES_PATH: log }, encoding: "utf-8" });
+      assert.strictEqual(held.status, 0, held.stderr);
+      assert.strictEqual(readFileSync(log, "utf-8"), before);
+      assert.match(held.stdout, /Wrote an archive check on 0 records/);
+      assert.ok(held.stdout.includes(NOT_WRITTEN.vendorChangesHeld));
       const run = spawnSync("node", ["scripts/write-settled-records.js", reportFile], {
         cwd: REPO,
         env: { ...process.env, AGENTDEALS_CHANGES_PATH: log },

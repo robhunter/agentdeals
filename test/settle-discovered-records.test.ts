@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-const { firstReadingsInForce, splitOf, listingFor, settleFirstReadings, SPLIT, badgesByRecord, recordKey, inShard, parseShard, reviewList } = await import("../scripts/settle-discovered-records.js");
+const { firstReadingsInForce, needsArchiveCheck, splitOf, listingFor, settleFirstReadings, SPLIT, badgesByRecord, recordKey, inShard, parseShard, reviewList } = await import("../scripts/settle-discovered-records.js");
 
 type Change = Record<string, unknown>;
 
@@ -12,6 +12,26 @@ function change(fields: Change): Change {
 }
 
 describe("the first readings the archive check settles", () => {
+  it("retries a missing or unsettled check while preserving settled and unknown outcomes", () => {
+    assert.strictEqual(needsArchiveCheck({}), true);
+    for (const outcome of ["no_usable_capture", "page_unreadable_today", "text_day_unknown", "reader_failed"]) assert.strictEqual(needsArchiveCheck({ archive_check: { outcome } }), true);
+    for (const outcome of ["ours", "vendor_changed", "removal_stated_before", "future_outcome"]) assert.strictEqual(needsArchiveCheck({ archive_check: { outcome } }), false);
+  });
+
+  it("selects the unsettled backlog after classifying first readings over the full history", async () => {
+    const record = (vendor: string, outcome?: string) => change({ vendor, date: "2026-09-01", date_source: "discovered", previous_state: `${vendor} before`, current_state: `${vendor} after`, ...(outcome ? { archive_check: { outcome } } : {}) });
+    const changes = [record("Missing"), ...["no_usable_capture", "page_unreadable_today", "text_day_unknown", "reader_failed", "ours", "vendor_changed", "removal_stated_before", "unknown"].map((outcome) => record(outcome, outcome))];
+    changes.push(change({ vendor: "ours", date: "2026-09-02", date_source: "discovered", previous_state: "ours after", current_state: "later reading" }));
+    changes.push({ ...record("Retracted"), resolution: { state: "retracted" } });
+    const fetched: string[] = [];
+    const report = await settleFirstReadings({
+      changes, offers: [], today: "2026-11-08", unsettledOnly: true,
+      fetchToday: async (url: string) => { fetched.push(url); return { ok: false, error: "HTTP 403" }; },
+    });
+    assert.deepStrictEqual(report.results.map((result: { vendor: string }) => result.vendor), ["Missing", "no_usable_capture", "page_unreadable_today", "text_day_unknown", "reader_failed"]);
+    assert.strictEqual(fetched.length, 5);
+  });
+
   it("takes discovered records in force whose before is our catalogue text, not an earlier reading of ours", () => {
     const changes = [
       change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "our Alpha text", current_state: "Alpha read once" }),
@@ -166,9 +186,9 @@ describe("settling the backlog", () => {
       change({ vendor: "Gamma", date: "2026-09-03", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://gamma.example/pricing" }),
     ];
     const offers = [
-      { vendor: "Alpha", tier: "Free", category: "Databases" },
-      { vendor: "Alpha", tier: "Hobby", category: "Databases" },
-      { vendor: "Beta", tier: "Free", category: "Hosting" },
+      { vendor: "Alpha", tier: "Free", category: "Databases", url: "https://alpha.example/pricing" },
+      { vendor: "Alpha", tier: "Hobby", category: "Databases", url: "https://alpha.example/pricing" },
+      { vendor: "Beta", tier: "Free", category: "Hosting", url: "https://beta.example/pricing" },
     ];
     const page = (terms: string) => `<html><body><p>TERMS=${terms}</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>`;
     const termsOn: Record<string, (day: string) => string> = {
@@ -179,7 +199,7 @@ describe("settling the backlog", () => {
     const archive = {
       captures: async (url: string) => {
         asked.push(url);
-        return { captures: ["20260201120000", "20260501120000", "20260502120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) };
+        return { captures: ["20250901120000", "20260201120000", "20260501120000", "20260502120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) };
       },
       captureHtml: async ({ timestamp, original }: { timestamp: string; original: string }) => ({
         html: page(termsOn[original](`${timestamp.slice(0, 4)}-${timestamp.slice(4, 6)}-${timestamp.slice(6, 8)}`)),
@@ -193,6 +213,7 @@ describe("settling the backlog", () => {
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
       offers,
       today: "2026-09-28",
@@ -214,6 +235,10 @@ describe("settling the backlog", () => {
       last_old_capture: "https://web.archive.org/web/20260501120000/https://alpha.example/pricing",
       first_new_capture: "https://web.archive.org/web/20260502120000/https://alpha.example/pricing",
       narrowed_to_adjacent_captures: true,
+      claim_proof: {
+        older: { day: "2026-05-01", url: "https://web.archive.org/web/20260501120000/https://alpha.example/pricing", verdict: { status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: "TERMS=A" }] } },
+        newer: { day: "2026-05-02", url: "https://web.archive.org/web/20260502120000/https://alpha.example/pricing", verdict: { status: "stated", stated_then: [{ record: "the change", old: "the line" }] } },
+      },
       relative_to_record: "before",
     }]);
     assert.strictEqual(report.results[0].record_day, "2026-09-01");
@@ -237,13 +262,14 @@ describe("settling the backlog", () => {
     ];
     const line = { old: "7-day history", new: "", why: "only the old page states it" };
     const archive = {
-      captures: async (url: string) => ({ captures: ["20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
+      captures: async (url: string) => ({ captures: ["20250901120000", "20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
       captureHtml: async () => ({ html: `<html><body><p>TERMS=A</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
     };
     const report = await settleFirstReadings({
-      statedReaderForRecord: () => statesItAlready,
+      statedReaderForRecord: (record: { vendor: string }) => record.vendor === "Epsilon" ? statesItAlready : async () => ({ status: "unstated", review: [{ record: "B", old: "" }] }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
-      offers: [],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
       archive,
       pairReaderForListing: (listing: { vendor: string }) => async () =>
@@ -277,14 +303,15 @@ describe("settling the backlog", () => {
     const fullPage = `<html><body><p>TERMS=A</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>`;
     const archive = {
       captures: async (url: string) => ({
-        captures: url.includes("uncaptured") ? [] : ["20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })),
+        captures: url.includes("uncaptured") ? [] : ["20250901120000", "20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })),
       }),
       captureHtml: async ({ original }: { original: string }) => ({ html: original.includes("unreadable") ? "<html><body><p>Loading</p></body></html>" : fullPage }),
     };
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
-      offers: [],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
       archive,
       pairReaderForListing: (listing: { vendor: string }) =>
@@ -318,11 +345,11 @@ describe("settling the backlog", () => {
       change({ vendor, tier: "Free Developer", date, date_source: "discovered", previous_state: "A", current_state: "B", source_url: `https://${vendor.toLowerCase()}.example/pricing` });
     const changes = [record("Zeta", "2026-09-01"), record("Eta", "2026-09-02")];
     const offers = [
-      { vendor: "Zeta", tier: "Free Developer", category: "Databases" },
-      { vendor: "Eta", tier: "Free Developer", category: "Databases" },
+      { vendor: "Zeta", tier: "Free Developer", category: "Databases", url: "https://zeta.example/pricing" },
+      { vendor: "Eta", tier: "Free Developer", category: "Databases", url: "https://eta.example/pricing" },
     ];
     const archive = {
-      captures: async (url: string) => ({ captures: ["20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
+      captures: async (url: string) => ({ captures: ["20250901120000", "20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
       captureHtml: async () => ({ html: `<html><body><p>TERMS=A</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
     };
     const matched: Record<string, { old: string; new: string; shared: string[] }[]> = {
@@ -337,6 +364,7 @@ describe("settling the backlog", () => {
     };
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
       offers,
       today: "2026-09-28",
@@ -372,15 +400,16 @@ describe("records the Archive did not answer", () => {
       captures: async (url: string) => {
         asked.push(url);
         if (url.includes("alpha") && asked.filter((u) => u === url).length === 1) return { unavailable: "network error: fetch failed after 4 attempts" };
-        return { captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] };
+        return { captures: ["20250901120000", "20260205120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) };
       },
       captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
     };
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
-      offers: [],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
       archive,
       pairReaderForListing: termsPairReader,
@@ -405,8 +434,9 @@ describe("checking the method on records whose outcome is already known", () => 
     assert.deepStrictEqual(firstReadingsInForce(changes, { includeResolved: true }).map((c: Change) => c.vendor), ["Alpha", "Beta"]);
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
-      offers: [],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
       archive: { captures: async () => ({ captures: [] }), captureHtml: async () => ({ unavailable: "unused" }) },
       pairReaderForListing: () => async () => ({ status: "unquotable", side: "both", why: "no terms on the page" }),
@@ -425,11 +455,12 @@ describe("the readings behind each outcome", () => {
     const run = (logReads: boolean) =>
       settleFirstReadings({
         statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
         changes,
         offers: [],
         today: "2026-09-28",
         archive: {
-          captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
+          captures: async (url: string) => ({ captures: ["20250901120000", "20260205120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
           captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
         },
         pairReaderForListing: termsPairReader,
@@ -442,7 +473,7 @@ describe("the readings behind each outcome", () => {
     const logged = await run(true);
     assert.deepStrictEqual(
       logged.results[0].readings.map((r: { older: string; newer: string; verdict: { status: string } }) => `${r.older} | ${r.newer} ${r.verdict.status}`),
-      ["capture 2026-02-05 | today same", "capture 2026-02-05 | the record stated"],
+      ["capture 2026-02-05 | today same", "capture 2026-02-05 | the record stated", "capture 2025-09-01 | the record stated"],
     );
   });
 });
@@ -461,11 +492,12 @@ describe("a reader that fails on one record", () => {
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
-      offers: [{ vendor: "Alpha", tier: "Free", category: "Databases" }],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, tier: "Free", category: "Databases", url: record.source_url })),
       today: "2026-09-28",
       archive: {
-        captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
+        captures: async (url: string) => ({ captures: ["20250901120000", "20260205120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
         captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
       },
       pairReaderForListing,
@@ -481,11 +513,12 @@ describe("a reader that fails on one record", () => {
   it("is reported as a reader failure, with the reader's error, when the second ask fails too", async () => {
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes: [change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B" })],
       offers: [],
       today: "2026-09-28",
       archive: {
-        captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
+        captures: async (url: string) => ({ captures: ["20250901120000", "20260205120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
         captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
       },
       pairReaderForListing: () => async () => {
@@ -505,13 +538,14 @@ describe("each result names its record and the archived copy that settled it", (
     const changes = ["Alpha cut its free plan to 1 project", "Alpha cut its free plan to 2 projects"].map((summary) =>
       change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://alpha.example/pricing", summary }));
     const archive = {
-      captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
+      captures: async (url: string) => ({ captures: ["20250901120000", "20260205120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
       captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
     };
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
-      offers: [],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
       archive,
       pairReaderForListing: termsPairReader,
