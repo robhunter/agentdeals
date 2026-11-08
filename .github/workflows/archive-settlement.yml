@@ -53,6 +53,7 @@ jobs:
           git diff --exit-code -- data
 
       - name: Write exactly the committed reviewed corrections
+        id: write
         if: inputs.reviewed_report != ''
         env:
           REVIEWED_REPORT: ${{ inputs.reviewed_report }}
@@ -60,9 +61,10 @@ jobs:
           node scripts/write-reviewed-archive.js "$REVIEWED_REPORT"
           cp -- "$REVIEWED_REPORT" "$RUNNER_TEMP/archive-settlement.json"
           sha256sum "$RUNNER_TEMP/archive-settlement.json" >> "$GITHUB_STEP_SUMMARY"
+          echo "written=true" >> "$GITHUB_OUTPUT"
 
       - name: Run the suite, then push to main only if it is green
-        if: inputs.reviewed_report != ''
+        if: steps.write.outputs.written == 'true'
         id: gate
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
