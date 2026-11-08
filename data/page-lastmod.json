@@ -30,7 +30,7 @@
       "changed": "2026-11-08"
     },
     "/alternative-to": {
-      "hash": "0a4be70e39ad5430",
+      "hash": "b8ba98da96294a30",
       "changed": "2026-11-08"
     },
     "/alternative-to/360-monitoring": {
@@ -1252,8 +1252,8 @@
       "changed": "2026-11-07"
     },
     "/category/messaging": {
-      "hash": "d07884abc8466bbc",
-      "changed": "2026-11-07"
+      "hash": "6b1529c5bd64b4a3",
+      "changed": "2026-11-08"
     },
     "/category/mobile-development": {
       "hash": "3b82e4ebaae70cd2",
@@ -3061,7 +3061,7 @@
       "changed": "2026-11-08"
     },
     "/digest/2026-w36": {
-      "hash": "ce2d6a76efe7f70b",
+      "hash": "fce126464e865bb6",
       "changed": "2026-11-08"
     },
     "/digest/2026-w37": {
@@ -3073,8 +3073,8 @@
       "changed": "2026-11-03"
     },
     "/digest/2026-w39": {
-      "hash": "5221dd140730ba2b",
-      "changed": "2026-11-07"
+      "hash": "18e106d4d6803f13",
+      "changed": "2026-11-08"
     },
     "/digest/2026-w40": {
       "hash": "78cb2a0f5e108f76",
@@ -3156,7 +3156,7 @@
       "changed": "2026-10-31"
     },
     "/digest/archive": {
-      "hash": "1b44ef87f50d684a",
+      "hash": "5f8e849138bda26b",
       "changed": "2026-11-08"
     },
     "/digitalocean-free-tier-2026": {
@@ -3261,7 +3261,7 @@
       "changed": "2026-10-29"
     },
     "/free-tier-risk": {
-      "hash": "0261b60836e23b6c",
+      "hash": "26884dcae6e31265",
       "changed": "2026-11-08"
     },
     "/free-tier-tracker": {
@@ -3442,7 +3442,7 @@
       "changed": "2026-10-15"
     },
     "/reports": {
-      "hash": "8b3080896ef003b0",
+      "hash": "6463f1ed3e49a729",
       "changed": "2026-11-08"
     },
     "/reports/2022-11": {
@@ -3566,12 +3566,12 @@
       "changed": "2026-11-08"
     },
     "/reports/2026-09": {
-      "hash": "11166b5a2953d62e",
+      "hash": "78804b06f0974715",
       "changed": "2026-11-08"
     },
     "/reports/2026-10": {
-      "hash": "e32e872d10a54720",
-      "changed": "2026-11-07"
+      "hash": "ae2d3b1206c6ae88",
+      "changed": "2026-11-08"
     },
     "/reports/2026-11": {
       "daily": true
@@ -3632,11 +3632,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "19f31db0b32799bc",
+      "hash": "b0c204b4819eb5a7",
       "changed": "2026-11-08"
     },
     "/stack-check": {
-      "hash": "c8af2a458be7d28b",
+      "hash": "1ad1812c8f8450e1",
       "changed": "2026-11-08"
     },
     "/stacks": {
@@ -3668,7 +3668,7 @@
       "changed": "2026-11-08"
     },
     "/state-of-free-tiers": {
-      "hash": "85300c2877ba6fce",
+      "hash": "08464efac67a0c63",
       "changed": "2026-11-08"
     },
     "/storage-alternatives": {
@@ -3855,8 +3855,8 @@
       "changed": "2026-10-25"
     },
     "/trends/messaging": {
-      "hash": "436d0906acf833f0",
-      "changed": "2026-11-02"
+      "hash": "fe98779657cc1c41",
+      "changed": "2026-11-08"
     },
     "/trends/mobile-development": {
       "hash": "42780545db43a932",
@@ -7474,7 +7474,7 @@
       "changed": "2026-11-08"
     },
     "/vendor/onesignal": {
-      "hash": "a3198ef3fceaa264",
+      "hash": "b409972ff71f3d17",
       "changed": "2026-11-08"
     },
     "/vendor/onlineexifviewer": {
