@@ -515,7 +515,7 @@
     {
       "vendor": "Stream",
       "tier": "Maker Account",
-      "since": "2026-11-02"
+      "since": "2026-11-08"
     },
     {
       "vendor": "Notion",
@@ -555,6 +555,16 @@
     {
       "vendor": "Bench",
       "tier": "Startup Discount",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Codecov",
+      "tier": "Developer",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "GrowthBook",
+      "tier": "Starter / Open Source",
       "since": "2026-11-08"
     }
   ]

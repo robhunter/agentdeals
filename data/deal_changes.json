@@ -9887,6 +9887,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-08",
+        "detail": "Retracted 2026-11-08: not a change by Codecov. The $12 this record calls the stored Team price is the Pro plan's. Codecov's pricing page listed Team at $5 per user a month for up to 10 users, and Pro at $12 per user a month, in Internet Archive copies from 2026-03-02, 2026-08-29 and 2026-10-10, with the same free Developer plan in each.",
+        "source_url": "https://web.archive.org/web/20260829152010/https://about.codecov.io/pricing/"
       }
     },
     {
@@ -11937,6 +11943,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-08",
+        "detail": "Retracted 2026-11-08: this record misread GrowthBook's page. The Open Source plan did not take Cloud Starter's 3-user limit: GrowthBook's FAQ says the free self-hosted plan has unlimited users. What changed is that both free plans were limited to 1 project, recorded separately with its archive dates.",
+        "source_url": "https://web.archive.org/web/20260824143854/https://www.growthbook.io/pricing"
       }
     },
     {
@@ -12332,6 +12344,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-08",
+        "detail": "Retracted 2026-11-08: not a change by Stream. The terms this record calls previous were our own listing text from 2026-02-26. Stream's Maker Account page stated the same requirements (five or fewer team members, less than $10k in monthly revenue, less than $100k in funding) and the same Chat limit of 2,000 monthly active users and 100 concurrent connections in Internet Archive copies from 2024-02-07, 2025-01-19 and 2025-12-08.",
+        "source_url": "https://web.archive.org/web/20251208195711/https://getstream.io/maker-account/"
       }
     },
     {
@@ -17983,6 +18001,34 @@
             "first_new": "2026-10-14",
             "last_old_capture": "https://web.archive.org/web/20261008042411/https://www.taskade.com/pricing",
             "first_new_capture": "https://web.archive.org/web/20261014123217/https://www.taskade.com/pricing"
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "GrowthBook",
+      "change_type": "limits_reduced",
+      "date": "2026-08-24",
+      "date_source": "hand_written",
+      "summary": "By August 24, 2026, GrowthBook's two free plans (Cloud Starter and self-hosted Open Source) were each limited to 1 project. On June 16, 2026, both listed unlimited environments and projects.",
+      "tier": "Starter / Open Source",
+      "tier_direction": "narrowed",
+      "previous_state": "Cloud Starter: up to 3 users, \"Environments & Projects: Unlimited\". Self-hosted Open Source: \"Environments & Projects: Unlimited\" (growthbook.io/pricing, archived 2026-06-16).",
+      "current_state": "Cloud Starter: up to 3 users, 1 project. Self-hosted Open Source: 1 project (growthbook.io/pricing, archived 2026-08-24). Read 2026-11-08: both still list \"1 project\", and GrowthBook's FAQ says \"The free self-hosted plan has unlimited users.\"",
+      "impact": "medium",
+      "source_url": "https://www.growthbook.io/pricing",
+      "category": "Feature Flags",
+      "alternatives": [],
+      "recorded_date": "2026-11-08",
+      "archive_check": {
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-06-16",
+            "first_new": "2026-08-24",
+            "last_old_capture": "https://web.archive.org/web/20260616142408/https://www.growthbook.io/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260824143854/https://www.growthbook.io/pricing"
           }
         ]
       }
