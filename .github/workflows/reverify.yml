@@ -1,188 +1,41 @@
-name: Daily rolling re-verification
-
+name: Read-only archive settlement evaluation
 on:
-  schedule:
-    - cron: "0 6 * * *"
   workflow_dispatch:
     inputs:
-      limit:
-        description: "Number of oldest entries to re-verify"
-        required: false
-        default: "75"
-      restate_limit:
-        description: "Most withheld entries this run may restate — blank restates every one a reading can answer for"
-        required: false
-        default: ""
-
+      mode:
+        description: "smoke (OneSignal and Mapbox) or backlog (all unsettled and the 42 corrections)"
+        required: true
+        default: smoke
 permissions:
-  actions: write
-  contents: write
-  issues: write
-
+  contents: read
 concurrency:
-  group: reverify-rolling
+  group: archive-settlement
   cancel-in-progress: false
-
 jobs:
-  reverify:
+  evaluate:
     runs-on: ubuntu-latest
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
-
+          persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: "24.22.1"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Name the rendering client a page that comes back too short is read with
-        run: node -e "import('./scripts/rendered-page.js').then((m) => console.log(m.findRenderer() ?? 'none found on this runner'))"
-
-      - name: Compile, so the gate and the restatement pass read the predicates the site reads
-        run: npm run build
-
-      - name: Check the vendor MCP entries and record failures for review
-        run: node scripts/check-official-mcp.js --write
-
-      - name: Run rolling re-verification
-        id: reverify
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Read the records without writing catalogue data
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: |
-          set -o pipefail
-          LIMIT="${{ github.event.inputs.limit || '75' }}"
-          node scripts/reverify-rolling.js --ai --limit "$LIMIT" | tee /tmp/reverify.log
-          VERIFIED=$(grep -oE '^Verified \(date bumped\): [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
-          FLAGGED=$(grep -oE '^Flagged \(URL/AI failure\): [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
-          PROPOSED=$(grep -oE '^Proposed to data/change_proposals.json: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
-          QUARANTINED=$(grep -oE '^In quarantine, retried every [0-9]+ days: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
-          RETRIED=$(grep -oE '^Retried from quarantine: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
-          REPICKED=$(grep -oE '^Checked again on the next run: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
-          HELD=$(grep -oE '^Awaiting a second reading, given up on after [0-9]+ days: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
-          DRAWN=$(grep -oE '^Drawn from the queue, so pages this run advances: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
-          SECOND=$(grep -oE '^Drawn to give a held demoting verdict its second reading: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
-          echo "held=$HELD" >> "$GITHUB_OUTPUT"
-          echo "drawn=$DRAWN" >> "$GITHUB_OUTPUT"
-          echo "second=$SECOND" >> "$GITHUB_OUTPUT"
-          echo "verified=$VERIFIED" >> "$GITHUB_OUTPUT"
-          echo "flagged=$FLAGGED" >> "$GITHUB_OUTPUT"
-          echo "proposed=$PROPOSED" >> "$GITHUB_OUTPUT"
-          echo "quarantined=$QUARANTINED" >> "$GITHUB_OUTPUT"
-          echo "retried=$RETRIED" >> "$GITHUB_OUTPUT"
-          echo "repicked=$REPICKED" >> "$GITHUB_OUTPUT"
-          {
-            echo "### Change records proposed for review: $PROPOSED"
-            echo ""
-            echo "None is published until it is confirmed with \`node scripts/change-proposals.js confirm <id>\`."
-            echo ""
-            sed -n 's/^  proposed /- /p' /tmp/reverify.log
-          } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Store the readings the withheld entries already show, and count the ones no reading answers
-        id: restate
-        env:
-          RESTATE_LIMIT: ${{ github.event.inputs.restate_limit }}
-        run: |
-          set -o pipefail
-          node scripts/restate-superseded-terms.js --write ${RESTATE_LIMIT:+--limit "$RESTATE_LIMIT"} | tee /tmp/restate.log
-          RESTATED=$(grep -oE '^Restated this run: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
-          ANSWERABLE=$(grep -oE '^We may restate from that reading: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
-          STILL=$(grep -oE '^Re-read since the record and still withheld: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
-          KEPT=$(grep -oE '^Not restated because the reading drops a figure our source check found on the page: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
-          KEPT_VENDORS=$(sed -n 's/^Not restated, by vendor: //p' /tmp/restate.log)
-          KEPT_CLAUSE="$KEPT not restated because the reading drops a figure our source check found on the page${KEPT_VENDORS:+ ($KEPT_VENDORS)}"
-          echo "restated=$RESTATED" >> "$GITHUB_OUTPUT"
-          echo "answerable=$ANSWERABLE" >> "$GITHUB_OUTPUT"
-          echo "still_withheld=$STILL" >> "$GITHUB_OUTPUT"
-          echo "kept_clause=$KEPT_CLAUSE" >> "$GITHUB_OUTPUT"
-
-      - name: Run the suite, then push to main only if it is green
-        id: gate
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GATE_RATCHET_BUDGETS: "1"
-          GATE_UPDATE_PAGE_LASTMOD: "1"
-          GATE_REGENERATE_LLM_INDEX: "1"
-          GATE_SYNC_PAGE_REVIEWS: "1"
-          RESTATED: ${{ steps.restate.outputs.restated }}
-          ANSWERABLE: ${{ steps.restate.outputs.answerable }}
-          STILL_WITHHELD: ${{ steps.restate.outputs.still_withheld }}
-          KEPT_CLAUSE: ${{ steps.restate.outputs.kept_clause }}
-          VERIFIED: ${{ steps.reverify.outputs.verified }}
-          FLAGGED: ${{ steps.reverify.outputs.flagged }}
-          PROPOSED: ${{ steps.reverify.outputs.proposed }}
-          QUARANTINED: ${{ steps.reverify.outputs.quarantined }}
-          RETRIED: ${{ steps.reverify.outputs.retried }}
-          REPICKED: ${{ steps.reverify.outputs.repicked }}
-          HELD: ${{ steps.reverify.outputs.held }}
-          DRAWN: ${{ steps.reverify.outputs.drawn }}
-          SECOND: ${{ steps.reverify.outputs.second }}
-        run: |
-          MESSAGE="data(auto): rolling re-verification — ${VERIFIED} verified of ${DRAWN} drawn from the queue, ${SECOND} re-read to corroborate a held verdict, ${FLAGGED} flagged, ${PROPOSED} changes proposed for review, ${RESTATED} of ${ANSWERABLE} withheld entries restated from the reading their page already showed with ${STILL_WITHHELD} re-read and still withheld, ${KEPT_CLAUSE}, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again"
-          PROPOSALS=$(sed -n 's/^  proposed /- /p' /tmp/reverify.log)
-          if [ -n "$PROPOSALS" ]; then
-            MESSAGE=$(printf '%s\n\nProposed for review, none published until confirmed:\n%s' "$MESSAGE" "$PROPOSALS")
-          fi
-          bash scripts/gate-data-push.sh \
-            data-quarantine/rolling-reverification \
-            "$MESSAGE" \
-            data/official_mcp_checks.json data/index.json data/deal_changes.json data/change_proposals.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/restated_terms.json data/quality_budgets.json data/page-lastmod.json data/page-reviews.json artifacts/free-llm-api-index/README.md
-
-      - name: Say where it can be seen what the gate did with this run's data
-        if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.drifted_guards != '' || steps.gate.outputs.pushed_commit != '' || steps.gate.outputs.pushed_nothing == 'true' || steps.gate.outputs.held_back_vendors != '')
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          QUARANTINED: ${{ steps.gate.outputs.quarantined }}
-          QUARANTINE_REF: ${{ steps.gate.outputs.quarantine_ref }}
-          QUARANTINE_REASON: ${{ steps.gate.outputs.quarantine_reason }}
-          PUSHED_OVER_FAILURES: ${{ steps.gate.outputs.pushed_over_failures }}
-          NON_BLOCKING_FILES: ${{ steps.gate.outputs.non_blocking_files }}
-          HELD_BACK_VENDORS: ${{ steps.gate.outputs.held_back_vendors }}
-          DRIFTED_GUARDS_BODY: ${{ steps.gate.outputs.drifted_guards_body }}
-          PUSHED_COMMIT: ${{ steps.gate.outputs.pushed_commit }}
-          PUSHED_NOTHING: ${{ steps.gate.outputs.pushed_nothing }}
-        run: |
-          if [ "$QUARANTINED" = "true" ]; then
-            bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" refused "$QUARANTINE_REF" "$QUARANTINE_REASON"
-            exit 0
-          fi
-          if [ -n "$HELD_BACK_VENDORS" ]; then
-            bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" held-back-a-vendor "$HELD_BACK_VENDORS"
-          fi
-          if [ -n "$DRIFTED_GUARDS_BODY" ] && [ -s "$DRIFTED_GUARDS_BODY" ]; then
-            bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" drifted-a-guard "$(cat "$DRIFTED_GUARDS_BODY")"
-          fi
-          if [ "$PUSHED_OVER_FAILURES" = "true" ]; then
-            bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" shipped-over-failures "$NON_BLOCKING_FILES"
-          fi
-          if [ -n "$PUSHED_COMMIT" ] || [ "$PUSHED_NOTHING" = "true" ]; then
-            bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" reached-main "$PUSHED_COMMIT"
-          fi
-
-      - name: Measure the quality budgets against the data that reached main
-        id: budgets
-        run: node scripts/report-quality-budgets.js --body /tmp/quality-budgets.md --github-output
-
-      - name: Say on an issue which budget is over its ceiling
-        if: always() && steps.budgets.outputs.over != ''
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OVER: ${{ steps.budgets.outputs.over }}
-        run: bash scripts/report-quality-budgets.sh /tmp/quality-budgets.md "$OVER"
-
-      - name: Check the change log is still being written to
-        id: staleness
+          ARCHIVE_EVAL_MODE: ${{ inputs.mode }}
+        run: node scripts/evaluate-archive.mjs
+      - name: Ensure catalogue bytes were preserved
         if: always()
-        run: |
-          git fetch origin main
-          node scripts/check-change-log-staleness.js --from-ref origin/main
-
-      - name: Signal that no change detector is scheduled
-        if: always() && steps.staleness.outputs.open_absence_issue == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash scripts/signal-detector-absence.sh reverify-detector-not-scheduled
+        run: git diff --exit-code -- data
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: archive-settlement-evaluation
+          path: archive-evaluation/
