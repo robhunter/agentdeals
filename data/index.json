@@ -6150,7 +6150,7 @@
     {
       "vendor": "GrowthBook",
       "category": "Feature Flags",
-      "description": "Cloud free: 3 users, unlimited flags/experiments/traffic. Self-hosted free: unlimited everything. Warehouse Native support",
+      "description": "GrowthBook Cloud Starter is free for up to 3 users and 1 project. Self-hosted Open Source is free with unlimited users and 1 project. Both have unlimited feature flags, experiments and traffic. Bring your own warehouse. No credit card required.",
       "tier": "Starter / Open Source",
       "url": "https://www.growthbook.io/pricing",
       "tags": [
@@ -9009,7 +9009,7 @@
     {
       "vendor": "Stream",
       "category": "Communication",
-      "description": "Chat, Activity Feeds, and Video APIs. Maker Account (free): 2,000 MAU chat, 125K API calls/month feeds, 333K participant-minutes/month video. Hard limits, no surprise overages",
+      "description": "Chat, Activity Feeds, Video and Moderation APIs. Stream's Maker Account is free for companies with five or fewer team members, under $10k monthly revenue and under $100k in funding. It includes the Chat Start plan limited to 2,000 monthly active users and 100 concurrent connections, the Activity Feeds Start plan, the Video & Audio Build plan and AI Moderation pay-as-you-go with a $100 monthly credit. Hard limits, no surprise bills.",
       "tier": "Maker Account",
       "url": "https://getstream.io/maker-account/",
       "tags": [
@@ -9029,7 +9029,16 @@
         "text": "If your company has five or less team members, less than $10k in monthly revenue and has taken less than $100k in funding, Stream is free/gratis/complimentary.",
         "url": "https://getstream.io/maker-account/",
         "read_on": "2026-11-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "The first $100 of Video & Audio usage each month is free on every plan, including the Build plan; $100 covers 333,000 audio participant minutes.",
+          "quote": "Your first $100 of usage is free each month for all pricing tiers",
+          "url": "https://getstream.io/video/pricing/",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "Descope",
