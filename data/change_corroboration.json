@@ -1,26 +1,15 @@
 {
   "held": [
     {
-      "vendor": "8base.com",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The Free tier's daily capacity limits have changed: database rows decreased from 2,500 to 2,500 (same). Units were ambiguous), Serverless Computing is now 1 GB-Hours (stored said 1Gb/h), and Client App Users is now 'Up to 5' (stored said 5). Additionally, a new Developer tier at $25/mo and revised Professional ($50) and Enterprise ($75) plans are shown. Previously's Free tier limits are partially restated but the page now shows Bandwidth 2 GB/mo. and GraphQL API Calls/Subscriptions 100,000/mo..",
-      "previous_state": "8base is a full-stack low-code development platform built for JavaScript developers built on top of MySQL and GraphQL and serverless backend-as-a-service. It allows you to start building web applications quickly using a UI app builder and scale quickly, The Free tier includes rows: 2,500, Storage: 500, Serverless computing: 1Gb/h, and client app users: 5.",
-      "current_state": "Free ($0/mo) includes: Database Rows 2,500; File Storage 0.5 GB; Serverless Computing 1 GB-Hours; Bandwidth 2 GB/mo.; GraphQL API Calls 100,000/mo.; GraphQL Subscriptions 100,000/mo.; Client App Users up to 5; 1 Team Member.",
-      "source_url": "https://www.8base.com/pricing",
-      "category": "Databases",
-      "first_read_date": "2026-11-07"
-    },
-    {
-      "vendor": "Arize AX",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "AX Free tier still exists at $0 with no credit card required. The Signal limit has been reduced from 10 issues per month to 10 issues per month (unchanged). Previously 'the Alyx agent and community support' and '2 Phoenix Cloud instances for free,'. Page confirms these but adds Signal 25 issues/month). The page no longer mentions Phoenix Cloud free instances or the Alyx agent in the AX Free tier description.",
-      "previous_state": "Platform for agent observability, evaluation and improvement. AX Free costs $0 with no credit card required: 25k trace spans per month, 1 GB ingestion per month, 15 days of retention, unlimited users and evals, 10 Signal issues per month, the Alyx agent and community support. AX Pro is $50 per month with 50k spans and 10 GB of ingestion per month and 30 days of retention. Arize also offers Phoenix, which is ELv2 licensed and can be self-hosted, and 2 Phoenix Cloud instances for free.",
-      "current_state": "AX Free is $0, no credit card required, with Signal 10 issues per month, 25k trace spans per month, 1 GB ingestion per month, 15 days retention, SaaS deployment, unlimited users, unlimited evals. The page does not mention the Alyx agent, community support, or 2 free Phoenix Cloud instances.",
-      "source_url": "https://arize.com/pricing",
-      "category": "AI / ML",
-      "first_read_date": "2026-11-07"
+      "vendor": "Ably",
+      "change_type": "pricing_model_change",
+      "impact": "high",
+      "summary": "Ably's free tier is now limited to 500 MAUs instead of the stored 6M messages/month, 200 concurrent connections, and 200 channels; pricing is now MAU-based across Free/Pro/Business/Enterprise tiers.",
+      "previous_state": "Real-time infrastructure — 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
+      "current_state": "Free: $0/month, up to 500 MAUs, community & email support (best effort), no commitment. Pro: $29/month for 1K MAUs billed annually. Business: $349/month for 1K MAUs billed annually. Enterprise: custom MAUs, annual billing only.",
+      "source_url": "https://ably.com/pricing",
+      "category": "Messaging",
+      "first_read_date": "2026-11-08"
     },
     {
       "vendor": "Harness CI",
@@ -34,15 +23,15 @@
       "first_read_date": "2026-11-01"
     },
     {
-      "vendor": "SuperTokens",
+      "vendor": "localazy.com",
       "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "Cloud pricing changed from $0.02/MAU with free under 5K MAUs to a stated $0.02 per MAU with free under 5K MAUs. The page now also lists a $100/month minimum billing example for 1-4,999 MAUs and includes dashboard user pricing at $20/user/month (3 free users).",
-      "previous_state": "Open source authentication — Self hosting the open source features is free without any limits! Cloud is free under 5K MAUs. Multi-factor Authentication is $0.01 / MAU (Minimum $100 / month). Account Linking is $0.005 / MAU (Minimum $100 / month).",
-      "current_state": "Cloud is $0.02 per MAU, free under 5K monthly active users. Paid add-ons include Multi-factor Authentication at $0.01/MAU with a $100/month minimum, Account Linking at $0.005/MAU with a $100/month minimum, and Dashboard users at $20/user/month with 3 free users. Pricing examples state 1-4,999 MAUs costs $100/month, 5,000 MAUs costs $125/month, and 7,000 MAUs costs $175/month.",
-      "source_url": "https://supertokens.com/pricing",
-      "category": "Auth",
-      "first_read_date": "2026-11-07"
+      "impact": "low",
+      "summary": "The free plan still exists with the same 200 source key limit and unlimited seats/languages. The page now shows $34/month with $408 billed annually.",
+      "previous_state": "Localization platform for apps, websites and content. The free plan covers small projects: up to 200 source keys, all essential localization features, unlimited seats and languages, no credit card required. Professional costs $41 a month, or $408 a year billed annually, for 1,000 source keys. Every new account starts with a 14-day trial of the Business plan. Localazy also runs Startup, Nonprofit and Ambassador programs.",
+      "current_state": "Professional is $34/mo ($408 billed annually) for 1,000 source keys and 12,000 words translated with Localazy AI. The free plan remains: up to 200 source keys, all essential localization features, unlimited seats & languages, no credit card required, with a 14-day trial of the Business plan.",
+      "source_url": "https://localazy.com/pricing",
+      "category": "Localization",
+      "first_read_date": "2026-11-08"
     }
   ],
   "resolved": [
@@ -3373,6 +3362,42 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-11-07 read it as limits_reduced too",
       "resolved_date": "2026-11-07"
+    },
+    {
+      "vendor": "8base.com",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The Free tier's daily capacity limits have changed: database rows decreased from 2,500 to 2,500 (same). Units were ambiguous), Serverless Computing is now 1 GB-Hours (stored said 1Gb/h), and Client App Users is now 'Up to 5' (stored said 5). Additionally, a new Developer tier at $25/mo and revised Professional ($50) and Enterprise ($75) plans are shown. Previously's Free tier limits are partially restated but the page now shows Bandwidth 2 GB/mo. and GraphQL API Calls/Subscriptions 100,000/mo..",
+      "previous_state": "8base is a full-stack low-code development platform built for JavaScript developers built on top of MySQL and GraphQL and serverless backend-as-a-service. It allows you to start building web applications quickly using a UI app builder and scale quickly, The Free tier includes rows: 2,500, Storage: 500, Serverless computing: 1Gb/h, and client app users: 5.",
+      "source_url": "https://www.8base.com/pricing",
+      "first_read_date": "2026-11-07",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-08 read a change the gate refused as measures_the_opposite",
+      "resolved_date": "2026-11-08"
+    },
+    {
+      "vendor": "Arize AX",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "AX Free tier still exists at $0 with no credit card required. The Signal limit has been reduced from 10 issues per month to 10 issues per month (unchanged). Previously 'the Alyx agent and community support' and '2 Phoenix Cloud instances for free,'. Page confirms these but adds Signal 25 issues/month). The page no longer mentions Phoenix Cloud free instances or the Alyx agent in the AX Free tier description.",
+      "previous_state": "Platform for agent observability, evaluation and improvement. AX Free costs $0 with no credit card required: 25k trace spans per month, 1 GB ingestion per month, 15 days of retention, unlimited users and evals, 10 Signal issues per month, the Alyx agent and community support. AX Pro is $50 per month with 50k spans and 10 GB of ingestion per month and 30 days of retention. Arize also offers Phoenix, which is ELv2 licensed and can be self-hosted, and 2 Phoenix Cloud instances for free.",
+      "source_url": "https://arize.com/pricing",
+      "first_read_date": "2026-11-07",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-08 read a change the gate refused as states_no_difference",
+      "resolved_date": "2026-11-08"
+    },
+    {
+      "vendor": "SuperTokens",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "Cloud pricing changed from $0.02/MAU with free under 5K MAUs to a stated $0.02 per MAU with free under 5K MAUs. The page now also lists a $100/month minimum billing example for 1-4,999 MAUs and includes dashboard user pricing at $20/user/month (3 free users).",
+      "previous_state": "Open source authentication — Self hosting the open source features is free without any limits! Cloud is free under 5K MAUs. Multi-factor Authentication is $0.01 / MAU (Minimum $100 / month). Account Linking is $0.005 / MAU (Minimum $100 / month).",
+      "source_url": "https://supertokens.com/pricing",
+      "first_read_date": "2026-11-07",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-08 read it as pricing_restructured too",
+      "resolved_date": "2026-11-08"
     }
   ]
 }
