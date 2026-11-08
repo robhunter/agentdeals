@@ -22,7 +22,7 @@ interface CountedOffer {
   url: string;
   verifiedDate: string;
   category: string;
-  restated_from?: { reading_date: string } | null;
+  restated_from?: { reading_date: string; restated_on?: string } | null;
 }
 
 const m = getFreshnessMetrics();
@@ -35,10 +35,11 @@ const ageInDays = (date: string) => Math.floor((nowMs - new Date(date).getTime()
 const within = (date: string | null | undefined, days: number) =>
   Boolean(date) && ageInDays(date as string) <= days;
 
-const termsWeTookFromAReading = (o: CountedOffer) => Boolean(o.restated_from);
-
-const storedSuccessOf = (o: CountedOffer): string | null =>
-  termsWeTookFromAReading(o) ? null : (store.get(`${o.vendor}|${o.url}`)?.last_success ?? null);
+const storedSuccessOf = (o: CountedOffer): string | null => {
+  const success = store.get(`${o.vendor}|${o.url}`)?.last_success ?? null;
+  if (o.restated_from && (!o.restated_from.restated_on || !success || success <= o.restated_from.restated_on)) return null;
+  return success;
+};
 
 const confirmedFromTheStore = offers.filter((o) => within(storedSuccessOf(o), 90));
 const stampedFromTheCatalogue = offers.filter((o) => within(o.verifiedDate, 90));
