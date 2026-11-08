@@ -1,6 +1,6 @@
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
-import { PAIRED_READER_MAX_TOKENS, parsePairedAnswer, statedBeforeReaderFor } from "./archive-captures.js";
+import { PAIRED_READER_MAX_TOKENS, comparableText, parsePairedAnswer, statedBeforeReaderFor } from "./archive-captures.js";
 import { originalCorrections } from "./run-archive-settlement.js";
 import { recordKey } from "./settle-discovered-records.js";
 import { createVerifierClient } from "./verify-freshness.js";
@@ -20,6 +20,7 @@ const client = createVerifierClient({ maxTokens: PAIRED_READER_MAX_TOKENS, fetch
   appendFileSync(`${dir}/model-calls.jsonl`, JSON.stringify({ request: JSON.parse(options.body), status: response.status, output: await response.clone().text() }) + "\n");
   return response;
 } });
+const fragments = (value) => (Array.isArray(value) ? value : value == null ? [] : [value]).map((text) => String(text ?? "").trim()).filter((text) => comparableText(text));
 const candidates = [];
 for (const [pass, results, records] of [["unsettled", report.results, currentByKey], ["audit", report.audit?.results ?? [], originalByKey]]) {
   for (const result of results) {
@@ -34,7 +35,7 @@ for (const [pass, results, records] of [["unsettled", report.results, currentByK
       if (!prompt.includes(`- Vendor: ${record.vendor}\n`)) continue;
       const output = JSON.parse(call.output);
       const answer = parsePairedAnswer(output.choices?.[0]?.message?.content);
-      if (!answer || JSON.stringify(answer.old_terms) !== JSON.stringify(reading.verdict.old_terms) || JSON.stringify(answer.new_terms) !== JSON.stringify(reading.verdict.new_terms)) continue;
+      if (!answer || JSON.stringify(fragments(answer.old_terms)) !== JSON.stringify(reading.verdict.old_terms) || JSON.stringify(fragments(answer.new_terms)) !== JSON.stringify(reading.verdict.new_terms)) continue;
       const marker = `OLD PAGE (saved ${result.capture.day}, truncated):\n`;
       const start = prompt.indexOf(marker);
       const end = prompt.indexOf("\n\nNEW PAGE (saved ", start + marker.length);
