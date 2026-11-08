@@ -39065,7 +39065,7 @@
     {
       "vendor": "OVHcloud",
       "category": "Infrastructure",
-      "description": "Dedicated servers starting from ~€55/mo (Rise line: Intel Xeon, 32 GB RAM, 2×480 GB SSD). Kimsufi budget line discontinued, replaced by Eco range from ~€30/mo. Game line with DDoS protection and high-frequency CPU. Storage line for NAS/backup from ~€40/mo. All include unmetered bandwidth (500 Mbps-1 Gbps depending on range). Post-April 2026: Bare Metal prices increased 9-11% for new deployments",
+      "description": "OVHcloud sells dedicated servers in five ranges: Kimsufi (T1/T2), its current budget range, sold on kimsufi.com; Advance (T3) from $136.00 a month ex. taxes; Game (T3: high-frequency processors and DDoS protection for online gaming) from $331.00; Scale (T4) from $638.00; and High Grade (T5) from $1,481.00 (prices from its international site). OVHcloud says traffic is unlimited and unmetered by default, except in its Asia-Pacific datacentres. Bare Metal prices rose 9-11% for new deployments in April 2026.",
       "tier": "Paid",
       "url": "https://www.ovhcloud.com/en/bare-metal/",
       "tags": [
