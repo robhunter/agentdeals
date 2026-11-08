@@ -9518,12 +9518,14 @@
     },
     {
       "vendor": "serveo",
-      "change_type": "record_corrected",
-      "date": "2026-09-02",
-      "date_source": "discovered",
-      "summary": "Data correction - Not a change by serveo. An Internet Archive copy of its page from 2026-03-02 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-02 recorded the difference as a change.",
-      "previous_state": "Expose local servers to the internet. No installation, no signup. Free subdomain, no limits.",
-      "current_state": "Free Plan For hobbyists and testing. Get 3 active tunnels and custom subdomains for $0/month.",
+      "change_type": "limits_reduced",
+      "date": "2026-01-20",
+      "date_source": "hand_written",
+      "summary": "By January 20, 2026, serveo had a Free Plan of 3 active tunnels, with an interstitial warning page, and a paid Pro plan for unlimited tunnels. On November 17, 2025, serveo.net stated no tunnel limit and asked for donations. Anonymous tunnels still need no account: serveo's docs, read 2026-11-08, say an anonymous tunnel needs no account or key, and that an account key is required for reserved hostnames and paid features.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "No tunnel limit stated (\"Request multiple tunnels at once\"); donations of $5 to $75 (serveo.net, archived 2025-11-17)",
+      "current_state": "Free Plan: \"Get 3 active tunnels and custom subdomains for $0/month.\" \"3 tunnels\", \"Interstitial warning\". Pro Plan $6 /mo: \"Unlimited active tunnels\", \"No interstitial warnings\" (serveo.net, archived 2026-01-20). Read 2026-11-08: the same Free Plan; Pro $6 a month, $60 a year or $6 for a 10-Day Pass.",
       "impact": "medium",
       "source_url": "https://serveo.net/",
       "category": "Tunneling & Networking",
@@ -9531,12 +9533,16 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-02",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "ours",
-        "capture_day": "2026-03-02",
-        "recorded_as": "limits_reduced",
-        "capture": "https://web.archive.org/web/20260302075200/https://serveo.net/",
-        "stated_then": "Free Plan For hobbyists and testing. Get 3 active tunnels · Unlimited active tunnels"
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2025-11-17",
+            "first_new": "2026-01-20",
+            "last_old_capture": "https://web.archive.org/web/20251117191704/https://serveo.net/",
+            "first_new_capture": "https://web.archive.org/web/20260120031417/https://serveo.net/"
+          }
+        ]
       }
     },
     {
@@ -18082,6 +18088,20 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "recorded_date": "2026-11-08"
+    },
+    {
+      "vendor": "serveo",
+      "change_type": "record_corrected",
+      "date": "2026-11-08",
+      "summary": "Data correction - serveo did change its free terms: between 2025-11-17 and 2026-01-20 it replaced tunnels with no stated limit with a Free Plan of 3 active tunnels. Our archive check of 2026-10-02 found the Free Plan in a copy from 2026-03-02 and recorded the change as our own error.",
+      "previous_state": "Recorded 2026-10-02 as record_corrected: not a change by serveo",
+      "current_state": "limits_reduced, between 2025-11-17 and 2026-01-20 from Internet Archive copies of serveo.net",
+      "impact": "low",
+      "source_url": "https://serveo.net/",
+      "category": "Tunneling & Networking",
+      "alternatives": [],
+      "recorded_date": "2026-11-08",
+      "date_source": "hand_written"
     }
   ]
 }
