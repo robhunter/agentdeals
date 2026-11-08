@@ -56,6 +56,17 @@ describe("the archive settlement and correction audit", () => {
     assert.ok(summary.includes("one\\|two"));
     assert.doesNotMatch(summary, /Existing corrections/);
   });
+
+  it("lists every correction settled from a review with its stated-before and review lines", () => {
+    const settled = (vendor: string) => ({ vendor, date: "2026-09-12", change_type: "limits_reduced", outcome: "ours", settled_from_review: true, stated_then: [{ record: "new limit", old: `${vendor} already stated it` }], review: [{ old: `${vendor} calculator`, new: "", why: "unrelated line" }] });
+    const summary = archiveSettlementSummary({ results: [settled("Mapbox"), settled("Stream"), { ...settled("Mux"), outcome: "no_usable_capture", settled_from_review: false }], audit: { results: [settled("Codecov")] } });
+    assert.match(summary, /Review records settled as our corrections: 3/);
+    for (const vendor of ["Mapbox", "Stream", "Codecov"]) {
+      assert.ok(summary.includes(`${vendor} already stated it`));
+      assert.ok(summary.includes(`${vendor} calculator`));
+    }
+    assert.ok(!summary.includes("Mux already stated it"));
+  });
 });
 
 describe("the serial archive settlement command", () => {
@@ -113,6 +124,7 @@ describe("the serial archive settlement command", () => {
       assert.strictEqual(report.audit.results.length, 0);
       assert.strictEqual(readFileSync(`${out}.jsonl`, "utf-8").trim().split("\n").length, 1);
       assert.match(readFileSync(`${out}.md`, "utf-8"), /Example.*no_usable_capture/);
+      assert.match(readFileSync(`${out}.review.md`, "utf-8"), /Review records settled as our corrections: 0/);
       assert.match(result.stdout, /unsettled: Example 2026-09-25 no_usable_capture/);
       assert.deepStrictEqual(readFileSync(path.join(scratch, "data/deal_changes.json")), before);
       assert.strictEqual(requests.filter((request) => request === "POST /chat/completions").length, 3);

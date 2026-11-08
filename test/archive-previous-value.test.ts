@@ -157,15 +157,82 @@ describe("grounding an earlier-value answer", () => {
   });
 });
 
-type Fixture = { vendor: string; date: string; textDay: string; summary: string; previous_state: string; current_state: string; pages: Record<string, string>; terms: (text: string) => string[]; review?: string; expected: string };
+describe("settling a review against the record's claim", () => {
+  const line = { old: "Total: $ 0", new: "", why: "only the old page states it" };
+  const review = { status: "review", old_terms: [NEW_MOBILE], new_terms: [NEW_MOBILE], review: [line], why: "a calculator line differs" };
+
+  it("settles a review as ours only after the old capture states the claim, retaining both sets of lines", async () => {
+    const options = oneSignalOptions({ "20260917120000": NEW_MOBILE });
+    const result = await settleAgainstCaptures({ ...options, readPair: async () => review });
+    assert.strictEqual(result.outcome, "ours");
+    assert.strictEqual(result.settled_from_review, true);
+    assert.deepStrictEqual(result.review, [line]);
+    assert.deepStrictEqual(result.stated_then, [{ record: ONE_SIGNAL.summary, old: NEW_MOBILE }]);
+  });
+
+  it("also settles today's review after an agreeing capture from before the record day", async () => {
+    const options = oneSignalOptions({ "20260917120000": NEW_MOBILE, "20260924120000": NEW_MOBILE });
+    const result = await settleAgainstCaptures({ ...options, readPair: async (_older: Page, newer: Page) => newer.page === "today" ? review : { status: "same", old_terms: [NEW_MOBILE], new_terms: [NEW_MOBILE] } });
+    assert.strictEqual(result.outcome, "ours");
+    assert.strictEqual(result.compared_with.page, "today");
+    assert.deepStrictEqual(result.review, [line]);
+  });
+
+  it("preserves review lines when the claim is missing or the capture is after our text day", async () => {
+    for (const day of ["20260917120000", "20260921120000"]) {
+      const options = oneSignalOptions({ [day]: NEW_MOBILE });
+      let asks = 0;
+      const result = await settleAgainstCaptures({ ...options, readPair: async () => review, readStatedBefore: async () => { asks++; return day === "20260917" + "120000" ? { status: "unstated", why: "claim absent", review: [] } : { status: "stated", stated_then: [{ old: NEW_MOBILE }] }; } });
+      assert.strictEqual(result.outcome, "no_usable_capture");
+      assert.deepStrictEqual(result.review, [line]);
+      assert.strictEqual(result.why, review.why);
+      assert.strictEqual(asks, 1);
+    }
+  });
+
+  it("runs the historical-value safeguard after a review and never turns the review into vendor_changed", async () => {
+    const options = oneSignalOptions({ "20260101120000": oldMobilePage, "20260917120000": NEW_MOBILE });
+    const result = await settleAgainstCaptures({ ...options, readPair: async () => review });
+    assert.strictEqual(result.outcome, "no_usable_capture");
+    assert.strictEqual(result.settled_from_review, false);
+    assert.strictEqual(result.prior_capture.day, "2026-01-01");
+    assert.deepStrictEqual(result.review, [line]);
+  });
+
+  it("keeps an already stated removal as a removal, retaining the review evidence", async () => {
+    const options = oneSignalOptions({ "20260917120000": NEW_MOBILE });
+    const result = await settleAgainstCaptures({ ...options, readPair: async () => review, readStatedBefore: async () => ({ status: "removal_stated", stated_then: [{ record: "removed", old: "No free tier" }] }) });
+    assert.strictEqual(result.outcome, "removal_stated_before");
+    assert.strictEqual(result.settled_from_review, true);
+    assert.deepStrictEqual(result.review, [line]);
+  });
+
+  it("retains review evidence when either subsequent reader fails", async () => {
+    for (const failing of ["stated", "previous"]) {
+      const options = oneSignalOptions({ "20260101120000": NEW_MOBILE, "20260917120000": NEW_MOBILE });
+      const fail = async () => { throw new Error("reader unavailable"); };
+      const result = await settleAgainstCaptures({ ...options, readPair: async () => review, ...(failing === "stated" ? { readStatedBefore: fail } : { readPreviousValue: fail }) });
+      assert.strictEqual(result.outcome, "reader_failed");
+      assert.deepStrictEqual(result.review, [line]);
+      assert.strictEqual(result.review_reason, review.why);
+      assert.match(result.why, /reader unavailable/);
+    }
+  });
+});
+
+type Fixture = { vendor: string; date: string; textDay: string; summary: string; previous_state: string; current_state: string; pages: Record<string, string>; terms: (text: string) => string[]; review?: string; addedReview?: string; expected: string };
 const FIXTURES: Fixture[] = [
   { vendor: "Pinata IPFS", date: "2026-08-28", textDay: "2026-03-02", summary: "The free tier now offers 500 pinned files, 1GB storage, 1 gateway, 10GB bandwidth per month, and 10k requests per month.", previous_state: "1 GB storage free, along with access to API.", current_state: "500 pinned files, 1GB storage, 1 gateway, 10GB bandwidth per month, 10k requests per month", pages: { "20250116120000": "500 pinned files, 1GB storage, 1 gateway, 10GB bandwidth per month, 10k requests per month", "20260306210048": "500 pinned files, 1GB storage, 1 gateway, 10GB bandwidth per month, 10k requests per month", "20260803120000": "500 pinned files, 1GB storage, 1 gateway, 10GB bandwidth per month, 10k requests per month" }, terms: (text) => [text.split(" Pricing")[0]], expected: "ours" },
   { vendor: "GrowthBook", date: "2026-09-09", textDay: "2026-06-16", summary: "The free plans now have a limit of 1 project.", previous_state: "Unlimited projects", current_state: "1 project", pages: { "20260616120000": "Unlimited projects", "20260824143854": "1 project" }, terms: (text) => [text.includes("Unlimited projects") ? "Unlimited projects" : "1 project"], expected: "vendor_changed" },
-  { vendor: "Stream", date: "2026-09-12", textDay: "2026-02-26", summary: "The Chat component now has a limit of 2,000 monthly active users and 100 concurrent connections.", previous_state: "Maker Account free: 2,000 monthly active users", current_state: "2,000 monthly active users and 100 concurrent connections", pages: { "20251208195711": "2,000 monthly active users and 100 concurrent connections Low-priority Support", "20260911120000": "2,000 monthly active users and 100 concurrent connections" }, terms: () => ["2,000 monthly active users", "100 concurrent connections"], review: "Low-priority Support", expected: "no_usable_capture" },
-  { vendor: "Codecov", date: "2026-09-02", textDay: "2026-03-02", summary: "The Team plan is now $5 per user/month, down from the stored $12 per user/month.", previous_state: "Developer plan free", current_state: "Team $5 per user/month for up to 10 users", pages: { "20260302120000": "Team $5 per user/month for up to 10 users Sentry integration", "20260829152010": "Team $5 per user/month for up to 10 users" }, terms: () => ["Team $5 per user/month for up to 10 users"], review: "Sentry integration", expected: "no_usable_capture" },
+  { vendor: "Stream", date: "2026-09-12", textDay: "2026-02-26", summary: "The Chat component now has a limit of 2,000 monthly active users and 100 concurrent connections.", previous_state: "Maker Account free: 2,000 monthly active users", current_state: "2,000 monthly active users and 100 concurrent connections", pages: { "20251208195711": "2,000 monthly active users and 100 concurrent connections Five or less team members Less than $100k in funding Less than $10k/mo revenue Low-priority Support", "20260911120000": "2,000 monthly active users and 100 concurrent connections Five or less team members Less than $100k in funding Less than $10k/mo revenue" }, terms: () => ["2,000 monthly active users", "100 concurrent connections"], review: "Low-priority Support", expected: "ours" },
+  { vendor: "Codecov", date: "2026-09-02", textDay: "2026-03-02", summary: "The Team plan is now $5 per user/month, down from the stored $12 per user/month.", previous_state: "Developer plan free", current_state: "Team $5 per user/month for up to 10 users", pages: { "20260302120000": "Team $5 per user/month for up to 10 users Sentry integration", "20260829152010": "Team $5 per user/month for up to 10 users" }, terms: () => ["Team $5 per user/month for up to 10 users"], review: "Sentry integration", expected: "ours" },
 ];
 
 describe("first-pass records with archive excerpt fixtures", () => {
+  const mapbox = RECORDS.find((record: { vendor: string }) => record.vendor === "Mapbox");
+  FIXTURES.push({ vendor: "Mapbox", date: mapbox.date, textDay: "2026-02-25", summary: mapbox.summary, previous_state: mapbox.previous_state, current_state: mapbox.current_state, pages: { "20260225071916": mapbox.current_state + " Total: $ 0", "20260827001036": mapbox.current_state }, terms: () => [mapbox.current_state], review: "Total: $ 0", expected: "ours" });
+  const mux = RECORDS.find((record: { vendor: string }) => record.vendor === "Mux");
+  FIXTURES.push({ vendor: "Mux", date: mux.date, textDay: "2026-02-13", summary: mux.summary, previous_state: mux.previous_state, current_state: mux.current_state, pages: { "20260213120000": "100K free monthly video delivery minutes", "20260909120000": "100K free monthly video delivery minutes 100K free monthly Mux Robots units" }, terms: () => ["100K free monthly video delivery minutes"], addedReview: "100K free monthly Mux Robots units", expected: "no_usable_capture" });
   for (const fixture of FIXTURES) {
     it(`${fixture.vendor} settles as ${fixture.expected}`, async () => {
       const record = RECORDS.find((record: { vendor: string }) => record.vendor === fixture.vendor);
@@ -174,13 +241,14 @@ describe("first-pass records with archive excerpt fixtures", () => {
       const client = {
         complete: async (prompt: string) => {
           if (prompt.includes('"previous_values"')) return JSON.stringify({ previous_values: [] });
-          if (prompt.includes('"changes"')) return JSON.stringify({ changes: [{ record: record.summary, old_page: fixture.pages[latest] }] });
+          if (prompt.includes('"changes"')) return JSON.stringify({ changes: [{ record: record.summary, old_page: fixture.addedReview ? "" : fixture.pages[latest] }] });
           const [, older, newer] = prompt.split(/(?:OLD|NEW) PAGE \(saved [^)]*\):\n/);
           const oldTerms = fixture.terms(older);
           const newTerms = fixture.terms(newer);
           const review = fixture.review && older.includes(fixture.review) ? fixture.review : null;
-          const same = !review && JSON.stringify(oldTerms) === JSON.stringify(newTerms);
-          return JSON.stringify({ old_terms: oldTerms, new_terms: newTerms, same, differences: review ? [{ old: review, new: "" }] : same ? [] : [{ old: oldTerms[0], new: newTerms[0] }] });
+          const addedReview = fixture.addedReview && newer.includes(fixture.addedReview) ? fixture.addedReview : null;
+          const same = !review && !addedReview && JSON.stringify(oldTerms) === JSON.stringify(newTerms);
+          return JSON.stringify({ old_terms: oldTerms, new_terms: newTerms, same, differences: review ? [{ old: review, new: "" }] : addedReview ? [{ old: "", new: addedReview }] : same ? [] : [{ old: oldTerms[0], new: newTerms[0] }] });
         },
       };
       const result = await settleAgainstCaptures({
@@ -190,6 +258,7 @@ describe("first-pass records with archive excerpt fixtures", () => {
         readStatedBefore: statedBeforeReaderFor(client, record), readPreviousValue: previousValueReaderFor(client, record),
       });
       assert.strictEqual(result.outcome, fixture.expected);
+      if (fixture.review && fixture.expected === "ours") { assert.strictEqual(result.settled_from_review, true); assert.ok(result.review.some((line: { old: string }) => line.old === fixture.review)); assert.ok(result.stated_then.length > 0); }
       if (fixture.vendor === "GrowthBook") {
         assert.ok(result.brackets.every((bracket: { last_old: string; first_new: string }) => bracket.last_old >= "2026-06-16" && bracket.first_new <= "2026-08-24"));
       }

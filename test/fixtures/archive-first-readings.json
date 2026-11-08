@@ -77,5 +77,37 @@
     "alternatives": [],
     "detected_by": "reverify-ai",
     "recorded_date": "2026-09-02"
+  },
+  {
+    "vendor": "Mapbox",
+    "change_type": "pricing_restructured",
+    "date": "2026-08-28",
+    "date_source": "discovered",
+    "summary": "The free tier for Navigation SDK now has limits on monthly active users and trips. There are two options: one with metered trips and one with unlimited trips, both with associated costs beyond the free tier.",
+    "previous_state": "50,000 map loads/month (web), 100,000 temporary geocoding requests/month, 100,000 directions requests/month, 25,000 mobile MAUs. Free tiers across Maps, Navigation, Search, and Tilequery APIs",
+    "current_state": "Navigation SDK v3.x offers a free tier up to 100 MAUs and 1,000 trips with a cost of $0.30/user and $0.08/trip beyond that. Another option is a flat fee per MAU (free up to 10, then contact sales). Navigation SDK v2.x also has similar tiered pricing.",
+    "impact": "high",
+    "source_url": "https://www.mapbox.com/pricing",
+    "category": "Maps/Geolocation",
+    "alternatives": [],
+    "detected_by": "reverify-ai",
+    "recorded_date": "2026-08-28"
+  },
+  {
+    "vendor": "Mux",
+    "change_type": "limits_increased",
+    "date": "2026-09-12",
+    "date_source": "discovered",
+    "summary": "The free tier now includes a limit of 100K free monthly Mux Robots units and 6k free minutes for live captions.",
+    "tier": "Free",
+    "tier_direction": "widened",
+    "previous_state": "100,000 delivery minutes/month, up to 10 stored videos, on-demand video only (no live streaming). No credit card required",
+    "current_state": "The Free plan offers 100K free monthly delivery minutes, up to 10 stored videos, on-demand video only, 100K free monthly Mux Robots units, and 6k free monthly live caption minutes. No credit card required.",
+    "impact": "low",
+    "source_url": "https://www.mux.com/pricing",
+    "category": "Video",
+    "alternatives": [],
+    "detected_by": "reverify-ai",
+    "recorded_date": "2026-09-12"
   }
 ]

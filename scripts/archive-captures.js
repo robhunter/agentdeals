@@ -838,8 +838,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
         continue;
       }
       const verdict = await compare(old, page);
-      if (verdict.status === "review") return forReview(page, verdict);
-      if (verdict.status === "same" || verdict.status === "differ") {
+      if (verdict.status === "same" || verdict.status === "differ" || verdict.status === "review") {
         end = page;
         first = verdict;
         break;
@@ -849,12 +848,13 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     }
     if (!end) return unsettled({ outcome: "no_usable_capture", why: `no reading of the page on the record's day settles it (${unreadable.join("; ")})` });
     const comparedWith = describePage(end);
-    const agreed = async (verdict, laterMoves = []) => {
+    const agreement = async (verdict, laterMoves, comparison) => {
+      const comparedWith = describePage(comparison);
       if (side !== "before") return { next: true, why: "the capture states the terms the page stated on the record's day, but a capture after our text's day cannot show the difference was ours" };
       const before = await statedBefore(old);
       if (before.status === "removal_stated") return { outcome: "removal_stated_before", compared_with: comparedWith, stated_then: before.stated_then, why: `the ${old.page} already states the removal, so it predates our text: to be dated` };
       if (before.status !== "stated") return { outcome: "no_usable_capture", compared_with: comparedWith, review: before.review, why: `the ${old.page} states the plan's terms as the page did on the record's day, but ${before.why}` };
-      const earlierCaptures = captures.filter((capture) => capture.timestamp !== old.capture.timestamp && dayOfTimestamp(capture.timestamp) <= judgedOn && (!end.capture || capture.timestamp < end.capture.timestamp));
+      const earlierCaptures = captures.filter((capture) => capture.timestamp !== old.capture.timestamp && dayOfTimestamp(capture.timestamp) <= judgedOn && (!comparison.capture || capture.timestamp < comparison.capture.timestamp));
       for (const capture of earlierCaptures) {
         const earlier = await pageOf(capture);
         const historical = { prior_capture: { day: dayOfTimestamp(capture.timestamp), url: archivedCopyUrl(capture) } };
@@ -868,14 +868,26 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       }
       return { outcome: "ours", compared_with: comparedWith, terms_then: verdict.old_terms, stated_then: before.stated_then, later_moves: laterMoves };
     };
+    const agreed = async (verdict, laterMoves = [], comparison = end) => {
+      if (verdict.status !== "review") return agreement(verdict, laterMoves, comparison);
+      try {
+        const before = await statedBefore(old);
+        if (side !== "before" || !["stated", "removal_stated"].includes(before.status)) return forReview(comparison, verdict);
+        const result = await agreement(verdict, laterMoves, comparison);
+        return { ...result, compared_with: result.compared_with ?? describePage(comparison), review: verdict.review, review_reason: verdict.why, settled_from_review: ["ours", "removal_stated_before"].includes(result.outcome) };
+      } catch (error) {
+        return { outcome: "reader_failed", compared_with: describePage(comparison), review: verdict.review, review_reason: verdict.why, why: `the reader failed: ${error?.message ?? error}` };
+      }
+    };
 
     let deciding = first;
     let moves;
+    if (first.status === "review") return agreed(first);
     if (first.status === "same") {
       if (!(end.capture && end.day < judgedOn)) return agreed(first);
       const now = await compare(old, todayPage);
       if (now.status === "same") return agreed(first);
-      if (now.status === "review") return forReview(todayPage, now);
+      if (now.status === "review") return agreed(now, [], todayPage);
       if (now.status !== "differ") return unsettled({ outcome: "no_usable_capture", compared_with: comparedWith, why: `the capture before the record's day states the old capture's terms, but the reader could not compare today's page: ${now.why}` });
       deciding = now;
       moves = await bracketMoves({ from: end, until: todayPage, pool: captures.filter((capture) => capture.timestamp > end.capture.timestamp), compare, pageOf, statesWhatTheRecordCallsNew });
