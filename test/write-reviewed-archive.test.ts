@@ -135,6 +135,12 @@ describe("writing the exact reviewed archive report", () => {
       assert.equal(written[0].change_type, "record_corrected");
       assert.equal(written[1].change_type, "limits_reduced");
       assert.deepEqual(JSON.parse(readFileSync(directionsFile, "utf8")), { ...directions, directions: directions.directions.slice(1) });
+      const workflow = readFileSync(new URL("../.github/workflows/archive-settlement.yml", import.meta.url), "utf8");
+      const gate = workflow.match(/bash scripts\/gate-data-push\.sh([\s\S]*?)(?=\n      - name:)/)?.[1] ?? "";
+      const committable = new Set(gate.match(/\bdata\/[a-zA-Z0-9_./-]+\.json\b/g) ?? []);
+      const changedPaths = git("diff", "--name-only").toString().trim().split("\n").filter(file => file.startsWith("data/"));
+      assert.ok(changedPaths.length > 0);
+      for (const file of changedPaths) assert.ok(committable.has(file), `${file} changed outside the writing gate's committed paths`);
       seed();
       const before = readFileSync(log);
       const directionsBefore = readFileSync(directionsFile);
