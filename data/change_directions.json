@@ -91,14 +91,6 @@
       "finding": "every figure the stored terms state is repeated in the reading — \"10k metric series, 50 GB logs, and 50 GB traces are included\", 14-day retention; the $19/month platform fee it adds buys 30-day retention, which the free tier never had"
     },
     {
-      "vendor": "Hex",
-      "change_type": "limits_reduced",
-      "date": "2026-09-05",
-      "source_url": "https://hex.tech/pricing",
-      "tier_direction": "widened",
-      "finding": "Small compute 2 GB / 0.25 CPU -> 4 GB / 0.5 CPU"
-    },
-    {
       "vendor": "imgix",
       "change_type": "pricing_model_change",
       "date": "2026-09-07",
@@ -107,28 +99,12 @@
       "finding": "our description opens \"no permanent free tier. 30-day free trial with 100 credits\"; the summary's finding is the same sentence"
     },
     {
-      "vendor": "Invantive Cloud",
-      "change_type": "pricing_restructured",
-      "date": "2026-08-28",
-      "source_url": "https://cloud.invantive.com/",
-      "tier_direction": "unchanged",
-      "finding": "\"Use for free. No further obligations. No user limit. No entrance or setup fees.\""
-    },
-    {
       "vendor": "LambdaTest",
       "change_type": "pricing_restructured",
       "date": "2026-09-03",
       "source_url": "https://www.testmuai.com/pricing/",
       "tier_direction": "unchanged",
       "finding": "Test Manager Premium at $49/month and KaneAI Starter at $17/month; the free tier is not mentioned"
-    },
-    {
-      "vendor": "LastPass",
-      "change_type": "pricing_restructured",
-      "date": "2026-09-03",
-      "source_url": "https://www.lastpass.com/pricing",
-      "tier_direction": "widened",
-      "finding": "the device limit is the same one device type; the stored terms end \"no dark web monitoring on free\" and the reading lists dark web monitoring as included"
     },
     {
       "vendor": "LiveKit",

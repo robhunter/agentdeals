@@ -2391,7 +2391,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 79,
+      "table_figures": 80,
       "table_figures_from_records": 12,
       "tables": [
         {
@@ -2416,7 +2416,7 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 12,
+          "figures": 13,
           "from_records": 12
         }
       ],
@@ -3243,8 +3243,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 96,
-      "table_figures_from_records": 35,
+      "table_figures": 94,
+      "table_figures_from_records": 33,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -3263,8 +3263,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 18,
-          "from_records": 18
+          "figures": 16,
+          "from_records": 16
         }
       ],
       "reads_changes": true,
