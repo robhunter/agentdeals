@@ -515,7 +515,7 @@
     {
       "vendor": "Stream",
       "tier": "Maker Account",
-      "since": "2026-11-02"
+      "since": "2026-11-08"
     },
     {
       "vendor": "Notion",
@@ -534,6 +534,46 @@
     },
     {
       "vendor": "EmailJS",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Pinata IPFS",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "CertKit",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Uptimia",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Bench",
+      "tier": "Startup Discount",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Codecov",
+      "tier": "Developer",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "GrowthBook",
+      "tier": "Starter / Open Source",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "localazy.com",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Hex",
       "tier": "Free",
       "since": "2026-11-08"
     }
