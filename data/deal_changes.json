@@ -8721,6 +8721,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-08",
+        "detail": "Retracted 2026-11-08: not a change by Localazy. This record read localazy.com, which shows only the 14-day trial of the Business plan, and took the trial for the whole offer. Localazy's pricing page has offered a free plan for small projects in every Internet Archive copy read, from 2021-06-13 to 2025-11-14, and does today: \"Small project = free plan! ... Up to 200 source keys\".",
+        "source_url": "https://web.archive.org/web/20251114075652/https://localazy.com/pricing"
       }
     },
     {
@@ -10907,9 +10913,9 @@
       "change_type": "limits_reduced",
       "date": "2026-09-05",
       "date_source": "discovered",
-      "summary": "The free tier (Community plan) still exists. The details have changed. Previously 'Small compute (2 GB RAM, 0.25 CPU)' for the free tier. The current pricing page shows 'Extra small 2 0.25 Free' and 'Small 4 0.5 Free' as compute profiles available for free. Also states 'Free trials are limited to Medium compute'. The free tier now has restrictions on published apps (up to 5) and shared collections (up to 3).",
+      "summary": "The free tier (Community plan) still exists. The details have changed. Previously 'Small compute (2 GB RAM, 0.25 CPU)' for the free tier. The current pricing page shows 'Extra small 2 0.25 Free' and 'Small 4 0.5 Free' as compute profiles available for free. Also states 'Free trials are limited to Medium compute'. The free tier now has restrictions on published apps (up to 5).",
       "previous_state": "Collaborative data platform for notebooks, data apps, and knowledge libraries. Community plan: up to 5 notebooks, up to 5 published apps, Small compute (2 GB RAM, 0.25 CPU), unlimited users, connect any data source, notebook agent trial (limited AI agent access).",
-      "current_state": "The Community plan is free and includes: Unlimited users, Hex agent trial, Connect any data source, Build with all cell types, Small compute (4 GB RAM, 0.5 CPU), Up to 5 published apps, Up to 3 shared collections.",
+      "current_state": "The Community plan is free and includes: Unlimited users, Hex agent trial, Connect any data source, Build with all cell types, Small compute (4 GB RAM, 0.5 CPU), Up to 5 published apps.",
       "impact": "medium",
       "source_url": "https://hex.tech/pricing",
       "category": "Notebooks & Data Science",
@@ -11240,6 +11246,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-08",
+        "detail": "Retracted 2026-11-08: not a change by Localazy. The 1,000 source language strings this record calls previous were our own listing text, which never matched Localazy's page. Localazy's free plan offered 200 source keys in Internet Archive copies from 2021-06-13 (\"free 200 source keys\"), 2022-04-06 (\"Start for free with 200 source keys\"), 2024-08-29 and 2025-08-28 (\"The Free plan offers up to 200 strings\").",
+        "source_url": "https://web.archive.org/web/20210613210635/https://localazy.com/pricing"
       }
     },
     {
