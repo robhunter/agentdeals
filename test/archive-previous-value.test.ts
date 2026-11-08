@@ -255,7 +255,7 @@ describe("captures of a source URL and its destination", () => {
         const progress: unknown[] = [];
         const change = { ...record, vendor: "Example", date_source: "discovered", source_url: source, category: "Databases" };
         const report = await runArchiveSettlement({
-          changes: [change], offers: [], today: "2026-11-08",
+          changes: [change], offers: [{ vendor: change.vendor, url: source }], today: "2026-11-08",
           archive: createArchiveClient({ minIntervalMs: 0, fetchImpl: async (input: string, options: RequestInit) => {
             const url = new URL(input);
             assert.strictEqual(url.origin, "https://web.archive.org");

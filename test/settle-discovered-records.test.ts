@@ -186,9 +186,9 @@ describe("settling the backlog", () => {
       change({ vendor: "Gamma", date: "2026-09-03", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://gamma.example/pricing" }),
     ];
     const offers = [
-      { vendor: "Alpha", tier: "Free", category: "Databases" },
-      { vendor: "Alpha", tier: "Hobby", category: "Databases" },
-      { vendor: "Beta", tier: "Free", category: "Hosting" },
+      { vendor: "Alpha", tier: "Free", category: "Databases", url: "https://alpha.example/pricing" },
+      { vendor: "Alpha", tier: "Hobby", category: "Databases", url: "https://alpha.example/pricing" },
+      { vendor: "Beta", tier: "Free", category: "Hosting", url: "https://beta.example/pricing" },
     ];
     const page = (terms: string) => `<html><body><p>TERMS=${terms}</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>`;
     const termsOn: Record<string, (day: string) => string> = {
@@ -265,7 +265,7 @@ describe("settling the backlog", () => {
       statedReaderForRecord: (record: { vendor: string }) => record.vendor === "Epsilon" ? statesItAlready : async () => ({ status: "unstated", review: [{ record: "B", old: "" }] }),
       previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
-      offers: [],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
       archive,
       pairReaderForListing: (listing: { vendor: string }) => async () =>
@@ -307,7 +307,7 @@ describe("settling the backlog", () => {
       statedReaderForRecord: () => statesItAlready,
       previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
-      offers: [],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
       archive,
       pairReaderForListing: (listing: { vendor: string }) =>
@@ -341,8 +341,8 @@ describe("settling the backlog", () => {
       change({ vendor, tier: "Free Developer", date, date_source: "discovered", previous_state: "A", current_state: "B", source_url: `https://${vendor.toLowerCase()}.example/pricing` });
     const changes = [record("Zeta", "2026-09-01"), record("Eta", "2026-09-02")];
     const offers = [
-      { vendor: "Zeta", tier: "Free Developer", category: "Databases" },
-      { vendor: "Eta", tier: "Free Developer", category: "Databases" },
+      { vendor: "Zeta", tier: "Free Developer", category: "Databases", url: "https://zeta.example/pricing" },
+      { vendor: "Eta", tier: "Free Developer", category: "Databases", url: "https://eta.example/pricing" },
     ];
     const archive = {
       captures: async (url: string) => ({ captures: ["20250901120000", "20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
@@ -405,7 +405,7 @@ describe("records the Archive did not answer", () => {
       statedReaderForRecord: () => statesItAlready,
       previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
-      offers: [],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
       archive,
       pairReaderForListing: termsPairReader,
@@ -432,7 +432,7 @@ describe("checking the method on records whose outcome is already known", () => 
       statedReaderForRecord: () => statesItAlready,
       previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
-      offers: [],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
       archive: { captures: async () => ({ captures: [] }), captureHtml: async () => ({ unavailable: "unused" }) },
       pairReaderForListing: () => async () => ({ status: "unquotable", side: "both", why: "no terms on the page" }),
@@ -490,7 +490,7 @@ describe("a reader that fails on one record", () => {
       statedReaderForRecord: () => statesItAlready,
       previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
-      offers: [{ vendor: "Alpha", tier: "Free", category: "Databases" }],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, tier: "Free", category: "Databases", url: record.source_url })),
       today: "2026-09-28",
       archive: {
         captures: async (url: string) => ({ captures: ["20250901120000", "20260205120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
@@ -541,7 +541,7 @@ describe("each result names its record and the archived copy that settled it", (
       statedReaderForRecord: () => statesItAlready,
       previousReaderForRecord: () => async () => ({ status: "not_stated" }),
       changes,
-      offers: [],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
       archive,
       pairReaderForListing: termsPairReader,

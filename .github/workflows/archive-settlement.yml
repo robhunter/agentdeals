@@ -9,8 +9,8 @@ on:
         description: "Optional commit before archive corrections were written, to audit their original records"
         required: false
         default: ""
-      report_pr:
-        description: "PR to receive the full review-to-correction list before this run writes data"
+      reviewed_report:
+        description: "Committed reviewed report to write exactly; leave empty for a read-only report"
         required: false
         default: ""
 
@@ -43,6 +43,7 @@ jobs:
       - run: npm run build
 
       - name: Settle every missing or unsettled first reading in one process
+        if: inputs.reviewed_report == ''
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           AUDIT_REF: ${{ inputs.audit_ref }}
@@ -51,21 +52,17 @@ jobs:
           cat "$RUNNER_TEMP/archive-settlement.json.md" >> "$GITHUB_STEP_SUMMARY"
           git diff --exit-code -- data
 
-      - name: List corrections settled from reviews on the requested pull request before writing
-        if: inputs.report_pr != ''
+      - name: Write exactly the committed reviewed corrections
+        if: inputs.reviewed_report != ''
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPORT_PR: ${{ inputs.report_pr }}
+          REVIEWED_REPORT: ${{ inputs.reviewed_report }}
         run: |
-          [[ "$REPORT_PR" =~ ^[1-9][0-9]*$ ]]
-          gh pr comment "$REPORT_PR" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/archive-settlement.json.review.md"
-
-      - name: Write settled results over missing or unsettled archive checks
-        run: |
-          node scripts/write-settled-records.js "$RUNNER_TEMP/archive-settlement.json" --hold-vendor-changes
-          echo "written=true" >> "$GITHUB_OUTPUT"
+          node scripts/write-reviewed-archive.js "$REVIEWED_REPORT"
+          cp -- "$REVIEWED_REPORT" "$RUNNER_TEMP/archive-settlement.json"
+          sha256sum "$RUNNER_TEMP/archive-settlement.json" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Run the suite, then push to main only if it is green
+        if: inputs.reviewed_report != ''
         id: gate
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

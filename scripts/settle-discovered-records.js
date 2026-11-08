@@ -77,6 +77,27 @@ export function listingFor(record, offers) {
   );
 }
 
+function pageIdentity(value) {
+  try {
+    const url = new URL(value);
+    if (!["http:", "https:"].includes(url.protocol)) return null;
+    return url.hostname.replace(/^www\./, "") + url.pathname.replace(/\/+$/, "");
+  } catch {
+    return null;
+  }
+}
+
+export function correctionUsesListingPage(record, offers) {
+  const page = pageIdentity(record.source_url);
+  return page !== null && offers.some((offer) => offer.vendor === record.vendor && pageIdentity(offer.url) === page);
+}
+
+export function requireListingPage(settled, record, offers) {
+  return settled.outcome === "ours" && !correctionUsesListingPage(record, offers)
+    ? { ...settled, outcome: "no_usable_capture", why: "the record's source page is not a listing page for this vendor" }
+    : settled;
+}
+
 export function matchesSharingOnlyTheTierName(readings, tier) {
   const tierWords = wordsOfTierName(tier);
   return readings.flatMap(({ older, newer, verdict }) =>
@@ -117,7 +138,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
     const listing = listingFor(record, offers);
     const page = await fetchToday(record.source_url);
     const readings = [];
-    const settled = page.ok
+    const read = page.ok
       ? await settleOrSayTheReaderFailed(() => settleAgainstCaptures({
           url: record.source_url,
           finalUrl: page.finalUrl,
@@ -132,6 +153,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
           onRead: (reading) => readings.push(reading),
         }), readings)
       : { outcome: "page_unreadable_today", why: page.error, reads: 0 };
+    const settled = requireListingPage(read, record, offers);
     const onTheTierName = matchesSharingOnlyTheTierName(readings, listing.tier);
     const { date: dateFromCaptures, ...settledWithoutItsDate } = settled;
     const result = {

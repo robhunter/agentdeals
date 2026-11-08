@@ -375,7 +375,7 @@ describe("writing the report a settle run produced", () => {
     };
     const report = await settleFirstReadings({
       changes,
-      offers: [],
+      offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
       archive,
       pairReaderForListing: termsPairReader,
