@@ -16,6 +16,7 @@ const { ANSWERED_OUTCOMES, applyAttempt, ATTEMPT_CHANGED, ATTEMPT_CONFIRMED, ATT
 const { NO_CONFIRMATION_HELD, OUTCOMES_THAT_READ_THE_PAGE, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, attemptThatDidNotRead, confirmationDate, lastReadDate, lastReadNote, storedConfirmationClause, verificationDates, verificationDatesCell, verificationDatesClause, verificationDatesSentence } =
   await import("../dist/read-date.js");
 const { confirmationALaterReadContradicted } = await import("../dist/read-date.js");
+const { whereOurTermsCameFrom, publishedDateLabel, publishedDateValue, CONFIRMED_DATE_LABEL } = await import("../dist/read-date.js");
 const { refusalsForVendor } = await import("../dist/data.js");
 const { aReadSinceTheReadingConfirmedWhatWeStore } = await import("../dist/restatement.js");
 const { publishedTermsEvidence, termsTheVerdictWithholds, unconfirmedTermsFrom } = await import("../dist/vendor-verdict.js");
@@ -214,6 +215,47 @@ describe("the day we last read the page", () => {
     assert.equal(confirmationDate(offer), "2026-09-10");
     assert.match(lastReadNote(offer, null, []), /read the vendor's page, and the day we last confirmed/);
     assert.doesNotMatch(lastReadNote(offer, null, []), /2026-04-12/);
+  });
+
+  describe("a confirmation after terms were restated", () => {
+    const restated = { ...offer, restated_from: { reading_date: "2026-08-01", restated_on: "2026-09-01" } };
+
+    it("dates the terms and their provenance to a confirmation after the restatement", () => {
+      withState([record({ last_attempt_at: "2026-09-10", last_outcome: ATTEMPT_CONFIRMED, last_success: "2026-09-10" })]);
+      assert.equal(confirmationDate(restated), "2026-09-10");
+      assert.deepEqual(whereOurTermsCameFrom(restated), { read: "a_read_that_confirmed_them", on: "2026-09-10" });
+      assert.equal(publishedDateLabel(restated), CONFIRMED_DATE_LABEL);
+      assert.equal(publishedDateValue(restated), "2026-09-10");
+      assert.doesNotMatch(lastReadNote(restated, null, []), /without confirming them|We hold no confirmation/);
+    });
+
+    it("does not confirm replaced terms with a success on or before the restatement", () => {
+      for (const success of ["2026-07-31", "2026-08-15", "2026-09-01"]) {
+        withState([record({ last_attempt_at: "2026-09-10", last_outcome: ATTEMPT_CHANGED, last_success: success })]);
+        assert.equal(confirmationDate(restated), null, success);
+        assert.deepEqual(whereOurTermsCameFrom(restated), { read: "a_read_we_restated_them_from", on: "2026-08-01" });
+        assert.match(lastReadNote(restated, null, []), /We hold no confirmation/);
+      }
+    });
+
+    it("holds no confirmation where the restated terms have never been confirmed", () => {
+      withState([record({ last_attempt_at: "2026-09-10", last_outcome: ATTEMPT_CHANGED })]);
+      assert.equal(confirmationDate(restated), null);
+      assert.equal(confirmationDate(null), null);
+    });
+
+    it("retains a later confirmation when a subsequent read finds a change", () => {
+      withState([record({ last_attempt_at: "2026-09-20", last_outcome: ATTEMPT_CHANGED, last_success: "2026-09-10" })]);
+      assert.equal(confirmationDate(restated), "2026-09-10");
+      assert.equal(confirmationALaterReadContradicted(restated), "2026-09-20");
+      assert.equal(verificationDatesSentence(restated), "Read 2026-09-20 · confirmed 2026-09-10");
+      assert.deepEqual(whereOurTermsCameFrom(restated), { read: "a_read_that_confirmed_them", on: "2026-09-10" });
+    });
+
+    it("does not infer which description a success confirmed when the restatement day is missing", () => {
+      withState([record({ last_attempt_at: "2026-09-10", last_outcome: ATTEMPT_CONFIRMED, last_success: "2026-09-10" })]);
+      assert.equal(confirmationDate({ ...offer, restated_from: { reading_date: "2026-08-01" } }), null);
+    });
   });
 
   it("keeps the confirmation it holds beside a later read that disagreed", () => {

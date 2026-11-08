@@ -5925,10 +5925,10 @@
     },
     {
       "vendor": "Penpot",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier now has a limit of 8 team members and 10GB of storage.",
+      "summary": "Data correction - Not a change by Penpot. An Internet Archive copy of its page from 2026-02-19 already states the terms this record called new, and our listing of 2026-02-25 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Open-source design platform — unlimited teams, unlimited designers/developers, unlimited design files, team libraries. Self-hostable (MPL 2.0). Cloud-hosted free tier has ~10 GB storage",
       "current_state": "Professional $0 / user / month. Up to 8 team members, and unlimited viewers. Up to 10GB of storage (typical file size: 10–100MB).",
       "impact": "medium",
@@ -5938,8 +5938,36 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "ours",
+        "capture_day": "2026-02-19",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260219180301/https://penpot.app/pricing",
+        "stated_then": "Up to 8 team members, and unlimited viewers · Up to 10GB of storage (typical file size: 10–100MB)",
+        "historical_proof": {
+          "minimum_age_days": 365,
+          "cutoff_day": "2025-11-08",
+          "readings": [
+            {
+              "day": "2025-10-27",
+              "url": "https://web.archive.org/web/20251027152110/https://penpot.app/pricing",
+              "verdict": {
+                "status": "stated",
+                "stated_then": [
+                  {
+                    "record": "The free tier now has a limit of 8 team members",
+                    "old": "Up to 8 team members, and unlimited viewers"
+                  },
+                  {
+                    "record": "10GB of storage",
+                    "old": "Up to 10GB of storage (typical file size: 10–100MB)"
+                  }
+                ]
+              }
+            }
+          ],
+          "skipped": []
+        }
       }
     },
     {
@@ -6720,10 +6748,10 @@
     },
     {
       "vendor": "mailinator.com",
-      "change_type": "new_tier",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier is still offered. It's now called \"Verified Pro $0 with Verification\" and includes a private domain and API access.",
+      "summary": "Data correction - Not a change by mailinator.com. An Internet Archive copy of its page from 2026-03-01 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Free, public email system where you can use any inbox you want",
       "current_state": "Mailinator offers a \"Verified Pro $0 with Verification\" plan which is free and includes a private domain and access to the API. They also offer a 100% free, public temporary or disposable email address where you can use any address @mailinator.com.",
       "impact": "medium",
@@ -6733,8 +6761,44 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "ours",
+        "capture_day": "2026-03-01",
+        "recorded_as": "new_tier",
+        "capture": "https://web.archive.org/web/20260301151619/https://www.mailinator.com/",
+        "stated_then": "Mailinator still offers a 100% free · Verified Pro $ 0 with Verification · with the benefit of a private domain · access to our API",
+        "historical_proof": {
+          "minimum_age_days": 365,
+          "cutoff_day": "2025-11-08",
+          "readings": [
+            {
+              "day": "2025-11-08",
+              "url": "https://web.archive.org/web/20251108020212/https://www.mailinator.com/",
+              "verdict": {
+                "status": "stated",
+                "stated_then": [
+                  {
+                    "record": "The free tier is still offered",
+                    "old": "Mailinator still offers a 100% free"
+                  },
+                  {
+                    "record": "It's now called \"Verified Pro $0 with Verification\"",
+                    "old": "Verified Pro $ 0 with Verification"
+                  },
+                  {
+                    "record": "includes a private domain",
+                    "old": "with the benefit of a private domain"
+                  },
+                  {
+                    "record": "and API access",
+                    "old": "and access to our API"
+                  }
+                ]
+              }
+            }
+          ],
+          "skipped": []
+        }
       }
     },
     {
@@ -7748,10 +7812,10 @@
     },
     {
       "vendor": "Grafana Loki",
-      "change_type": "new_free_tier",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The page details a free tier of Grafana Cloud Logs offering up to 50GB of logs. The page now highlights Grafana Cloud as the easiest way to get started, with a free tier.",
+      "summary": "Data correction - Not a change by Grafana Loki. An Internet Archive copy of its page from 2026-02-20 already states the terms this record called new, and our listing of 2026-02-26 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Free OSS (AGPLv3). Horizontally-scalable log aggregation system by Grafana Labs. Label-based indexing (like Prometheus for logs), integrates with Grafana dashboards",
       "current_state": "Grafana Cloud Logs offers a free tier with up to 50GB of logs. Loki is also available as a self-managed, open source option.",
       "impact": "medium",
@@ -7761,16 +7825,44 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "ours",
+        "capture_day": "2026-02-20",
+        "recorded_as": "new_free_tier",
+        "capture": "https://web.archive.org/web/20260220211152/https://grafana.com/oss/loki/",
+        "stated_then": "50GB logs · The easiest way to get started is with Grafana Cloud",
+        "historical_proof": {
+          "minimum_age_days": 365,
+          "cutoff_day": "2025-11-08",
+          "readings": [
+            {
+              "day": "2025-11-06",
+              "url": "https://web.archive.org/web/20251106234729/https://grafana.com/oss/loki/",
+              "verdict": {
+                "status": "stated",
+                "stated_then": [
+                  {
+                    "record": "free tier of Grafana Cloud Logs offering up to 50GB of logs",
+                    "old": "50GB logs"
+                  },
+                  {
+                    "record": "highlights Grafana Cloud as the easiest way to get started, with a free tier",
+                    "old": "The easiest way to get started is with Grafana Cloud"
+                  }
+                ]
+              }
+            }
+          ],
+          "skipped": []
+        }
       }
     },
     {
       "vendor": "Invantive Cloud",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier now includes connectors for a specific list of platforms (Autotask, BasisWettenBestand, Brevo, etc.) and states 'Use for free. No further obligations. No user limit. No entrance or setup fees.' However, there's also a 'Start free 180 day trial' option and paid plans starting at €59/month.",
+      "summary": "Data correction - Not a change by Invantive Cloud. An Internet Archive copy of its page from 2025-08-03 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Access over 70 (cloud)platforms such as Exact Online, Twinfield, ActiveCampaign or Visma using Invantive SQL or OData4 (typically Power BI or Power Query). Includes data replication and exchange. Free plan for developers and implementation consultants. Free for specific platforms with limitations in data volumes.",
       "current_state": "A free plan is available with connectors for a specific list of platforms, no user limit, no entrance/setup fees. A 180-day free trial is also offered. Paid plans start at €59/month.",
       "impact": "medium",
@@ -7780,8 +7872,44 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "ours",
+        "capture_day": "2025-08-03",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20250803065814/https://cloud.invantive.com/en",
+        "stated_then": "Free Includes connectors for Autotask, BasisWettenBestand (KOOP, NL), Brevo · Use for free. No further obligations. No user limit. No entrance or setup fees. · Start free 180 day trial · Total &#x20AC; 59 /mo",
+        "historical_proof": {
+          "minimum_age_days": 365,
+          "cutoff_day": "2025-11-08",
+          "readings": [
+            {
+              "day": "2025-08-03",
+              "url": "https://web.archive.org/web/20250803065814/https://cloud.invantive.com/en",
+              "verdict": {
+                "status": "stated",
+                "stated_then": [
+                  {
+                    "record": "The free tier now includes connectors for a specific list of platforms (Autotask, BasisWettenBestand, Brevo, etc.)",
+                    "old": "Free Includes connectors for Autotask, BasisWettenBestand (KOOP, NL), Brevo"
+                  },
+                  {
+                    "record": "states 'Use for free. No further obligations. No user limit. No entrance or setup fees.'",
+                    "old": "Use for free. No further obligations. No user limit. No entrance or setup fees."
+                  },
+                  {
+                    "record": "there's also a 'Start free 180 day trial' option",
+                    "old": "Start free 180 day trial"
+                  },
+                  {
+                    "record": "paid plans starting at €59/month",
+                    "old": "Total &#x20AC; 59 /mo"
+                  }
+                ]
+              }
+            }
+          ],
+          "skipped": []
+        }
       }
     },
     {
@@ -7944,10 +8072,10 @@
     },
     {
       "vendor": "Mapbox",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier for Navigation SDK now has limits on monthly active users and trips. There are two options: one with metered trips and one with unlimited trips, both with associated costs beyond the free tier.",
+      "summary": "Data correction - Not a change by Mapbox. An Internet Archive copy of its page from 2026-02-25 already states the terms this record called new, and our listing of 2026-02-25 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "50,000 map loads/month (web), 100,000 temporary geocoding requests/month, 100,000 directions requests/month, 25,000 mobile MAUs. Free tiers across Maps, Navigation, Search, and Tilequery APIs",
       "current_state": "Navigation SDK v3.x offers a free tier up to 100 MAUs and 1,000 trips with a cost of $0.30/user and $0.08/trip beyond that. Another option is a flat fee per MAU (free up to 10, then contact sales). Navigation SDK v2.x also has similar tiered pricing.",
       "impact": "high",
@@ -7957,8 +8085,40 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "ours",
+        "capture_day": "2026-02-25",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260225071916/https://www.mapbox.com/pricing",
+        "stated_then": "Monthly active users Up to 100 101+ 20,000+ Cost per user Free $0.30 Contact sales for discount › Monthly trip counts Up to 1,000 1,001 - 50,000 50,001 - 100,000 100,001+ 200,000+ Cost per trip count Free $0.08 $0.064 $0.048 Contact sales for discount › · Metered trips Unlimited trips · Cost per user Free $0.30 Contact sales for discount ›",
+        "historical_proof": {
+          "minimum_age_days": 365,
+          "cutoff_day": "2025-11-08",
+          "readings": [
+            {
+              "day": "2025-11-08",
+              "url": "https://web.archive.org/web/20251108222717/https://www.mapbox.com/pricing",
+              "verdict": {
+                "status": "stated",
+                "stated_then": [
+                  {
+                    "record": "The free tier for Navigation SDK now has limits on monthly active users and trips.",
+                    "old": "Monthly active users Up to 100 101+ 20,000+ Cost per user Free $0.30 Contact sales for discount › Monthly trip counts Up to 1,000 1,001 - 50,000 50,001 - 100,000 100,001+ 200,000+ Cost per trip count Free $0.08 $0.064 $0.048 Contact sales for discount ›"
+                  },
+                  {
+                    "record": "There are two options: one with metered trips and one with unlimited trips",
+                    "old": "Metered trips Unlimited trips"
+                  },
+                  {
+                    "record": "both with associated costs beyond the free tier",
+                    "old": "Cost per user Free $0.30 Contact sales for discount ›"
+                  }
+                ]
+              }
+            }
+          ],
+          "skipped": []
+        }
       }
     },
     {
@@ -8502,10 +8662,10 @@
     },
     {
       "vendor": "webhook.site",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier has a request limit.",
+      "summary": "Data correction - Not a change by webhook.site. An Internet Archive copy of its page from 2026-03-02 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Verify webhooks, outbound HTTP requests, or emails with a custom URL. A temporary URL and email address are always free.",
       "current_state": "The free tier allows a maximum of 50 requests. URLs expire.",
       "impact": "medium",
@@ -8515,8 +8675,32 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "ours",
+        "capture_day": "2026-03-02",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260302193744/https://webhook.site/",
+        "stated_then": "can accept a maximum of {{ appConfig.MaxRequests }} requests",
+        "historical_proof": {
+          "minimum_age_days": 365,
+          "cutoff_day": "2025-11-08",
+          "readings": [
+            {
+              "day": "2025-11-08",
+              "url": "https://web.archive.org/web/20251108152057/https://webhook.site/",
+              "verdict": {
+                "status": "stated",
+                "stated_then": [
+                  {
+                    "record": "The free tier has a request limit.",
+                    "old": "{{ !token.premium ? '/' + appConfig.MaxRequests : '' }}"
+                  }
+                ]
+              }
+            }
+          ],
+          "skipped": []
+        }
       }
     },
     {
@@ -8643,10 +8827,10 @@
     },
     {
       "vendor": "Supermaven",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier now has a 7-day data retention limit. The current pricing page specifies a 7-day data retention limit for the free tier. Additionally, features like adapting to coding style and a 1 million token context window are now Pro-only features.",
+      "summary": "Data correction - Not a change by Supermaven. An Internet Archive copy of its page from 2026-03-02 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "A high-speed AI code completion plugin for VS Code, JetBrains, and Neovim. The free tier provides unlimited inline completions with a focus on ultra-low latency.",
       "current_state": "The free tier is $0/month and includes fast, high-quality code suggestions, works with large codebases, and has a 7-day data retention limit.",
       "impact": "medium",
@@ -8656,8 +8840,40 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "ours",
+        "capture_day": "2026-03-02",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260302175913/https://supermaven.com/",
+        "stated_then": "7-day data retention limit · 7-day data retention limit · Adapts to your coding style (Pro only) 1 million token context window (Pro only)",
+        "historical_proof": {
+          "minimum_age_days": 365,
+          "cutoff_day": "2025-11-08",
+          "readings": [
+            {
+              "day": "2025-11-04",
+              "url": "https://web.archive.org/web/20251104225023/https://supermaven.com/",
+              "verdict": {
+                "status": "stated",
+                "stated_then": [
+                  {
+                    "record": "The free tier now has a 7-day data retention limit.",
+                    "old": "7-day data retention limit"
+                  },
+                  {
+                    "record": "The current pricing page specifies a 7-day data retention limit for the free tier.",
+                    "old": "7-day data retention limit"
+                  },
+                  {
+                    "record": "features like adapting to coding style and a 1 million token context window are now Pro-only features.",
+                    "old": "Adapts to your coding style (Pro only) 1 million token context window (Pro only)"
+                  }
+                ]
+              }
+            }
+          ],
+          "skipped": []
+        }
       }
     },
     {
@@ -9403,10 +9619,10 @@
     },
     {
       "vendor": "Glauca",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-09-01",
       "date_source": "discovered",
-      "summary": "The free tier now only includes up to 3 zones at 0.00 GBP per month, and costs 1.00 GBP per month for zones above 3.",
+      "summary": "Data correction - Not a change by Glauca. An Internet Archive copy of its page from 2026-02-24 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-01 recorded the difference as a change.",
       "previous_state": "Free DNS hosting for up to 3 domains and DNSSEC support",
       "current_state": "For the first X zones Price per zone per month 3 0.00 GBP Above 3 1.00 GBP Plus EU VAT where applicable.",
       "impact": "high",
@@ -9416,8 +9632,36 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-01",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "ours",
+        "capture_day": "2026-02-24",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260224200524/https://docs.glauca.digital/hexdns/",
+        "stated_then": "3 0.00 GBP · Above 3 1.00 GBP",
+        "historical_proof": {
+          "minimum_age_days": 365,
+          "cutoff_day": "2025-11-08",
+          "readings": [
+            {
+              "day": "2025-11-07",
+              "url": "https://web.archive.org/web/20251107030051/https://docs.glauca.digital/hexdns/",
+              "verdict": {
+                "status": "stated",
+                "stated_then": [
+                  {
+                    "record": "only includes up to 3 zones at 0.00 GBP per month",
+                    "old": "3 0.00 GBP"
+                  },
+                  {
+                    "record": "costs 1.00 GBP per month for zones above 3",
+                    "old": "Above 3 1.00 GBP"
+                  }
+                ]
+              }
+            }
+          ],
+          "skipped": []
+        }
       }
     },
     {
@@ -10383,10 +10627,10 @@
     },
     {
       "vendor": "Internxt",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-09-03",
       "date_source": "discovered",
-      "summary": "The free tier now offers 1GB of storage instead of 10GB.",
+      "summary": "Data correction - Not a change by Internxt. An Internet Archive copy of its page from 2026-03-05 already states the terms this record called new, and our listing of 2026-04-02 did not match them. Our re-read of 2026-09-03 recorded the difference as a change.",
       "previous_state": "10 GB storage. End-to-end encrypted with zero-knowledge architecture. File sharing. Cross-platform apps. Open-source. No file size limits within storage quota.",
       "current_state": "Free plan offers 1GB of encrypted cloud storage.",
       "impact": "high",
@@ -10396,8 +10640,32 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-03",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "ours",
+        "capture_day": "2026-03-05",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260305043546/https://internxt.com/pricing",
+        "stated_then": "Get 1GB of encrypted cloud storage for free",
+        "historical_proof": {
+          "minimum_age_days": 365,
+          "cutoff_day": "2025-11-08",
+          "readings": [
+            {
+              "day": "2025-11-08",
+              "url": "https://web.archive.org/web/20251108070626/https://internxt.com/pricing",
+              "verdict": {
+                "status": "stated",
+                "stated_then": [
+                  {
+                    "record": "The free tier now offers 1GB of storage instead of 10GB.",
+                    "old": "Get 1GB of encrypted cloud storage for free"
+                  }
+                ]
+              }
+            }
+          ],
+          "skipped": []
+        }
       }
     },
     {
@@ -10687,10 +10955,10 @@
     },
     {
       "vendor": "LastPass",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-09-03",
       "date_source": "discovered",
-      "summary": "The free tier now has dark web monitoring and is limited to 1 device type.",
+      "summary": "Data correction - Not a change by LastPass. An Internet Archive copy of its page from 2026-04-01 already states the terms this record called new, and our listing of 2026-04-02 did not match them. Our re-read of 2026-09-03 recorded the difference as a change.",
       "previous_state": "Unlimited vault items. Single device type only (mobile OR desktop, not both). 50 MB encrypted file storage. No emergency access, no 1-to-many sharing, no dark web monitoring on free.",
       "current_state": "Free plan: Limited to 1 device type. Simple password management with unlimited password storage, autofill, dark web monitoring, and basic password sharing.",
       "impact": "low",
@@ -10700,8 +10968,36 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-03",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "ours",
+        "capture_day": "2026-04-01",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260401034207/https://www.lastpass.com/pricing",
+        "stated_then": "dark web monitoring · Limited to 1 device type",
+        "historical_proof": {
+          "minimum_age_days": 365,
+          "cutoff_day": "2025-11-08",
+          "readings": [
+            {
+              "day": "2025-11-07",
+              "url": "https://web.archive.org/web/20251107031945/https://www.lastpass.com/pricing",
+              "verdict": {
+                "status": "stated",
+                "stated_then": [
+                  {
+                    "record": "The free tier now has dark web monitoring",
+                    "old": "dark web monitoring"
+                  },
+                  {
+                    "record": "is limited to 1 device type",
+                    "old": "Limited to 1 device type"
+                  }
+                ]
+              }
+            }
+          ],
+          "skipped": []
+        }
       }
     },
     {
@@ -10975,10 +11271,10 @@
     },
     {
       "vendor": "Hex",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-09-05",
       "date_source": "discovered",
-      "summary": "The free tier (Community plan) still exists. The details have changed. Previously 'Small compute (2 GB RAM, 0.25 CPU)' for the free tier. The current pricing page shows 'Extra small 2 0.25 Free' and 'Small 4 0.5 Free' as compute profiles available for free. Also states 'Free trials are limited to Medium compute'. The free tier now has restrictions on published apps (up to 5).",
+      "summary": "Data correction - Not a change by Hex. An Internet Archive copy of its page from 2026-04-11 already states the terms this record called new, and our listing of 2026-04-19 did not match them. Our re-read of 2026-09-05 recorded the difference as a change.",
       "previous_state": "Collaborative data platform for notebooks, data apps, and knowledge libraries. Community plan: up to 5 notebooks, up to 5 published apps, Small compute (2 GB RAM, 0.25 CPU), unlimited users, connect any data source, notebook agent trial (limited AI agent access).",
       "current_state": "The Community plan is free and includes: Unlimited users, Hex agent trial, Connect any data source, Build with all cell types, Small compute (4 GB RAM, 0.5 CPU), Up to 5 published apps.",
       "impact": "medium",
@@ -10988,8 +11284,67 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-05",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "ours",
+        "capture_day": "2026-04-11",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260411012016/https://hex.tech/pricing/",
+        "stated_then": "Community For hobbyists completing small projects and showcasing work. Free · Small 4 0.5 Free · Extra small 2 0.25 Free Small 4 0.5 Free · Free trials are limited to Medium compute. · Published apps Up to 5 · Collections Up to 3 shared collections",
+        "historical_proof": {
+          "minimum_age_days": 365,
+          "cutoff_day": "2025-11-08",
+          "readings": [
+            {
+              "day": "2025-10-07",
+              "url": "https://web.archive.org/web/20251007185925/https://hex.tech/pricing/",
+              "verdict": {
+                "status": "unstated",
+                "why": "no line already states \"Previously 'Small compute (2 GB RAM, 0.25 CPU)' for the free tier.\"",
+                "review": [
+                  {
+                    "record": "Previously 'Small compute (2 GB RAM, 0.25 CPU)' for the free tier.",
+                    "old": "",
+                    "why": "the capture does not state it"
+                  }
+                ]
+              }
+            },
+            {
+              "day": "2025-08-16",
+              "url": "https://web.archive.org/web/20250816021647/https://hex.tech/pricing/",
+              "verdict": {
+                "status": "stated",
+                "stated_then": [
+                  {
+                    "record": "The free tier (Community plan) still exists.",
+                    "old": "Community Free to explore data and showcase your work. Free"
+                  },
+                  {
+                    "record": "Previously 'Small compute (2 GB RAM, 0.25 CPU)' for the free tier.",
+                    "old": "Small 4 0.5 Free"
+                  },
+                  {
+                    "record": "The current pricing page shows 'Extra small 2 0.25 Free' and 'Small 4 0.5 Free' as compute profiles available for free.",
+                    "old": "Extra small 2 0.25 Free Small 4 0.5 Free"
+                  },
+                  {
+                    "record": "Also states 'Free trials are limited to Medium compute'.",
+                    "old": "Free trials are limited to Medium compute."
+                  },
+                  {
+                    "record": "The free tier now has restrictions on published apps (up to 5)",
+                    "old": "Up to 5 projects"
+                  },
+                  {
+                    "record": "and shared collections (up to 3).",
+                    "old": "Up to 3 shared collections"
+                  }
+                ]
+              }
+            }
+          ],
+          "skipped": []
+        }
       }
     },
     {

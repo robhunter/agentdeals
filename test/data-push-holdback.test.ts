@@ -204,10 +204,10 @@ describe("#1337 putting a held vendor back the way main had it", () => {
     }
   });
 
-  it("lets the proposals stores hold no rows when nothing awaits review", () => {
+  it("lets proposal and historical direction stores hold no remaining rows", () => {
     assert.deepStrictEqual(
       VENDOR_KEYED_DATA.filter((f) => f.mayHoldNoRows).map((f) => f.path),
-      ["data/change_proposals.json", "data/official_mcp_checks.json"],
+      ["data/change_directions.json", "data/change_proposals.json", "data/official_mcp_checks.json"],
     );
   });
 
@@ -269,6 +269,16 @@ describe("#1898 a held-back vendor loses every row its run wrote", () => {
     const ledger = { restatements: [row("Buildkite", { restated_on: "2026-09-19" })] };
     const run = { restatements: [...ledger.restatements, row("Buildkite", { restated_on: "2026-09-20" })] };
     assert.deepStrictEqual(withVendorsAsTheyWereBeforeIn(ledger, run, ["restatements"], ["Buildkite"]), ledger);
+  });
+
+  it("restores a direction review removed by a correction when that vendor is held back", () => {
+    const storage = VENDOR_KEYED_DATA.find(entry => entry.path === "data/change_directions.json");
+    assert.ok(storage);
+    assert.deepStrictEqual(storage.arrayKeys, ["directions"]);
+    const review = { reviewed: "2026-09-10", directions: [row("Held", { finding: "The allowance increased" }), row("Kept", { finding: "The allowance stayed the same" })] };
+    const run = { ...review, directions: review.directions.slice(1) };
+    assert.deepStrictEqual(vendorsMovedIn(review, run, storage.arrayKeys), ["Held"]);
+    assert.deepStrictEqual(withVendorsAsTheyWereBeforeIn(review, run, storage.arrayKeys, ["Held"]), { ...review, directions: [review.directions[1], review.directions[0]] });
   });
 
   it("restores every array of vendor rows in a file a gated workflow commits", () => {

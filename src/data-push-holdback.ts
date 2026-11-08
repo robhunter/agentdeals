@@ -8,6 +8,7 @@ export const VENDOR_KEYED_DATA: readonly VendorKeyedData[] = [
   { path: "data/index.json", arrayKeys: ["offers"] },
   { path: "data/deal_changes.json", arrayKeys: ["changes"] },
   { path: "data/change_refusals.json", arrayKeys: ["refusals"] },
+  { path: "data/change_directions.json", arrayKeys: ["directions"], mayHoldNoRows: true },
   { path: "data/verification_state.json", arrayKeys: ["records"] },
   { path: "data/restated_terms.json", arrayKeys: ["restatements"] },
   { path: "data/change_corroboration.json", arrayKeys: ["held", "resolved"] },

@@ -75,7 +75,7 @@ jobs:
           bash scripts/gate-data-push.sh \
             data-quarantine/archive-settlement \
             "data(auto): archive settlement of first readings" \
-            data/deal_changes.json data/page-lastmod.json data/page-reviews.json artifacts/free-llm-api-index/README.md
+            data/deal_changes.json data/change_directions.json data/page-lastmod.json data/page-reviews.json artifacts/free-llm-api-index/README.md
 
       - name: Say where it can be seen what the gate did with this run's data
         if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.drifted_guards != '' || steps.gate.outputs.pushed_commit != '' || steps.gate.outputs.pushed_nothing == 'true' || steps.gate.outputs.held_back_vendors != '')

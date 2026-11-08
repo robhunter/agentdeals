@@ -54,7 +54,9 @@ function restatedFrom(offer: Offer): string | null {
 }
 
 function confirmedFor(offer: Offer): string | null {
-  return confirmedOn.get(`${offer.vendor}|${offer.url}`) ?? null;
+  const confirmed = confirmedOn.get(`${offer.vendor}|${offer.url}`) ?? null;
+  const restated = offer.restated_from;
+  return restated && (!confirmed || confirmed <= restated.restated_on) ? null : confirmed;
 }
 
 function storesDateOurTermsToARead(offer: Offer): boolean {
@@ -253,14 +255,15 @@ describe("a page never disclaims provenance our records hold", () => {
     assertPopulationFloor(dated, 62, "cited services a list dates to a read of the vendor's page");
   });
 
-  it("names the reading a restated entry was taken from, not the read that followed it", () => {
+  it("names the confirmation after a restatement, or the reading its terms came from", () => {
     const flattened: string[] = [];
     let checked = 0;
     for (const [route, html] of compiled) {
       for (const m of html.matchAll(CITED_ENTRY)) {
         if (!m[2]!.includes(`class="${RECORD_SOURCE_CLASS}"`)) continue;
         const offer = primaryForSlug.get(m[1]!);
-        const reading = offer ? restatedFrom(offer) : null;
+        if (!offer?.restated_from) continue;
+        const reading = offer ? confirmedFor(offer) ?? restatedFrom(offer) : null;
         if (!offer || reading === null) continue;
         checked++;
         if (!m[2]!.includes(reading)) flattened.push(`${route} — ${m[1]}`);

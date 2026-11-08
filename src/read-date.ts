@@ -23,7 +23,7 @@ const UNCONFIRMED_DATE_WORDS = UNCONFIRMED_DATE_LABEL.toLowerCase();
 export const VERIFICATION_DATES_HEADING = `Read / ${UNCONFIRMED_DATE_WORDS}`;
 
 export interface RestatableRecord {
-  restated_from?: { reading_date: string; source_url?: string | null } | null;
+  restated_from?: { reading_date: string; restated_on?: string; source_url?: string | null } | null;
 }
 
 export interface CheckedRecord {
@@ -121,8 +121,10 @@ export function confirmationALaterReadContradicted(
 }
 
 export function confirmationDate(offer: DatedRecord | null | undefined): string | null {
-  if (termsCameFromAReading(offer)) return null;
-  return storedConfirmationDate(offer);
+  const confirmed = storedConfirmationDate(offer);
+  const restated = offer?.restated_from;
+  if (restated && (!restated.restated_on || !confirmed || confirmed <= restated.restated_on)) return null;
+  return confirmed;
 }
 
 export function lastAttemptDate(offer: DatedRecord | null | undefined): string | null {
@@ -437,10 +439,10 @@ export interface TermsProvenance {
 export function whereOurTermsCameFrom(
   offer: DatedRecord | null | undefined,
 ): TermsProvenance | null {
-  const restated = restatedReadingDate(offer);
-  if (restated) return { read: "a_read_we_restated_them_from", on: restated };
   const confirmed = confirmationDate(offer);
-  return confirmed ? { read: "a_read_that_confirmed_them", on: confirmed } : null;
+  if (confirmed) return { read: "a_read_that_confirmed_them", on: confirmed };
+  const restated = restatedReadingDate(offer);
+  return restated ? { read: "a_read_we_restated_them_from", on: restated } : null;
 }
 
 const HOW_A_PROVENANCE_IS_STATED: Record<
