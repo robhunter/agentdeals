@@ -1,6 +1,18 @@
 {
   "refusals": [
     {
+      "vendor": "8base.com",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 500 serverles against 2,500 file",
+      "summary": "The Free tier's daily capacity limits have changed: database rows dropped from 2,500 to 2,500 (same), but file storage is now 0.5 GB, serverless computing is 1 GB-Hours, bandwidth is 2 GB/mo., and client app users are up to 5. The stored description listed rows: 2,500, Storage: 500, Serverless computing: 1Gb/h, and client app users: 5.",
+      "previous_state": "8base is a full-stack low-code development platform built for JavaScript developers built on top of MySQL and GraphQL and serverless backend-as-a-service. It allows you to start building web applications quickly using a UI app builder and scale quickly, The Free tier includes rows: 2,500, Storage: 500, Serverless computing: 1Gb/h, and client app users: 5.",
+      "current_state": "Free plan ($0/mo) includes: Database Rows 2,500; File Storage 0.5 GB; Serverless Computing 1 GB-Hours; Bandwidth 2 GB/mo.; GraphQL API Calls 100,000/mo.; GraphQL Subscriptions 100,000/mo.; Client App Users up to 5; 1 Team Member; 1 Frontend Application per Project.",
+      "source_url": "https://www.8base.com/pricing",
+      "category": "Databases",
+      "refused_date": "2026-11-08"
+    },
+    {
       "vendor": "Abby",
       "change_type": "limits_reduced",
       "reason": "null_comparison",
@@ -605,6 +617,18 @@
       "source_url": "https://argos-ci.com",
       "category": "Testing",
       "refused_date": "2026-09-30"
+    },
+    {
+      "vendor": "Arize AX",
+      "change_type": "limits_increased",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "AX Free tier still exists at $0 with no credit card required, but the stored description omits the Signal limit change: the page now lists AX Free Signal as 10 issues per month (matching stored info) while AX Pro Signal is 25 issues per month (stored info said Pro had 50k spans and 10 GB ingestion but did not mention Pro Signal). More notably, the stored description says AX Pro is $50/month with 50k spans and 10 GB ingestion and 30 days retention, which matches the page. However, the stored description's Phoenix claim (ELv2 licensed, self-hosted, 2 Phoenix Cloud instances free) is not verifiable from this page text. The page also shows AX Free has 1 Space and 1 org, 2 spaces for Pro, which the stored description did not mention.",
+      "previous_state": "Platform for agent observability, evaluation and improvement. AX Free costs $0 with no credit card required: 25k trace spans per month, 1 GB ingestion per month, 15 days of retention, unlimited users and evals, 10 Signal issues per month, the Alyx agent and community support. AX Pro is $50 per month with 50k spans and 10 GB of ingestion per month and 30 days of retention. Arize also offers Phoenix, which is ELv2 licensed and can be self-hosted, and 2 Phoenix Cloud instances for free.",
+      "current_state": "AX Free is $0, no credit card required, with 10 Signal issues per month, 25k trace spans per month, 1 GB ingestion per month, 15 days retention, SaaS deployment, unlimited users, unlimited evals, 1 Space, and community support.",
+      "source_url": "https://arize.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-11-08"
     },
     {
       "vendor": "Artillery",
@@ -3918,6 +3942,18 @@
       "refused_date": "2026-09-24"
     },
     {
+      "vendor": "Flagsmith",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-24 (confirmed_unchanged) claimed the same change, limits_increased, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free plan limits have changed. The stored deal mentioned 50K API requests/month, but the current free plan states 'Up to 50,000 Requests Per Month*' and also lists 'Up to 100,000 Users in Experiments' and '1 Team Member' which are not explicitly detailed in the stored description, but the API request limit is the same. However, the stored description mentions 'unlimited flags/environments/identities', while the free plan explicitly states 'Unlimited Feature Flags', 'Unlimited Environments', and 'Unlimited Identities and Segments' in the feature table, which is consistent. The main difference is the explicit mention of 'Up to 100,000 Users in Experiments' on the page, which wasn't in the stored description.",
+      "previous_state": "Feature flags and remote config — 50K API requests/month, unlimited flags/environments/identities, A/B testing, 1 user",
+      "current_state": "Free plan includes: Up to 50,000 Requests Per Month* Additional API calls start at $50 per million per month and decrease with volume Up to 100,000 Users in Experiments Additional API calls start at $50 per million per month and decrease with volume 1 Team Member Unlimited Feature Flags Fair usage policy applies Unlimited Environments Unlimited Identities and Segments Fair usage policy applies API Access",
+      "source_url": "https://www.flagsmith.com/pricing",
+      "category": "Feature Flags",
+      "refused_date": "2026-11-08"
+    },
+    {
       "vendor": "Flickr",
       "change_type": "limits_increased",
       "reason": "no_price_signal",
@@ -4538,13 +4574,13 @@
       "vendor": "GitHub Actions",
       "change_type": "pricing_restructured",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-31 (same_transition_graded_differently) stated the same 3 figures, so the page showed these terms before the date this record gives",
-      "summary": "The stored description says private repos get 2,000 min/mo of GitHub-hosted runner time, but the page now expresses included compute usage as a monetary amount ($12 USD for GitHub Free) rather than a fixed minute allotment, and it no longer states a 2,000-minute figure.",
-      "previous_state": "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runners remain free — planned $0.002/min charge was postponed indefinitely after community backlash (March 2026). Hosted runner prices reduced 39% (Jan 2026)",
-      "current_state": "GitHub Free includes 500 MB artifact storage, $12 USD of included compute usage per month, and 10 GB cache storage per repository; included compute usage is expressed as a monetary amount, not a fixed number of minutes, and standard GitHub-hosted runners in public repositories and self-hosted runners remain free.",
+      "detail": "the reading of this page refused on 2026-11-02 (repeats_a_refused_reading) stated the same 3 figures, so the page showed these terms before the date this record gives",
+      "summary": "The stored description says GitHub Free private repos get 2,000 minutes of included compute, but the current page expresses the allowance as a monetary amount ($12 USD) rather than a fixed number of minutes, and it also documents a shared artifact/Packages storage allowance of 500 MB for GitHub Free. The page does not mention the postponed self-hosted runner charge or the 39% hosted runner price reduction.",
+      "previous_state": "Free CI/CD for public repos (standard runners, unlimited minutes). Private repos on GitHub Free: $12 USD of included compute a month, which is 2,000 minutes on a standard Linux runner ($0.006/min), 1,200 on Windows ($0.010/min) or about 193 on macOS ($0.062/min). GitHub's billing docs gave the allowance as 2,000 minutes before a revision published on October 28, 2026. 500 MB artifact storage, 10 GB cache per repo. Self-hosted runners remain free — planned $0.002/min charge was postponed indefinitely after community backlash (March 2026). Hosted runner prices reduced 39% (Jan 2026)",
+      "current_state": "GitHub Free includes 500 MB artifact storage (shared with GitHub Packages), $12 USD of included compute usage per month, and 10 GB cache storage per repository; custom image storage is not applicable. The included compute usage is expressed as a monetary amount, not a fixed number of minutes, and standard GitHub-hosted runners in public repositories and self-hosted runners remain free.",
       "source_url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
       "category": "CI/CD",
-      "refused_date": "2026-11-02"
+      "refused_date": "2026-11-08"
     },
     {
       "vendor": "GitHub Actions",
@@ -4619,6 +4655,18 @@
       "source_url": "https://education.github.com/pack",
       "category": "Source Control",
       "refused_date": "2026-10-18"
+    },
+    {
+      "vendor": "GitHub",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this vendor refused on 2026-10-18 (repeats_a_refused_claim) stated the same current state, word for word",
+      "summary": "The stored description says the Student Pack includes GitHub Copilot, but the page now describes GitHub Copilot Student as a separate offer with limited chat and agent usage and auto model selection only, rather than the full Copilot access implied by the stored info.",
+      "previous_state": "Free access to GitHub Pro, JetBrains, Namecheap domain, and 100+ developer tools for verified students. Includes GitHub Copilot (new Copilot Student signups paused 2026-04-20 due to infrastructure strain — existing students unaffected), Codespaces, and Actions minutes",
+      "current_state": "GitHub Copilot Student is available to verified students. The plan includes unlimited code completions and an allowance of GitHub AI Credits, plus limited chat and agent usage with models available through auto model selection only.",
+      "source_url": "https://education.github.com/pack",
+      "category": "Source Control",
+      "refused_date": "2026-11-08"
     },
     {
       "vendor": "GitHub",
@@ -6833,6 +6881,18 @@
     },
     {
       "vendor": "Logz.io",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-24 (confirmed_unchanged) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored info says Logz.io has no permanent free tier and only a 14-day free trial, but the current pricing page repeatedly offers a 'Free Trial' and a 'Pro Free Trial' plan alongside Pro and Enterprise tiers. The page does not state a 14-day duration, and it now lists consumption pricing for Log Management at $0.92 per ingested GB per day with 7 days retention, plus Infrastructure Monitoring and Distributed Tracing consumption rates. The 'Community plan removed' claim is not contradicted, but the trial/free-tier framing and pricing details differ from the stored description.",
+      "previous_state": "ELK-based log management — 14-day free trial only. No permanent free tier. Consumption-based pricing starts at $0.92/ingested GB/day. Community plan removed",
+      "current_state": "The page lists Pro and Enterprise plans for Log Management, Infrastructure Monitoring, and Distributed Tracing, with a 'Free Trial' and 'Pro Free Trial' option. Consumption pricing shown includes Log Management at $0.92 per ingested GB per day with 7 days retention, Infrastructure Monitoring at $0.40 per 1000 time series metrics per day with 18 months retention, and Distributed Tracing at $0.16 per 1 million spans per day with 10 days retention. Additional retention is priced separately.",
+      "source_url": "https://logz.io/pricing/",
+      "category": "Logging",
+      "refused_date": "2026-11-08"
+    },
+    {
+      "vendor": "Logz.io",
       "change_type": "new_tier",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states bookkeeping or narration rather than a term the page carries, so it reports the reading rather than a change",
@@ -7680,6 +7740,18 @@
       "source_url": "https://modal.com/pricing",
       "category": "AI / ML",
       "refused_date": "2026-10-16"
+    },
+    {
+      "vendor": "Modal",
+      "change_type": "record_corrected",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored description says Shared Endpoints are billed per token from the first request and are not covered by the $30 credit, and that network egress beyond 1 TiB/month is billed at $0.04/GiB. The current pricing page does not mention Shared Endpoints or per-token billing at all, and it lists network egress as $0.04/GiB with 1 TiB/month free for Starter, 10 TiB/month for Team, and 100 TiB/month for Enterprise. The Starter plan itself still exists at $0 + compute/month with $30/month free credits, 3 workspace seats, 100 containers, and 10 GPU concurrency, matching the stored info.",
+      "previous_state": "Serverless platform for running CPU and GPU workloads. The Starter plan has no monthly fee and includes $30 of compute per month (GPU, CPU and memory), 3 workspace seats, 100 containers and 10 GPU concurrency. Usage beyond the $30 is billed per second: T4 $0.000164 per second; H100 $0.001097 per second. Since 2026-09-01, Shared Endpoints are billed per token from the first request and are not covered by the $30. Since 2026-10-01, network egress beyond 1 TiB a month is billed at $0.04 per GiB. Team is $250 per month with $100 of compute included.",
+      "current_state": "Starter is $0 + compute/month with $30/month free credits, 3 workspace seats, 100 containers, 10 GPU concurrency, and 1 TiB/month free network egress. Network egress is $0.04/GiB. Team is $250 + compute/month with $100/month free credits, unlimited seats, 5000 containers, 50 GPU concurrency, and 10 TiB/month free network egress. Enterprise has custom compute and 100 TiB/month free network egress. The page does not mention Shared Endpoints or per-token billing.",
+      "source_url": "https://modal.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-11-08"
     },
     {
       "vendor": "Momento",
@@ -8540,15 +8612,15 @@
     },
     {
       "vendor": "PagerDuty",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "reason": "confirmed_unchanged",
-      "detail": "The stored description already stated 100 intl phone/SMS notifications/month.",
-      "summary": "The free tier now includes a limit of 100 SMS/Phone notifications per month.",
+      "detail": "The current page states the same free-tier terms (5 users, 1 on-call schedule, 1 escalation policy, 100 global SMS/phone notifications per month); the report only notes wording differences and omits details the stored description never claimed.",
+      "summary": "The page shows a 'Free' plan with 5 users, 1 on-call schedule, 1 escalation policy, and 100 free global SMS or phone notifications per month. Is different from the page's 'global' description.",
       "previous_state": "Incident management — 5 users, 1 on-call schedule, 1 escalation policy, 100 intl phone/SMS notifications/month, 700+ integrations, API access",
-      "current_state": "Free plan accounts receive 100 free global SMS or phone notifications per month.",
+      "current_state": "Free plan includes 5 users, 1 on-call schedule, 1 escalation policy, and 100 free global SMS or phone notifications per month.",
       "source_url": "https://www.pagerduty.com/pricing/",
       "category": "Monitoring",
-      "refused_date": "2026-10-18"
+      "refused_date": "2026-11-08"
     },
     {
       "vendor": "pagertree.com",
@@ -9037,13 +9109,13 @@
       "vendor": "Polar",
       "change_type": "pricing_restructured",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-09-25 (same_transition_graded_differently) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
-      "summary": "The pricing structure has been significantly restructured. The original pay-as-you-go model is no longer the primary offering. Instead, there are tiered plans (Starter, Pro, Growth, Scale) with monthly fees and reduced transaction fees. A Startup Program is also available, offering the Scale plan for free for 12 months.",
+      "detail": "the reading of this vendor refused on 2026-10-18 (repeats_a_refused_claim) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored 'Pay-as-you-go' tier no longer exists. The pricing page now shows a free 'Starter' plan (5.00% + 50¢ per transaction) plus paid monthly plans: Pro $20/mo (3.80% + 40¢), Growth $100/mo (3.60% + 35¢), and Scale $400/mo (3.40% + 30¢). The stored 4% + $0.40 rate with +1.5% international and +0.5% subscription surcharges is not present.",
       "previous_state": "Merchant of record — no monthly fee, 4% + $0.40 per transaction (includes Stripe fees). +1.5% for international cards, +0.5% for subscriptions",
-      "current_state": "Starter: $0/month, 5.00% + $0.50 per transaction. Pro: $20/month, 3.80% + $0.40 per transaction. Growth: $100/month, 3.60% + $0.35 per transaction. Scale: $400/month, 3.40% + $0.30 per transaction. Startup Program: Scale plan free for 12 months, 3.40% + $0.30 per transaction.",
+      "current_state": "Starter is free with a 5.00% + 50¢ transaction fee; Pro is $20/month with 3.80% + 40¢; Growth is $100/month with 3.60% + 35¢; Scale is $400/month with 3.40% + 30¢. A Startup Program offers the Scale plan free for 12 months with 3.40% + 30¢.",
       "source_url": "https://polar.sh/",
       "category": "Payments",
-      "refused_date": "2026-10-18"
+      "refused_date": "2026-11-08"
     },
     {
       "vendor": "Polar",
@@ -9433,6 +9505,18 @@
       "source_url": "https://qrtracer.io",
       "category": "Storage",
       "refused_date": "2026-10-02"
+    },
+    {
+      "vendor": "QStash",
+      "change_type": "pricing_model_change",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored description says retries are free, but the current pricing page FAQ states that each delivery attempt counts as one message and each retry is billed as an additional message.",
+      "previous_state": "Serverless message queue by Upstash — 1,000 messages/day, 10 active schedules, 7-day max delay, retries free",
+      "current_state": "Free plan: $0/month, 1,000 messages/day, 50 GB max monthly bandwidth, 1 MB max message size, 7 days max delay, 3 days max DLQ retention, 3 days max logs retention, 10 max active schedules, 10 max queue count, 2 max queue parallelism, 10 max parallelism. Retries are not free: each delivery attempt counts as one message, and each retry is counted as an additional message.",
+      "source_url": "https://upstash.com/pricing/qstash",
+      "category": "Messaging",
+      "refused_date": "2026-11-08"
     },
     {
       "vendor": "Railway",
@@ -9831,6 +9915,18 @@
       "source_url": "https://retool.com/pricing",
       "category": "Low-Code Platforms",
       "refused_date": "2026-10-18"
+    },
+    {
+      "vendor": "Retool",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-18 (measures_no_change) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The Free tier no longer lists unlimited web & mobile apps, 5GB database capacity, 5GB file storage, or 20 hours/month of Agents. The page now shows Free includes up to 5 users, 250 pooled AI credits/month, Retool Cloud (production only), unlimited web apps, unlimited mobile apps, and 500 workflow runs/month, with Agents observability/evaluations/tuning included but no Agent hours stated.",
+      "previous_state": "Internal tools builder — The Free tier costs $0/mo and includes unlimited web & mobile apps, 500 workflow runs/month, 5GB of database capacity, 5GB of file storage, up to 5 users, up to 20 hours/month of Agents, and 250 AI credits/month.",
+      "current_state": "Free is $0/mo per builder and $0/mo per internal user, includes up to 5 users, 250 pooled AI credits per month, Retool Cloud production only, unlimited web apps, unlimited mobile apps, 500 workflow runs/month, and Agents observability, evaluations, and tuning included.",
+      "source_url": "https://retool.com/pricing",
+      "category": "Low-Code Platforms",
+      "refused_date": "2026-11-08"
     },
     {
       "vendor": "reviewable.io",
@@ -11372,13 +11468,13 @@
       "vendor": "TeleportHQ",
       "change_type": "free_tier_removed",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-09-24 (no_baseline) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
-      "summary": "The free tier has been removed. The page now offers a 7-day free trial of all plans, after which users must upgrade to a paid plan. The stored deal info stated three free projects, unlimited collaborators, and free code export, which are no longer available.",
+      "detail": "the reading of this vendor refused on 2026-10-18 (repeats_a_refused_claim) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored free tier description no longer matches the pricing page. The page now presents a 7-day free trial (no credit card) rather than a permanent free plan with three free projects, unlimited collaborators, and free code export. The trial includes 1 website project, 1 web app project, 200 pages per project, code preview only (no export), TeleportHQ branding on published sites, password-protected published site, and 1 editor seat. Code export and custom domains are Pro features.",
       "previous_state": "Low-code Front-end Design & Development Platform. TeleportHQ is the collaborative front-end platform to instantly create and publish headless static websites. Three free projects, unlimited collaborators, and free code export.",
-      "current_state": "After a 7-day trial, users must upgrade to Pro ($14/month) or add a slot ($19.99/month) to continue using the platform. Code export is limited to static projects only during the trial.",
+      "current_state": "7 Day trial: $0 for testing the platform, no credit card needed. Includes 1 website project, 1 web app project (free for 7 days, then upgrade to Pro or add a slot at $19.99/month), 200 pages per project, 30,000 AI tokens once, code preview only with no export, published site password-protected, TeleportHQ branding on the site, 1 editor seat, 1 GB asset storage, 5 GB monthly bandwidth.",
       "source_url": "https://teleporthq.io/pricing",
       "category": "Design",
-      "refused_date": "2026-10-18"
+      "refused_date": "2026-11-08"
     },
     {
       "vendor": "temp-mail.io",
@@ -13224,6 +13320,18 @@
       "source_url": "https://brex.com/rewards/",
       "category": "Startup Perks",
       "refused_date": "2026-09-16"
+    },
+    {
+      "vendor": "Zuplo",
+      "change_type": "restriction",
+      "reason": "confirmed_unchanged",
+      "detail": "Stored description already said custom domains cost $25/mo, not included in free tier; current page confirms same terms.",
+      "summary": "The Free tier no longer includes the custom domain option described.",
+      "previous_state": "Free tier includes 100K requests / month. Custom domains are $25/mo for 2 domains (max).",
+      "current_state": "Free plan: Custom domains — None. Builder plan ($25/mo): 2 custom domains; more needs Enterprise. Free tier includes 100K requests/month, 1 day of analytics/live logs/traces, up to 2 developer seats, GitOps with GitHub.",
+      "source_url": "https://zuplo.com/pricing",
+      "category": "API Gateway",
+      "refused_date": "2026-11-08"
     }
   ]
 }
