@@ -6803,7 +6803,15 @@
         "text": "Free $0/mo For individuals and organizations just starting out Get started now Access to: All channels Basic automation & analytics OneSignal AI & MCP Basic personalization",
         "url": "https://onesignal.com/pricing",
         "read_on": "2026-11-02"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Above 1,000 monthly active users, OneSignal pauses mobile push and in-app messages on the Free plan until the account upgrades; web push and email keep working under the Free plan's limits.",
+          "quote": "For accounts above the limit, mobile push and in-app messages will pause until you upgrade. Other channels, including web push and email will keep working under the existing plan limits.",
+          "url": "https://onesignal.com/blog/whats-changing-on-onesignals-free-plan/",
+          "read_on": "2026-11-08"
+        }
+      ]
     },
     {
       "vendor": "n8n",
@@ -14723,7 +14731,7 @@
     {
       "vendor": "Hex",
       "category": "Notebooks & Data Science",
-      "description": "Collaborative data platform for notebooks, data apps, and knowledge libraries. Community plan: up to 5 notebooks, up to 5 published apps, Small compute (4 GB RAM, 0.5 CPU), unlimited users, connect any data source, notebook agent trial (limited AI agent access).",
+      "description": "Collaborative data platform for notebooks, data apps, and knowledge libraries. Community plan (free): unlimited users, Hex agent trial with limited credits, connect any data source, all cell types, Small compute (4 GB RAM, 0.5 CPU), up to 5 published apps.",
       "tier": "Free",
       "url": "https://hex.tech/pricing",
       "tags": [
@@ -20942,7 +20950,7 @@
     {
       "vendor": "localazy.com",
       "category": "Localization",
-      "description": "Free for 1000 source language strings, unlimited languages, unlimited contributors, startup and open source deals",
+      "description": "Localization platform for apps, websites and content. The free plan covers small projects: up to 200 source keys, all essential localization features, unlimited seats and languages, no credit card required. Professional costs $41 a month, or $408 a year billed annually, for 1,000 source keys. Every new account starts with a 14-day trial of the Business plan. Localazy also runs Startup, Nonprofit and Ambassador programs.",
       "tier": "Free",
       "url": "https://localazy.com/pricing",
       "tags": [

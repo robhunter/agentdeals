@@ -8721,6 +8721,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-08",
+        "detail": "Retracted 2026-11-08: not a change by Localazy. This record read localazy.com, which shows only the 14-day trial of the Business plan, and took the trial for the whole offer. Localazy's pricing page has offered a free plan for small projects in every Internet Archive copy read, from 2021-06-13 to 2025-11-14, and does today: \"Small project = free plan! ... Up to 200 source keys\".",
+        "source_url": "https://web.archive.org/web/20251114075652/https://localazy.com/pricing"
       }
     },
     {
@@ -10907,9 +10913,9 @@
       "change_type": "limits_reduced",
       "date": "2026-09-05",
       "date_source": "discovered",
-      "summary": "The free tier (Community plan) still exists. The details have changed. Previously 'Small compute (2 GB RAM, 0.25 CPU)' for the free tier. The current pricing page shows 'Extra small 2 0.25 Free' and 'Small 4 0.5 Free' as compute profiles available for free. Also states 'Free trials are limited to Medium compute'. The free tier now has restrictions on published apps (up to 5) and shared collections (up to 3).",
+      "summary": "The free tier (Community plan) still exists. The details have changed. Previously 'Small compute (2 GB RAM, 0.25 CPU)' for the free tier. The current pricing page shows 'Extra small 2 0.25 Free' and 'Small 4 0.5 Free' as compute profiles available for free. Also states 'Free trials are limited to Medium compute'. The free tier now has restrictions on published apps (up to 5).",
       "previous_state": "Collaborative data platform for notebooks, data apps, and knowledge libraries. Community plan: up to 5 notebooks, up to 5 published apps, Small compute (2 GB RAM, 0.25 CPU), unlimited users, connect any data source, notebook agent trial (limited AI agent access).",
-      "current_state": "The Community plan is free and includes: Unlimited users, Hex agent trial, Connect any data source, Build with all cell types, Small compute (4 GB RAM, 0.5 CPU), Up to 5 published apps, Up to 3 shared collections.",
+      "current_state": "The Community plan is free and includes: Unlimited users, Hex agent trial, Connect any data source, Build with all cell types, Small compute (4 GB RAM, 0.5 CPU), Up to 5 published apps.",
       "impact": "medium",
       "source_url": "https://hex.tech/pricing",
       "category": "Notebooks & Data Science",
@@ -11240,6 +11246,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-08",
+        "detail": "Retracted 2026-11-08: not a change by Localazy. The 1,000 source language strings this record calls previous were our own listing text, which never matched Localazy's page. Localazy's free plan offered 200 source keys in Internet Archive copies from 2021-06-13 (\"free 200 source keys\"), 2022-04-06 (\"Start for free with 200 source keys\"), 2024-08-29 and 2025-08-28 (\"The Free plan offers up to 200 strings\").",
+        "source_url": "https://web.archive.org/web/20210613210635/https://localazy.com/pricing"
       }
     },
     {
@@ -13512,23 +13524,45 @@
     {
       "vendor": "OneSignal",
       "change_type": "limits_reduced",
-      "date": "2026-09-25",
-      "date_source": "discovered",
-      "summary": "The free tier now has limits on monthly active users for mobile push notifications (up to 1,000) and web push notifications (max 10,000 subscribers per send). Email sends are limited to 10,000/month.",
+      "date": "2026-09-01",
+      "date_source": "vendor_page",
+      "summary": "OneSignal limited mobile push and in-app messaging on its Free plan to organizations with up to 1,000 monthly active users, from September 1, 2026 for new customers and October 1, 2026 for existing customers. Above the limit, mobile push and in-app messages pause until the account upgrades; web push and email keep working under the existing limits. Mobile push had been unlimited on Free.",
       "tier": "Free",
       "tier_direction": "narrowed",
-      "previous_state": "Push notification platform — Free access to: 10,000/mo Free Email Sends Unlimited Mobile Push Sends. Web Push Notifications Max 10,000 subscribers per send.",
+      "previous_state": "Free: Unlimited Mobile Push Sends. Web Push Notifications Max 10,000 subscribers per send. 10,000/mo Free Email Sends.",
       "current_state": "Free $0/mo. Access to: All channels, Basic automation & analytics, OneSignal AI & MCP, Basic personalization. Mobile Push Notifications for organizations with up to 1,000 monthly active users. Web Push Notifications Max 10,000 subscribers per send. Email 10,000 sends / month.",
       "impact": "high",
-      "source_url": "https://onesignal.com/pricing",
+      "source_url": "https://onesignal.com/blog/whats-changing-on-onesignals-free-plan/",
       "category": "Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-25",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-04",
+            "first_new": "2026-09-07",
+            "last_old_capture": "https://web.archive.org/web/20260804172328/https://onesignal.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260907165917/https://onesignal.com/pricing"
+          }
+        ]
       }
+    },
+    {
+      "vendor": "OneSignal",
+      "change_type": "record_corrected",
+      "date": "2026-11-08",
+      "summary": "Data correction - OneSignal's 1,000 monthly-active-user limit on Free mobile push took effect on September 1, 2026 for new customers and October 1, 2026 for existing customers, not on 2026-09-25, the day our re-read found it. Our record also listed the Free plan's web push and email limits as new; they did not change.",
+      "previous_state": "Recorded 2026-09-25 as: The free tier now has limits on monthly active users for mobile push notifications (up to 1,000) and web push notifications (max 10,000 subscribers per send). Email sends are limited to 10,000/month.",
+      "current_state": "\"These changes take effect for new customers on September 1, 2026, and for existing customers on October 1, 2026.\"",
+      "impact": "medium",
+      "source_url": "https://onesignal.com/blog/whats-changing-on-onesignals-free-plan/",
+      "category": "Messaging",
+      "alternatives": [],
+      "recorded_date": "2026-11-08",
+      "date_source": "hand_written"
     },
     {
       "vendor": "podio.com",
