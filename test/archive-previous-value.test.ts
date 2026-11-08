@@ -126,6 +126,7 @@ describe("grounding an earlier-value answer", () => {
     for (const value of [
       { ...EARLIER_VALUE, previous: "Unlimited everything" },
       { ...EARLIER_VALUE, current: "Only 500 users" },
+      { ...EARLIER_VALUE, old_page: "Unlimited push forever" },
       { ...EARLIER_VALUE, old_page: "Free Email Sends 10,000/mo" },
       { ...EARLIER_VALUE, previous: "" },
       { ...EARLIER_VALUE, old_page: "" },
