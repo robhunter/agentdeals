@@ -21,17 +21,6 @@
       "source_url": "https://www.harness.io/pricing",
       "category": "CI/CD",
       "first_read_date": "2026-11-01"
-    },
-    {
-      "vendor": "localazy.com",
-      "change_type": "pricing_restructured",
-      "impact": "low",
-      "summary": "The free plan still exists with the same 200 source key limit and unlimited seats/languages. The page now shows $34/month with $408 billed annually.",
-      "previous_state": "Localization platform for apps, websites and content. The free plan covers small projects: up to 200 source keys, all essential localization features, unlimited seats and languages, no credit card required. Professional costs $41 a month, or $408 a year billed annually, for 1,000 source keys. Every new account starts with a 14-day trial of the Business plan. Localazy also runs Startup, Nonprofit and Ambassador programs.",
-      "current_state": "Professional is $34/mo ($408 billed annually) for 1,000 source keys and 12,000 words translated with Localazy AI. The free plan remains: up to 200 source keys, all essential localization features, unlimited seats & languages, no credit card required, with a 14-day trial of the Business plan.",
-      "source_url": "https://localazy.com/pricing",
-      "category": "Localization",
-      "first_read_date": "2026-11-08"
     }
   ],
   "resolved": [
@@ -3397,6 +3386,20 @@
       "first_read_date": "2026-11-07",
       "outcome": "corroborated",
       "detail": "a reading on 2026-11-08 read it as pricing_restructured too",
+      "resolved_date": "2026-11-08"
+    },
+    {
+      "vendor": "localazy.com",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "The free plan still exists with the same 200 source key limit and unlimited seats/languages. The page now shows $34/month with $408 billed annually.",
+      "previous_state": "Localization platform for apps, websites and content. The free plan covers small projects: up to 200 source keys, all essential localization features, unlimited seats and languages, no credit card required. Professional costs $41 a month, or $408 a year billed annually, for 1,000 source keys. Every new account starts with a 14-day trial of the Business plan. Localazy also runs Startup, Nonprofit and Ambassador programs.",
+      "current_state": "Professional is $34/mo ($408 billed annually) for 1,000 source keys and 12,000 words translated with Localazy AI. The free plan remains: up to 200 source keys, all essential localization features, unlimited seats & languages, no credit card required, with a 14-day trial of the Business plan.",
+      "source_url": "https://localazy.com/pricing",
+      "category": "Localization",
+      "first_read_date": "2026-11-08",
+      "outcome": "baseline_moved",
+      "detail": "the terms it was read against are no longer the terms we publish",
       "resolved_date": "2026-11-08"
     }
   ]

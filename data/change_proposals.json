@@ -1,104 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-11-08/unkey/limits_increased",
-      "proposed_on": "2026-11-08",
-      "vendor": "Unkey",
-      "change_type": "limits_increased",
-      "date": "2026-11-08",
-      "date_source": "discovered",
-      "summary": "The Free plan's log retention and audit log retention have increased from 1-day logs / 3-day audit logs to 7-day logs / 30-day audit log retention.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "The \"Free\" API key management plan is priced at 0 USD / mo and lists \"1k API keys\", \"150K valid requests / mo\", \"1-day logs retention\", \"3-day audit log retention\" and \"Unlimited APIs\".",
-      "current_state": "Free plan is $0/mo and includes 1k API keys, 150K valid requests / mo, 7-day logs retention, 30-day audit log retention, and Unlimited APIs.",
-      "impact": "low",
-      "source_url": "https://www.unkey.com/pricing",
-      "category": "API Gateway",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-08",
-      "restatement": [
-        {
-          "url": "https://www.unkey.com/pricing",
-          "description": "Free plan is $0/mo and includes 1k API keys, 150K valid requests / mo, 7-day logs retention, 30-day audit log retention, and Unlimited APIs."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-08/svix/record_corrected",
-      "proposed_on": "2026-11-08",
-      "vendor": "Svix",
-      "change_type": "record_corrected",
-      "date": "2026-11-08",
-      "date_source": "discovered",
-      "summary": "The current pricing page no longer states any such end date for the Free plan.",
-      "tier": "Free",
-      "tier_direction": "unchanged",
-      "previous_state": "Webhook service for sending (Dispatch), receiving (Ingest) and data streaming (Stream). The Free plan is $0 with no credit card: up to 50,000 messages a month, 50 messages a second, 7-day payload retention and the embeddable webhooks UI. Basic, from $20 a month, adds a 99.9% uptime SLA, 200 messages a second and 30-day retention, the Free plan's terms until September 2026, and bills messages beyond 50,000 a month.",
-      "current_state": "Free is $0 per month with no credit card required, includes the embeddable webhooks UI, 50 messages/second, 7-day payload retention, up to 50k messages per month, and Dispatch, Stream and Ingest. No end date for these terms is stated.",
-      "impact": "low",
-      "source_url": "https://www.svix.com/pricing/",
-      "category": "Messaging",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-08",
-      "restatement": [
-        {
-          "url": "https://www.svix.com/pricing/",
-          "refused": "reading_drops_a_figure_our_source_check_found",
-          "figures": [
-            "$ 20"
-          ]
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-08/browserless/limits_increased",
-      "proposed_on": "2026-11-08",
-      "vendor": "Browserless",
-      "change_type": "limits_increased",
-      "date": "2026-11-08",
-      "date_source": "discovered",
-      "summary": "The Free plan's max session time is now 2 minutes (with session reconnects). Previously 1-minute max session with reconnects.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Headless browser API — 1,000 units/mo (1 unit = 30 sec), 2 concurrent browsers, 1-minute max session with reconnects, automatic captcha solving, BrowserQL editor. Supports Chrome, WebKit, Firefox",
-      "current_state": "Free plan: $0/month billed annually, 1k units/month, 2 max concurrent browsers, 2 min. max session time, session reconnects, 1 day persisted sessions and replays storage, 8 hours log search window, residential proxies (6 units/MB) and datacenter proxies (2 units/MB), automatic captcha solving, Chrome Extensions, San Francisco/London/Amsterdam endpoints, Chrome/WebKit & Firefox, stream pages with Hybrid Automations.",
-      "impact": "low",
-      "source_url": "https://www.browserless.io/pricing",
-      "category": "Browser Automation",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-08",
-      "restatement": [
-        {
-          "url": "https://www.browserless.io/pricing",
-          "description": "Headless browser API — Free plan: $0/month billed annually, 1k units/month, 2 max concurrent browsers, 2 min. max session time, session reconnects, 1 day persisted sessions and replays storage, 8 hours log search window, residential proxies (6 units/MB) and datacenter proxies (2 units/MB), automatic captcha solving, Chrome Extensions, San Francisco/London/Amsterdam endpoints, Chrome/WebKit & Firefox, stream pages with Hybrid Automations."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-08/supertokens/pricing_restructured",
-      "proposed_on": "2026-11-08",
-      "vendor": "SuperTokens",
-      "change_type": "pricing_restructured",
-      "date": "2026-11-08",
-      "date_source": "discovered",
-      "summary": "Cloud pricing changed from $0.02/MAU with free under 5K MAUs to a $0.02/MAU rate that is still free under 5K MAUs. The page now also lists a $100/month minimum billing for paid features and a pricing example showing 1-4,999 MAUs costs $100/month. Is still stated. The page adds a minimum billing structure that affects paid add-ons.",
-      "tier": "Cloud",
-      "tier_direction": "unchanged",
-      "previous_state": "Open source authentication — Self hosting the open source features is free without any limits! Cloud is free under 5K MAUs. Multi-factor Authentication is $0.01 / MAU (Minimum $100 / month). Account Linking is $0.005 / MAU (Minimum $100 / month).",
-      "current_state": "Cloud is $0.02 per MAU, free under 5K monthly active users. Paid features/add-ons include Multi-factor Authentication at $0.01/MAU with a $100/month minimum, Account Linking at $0.005/MAU with a $100/month minimum, and Dashboard users at $20/user/month with 3 free users. Pricing examples show 1-4,999 MAUs costing $100/month and 5,000 MAUs costing $125/month.",
-      "impact": "medium",
-      "source_url": "https://supertokens.com/pricing",
-      "category": "Auth",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-08",
-      "restatement": []
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
@@ -2245,6 +2146,58 @@
       ],
       "dropped_on": "2026-11-07",
       "drop_reason": "Undated, and Miro's pages disagree: the Free card lists 250+ integrations (our listing said 160+) and names no AI credit amount; the pricing page's FAQ gives the Free plan 10 credits per month, while the help center's AI credits table gives 25. The Wayback Machine holds no 2026 capture of miro.com/pricing to date either figure. Integrations corrected by hand; credits left at the pricing page's 10."
+    },
+    {
+      "proposal_id": "2026-11-08/svix/record_corrected",
+      "proposed_on": "2026-11-08",
+      "vendor": "Svix",
+      "change_type": "record_corrected",
+      "date": "2026-11-08",
+      "date_source": "discovered",
+      "summary": "The current pricing page no longer states any such end date for the Free plan.",
+      "tier": "Free",
+      "tier_direction": "unchanged",
+      "previous_state": "Webhook service for sending (Dispatch), receiving (Ingest) and data streaming (Stream). The Free plan is $0 with no credit card: up to 50,000 messages a month, 50 messages a second, 7-day payload retention and the embeddable webhooks UI. Basic, from $20 a month, adds a 99.9% uptime SLA, 200 messages a second and 30-day retention, the Free plan's terms until September 2026, and bills messages beyond 50,000 a month.",
+      "current_state": "Free is $0 per month with no credit card required, includes the embeddable webhooks UI, 50 messages/second, 7-day payload retention, up to 50k messages per month, and Dispatch, Stream and Ingest. No end date for these terms is stated.",
+      "impact": "low",
+      "source_url": "https://www.svix.com/pricing/",
+      "category": "Messaging",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-08",
+      "restatement": [
+        {
+          "url": "https://www.svix.com/pricing/",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$ 20"
+          ]
+        }
+      ],
+      "dropped_on": "2026-11-08",
+      "drop_reason": "Not a change: svix.com/pricing/, read 2026-11-08, lists Free at up to 50k messages per month, 50 messages / second and 7-day payload retention, and Basic from $20 a month with a 99.9% uptime SLA, 200 messages / second and 30-day payload retention, as our listing does. The reading took our clause \"the Free plan's terms until September 2026\" for an end date of the Free plan; the listing no longer carries it."
+    },
+    {
+      "proposal_id": "2026-11-08/supertokens/pricing_restructured",
+      "proposed_on": "2026-11-08",
+      "vendor": "SuperTokens",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-08",
+      "date_source": "discovered",
+      "summary": "Cloud pricing changed from $0.02/MAU with free under 5K MAUs to a $0.02/MAU rate that is still free under 5K MAUs. The page now also lists a $100/month minimum billing for paid features and a pricing example showing 1-4,999 MAUs costs $100/month. Is still stated. The page adds a minimum billing structure that affects paid add-ons.",
+      "tier": "Cloud",
+      "tier_direction": "unchanged",
+      "previous_state": "Open source authentication — Self hosting the open source features is free without any limits! Cloud is free under 5K MAUs. Multi-factor Authentication is $0.01 / MAU (Minimum $100 / month). Account Linking is $0.005 / MAU (Minimum $100 / month).",
+      "current_state": "Cloud is $0.02 per MAU, free under 5K monthly active users. Paid features/add-ons include Multi-factor Authentication at $0.01/MAU with a $100/month minimum, Account Linking at $0.005/MAU with a $100/month minimum, and Dashboard users at $20/user/month with 3 free users. Pricing examples show 1-4,999 MAUs costing $100/month and 5,000 MAUs costing $125/month.",
+      "impact": "medium",
+      "source_url": "https://supertokens.com/pricing",
+      "category": "Auth",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-08",
+      "restatement": [],
+      "dropped_on": "2026-11-08",
+      "drop_reason": "Not a change: supertokens.com/pricing, read 2026-11-08, still gives Cloud at $0.02 per MAU, free under 5K monthly active users, Multi-factor Authentication at $0.01 / MAU and Account Linking at $0.005 / MAU, each with a $100 monthly minimum, as our listing does. Its \"1 - 4,999 MAUs, that will be $100 / month\" example is Account Linking's minimum. The 2026-09-05 record making the same claim was retracted on 2026-09-28."
     }
   ]
 }

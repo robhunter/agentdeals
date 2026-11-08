@@ -343,6 +343,27 @@
           "read_on": "2026-10-06"
         },
         {
+          "text": "Workers Free and Workers Paid both allow a Worker of up to 64 MiB, counted on the uncompressed bundle; there is no compressed size limit. Until September 4, 2026, deploys over 3 MB compressed on Free, or 10 MB on Paid, were rejected.",
+          "quote": "There is no compressed size limit. Only the uncompressed bundle size counts.",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
+          "text": "A Worker invocation may make 50 subrequests on Workers Free and 10,000 on Workers Paid, where the limit can be raised per Worker up to 10 million. A subrequest is a fetch() call or a call to a Cloudflare service such as KV, R2 or D1, and each request in a redirect chain counts. Cloudflare lists a separate limit of 1,000 subrequests to internal services on Workers Free.",
+          "quote": "Each subrequest in a redirect chain counts against this limit.",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
+          "text": "An account may have 100 Workers on Workers Free and 500 on Workers Paid.",
+          "quote": "Workers per account | 100 | 500",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
           "text": "Cloudflare's terms prohibit processing or collecting credit card information on any site using its free services.",
           "quote": "process or collect personal or business credit card information on any web property that is receiving Free Services",
           "url": "https://www.cloudflare.com/terms/",
@@ -5438,7 +5459,7 @@
     {
       "vendor": "Doppler",
       "category": "Secrets Management",
-      "description": "Secrets management — up to 3 users, 10 projects, 4 environments per project. CLI, SDKs, and integrations included",
+      "description": "Secrets management — free for 3 users, $8 a month per additional user (Doppler: \"AI agents and non-human identities ride free\"). 10 projects, 4 environments per project, 3 days of activity logs. CLI, SDKs, and integrations included",
       "tier": "Free",
       "url": "https://www.doppler.com/pricing",
       "tags": [
@@ -6307,7 +6328,7 @@
     {
       "vendor": "Unkey",
       "category": "API Gateway",
-      "description": "The \"Free\" API key management plan is priced at 0 USD / mo and lists \"1k API keys\", \"150K valid requests / mo\", \"1-day logs retention\", \"3-day audit log retention\" and \"Unlimited APIs\".",
+      "description": "API key management. The \"Free\" plan is priced at 0 USD / mo and lists \"1k API keys\", \"150K valid requests / mo\", \"7-day logs retention\", \"30-day audit log retention\" and \"Unlimited APIs\".",
       "tier": "Free",
       "url": "https://www.unkey.com/pricing",
       "tags": [
@@ -6321,13 +6342,6 @@
         "checked": "2026-11-08",
         "outcome": "ok",
         "detail": "the page names Unkey as \"unkey\" and states \"150K valid requests / mo\""
-      },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://www.unkey.com/pricing",
-        "record_date": "2026-08-28",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
       }
     },
     {
@@ -6581,7 +6595,7 @@
     {
       "vendor": "Svix",
       "category": "Messaging",
-      "description": "Webhook service for sending (Dispatch), receiving (Ingest) and data streaming (Stream). The Free plan is $0 with no credit card: up to 50,000 messages a month, 50 messages a second, 7-day payload retention and the embeddable webhooks UI. Basic, from $20 a month, adds a 99.9% uptime SLA, 200 messages a second and 30-day retention, the Free plan's terms until September 2026, and bills messages beyond 50,000 a month.",
+      "description": "Webhook service for sending (Dispatch), receiving (Ingest) and data streaming (Stream). The Free plan is $0 with no credit card: up to 50,000 messages a month, 50 messages a second, 7-day payload retention and the embeddable webhooks UI. Basic, from $20 a month, adds a 99.9% uptime SLA, 200 messages a second and 30-day retention, and bills messages beyond 50,000 a month.",
       "tier": "Free",
       "url": "https://www.svix.com/pricing/",
       "tags": [
@@ -7126,7 +7140,7 @@
     {
       "vendor": "Browserless",
       "category": "Browser Automation",
-      "description": "Headless browser API — 1,000 units/mo (1 unit = 30 sec), 2 concurrent browsers, 1-minute max session with reconnects, automatic captcha solving, BrowserQL editor. Supports Chrome, WebKit, Firefox",
+      "description": "Headless browser API — 1,000 units/mo (1 unit = up to 30 sec of browser time), 2 concurrent browsers, 2-minute max session with session reconnects, automatic captcha solving, BrowserQL editor. No card required. Supports Chrome, WebKit, Firefox",
       "tier": "Free",
       "url": "https://www.browserless.io/pricing",
       "tags": [
@@ -21004,7 +21018,7 @@
     {
       "vendor": "localazy.com",
       "category": "Localization",
-      "description": "Localization platform for apps, websites and content. The free plan covers small projects: up to 200 source keys, all essential localization features, unlimited seats and languages, no credit card required. Professional costs $41 a month, or $408 a year billed annually, for 1,000 source keys. Every new account starts with a 14-day trial of the Business plan. Localazy also runs Startup, Nonprofit and Ambassador programs.",
+      "description": "Localization platform for apps, websites and content. The free plan covers small projects: up to 200 source keys, all essential localization features, unlimited seats and languages, no credit card required. Professional costs $41 a month billed monthly, or $408 a year ($34 a month) billed annually, for 1,000 source keys. Every new account starts with a 14-day trial of the Business plan. Localazy also runs Startup, Nonprofit and Ambassador programs.",
       "tier": "Free",
       "url": "https://localazy.com/pricing",
       "tags": [
@@ -28334,7 +28348,7 @@
     {
       "vendor": "Shake",
       "category": "Mobile Development",
-      "description": "In-app bug reporting and feedback tool for mobile apps — The Free plan is $0 forever and includes 20 bug reports per month, unlimited crash reports, unlimited app users, limited integrations, 3 team seats, 10,000 app installs, 1 month data retention, 1,000 logs in activity history, AI debugging, MCP server access, and access to the Slack community.",
+      "description": "In-app bug reporting and feedback tool for mobile apps — The Free plan is $0 forever and includes 20 bug reports per month, unlimited crash reports, unlimited app users, limited integrations, 3 team seats, 1 app on the dashboard, 10,000 app installs, 1 month data retention, 1,000 logs in activity history, AI debugging, MCP server access, and access to the Slack community.",
       "tier": "Free",
       "url": "https://www.shakebugs.com/pricing",
       "tags": [
@@ -28346,13 +28360,6 @@
         "checked": "2026-10-22",
         "outcome": "ok",
         "detail": "the page names Shake as \"shake\" and states \"$0\""
-      },
-      "restated_from": {
-        "reading_date": "2026-09-09",
-        "source_url": "https://www.shakebugs.com/pricing",
-        "record_date": "2026-09-09",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-20"
       }
     },
     {
@@ -36456,7 +36463,7 @@
     {
       "vendor": "Google Cloud Run",
       "category": "Cloud Hosting",
-      "description": "Always Free: 2M requests/month, 360K GB-seconds memory, 180K vCPU-seconds compute, 1 GB North America egress. Fully managed serverless containers. If your service uses instance-based billing, its free tier is 240K vCPU-seconds and 450K GiB-seconds a month instead of 180K and 360K. Jobs get the same 240K and 450K",
+      "description": "Always Free: 2M requests/month, 360K GB-seconds memory, 180K vCPU-seconds compute, 1 GB North America egress. Fully managed serverless containers. If your service uses instance-based billing, its free tier is 240K vCPU-seconds and 450K GiB-seconds a month instead of 180K and 360K. Jobs get the same 240K and 450K. Delayed Jobs get 342,857 vCPU-seconds and 642,857 GiB-seconds a month, and worker pools 384,204 vCPU-seconds and 728,744 GiB-seconds (Google states each free tier at us-central1 prices).",
       "tier": "Always Free",
       "url": "https://cloud.google.com/run/pricing",
       "tags": [
@@ -39058,7 +39065,7 @@
     {
       "vendor": "OVHcloud",
       "category": "Infrastructure",
-      "description": "Dedicated servers starting from ~€55/mo (Rise line: Intel Xeon, 32 GB RAM, 2×480 GB SSD). Kimsufi budget line discontinued, replaced by Eco range from ~€30/mo. Game line with DDoS protection and high-frequency CPU. Storage line for NAS/backup from ~€40/mo. All include unmetered bandwidth (500 Mbps-1 Gbps depending on range). Post-April 2026: Bare Metal prices increased 9-11% for new deployments",
+      "description": "OVHcloud sells dedicated servers in five ranges: Kimsufi (T1/T2), its current budget range, sold on kimsufi.com; Advance (T3) from $136.00 a month ex. taxes; Game (T3: high-frequency processors and DDoS protection for online gaming) from $331.00; Scale (T4) from $638.00; and High Grade (T5) from $1,481.00 (prices from its international site). OVHcloud says traffic is unlimited and unmetered by default, except in its Asia-Pacific datacentres. Bare Metal prices rose 9-11% for new deployments in April 2026.",
       "tier": "Paid",
       "url": "https://www.ovhcloud.com/en/bare-metal/",
       "tags": [

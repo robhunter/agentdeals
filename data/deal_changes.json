@@ -8024,6 +8024,17 @@
         "checked": "2026-10-03",
         "outcome": "vendor_changed",
         "brackets": []
+      },
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-11-05",
+        "source_url": "https://github.com/unkeyed/marketing-site/commit/b0d3363f8d650f4621ac33562f40f70f4f31623a",
+        "resolved_by": {
+          "vendor": "Unkey",
+          "date": "2026-11-05",
+          "change_type": "limits_increased"
+        },
+        "detail": "Reversed 2026-11-05: Unkey's pricing page again gives the Free API plan 7 days of log retention and 30 days of audit log retention. Unkey's commit of 2026-11-05 reads: \"Free is 7 days of logs and 30 days of audit logs (was 1 / 3 days).\""
       }
     },
     {
@@ -9518,12 +9529,14 @@
     },
     {
       "vendor": "serveo",
-      "change_type": "record_corrected",
-      "date": "2026-09-02",
-      "date_source": "discovered",
-      "summary": "Data correction - Not a change by serveo. An Internet Archive copy of its page from 2026-03-02 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-02 recorded the difference as a change.",
-      "previous_state": "Expose local servers to the internet. No installation, no signup. Free subdomain, no limits.",
-      "current_state": "Free Plan For hobbyists and testing. Get 3 active tunnels and custom subdomains for $0/month.",
+      "change_type": "limits_reduced",
+      "date": "2026-01-20",
+      "date_source": "hand_written",
+      "summary": "By January 20, 2026, serveo had a Free Plan of 3 active tunnels, with an interstitial warning page, and a paid Pro plan for unlimited tunnels. On November 17, 2025, serveo.net stated no tunnel limit and asked for donations. Anonymous tunnels still need no account: serveo's docs, read 2026-11-08, say an anonymous tunnel needs no account or key, and that an account key is required for reserved hostnames and paid features.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "No tunnel limit stated (\"Request multiple tunnels at once\"); donations of $5 to $75 (serveo.net, archived 2025-11-17)",
+      "current_state": "Free Plan: \"Get 3 active tunnels and custom subdomains for $0/month.\" \"3 tunnels\", \"Interstitial warning\". Pro Plan $6 /mo: \"Unlimited active tunnels\", \"No interstitial warnings\" (serveo.net, archived 2026-01-20). Read 2026-11-08: the same Free Plan; Pro $6 a month, $60 a year or $6 for a 10-Day Pass.",
       "impact": "medium",
       "source_url": "https://serveo.net/",
       "category": "Tunneling & Networking",
@@ -9531,12 +9544,16 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-02",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "ours",
-        "capture_day": "2026-03-02",
-        "recorded_as": "limits_reduced",
-        "capture": "https://web.archive.org/web/20260302075200/https://serveo.net/",
-        "stated_then": "Free Plan For hobbyists and testing. Get 3 active tunnels · Unlimited active tunnels"
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2025-11-17",
+            "first_new": "2026-01-20",
+            "last_old_capture": "https://web.archive.org/web/20251117191704/https://serveo.net/",
+            "first_new_capture": "https://web.archive.org/web/20260120031417/https://serveo.net/"
+          }
+        ]
       }
     },
     {
@@ -18063,6 +18080,94 @@
             "first_new": "2026-08-24",
             "last_old_capture": "https://web.archive.org/web/20260616142408/https://www.growthbook.io/pricing",
             "first_new_capture": "https://web.archive.org/web/20260824143854/https://www.growthbook.io/pricing"
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "Cloudflare Workers",
+      "change_type": "limits_increased",
+      "date": "2026-09-04",
+      "date_source": "vendor_page",
+      "summary": "On September 4, 2026, Cloudflare removed the compressed Worker size limits of 3 MB on Workers Free and 10 MB on Workers Paid. A Worker on either plan can now be up to 64 MiB, counted on the uncompressed bundle.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Worker size: deploys over 3 MB compressed on Workers Free, or 10 MB on Workers Paid, were rejected. Cloudflare's changelog of 2026-09-04: \"Previously, Cloudflare checked that compressed size and rejected deploys over 3 MB (Free) or 10 MB (Paid).\"",
+      "current_state": "\"There is no compressed size limit. Only the uncompressed bundle size counts.\" Worker size (uncompressed): 64 MiB on Workers Free and Workers Paid (developers.cloudflare.com/workers/platform/limits/, read 2026-11-08).",
+      "impact": "medium",
+      "source_url": "https://developers.cloudflare.com/changelog/post/2026-09-04-increased-worker-size-limit/",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-08"
+    },
+    {
+      "vendor": "serveo",
+      "change_type": "record_corrected",
+      "date": "2026-11-08",
+      "summary": "Data correction - serveo did change its free terms: between 2025-11-17 and 2026-01-20 it replaced tunnels with no stated limit with a Free Plan of 3 active tunnels. Our archive check of 2026-10-02 found the Free Plan in a copy from 2026-03-02 and recorded the change as our own error.",
+      "previous_state": "Recorded 2026-10-02 as record_corrected: not a change by serveo",
+      "current_state": "limits_reduced, between 2025-11-17 and 2026-01-20 from Internet Archive copies of serveo.net",
+      "impact": "low",
+      "source_url": "https://serveo.net/",
+      "category": "Tunneling & Networking",
+      "alternatives": [],
+      "recorded_date": "2026-11-08",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Unkey",
+      "change_type": "limits_increased",
+      "date": "2026-11-05",
+      "date_source": "vendor_page",
+      "summary": "On November 5, 2026, Unkey's pricing page raised the Free API plan's log retention from 1 day to 7 days and its audit log retention from 3 days to 30 days. Pro went from 7 and 14 days to 90 days of each. Unkey's commit is titled \"Fix API Management log retention on the pricing page\" and reads: \"Free is 7 days of logs and 30 days of audit logs (was 1 / 3 days).\" Keys, requests and the $0 price are unchanged.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Free: \"1k API keys\", \"150K valid requests / mo\", \"1-day logs retention\", \"3-day audit log retention\", \"Unlimited APIs\" (unkey.com/pricing, archived 2026-09-20).",
+      "current_state": "Free, 0 USD / mo: \"1k API keys\", \"150K valid requests / mo\", \"7-day logs retention\", \"30-day audit log retention\", \"Unlimited APIs\". Pro: \"90-day logs retention\", \"90-day audit log retention\" (unkey.com/pricing, read 2026-11-08).",
+      "impact": "low",
+      "source_url": "https://github.com/unkeyed/marketing-site/commit/b0d3363f8d650f4621ac33562f40f70f4f31623a",
+      "category": "API Gateway",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-08",
+      "archive_check": {
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-09-20",
+            "first_new": "2026-11-05",
+            "last_old_capture": "https://web.archive.org/web/20260920152529/https://www.unkey.com/pricing",
+            "first_new_capture": null
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "Browserless",
+      "change_type": "limits_increased",
+      "date": "2026-09-24",
+      "date_source": "hand_written",
+      "summary": "By September 24, 2026, Browserless's Free plan allowed a browser session of up to 2 minutes, up from 1 minute on August 24, 2026. The 1,000 units a month, 2 concurrent browsers, session reconnects and the $0 price were unchanged.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Free: \"1k units/month\", \"2 max concurrent browsers\", \"1 min. max session time & session reconnects\" (browserless.io/pricing, archived 2026-08-24).",
+      "current_state": "Free: \"1k units/month\", \"2 max concurrent browsers\", \"2 min. max session time\", \"Session reconnects\" (browserless.io/pricing, archived 2026-09-24; the same on 2026-11-08).",
+      "impact": "low",
+      "source_url": "https://www.browserless.io/pricing",
+      "category": "Browser Automation",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-08",
+      "archive_check": {
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-24",
+            "first_new": "2026-09-24",
+            "last_old_capture": "https://web.archive.org/web/20260824200110/https://www.browserless.io/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260924183637/https://www.browserless.io/pricing"
           }
         ]
       }

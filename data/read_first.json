@@ -335,17 +335,17 @@
     {
       "vendor": "Microsoft for Startups",
       "tier": "Startup Credits",
-      "since": "2026-11-02"
+      "since": "2026-11-09"
     },
     {
       "vendor": "OpenAI Codex",
       "tier": "Free",
-      "since": "2026-11-02"
+      "since": "2026-11-09"
     },
     {
       "vendor": "Google Gemini API",
       "tier": "Free (Reduced)",
-      "since": "2026-11-02"
+      "since": "2026-11-09"
     },
     {
       "vendor": "SiliconFlow",
@@ -410,7 +410,7 @@
     {
       "vendor": "Mapbox",
       "tier": "Free",
-      "since": "2026-11-02"
+      "since": "2026-11-09"
     },
     {
       "vendor": "Google Gemini Embedding 2",
@@ -420,12 +420,12 @@
     {
       "vendor": "Google Cloud Storage",
       "tier": "Always Free",
-      "since": "2026-11-02"
+      "since": "2026-11-09"
     },
     {
       "vendor": "GitHub Actions",
       "tier": "Free",
-      "since": "2026-11-08"
+      "since": "2026-11-09"
     },
     {
       "vendor": "Filebase",
@@ -460,12 +460,12 @@
     {
       "vendor": "Grafana k6 Cloud",
       "tier": "Free",
-      "since": "2026-11-02"
+      "since": "2026-11-09"
     },
     {
       "vendor": "Google Maps Platform",
       "tier": "Free",
-      "since": "2026-11-02"
+      "since": "2026-11-09"
     },
     {
       "vendor": "GitHub Models",
@@ -576,6 +576,101 @@
       "vendor": "Hex",
       "tier": "Free",
       "since": "2026-11-08"
+    },
+    {
+      "vendor": "Unkey",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Browserless",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Svix",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "OpenAI",
+      "tier": "Pay-as-you-go",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "Fastly",
+      "tier": "Free Developer",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "OVHcloud",
+      "tier": "Paid",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "Akamai Cloud",
+      "tier": "Credits",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "Amazon Cognito",
+      "tier": "Free",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "Amazon SES",
+      "tier": "Credits",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "BackgroundStyler.com",
+      "tier": "Retired",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "Google Meet",
+      "tier": "Free",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "MIT OpenCourseWare",
+      "tier": "Free",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "MailerLite.com",
+      "tier": "Free",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "ManageEngine Log360 Cloud",
+      "tier": "Free",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "PDFBolt",
+      "tier": "Free",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "Railway Sandboxes",
+      "tier": "Free",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "WhatsApp Business Platform",
+      "tier": "Free",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "pubnub.com",
+      "tier": "Free",
+      "since": "2026-11-09"
+    },
+    {
+      "vendor": "taskade.com",
+      "tier": "Free",
+      "since": "2026-11-09"
     }
   ]
 }
