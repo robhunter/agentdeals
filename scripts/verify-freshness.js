@@ -13,7 +13,7 @@ const INDEX_PATH = resolve(__dirname, "..", "data", "index.json");
 const DEFAULT_THRESHOLD_DAYS = 25;
 const FETCH_TIMEOUT_MS = 15_000;
 const RATE_LIMIT_MS = 500;
-export const MAX_PAGE_TEXT_LENGTH = 12_000;
+export const MAX_PAGE_TEXT_LENGTH = 100_000;
 export const MAX_PAGE_BYTES = 16_000_000;
 export const MIN_PAGE_TEXT_LENGTH = 500;
 export const PAGE_TOO_SHORT_ERROR = "page content too short (likely JS-rendered SPA)";
@@ -334,7 +334,8 @@ export function parseVerifierResponse(raw) {
 }
 
 export async function verifyOfferAgainstPage(client, offer, wholePageText) {
-  const pageText = String(wholePageText ?? "").slice(0, MAX_PAGE_TEXT_LENGTH);
+  const whole = String(wholePageText ?? "");
+  const pageText = whole.slice(0, MAX_PAGE_TEXT_LENGTH);
   const prompt = `You are verifying whether a vendor's deal/free-tier information is still accurate.
 
 STORED DEAL INFO:
@@ -343,7 +344,7 @@ STORED DEAL INFO:
 - Tier: ${offer.tier}
 - Description: ${offer.description}
 
-CURRENT PRICING PAGE TEXT (truncated):
+CURRENT PRICING PAGE TEXT (${pageText.length < whole.length ? "truncated" : "whole page"}):
 ${pageText}
 
 Compare the stored deal info against the pricing page text. Focus on:

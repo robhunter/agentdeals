@@ -1,8 +1,14 @@
 import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
-import { createArchiveClient, dayOurTextEntered, pairedReaderFor, PAIRED_READER_MAX_TOKENS, settleAgainstCaptures, statedBeforeReaderFor, wordsOfTierName } from "./archive-captures.js";
+import { createArchiveClient, dayOurTextEntered, pairedReaderFor, PAIRED_READER_MAX_TOKENS, previousValueReaderFor, settleAgainstCaptures, statedBeforeReaderFor, wordsOfTierName } from "./archive-captures.js";
 import { createVerifierClient, fetchPageText } from "./verify-freshness.js";
 
 export const DEMOTION_WINDOW_DAYS = 180;
+export const SETTLED_ARCHIVE_OUTCOMES = ["ours", "vendor_changed", "removal_stated_before"];
+export const UNSETTLED_ARCHIVE_OUTCOMES = ["no_usable_capture", "page_unreadable_today", "text_day_unknown", "reader_failed"];
+
+export function needsArchiveCheck(record) {
+  return !record.archive_check || UNSETTLED_ARCHIVE_OUTCOMES.includes(record.archive_check.outcome);
+}
 
 export const SPLIT = {
   recentVendorChange: "vendor change inside 180 days",
@@ -71,6 +77,27 @@ export function listingFor(record, offers) {
   );
 }
 
+function pageIdentity(value) {
+  try {
+    const url = new URL(value);
+    if (!["http:", "https:"].includes(url.protocol)) return null;
+    return url.hostname.replace(/^www\./, "") + url.pathname.replace(/\/+$/, "");
+  } catch {
+    return null;
+  }
+}
+
+export function correctionUsesListingPage(record, offers) {
+  const page = pageIdentity(record.source_url);
+  return page !== null && offers.some((offer) => offer.vendor === record.vendor && pageIdentity(offer.url) === page);
+}
+
+export function requireListingPage(settled, record, offers) {
+  return settled.outcome === "ours" && !correctionUsesListingPage(record, offers)
+    ? { ...settled, outcome: "no_usable_capture", why: "the record's source page is not a listing page for this vendor" }
+    : settled;
+}
+
 export function matchesSharingOnlyTheTierName(readings, tier) {
   const tierWords = wordsOfTierName(tier);
   return readings.flatMap(({ older, newer, verdict }) =>
@@ -103,15 +130,15 @@ export function parseShard(text) {
   return count > 0 && index < count ? { index, count } : null;
 }
 
-export async function settleFirstReadings({ changes, offers, today, archive, pairReaderForListing, statedReaderForRecord, fetchToday, textDayOf, badgeSetBy = () => null, limit = Infinity, vendors, shard = null, includeResolved = false, logReads = false, onSettled = () => {} }) {
-  const backlog = inShard(firstReadingsInForce(changes, { includeResolved }).filter((record) => !vendors || vendors.includes(record.vendor)), shard).slice(0, limit);
+export async function settleFirstReadings({ changes, offers, today, archive, pairReaderForListing, statedReaderForRecord, previousReaderForRecord, fetchToday, textDayOf, badgeSetBy = () => null, limit = Infinity, vendors, shard = null, includeResolved = false, unsettledOnly = false, logReads = false, onSettled = () => {} }) {
+  const backlog = inShard(firstReadingsInForce(changes, { includeResolved }).filter((record) => (!vendors || vendors.includes(record.vendor)) && (!unsettledOnly || needsArchiveCheck(record))), shard).slice(0, limit);
   const settleOne = async (record) => {
     const badge = badgeSetBy(record);
     const subject = { record_key: recordKey(record), vendor: record.vendor, date: record.date, change_type: record.change_type, source_url: record.source_url, resolution: record.resolution?.state ?? null, badge };
     const listing = listingFor(record, offers);
     const page = await fetchToday(record.source_url);
     const readings = [];
-    const settled = page.ok
+    const read = page.ok
       ? await settleOrSayTheReaderFailed(() => settleAgainstCaptures({
           url: record.source_url,
           finalUrl: page.finalUrl,
@@ -122,9 +149,11 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
           archive,
           readPair: pairReaderForListing(listing),
           readStatedBefore: statedReaderForRecord?.(record),
+          readPreviousValue: previousReaderForRecord?.(record),
           onRead: (reading) => readings.push(reading),
         }), readings)
       : { outcome: "page_unreadable_today", why: page.error, reads: 0 };
+    const settled = requireListingPage(read, record, offers);
     const onTheTierName = matchesSharingOnlyTheTierName(readings, listing.tier);
     const { date: dateFromCaptures, ...settledWithoutItsDate } = settled;
     const result = {
@@ -211,6 +240,7 @@ async function main() {
     archive: createArchiveClient(),
     pairReaderForListing: (listing) => pairedReaderFor(client, listing),
     statedReaderForRecord: (record) => statedBeforeReaderFor(client, record),
+    previousReaderForRecord: (record) => previousValueReaderFor(client, record),
     fetchToday: (url) => fetchPageText(url),
     textDayOf: (text) => dayOurTextEntered(text),
     badgeSetBy: (record) => badges.get(recordKey(record)) ?? null,
@@ -218,6 +248,7 @@ async function main() {
     vendors: option("--vendors")?.split(",").map((name) => name.trim()),
     shard: shardAsked,
     includeResolved: args.includes("--include-resolved"),
+    unsettledOnly: args.includes("--unsettled-only"),
     logReads: args.includes("--log-reads"),
     onSettled: (result) => appendFileSync(progress, `${JSON.stringify(result)}\n`),
   });

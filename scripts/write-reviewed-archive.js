@@ -1,0 +1,50 @@
+import { execFileSync } from "node:child_process";
+import { readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { CHANGES_PATH, readChangeLog } from "./change-log.js";
+import { correctionUsesListingPage, needsArchiveCheck, recordKey } from "./settle-discovered-records.js";
+import { writeSettledRecords } from "./write-settled-records.js";
+
+export function reviewedRecordKey(record) {
+  return JSON.stringify([record.vendor, record.date, record.change_type]);
+}
+
+export function writeReviewedArchive(changes, report, offers) {
+  if (report.version !== 1 || !/^https:\/\/github\.com\/[^/]+\/[^/]+\/pull\/\d+#issuecomment-\d+$/.test(report.review_url ?? "")) throw new Error("a reviewed report must identify its approval");
+  if (!Array.isArray(report.results) || report.results.length === 0) throw new Error("a reviewed report must name its approved records");
+  const seen = new Set();
+  const results = report.results.map((result) => {
+    const key = reviewedRecordKey(result);
+    if (seen.has(key)) throw new Error(`duplicate reviewed key: ${key}`);
+    seen.add(key);
+    const matches = changes.filter((record) => reviewedRecordKey(record) === key);
+    if (matches.length !== 1) throw new Error(`expected one current record for reviewed key ${key}, found ${matches.length}`);
+    const [record] = matches;
+    if (record.resolution || !needsArchiveCheck(record)) throw new Error(`reviewed record is already settled or no longer in force: ${key}`);
+    if (result.outcome !== "ours") throw new Error(`only reviewed corrections may be written: ${key}`);
+    if (!correctionUsesListingPage(record, offers) || record.source_url !== result.source_url) throw new Error(`reviewed source is not the current listing page: ${key}`);
+    if (!result.capture?.url || !result.capture?.day || !result.stated_then?.length || !result.readings?.length || !result.historical_proof?.readings?.some((reading) => reading.verdict?.status === "stated" && reading.verdict.stated_then?.length)) throw new Error(`reviewed correction lacks saved readings: ${key}`);
+    return { ...result, record_key: recordKey(record) };
+  });
+  const written = writeSettledRecords(changes, [{ ...report, results }], { holdVendorChanges: true });
+  if (written.written.length !== results.length || written.not_written.length) throw new Error("the reviewed report was not written in full");
+  return written;
+}
+
+function main() {
+  const [file, ...extra] = process.argv.slice(2);
+  if (!file || extra.length) throw new Error("give one committed reviewed report: node scripts/write-reviewed-archive.js <report.json>");
+  const committed = execFileSync("git", ["show", `HEAD:${file}`], { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
+  if (readFileSync(resolve(file), "utf8") !== committed) throw new Error("the reviewed report differs from its committed bytes");
+  const report = JSON.parse(committed);
+  const log = readChangeLog(CHANGES_PATH);
+  const offers = JSON.parse(readFileSync("data/index.json", "utf8")).offers;
+  const written = writeReviewedArchive(log.changes, report, offers);
+  writeFileSync(CHANGES_PATH, JSON.stringify({ ...log, changes: written.changes }, null, 2) + "\n");
+  console.log(`Wrote exactly ${written.written.length} reviewed corrections from ${file}`);
+  for (const record of written.written) console.log(`${record.vendor} ${record.date} ${record.change_type}`);
+}
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  try { main(); } catch (error) { console.error(error?.message ?? error); process.exitCode = 1; }
+}

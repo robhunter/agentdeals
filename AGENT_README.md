@@ -46,6 +46,18 @@ npm start            # Run compiled server (stdio transport)
 npm run serve        # Run HTTP server (streamable-http transport)
 ```
 
+The weekly archive settlement reads standing first-pass change records with missing or
+unsettled archive checks, one at a time. Run
+`node scripts/run-archive-settlement.js --out <report.json>` to produce a report without
+changing catalogue data. Add `--audit-ours-from <git-ref>` to re-read existing corrections
+using their original records from that revision. Audit results are reported separately
+and are never written by `node scripts/write-settled-records.js <report.json>`. The
+scheduled writer replaces unsettled checks only with settled verdicts, then submits
+the data through the data gate.
+For the first writing run, dispatch with `report_pr` set to the implementation PR:
+the job posts every review settled as a correction, with both sets of quoted lines,
+before invoking the writer. An unsuccessful comment prevents that run's write.
+
 ### HTTP Transport
 
 The server supports two transport modes:
