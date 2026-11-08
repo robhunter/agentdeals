@@ -761,8 +761,8 @@ async function capturesOfEither(archive, urls, fromDay, toDay) {
     if (listed.unavailable) return listed;
     captures.push(...listed.captures);
   }
-  const byTimestamp = new Map(captures.map((capture) => [capture.timestamp, capture]));
-  return { captures: [...byTimestamp.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp)) };
+  const byUrl = new Map(captures.map((capture) => [captureUrl(capture), capture]));
+  return { captures: [...byUrl.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp)) };
 }
 
 function describeDay(day, reference, side) {
@@ -784,12 +784,13 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
 
   const texts = new Map();
   const pageOf = async (capture) => {
-    if (!texts.has(capture.timestamp)) {
+    const key = captureUrl(capture);
+    if (!texts.has(key)) {
       const stored = await archive.captureHtml(capture);
       const text = stored.unavailable ? "" : stripHtml(stored.html);
-      texts.set(capture.timestamp, text.length >= MIN_PAGE_TEXT_LENGTH ? text : null);
+      texts.set(key, text.length >= MIN_PAGE_TEXT_LENGTH ? text : null);
     }
-    const text = texts.get(capture.timestamp);
+    const text = texts.get(key);
     const day = dayOfTimestamp(capture.timestamp);
     return text === null ? null : { page: `capture ${day}`, day, text, capture };
   };
@@ -806,7 +807,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
   const statedBeforeReadings = new Map();
   const statedBefore = async (older) => {
     if (!readStatedBefore) return { status: "unstated", why: "no reader was asked for a line that already states what the record calls new", review: [] };
-    const key = older.capture?.timestamp ?? older.page;
+    const key = older.capture ? captureUrl(older.capture) : older.page;
     if (!statedBeforeReadings.has(key)) {
       reads++;
       const verdict = await readStatedBefore(older);
@@ -854,7 +855,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       const before = await statedBefore(old);
       if (before.status === "removal_stated") return { outcome: "removal_stated_before", compared_with: comparedWith, stated_then: before.stated_then, why: `the ${old.page} already states the removal, so it predates our text: to be dated` };
       if (before.status !== "stated") return { outcome: "no_usable_capture", compared_with: comparedWith, review: before.review, why: `the ${old.page} states the plan's terms as the page did on the record's day, but ${before.why}` };
-      const earlierCaptures = captures.filter((capture) => capture.timestamp !== old.capture.timestamp && dayOfTimestamp(capture.timestamp) <= judgedOn && (!comparison.capture || capture.timestamp < comparison.capture.timestamp));
+      const earlierCaptures = captures.filter((capture) => captureUrl(capture) !== captureUrl(old.capture) && dayOfTimestamp(capture.timestamp) <= judgedOn && (!comparison.capture || capture.timestamp < comparison.capture.timestamp));
       for (const capture of earlierCaptures) {
         const earlier = await pageOf(capture);
         const historical = { prior_capture: { day: dayOfTimestamp(capture.timestamp), url: archivedCopyUrl(capture) } };

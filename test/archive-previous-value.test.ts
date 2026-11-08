@@ -1,6 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 import { readFileSync } from "node:fs";
+import { createServer } from "node:http";
 
 const { judgePreviousValue, pairedReaderFor, previousValuePrompt, previousValueReaderFor, settleAgainstCaptures, statedBeforeReaderFor } = await import("../scripts/archive-captures.js");
 const { settleFirstReadings } = await import("../scripts/settle-discovered-records.js");
@@ -111,6 +112,155 @@ describe("an earlier capture of the value a record says changed", () => {
     });
     assert.strictEqual(report.results[0].outcome, "no_usable_capture");
     assert.ok(report.results[0].readings.some((read: { newer: string; verdict: { status: string } }) => read.newer === "the previous value" && read.verdict.status === "stated"));
+  });
+});
+
+describe("captures of a source URL and its destination", () => {
+  const source = "https://archive-alias.example/pricing";
+  const destination = "https://archive-alias.example/plans";
+  const january = "20260101120000";
+  const september = "20260917120000";
+  const oldTerms = "Free plan: 3 projects";
+  const newTerms = "Free plan: 1 project";
+  const record = { date: "2026-09-25", summary: "The free plan now allows 1 project.", previous_state: oldTerms, current_state: newTerms };
+  const identity = (url: string, timestamp: string) => `${url} ${timestamp}`;
+  const savedUrl = (url: string, timestamp: string) => `https://web.archive.org/web/${timestamp}/${url}`;
+
+  async function settle(pages: Record<string, string>) {
+    const fetched: string[] = [];
+    const listed: string[] = [];
+    const client = { complete: async (prompt: string) => JSON.stringify({ previous_values: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].includes(oldTerms) ? [{ previous: oldTerms, current: newTerms, old_page: oldTerms }] : [] }) };
+    const result = await settleAgainstCaptures({
+      url: source, finalUrl: destination, textDay: "2026-09-20", recordDay: record.date,
+      today: "2026-11-08", todayText: `${newTerms} ${FILLER}`,
+      archive: {
+        captures: async (url: string) => {
+          listed.push(url);
+          return { captures: [january, september].filter((timestamp) => Object.hasOwn(pages, identity(url, timestamp))).map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) };
+        },
+        captureHtml: async (capture: Capture) => {
+          const key = identity(capture.original, capture.timestamp);
+          fetched.push(key);
+          return { html: `<p>${pages[key]} ${FILLER}</p>` };
+        },
+      },
+      readPair: async () => ({ status: "same", old_terms: [newTerms], new_terms: [newTerms] }),
+      readStatedBefore: async () => ({ status: "stated", stated_then: [{ record: record.summary, old: newTerms }] }),
+      readPreviousValue: previousValueReaderFor(client, record),
+    });
+    assert.deepStrictEqual(listed, [source, destination]);
+    return { result, fetched };
+  }
+
+  it("preserves an earlier source copy when the destination has a different page at the same instant", async () => {
+    const { result, fetched } = await settle({
+      [identity(source, january)]: oldTerms, [identity(destination, january)]: newTerms,
+      [identity(source, september)]: newTerms, [identity(destination, september)]: newTerms,
+    });
+    assert.strictEqual(result.outcome, "no_usable_capture");
+    assert.strictEqual(result.prior_capture.url, savedUrl(source, january));
+    assert.ok(fetched.includes(identity(source, january)));
+  });
+
+  it("reads each distinct copy instead of reusing another URL's cached text", async () => {
+    const { result, fetched } = await settle({
+      [identity(source, january)]: newTerms, [identity(destination, january)]: oldTerms,
+      [identity(source, september)]: newTerms,
+    });
+    assert.strictEqual(result.outcome, "no_usable_capture");
+    assert.strictEqual(result.prior_capture.url, savedUrl(destination, january));
+    assert.deepStrictEqual(fetched, [identity(source, september), identity(source, january), identity(destination, january)]);
+  });
+
+  it("excludes only the chosen copy when checking other captures at that instant", async () => {
+    const { result, fetched } = await settle({
+      [identity(source, september)]: newTerms, [identity(destination, september)]: oldTerms,
+    });
+    assert.strictEqual(result.outcome, "no_usable_capture");
+    assert.strictEqual(result.prior_capture.url, savedUrl(destination, september));
+    assert.deepStrictEqual(fetched, [identity(source, september), identity(destination, september)]);
+  });
+
+  it("retains both URL copies through actual HTTP collection, model reading and the serial settlement report", async () => {
+    const { createArchiveClient } = await import("../scripts/archive-captures.js");
+    const { createVerifierClient, fetchPageText } = await import("../scripts/verify-freshness.js");
+    const { runArchiveSettlement } = await import("../scripts/run-archive-settlement.js");
+    let base = "";
+    let pages: Record<string, string> = {};
+    const archived: string[] = [];
+    const modelPrompts: string[] = [];
+    const server = createServer(async (request, response) => {
+      const url = new URL(request.url!, base);
+      if (url.pathname === "/pricing") {
+        response.writeHead(302, { Location: `${base}/plans` });
+        response.end();
+      } else if (url.pathname === "/cdx/search/cdx") {
+        const original = url.searchParams.get("url")!;
+        response.end(JSON.stringify([["timestamp", "original", "statuscode", "mimetype"],
+          ...[january, september].filter((timestamp) => Object.hasOwn(pages, identity(original, timestamp))).map((timestamp) => [timestamp, original, "200", "text/html"])]));
+      } else if (url.pathname.startsWith("/web/")) {
+        const match = /^\/web\/(\d{14})id_\/(.+)$/.exec(url.pathname)!;
+        const key = identity(match[2], match[1]);
+        archived.push(key);
+        assert.ok(Object.hasOwn(pages, key));
+        response.end(`<p>${pages[key]} ${FILLER}</p>`);
+      } else if (url.pathname === "/chat/completions") {
+        let body = "";
+        for await (const part of request) body += part;
+        const prompt = JSON.parse(body).messages[0].content;
+        modelPrompts.push(prompt);
+        const answer = prompt.includes('"previous_values"')
+          ? { previous_values: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].includes(oldTerms) ? [{ previous: oldTerms, current: newTerms, old_page: oldTerms }] : [] }
+          : prompt.includes('"changes"')
+            ? { changes: [{ record: "now allows 1 project", old_page: newTerms }] }
+            : { old_terms: [newTerms], new_terms: [newTerms], same: true, differences: [] };
+        response.setHeader("Content-Type", "application/json");
+        response.end(JSON.stringify({ choices: [{ message: { content: JSON.stringify(answer) } }] }));
+      } else {
+        assert.strictEqual(url.pathname, "/plans");
+        response.end(`<p>${newTerms} ${FILLER}</p>`);
+      }
+    });
+    try {
+      await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+      base = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
+      const source = `${base}/pricing`;
+      const destination = `${base}/plans`;
+      const client = createVerifierClient({ apiKey: "local-fixture", baseUrl: base });
+      const scenarios = [
+        { pages: { [identity(source, january)]: oldTerms, [identity(destination, january)]: newTerms, [identity(source, september)]: newTerms }, expected: savedUrl(source, january) },
+        { pages: { [identity(source, january)]: newTerms, [identity(destination, january)]: oldTerms, [identity(source, september)]: newTerms }, expected: savedUrl(destination, january) },
+        { pages: { [identity(source, september)]: newTerms, [identity(destination, september)]: oldTerms }, expected: savedUrl(destination, september) },
+      ];
+      for (const scenario of scenarios) {
+        pages = scenario.pages;
+        archived.length = 0;
+        modelPrompts.length = 0;
+        const progress: unknown[] = [];
+        const change = { ...record, vendor: "Example", date_source: "discovered", source_url: source, category: "Databases" };
+        const report = await runArchiveSettlement({
+          changes: [change], offers: [], today: "2026-11-08",
+          archive: createArchiveClient({ minIntervalMs: 0, fetchImpl: async (input: string, options: RequestInit) => {
+            const url = new URL(input);
+            assert.strictEqual(url.origin, "https://web.archive.org");
+            return fetch(`${base}${url.pathname}${url.search}`, options);
+          } }),
+          fetchToday: fetchPageText, textDayOf: () => "2026-09-20",
+          pairReaderForListing: (listing: unknown) => pairedReaderFor(client, listing),
+          statedReaderForRecord: (record: unknown) => statedBeforeReaderFor(client, record),
+          previousReaderForRecord: (record: unknown) => previousValueReaderFor(client, record),
+          onSettled: (row: unknown) => progress.push(row),
+        });
+        assert.strictEqual(report.results[0].outcome, "no_usable_capture");
+        assert.strictEqual(report.results[0].prior_capture.url, scenario.expected);
+        assert.strictEqual(report.results[0].previous_values[0].previous, oldTerms);
+        assert.strictEqual(progress.length, 1);
+        assert.strictEqual(new Set(archived).size, archived.length);
+        assert.ok(modelPrompts.some((prompt) => prompt.includes('"previous_values"') && prompt.includes(oldTerms)));
+      }
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+    }
   });
 });
 
