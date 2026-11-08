@@ -5915,7 +5915,7 @@
     {
       "vendor": "GitHub",
       "category": "Source Control",
-      "description": "Free access to GitHub Pro, JetBrains, Namecheap domain, and 100+ developer tools for verified students. Includes GitHub Copilot (new Copilot Student signups paused 2026-04-20 due to infrastructure strain — existing students unaffected), Codespaces, and Actions minutes",
+      "description": "Free GitHub Pro while you are a student, plus partner offers for verified students. GitHub Copilot Student includes unlimited code completions and an allowance of GitHub AI Credits, plus limited chat and agent usage with models available through auto model selection only. Also Pro-level Codespaces, a JetBrains IDE subscription renewed annually, and a 1-year .me domain from Namecheap.",
       "tier": "Student Pack",
       "url": "https://education.github.com/pack",
       "tags": [
@@ -28985,7 +28985,23 @@
         "checked": "2026-10-24",
         "outcome": "ok",
         "detail": "the page names MConverter as \"mconverter\" and states \"15 files per day\""
-      }
+      },
+      "conditions": [
+        {
+          "text": "MConverter's free daily limit of 15 files may be reduced to 3 conversions depending on use.",
+          "quote": "Note that the daily limit may be reduced to 3 conversions depending on use.",
+          "url": "https://mconverter.eu/",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
+          "text": "MConverter's site offers visitors who block ads 12 more free conversions for adding an exception for mconverter.eu in the ad blocker, and in Tracking Prevention if it is set to Strict.",
+          "quote": "Get 12 more conversions for free by adding an exception for our website in your ad blocker and in Tracking Prevention (if it's set to Strict).",
+          "url": "https://mconverter.eu/",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "nitropack.io",
