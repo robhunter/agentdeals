@@ -97,14 +97,21 @@ for (const [population, rows] of [["fixed", input.fixed], ["published", input.pu
       active = { ...active, bracket: index };
       const older = await endpoint(bracket.older);
       const newer = await endpoint(bracket.newer);
-      const read = (stored, reader) => async (page) => stored.text ? reader(page) : { status: "unknown", why: stored.unavailable ?? "endpoint body unavailable" };
+      let readingComplete = true;
+      const read = (stored, reader) => async (page) => {
+        if (!stored.text) {
+          readingComplete = false;
+          return { status: "unknown", why: stored.unavailable ?? "endpoint body unavailable" };
+        }
+        try { return await reader(page); } catch (error) { readingComplete = false; throw error; }
+      };
       const proof = await readBracketClaims(pageOf(older), pageOf(newer), read(older, previousValueReaderFor(client, record)), read(newer, statedBeforeReaderFor(client, record)));
       const checked = { ...bracket.bracket, claim_proof: proof };
-      result.brackets.push({ ...checked, states_record: bracketStatesRecord(checked), endpoint_inputs: { older, newer } });
+      result.brackets.push({ ...checked, states_record: bracketStatesRecord(checked), endpoint_readings_complete: readingComplete, endpoint_inputs: { older, newer } });
       write("progress.jsonl", { ...active, ...result.brackets.at(-1) });
     }
     result.verified_brackets = result.brackets.filter((bracket) => bracket.states_record).length;
-    result.endpoint_readings_complete = result.brackets.every((bracket) => [bracket.claim_proof.older, bracket.claim_proof.newer].every((reading) => reading.verdict?.status !== "unknown"));
+    result.endpoint_readings_complete = result.brackets.length > 0 && result.brackets.every((bracket) => bracket.endpoint_readings_complete);
     outcomes.push(result);
     console.log(`${population}: ${active.vendor}: ${result.verified_brackets}/${result.brackets.length} brackets establish the claim (${result.disposition})`);
     writeFileSync(`${output}/report.json`, JSON.stringify({ ...metadata, results: outcomes, archive_attempts: archiveAttempts, model_attempts: modelAttempts, cache_hits: cacheHits, catalogue_writes: 0 }, null, 2) + "\n");
