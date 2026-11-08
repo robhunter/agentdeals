@@ -1,7 +1,9 @@
 import { execFileSync } from "node:child_process";
 import { readDeprecation } from "../dist/product-deprecation.js";
 import { descriptionDeniesFreeTier } from "../dist/ranking.js";
-import { MAX_PAGE_TEXT_LENGTH, MIN_PAGE_TEXT_LENGTH, stripHtml } from "./verify-freshness.js";
+import { MIN_PAGE_TEXT_LENGTH, stripHtml } from "./verify-freshness.js";
+
+export const MAX_ARCHIVE_PAGE_TEXT_LENGTH = 12_000;
 
 const CDX_ENDPOINT = "https://web.archive.org/cdx/search/cdx";
 const WAYBACK = "https://web.archive.org/web";
@@ -186,7 +188,7 @@ export function comparableText(text) {
   return decodedText(text).replace(/[\s\u200B-\u200D\u2060\uFEFF]+/g, "");
 }
 
-export function pairedPrompt(listing, older, newer, maxLength = MAX_PAGE_TEXT_LENGTH) {
+export function pairedPrompt(listing, older, newer, maxLength = MAX_ARCHIVE_PAGE_TEXT_LENGTH) {
   const clip = (text) => String(text ?? "").slice(0, maxLength);
   return `You are comparing two copies of the same web page, saved on different days, to find out whether the terms of one plan changed between them.
 
@@ -531,7 +533,7 @@ export function pairedReaderFor(client, listing) {
   return async (older, newer) => judgePair(parsePairedAnswer(await client.complete(pairedPrompt(listing, older, newer))), older.text, newer.text);
 }
 
-export function statedBeforePrompt(record, older, maxLength = MAX_PAGE_TEXT_LENGTH) {
+export function statedBeforePrompt(record, older, maxLength = MAX_ARCHIVE_PAGE_TEXT_LENGTH) {
   const clip = (text) => String(text ?? "").slice(0, maxLength);
   return `You are checking whether an old copy of a web page already said what a change record calls new.
 
