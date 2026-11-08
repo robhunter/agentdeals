@@ -400,12 +400,16 @@ describe("first-pass records with archive excerpt fixtures", () => {
   FIXTURES.push({ vendor: "Mux", date: mux.date, textDay: "2026-02-13", summary: mux.summary, previous_state: mux.previous_state, current_state: mux.current_state, pages: { "20260213120000": "100K free monthly video delivery minutes", "20260909120000": "100K free monthly video delivery minutes 100K free monthly Mux Robots units" }, terms: () => ["100K free monthly video delivery minutes"], addedReview: "100K free monthly Mux Robots units", expected: "no_usable_capture" });
   for (const fixture of FIXTURES) {
     it(`${fixture.vendor} settles as ${fixture.expected}`, async () => {
-      const record = RECORDS.find((record: { vendor: string }) => record.vendor === fixture.vendor);
+      const savedRecord = RECORDS.find((record: { vendor: string }) => record.vendor === fixture.vendor);
+      const record = { ...savedRecord, date: fixture.date, summary: fixture.summary, previous_state: fixture.previous_state, current_state: fixture.current_state };
       const latest = Object.keys(fixture.pages).sort().at(-1)!;
       const text = `${fixture.pages[latest]} ${FILLER}`;
       const client = {
         complete: async (prompt: string) => {
-          if (prompt.includes('"previous_values"')) return JSON.stringify({ previous_values: [] });
+          if (prompt.includes('"previous_values"')) {
+            const earlier = prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].split("\n\nFind only")[0];
+            return JSON.stringify({ previous_values: fixture.vendor === "GrowthBook" && earlier.includes(fixture.previous_state) ? [{ previous: fixture.previous_state, current: fixture.current_state, old_page: fixture.previous_state }] : [] });
+          }
           if (prompt.includes('"changes"')) return JSON.stringify({ changes: [{ record: record.summary, old_page: fixture.addedReview ? "" : fixture.pages[latest] }] });
           const [, older, newer] = prompt.split(/(?:OLD|NEW) PAGE \(saved [^)]*\):\n/);
           const oldTerms = fixture.terms(older);

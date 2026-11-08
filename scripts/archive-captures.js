@@ -872,7 +872,17 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     }
     return previousValueReadings.get(key);
   };
-  const readClaims = (older, newer) => readBracketClaims(older, newer, previousValue, statedBefore);
+  const bracketStatedBefore = async (page) => {
+    try {
+      return await statedBefore(page);
+    } catch (error) {
+      const verdict = { status: "unknown", why: `the new-claim reader failed: ${error?.message ?? error}` };
+      onRead({ older: page.page, newer: "the record", verdict });
+      statedBeforeReadings.set(page.capture ? captureUrl(page.capture) : page.page, verdict);
+      return verdict;
+    }
+  };
+  const readClaims = (older, newer) => readBracketClaims(older, newer, previousValue, bracketStatedBefore);
 
   const describePage = (page) => ({ page: page.page, ...describeDay(page.day, judgedOn, sideOfRecordDay(page.day, judgedOn)) });
   const forReview = (page, verdict) => ({ outcome: "no_usable_capture", compared_with: describePage(page), review: verdict.review, why: verdict.why });
@@ -963,7 +973,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       if (unverified.length > 0) return {
         outcome: "no_usable_capture",
         compared_with: comparedWith,
-        why: "neither endpoint pair establishes the record's earlier value and new claim",
+        why: "no bracket's endpoints establish the record's earlier value and new claim",
         differences: deciding.differences,
         unverified_brackets: unverified,
         later_moves: laterMoves,

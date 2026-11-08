@@ -114,4 +114,20 @@ describe("each bracket's evidence for the record's own claim", () => {
     const proof = await readBracketClaims(page("2026-07-02", record.previous_state), page("2026-07-23", "No free tier"), proofReader("stated", { previous_values: oldValues }), proofReader("removal_stated", { stated_then: [{ record: "free tier removed", old: "No free tier" }] }));
     assert.equal(bracketStatesRecord({ claim_proof: proof }), true);
   });
+
+  it("records a failed endpoint read once and retains the successful opposite reading", async () => {
+    for (const failing of ["readPreviousValue", "readStatedBefore"]) {
+      const readings: Array<{ newer: string; verdict: { status: string } }> = [];
+      const settled = await settle([{ day: "2026-06-01", text: record.previous_state }, { day: "2026-07-23", text: record.current_state }], {
+        [failing]: async () => { throw new Error("endpoint unavailable"); },
+        onRead: (reading: { newer: string; verdict: { status: string } }) => readings.push(reading),
+      });
+      assert.equal(settled.outcome, "no_usable_capture");
+      assert.equal(settled.reads, readings.length);
+      assert.equal(readings.filter((reading) => reading.verdict.status === "unknown").length, 1);
+      const proof = settled.unverified_brackets[0].claim_proof;
+      assert.equal(proof[failing === "readPreviousValue" ? "older" : "newer"].verdict.status, "unknown");
+      assert.equal(proof[failing === "readPreviousValue" ? "newer" : "older"].verdict.status, "stated");
+    }
+  });
 });

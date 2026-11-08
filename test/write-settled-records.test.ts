@@ -380,7 +380,7 @@ describe("writing the report a settle run produced", () => {
       archive,
       pairReaderForListing: termsPairReader,
       statedReaderForRecord,
-      previousReaderForRecord: () => async () => ({ status: "not_stated" }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       fetchToday: async (url: string) => (url === urlOf("Gamma") ? { ok: false, error: "HTTP 403" } : { ok: true, text: "TERMS=B" }),
       textDayOf: () => "2026-02-10",
       badgeSetBy: (record: Change) => ({ Gamma: "risky", Delta: "caution", Zeta: "risky" } as Record<string, string>)[record.vendor] ?? null,
@@ -405,6 +405,7 @@ describe("writing the report a settle run produced", () => {
       first_new: "2026-05-02",
       last_old_capture: "https://web.archive.org/web/20260501120000/https://alpha.example/pricing",
       first_new_capture: "https://web.archive.org/web/20260502120000/https://alpha.example/pricing",
+      claim_proof: report.results.find((result: Change) => result.vendor === "Alpha").brackets[0].claim_proof,
     }]);
 
     assert.strictEqual(byVendor.Beta.change_type, "record_corrected");
