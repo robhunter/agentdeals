@@ -228,7 +228,7 @@ describe("the character limit belongs to the verifier prompt alone", () => {
       assert.ok(from !== -1 && to > from, builder);
       assert.match(source.slice(from, to), /maxLength = MAX_PAGE_TEXT_LENGTH/, builder);
     }
-    assert.strictEqual(source.split("MAX_PAGE_TEXT_LENGTH").length - 1, builders.length + 1);
+    assert.strictEqual((source.match(/\bMAX_PAGE_TEXT_LENGTH\b/g) ?? []).length, builders.length + 1);
   });
 
   it("applies the limit inside the function that builds the prompt", () => {

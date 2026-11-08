@@ -141,6 +141,20 @@ describe("grounding an earlier-value answer", () => {
     assert.strictEqual(judgePreviousValue({ previous_values: [EARLIER_VALUE] }, ONE_SIGNAL, text).status, "stated");
     assert.strictEqual(judgePreviousValue({ previous_values: [] }, ONE_SIGNAL, "x".repeat(100000)).status, "not_stated");
   });
+
+  it("sends the complete page at its boundary and rejects a quote beyond the actual prompt window", async () => {
+    const prompts: string[] = [];
+    const client = { complete: async (prompt: string) => { prompts.push(prompt); return JSON.stringify({ previous_values: [EARLIER_VALUE] }); } };
+    const read = previousValueReaderFor(client, ONE_SIGNAL);
+    const boundary = "x".repeat(100000 - OLD_MOBILE.length) + OLD_MOBILE;
+    assert.strictEqual((await read({ day: "2026-01-01", text: boundary })).status, "stated");
+    assert.ok(prompts[0].includes(boundary));
+    const beyond = "x".repeat(100000) + OLD_MOBILE;
+    assert.strictEqual((await read({ day: "2026-01-01", text: beyond })).status, "unknown");
+    const shown = prompts[1].split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].split("\n\nFind only")[0];
+    assert.strictEqual(shown, "x".repeat(100000));
+    assert.ok(!shown.includes(OLD_MOBILE));
+  });
 });
 
 type Fixture = { vendor: string; date: string; textDay: string; summary: string; previous_state: string; current_state: string; pages: Record<string, string>; terms: (text: string) => string[]; review?: string; expected: string };
