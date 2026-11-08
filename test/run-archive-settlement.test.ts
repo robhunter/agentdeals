@@ -57,6 +57,15 @@ describe("the archive settlement and correction audit", () => {
     assert.doesNotMatch(summary, /Existing corrections/);
   });
 
+  it("lists all corrections with both capture links and both affirmative readings", () => {
+    const witness = { day: "2025-01-01", url: "https://archive.example/year-old", verdict: { status: "stated", stated_then: [{ record: "1 project", old: "Free: 1 project a year ago" }] } };
+    const result = { vendor: "Example", date: "2026-09-12", outcome: "ours", capture: { url: "https://archive.example/settling" }, stated_then: [{ record: "1 project", old: "Free: 1 project" }], historical_proof: { readings: [witness] } };
+    const summary = archiveSettlementSummary({ results: [result], audit: { results: [{ ...result, vendor: "Audited", verdict_changed: false }] } });
+    assert.match(summary, /All proposed corrections: 2/);
+    for (const text of ["https://archive.example/year-old", "https://archive.example/settling", "Free: 1 project a year ago", "| unsettled | Example |", "| audit | Audited |"]) assert.ok(summary.includes(text), text);
+    assert.match(summary, /Review records settled as our corrections: 0/);
+  });
+
   it("lists every correction settled from a review with its stated-before and review lines", () => {
     const settled = (vendor: string) => ({ vendor, date: "2026-09-12", change_type: "limits_reduced", outcome: "ours", settled_from_review: true, stated_then: [{ record: "new limit", old: `${vendor} already stated it` }], review: [{ old: `${vendor} calculator`, new: "", why: "unrelated line" }] });
     const summary = archiveSettlementSummary({ results: [settled("Mapbox"), settled("Stream"), { ...settled("Mux"), outcome: "no_usable_capture", settled_from_review: false }], audit: { results: [settled("Codecov")] } });
@@ -70,7 +79,7 @@ describe("the archive settlement and correction audit", () => {
 });
 
 describe("the serial archive settlement command", () => {
-  it("uses actual HTTP archive and model responses, reports the earlier value, and leaves catalogue bytes unchanged", { timeout: 60000 }, async () => {
+  it("uses actual HTTP archive and model responses, reports missing historical evidence, and leaves catalogue bytes unchanged", { timeout: 60000 }, async () => {
     const scratch = mkdtempSync(path.join(tmpdir(), "archive-settlement-cli-"));
     const script = fileURLToPath(new URL("../scripts/run-archive-settlement.js", import.meta.url));
     const filler = "Pricing, plan limits and other features. ".repeat(30);
@@ -119,16 +128,15 @@ describe("the serial archive settlement command", () => {
       const result = await promisify(execFile)(process.execPath, ["--import", adapter, script, "--out", out, "--audit-ours-from", originalRef], { cwd: scratch, env: { ...process.env, OPENROUTER_API_KEY: "local-fixture", OPENROUTER_BASE_URL: base }, timeout: 50000 });
       const report = JSON.parse(readFileSync(out, "utf-8"));
       assert.strictEqual(report.results[0].outcome, "no_usable_capture");
-      assert.strictEqual(report.results[0].prior_capture.day, "2026-01-01");
-      assert.deepStrictEqual(report.results[0].previous_values, [{ previous: original.previous_state, current: original.current_state, old: original.previous_state }]);
+      assert.deepStrictEqual(report.results[0].historical_proof.readings, []);
       assert.strictEqual(report.audit.results.length, 0);
       assert.strictEqual(readFileSync(`${out}.jsonl`, "utf-8").trim().split("\n").length, 1);
       assert.match(readFileSync(`${out}.md`, "utf-8"), /Example.*no_usable_capture/);
       assert.match(readFileSync(`${out}.review.md`, "utf-8"), /Review records settled as our corrections: 0/);
       assert.match(result.stdout, /unsettled: Example 2026-09-25 no_usable_capture/);
       assert.deepStrictEqual(readFileSync(path.join(scratch, "data/deal_changes.json")), before);
-      assert.strictEqual(requests.filter((request) => request === "POST /chat/completions").length, 3);
-      assert.ok(requests.some((request) => request.includes("/web/20260101120000id_/")));
+      assert.strictEqual(requests.filter((request) => request === "POST /chat/completions").length, 2);
+      assert.ok(!requests.some((request) => request.includes("/web/20260101120000id_/")));
     } finally {
       await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
       rmSync(scratch, { recursive: true, force: true });

@@ -199,7 +199,7 @@ describe("settling the backlog", () => {
     const archive = {
       captures: async (url: string) => {
         asked.push(url);
-        return { captures: ["20260201120000", "20260501120000", "20260502120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) };
+        return { captures: ["20250901120000", "20260201120000", "20260501120000", "20260502120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) };
       },
       captureHtml: async ({ timestamp, original }: { timestamp: string; original: string }) => ({
         html: page(termsOn[original](`${timestamp.slice(0, 4)}-${timestamp.slice(4, 6)}-${timestamp.slice(6, 8)}`)),
@@ -258,7 +258,7 @@ describe("settling the backlog", () => {
     ];
     const line = { old: "7-day history", new: "", why: "only the old page states it" };
     const archive = {
-      captures: async (url: string) => ({ captures: ["20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
+      captures: async (url: string) => ({ captures: ["20250901120000", "20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
       captureHtml: async () => ({ html: `<html><body><p>TERMS=A</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
     };
     const report = await settleFirstReadings({
@@ -299,7 +299,7 @@ describe("settling the backlog", () => {
     const fullPage = `<html><body><p>TERMS=A</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>`;
     const archive = {
       captures: async (url: string) => ({
-        captures: url.includes("uncaptured") ? [] : ["20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })),
+        captures: url.includes("uncaptured") ? [] : ["20250901120000", "20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })),
       }),
       captureHtml: async ({ original }: { original: string }) => ({ html: original.includes("unreadable") ? "<html><body><p>Loading</p></body></html>" : fullPage }),
     };
@@ -345,7 +345,7 @@ describe("settling the backlog", () => {
       { vendor: "Eta", tier: "Free Developer", category: "Databases" },
     ];
     const archive = {
-      captures: async (url: string) => ({ captures: ["20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
+      captures: async (url: string) => ({ captures: ["20250901120000", "20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
       captureHtml: async () => ({ html: `<html><body><p>TERMS=A</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
     };
     const matched: Record<string, { old: string; new: string; shared: string[] }[]> = {
@@ -396,7 +396,7 @@ describe("records the Archive did not answer", () => {
       captures: async (url: string) => {
         asked.push(url);
         if (url.includes("alpha") && asked.filter((u) => u === url).length === 1) return { unavailable: "network error: fetch failed after 4 attempts" };
-        return { captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] };
+        return { captures: ["20250901120000", "20260205120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) };
       },
       captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
     };
@@ -456,7 +456,7 @@ describe("the readings behind each outcome", () => {
         offers: [],
         today: "2026-09-28",
         archive: {
-          captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
+          captures: async (url: string) => ({ captures: ["20250901120000", "20260205120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
           captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
         },
         pairReaderForListing: termsPairReader,
@@ -469,7 +469,7 @@ describe("the readings behind each outcome", () => {
     const logged = await run(true);
     assert.deepStrictEqual(
       logged.results[0].readings.map((r: { older: string; newer: string; verdict: { status: string } }) => `${r.older} | ${r.newer} ${r.verdict.status}`),
-      ["capture 2026-02-05 | today same", "capture 2026-02-05 | the record stated"],
+      ["capture 2026-02-05 | today same", "capture 2026-02-05 | the record stated", "capture 2025-09-01 | the record stated"],
     );
   });
 });
@@ -493,7 +493,7 @@ describe("a reader that fails on one record", () => {
       offers: [{ vendor: "Alpha", tier: "Free", category: "Databases" }],
       today: "2026-09-28",
       archive: {
-        captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
+        captures: async (url: string) => ({ captures: ["20250901120000", "20260205120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
         captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
       },
       pairReaderForListing,
@@ -514,7 +514,7 @@ describe("a reader that fails on one record", () => {
       offers: [],
       today: "2026-09-28",
       archive: {
-        captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
+        captures: async (url: string) => ({ captures: ["20250901120000", "20260205120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
         captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
       },
       pairReaderForListing: () => async () => {
@@ -534,7 +534,7 @@ describe("each result names its record and the archived copy that settled it", (
     const changes = ["Alpha cut its free plan to 1 project", "Alpha cut its free plan to 2 projects"].map((summary) =>
       change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://alpha.example/pricing", summary }));
     const archive = {
-      captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
+      captures: async (url: string) => ({ captures: ["20250901120000", "20260205120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
       captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
     };
     const report = await settleFirstReadings({

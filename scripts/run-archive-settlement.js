@@ -45,7 +45,21 @@ export function archiveSettlementSummary(report) {
   const table = (results) => ["| Vendor | Record day | Type | Outcome | Reason |", "|---|---|---|---|---|", ...rows(results)];
   const lines = [`### Archive settlement: ${report.results.length} unsettled first readings`, "", ...table(report.results)];
   if (report.audit) lines.push("", `### Existing corrections audited: ${report.audit.results.length}`, "", `${report.audit.results.filter((result) => result.verdict_changed).length} verdicts differ from the earlier ours outcome. Audit results are not written by this run.`, "", ...table(report.audit.results));
-  lines.push("", reviewCorrectionsSummary(report));
+  lines.push("", correctionsEvidenceSummary(report), "", reviewCorrectionsSummary(report));
+  return lines.join("\n") + "\n";
+}
+
+export function correctionsEvidenceSummary(report) {
+  const corrections = [
+    ...report.results.map((result) => ({ pass: "unsettled", ...result })),
+    ...(report.audit?.results ?? []).map((result) => ({ pass: "audit", ...result })),
+  ].filter((result) => result.outcome === "ours");
+  const lines = [`### All proposed corrections: ${corrections.length}`, "", "| Pass | Vendor | Record day | Settling capture | Settling reading | Year-old witness | Historical reading |", "|---|---|---|---|---|---|---|"];
+  const stated = (verdict) => (verdict?.stated_then ?? []).map((line) => `${line.record}: ${line.old}`).join("; ");
+  for (const result of corrections) {
+    const witness = result.historical_proof?.readings?.find((reading) => reading.verdict.status === "stated");
+    lines.push(`| ${[result.pass, result.vendor, result.date, result.capture?.url, stated(result), witness?.url ?? "missing", stated(witness?.verdict)].map(tableCell).join(" | ")} |`);
+  }
   return lines.join("\n") + "\n";
 }
 
@@ -85,7 +99,7 @@ async function main() {
   });
   writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
   writeFileSync(`${out}.md`, archiveSettlementSummary(report));
-  writeFileSync(`${out}.review.md`, reviewCorrectionsSummary(report));
+  writeFileSync(`${out}.review.md`, correctionsEvidenceSummary(report) + "\n" + reviewCorrectionsSummary(report));
   console.log(`Report: ${out}`);
 }
 

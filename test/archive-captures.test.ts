@@ -787,7 +787,7 @@ function linesPairReader() {
 
 const TODAY = "2026-09-27";
 const RECORD_DAY = "2026-08-28";
-const ALL_YEAR = everyDay("2025-10-01", TODAY);
+const ALL_YEAR = everyDay("2025-09-01", TODAY);
 
 function moveQuotedOnlySometimesReader() {
   const calls: string[] = [];
@@ -959,7 +959,7 @@ describe("settling a first reading's difference against the page as the Archive 
   });
 
   it("also reads today's page when the capture nearest the record's day is from before it, and calls the difference ours when today agrees", async () => {
-    const { result, reader } = settle({ todayTerms: "A", days: everyDay("2026-01-01", "2026-08-20"), termsOn: () => "A" });
+    const { result, reader } = settle({ todayTerms: "A", days: everyDay("2025-09-01", "2026-08-20"), termsOn: () => "A" });
     const settled = await result;
     assert.strictEqual(settled.outcome, "ours");
     assert.deepStrictEqual(settled.compared_with, { page: "capture 2026-08-20", day: "2026-08-20", gap_days: 8, side: "before" });
@@ -967,7 +967,7 @@ describe("settling a first reading's difference against the page as the Archive 
   });
 
   it("keeps the record the vendor's when the capture before the record's day agrees but today's page does not, dated by that bracket", async () => {
-    const { result } = settle({ todayTerms: "B", days: everyDay("2026-01-01", "2026-08-20"), termsOn: () => "A" });
+    const { result } = settle({ todayTerms: "B", days: everyDay("2025-09-01", "2026-08-20"), termsOn: () => "A" });
     const settled = await result;
     assert.strictEqual(settled.outcome, "vendor_changed");
     assert.strictEqual(settled.previous_state, "TERMS=A");
@@ -976,7 +976,7 @@ describe("settling a first reading's difference against the page as the Archive 
   });
 
   it("reports a move a capture places after the record's day as a later move, and the record's difference as ours", async () => {
-    const days = [...everyDay("2026-01-01", "2026-08-20"), "2026-09-20"];
+    const days = [...everyDay("2025-09-01", "2026-08-20"), "2026-09-20"];
     const { result } = settle({ todayTerms: "B", days, termsOn: () => "A" });
     const settled = await result;
     assert.strictEqual(settled.outcome, "ours");
@@ -994,7 +994,7 @@ describe("settling a first reading's difference against the page as the Archive 
   });
 
   it("reports a move that a capture beyond the window places after the record's day as a later move", async () => {
-    const days = [...everyDay("2026-01-01", "2026-02-15"), "2026-08-15"];
+    const days = [...everyDay("2025-09-01", "2026-02-15"), "2026-08-15"];
     const { result } = settle({ todayTerms: "B", days, termsOn: (day) => (day <= "2026-08-15" ? "A" : "B"), recordDay: "2026-06-01" });
     const settled = await result;
     assert.strictEqual(settled.outcome, "ours");
@@ -1003,7 +1003,7 @@ describe("settling a first reading's difference against the page as the Archive 
   });
 
   it("stands today's page in for the record's day when no capture is within the window of it", async () => {
-    const days = everyDay("2026-01-01", "2026-06-01");
+    const days = everyDay("2025-09-01", "2026-06-01");
     const moved = await settle({ todayTerms: "B", days, termsOn: (day) => (day <= "2026-04-10" ? "A" : "B") }).result;
     assert.strictEqual(moved.outcome, "vendor_changed");
     assert.deepStrictEqual(moved.compared_with, { page: "today", day: TODAY, gap_days: 30, side: "after" });
@@ -1089,7 +1089,7 @@ describe("settling a first reading's difference against the page as the Archive 
   });
 
   it("is never ours when a capture before the record's day agrees but the reader cannot copy the plan's terms from today's page", async () => {
-    const { result } = settle({ todayTerms: null, days: everyDay("2026-01-01", "2026-08-20"), termsOn: () => "A" });
+    const { result } = settle({ todayTerms: null, days: everyDay("2025-09-01", "2026-08-20"), termsOn: () => "A" });
     const settled = await result;
     assert.strictEqual(settled.outcome, "no_usable_capture");
     assert.match(settled.why, /could not compare today's page/);
@@ -1129,7 +1129,7 @@ describe("settling a first reading's difference against the page as the Archive 
   });
 
   it("keeps today's review lines when the older capture does not state the recorded claim", async () => {
-    const { result } = settle({ todayTerms: "A_bandwidth", days: everyDay("2026-01-01", "2026-08-20"), termsOn: () => "A", reader: linesPairReader(), statedBefore: statesTheRecordWhere(() => false) });
+    const { result } = settle({ todayTerms: "A_bandwidth", days: everyDay("2025-09-01", "2026-08-20"), termsOn: () => "A", reader: linesPairReader(), statedBefore: statesTheRecordWhere(() => false) });
     const settled = await result;
     assert.strictEqual(settled.outcome, "no_usable_capture");
     assert.strictEqual(settled.compared_with.page, "today");
