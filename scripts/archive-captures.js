@@ -652,11 +652,16 @@ export function judgePreviousValue(answer, record, olderText, maxLength = PREVIO
   const current = comparableText(record.current_state);
   const values = [];
   for (const value of answer.previous_values) {
-    const previous = String(value?.previous ?? "").trim();
+    let previous = String(value?.previous ?? "").trim();
     const replacement = String(value?.current ?? "").trim();
     const old = String(value?.old_page ?? "").trim();
     if (![previous, replacement, old].every((words) => comparableText(words))) return unknown("an earlier-value fragment is empty");
-    if (!before.includes(comparableText(previous)) && !summary.includes(comparableText(previous))) return unknown("the earlier value is not quoted from the record");
+    const inRecord = (words) => before.includes(comparableText(words)) || summary.includes(comparableText(words));
+    if (!inRecord(previous) && valuesStated(previous).length === 0) {
+      const feature = previous.replace(/^access(?: to)?\s+/i, "");
+      if (inRecord(feature) && comparableText(old).includes(comparableText(feature))) previous = feature;
+    }
+    if (!inRecord(previous)) return unknown("the earlier value is not quoted from the record");
     if (!current.includes(comparableText(replacement))) return unknown("the replacement is not quoted from the new description");
     if (!page.includes(comparableText(old))) return unknown("the earlier value is not quoted from the capture");
     const was = termsOfLine(previous);

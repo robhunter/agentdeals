@@ -93,6 +93,16 @@ describe("a quoted earlier qualitative feature", () => {
     assert.equal(verdict.previous_values[0].previous, "cloud models");
   });
 
+  it("retains the shared feature quote when a page introduces it with access", () => {
+    const original = { ...row, previous_state: "Free tier for light usage with one concurrent model." };
+    const answer = { previous_values: [{ ...value, previous: "Access cloud models" }] };
+    const verdict = judgePreviousValue(answer, original, "Free: Access cloud models. Light usage.");
+    assert.equal(verdict.status, "stated");
+    assert.equal(verdict.previous_values[0].previous, "cloud models");
+    assert.equal(verdict.previous_values[0].old, "Access cloud models");
+    assert.equal(judgePreviousValue({ previous_values: [{ ...value, previous: "Access unrelated models" }] }, original, "Access unrelated models").status, "unknown");
+  });
+
   it("refuses a single generic word, a paraphrase and an unchanged feature", () => {
     for (const patch of [{ previous: "models" }, { previous: "Free plan", old_page: "Free plan" }, { old_page: "Access models in the cloud" }, { current: "cloud models" }]) {
       const answer = { previous_values: [{ ...value, ...patch }] };
