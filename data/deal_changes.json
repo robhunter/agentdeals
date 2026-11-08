@@ -18066,6 +18066,22 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Cloudflare Workers",
+      "change_type": "limits_increased",
+      "date": "2026-09-04",
+      "date_source": "vendor_page",
+      "summary": "On September 4, 2026, Cloudflare removed the compressed Worker size limits of 3 MB on Workers Free and 10 MB on Workers Paid. A Worker on either plan can now be up to 64 MiB, counted on the uncompressed bundle.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Worker size: deploys over 3 MB compressed on Workers Free, or 10 MB on Workers Paid, were rejected. Cloudflare's changelog of 2026-09-04: \"Previously, Cloudflare checked that compressed size and rejected deploys over 3 MB (Free) or 10 MB (Paid).\"",
+      "current_state": "\"There is no compressed size limit. Only the uncompressed bundle size counts.\" Worker size (uncompressed): 64 MiB on Workers Free and Workers Paid (developers.cloudflare.com/workers/platform/limits/, read 2026-11-08).",
+      "impact": "medium",
+      "source_url": "https://developers.cloudflare.com/changelog/post/2026-09-04-increased-worker-size-limit/",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-08"
     }
   ]
 }

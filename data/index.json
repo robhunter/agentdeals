@@ -343,6 +343,27 @@
           "read_on": "2026-10-06"
         },
         {
+          "text": "Workers Free and Workers Paid both allow a Worker of up to 64 MiB, counted on the uncompressed bundle; there is no compressed size limit. Until September 4, 2026, deploys over 3 MB compressed on Free, or 10 MB on Paid, were rejected.",
+          "quote": "There is no compressed size limit. Only the uncompressed bundle size counts.",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
+          "text": "A Worker invocation may make 50 subrequests on Workers Free and 10,000 on Workers Paid, where the limit can be raised per Worker up to 10 million. A subrequest is a fetch() call or a call to a Cloudflare service such as KV, R2 or D1, and each request in a redirect chain counts. Cloudflare lists a separate limit of 1,000 subrequests to internal services on Workers Free.",
+          "quote": "Each subrequest in a redirect chain counts against this limit.",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
+          "text": "An account may have 100 Workers on Workers Free and 500 on Workers Paid.",
+          "quote": "Workers per account | 100 | 500",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
           "text": "Cloudflare's terms prohibit processing or collecting credit card information on any site using its free services.",
           "quote": "process or collect personal or business credit card information on any web property that is receiving Free Services",
           "url": "https://www.cloudflare.com/terms/",
