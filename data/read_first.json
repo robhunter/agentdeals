@@ -566,6 +566,16 @@
       "vendor": "GrowthBook",
       "tier": "Starter / Open Source",
       "since": "2026-11-08"
+    },
+    {
+      "vendor": "localazy.com",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Hex",
+      "tier": "Free",
+      "since": "2026-11-08"
     }
   ]
 }
