@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "smoke, backlog, mapbox-window, or review-rule (saved captures only)"
+        description: "smoke, backlog, mapbox-window, review-rule, or history-rule"
         required: true
         default: smoke
 permissions:
@@ -28,11 +28,16 @@ jobs:
       - run: npm ci
       - run: npm run build
       - name: Download the saved captures for the prompt-window replay
-        if: inputs.mode == 'mapbox-window' || inputs.mode == 'review-rule'
+        if: inputs.mode == 'mapbox-window' || inputs.mode == 'review-rule' || inputs.mode == 'history-rule'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SOURCE_RUN: ${{ inputs.mode == 'review-rule' && '42446730220' || '42446506294' }}
+          SOURCE_RUN: ${{ (inputs.mode == 'review-rule' || inputs.mode == 'history-rule') && '42446730220' || '42446506294' }}
         run: gh run download "$SOURCE_RUN" --name archive-settlement-evaluation --dir prior-evaluation
+      - name: Download the saved stated-before replay
+        if: inputs.mode == 'history-rule'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh run download 42451026818 --name archive-settlement-evaluation --dir prior-review
       - name: Read the records without writing catalogue data
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -42,6 +47,8 @@ jobs:
             node scripts/replay-mapbox-window.mjs
           elif [ "$ARCHIVE_EVAL_MODE" = "review-rule" ]; then
             node scripts/replay-reviewed-claims.mjs
+          elif [ "$ARCHIVE_EVAL_MODE" = "history-rule" ]; then
+            node scripts/replay-archive-history.mjs . prior-evaluation prior-review archive-evaluation --allow-missing-history
           else
             node scripts/evaluate-archive.mjs
           fi
