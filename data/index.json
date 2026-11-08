@@ -6328,7 +6328,7 @@
     {
       "vendor": "Unkey",
       "category": "API Gateway",
-      "description": "The \"Free\" API key management plan is priced at 0 USD / mo and lists \"1k API keys\", \"150K valid requests / mo\", \"1-day logs retention\", \"3-day audit log retention\" and \"Unlimited APIs\".",
+      "description": "API key management. The \"Free\" plan is priced at 0 USD / mo and lists \"1k API keys\", \"150K valid requests / mo\", \"7-day logs retention\", \"30-day audit log retention\" and \"Unlimited APIs\".",
       "tier": "Free",
       "url": "https://www.unkey.com/pricing",
       "tags": [
@@ -6342,13 +6342,6 @@
         "checked": "2026-11-08",
         "outcome": "ok",
         "detail": "the page names Unkey as \"unkey\" and states \"150K valid requests / mo\""
-      },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://www.unkey.com/pricing",
-        "record_date": "2026-08-28",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
       }
     },
     {
@@ -6602,7 +6595,7 @@
     {
       "vendor": "Svix",
       "category": "Messaging",
-      "description": "Webhook service for sending (Dispatch), receiving (Ingest) and data streaming (Stream). The Free plan is $0 with no credit card: up to 50,000 messages a month, 50 messages a second, 7-day payload retention and the embeddable webhooks UI. Basic, from $20 a month, adds a 99.9% uptime SLA, 200 messages a second and 30-day retention, the Free plan's terms until September 2026, and bills messages beyond 50,000 a month.",
+      "description": "Webhook service for sending (Dispatch), receiving (Ingest) and data streaming (Stream). The Free plan is $0 with no credit card: up to 50,000 messages a month, 50 messages a second, 7-day payload retention and the embeddable webhooks UI. Basic, from $20 a month, adds a 99.9% uptime SLA, 200 messages a second and 30-day retention, and bills messages beyond 50,000 a month.",
       "tier": "Free",
       "url": "https://www.svix.com/pricing/",
       "tags": [
@@ -7147,7 +7140,7 @@
     {
       "vendor": "Browserless",
       "category": "Browser Automation",
-      "description": "Headless browser API — 1,000 units/mo (1 unit = 30 sec), 2 concurrent browsers, 1-minute max session with reconnects, automatic captcha solving, BrowserQL editor. Supports Chrome, WebKit, Firefox",
+      "description": "Headless browser API — 1,000 units/mo (1 unit = up to 30 sec of browser time), 2 concurrent browsers, 2-minute max session with session reconnects, automatic captcha solving, BrowserQL editor. No card required. Supports Chrome, WebKit, Firefox",
       "tier": "Free",
       "url": "https://www.browserless.io/pricing",
       "tags": [

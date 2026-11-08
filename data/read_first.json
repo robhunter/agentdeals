@@ -576,6 +576,21 @@
       "vendor": "Hex",
       "tier": "Free",
       "since": "2026-11-08"
+    },
+    {
+      "vendor": "Unkey",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Browserless",
+      "tier": "Free",
+      "since": "2026-11-08"
+    },
+    {
+      "vendor": "Svix",
+      "tier": "Free",
+      "since": "2026-11-08"
     }
   ]
 }

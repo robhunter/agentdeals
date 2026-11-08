@@ -297,7 +297,8 @@
       "source_url": "https://www.unkey.com/pricing",
       "record_date": "2026-08-28",
       "change_type": "limits_reduced",
-      "summary": "Log retention on the free plan narrowed from 7 days to 1, and audit log retention from 30 days to 3. Keys, requests and APIs are unchanged and the plan is still priced at nothing."
+      "summary": "Log retention on the free plan narrowed from 7 days to 1, and audit log retention from 30 days to 3. Keys, requests and APIs are unchanged and the plan is still priced at nothing.",
+      "reverted_on": "2026-11-08"
     },
     {
       "vendor": "Cypress Cloud",

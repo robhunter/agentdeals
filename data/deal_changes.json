@@ -8024,6 +8024,17 @@
         "checked": "2026-10-03",
         "outcome": "vendor_changed",
         "brackets": []
+      },
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-11-05",
+        "source_url": "https://github.com/unkeyed/marketing-site/commit/b0d3363f8d650f4621ac33562f40f70f4f31623a",
+        "resolved_by": {
+          "vendor": "Unkey",
+          "date": "2026-11-05",
+          "change_type": "limits_increased"
+        },
+        "detail": "Reversed 2026-11-05: Unkey's pricing page again gives the Free API plan 7 days of log retention and 30 days of audit log retention. Unkey's commit of 2026-11-05 reads: \"Free is 7 days of logs and 30 days of audit logs (was 1 / 3 days).\""
       }
     },
     {
@@ -18102,6 +18113,64 @@
       "alternatives": [],
       "recorded_date": "2026-11-08",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Unkey",
+      "change_type": "limits_increased",
+      "date": "2026-11-05",
+      "date_source": "vendor_page",
+      "summary": "On November 5, 2026, Unkey's pricing page raised the Free API plan's log retention from 1 day to 7 days and its audit log retention from 3 days to 30 days. Pro went from 7 and 14 days to 90 days of each. Unkey's commit is titled \"Fix API Management log retention on the pricing page\" and reads: \"Free is 7 days of logs and 30 days of audit logs (was 1 / 3 days).\" Keys, requests and the $0 price are unchanged.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Free: \"1k API keys\", \"150K valid requests / mo\", \"1-day logs retention\", \"3-day audit log retention\", \"Unlimited APIs\" (unkey.com/pricing, archived 2026-09-20).",
+      "current_state": "Free, 0 USD / mo: \"1k API keys\", \"150K valid requests / mo\", \"7-day logs retention\", \"30-day audit log retention\", \"Unlimited APIs\". Pro: \"90-day logs retention\", \"90-day audit log retention\" (unkey.com/pricing, read 2026-11-08).",
+      "impact": "low",
+      "source_url": "https://github.com/unkeyed/marketing-site/commit/b0d3363f8d650f4621ac33562f40f70f4f31623a",
+      "category": "API Gateway",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-08",
+      "archive_check": {
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-09-20",
+            "first_new": "2026-11-05",
+            "last_old_capture": "https://web.archive.org/web/20260920152529/https://www.unkey.com/pricing",
+            "first_new_capture": null
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "Browserless",
+      "change_type": "limits_increased",
+      "date": "2026-09-24",
+      "date_source": "hand_written",
+      "summary": "By September 24, 2026, Browserless's Free plan allowed a browser session of up to 2 minutes, up from 1 minute on August 24, 2026. The 1,000 units a month, 2 concurrent browsers, session reconnects and the $0 price were unchanged.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Free: \"1k units/month\", \"2 max concurrent browsers\", \"1 min. max session time & session reconnects\" (browserless.io/pricing, archived 2026-08-24).",
+      "current_state": "Free: \"1k units/month\", \"2 max concurrent browsers\", \"2 min. max session time\", \"Session reconnects\" (browserless.io/pricing, archived 2026-09-24; the same on 2026-11-08).",
+      "impact": "low",
+      "source_url": "https://www.browserless.io/pricing",
+      "category": "Browser Automation",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-08",
+      "archive_check": {
+        "checked": "2026-11-08",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-24",
+            "first_new": "2026-09-24",
+            "last_old_capture": "https://web.archive.org/web/20260824200110/https://www.browserless.io/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260924183637/https://www.browserless.io/pricing"
+          }
+        ]
+      }
     }
   ]
 }
