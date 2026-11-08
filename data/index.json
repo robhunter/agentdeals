@@ -6917,7 +6917,30 @@
         "text": "Free for everyone $ 0 / mo per builder Builder: A user who created or edited an app or workflow this billing cycle. You're billed per builder, per month.",
         "url": "https://retool.com/pricing",
         "read_on": "2026-11-08"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Retool's 250 free AI credits a month are one pool shared by every user in the organization, for app building and AI Actions. They renew monthly and do not roll over, and Free plan organizations cannot buy more.",
+          "quote": "250 credits shared across your account for app building and AI Actions. Renews monthly, doesn't roll over. Upgrade to Team for additional packs.",
+          "url": "https://retool.com/pricing",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
+          "text": "When a Free plan organization has used its AI credits, Retool's AI-powered features are unavailable until the credits renew at the start of the next month.",
+          "quote": "When no credits remain, AI-powered features are unavailable. Cloud organization admins on a paid plan can purchase additional credits. Otherwise, credits renew at the start of the next month.",
+          "url": "https://docs.retool.com/support/billing-usage/ai-credits",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
+          "text": "When a Free plan organization has used its 20 Agent hours for the month, agent execution pauses; upgrading to a paid plan lets agents continue.",
+          "quote": "Agent execution pauses. You can upgrade to a paid plan to continue without interruption.",
+          "url": "https://retool.com/pricing",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "MinIO",

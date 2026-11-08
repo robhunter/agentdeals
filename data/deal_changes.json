@@ -7867,12 +7867,13 @@
     },
     {
       "vendor": "Retool",
-      "change_type": "limits_increased",
+      "change_type": "pricing_restructured",
       "date": "2026-06-17",
       "date_source": "discovered",
-      "summary": "The free tier also includes up to 20 hours/month of Agents and 250 AI credits/month.",
-      "previous_state": "Internal tools builder — free for up to 5 users, unlimited apps. Drag-and-drop UI, 100+ integrations, custom components",
-      "current_state": "The Free tier costs $0/mo and includes unlimited web & mobile apps, 500 workflow runs/month, 5GB of database capacity, 5GB of file storage, up to 5 users, up to 20 hours/month of Agents, and 250 AI credits/month.",
+      "summary": "Retool's Free plan replaced its AI prompting credits, up to 100 a month for each user, with 250 AI credits a month shared by the whole organization, between the Internet Archive's copies of retool.com/pricing of 2026-05-21 and 2026-06-17. The shared credits cover app building and AI Actions; the prompting credits had covered building and editing apps with Assist. The Free plan's 20 hours a month of Agents were already on the page before the change.",
+      "tier": "Free",
+      "previous_state": "Free: \"Up to 5 users\", \"Up to 20 hours/month of Agents\", \"Up to 100 monthly AI prompting credits per user\" (retool.com/pricing, archived 2026-05-21)",
+      "current_state": "Free: \"Up to 20 hours/month of Agents\", \"250 AI credits/month\"; \"AI credits are pooled at the account level and cover all app building and AI Actions.\" (retool.com/pricing, archived 2026-06-17)",
       "impact": "medium",
       "source_url": "https://retool.com/pricing",
       "category": "Low-Code Platforms",
@@ -7891,6 +7892,36 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Retool",
+      "change_type": "record_corrected",
+      "date": "2026-11-08",
+      "summary": "Data correction - in June 2026 Retool's Free plan replaced its AI prompting credits, up to 100 a month for each user, with 250 AI credits a month shared by the whole organization. We had recorded this as an increase that also added 20 hours a month of Agents; the Internet Archive's copy of retool.com/pricing of 2026-05-21 already lists the 20 Agent hours.",
+      "previous_state": "Recorded 2026-08-28 as limits_increased: the free tier also includes up to 20 hours/month of Agents and 250 AI credits/month",
+      "current_state": "pricing_restructured, between 2026-05-21 and 2026-06-17 from Internet Archive copies of retool.com/pricing",
+      "impact": "low",
+      "source_url": "https://retool.com/pricing",
+      "category": "Low-Code Platforms",
+      "alternatives": [],
+      "recorded_date": "2026-11-08",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Retool",
+      "change_type": "limits_reduced",
+      "date": "2027-01-01",
+      "date_source": "vendor_page",
+      "summary": "Retool Email can be used on Retool's Free plan until January 1, 2027. From that date, Free plan organizations can no longer use Retool Email to send emails from apps, workflows or other automations. Retool Email stays available on the Team, Business and Enterprise plans. Retool's changelog names SendGrid, Gmail, SMTP or an email provider's REST API as other ways to send email from Retool.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free plan organizations send emails from apps, workflows and other automations with Retool Email",
+      "current_state": "\"Starting January 1, 2027, Retool is deprecating Retool Email for organizations on the Free plan. After this date, Free plan organizations can no longer use Retool Email to send emails from apps, workflows, or other automations.\" (docs.retool.com changelog, 2026-09-30)",
+      "impact": "medium",
+      "source_url": "https://docs.retool.com/changelog/retool-email-free-plan-deprecation",
+      "category": "Low-Code Platforms",
+      "alternatives": [],
+      "recorded_date": "2026-11-08"
     },
     {
       "vendor": "LogRocket",
