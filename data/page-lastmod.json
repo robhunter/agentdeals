@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-08",
+  "generated": "2026-11-09",
   "pages": {
     "/": {
       "daily": true
@@ -3097,7 +3097,8 @@
       "changed": "2026-11-05"
     },
     "/digest/2026-w45": {
-      "daily": true
+      "hash": "eb738fb59532fda1",
+      "changed": "2026-11-09"
     },
     "/digest/2026-w47": {
       "hash": "ac5da01d198369cb",
@@ -3207,7 +3208,8 @@
       "daily": true
     },
     "/feed.xml": {
-      "daily": true
+      "hash": "4a960c8f921d8260",
+      "changed": "2026-11-09"
     },
     "/firebase-alternatives": {
       "hash": "60bff8d4568ecc8c",
