@@ -27204,6 +27204,25 @@ function buildShutdownTrackerPage(): string {
   completed.sort((a, b) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
 
   const activeCount = imminent.length + upcoming.length + later.length;
+  const shutdownMonths = new Map<string, ShutdownEntry[]>();
+  for (const entry of [...imminent, ...upcoming, ...later]) {
+    const month = entry.deadline.slice(0, 7);
+    const entries = shutdownMonths.get(month) ?? [];
+    entries.push(entry);
+    shutdownMonths.set(month, entries);
+  }
+  const byMonth = shutdownMonths.size === 0 ? "" : `<section aria-labelledby="by-month">
+    <h2 id="by-month">By month</h2>
+    <ul class="shutdown-months">
+      ${[...shutdownMonths].map(([month, entries]) => {
+        const label = new Date(`${month}-01`).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
+        return `<li data-month="${month}"><strong>${escHtmlServer(label)}:</strong> ${entries.map(entry => {
+          const day = new Date(entry.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
+          return `<span class="shutdown-month-entry">${escHtmlServer(entry.service)} (${escHtmlServer(day)})</span>`;
+        }).join("; ")}.</li>`;
+      }).join("\n      ")}
+    </ul>
+  </section>`;
   const nextDeadline = shutdowns.find(s => countsDownTo(s) && new Date(s.deadline) > today);
   const nextDaysLeft = nextDeadline ? Math.max(0, Math.ceil((new Date(nextDeadline.deadline).getTime() - today.getTime()) / (1000 * 60 * 60 * 24))) : 0;
 
@@ -27379,6 +27398,8 @@ h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .
 .shutdown-links a:hover{text-decoration:underline}
 .timeline-bar{display:flex;gap:4px;margin:1.5rem 0 2rem;height:8px;border-radius:4px;overflow:hidden}
 .timeline-segment{height:100%;border-radius:2px;min-width:4px}
+.shutdown-months{padding-left:1.25rem;margin:1rem 0 2rem;line-height:1.7}
+.shutdown-months li{margin-bottom:.75rem}
 .pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
 .pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
 .pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
@@ -27431,6 +27452,8 @@ ${buildGlobalNav("guides")}
       return `<div class="timeline-segment" style="background:${color};flex:1" title="${escHtmlServer(s.service)} \u2014 ${escHtmlServer(daysLabel(s.deadline))}"></div>`;
     }).join("\n    ")}
   </div>
+
+  ${byMonth}
 
   ${buildSection("\u26a0\ufe0f Imminent", "These shutdowns are happening within the next 30 days. Take action now.", imminent, "imminent")}
 
