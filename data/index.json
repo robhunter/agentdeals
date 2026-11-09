@@ -3860,7 +3860,7 @@
     {
       "vendor": "Ably",
       "category": "Messaging",
-      "description": "Real-time infrastructure: Pub/Sub, Chat, Spaces, LiveObjects, LiveSync and AI Transport. The Free package costs $0 a month for up to 500 monthly active users (MAUs), with community and email support and no commitment. Ably has priced on MAUs since November 5, 2026. Accounts already on its resource-based pricing keep their terms. Pro costs $29 a month and Business $349 a month for 1,000 MAUs, billed annually, and on both each MAU over the allowance costs $0.05.",
+      "description": "Up to 500 monthly active users (MAUs) for $0 on the Free package, with every Ably product (Pub/Sub, Chat, Spaces, LiveObjects, LiveSync and AI Transport), community and email support and no commitment. Ably has priced on MAUs since November 5, 2026. Accounts already on its resource-based pricing keep their terms. Pro costs $29 a month and Business $349 a month for 1,000 MAUs, billed annually, and on both each MAU over the allowance costs $0.05.",
       "tier": "Free",
       "url": "https://ably.com/pricing",
       "tags": [
