@@ -65,6 +65,7 @@ if (args[0] === "workflow") process.exit(process.env.QUEUE_MODE === "dispatch-re
 const path = args.at(-1);
 if (/\\/pulls\\/34$/.test(path)) console.log(readFileSync(process.env.QUEUE_PR, "utf8"));
 else if (/\\/issues\\/12$/.test(path)) console.log(JSON.stringify({ updated_at: process.env.QUEUE_MODE === "issue-edited" ? new Date().toISOString() : "2026-01-01T00:00:00Z" }));
+else if (/\\/pulls\\/34\\/comments\\?/.test(path)) console.log((process.env.QUEUE_MODE === "inline-added" || (process.env.QUEUE_MODE === "inline-during" && readFileSync(process.env.QUEUE_LOG, "utf8").includes("tested-tree"))) ? JSON.stringify([[{ updated_at: new Date().toISOString() }]]) : "[[]]");
 else if (/\\/comments\\?/.test(path)) console.log("[" + readFileSync(process.env.QUEUE_COMMENTS, "utf8") + "]");
 else if (/\\/reviews\\?/.test(path)) console.log("[" + readFileSync(process.env.QUEUE_REVIEWS, "utf8") + "]");
 else process.exit(2);
@@ -159,7 +160,7 @@ describe("reviewed merge publication uses the exact tested tree", () => {
     } finally { rmSync(f.root, { recursive: true, force: true }); }
   });
 
-  for (const mode of ["red", "marked-red", "dirty", "head-changed", "comment-added", "review-added", "issue-edited", "ci-red"]) {
+  for (const mode of ["red", "marked-red", "dirty", "head-changed", "comment-added", "review-added", "issue-edited", "ci-red", "inline-added", "inline-during"]) {
     it(`refuses publication when ${mode}`, () => {
       const f = fixture();
       try {

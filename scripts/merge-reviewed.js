@@ -52,6 +52,10 @@ function reviewedPullRequest() {
       throw new Error(`New or edited comments on ${repository} issue ${thread} need review.`);
     }
   }
+  const inlineComments = api(`pulls/${number}/comments?since=${encodeURIComponent(reviewedAt)}&per_page=100`, true).flat();
+  if (inlineComments.some((comment) => Date.parse(comment.updated_at) > reviewedTime)) {
+    throw new Error("New or edited inline review comments need reading.");
+  }
   const reviews = api(`pulls/${number}/reviews?per_page=100`, true).flat();
   if (reviews.some((review) => Date.parse(review.submitted_at) > reviewedTime)) {
     throw new Error("A new pull request review needs reading.");
