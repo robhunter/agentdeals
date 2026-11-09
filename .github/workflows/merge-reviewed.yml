@@ -1,0 +1,60 @@
+name: Publish a reviewed pull request
+
+on:
+  workflow_dispatch:
+    inputs:
+      pull_request:
+        description: "Reviewed pull request number"
+        required: false
+      expected_head:
+        description: "Full reviewed head commit SHA"
+        required: false
+      verify_queue:
+        description: "Hold one publication turn for 20 seconds without merging"
+        type: boolean
+        default: false
+      reviewed_at:
+        description: "UTC timestamp after reading the pull request and linked issue comments"
+        required: false
+
+permissions:
+  actions: write
+  contents: write
+  checks: read
+  pull-requests: read
+  issues: read
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    concurrency:
+      group: main-publication-${{ github.ref }}
+      queue: max
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.1"
+          cache: npm
+      - name: Observe a publication turn without changing main
+        if: inputs.verify_queue
+        run: |
+          date -u
+          git rev-parse HEAD
+          sleep 20
+          date -u
+      - name: Test and publish the current merge tree
+        if: ${{ !inputs.verify_queue }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST: ${{ inputs.pull_request }}
+          EXPECTED_HEAD: ${{ inputs.expected_head }}
+          REVIEWED_AT: ${{ inputs.reviewed_at }}
+          TZ: UTC
+        run: node scripts/merge-reviewed.js "$PULL_REQUEST" "$EXPECTED_HEAD" "$REVIEWED_AT"

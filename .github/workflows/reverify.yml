@@ -25,6 +25,10 @@ concurrency:
 
 jobs:
   reverify:
+    concurrency:
+      group: main-publication-${{ github.ref }}
+      queue: max
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

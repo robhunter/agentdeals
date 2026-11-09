@@ -63,6 +63,38 @@ the exact current record and may only retain an unchanged subset of existing bra
 check unsettled; they preserve the record's text and date. The writer preflights
 the complete batch before writing, then the data gate validates the result.
 
+### Publishing data and reviewed pull requests
+
+All six scheduled data writers acquire the same Actions job concurrency group before
+checkout, preparation, tests and publication. The queue retains up to 100 waiting
+jobs in arrival order. Their existing workflow groups still coalesce redundant runs
+of the same producer. Named-ref checkout reads the current branch when the job starts,
+rather than the commit that originally triggered a waiting run. Read-only archive
+evaluations do not take a publication turn.
+
+Publish reviewed pull requests through the same queue instead of merging directly:
+
+```bash
+gh workflow run merge-reviewed.yml --ref main \
+  -f pull_request=123 \
+  -f expected_head=<full-reviewed-head-sha> \
+  -f reviewed_at=<UTC-timestamp-after-reading-comments>
+```
+
+The pull request must target main, come from this repository and link its issue with
+`Refs #123` or a full GitHub issue URL after `Refs`. The workflow rejects changed heads,
+new or edited comments and new reviews. It builds the current merge commit, runs the
+complete regular and marked-condition suites, checks the head and comments again, and
+publishes that exact commit using a normal fast-forward push. A conflicting merge or
+unexpected push refuses publication; it never substitutes a different merge tree.
+The merge commit retains the reviewed branch as a parent so GitHub records the pull
+request as merged. Delete the merged branch after verifying publication.
+
+The workflow explicitly dispatches Tests, page dates and the AI index after publication,
+because pushes authenticated with the Actions token do not trigger other workflows.
+A failed follow-up dispatch is reported separately from the already-published merge.
+The data gate keeps its existing refusal, vendor holdback and reporting rules.
+
 ### HTTP Transport
 
 The server supports two transport modes:

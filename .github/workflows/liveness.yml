@@ -16,9 +16,15 @@ concurrency:
 
 jobs:
   liveness:
+    concurrency:
+      group: main-publication-${{ github.ref }}
+      queue: max
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
 
       - uses: actions/setup-node@v4
         with:

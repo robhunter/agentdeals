@@ -26,6 +26,10 @@ concurrency:
 jobs:
   settle:
     if: github.ref == 'refs/heads/main'
+    concurrency:
+      group: ${{ inputs.reviewed_report != '' && format('main-publication-{0}', github.ref) || format('archive-read-only-{0}', github.run_id) }}
+      queue: max
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
