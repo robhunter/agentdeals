@@ -718,13 +718,18 @@ Respond with exactly one JSON object and no other text:
 
 function replacementRecord(record, values) {
   if (record.change_type === "free_tier_removed" || !values?.length) return record;
-  const replacement = values.map((value) => value.current).join("; ");
+  const numberWords = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+  const replacement = values.map((value) => {
+    const numeric = value.current.replace(/\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b/gi, (word) => String(numberWords.indexOf(word.toLowerCase())));
+    return comparableText(record.summary).includes(comparableText(numeric)) ? numeric : value.current;
+  }).join("; ");
   return { ...record, summary: replacement, current_state: replacement };
 }
 
 export function currentValuePrompt(record, older, values = [], maxLength = PREVIOUS_VALUE_MAX_PAGE_TEXT_LENGTH) {
   const focused = replacementRecord(record, values);
-  return statedBeforePrompt(focused, older, maxLength) + `
+  const plan = record.tier ? `\nTHE PLAN TO CHECK: ${record.tier}\nRead only this plan. A replacement value stated only for another plan is not stated for this plan; leave old_page empty in that case.\n` : "";
+  return statedBeforePrompt(focused, older, maxLength) + plan + `
 
 PLAN AND PRODUCT CONTEXT ONLY:
 ${record.summary}

@@ -62,6 +62,19 @@ describe("an older endpoint cannot already state replacement terms", () => {
     }
   });
 
+  it("checks the named plan when another plan already has the replacement figure", async () => {
+    const record = { ...row, tier: "Free", summary: "The Free plan now includes 5 concurrent runs. Previously 2 concurrent runs.", previous_state: "Free plan: 2 concurrent runs", current_state: "Free and Business plans include five concurrent runs." };
+    const old = { previous: "2 concurrent runs", current: "five concurrent runs", old_page: "2 concurrent runs" };
+    const prompts: string[] = [];
+    for (const [text,status] of [["Free Plan: 2 concurrent runs. Business Plans: Start with 5 concurrent runs.","stated"],["Free Plan: 5 concurrent runs. Business Plans: Start with 5 concurrent runs.","new_stated"]]) {
+      const c = {complete:async(prompt:string)=>{prompts.push(prompt);return JSON.stringify(prompt.includes('"previous_values"')?{previous_values:text.includes("2 concurrent runs")?[old]:[]}:{changes:[{record:"5 concurrent runs",old_page:text.startsWith("Free Plan: 5")?"Free Plan: 5 concurrent runs":""}]});}};
+      assert.equal((await previousValueReaderFor(c,record)({day:"2026-08-28",text:text+filler})).status,status);
+    }
+    assert.ok(prompts[1].includes("THE PLAN TO CHECK: Free"));
+    assert.ok(prompts[1].includes("another plan is not stated for this plan"));
+    assert.ok(prompts[1].includes("\n5 concurrent runs\n"));
+  });
+
   it("requires the complete page before certifying that no replacement is present", () => {
     const answer = { previous_values: [previous], current_values: [] };
     assert.equal(judgePreviousValue(answer, row, oldText.padEnd(100000, " ")).status, "stated");
