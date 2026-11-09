@@ -29,7 +29,7 @@ function reviewedDisposition(record, result, today, key) {
 }
 
 export function writeReviewedArchive(changes, report, offers) {
-  if (![1, 2, 3].includes(report.version) || !/^https:\/\/github\.com\/[^/]+\/[^/]+\/(?:pull|issues)\/\d+#issuecomment-\d+$/.test(report.review_url ?? "")) throw new Error("a reviewed report must identify its approval");
+  if (![1, 2, 3, 4].includes(report.version) || !/^https:\/\/github\.com\/[^/]+\/[^/]+\/(?:pull|issues)\/\d+#issuecomment-\d+$/.test(report.review_url ?? "")) throw new Error("a reviewed report must identify its approval");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(report.today ?? "")) throw new Error("a reviewed report must give its reading day");
   if (!Array.isArray(report.results) || report.results.length === 0) throw new Error("a reviewed report must name its approved records");
   const seen = new Set();
@@ -41,6 +41,14 @@ export function writeReviewedArchive(changes, report, offers) {
     if (matches.length !== 1) throw new Error(`expected one current record for reviewed key ${key}, found ${matches.length}`);
     const [record] = matches;
     if (record.resolution) throw new Error(`reviewed record is already settled or no longer in force: ${key}`);
+    if (report.version === 4) {
+      const { operation, ...approved } = result;
+      const version = operation === "vendor_change" ? 2 : operation === "disposition" ? 3 : null;
+      if (!version) throw new Error(`a mixed report requires an explicit vendor_change or disposition operation: ${key}`);
+      const written = writeReviewedArchive(changes, { ...report, version, results: [approved] }, offers);
+      const index = changes.indexOf(record);
+      return { index, record: written.changes[index], written: written.written[0] };
+    }
     if (report.version === 3) return reviewedDisposition(record, result, report.today, key);
     if (!needsArchiveCheck(record)) throw new Error(`reviewed record is already settled or no longer in force: ${key}`);
     if (report.version === 2) {
@@ -64,6 +72,15 @@ export function writeReviewedArchive(changes, report, offers) {
     if (!result.capture?.url || !result.capture?.day || !result.stated_then?.length || !result.readings?.length || !result.historical_proof?.readings?.some((reading) => reading.verdict?.status === "stated" && reading.verdict.stated_then?.length)) throw new Error(`reviewed correction lacks saved readings: ${key}`);
     return { ...result, record_key: recordKey(record) };
   });
+  if (report.version === 4) {
+    const replacements = new Map(results.map(({ index, record }) => [index, record]));
+    return {
+      changes: changes.map((record, index) => replacements.get(index) ?? record),
+      written: results.map(({ written }) => written),
+      not_written: [],
+      review: [],
+    };
+  }
   if (report.version === 3) {
     const replacements = new Map(results.map((record) => [reviewedRecordKey(record), record]));
     return {
@@ -103,7 +120,7 @@ function main() {
     writeFileSync(directionsPath, JSON.stringify(directions, null, 2) + "\n");
     console.log(`Retired ${review.directions.length - directions.directions.length} direction reviews of replaced records`);
   }
-  console.log(`Wrote exactly ${written.written.length} reviewed ${report.version === 3 ? "dispositions" : report.version === 2 ? "vendor changes" : "corrections"} from ${file}`);
+  console.log(`Wrote exactly ${written.written.length} reviewed ${report.version === 4 ? "operations" : report.version === 3 ? "dispositions" : report.version === 2 ? "vendor changes" : "corrections"} from ${file}`);
   for (const record of written.written) console.log(`${record.vendor} ${record.date} ${record.change_type}`);
 }
 

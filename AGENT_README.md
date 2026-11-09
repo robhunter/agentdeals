@@ -56,8 +56,10 @@ scheduled writer replaces unsettled checks only with settled verdicts, then subm
 the data through the data gate.
 To publish an approved batch, commit its exact reviewed report and dispatch with
 `reviewed_report` set to that path. Corrections, vendor changes and published-check
-dispositions use separate report versions. Dispositions require the exact current
-record and may only retain an unchanged subset of existing brackets or mark the
+dispositions use separate report versions. Version 4 combines vendor changes and
+dispositions with an explicit `vendor_change` or `disposition` operation per result;
+every operation is validated before either store is written. Dispositions require
+the exact current record and may only retain an unchanged subset of existing brackets or mark the
 check unsettled; they preserve the record's text and date. The writer preflights
 the complete batch before writing, then the data gate validates the result.
 
