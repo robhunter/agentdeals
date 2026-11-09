@@ -78,6 +78,7 @@ describe("the removed plan's older free terms", () => {
     assert.equal(judgePreviousValue({ previous_values: [value] }, row, filler).status, "unknown");
     assert.equal(judgePreviousValue({ previous_values: [value] }, { ...row, change_type: "limits_reduced" }, `Free forever ${filler}`).status, "unknown");
     assert.ok(previousValuePrompt(row, { day: "2026-05-13", text: filler }).includes('exact "Free forever" fragment'));
+    assert.ok(!previousValuePrompt({ ...row, previous_state: "Free: €0 a month, forever free." }, { day: "2026-05-13", text: filler }).includes('exact "Free forever" fragment'));
   });
 });
 
