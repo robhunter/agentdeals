@@ -1034,10 +1034,10 @@
           "operating_detail": true
         },
         {
-          "text": "Koyeb's Scale-to-Zero is in public preview and requires a Standard CPU or GPU instance with minimum instances set to zero. The default idle period is 5 minutes; the Pro plan allows up to 6 hours, Scale and Enterprise up to 12 hours.",
+          "text": "Koyeb's Scale-to-Zero is in public preview and requires a Standard CPU or GPU instance with minimum instances set to zero, so services on Eco instances cannot scale to zero. The default idle period is 5 minutes; the Pro plan allows up to 6 hours, Scale and Enterprise up to 12 hours.",
           "quote": "Scale-to-Zero is currently in public preview. To enable Scale-to-Zero on your Services, you need to use a Standard CPU or GPU Instance and set the minimum number of Instances to zero. … Standard CPU and GPU Instances default idle period is set to 5 minutes. … For organizations on the Pro plan: up to 6 hours … For organizations on the Scale or Enterprise plan: up to 12 hours",
           "url": "https://www.koyeb.com/docs/run-and-scale/scale-to-zero",
-          "read_on": "2026-11-07",
+          "read_on": "2026-11-09",
           "operating_detail": true
         },
         {
@@ -22823,7 +22823,7 @@
           "operating_detail": true
         },
         {
-          "text": "The domain allowlist, attachments (up to 500 KB) and footer removal start on the Personal plan at $9 a month with 2,000 requests.",
+          "text": "The domain allowlist, which limits your public key to requests from your own domains, attachments (up to 500 KB) and footer removal start on the Personal plan at $9 a month with 2,000 requests.",
           "quote": "Personal For Personal Use $ 9 /mo 2,000 monthly requests 6 email templates Whitelist Unlimited contacts Attachments up to 500kb Completely white label",
           "url": "https://www.emailjs.com/pricing/",
           "read_on": "2026-11-07",
