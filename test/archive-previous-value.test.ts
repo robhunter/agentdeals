@@ -414,7 +414,11 @@ describe("first-pass records with archive excerpt fixtures", () => {
             const earlier = prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].split("\n\nFind only")[0];
             return JSON.stringify({ current_values: [], previous_values: fixture.vendor === "GrowthBook" && earlier.includes(fixture.previous_state) ? [{ previous: fixture.previous_state, current: fixture.current_state, old_page: fixture.previous_state }] : [] });
           }
-          if (prompt.includes('"changes"')) return JSON.stringify({ changes: [{ record: record.summary, old_page: fixture.addedReview ? "" : fixture.pages[latest] }] });
+          if (prompt.includes('"changes"')) {
+            const target = prompt.split(/THE RECORD[^\n]*:\n/)[1].split("\n\nTHE NEW DESCRIPTION")[0];
+            const shown = prompt.split(/OLD PAGE \(saved [^)]*\):\n/)[1].split("\n\nStep 1.")[0];
+            return JSON.stringify({ changes: [{ record: target, old_page: !fixture.addedReview && shown.includes(fixture.pages[latest]) ? fixture.pages[latest] : "" }] });
+          }
           const [, older, newer] = prompt.split(/(?:OLD|NEW) PAGE \(saved [^)]*\):\n/);
           const oldTerms = fixture.terms(older);
           const newTerms = fixture.terms(newer);
