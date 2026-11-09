@@ -11,6 +11,8 @@ if (!/^[1-9][0-9]*$/.test(number ?? "") || !/^[a-f0-9]{40}$/.test(expectedHead ?
     !Number.isFinite(reviewedTime) || reviewedTime > Date.now()) {
   throw new Error("Expected a pull request number, full head SHA, repository and past UTC review timestamp.");
 }
+const reviewSecond = Math.floor(reviewedTime / 1000) * 1000;
+const commentsSince = new Date(reviewSecond - 1000).toISOString();
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, { encoding: "utf8", ...options });
@@ -29,7 +31,7 @@ function reviewedPullRequest() {
       pr.head.repo?.full_name !== repository || pr.head.sha !== expectedHead) {
     throw new Error("The pull request is no longer the reviewed open head targeting main in this repository.");
   }
-  if (Date.parse(pr.updated_at) > reviewedTime) {
+  if (Date.parse(pr.updated_at) >= reviewSecond) {
     throw new Error("The pull request changed after its review timestamp.");
   }
   const checks = JSON.parse(run("gh", ["pr", "checks", number, "--repo", repository, "--json", "name,bucket"]));
@@ -44,20 +46,20 @@ function reviewedPullRequest() {
   }
   if (threads.size < 2) throw new Error("The pull request must name its issue using Refs.");
   for (const thread of threads) {
-    if (thread !== number && Date.parse(api(`issues/${thread}`).updated_at) > reviewedTime) {
+    if (thread !== number && Date.parse(api(`issues/${thread}`).updated_at) >= reviewSecond) {
       throw new Error(`The linked issue ${repository} issue ${thread} changed after review.`);
     }
-    const comments = api(`issues/${thread}/comments?since=${encodeURIComponent(reviewedAt)}&per_page=100`, true).flat();
-    if (comments.some((comment) => Date.parse(comment.updated_at) > reviewedTime)) {
+    const comments = api(`issues/${thread}/comments?since=${encodeURIComponent(commentsSince)}&per_page=100`, true).flat();
+    if (comments.some((comment) => Date.parse(comment.updated_at) >= reviewSecond)) {
       throw new Error(`New or edited comments on ${repository} issue ${thread} need review.`);
     }
   }
-  const inlineComments = api(`pulls/${number}/comments?since=${encodeURIComponent(reviewedAt)}&per_page=100`, true).flat();
-  if (inlineComments.some((comment) => Date.parse(comment.updated_at) > reviewedTime)) {
+  const inlineComments = api(`pulls/${number}/comments?since=${encodeURIComponent(commentsSince)}&per_page=100`, true).flat();
+  if (inlineComments.some((comment) => Date.parse(comment.updated_at) >= reviewSecond)) {
     throw new Error("New or edited inline review comments need reading.");
   }
   const reviews = api(`pulls/${number}/reviews?per_page=100`, true).flat();
-  if (reviews.some((review) => Date.parse(review.submitted_at) > reviewedTime)) {
+  if (reviews.some((review) => Date.parse(review.submitted_at) >= reviewSecond)) {
     throw new Error("A new pull request review needs reading.");
   }
   return pr;

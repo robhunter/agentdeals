@@ -63,10 +63,14 @@ appendFileSync(process.env.QUEUE_LOG, JSON.stringify(args) + "\\n");
 if (args[0] === "pr") { console.log(JSON.stringify([{ name: "test", bucket: process.env.QUEUE_MODE === "ci-red" ? "fail" : "pass" }])); process.exit(0); }
 if (args[0] === "workflow") process.exit(process.env.QUEUE_MODE === "dispatch-red" ? 1 : 0);
 const path = args.at(-1);
+function comments(rows) {
+  const since = Date.parse(new URL("https://api.example/" + path).searchParams.get("since"));
+  console.log(JSON.stringify([rows.filter(row => Date.parse(row.updated_at) > since)]));
+}
 if (/\\/pulls\\/34$/.test(path)) console.log(readFileSync(process.env.QUEUE_PR, "utf8"));
-else if (/\\/issues\\/12$/.test(path)) console.log(JSON.stringify({ updated_at: process.env.QUEUE_MODE === "issue-edited" ? new Date().toISOString() : "2026-01-01T00:00:00Z" }));
-else if (/\\/pulls\\/34\\/comments\\?/.test(path)) console.log((process.env.QUEUE_MODE === "inline-added" || (process.env.QUEUE_MODE === "inline-during" && readFileSync(process.env.QUEUE_LOG, "utf8").includes("tested-tree"))) ? JSON.stringify([[{ updated_at: new Date().toISOString() }]]) : "[[]]");
-else if (/\\/comments\\?/.test(path)) console.log("[" + readFileSync(process.env.QUEUE_COMMENTS, "utf8") + "]");
+else if (/\\/issues\\/12$/.test(path)) console.log(JSON.stringify({ updated_at: process.env.QUEUE_MODE === "issue-boundary" ? process.env.QUEUE_REVIEW_SECOND : process.env.QUEUE_MODE === "issue-edited" ? new Date().toISOString() : "2026-01-01T00:00:00Z" }));
+else if (/\\/pulls\\/34\\/comments\\?/.test(path)) comments(process.env.QUEUE_MODE === "inline-boundary" ? [{ updated_at: process.env.QUEUE_REVIEW_SECOND }] : (process.env.QUEUE_MODE === "inline-added" || (process.env.QUEUE_MODE === "inline-during" && readFileSync(process.env.QUEUE_LOG, "utf8").includes("tested-tree"))) ? [{ updated_at: new Date().toISOString() }] : []);
+else if (/\\/comments\\?/.test(path)) comments(JSON.parse(readFileSync(process.env.QUEUE_COMMENTS, "utf8")));
 else if (/\\/reviews\\?/.test(path)) console.log("[" + readFileSync(process.env.QUEUE_REVIEWS, "utf8") + "]");
 else process.exit(2);
 `, { mode: 0o755 });
@@ -103,6 +107,7 @@ if (args[0] === "test") {
         GITHUB_STEP_SUMMARY: join(root, "summary.md"), TEST_SHARD: "1/3",
         QUEUE_MODE: mode, QUEUE_PR: prFile, QUEUE_COMMENTS: commentsFile, QUEUE_REVIEWS: reviewsFile,
         QUEUE_LOG: log, QUEUE_SIBLING: sibling,
+        QUEUE_REVIEW_SECOND: new Date(Math.floor(Date.parse(reviewedAt) / 1000) * 1000).toISOString(),
       },
     });
   }
@@ -203,6 +208,24 @@ describe("reviewed merge publication uses the exact tested tree", () => {
       assert.equal(git(f.origin, "rev-parse", "main"), f.base);
     } finally { rmSync(f.root, { recursive: true, force: true }); }
   });
+
+  for (const surface of ["pull", "issue", "thread", "inline", "review"]) {
+    it(`refuses ${surface} edits in the review timestamp's second`, () => {
+      const f = fixture();
+      try {
+        const second = Math.floor(Date.parse(f.reviewedAt) / 1000) * 1000;
+        const boundary = new Date(second).toISOString();
+        const reviewedAt = new Date(second + 500).toISOString();
+        if (surface === "pull") writeFileSync(f.prFile, JSON.stringify({ ...f.pr, updated_at: boundary }));
+        if (surface === "thread") writeFileSync(f.commentsFile, JSON.stringify([{ updated_at: boundary }]));
+        if (surface === "review") writeFileSync(f.reviewsFile, JSON.stringify([{ submitted_at: boundary }]));
+        const result = f.invoke(`${surface}-boundary`, ["34", f.head, reviewedAt]);
+        assert.notEqual(result.status, 0, result.stdout + result.stderr);
+        assert.equal(git(f.origin, "rev-parse", "main"), f.base);
+        assert.doesNotMatch(readFileSync(f.log, "utf8"), /tested-tree/);
+      } finally { rmSync(f.root, { recursive: true, force: true }); }
+    });
+  }
 
   it("reports a failed follow-up separately from the already-published merge", () => {
     const f = fixture();
