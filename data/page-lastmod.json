@@ -1248,7 +1248,7 @@
       "changed": "2026-11-09"
     },
     "/category/maps-geolocation": {
-      "hash": "93f9c9a4b7bcebbc",
+      "hash": "d864cb77072bdd57",
       "changed": "2026-11-09"
     },
     "/category/messaging": {
@@ -1312,7 +1312,7 @@
       "changed": "2026-11-09"
     },
     "/category/storage": {
-      "hash": "da5425b6311c0dfc",
+      "hash": "3829c71fee1e0acf",
       "changed": "2026-11-09"
     },
     "/category/team-collaboration": {
@@ -3650,7 +3650,7 @@
       "changed": "2026-11-09"
     },
     "/stack-check": {
-      "hash": "019a4ae807496336",
+      "hash": "906384f8bff36e83",
       "changed": "2026-11-09"
     },
     "/stacks": {
@@ -3686,7 +3686,7 @@
       "changed": "2026-11-09"
     },
     "/storage-alternatives": {
-      "hash": "c68e5c5d3d38cbf1",
+      "hash": "001a6630692d3ed9",
       "changed": "2026-11-09"
     },
     "/storage-comparison-2026": {
@@ -5884,7 +5884,7 @@
       "changed": "2026-11-09"
     },
     "/vendor/geoapify-com": {
-      "hash": "88e06d45f89b2d42",
+      "hash": "b12ecb3f3f0243cf",
       "changed": "2026-11-09"
     },
     "/vendor/geocodify-com": {
@@ -6019,7 +6019,7 @@
       "changed": "2026-11-09"
     },
     "/vendor/gofile-io": {
-      "hash": "ecb2a979aba52855",
+      "hash": "eb0b59805a48170a",
       "changed": "2026-11-09"
     },
     "/vendor/gokanban-io": {
