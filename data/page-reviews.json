@@ -336,13 +336,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 124,
-      "table_figures_from_records": 23,
+      "table_figures": 113,
+      "table_figures_from_records": 12,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 60,
-          "from_records": 21
+          "figures": 49,
+          "from_records": 11
         },
         {
           "label": "Managed Auth Platforms",
@@ -372,7 +372,7 @@
         {
           "label": "The Growth Cost Trap: Free to 100K MAU",
           "figures": 46,
-          "from_records": 1
+          "from_records": 0
         },
         {
           "label": "Pricing Change Timeline",
@@ -421,8 +421,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 85,
-      "table_figures_from_records": 47,
+      "table_figures": 55,
+      "table_figures_from_records": 17,
       "tables": [
         {
           "label": "Deprecation Timeline",
@@ -431,13 +431,13 @@
         },
         {
           "label": "Container Deployment Alternatives",
-          "figures": 66,
-          "from_records": 37
+          "figures": 36,
+          "from_records": 10
         },
         {
           "label": "Pricing Comparison",
           "figures": 15,
-          "from_records": 6
+          "from_records": 3
         },
         {
           "label": "AWS Change Timeline",
@@ -485,8 +485,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 88,
-      "table_figures_from_records": 59,
+      "table_figures": 68,
+      "table_figures_from_records": 39,
       "tables": [
         {
           "label": "Always Free Services",
@@ -500,8 +500,8 @@
         },
         {
           "label": "AWS vs Alternatives",
-          "figures": 68,
-          "from_records": 50
+          "figures": 48,
+          "from_records": 30
         },
         {
           "label": "Recent AWS Changes",
@@ -540,8 +540,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 94,
-      "table_figures_from_records": 53,
+      "table_figures": 73,
+      "table_figures_from_records": 32,
       "tables": [
         {
           "label": "Always Free Services",
@@ -560,8 +560,8 @@
         },
         {
           "label": "Azure vs Alternatives",
-          "figures": 63,
-          "from_records": 51
+          "figures": 42,
+          "from_records": 30
         },
         {
           "label": "Recent Azure Changes",
@@ -711,13 +711,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 62,
-      "table_figures_from_records": 14,
+      "table_figures": 56,
+      "table_figures_from_records": 8,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 37,
-          "from_records": 6
+          "figures": 31,
+          "from_records": 0
         },
         {
           "label": "General-Purpose CI/CD",
@@ -778,8 +778,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 74,
-      "table_figures_from_records": 20,
+      "table_figures": 72,
+      "table_figures_from_records": 18,
       "tables": [
         {
           "label": "Free Trial Credits",
@@ -788,13 +788,13 @@
         },
         {
           "label": "Always-Free Compute",
-          "figures": 17,
-          "from_records": 6
+          "figures": 15,
+          "from_records": 3
         },
         {
           "label": "Always-Free Databases",
           "figures": 17,
-          "from_records": 0
+          "from_records": 1
         },
         {
           "label": "Serverless Functions",
@@ -885,13 +885,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 128,
-      "table_figures_from_records": 96,
+      "table_figures": 88,
+      "table_figures_from_records": 57,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 70,
-          "from_records": 50
+          "figures": 37,
+          "from_records": 22
         },
         {
           "label": "Postgres-Compatible Databases",
@@ -900,8 +900,8 @@
         },
         {
           "label": "Firebase / BaaS Databases",
-          "figures": 22,
-          "from_records": 18
+          "figures": 16,
+          "from_records": 11
         },
         {
           "label": "Edge / Embedded Databases",
@@ -915,8 +915,8 @@
         },
         {
           "label": "Vector Databases",
-          "figures": 6,
-          "from_records": 6
+          "figures": 5,
+          "from_records": 2
         },
         {
           "label": "Pricing Change Timeline",
@@ -1099,8 +1099,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 162,
-      "table_figures_from_records": 115,
+      "table_figures": 132,
+      "table_figures_from_records": 85,
       "tables": [
         {
           "label": "Free Services (Permanent)",
@@ -1114,8 +1114,8 @@
         },
         {
           "label": "DigitalOcean vs Alternatives",
-          "figures": 123,
-          "from_records": 107
+          "figures": 93,
+          "from_records": 77
         },
         {
           "label": "Recent DigitalOcean Changes",
@@ -1197,13 +1197,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 57,
-      "table_figures_from_records": 9,
+      "table_figures": 58,
+      "table_figures_from_records": 10,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 6,
-          "from_records": 0
+          "figures": 7,
+          "from_records": 1
         },
         {
           "label": "Migration Paths by Use Case",
@@ -1928,8 +1928,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 113,
-      "table_figures_from_records": 63,
+      "table_figures": 92,
+      "table_figures_from_records": 42,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1943,8 +1943,8 @@
         },
         {
           "label": "GCP vs AWS vs Others",
-          "figures": 69,
-          "from_records": 53
+          "figures": 48,
+          "from_records": 32
         },
         {
           "label": "Recent GCP & Google Changes",
@@ -1989,8 +1989,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 69,
-      "table_figures_from_records": 55,
+      "table_figures": 74,
+      "table_figures_from_records": 60,
       "tables": [
         {
           "label": "1. What Changed on April 1",
@@ -2004,8 +2004,8 @@
         },
         {
           "label": "6. Free LLM API Comparison",
-          "figures": 55,
-          "from_records": 55
+          "figures": 60,
+          "from_records": 60
         }
       ],
       "reads_changes": true,
@@ -2049,8 +2049,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 88,
-      "table_figures_from_records": 48,
+      "table_figures": 76,
+      "table_figures_from_records": 36,
       "tables": [
         {
           "label": "2. Price Comparison Table",
@@ -2059,18 +2059,18 @@
         },
         {
           "label": "5. Free Cloud Credit Alternatives",
-          "figures": 42,
-          "from_records": 23
+          "figures": 34,
+          "from_records": 16
         },
         {
           "label": "6. Free AI/LLM API Alternatives",
-          "figures": 1,
-          "from_records": 1
+          "figures": 8,
+          "from_records": 8
         },
         {
           "label": "7. Firebase Alternatives",
-          "figures": 28,
-          "from_records": 24
+          "figures": 17,
+          "from_records": 12
         }
       ],
       "reads_changes": true,
@@ -2106,8 +2106,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 151,
-      "table_figures_from_records": 32,
+      "table_figures": 136,
+      "table_figures_from_records": 17,
       "tables": [
         {
           "label": "1. Every Cloud Plan, Priced Today",
@@ -2121,8 +2121,8 @@
         },
         {
           "label": "6. Alternatives Comparison",
-          "figures": 63,
-          "from_records": 32
+          "figures": 48,
+          "from_records": 17
         }
       ],
       "reads_changes": true,
@@ -2450,8 +2450,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 36,
-      "table_figures_from_records": 12,
+      "table_figures": 29,
+      "table_figures_from_records": 6,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -2465,8 +2465,8 @@
         },
         {
           "label": "5. Other Database Alternatives",
-          "figures": 13,
-          "from_records": 12
+          "figures": 6,
+          "from_records": 6
         }
       ],
       "reads_changes": true,
@@ -2507,8 +2507,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 56,
-      "table_figures_from_records": 56,
+      "table_figures": 58,
+      "table_figures_from_records": 58,
       "tables": [
         {
           "label": "What’s Changing",
@@ -2517,8 +2517,8 @@
         },
         {
           "label": "Free Tier Comparison Table",
-          "figures": 54,
-          "from_records": 54
+          "figures": 56,
+          "from_records": 56
         },
         {
           "label": "OpenAI Pricing Change Timeline",
@@ -2617,8 +2617,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 61,
-      "table_figures_from_records": 61,
+      "table_figures": 56,
+      "table_figures_from_records": 56,
       "tables": [
         {
           "label": "2. Feature Migration Map",
@@ -2627,8 +2627,8 @@
         },
         {
           "label": "Direct API Alternatives",
-          "figures": 29,
-          "from_records": 29
+          "figures": 24,
+          "from_records": 24
         },
         {
           "label": "Agent Frameworks",
@@ -2735,8 +2735,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 76,
-      "table_figures_from_records": 33,
+      "table_figures": 71,
+      "table_figures_from_records": 28,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -2750,8 +2750,8 @@
         },
         {
           "label": "5. Other PaaS Alternatives",
-          "figures": 34,
-          "from_records": 33
+          "figures": 29,
+          "from_records": 28
         }
       ],
       "reads_changes": true,
@@ -2871,13 +2871,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 85,
-      "table_figures_from_records": 50,
+      "table_figures": 75,
+      "table_figures_from_records": 40,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 44,
-          "from_records": 19
+          "figures": 40,
+          "from_records": 15
         },
         {
           "label": "Traditional FaaS",
@@ -2896,8 +2896,8 @@
         },
         {
           "label": "Specialized Serverless",
-          "figures": 12,
-          "from_records": 10
+          "figures": 6,
+          "from_records": 4
         },
         {
           "label": "Pricing Change Timeline",
@@ -3244,13 +3244,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 91,
-      "table_figures_from_records": 30,
+      "table_figures": 80,
+      "table_figures_from_records": 19,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 48,
-          "from_records": 15
+          "figures": 37,
+          "from_records": 6
         },
         {
           "label": "Media & Image CDN",
@@ -3260,7 +3260,7 @@
         {
           "label": "Growth Cost Trap: Scaling from Free to Enterprise",
           "figures": 24,
-          "from_records": 2
+          "from_records": 0
         },
         {
           "label": "Pricing Change Timeline",
@@ -3297,8 +3297,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 51,
-      "table_figures_from_records": 28,
+      "table_figures": 45,
+      "table_figures_from_records": 22,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -3312,8 +3312,8 @@
         },
         {
           "label": "5. Other BaaS Alternatives",
-          "figures": 28,
-          "from_records": 28
+          "figures": 22,
+          "from_records": 22
         }
       ],
       "reads_changes": true,
@@ -3527,8 +3527,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 76,
-      "table_figures_from_records": 55,
+      "table_figures": 60,
+      "table_figures_from_records": 39,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -3542,8 +3542,8 @@
         },
         {
           "label": "5. Other Hosting Alternatives",
-          "figures": 55,
-          "from_records": 55
+          "figures": 39,
+          "from_records": 39
         }
       ],
       "reads_changes": true,
