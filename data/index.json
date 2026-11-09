@@ -3961,7 +3961,7 @@
     {
       "vendor": "Apify",
       "category": "Web Scraping",
-      "description": "Web scraping and automation platform. The Free plan is $0 with $5 of prepaid usage a month to spend in Apify Store or on your own Actors, at $0.2 per compute unit, with up to 16 GB of Actor RAM and community support; no credit card is required. Starter is $19/month with $19 of usage a month. The Creator plan, for developers who run their own Actors, costs $1/month paid six months in advance, adds a one-time $500 of usage for those six months, and limits access to Apify Store Actors.",
+      "description": "Web scraping and automation platform. The Free plan is $0 with $5 of prepaid usage a month to spend in Apify Store or on your own Actors, at $0.2 per compute unit, with up to 16 GB of Actor RAM and community support; no credit card is required. Starter is $19/month with $19 of usage a month.",
       "tier": "Free",
       "url": "https://apify.com/pricing",
       "tags": [
@@ -3986,7 +3986,16 @@
         "text": "Free $0 $5 to spend in Apify Store or on your own Actors $0.2 per compute unit Community support No Apify Store discount Start for free No credit card required.",
         "url": "https://apify.com/pricing",
         "read_on": "2026-11-02"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Apify's Creator plan, for developers who run their own Actors, costs $1/month paid six months in advance, adds a one-time $500 of usage for those six months, and limits access to Apify Store Actors.",
+          "quote": "Start for $1 a month, with $500 of platform usage for the first 6 months.",
+          "url": "https://apify.com/pricing/creator-plan",
+          "read_on": "2026-11-09",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "Cursor",
