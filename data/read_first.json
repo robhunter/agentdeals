@@ -595,7 +595,7 @@
     {
       "vendor": "OpenAI",
       "tier": "Pay-as-you-go",
-      "since": "2026-11-09"
+      "since": "2026-11-10"
     },
     {
       "vendor": "Fastly",
@@ -620,7 +620,7 @@
     {
       "vendor": "Amazon SES",
       "tier": "Credits",
-      "since": "2026-11-09"
+      "since": "2026-11-10"
     },
     {
       "vendor": "BackgroundStyler.com",
