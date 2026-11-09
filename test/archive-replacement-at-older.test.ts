@@ -52,6 +52,16 @@ describe("an older endpoint cannot already state replacement terms", () => {
     assert.equal(bracketStatesRecord({ claim_proof: { older: { verdict: { status: "stated", previous_values: [previous] } }, newer: { verdict: { status: "stated", stated_then: [{}] } } } }), false);
   });
 
+  it("refuses replacement quotes that name another feature or mix plan-column values", async () => {
+    for (const fixture of [
+      { record: row, value: previous, text: "Free Custom domains 1. Custom domains 1 3. " + filler, quote: "Custom domains 1 3" },
+      { record: { ...row, summary: "Free now includes unlimited monthly active users and rooms.", previous_state: "500 monthly active rooms", current_state: "unlimited monthly active users and rooms" }, value: { previous: "500 monthly active rooms", current: "unlimited monthly active users and rooms", old_page: "500 monthly active rooms" }, text: "500 monthly active rooms. Monthly active users Unlimited. " + filler, quote: "Monthly active users Unlimited" },
+    ]) {
+      const c = { complete: async (prompt: string) => JSON.stringify(prompt.includes('"previous_values"') ? {previous_values:[fixture.value]} : {changes:[{record:fixture.value.current,old_page:fixture.quote}]}) };
+      assert.equal((await previousValueReaderFor(c,fixture.record)({day:"2026-08-21",text:fixture.text})).status,"unknown");
+    }
+  });
+
   it("requires the complete page before certifying that no replacement is present", () => {
     const answer = { previous_values: [previous], current_values: [] };
     assert.equal(judgePreviousValue(answer, row, oldText.padEnd(100000, " ")).status, "stated");

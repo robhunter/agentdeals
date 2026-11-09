@@ -782,6 +782,18 @@ export function previousValueReaderFor(client, record) {
     const current = judgeStatedBefore(answer, replacementRecord(record, values), older.text);
     const checked = Array.isArray(answer?.changes) && answer.changes.length > 0 || record.change_type === "free_tier_removed" && Array.isArray(answer?.offered_plans) && answer.offered_plans.length > 0;
     if (!checked || current.claims_checked === false) return { status: "unknown", why: "the replacement reader did not answer for this capture", replacement_reading: current };
+    if (current.status === "stated" && values.length > 0) {
+      const ambiguous = values.some((value) => {
+        const before = termsOfLine(value.previous);
+        const after = termsOfLine(value.current);
+        const shared = before.words.filter((word) => after.words.includes(word));
+        return !current.stated_then.some((line) => {
+          const quoted = termsOfLine(line.old);
+          return shared.every((word) => quoted.words.includes(word)) && !before.values.some((amount) => quoted.values.includes(amount) && !after.values.includes(amount));
+        });
+      });
+      if (ambiguous) return { status: "unknown", why: "the replacement quote does not isolate the changed feature and value", previous_values: values, replacement_reading: current };
+    }
     if (["stated", "removal_stated"].includes(current.status)) return { status: "new_stated", current_values: current.stated_then, previous_values: values, replacement_reading: current };
     return { ...judgePreviousValue({ previous_values: previous?.previous_values, current_values: [] }, record, older.text), replacement_reading: current };
   };
