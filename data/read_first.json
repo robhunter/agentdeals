@@ -676,6 +676,11 @@
       "vendor": "Google Colab",
       "tier": "Free",
       "since": "2026-11-10"
+    },
+    {
+      "vendor": "geoapify.com",
+      "tier": "Free",
+      "since": "2026-11-11"
     }
   ]
 }
