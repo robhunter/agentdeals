@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-08",
+  "generated": "2026-11-09",
   "pages": {
     "/": {
       "daily": true
@@ -30,8 +30,8 @@
       "changed": "2026-11-08"
     },
     "/alternative-to": {
-      "hash": "08be6206f80d334e",
-      "changed": "2026-11-08"
+      "hash": "35d2f48da9f63c01",
+      "changed": "2026-11-09"
     },
     "/alternative-to/360-monitoring": {
       "daily": true
@@ -2714,8 +2714,8 @@
       "changed": "2026-11-08"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "dbb9972cdf68236f",
-      "changed": "2026-11-08"
+      "hash": "57ad08cd5d6d1844",
+      "changed": "2026-11-09"
     },
     "/database-pricing": {
       "hash": "7c44ab3d3bb126b0",
@@ -3057,12 +3057,12 @@
       "changed": "2026-11-08"
     },
     "/digest/2026-w35": {
-      "hash": "9ed3bcedb95c99ac",
-      "changed": "2026-11-08"
+      "hash": "25878e6b487274d0",
+      "changed": "2026-11-09"
     },
     "/digest/2026-w36": {
-      "hash": "79fd763783dfb4f0",
-      "changed": "2026-11-08"
+      "hash": "624a64a757e831e0",
+      "changed": "2026-11-09"
     },
     "/digest/2026-w37": {
       "hash": "06b2a09d1d4a8247",
@@ -3097,7 +3097,8 @@
       "changed": "2026-11-05"
     },
     "/digest/2026-w45": {
-      "daily": true
+      "hash": "eb738fb59532fda1",
+      "changed": "2026-11-09"
     },
     "/digest/2026-w47": {
       "hash": "ac5da01d198369cb",
@@ -3211,7 +3212,8 @@
       "daily": true
     },
     "/feed.xml": {
-      "daily": true
+      "hash": "4a960c8f921d8260",
+      "changed": "2026-11-09"
     },
     "/firebase-alternatives": {
       "hash": "60bff8d4568ecc8c",
@@ -3403,8 +3405,8 @@
       "changed": "2026-11-06"
     },
     "/postman-alternatives": {
-      "hash": "a9dadb4bbac15152",
-      "changed": "2026-11-08"
+      "hash": "dd385587cf6a87a6",
+      "changed": "2026-11-09"
     },
     "/postmark-vs-resend": {
       "hash": "fe867218c655d490",
@@ -3636,12 +3638,12 @@
       "daily": true
     },
     "/stability": {
-      "hash": "ac3055e12f85cd47",
-      "changed": "2026-11-08"
+      "hash": "494d6d733628bbf9",
+      "changed": "2026-11-09"
     },
     "/stack-check": {
-      "hash": "8ad5a33053fd4a57",
-      "changed": "2026-11-08"
+      "hash": "c9b374ae119be1ce",
+      "changed": "2026-11-09"
     },
     "/stacks": {
       "hash": "1438053a7388dfb6",
@@ -3700,12 +3702,12 @@
       "changed": "2026-11-06"
     },
     "/testing-alternatives": {
-      "hash": "be7afb1189c743ea",
-      "changed": "2026-11-08"
+      "hash": "93e05c3f493ec9ae",
+      "changed": "2026-11-09"
     },
     "/testing-free-tier-comparison-2026": {
-      "hash": "2fa7b71229257c56",
-      "changed": "2026-11-08"
+      "hash": "2f4e0301ff8134b8",
+      "changed": "2026-11-09"
     },
     "/this-week": {
       "daily": true
@@ -3787,8 +3789,8 @@
       "daily": true
     },
     "/trends/design": {
-      "hash": "616b2929059d23dc",
-      "changed": "2026-11-08"
+      "hash": "9514c2140ec51b5d",
+      "changed": "2026-11-09"
     },
     "/trends/design-creative": {
       "hash": "15bfd69158ca5494",
@@ -3911,8 +3913,8 @@
       "changed": "2026-10-11"
     },
     "/trends/startup-perks": {
-      "hash": "1d9f6bb257b03098",
-      "changed": "2026-10-09"
+      "hash": "0413f85fb5ea4090",
+      "changed": "2026-11-09"
     },
     "/trends/status-pages": {
       "hash": "08f38543fde2188f",
@@ -4380,8 +4382,8 @@
       "changed": "2026-11-08"
     },
     "/vendor/bench": {
-      "hash": "ad7b2b81365c6b0a",
-      "changed": "2026-11-08"
+      "hash": "1e5e002d5e163b07",
+      "changed": "2026-11-09"
     },
     "/vendor/bencher": {
       "hash": "bf18f5ed2cf87830",
@@ -5181,8 +5183,8 @@
       "changed": "2026-11-08"
     },
     "/vendor/cypress-cloud": {
-      "hash": "f82c346e3529e323",
-      "changed": "2026-11-08"
+      "hash": "8f9152826836221d",
+      "changed": "2026-11-09"
     },
     "/vendor/dadroit-v-web": {
       "hash": "e647ec4d4523cb0f",
@@ -7837,8 +7839,8 @@
       "changed": "2026-11-08"
     },
     "/vendor/prisma-accelerate": {
-      "hash": "41d4bad78bda0eb2",
-      "changed": "2026-11-08"
+      "hash": "30c58defb4fc0c2c",
+      "changed": "2026-11-09"
     },
     "/vendor/prismic": {
       "hash": "d71fda56566bd3bd",
@@ -8753,8 +8755,8 @@
       "changed": "2026-11-08"
     },
     "/vendor/tabler-icons-io": {
-      "hash": "917e00967cbe00da",
-      "changed": "2026-11-08"
+      "hash": "0f79dbad20632f60",
+      "changed": "2026-11-09"
     },
     "/vendor/taiga-io": {
       "hash": "3dfdba5ab9e7c6d9",
@@ -9164,8 +9166,8 @@
       "changed": "2026-11-08"
     },
     "/vendor/userforge-com": {
-      "hash": "dd4f433f40abb641",
-      "changed": "2026-11-08"
+      "hash": "4b41f4dbd787f1cf",
+      "changed": "2026-11-09"
     },
     "/vendor/usewebhook-com": {
       "hash": "84263234fd2ca16a",

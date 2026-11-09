@@ -6459,22 +6459,8 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-03-12",
-            "first_new": "2026-04-21",
-            "last_old_capture": "https://web.archive.org/web/20260312201642/https://userforge.com/",
-            "first_new_capture": "https://web.archive.org/web/20260421153608/https://userforge.com/"
-          },
-          {
-            "last_old": "2026-07-09",
-            "first_new": "2026-08-28",
-            "last_old_capture": "https://web.archive.org/web/20260709123552/https://userforge.com/",
-            "first_new_capture": "https://web.archive.org/web/20260828130948/https://userforge.com/"
-          }
-        ]
+        "checked": "2026-11-08",
+        "outcome": "no_usable_capture"
       }
     },
     {
@@ -7258,28 +7244,8 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-04-14",
-            "first_new": "2026-04-16",
-            "last_old_capture": "https://web.archive.org/web/20260414212920/https://tabler.io/icons",
-            "first_new_capture": "https://web.archive.org/web/20260416163551/https://tabler.io/icons"
-          },
-          {
-            "last_old": "2026-04-29",
-            "first_new": "2026-05-15",
-            "last_old_capture": "https://web.archive.org/web/20260429011134/https://tabler.io/icons",
-            "first_new_capture": "https://web.archive.org/web/20260515210713/https://tabler.io/icons"
-          },
-          {
-            "last_old": "2026-07-10",
-            "first_new": "2026-07-19",
-            "last_old_capture": "https://web.archive.org/web/20260710142335/https://tabler.io/icons",
-            "first_new_capture": "https://web.archive.org/web/20260719141323/https://tabler.io/icons"
-          }
-        ]
+        "checked": "2026-11-08",
+        "outcome": "no_usable_capture"
       }
     },
     {
@@ -7513,16 +7479,8 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-03-12",
-            "first_new": null,
-            "last_old_capture": "https://web.archive.org/web/20260312100423/https://www.bench.co/integrations/stripe",
-            "first_new_capture": null
-          }
-        ]
+        "checked": "2026-11-08",
+        "outcome": "no_usable_capture"
       }
     },
     {
@@ -11306,15 +11264,9 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-05",
       "archive_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-11-08",
         "outcome": "vendor_changed",
         "brackets": [
-          {
-            "last_old": "2026-07-11",
-            "first_new": "2026-08-19",
-            "last_old_capture": "https://web.archive.org/web/20260711080112/https://www.cypress.io/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260819234557/https://www.cypress.io/pricing"
-          },
           {
             "last_old": "2026-08-28",
             "first_new": "2026-09-07",
@@ -11358,15 +11310,9 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-05",
       "archive_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-11-08",
         "outcome": "vendor_changed",
         "brackets": [
-          {
-            "last_old": "2026-04-18",
-            "first_new": "2026-06-22",
-            "last_old_capture": "https://web.archive.org/web/20260418051610/https://www.prisma.io/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260622180731/https://www.prisma.io/pricing"
-          },
           {
             "last_old": "2026-07-31",
             "first_new": "2026-08-27",

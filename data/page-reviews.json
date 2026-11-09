@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-08",
+  "measured_on": "2026-11-09",
   "pages": [
     {
       "path": "/agent-payments",
@@ -1813,6 +1813,7 @@
         "codesandbox-io",
         "compare-json",
         "conversion-tools",
+        "cypress-cloud",
         "digitalocean",
         "exa",
         "firebase",
@@ -1862,8 +1863,8 @@
       "partial_recheck": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 36,
-      "table_figures_from_records": 36,
+      "table_figures": 37,
+      "table_figures_from_records": 37,
       "tables": [
         {
           "label": "Q4 2026",
@@ -1872,8 +1873,8 @@
         },
         {
           "label": "Q3 2026",
-          "figures": 10,
-          "from_records": 10
+          "figures": 11,
+          "from_records": 11
         },
         {
           "label": "Q2 2026",
