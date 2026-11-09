@@ -36,7 +36,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-04-15",
-      "consecutive_unreachable": 74
+      "consecutive_unreachable": 75
     },
     {
       "url": "https://codepen.io/",
@@ -90,7 +90,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-05-02",
-      "consecutive_unreachable": 75
+      "consecutive_unreachable": 76
     },
     {
       "url": "https://dadroit.com/vweb/",
@@ -144,7 +144,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-08-30",
-      "consecutive_unreachable": 70
+      "consecutive_unreachable": 71
     },
     {
       "url": "https://etlr.io",
@@ -153,7 +153,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-09-25",
-      "consecutive_unreachable": 3
+      "consecutive_unreachable": 4
     },
     {
       "url": "https://evernote.com/free",
@@ -162,7 +162,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-04-23",
-      "consecutive_unreachable": 75
+      "consecutive_unreachable": 76
     },
     {
       "url": "https://financialdata.net/pricing",
@@ -246,6 +246,15 @@
       "consecutive_unreachable": 0
     },
     {
+      "url": "https://inkscape.org",
+      "checked": "2026-11-09",
+      "outcome": "unknown",
+      "detail": "GET 502",
+      "terminal": false,
+      "last_reachable": "2026-11-09",
+      "consecutive_unreachable": 0
+    },
+    {
       "url": "https://labelbox.com/pricing/",
       "checked": "2026-09-27",
       "outcome": "unreachable",
@@ -261,7 +270,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-11-04",
-      "consecutive_unreachable": 4
+      "consecutive_unreachable": 5
     },
     {
       "url": "https://langtrace.ai",
@@ -270,7 +279,16 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-05-07",
-      "consecutive_unreachable": 73
+      "consecutive_unreachable": 74
+    },
+    {
+      "url": "https://libraries.io/",
+      "checked": "2026-11-09",
+      "outcome": "unknown",
+      "detail": "GET TIMEOUT",
+      "terminal": false,
+      "last_reachable": "2026-11-09",
+      "consecutive_unreachable": 0
     },
     {
       "url": "https://mathworks.com/products/startups.html",
@@ -297,7 +315,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-04-13",
-      "consecutive_unreachable": 28
+      "consecutive_unreachable": 29
     },
     {
       "url": "https://namae.dev/",
@@ -324,7 +342,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-10-02",
-      "consecutive_unreachable": 37
+      "consecutive_unreachable": 38
     },
     {
       "url": "https://nordpass.com/plans/",
@@ -405,7 +423,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-10-26",
-      "consecutive_unreachable": 13
+      "consecutive_unreachable": 14
     },
     {
       "url": "https://postmarkapp.com/partner-program",
@@ -414,7 +432,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-10-08",
-      "consecutive_unreachable": 31
+      "consecutive_unreachable": 32
     },
     {
       "url": "https://proxysentry.io/",
@@ -423,16 +441,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-09-15",
-      "consecutive_unreachable": 15
-    },
-    {
-      "url": "https://qrme.sh",
-      "checked": "2026-11-09",
-      "outcome": "unknown",
-      "detail": "GET 520",
-      "terminal": false,
-      "last_reachable": "2026-11-07",
-      "consecutive_unreachable": 0
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://resizeappicon.com/",
@@ -450,7 +459,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-04-24",
-      "consecutive_unreachable": 75
+      "consecutive_unreachable": 76
     },
     {
       "url": "https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/",
@@ -496,7 +505,7 @@
       "detail": "GET 410",
       "terminal": true,
       "last_reachable": "2026-05-23",
-      "consecutive_unreachable": 75
+      "consecutive_unreachable": 76
     },
     {
       "url": "https://strale.io",
@@ -560,7 +569,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-07-12",
-      "consecutive_unreachable": 75
+      "consecutive_unreachable": 76
     },
     {
       "url": "https://wdrfree.com/free-svg",
@@ -569,7 +578,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-06-01",
-      "consecutive_unreachable": 75
+      "consecutive_unreachable": 76
     },
     {
       "url": "https://whitespace.dev",
@@ -578,7 +587,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-09-28",
-      "consecutive_unreachable": 40
+      "consecutive_unreachable": 41
     },
     {
       "url": "https://wso2.com/asgardeo",
@@ -614,7 +623,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-07-08",
-      "consecutive_unreachable": 75
+      "consecutive_unreachable": 76
     },
     {
       "url": "https://www.btunnel.in/",
@@ -749,7 +758,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-10-08",
-      "consecutive_unreachable": 31
+      "consecutive_unreachable": 32
     },
     {
       "url": "https://www.namecheap.com/affiliates/",
@@ -821,7 +830,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-10-28",
-      "consecutive_unreachable": 11
+      "consecutive_unreachable": 12
     },
     {
       "url": "https://www.tryabby.com",
