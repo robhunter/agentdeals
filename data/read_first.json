@@ -435,7 +435,7 @@
     {
       "vendor": "Apify",
       "tier": "Free",
-      "since": "2026-11-02"
+      "since": "2026-11-10"
     },
     {
       "vendor": "Resend",
@@ -595,7 +595,7 @@
     {
       "vendor": "OpenAI",
       "tier": "Pay-as-you-go",
-      "since": "2026-11-09"
+      "since": "2026-11-10"
     },
     {
       "vendor": "Fastly",
@@ -620,7 +620,7 @@
     {
       "vendor": "Amazon SES",
       "tier": "Credits",
-      "since": "2026-11-09"
+      "since": "2026-11-10"
     },
     {
       "vendor": "BackgroundStyler.com",
@@ -671,6 +671,11 @@
       "vendor": "taskade.com",
       "tier": "Free",
       "since": "2026-11-09"
+    },
+    {
+      "vendor": "Google Colab",
+      "tier": "Free",
+      "since": "2026-11-10"
     }
   ]
 }
