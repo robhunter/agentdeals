@@ -2787,6 +2787,18 @@
       "refused_date": "2026-11-02"
     },
     {
+      "vendor": "CurrencyScoop",
+      "change_type": "rebranded",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-11-02 (page_does_not_name_vendor) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The vendor is now CurrencyBeacon, not CurrencyScoop, and the free tier is named 'Developer sandbox' with 5,000 API requests/month (REST and MCP calls share the quota).",
+      "previous_state": "Realtime currency data API for fintech apps. The free plan includes 5,000 calls per month.",
+      "current_state": "Free 'Developer sandbox' plan at $0/month with 5,000 API requests per month, hourly updates, latest/historical/conversion rates, community support; REST and MCP calls share this quota.",
+      "source_url": "https://currencybeacon.com/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-11-09"
+    },
+    {
       "vendor": "Cursor",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -4573,6 +4585,18 @@
     {
       "vendor": "GitHub Actions",
       "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-11-08 (repeats_a_refused_reading) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored description says GitHub Free private repos get 2,000 minutes of included compute, but the page now expresses the allowance as a monetary amount ($12 USD) rather than a fixed minute count, and it explicitly states the included compute usage is a monetary amount, not a fixed number of minutes. The page also lists a new Linux 1-core slim runner at $0.002/min and a Linux 2-core arm64 runner at $0.005/min, and states artifact storage is shared with GitHub Packages. The $12 USD figure and per-minute rates otherwise match the stored info.",
+      "previous_state": "Free CI/CD for public repos (standard runners, unlimited minutes). Private repos on GitHub Free: $12 USD of included compute a month, which is 2,000 minutes on a standard Linux runner ($0.006/min), 1,200 on Windows ($0.010/min) or about 193 on macOS ($0.062/min). GitHub's billing docs gave the allowance as 2,000 minutes before a revision published on October 28, 2026. 500 MB artifact storage, 10 GB cache per repo. Self-hosted runners remain free — planned $0.002/min charge was postponed indefinitely after community backlash (March 2026). Hosted runner prices reduced 39% (Jan 2026)",
+      "current_state": "GitHub Free includes 500 MB artifact storage, $12 USD of included compute usage per month, and 10 GB cache storage per repository; the included compute usage is expressed as a monetary amount, not a fixed number of minutes, and standard Linux 2-core runners are billed at $0.006 USD/min, Windows at $0.010 USD/min, and macOS at $0.062 USD/min.",
+      "source_url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
+      "category": "CI/CD",
+      "refused_date": "2026-11-09"
+    },
+    {
+      "vendor": "GitHub Actions",
+      "change_type": "pricing_restructured",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-11-02 (repeats_a_refused_reading) stated the same 3 figures, so the page showed these terms before the date this record gives",
       "summary": "The stored description says GitHub Free private repos get 2,000 minutes of included compute, but the current page expresses the allowance as a monetary amount ($12 USD) rather than a fixed number of minutes, and it also documents a shared artifact/Packages storage allowance of 500 MB for GitHub Free. The page does not mention the postponed self-hosted runner charge or the 39% hosted runner price reduction.",
@@ -5652,6 +5676,18 @@
       "refused_date": "2026-10-18"
     },
     {
+      "vendor": "Hyperbrowser",
+      "change_type": "pricing_model_change",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-18 (no_terms_to_narrow) claimed the same change, pricing_model_change, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored description says Hyperbrowser offers pay-per-use cloud browser sessions via x402 micropayments with no API key needed. The current pricing page instead shows a credit-based subscription model: a Free plan with 5,000 credits, Startup at $30/month for 30,000 credits, and Scale at $100/month for 100,000 credits. The x402 micropayment/no-API-key pay-per-use framing is no longer the pricing structure presented.",
+      "previous_state": "Pay-per-use cloud browser sessions for AI agents — x402 micropayments, no API key needed. Headless Chrome instances with full browser automation, screenshot capture, and page interaction. Built for agent workflows.",
+      "current_state": "Free plan: $0 to start, 5,000 credits included. Startup: $30/month, 30,000 credits included. Scale: $100/month, 100,000 credits included. All plans and usage rates are referenced via a separate link.",
+      "source_url": "https://hyperbrowser.ai",
+      "category": "Browser Automation",
+      "refused_date": "2026-11-09"
+    },
+    {
       "vendor": "Hyperping",
       "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
@@ -6257,6 +6293,18 @@
       "source_url": "https://www.khanacademy.org",
       "category": "Education",
       "refused_date": "2026-10-22"
+    },
+    {
+      "vendor": "Knock",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report restates the stored limits; the page still shows 10,000 messages and 500 guide recipients, with only wording/detail differences.",
+      "summary": "The free plan's message and guide recipient limits remain 10,000/month and 500 respectively.",
+      "previous_state": "Notification infrastructure — 10,000 notifications/month, 500 guide active users, unlimited workflows/broadcasts/channels/team members. All delivery channels included",
+      "current_state": "Free plan at $0/month includes up to 10,000 messages sent, up to 500 guide recipients, up to 500 agent credits (additional credits $0.01 each), unlimited stored profiles, unlimited workflows, unlimited broadcasts, unlimited in-app guides, unlimited delivery channels, unlimited team members, and built-in multi-tenancy.",
+      "source_url": "https://knock.app/pricing",
+      "category": "Messaging",
+      "refused_date": "2026-11-09"
     },
     {
       "vendor": "Koyeb",
@@ -7533,6 +7581,18 @@
       "category": "Startup Perks",
       "refused_date": "2026-10-02",
       "collided_with": "Microsoft for Startups|limits_increased|2026-09-02|https://startups.microsoft.com/en-us/"
+    },
+    {
+      "vendor": "Microsoft for Startups",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page still states up to $150,000 in Startup credits; the report only notes omitted details that the stored description never claimed the page would retain.",
+      "summary": "The current page only states up to $150,000 in Startup credits and no longer mentions the $200,000 Investor Network tier or the associated GitHub Enterprise, Microsoft 365 Business Premium, Dynamics 365, Power Platform, and LinkedIn Premium benefits.",
+      "previous_state": "Azure credits for software startups, up to $150,000, are unlocked over time as a startup verifies its progress and uses more Azure. Startups backed by a partner in Microsoft's Investor Network (a VC, accelerator, incubator or university) may unlock up to $200,000, and sooner. No investor is needed to join. Investor Network-backed startups may also get GitHub Enterprise (up to 20 users), Microsoft 365 Business Premium (up to 50 seats), Dynamics 365, Power Platform and LinkedIn Premium, and Azure Standard Support.",
+      "current_state": "The page states startups can access up to $150K USD in Startup credits to build, test, and scale on Azure, unlocking more credits as they grow on Azure. It also states startups can unlock up to $5,000 in Startup credits through business verification and up to $150,000 in Startup credits over time as they build and scale on Azure.",
+      "source_url": "https://www.microsoft.com/en-us/startups",
+      "category": "Startup Perks",
+      "refused_date": "2026-11-09"
     },
     {
       "vendor": "Microsoft for Startups",
@@ -9519,6 +9579,18 @@
       "refused_date": "2026-11-08"
     },
     {
+      "vendor": "Railway Sandboxes",
+      "change_type": "pricing_restructured",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The stored deal info describes a $1/month free credit on Railway's Free plan plus a one-time $5 trial grant, but the current Sandboxes pricing page no longer mentions any free credit or trial grant. It now states sandboxes are available on every plan and bill at VM rates ($50 per vCPU-month, $50 per GB-month, $0.05/GB egress) drawing from the same included usage as the rest of the plan. The Free plan's sandbox limits (10 per environment, 2 vCPU/2 GB, 5-minute idle timeout) still match, but the credit terms are gone.",
+      "previous_state": "$1 of free credit a month on Railway's Free plan, after a one-time $5 grant on the 30-day trial; the credit is shared with other Railway usage and does not roll over. Sandboxes are isolated Linux VMs for coding agents, test runs or code execution, managed by SDK, CLI, dashboard or API, with Claude Code, Codex, OpenCode and Pi preinstalled. Free and Trial plans allow 10 sandboxes per environment, each up to 2 vCPU and 2 GB. The idle timeout is at most 5 minutes, after which Railway destroys the sandbox. Rates are $50 per vCPU-month and $50 per GB-month for CPU used and memory in use, metered per second, and egress at $0.05 per GB; a 20-minute task averaging 1 GB of memory and 30% of one vCPU costs about 3 cents. Hobby costs $5 a month with $5 of usage, allows 50 sandboxes per environment up to 8 vCPU and 8 GB, and an idle timeout up to 120 minutes or off.",
+      "current_state": "Sandboxes are available on every plan and bill at VM rates metered per second: $50 per GB per month for memory in use, $50 per vCPU per month for CPU actually used, and $0.05 per GB egress. Sandbox usage draws from the same included usage as the rest of your plan and counts toward usage limits. The Free plan allows 10 sandboxes per environment, each up to 2 vCPU / 2 GB, with a default idle timeout of 5 minutes (range 1 to 5 minutes, no disable option). No free credit or trial grant is mentioned on this page.",
+      "source_url": "https://docs.railway.com/sandboxes",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-11-09"
+    },
+    {
       "vendor": "Railway",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
@@ -10359,6 +10431,18 @@
     {
       "vendor": "Sendbird",
       "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-19 (repeats_a_refused_reading) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored 'Developer' plan no longer exists on the pricing page. The free tier is now called 'Free trial' and is described as a trial rather than a permanent free plan; the page's FAQ still references a 'Developer plan' that is free forever, but the plan table lists 'Free trial' with 'No overages allowed' and no MAU/concurrent-connection/message limits stated. Paid tiers are now Starter (5K MAU, $349/mo annual or $399/mo monthly) and Pro (5K MAU, $499/mo annual or $599/mo monthly).",
+      "previous_state": "Chat SDK — Developer plan: 1,000 MAU, 20 peak concurrent connections, unlimited messages/month, unlimited storage (6-month retention). All Pro features included (typing indicators, read receipts, push notifications)",
+      "current_state": "The page lists a 'Free trial' plan: 'Experiment with chat', 'Free', 'No overages allowed', 'All pro features', 'No credit card required', 'Community support'. The comparison table's 'Free trial' column shows MAUs 'Up to 1,000', Peak concurrent connections 'Up to 20', 'Soft caps on MAUs & peak concurrent connections', Messages/month 'Unlimited', Message storage 'Unlimited' with 6-month retention, and multiple apps under one organization. Paid plans are Starter (5K MAU, $349/month billed annually or $399/month billed monthly) and Pro (5K MAU, $499/month billed annually or $599/month billed monthly), with Enterprise custom pricing.",
+      "source_url": "https://sendbird.com/pricing/chat",
+      "category": "Communication",
+      "refused_date": "2026-11-09"
+    },
+    {
+      "vendor": "Sendbird",
+      "change_type": "pricing_restructured",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-09-25 (confirmed_unchanged) stated the same 3 figures, so the page showed these terms before the date this record gives",
       "summary": "The Developer tier (1,000 MAU) is still offered as a free trial, but it's now called 'Free trial' and has a 6-month retention period for messages, as stated in the stored deal info. However, the page now prominently displays paid plans (Starter, Pro, Enterprise) with specific monthly costs and limits. The 'Free trial' plan does not explicitly state 'unlimited messages/month' and 'all Pro features included' as the stored deal info suggests.",
@@ -10637,6 +10721,18 @@
       "source_url": "https://simplescraper.io",
       "category": "Web Scraping",
       "refused_date": "2026-10-25"
+    },
+    {
+      "vendor": "Slack",
+      "change_type": "limits_increased",
+      "reason": "measures_no_change",
+      "detail": "limits_increased claimed, and every quantity the record compares holds the same value once notation and period are normalised — 90 message against 90 message, 10 app against 10 app, 1 meeting against 1 meeting",
+      "summary": "The free plan now includes Basic AI features (AI conversation summaries, Slackbot personal AI agent, AI workflow generation, AI search, AI daily recaps, AI file summaries), which the stored description says are not included on Free.",
+      "previous_state": "Slack's free plan includes 90 days of message history, up to 10 apps, 1:1 meetings and 1:1 external messages. It does not include AI features, SAML-based single sign-on or SCIM user management. AI conversation summaries start on Pro. SAML-based single sign-on and SCIM user management start on Business+.",
+      "current_state": "Free plan lists Basic AI including AI conversation summaries, Slackbot (personal AI agent), AI workflow generation, AI search, AI daily recaps, and AI file summaries; it still has 90 days of message history, up to 10 apps, 1:1 meetings, and 1:1 external messages, and does not include SAML-based single sign-on or SCIM user management.",
+      "source_url": "https://slack.com/pricing",
+      "category": "Communication & Messaging",
+      "refused_date": "2026-11-09"
     },
     {
       "vendor": "smartforms.dev",

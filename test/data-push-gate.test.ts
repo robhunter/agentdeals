@@ -106,8 +106,10 @@ describe("#1317 the suite sees every commit that reaches main", () => {
     );
 
     const gate = readFileSync(GATE, "utf8");
-    const pushes = gate.split("\n").filter((l) => /git push/.test(l) && /\bmain\b/.test(l));
+    const publisher = readFileSync(join(REPO, "scripts", "push-tested-tree.sh"), "utf8");
+    const pushes = publisher.split("\n").filter((l) => /git push/.test(l) && /\bmain\b/.test(l));
     assert.strictEqual(pushes.length, 1, `the gate should hold exactly one push to main, holds ${pushes.length}`);
+    assert.match(gate, /push-tested-tree\.sh/, "the gate does not use the shared publisher");
     assert.match(gate, /npm run test:gated/, "the gate does not run the suite");
   });
 

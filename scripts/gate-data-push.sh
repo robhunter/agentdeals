@@ -85,7 +85,7 @@ BATCH_COMMIT_AS_THE_RUN_WROTE_IT=""
 READINGS_THE_REPLAY_COULD_NOT_MERGE=""
 
 push_to_main() {
-  git push origin HEAD:main
+  bash "$SCRIPT_DIR/push-tested-tree.sh" "$(git rev-parse HEAD)" "$(git rev-parse HEAD^{tree})"
 }
 
 ask_the_suite_to_read_main() {
