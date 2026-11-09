@@ -11184,7 +11184,7 @@
     {
       "vendor": "Resend",
       "change_type": "limits_increased",
-      "date": "2026-09-05",
+      "date": "2026-08-20",
       "date_source": "discovered",
       "summary": "The free tier now has a limit of 3,000 emails/month (100/day) and includes 3 domains. Previously 3K emails/month (100/day) and 1 domain. The free tier also includes ticket support, 10,000 automation runs, and 30-day data retention.",
       "previous_state": "Developer-first email API — 3K emails/month free (100/day cap), 1 domain, 1K marketing contacts/month, 5 AI credits, 30-day data retention",
@@ -11196,8 +11196,100 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-05",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-09",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-19",
+            "first_new": "2026-08-20",
+            "last_old_capture": "https://web.archive.org/web/20260819205556/https://resend.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260820220357/https://resend.com/pricing",
+            "claim_proof": {
+              "older": {
+                "day": "2026-08-19",
+                "url": "https://web.archive.org/web/20260819205556/https://resend.com/pricing",
+                "verdict": {
+                  "status": "stated",
+                  "current_values_checked": true,
+                  "previous_values": [
+                    {
+                      "previous": "1 domain",
+                      "current": "3 domains",
+                      "old": "1 domain"
+                    }
+                  ],
+                  "replacement_reading": {
+                    "status": "unstated",
+                    "why": "no line already states \"3 domains\"",
+                    "review": [
+                      {
+                        "record": "3 domains",
+                        "old": "1 domain",
+                        "why": "the capture's words do not state \"3\""
+                      }
+                    ]
+                  }
+                }
+              },
+              "newer": {
+                "day": "2026-08-20",
+                "url": "https://web.archive.org/web/20260820220357/https://resend.com/pricing",
+                "verdict": {
+                  "status": "stated",
+                  "stated_then": [
+                    {
+                      "record": "3 domains",
+                      "old": "3 domains"
+                    },
+                    {
+                      "record": "ticket support",
+                      "old": "Ticket support"
+                    },
+                    {
+                      "record": "10,000 automation runs",
+                      "old": "10,000 automation runs"
+                    },
+                    {
+                      "record": "30-day data retention",
+                      "old": "30-day data retention"
+                    }
+                  ]
+                }
+              }
+            },
+            "rejected_older_endpoints": [
+              {
+                "day": "2026-08-21",
+                "url": "https://web.archive.org/web/20260821084728/https://resend.com/pricing",
+                "verdict": {
+                  "status": "new_stated",
+                  "current_values": [
+                    {
+                      "record": "3 domains",
+                      "old": "3 domains"
+                    }
+                  ],
+                  "previous_values": [
+                    {
+                      "previous": "1 domain",
+                      "current": "3 domains",
+                      "old": "1"
+                    }
+                  ],
+                  "replacement_reading": {
+                    "status": "stated",
+                    "stated_then": [
+                      {
+                        "record": "3 domains",
+                        "old": "3 domains"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -12365,7 +12457,7 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-09",
       "archive_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-11-09",
         "outcome": "vendor_changed",
         "brackets": [
           {
@@ -12373,12 +12465,6 @@
             "first_new": "2026-07-25",
             "last_old_capture": "https://web.archive.org/web/20260716200743/https://infisical.com/pricing",
             "first_new_capture": "https://web.archive.org/web/20260725022640/https://infisical.com/pricing"
-          },
-          {
-            "last_old": "2026-07-25",
-            "first_new": "2026-07-29",
-            "last_old_capture": "https://web.archive.org/web/20260725022640/https://infisical.com/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260729161636/https://infisical.com/pricing"
           }
         ]
       }
