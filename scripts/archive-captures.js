@@ -654,7 +654,7 @@ export function resultingTermsIn(summary) {
 }
 
 export function judgeStatedBefore(answer, record, olderText) {
-  if (record.change_type === "free_tier_removed" && Object.hasOwn(answer ?? {}, "offered_plans")) return judgeFreeTierRemoval(answer, record, olderText);
+  if (record.change_type === "free_tier_removed") return judgeFreeTierRemoval(answer, record, olderText);
   if (!Array.isArray(answer?.changes)) return { status: "unstated", why: "the reader's answer could not be parsed", review: [] };
   const changes = answer.changes
     .map((change) => ({ record: String(change?.record ?? "").trim(), old: String(change?.old_page ?? "").trim() }))

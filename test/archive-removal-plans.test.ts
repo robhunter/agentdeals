@@ -34,6 +34,7 @@ describe("a removed free plan's newer pricing page", () => {
       [answer, plan.old_page],
       [{ ...answer, offered_plans: [] }, filler],
       [answer, filler],
+      [{ changes: [{ record: "The free tier no longer exists", old_page: "No free tier" }] }, `No free tier. ${filler}`],
       [{ ...answer, offered_plans: [{ ...plan, old_page: "Starter €19 /month" }] }, page],
       [{ ...answer, offered_plans: [{ ...plan, name: "Business" }] }, page],
       [{ ...answer, offered_plans: [plan, plan] }, page],

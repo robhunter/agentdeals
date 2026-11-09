@@ -68,10 +68,10 @@ describe("an archived endpoint states the resulting terms", () => {
     assert.equal(judgeStatedBefore({ changes: [{ record: onlyOmission.summary, old_page: "" }] }, onlyOmission, page).status, "unstated");
   });
 
-  it("requires an affirmative removal rather than an omitted plan", () => {
+  it("requires an offered-plan list for a free-plan removal", () => {
     const row = { ...record, change_type: "free_tier_removed", summary: "The free tier is removed. Previously 100K events.", current_state: "No free tier. Paid plans start at $10." };
     const answer = { changes: [{ record: "The free tier is removed", old_page: "No free tier." }, { record: "Previously 100K events.", old_page: "" }] };
-    assert.equal(judgeStatedBefore(answer, row, "No free tier.").status, "removal_stated");
+    assert.equal(judgeStatedBefore(answer, row, "No free tier.").status, "unstated");
     assert.equal(judgeStatedBefore({ changes: [{ record: "The free tier is removed", old_page: "Paid plans start at $10." }] }, row, "Paid plans start at $10.").status, "unstated");
   });
 
