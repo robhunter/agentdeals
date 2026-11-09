@@ -12252,6 +12252,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-09",
+        "detail": "Retracted 2026-11-09: not a change by Storj. The Internet Archive copy of Storj's pricing page from 2026-09-02, a week before this record, already offered the same free trial: 25GB free storage for 30 days, no credit card required and 2 free Object Mount licenses. It also gave the $5 minimum monthly fee, which does not apply during the trial or to accounts paying with STORJ token, the Standard plan at $7/TB storage and $7/TB egress, the Advanced plan, Object Mount Teams at $29 a license a month and Any S3 at $39 a license.",
+        "source_url": "https://web.archive.org/web/20260902224225/https://storj.io/pricing"
       }
     },
     {
