@@ -22,7 +22,7 @@ const {
 } = await import("../scripts/archive-captures.js");
 
 const statesItAlready = async () => ({ status: "stated", stated_then: [{ record: "the change", old: "the line" }] });
-const earlierValueRead = async (older: Page) => ({ status: "stated", previous_values: [{ previous: "the earlier value", current: "its replacement", old: older.text.split(". ")[0] }] });
+const earlierValueRead = async (older: Page) => ({ status: "stated", current_values_checked: true, previous_values: [{ previous: "the earlier value", current: "its replacement", old: older.text.split(". ")[0] }] });
 
 const HEADER = ["timestamp", "original", "statuscode", "mimetype"];
 

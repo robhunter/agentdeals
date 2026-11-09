@@ -88,30 +88,30 @@ describe("a quoted earlier qualitative feature", () => {
   const value = { previous: "cloud models", current: "starter models only", old_page: "Access cloud models" };
 
   it("accepts exact shared feature words without inventing a numeric allowance", () => {
-    const verdict = judgePreviousValue({ previous_values: [value] }, row, "Free: Access cloud models. Light usage.");
+    const verdict = judgePreviousValue({ current_values: [], previous_values: [value] }, row, "Free: Access cloud models. Light usage.");
     assert.equal(verdict.status, "stated");
     assert.equal(verdict.previous_values[0].previous, "cloud models");
   });
 
   it("retains the shared feature quote when a page introduces it with access", () => {
     const original = { ...row, previous_state: "Free tier for light usage with one concurrent model." };
-    const answer = { previous_values: [{ ...value, previous: "Access cloud models" }] };
+    const answer = { current_values: [], previous_values: [{ ...value, previous: "Access cloud models" }] };
     const verdict = judgePreviousValue(answer, original, "Free: Access cloud models. Light usage.");
     assert.equal(verdict.status, "stated");
     assert.equal(verdict.previous_values[0].previous, "cloud models");
     assert.equal(verdict.previous_values[0].old, "Access cloud models");
-    assert.equal(judgePreviousValue({ previous_values: [{ ...value, previous: "Access unrelated models" }] }, original, "Access unrelated models").status, "unknown");
+    assert.equal(judgePreviousValue({ current_values: [], previous_values: [{ ...value, previous: "Access unrelated models" }] }, original, "Access unrelated models").status, "unknown");
   });
 
   it("refuses a single generic word, a paraphrase and an unchanged feature", () => {
     for (const patch of [{ previous: "models" }, { previous: "Free plan", old_page: "Free plan" }, { old_page: "Access models in the cloud" }, { current: "cloud models" }]) {
-      const answer = { previous_values: [{ ...value, ...patch }] };
+      const answer = { current_values: [], previous_values: [{ ...value, ...patch }] };
       assert.equal(judgePreviousValue(answer, row, "Free plan. Access cloud models. Access models in the cloud.").status, "unknown");
     }
   });
 
   it("keeps numeric witnesses strict and asks for the smallest changed fragment", () => {
-    assert.equal(judgePreviousValue({ previous_values: [{ previous: "100K events", current: "500K events", old_page: "500K events" }] }, record, "500K events").status, "unknown");
+    assert.equal(judgePreviousValue({ current_values: [], previous_values: [{ previous: "100K events", current: "500K events", old_page: "500K events" }] }, record, "500K events").status, "unknown");
     const prompt = previousValuePrompt(row, { day: "2026-08-27", text: "Access cloud models" });
     assert.ok(prompt.includes("smallest fragment naming that value"));
     assert.ok(prompt.includes("qualitative feature without a number"));

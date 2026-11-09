@@ -75,9 +75,9 @@ describe("a removed free plan's newer pricing page", () => {
 describe("the removed plan's older free terms", () => {
   it("accepts an exact permanent free offer without unrelated old numeric allowances", () => {
     const value = { previous: "Free forever", current: "Paid plans start at €19 a month", old_page: "Free forever" };
-    assert.equal(judgePreviousValue({ previous_values: [value] }, row, `Sandbox $0/mo Free forever. ${filler}`).status, "stated");
-    assert.equal(judgePreviousValue({ previous_values: [value] }, row, filler).status, "unknown");
-    assert.equal(judgePreviousValue({ previous_values: [value] }, { ...row, change_type: "limits_reduced" }, `Free forever ${filler}`).status, "unknown");
+    assert.equal(judgePreviousValue({ current_values: [], previous_values: [value] }, row, `Sandbox $0/mo Free forever. ${filler}`).status, "stated");
+    assert.equal(judgePreviousValue({ current_values: [], previous_values: [value] }, row, filler).status, "unknown");
+    assert.equal(judgePreviousValue({ current_values: [], previous_values: [value] }, { ...row, change_type: "limits_reduced" }, `Free forever ${filler}`).status, "unknown");
     assert.ok(previousValuePrompt(row, { day: "2026-05-13", text: filler }).includes('exact "Free forever" fragment'));
     assert.ok(!previousValuePrompt({ ...row, previous_state: "Free: €0 a month, forever free." }, { day: "2026-05-13", text: filler }).includes('exact "Free forever" fragment'));
   });

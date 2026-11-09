@@ -22,7 +22,7 @@ function readers() {
   const client = { complete: async (prompt: string) => {
     if (prompt.startsWith("You are checking whether an archived page")) {
       const text = prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].split("\n\nFind only")[0];
-      return JSON.stringify({ previous_values: text.includes("Free plan: 50 requests per day") ? oldValues.map(({ previous, current, old }) => ({ previous, current, old_page: old })) : [] });
+      return JSON.stringify({ current_values: [], previous_values: text.includes("Free plan: 50 requests per day") ? oldValues.map(({ previous, current, old }) => ({ previous, current, old_page: old })) : [] });
     }
     const text = prompt.split(/OLD PAGE \(saved [^)]*\):\n/)[1].split("\n\nStep 1.")[0];
     return JSON.stringify({ changes: [{ record: "now allows 25 requests per day", old_page: text.includes("Free plan: 25 requests per day") ? "Free plan: 25 requests per day" : "" }] });
@@ -111,7 +111,7 @@ describe("each bracket's evidence for the record's own claim", () => {
       assert.equal(bracketStatesRecord({ claim_proof: proof }), false);
       assert.deepEqual(proof.newer.verdict.stated_then, newValues);
     }
-    const proof = await readBracketClaims(page("2026-07-02", record.previous_state), page("2026-07-23", "No free tier"), proofReader("stated", { previous_values: oldValues }), proofReader("removal_stated", { stated_then: [{ record: "free tier removed", old: "No free tier" }] }));
+    const proof = await readBracketClaims(page("2026-07-02", record.previous_state), page("2026-07-23", "No free tier"), proofReader("stated", { current_values_checked: true, previous_values: oldValues }), proofReader("removal_stated", { stated_then: [{ record: "free tier removed", old: "No free tier" }] }));
     assert.equal(bracketStatesRecord({ claim_proof: proof }), true);
   });
 

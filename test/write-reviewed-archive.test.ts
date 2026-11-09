@@ -169,10 +169,15 @@ describe("writing the exact reviewed archive report", () => {
 });
 
 const approvedVendorChanges = JSON.parse(readFileSync(new URL("../artifacts/archive-settlement/reviewed-vendor-changes-2026-11-08.json", import.meta.url), "utf8"));
+const legacyVendorChanges = structuredClone(approvedVendorChanges);
+for (const row of approvedVendorChanges.results) for (const bracket of row.brackets) bracket.claim_proof.older.verdict.current_values_checked = true;
 const approvedVendorRecords = () => approvedVendorChanges.results.map((row: Row) => structuredClone(row.expected_record));
 const vendorListings = () => approvedVendorRecords().map((row: Row) => ({ vendor: row.vendor, url: row.source_url }));
 
 describe("writing reviewed vendor changes", () => {
+  it("refuses a legacy report without checking the older end for replacement terms", () => {
+    assert.throws(() => writeReviewedArchive(approvedVendorRecords(), legacyVendorChanges, vendorListings()), /lacks both endpoint claims/);
+  });
   it("writes the four approved records, preserves their terms and both proofs, and moves dates only earlier", () => {
     const changes = approvedVendorRecords();
     const settled = record({ vendor: "Already settled", archive_check: { outcome: "vendor_changed", checked: "2026-10-01" } });

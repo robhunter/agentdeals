@@ -30,7 +30,7 @@ function archiveOf(pages: Record<string, string | null>, url = ONE_SIGNAL.source
   };
 }
 
-function oneSignalOptions(pages: Record<string, string | null>, answer: (page: Page) => unknown = (page) => ({ previous_values: page.text.includes(OLD_MOBILE) ? [EARLIER_VALUE] : [] })) {
+function oneSignalOptions(pages: Record<string, string | null>, answer: (page: Page) => unknown = (page) => ({ current_values: [], previous_values: page.text.includes(OLD_MOBILE) ? [EARLIER_VALUE] : [] })) {
   const client = { complete: async (prompt: string) => JSON.stringify(answer({ page: "", day: "", text: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1] ?? "" })) };
   const readings: unknown[] = [];
   return {
@@ -155,7 +155,7 @@ describe("captures of a source URL and its destination", () => {
   async function settle(pages: Record<string, string>) {
     const fetched: string[] = [];
     const listed: string[] = [];
-    const client = { complete: async (prompt: string) => JSON.stringify({ previous_values: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].includes(oldTerms) ? [{ previous: oldTerms, current: newTerms, old_page: oldTerms }] : [] }) };
+    const client = { complete: async (prompt: string) => JSON.stringify({ current_values: [], previous_values: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].includes(oldTerms) ? [{ previous: oldTerms, current: newTerms, old_page: oldTerms }] : [] }) };
     const result = await settleAgainstCaptures({
       url: source, finalUrl: destination, textDay: "2026-09-20", recordDay: record.date,
       today: "2026-11-08", todayText: `${newTerms} ${FILLER}`,
@@ -227,7 +227,7 @@ describe("captures of a source URL and its destination", () => {
         const prompt = JSON.parse(body).messages[0].content;
         modelPrompts.push(prompt);
         const answer = prompt.includes('"previous_values"')
-          ? { previous_values: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].includes(oldTerms) ? [{ previous: oldTerms, current: newTerms, old_page: oldTerms }] : [] }
+          ? { current_values: [], previous_values: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].includes(oldTerms) ? [{ previous: oldTerms, current: newTerms, old_page: oldTerms }] : [] }
           : prompt.includes('"changes"')
             ? { changes: [{ record: "now allows 1 project", old_page: prompt.split(/OLD PAGE \(saved [^)]*\):\n/)[1].includes(newTerms) ? newTerms : "" }] }
             : { old_terms: [newTerms], new_terms: [newTerms], same: true, differences: [] };
@@ -286,7 +286,7 @@ describe("grounding an earlier-value answer", () => {
   });
 
   it("accepts quoted old and new values, and rejects invented, empty, unchanged or missing figures", () => {
-    const judge = (value: unknown) => judgePreviousValue({ previous_values: [value] }, ONE_SIGNAL, oldMobilePage);
+    const judge = (value: unknown) => judgePreviousValue({ current_values: [], previous_values: [value] }, ONE_SIGNAL, oldMobilePage);
     assert.strictEqual(judge(EARLIER_VALUE).status, "stated");
     for (const value of [
       { ...EARLIER_VALUE, previous: "Unlimited everything" },
@@ -297,19 +297,19 @@ describe("grounding an earlier-value answer", () => {
       { ...EARLIER_VALUE, old_page: "" },
     ]) assert.strictEqual(judge(value).status, "unknown", JSON.stringify(value));
     const record = { ...ONE_SIGNAL, previous_state: "1 GB storage", current_state: "1GB of storage" };
-    assert.strictEqual(judgePreviousValue({ previous_values: [{ previous: "1 GB storage", current: "1GB of storage", old_page: "1 GB storage" }] }, record, "1 GB storage").status, "unknown");
+    assert.strictEqual(judgePreviousValue({ current_values: [], previous_values: [{ previous: "1 GB storage", current: "1GB of storage", old_page: "1 GB storage" }] }, record, "1 GB storage").status, "unknown");
   });
 
   it("cannot exclude an earlier value outside the prompt window, but keeps positive evidence inside it", () => {
     const text = `${oldMobilePage} ${"x".repeat(100000)}`;
-    assert.strictEqual(judgePreviousValue({ previous_values: [] }, ONE_SIGNAL, text).status, "unknown");
-    assert.strictEqual(judgePreviousValue({ previous_values: [EARLIER_VALUE] }, ONE_SIGNAL, text).status, "stated");
-    assert.strictEqual(judgePreviousValue({ previous_values: [] }, ONE_SIGNAL, "x".repeat(100000)).status, "not_stated");
+    assert.strictEqual(judgePreviousValue({ current_values: [], previous_values: [] }, ONE_SIGNAL, text).status, "unknown");
+    assert.strictEqual(judgePreviousValue({ current_values: [], previous_values: [EARLIER_VALUE] }, ONE_SIGNAL, text).status, "unknown");
+    assert.strictEqual(judgePreviousValue({ current_values: [], previous_values: [] }, ONE_SIGNAL, "x".repeat(100000)).status, "not_stated");
   });
 
   it("sends the complete page at its boundary and rejects a quote beyond the actual prompt window", async () => {
     const prompts: string[] = [];
-    const client = { complete: async (prompt: string) => { prompts.push(prompt); return JSON.stringify({ previous_values: [EARLIER_VALUE] }); } };
+    const client = { complete: async (prompt: string) => { prompts.push(prompt); return JSON.stringify({ current_values: [], previous_values: [EARLIER_VALUE] }); } };
     const read = previousValueReaderFor(client, ONE_SIGNAL);
     const boundary = "x".repeat(100000 - OLD_MOBILE.length) + OLD_MOBILE;
     assert.strictEqual((await read({ day: "2026-01-01", text: boundary })).status, "stated");
@@ -408,7 +408,7 @@ describe("first-pass records with archive excerpt fixtures", () => {
         complete: async (prompt: string) => {
           if (prompt.includes('"previous_values"')) {
             const earlier = prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].split("\n\nFind only")[0];
-            return JSON.stringify({ previous_values: fixture.vendor === "GrowthBook" && earlier.includes(fixture.previous_state) ? [{ previous: fixture.previous_state, current: fixture.current_state, old_page: fixture.previous_state }] : [] });
+            return JSON.stringify({ current_values: [], previous_values: fixture.vendor === "GrowthBook" && earlier.includes(fixture.previous_state) ? [{ previous: fixture.previous_state, current: fixture.current_state, old_page: fixture.previous_state }] : [] });
           }
           if (prompt.includes('"changes"')) return JSON.stringify({ changes: [{ record: record.summary, old_page: fixture.addedReview ? "" : fixture.pages[latest] }] });
           const [, older, newer] = prompt.split(/(?:OLD|NEW) PAGE \(saved [^)]*\):\n/);
