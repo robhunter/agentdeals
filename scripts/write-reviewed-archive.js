@@ -12,8 +12,24 @@ export function reviewedRecordKey(record) {
   return JSON.stringify([record.vendor, record.date, record.change_type]);
 }
 
+function reviewedDisposition(record, result, today, key) {
+  if (!isDeepStrictEqual(record, result.expected_record)) throw new Error(`reviewed disposition record changed: ${key}`);
+  if (record.archive_check?.outcome !== "vendor_changed") throw new Error(`reviewed disposition requires a published vendor change: ${key}`);
+  if (result.outcome === "no_usable_capture") {
+    if (result.brackets !== undefined) throw new Error(`an unsettled disposition cannot retain brackets: ${key}`);
+    return { ...record, archive_check: { checked: today, outcome: result.outcome } };
+  }
+  if (result.outcome !== "vendor_changed") throw new Error(`a reviewed disposition may only drop brackets or unsettle a record: ${key}`);
+  const existing = record.archive_check.brackets;
+  const retained = result.brackets;
+  if (!Array.isArray(existing) || !Array.isArray(retained) || retained.length === 0 || retained.length >= existing.length) throw new Error(`a bracket disposition must retain a proper nonempty subset: ${key}`);
+  const indices = retained.map((bracket) => existing.findIndex((held) => isDeepStrictEqual(held, bracket)));
+  if (indices.some((at, index) => at < 0 || (index > 0 && at <= indices[index - 1]))) throw new Error(`a bracket disposition must preserve the retained brackets exactly and in order: ${key}`);
+  return { ...record, archive_check: { ...record.archive_check, checked: today, brackets: retained } };
+}
+
 export function writeReviewedArchive(changes, report, offers) {
-  if (![1, 2].includes(report.version) || !/^https:\/\/github\.com\/[^/]+\/[^/]+\/(?:pull|issues)\/\d+#issuecomment-\d+$/.test(report.review_url ?? "")) throw new Error("a reviewed report must identify its approval");
+  if (![1, 2, 3].includes(report.version) || !/^https:\/\/github\.com\/[^/]+\/[^/]+\/(?:pull|issues)\/\d+#issuecomment-\d+$/.test(report.review_url ?? "")) throw new Error("a reviewed report must identify its approval");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(report.today ?? "")) throw new Error("a reviewed report must give its reading day");
   if (!Array.isArray(report.results) || report.results.length === 0) throw new Error("a reviewed report must name its approved records");
   const seen = new Set();
@@ -24,7 +40,9 @@ export function writeReviewedArchive(changes, report, offers) {
     const matches = changes.filter((record) => reviewedRecordKey(record) === key);
     if (matches.length !== 1) throw new Error(`expected one current record for reviewed key ${key}, found ${matches.length}`);
     const [record] = matches;
-    if (record.resolution || !needsArchiveCheck(record)) throw new Error(`reviewed record is already settled or no longer in force: ${key}`);
+    if (record.resolution) throw new Error(`reviewed record is already settled or no longer in force: ${key}`);
+    if (report.version === 3) return reviewedDisposition(record, result, report.today, key);
+    if (!needsArchiveCheck(record)) throw new Error(`reviewed record is already settled or no longer in force: ${key}`);
     if (report.version === 2) {
       if (result.outcome !== "vendor_changed") throw new Error(`only reviewed vendor changes may be written: ${key}`);
       if (!isDeepStrictEqual(record, result.expected_record)) throw new Error(`reviewed vendor record changed: ${key}`);
@@ -46,6 +64,15 @@ export function writeReviewedArchive(changes, report, offers) {
     if (!result.capture?.url || !result.capture?.day || !result.stated_then?.length || !result.readings?.length || !result.historical_proof?.readings?.some((reading) => reading.verdict?.status === "stated" && reading.verdict.stated_then?.length)) throw new Error(`reviewed correction lacks saved readings: ${key}`);
     return { ...result, record_key: recordKey(record) };
   });
+  if (report.version === 3) {
+    const replacements = new Map(results.map((record) => [reviewedRecordKey(record), record]));
+    return {
+      changes: changes.map((record) => replacements.get(reviewedRecordKey(record)) ?? record),
+      written: results.map(({ vendor, date, change_type, archive_check }) => ({ vendor, date, change_type, outcome: archive_check.outcome })),
+      not_written: [],
+      review: [],
+    };
+  }
   const written = writeSettledRecords(changes, [{ ...report, results }], { holdVendorChanges: report.version !== 2 });
   if (written.written.length !== results.length || written.not_written.length) throw new Error("the reviewed report was not written in full");
   return written;
@@ -76,7 +103,7 @@ function main() {
     writeFileSync(directionsPath, JSON.stringify(directions, null, 2) + "\n");
     console.log(`Retired ${review.directions.length - directions.directions.length} direction reviews of replaced records`);
   }
-  console.log(`Wrote exactly ${written.written.length} reviewed ${report.version === 2 ? "vendor changes" : "corrections"} from ${file}`);
+  console.log(`Wrote exactly ${written.written.length} reviewed ${report.version === 3 ? "dispositions" : report.version === 2 ? "vendor changes" : "corrections"} from ${file}`);
   for (const record of written.written) console.log(`${record.vendor} ${record.date} ${record.change_type}`);
 }
 
