@@ -12510,22 +12510,34 @@
     },
     {
       "vendor": "GitHub",
-      "change_type": "pricing_restructured",
-      "date": "2026-09-09",
-      "date_source": "discovered",
-      "summary": "GitHub Copilot access for students is now limited. Previously offering full access, it now offers a plan with 'limited chat and agent usage with models available through auto model selection only'. Additionally, new Copilot Student signups are paused until 2026-04-20 due to infrastructure strain.",
-      "previous_state": "Free access to GitHub Pro, JetBrains, Namecheap domain, and 100+ developer tools for verified students. Includes GitHub Copilot (new Copilot Student signups paused 2026-04-20 due to infrastructure strain — existing students unaffected), Codespaces, and Actions minutes",
-      "current_state": "GitHub Copilot Student is available to verified students. The plan includes unlimited code completions and an allowance of GitHub AI Credits, plus limited chat and agent usage with models available through auto model selection only.",
+      "change_type": "limits_reduced",
+      "date": "2026-06-24",
+      "date_source": "vendor_page",
+      "summary": "GitHub moved Copilot Student, the Copilot plan in the Student Pack, to auto model selection only, so students can no longer choose which model answers.",
+      "tier": "Student Pack",
+      "tier_direction": "narrowed",
+      "previous_state": "Copilot Student users could choose a model by hand as well as through auto model selection.",
+      "current_state": "\"Copilot Free and Student plans will now use Copilot auto model selection as the default and only model selection experience.\" (GitHub changelog, 2026-06-24). The Student Pack page now describes Copilot Student as unlimited code completions and an allowance of GitHub AI Credits, plus limited chat and agent usage with models available through auto model selection only.",
       "impact": "medium",
-      "source_url": "https://education.github.com/pack",
+      "source_url": "https://github.blog/changelog/2026-06-24-changes-to-model-selection-for-free-and-student-plans/",
       "category": "Source Control",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09",
-      "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
-      }
+      "recorded_date": "2026-09-09"
+    },
+    {
+      "vendor": "GitHub",
+      "change_type": "record_corrected",
+      "date": "2026-11-09",
+      "summary": "Data correction - GitHub moved Copilot Student to auto model selection on 2026-06-24, the date of its changelog post, not on 2026-09-09. Our record of 2026-09-09 compared the Student Pack page with our own listing, and it repeated our listing's old line that new Copilot Student sign-ups were paused. GitHub began reopening them, gradually, on 2026-06-17.",
+      "previous_state": "Recorded 2026-09-09 as pricing_restructured, measured against our own listing, with a line saying new Copilot Student sign-ups were paused",
+      "current_state": "limits_reduced, dated 2026-06-24 from GitHub's changelog post on model selection for the Free and Student plans",
+      "impact": "low",
+      "source_url": "https://github.blog/changelog/2026-06-17-copilot-individual-plan-sign-ups-are-reopening/",
+      "category": "Source Control",
+      "alternatives": [],
+      "recorded_date": "2026-11-09",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Infisical",
