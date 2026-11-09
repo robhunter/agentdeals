@@ -9920,6 +9920,7 @@
       "impact": "low",
       "source_url": "https://terragrunt.com/terragrunt-scale",
       "category": "Infrastructure",
+      "alternatives": [],
       "recorded_date": "2026-11-08",
       "date_source": "hand_written"
     },
