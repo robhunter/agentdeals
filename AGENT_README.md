@@ -91,6 +91,10 @@ unexpected push refuses publication; it never substitutes a different merge tree
 The merge commit retains the reviewed branch as a parent so GitHub records the pull
 request as merged. Delete the merged branch after verifying publication.
 
+Edit timestamps have second precision. An edit in the review timestamp's second
+is refused as ambiguous; read the latest state and use a fresh timestamp after
+that second before retrying.
+
 The workflow explicitly dispatches Tests, page dates and the AI index after publication,
 because pushes authenticated with the Actions token do not trigger other workflows.
 A failed follow-up dispatch is reported separately from the already-published merge.

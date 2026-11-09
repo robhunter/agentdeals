@@ -12,7 +12,7 @@ if (!/^[1-9][0-9]*$/.test(number ?? "") || !/^[a-f0-9]{40}$/.test(expectedHead ?
   throw new Error("Expected a pull request number, full head SHA, repository and past UTC review timestamp.");
 }
 const reviewSecond = Math.floor(reviewedTime / 1000) * 1000;
-const commentsSince = new Date(reviewSecond - 1000).toISOString();
+const commentsSince = new Date(reviewSecond - 1000).toISOString().replace(".000Z", "Z");
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, { encoding: "utf8", ...options });
@@ -32,7 +32,7 @@ function reviewedPullRequest() {
     throw new Error("The pull request is no longer the reviewed open head targeting main in this repository.");
   }
   if (Date.parse(pr.updated_at) >= reviewSecond) {
-    throw new Error("The pull request changed after its review timestamp.");
+    throw new Error("The pull request changed in or after its review timestamp's second.");
   }
   const checks = JSON.parse(run("gh", ["pr", "checks", number, "--repo", repository, "--json", "name,bucket"]));
   if (!checks.some((check) => check.name === "test" && check.bucket === "pass") ||
@@ -47,7 +47,7 @@ function reviewedPullRequest() {
   if (threads.size < 2) throw new Error("The pull request must name its issue using Refs.");
   for (const thread of threads) {
     if (thread !== number && Date.parse(api(`issues/${thread}`).updated_at) >= reviewSecond) {
-      throw new Error(`The linked issue ${repository} issue ${thread} changed after review.`);
+      throw new Error(`The linked issue ${repository} issue ${thread} changed in or after the review timestamp's second.`);
     }
     const comments = api(`issues/${thread}/comments?since=${encodeURIComponent(commentsSince)}&per_page=100`, true).flat();
     if (comments.some((comment) => Date.parse(comment.updated_at) >= reviewSecond)) {
