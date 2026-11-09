@@ -35643,7 +35643,7 @@
     {
       "vendor": "Gcore DNS",
       "category": "DNS & Domain Management",
-      "description": "Managed DNS has a free tier with unlimited zones, Anycast across 210+ PoPs, DDoS protection, IPv4/IPv6, 10,000,000 requests included, and costs €0.20 per 1,000,000 requests over that limit. It also limits dynamic RRset to 1 per zone.",
+      "description": "Unlimited requests and unlimited zones on the Managed DNS Free plan, with Anycast across 210+ PoPs, IPv4/IPv6, 1 dynamic RRset per zone (3 records each), a 120-second minimum TTL and 1 health-check record checked every 300 seconds.",
       "tier": "Free",
       "url": "https://gcore.com/pricing/edge-network",
       "tags": [
@@ -35653,16 +35653,13 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-11-06",
+        "checked": "2026-11-09",
         "outcome": "ok",
-        "detail": "the page names Gcore DNS as \"dns\" and states \"€0.2\" and \"€0.20\""
+        "detail": "the page names Gcore DNS as \"dns\" and states amounts, none of which we matched to the terms we publish"
       },
-      "restated_from": {
-        "reading_date": "2026-09-03",
-        "source_url": "https://gcore.com/pricing/edge-network",
+      "restatement_reverted": {
         "record_date": "2026-09-03",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-11-09"
       }
     },
     {

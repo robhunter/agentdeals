@@ -10599,6 +10599,12 @@
             "first_new_capture": "https://web.archive.org/web/20260924174254/https://gcore.com/pricing/edge-network"
           }
         ]
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-09",
+        "detail": "Retracted 2026-11-09: not a change by Gcore. The 10,000,000 included requests and the €0.20 per 1,000,000 belong to the PRO plan. Gcore's Managed DNS table gave the FREE plan unlimited requests, and PRO 10,000,000 requests with €0.20 per 1,000,000 after, in Internet Archive copies from 2026-02-13 and 2026-08-29 and on the live page on 2026-11-09.",
+        "source_url": "https://web.archive.org/web/20260829023155/https://gcore.com/pricing/edge-network"
       }
     },
     {
@@ -11254,7 +11260,7 @@
       "change_type": "limits_reduced",
       "date": "2026-09-05",
       "date_source": "discovered",
-      "summary": "The Starter tier, which is free, now includes 10 users instead of 50, and carries a new limit of 100 prompt executions/month. Test results stay at 500/month.",
+      "summary": "The Starter tier, which is free, now includes 10 users instead of 50. Test results stay at 500/month and prompt executions at 100/month.",
       "previous_state": "50 users, 500 test results/month, 30-day data retention. Parallelization included. Separate OSS plan available (100K results/mo) via application",
       "current_state": "Starter is priced Free with no credit card required, and now includes 10 users, 500 test results / month and 100 prompt execs / month. The compare table prices Team at $799 / year and Business at $3,199 / year, and Cypress Cloud remains free to use for non-commercial open-source public projects.",
       "impact": "high",
