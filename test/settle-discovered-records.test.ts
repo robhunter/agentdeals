@@ -213,7 +213,7 @@ describe("settling the backlog", () => {
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
-      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", current_values_checked: true, previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
       offers,
       today: "2026-09-28",
@@ -236,7 +236,7 @@ describe("settling the backlog", () => {
       first_new_capture: "https://web.archive.org/web/20260502120000/https://alpha.example/pricing",
       narrowed_to_adjacent_captures: true,
       claim_proof: {
-        older: { day: "2026-05-01", url: "https://web.archive.org/web/20260501120000/https://alpha.example/pricing", verdict: { status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: "TERMS=A" }] } },
+        older: { day: "2026-05-01", url: "https://web.archive.org/web/20260501120000/https://alpha.example/pricing", verdict: { status: "stated", current_values_checked: true, previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: "TERMS=A" }] } },
         newer: { day: "2026-05-02", url: "https://web.archive.org/web/20260502120000/https://alpha.example/pricing", verdict: { status: "stated", stated_then: [{ record: "the change", old: "the line" }] } },
       },
       relative_to_record: "before",
@@ -267,7 +267,7 @@ describe("settling the backlog", () => {
     };
     const report = await settleFirstReadings({
       statedReaderForRecord: (record: { vendor: string }) => record.vendor === "Epsilon" ? statesItAlready : async () => ({ status: "unstated", review: [{ record: "B", old: "" }] }),
-      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", current_values_checked: true, previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
       offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
@@ -309,7 +309,7 @@ describe("settling the backlog", () => {
     };
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
-      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", current_values_checked: true, previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
       offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
@@ -364,7 +364,7 @@ describe("settling the backlog", () => {
     };
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
-      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", current_values_checked: true, previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
       offers,
       today: "2026-09-28",
@@ -407,7 +407,7 @@ describe("records the Archive did not answer", () => {
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
-      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", current_values_checked: true, previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
       offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
@@ -434,7 +434,7 @@ describe("checking the method on records whose outcome is already known", () => 
     assert.deepStrictEqual(firstReadingsInForce(changes, { includeResolved: true }).map((c: Change) => c.vendor), ["Alpha", "Beta"]);
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
-      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", current_values_checked: true, previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
       offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",
@@ -455,7 +455,7 @@ describe("the readings behind each outcome", () => {
     const run = (logReads: boolean) =>
       settleFirstReadings({
         statedReaderForRecord: () => statesItAlready,
-      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", current_values_checked: true, previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
         changes,
         offers: [],
         today: "2026-09-28",
@@ -492,7 +492,7 @@ describe("a reader that fails on one record", () => {
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
-      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", current_values_checked: true, previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
       offers: changes.map((record: Change) => ({ vendor: record.vendor, tier: "Free", category: "Databases", url: record.source_url })),
       today: "2026-09-28",
@@ -513,7 +513,7 @@ describe("a reader that fails on one record", () => {
   it("is reported as a reader failure, with the reader's error, when the second ask fails too", async () => {
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
-      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", current_values_checked: true, previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes: [change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B" })],
       offers: [],
       today: "2026-09-28",
@@ -543,7 +543,7 @@ describe("each result names its record and the archived copy that settled it", (
     };
     const report = await settleFirstReadings({
       statedReaderForRecord: () => statesItAlready,
-      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", current_values_checked: true, previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       changes,
       offers: changes.map((record: Change) => ({ vendor: record.vendor, url: record.source_url })),
       today: "2026-09-28",

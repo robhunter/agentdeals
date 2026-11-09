@@ -1088,8 +1088,8 @@
       "daily": true
     },
     "/brevo-vs-resend": {
-      "hash": "49d0e2c897f52e40",
-      "changed": "2026-11-07"
+      "hash": "eaec792bfc44333f",
+      "changed": "2026-11-09"
     },
     "/budget-builder": {
       "hash": "2011b452e9000cac",
@@ -1391,8 +1391,8 @@
       "changed": "2026-11-03"
     },
     "/compare/10minutemail-vs-resend": {
-      "hash": "1bcfb96cc9583ad0",
-      "changed": "2026-11-07"
+      "hash": "9844a578fca5d6d7",
+      "changed": "2026-11-09"
     },
     "/compare/adapty-io-vs-coinmarketcap": {
       "hash": "1cc72cc2b3a80e99",
@@ -1903,8 +1903,8 @@
       "changed": "2026-11-08"
     },
     "/compare/doppler-vs-infisical": {
-      "hash": "a3c3bfe7be0b4312",
-      "changed": "2026-11-08"
+      "hash": "cb18b67c25f4a3f4",
+      "changed": "2026-11-09"
     },
     "/compare/dotenv-vs-internet-nl": {
       "hash": "ca680683ba89b8d1",
@@ -1931,8 +1931,8 @@
       "changed": "2026-10-12"
     },
     "/compare/emaillabs-io-vs-resend": {
-      "hash": "18ff839b8b8ad8aa",
-      "changed": "2026-11-07"
+      "hash": "79f6b1e8936a6df8",
+      "changed": "2026-11-09"
     },
     "/compare/exa-vs-letta": {
       "hash": "c880a10c06da4108",
@@ -2127,8 +2127,8 @@
       "changed": "2026-11-08"
     },
     "/compare/google-secret-manager-vs-infisical": {
-      "hash": "2efef7ca0d39b137",
-      "changed": "2026-11-08"
+      "hash": "e156046ec9dade29",
+      "changed": "2026-11-09"
     },
     "/compare/grafana-cloud-vs-sentry": {
       "hash": "1bff547f5ad978b6",
@@ -2555,8 +2555,8 @@
       "changed": "2026-11-07"
     },
     "/compare/resend-vs-mail-tester-com": {
-      "hash": "de931fbdac72f859",
-      "changed": "2026-11-07"
+      "hash": "b098d08ef6835856",
+      "changed": "2026-11-09"
     },
     "/compare/resmush-it-vs-wormhol-org": {
       "hash": "72c22cbf6c93f3ce",
@@ -3057,20 +3057,20 @@
       "changed": "2026-10-21"
     },
     "/digest/2026-w34": {
-      "hash": "0a9d3929c6e9ffe1",
-      "changed": "2026-11-08"
+      "hash": "dd80025abcbca0c7",
+      "changed": "2026-11-09"
     },
     "/digest/2026-w35": {
       "hash": "25878e6b487274d0",
       "changed": "2026-11-09"
     },
     "/digest/2026-w36": {
-      "hash": "624a64a757e831e0",
+      "hash": "e9f4161a71bd2e68",
       "changed": "2026-11-09"
     },
     "/digest/2026-w37": {
-      "hash": "06b2a09d1d4a8247",
-      "changed": "2026-11-08"
+      "hash": "20c53e1b1778611d",
+      "changed": "2026-11-09"
     },
     "/digest/2026-w38": {
       "hash": "367b252a35382424",
@@ -3169,8 +3169,8 @@
       "changed": "2026-10-31"
     },
     "/digest/archive": {
-      "hash": "5fb3d0a20df9d7d7",
-      "changed": "2026-11-08"
+      "hash": "0f3e0b2838ac9cf2",
+      "changed": "2026-11-09"
     },
     "/digitalocean-free-tier-2026": {
       "hash": "ee748b46ff75909a",
@@ -3185,8 +3185,8 @@
       "changed": "2026-11-08"
     },
     "/email-comparison-2026": {
-      "hash": "eeb52f7d3d0de0c7",
-      "changed": "2026-11-08"
+      "hash": "d937a4f0112e3d5e",
+      "changed": "2026-11-09"
     },
     "/email-service-alternatives": {
       "hash": "0017ee21c444f1f3",
@@ -3275,8 +3275,8 @@
       "changed": "2026-10-29"
     },
     "/free-tier-risk": {
-      "hash": "b44b98a4aada9cd1",
-      "changed": "2026-11-08"
+      "hash": "a1c3d6f2cfbcabf4",
+      "changed": "2026-11-09"
     },
     "/free-tier-tracker": {
       "daily": true
@@ -3417,8 +3417,8 @@
       "changed": "2026-11-09"
     },
     "/postmark-vs-resend": {
-      "hash": "fe867218c655d490",
-      "changed": "2026-11-07"
+      "hash": "7475dfd7b36ed348",
+      "changed": "2026-11-09"
     },
     "/press": {
       "hash": "a2157fffe6e2dcfe",
@@ -3646,11 +3646,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "494d6d733628bbf9",
+      "hash": "4242400202193989",
       "changed": "2026-11-09"
     },
     "/stack-check": {
-      "hash": "c9b374ae119be1ce",
+      "hash": "869f0aced8a8a1ad",
       "changed": "2026-11-09"
     },
     "/stacks": {
@@ -3682,8 +3682,8 @@
       "changed": "2026-11-08"
     },
     "/state-of-free-tiers": {
-      "hash": "1d0d0bcac0da4a3c",
-      "changed": "2026-11-08"
+      "hash": "2cdfb9125f2ff27d",
+      "changed": "2026-11-09"
     },
     "/storage-alternatives": {
       "hash": "9d6b279fff34f221",
@@ -3825,8 +3825,8 @@
       "changed": "2026-11-06"
     },
     "/trends/email": {
-      "hash": "88bb9542d86fe54c",
-      "changed": "2026-11-08"
+      "hash": "77694c4b47bacd17",
+      "changed": "2026-11-09"
     },
     "/trends/error-tracking": {
       "hash": "48abe254b8458d22",
@@ -3905,8 +3905,8 @@
       "changed": "2026-11-03"
     },
     "/trends/secrets-management": {
-      "hash": "9171364947314f52",
-      "changed": "2026-10-09"
+      "hash": "0399dfd52033878c",
+      "changed": "2026-11-09"
     },
     "/trends/security": {
       "hash": "ae89c0df7d20f1e4",
@@ -6455,8 +6455,8 @@
       "daily": true
     },
     "/vendor/infisical": {
-      "hash": "bbddd709edb91366",
-      "changed": "2026-11-08"
+      "hash": "0eb51c8df8879734",
+      "changed": "2026-11-09"
     },
     "/vendor/influxdb-cloud": {
       "hash": "a9b0dcfd15945b5e",
@@ -8093,8 +8093,8 @@
       "changed": "2026-11-08"
     },
     "/vendor/resend": {
-      "hash": "50ade4f8e13dbe14",
-      "changed": "2026-11-08"
+      "hash": "b4366a1787edb9c2",
+      "changed": "2026-11-09"
     },
     "/vendor/resizeappicon-com": {
       "hash": "83a5cabcd9e165a2",

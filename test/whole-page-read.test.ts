@@ -224,7 +224,7 @@ describe("the character limit belongs to the verifier prompt alone", () => {
 
   it("applies the limit to the pages an archive reader is shown only inside the functions that build its prompts", () => {
     const source = readFileSync(path.join(SCRIPTS, "archive-captures.js"), "utf-8");
-    const builders = ["export function pairedPrompt", "export function statedBeforePrompt"];
+    const builders = ["export function pairedPrompt", "export function statedBeforePrompt", "export function freeTierRemovalPrompt"];
     for (const builder of builders) {
       const from = source.indexOf(builder);
       const to = source.indexOf("\n}\n", from);

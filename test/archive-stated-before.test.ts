@@ -151,18 +151,18 @@ describe("the change a record's type names, when it is not a figure", () => {
     assert.strictEqual(statusOf(LOST_PIXEL, answer, LOST_PIXEL_SUNSET_CAPTURE).status, "removal_stated");
   });
 
-  it("is missing for a free_tier_removed record whose copied lines offer a trial but never say there is no free tier", () => {
+  it("is missing for a free_tier_removed record without a readable offered-plan list", () => {
     const capture = `Website feedback for teams. Start Free 7-day free trial Cancel anytime No credit card required. ${FILLER}`;
     assert.strictEqual(statusOf({ ...WEBVIZIO, change_type: "pricing_restructured" }, WEBVIZIO_TRIAL_LINES, capture).status, "stated");
     const verdict = statusOf(WEBVIZIO, WEBVIZIO_TRIAL_LINES, capture);
     assert.strictEqual(verdict.status, "unstated");
-    assert.strictEqual(verdict.why, "no line copied from it says there is no free tier");
+    assert.strictEqual(verdict.why, "the capture has no readable offered-plan list");
   });
 
-  it("is found for a free_tier_removed record whose older capture already says there is no free tier, as a removal older than our text", () => {
+  it("refuses a free-plan removal response that omits its offered-plan evidence", () => {
     const capture = `Website feedback for teams. No free tier. 7-day free trial Cancel anytime No credit card required. ${FILLER}`;
     const answer = [{ record: "The deal is no longer a permanently free tier.", old_page: "No free tier." }, WEBVIZIO_TRIAL_LINES[1]];
-    assert.strictEqual(statusOf(WEBVIZIO, answer, capture).status, "removal_stated");
+    assert.strictEqual(statusOf(WEBVIZIO, answer, capture).status, "unstated");
   });
 
   for (const changeType of ["restriction", "open_source_killed"]) {
