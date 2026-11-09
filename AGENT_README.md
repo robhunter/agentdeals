@@ -66,7 +66,8 @@ the complete batch before writing, then the data gate validates the result.
 ### Publishing data and reviewed pull requests
 
 All six scheduled data writers acquire the same Actions job concurrency group before
-checkout, preparation, tests and publication. The queue retains up to 100 waiting
+checkout, preparation, tests and publication. The group names the main destination,
+including when a writer is dispatched from another ref. The queue retains up to 100 waiting
 jobs in arrival order. Their existing workflow groups still coalesce redundant runs
 of the same producer. Named-ref checkout reads the current branch when the job starts,
 rather than the commit that originally triggered a waiting run. Read-only archive

@@ -28,7 +28,7 @@ jobs:
   publish:
     if: github.ref == 'refs/heads/main'
     concurrency:
-      group: main-publication-${{ github.ref }}
+      group: main-publication
       queue: max
       cancel-in-progress: false
     runs-on: ubuntu-latest

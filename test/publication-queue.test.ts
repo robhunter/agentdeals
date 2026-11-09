@@ -112,12 +112,12 @@ if (args[0] === "test") {
 describe("data publishers share a retained queue", () => {
   const workflows = join(REPO, ".github/workflows");
   const writers = readdirSync(workflows).filter((file) => /gate-data-push\.sh/.test(readFileSync(join(workflows, file), "utf8")));
-  it("serializes every data writer after workflow coalescing and before named-ref checkout", () => {
+  it("serializes every main publisher regardless of dispatch ref before named-ref checkout", () => {
     assert.equal(writers.length, 6);
     for (const file of [...writers, "merge-reviewed.yml"]) {
       const text = readFileSync(join(workflows, file), "utf8");
-      if (file !== "archive-settlement.yml") assert.match(text, /^      group: main-publication-\$\{\{ github.ref \}\}$/m, file);
-      assert.match(text, /^    concurrency:\n      group: .*(?:main-publication-)/m, file);
+      if (file !== "archive-settlement.yml") assert.match(text, /^      group: main-publication$/m, file);
+      assert.match(text, /^    concurrency:\n      group: .*(?:main-publication)/m, file);
       assert.match(text, /^      queue: max\n      cancel-in-progress: false$/m, file);
       assert.match(text, /uses: actions\/checkout@v4\n        with:\n          ref: \$\{\{ github.ref \}\}/, file);
       assert.ok(text.indexOf("    concurrency:") < text.indexOf("uses: actions/checkout"), file);
@@ -125,7 +125,7 @@ describe("data publishers share a retained queue", () => {
   });
   it("keeps read-only archive evaluation outside the publication queue", () => {
     const text = readFileSync(join(workflows, "archive-settlement.yml"), "utf8");
-    assert.match(text, /inputs\.reviewed_report != '' && format\('main-publication-\{0\}', github.ref\) \|\| format\('archive-read-only-\{0\}', github.run_id\)/);
+    assert.match(text, /inputs\.reviewed_report != '' && 'main-publication' \|\| format\('archive-read-only-\{0\}', github.run_id\)/);
   });
 });
 
