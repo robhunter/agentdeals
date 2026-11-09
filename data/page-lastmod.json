@@ -2856,6 +2856,10 @@
       "hash": "d47e83f21d1f803f",
       "changed": "2026-10-09"
     },
+    "/digest/2025-w31": {
+      "hash": "88b01692852feebb",
+      "changed": "2026-11-09"
+    },
     "/digest/2025-w32": {
       "hash": "36748cf157dd63b3",
       "changed": "2026-10-09"
@@ -3098,6 +3102,10 @@
     },
     "/digest/2026-w45": {
       "hash": "eb738fb59532fda1",
+      "changed": "2026-11-09"
+    },
+    "/digest/2026-w46": {
+      "hash": "bfa13ad38cfe1a49",
       "changed": "2026-11-09"
     },
     "/digest/2026-w47": {

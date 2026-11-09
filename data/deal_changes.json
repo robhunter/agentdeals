@@ -11285,21 +11285,45 @@
     {
       "vendor": "ImageKit",
       "change_type": "limits_reduced",
-      "date": "2026-09-05",
-      "date_source": "discovered",
-      "summary": "The free tier now offers 3 GB of DAM storage and 500 video units instead of 20 GB storage and 1,000 video processing units. Bandwidth is 20 GB.",
-      "previous_state": "Real-time image and video optimization with CDN — 20 GB bandwidth/month, 20 GB media storage, unlimited image transformations, 1,000 video processing units. No credit card required",
-      "current_state": "Forever free $0 / mo. Includes: 20 GB bandwidth Monthly limit, 3 GB DAM storage Fixed limit, 500 video units Monthly limit, 650 extension units Monthly limit, 2 users Fixed limit, 500 purge requests Monthly limit.",
-      "impact": "high",
+      "date": "2025-08-03",
+      "date_source": "hand_written",
+      "summary": "Between July 13 and August 3, 2025, ImageKit cut its Free plan's DAM storage from 5 GB to 3 GB and its media delivery bandwidth from 25 GB to 20 GB a month. Video processing units stayed at 500 a month.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free plan inclusions: \"25GB media delivery bandwidth\", \"5GB DAM storage\", \"500 video processing units\" (imagekit.io/plans, archived 2025-07-13)",
+      "current_state": "Forever free $0 / mo: \"20 GB bandwidth\" (monthly limit), \"3 GB DAM storage\" (fixed limit), \"500 video units\" (monthly limit) (imagekit.io/plans, archived 2025-08-03). The same three figures on the 2026-09-06 copy.",
+      "impact": "medium",
       "source_url": "https://imagekit.io/plans/",
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-05",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-09",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2025-07-13",
+            "first_new": "2025-08-03",
+            "last_old_capture": "https://web.archive.org/web/20250713133415/https://imagekit.io/plans/",
+            "first_new_capture": "https://web.archive.org/web/20250803232310/https://imagekit.io/plans/"
+          }
+        ]
       }
+    },
+    {
+      "vendor": "ImageKit",
+      "change_type": "record_corrected",
+      "date": "2026-11-09",
+      "summary": "Data correction - ImageKit did cut its Free plan, but in 2025 and from other figures. Between 2025-07-13 and 2025-08-03 DAM storage went from 5 GB to 3 GB and bandwidth from 25 GB to 20 GB a month; video processing units were 500 on every copy from 2024-12-10 on. The record of 2026-09-05 compared the page with our own listing and dated the change the day we read it.",
+      "previous_state": "Recorded 2026-09-05 as limits_reduced, measured against the storage and video figures of our own listing",
+      "current_state": "limits_reduced, between 2025-07-13 and 2025-08-03 from Internet Archive copies of imagekit.io/plans",
+      "impact": "low",
+      "source_url": "https://imagekit.io/plans/",
+      "category": "Storage",
+      "alternatives": [],
+      "recorded_date": "2026-11-09",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Prisma Accelerate",
