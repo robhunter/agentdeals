@@ -671,6 +671,11 @@
       "vendor": "taskade.com",
       "tier": "Free",
       "since": "2026-11-09"
+    },
+    {
+      "vendor": "geoapify.com",
+      "tier": "Free",
+      "since": "2026-11-11"
     }
   ]
 }
