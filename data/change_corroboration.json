@@ -1,6 +1,28 @@
 {
   "held": [
     {
+      "vendor": "Amazon Cognito",
+      "change_type": "restriction",
+      "impact": "medium",
+      "summary": "The page confirms both: 10,000 MAU free tier for Lite/Essentials that does not expire, plus a continuing 50,000 MAU free tier for existing (pre-Nov 22, 2024) user pools.",
+      "previous_state": "User sign-up and sign-in for web and mobile apps. Free tier: 10,000 monthly active users per account on the Lite and Essentials tiers, with no 12-month limit; user pools created on or before November 22, 2024 keep 50,000. Users who sign in through SAML or OIDC federation: 50 MAU free. The Plus tier and machine-to-machine token requests are paid only.",
+      "current_state": "Amazon Cognito Essentials and Lite have a free tier that does not automatically expire at the end of the 12-month AWS Free Tier term and is available to existing and new AWS customers indefinitely. The free tier pricing isn't available in the AWS GovCloud (US) Regions. The free tier is 10,000 MAU per month per account or per AWS organization for users signing in directly or via social identity provider (Lite or Essentials tiers; no free tier for Plus). For users federated through SAML 2.0 or OIDC, the free tier is 50 MAU per month per account or per AWS organization regardless of tier configuration. There is no free tier for token requests in the machine-to-machine use case. Customers with existing user pools created on or before 10:00am Pacific Time, November 22, 2024 continue having a free tier of the first 50,000 MAUs on the Lite tier.",
+      "source_url": "https://aws.amazon.com/cognito/pricing/",
+      "category": "Auth",
+      "first_read_date": "2026-11-09"
+    },
+    {
+      "vendor": "Directus",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "Directus's own page now redirects to directus.com. The page now shows Core at $89/mo billed yearly (or $99 monthly), and Team at $588/mo billed yearly (or $698 monthly) rather than $499/mo billed annually. The self-hosted Core limits (3 seats, 25 collections, 5 flows) and the Open Innovation Grant terms remain the same.",
+      "previous_state": "Self-hostable headless CMS. Core is $0 a month with 3 user seats, 25 collections and 5 flows. The Open Innovation Grant gives organizations under $5M in annual revenue and fewer than 50 employees a fully permissive license at no cost. Directus Cloud hosting is a $99 a month add-on; Team is $499 a month billed annually.",
+      "current_state": "Core is $89/mo billed yearly, or $99 monthly, with 3 user seats, 25 collections, and 5 flows. Team is $588/mo billed yearly, or $698 monthly, with 10 SSO seats, 50 collections, and 20 flows. Directus Cloud adds $89/mo billed yearly, or $99 monthly, on Core and Team. The Open Innovation Grant gives qualifying organizations (under $5M annual revenue, fewer than 50 employees) full access at no cost, free to self-host, with cloud hosting at $99/mo.",
+      "source_url": "https://directus.io/pricing",
+      "category": "Headless CMS",
+      "first_read_date": "2026-11-09"
+    },
+    {
       "vendor": "Harness CI",
       "change_type": "pricing_restructured",
       "impact": "high",
@@ -10,6 +32,39 @@
       "source_url": "https://www.harness.io/pricing",
       "category": "CI/CD",
       "first_read_date": "2026-11-01"
+    },
+    {
+      "vendor": "ManageEngine Log360 Cloud",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "The page now lists 7 days Search Retention and 15 days Archival Retention, and also adds 50 GB Default Search Storage and 150 GB Default Archival Storage.",
+      "previous_state": "Log Management service powered by Manage Engine. Free Plan offers 50 GB storage with 15 days Storage Retention and 7 days search.",
+      "current_state": "Free plan $0: 50 GB Storage, 50 GB Default Search Storage, 150 GB Default Archival Storage (3x of Search Storage), 7 days Search Retention, 15 days Archival Retention.",
+      "source_url": "https://www.manageengine.com/cloud-siem/",
+      "category": "Logging",
+      "first_read_date": "2026-11-09"
+    },
+    {
+      "vendor": "Socket.dev",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "Free plan now lists 1 dev seat, 1,000 scans/mo, 500 API requests/hour, and 2 attack campaigns. Team plan now starts at 5 seats and $25/dev seat/mo, and open-source free Team account offer is still mentioned.",
+      "previous_state": "Socket.dev is a supply chain security tool for open source dependencies. The Free plan includes 1 dev seat, unlimited dashboard users and repositories, 1,000 scans a month, and 500 API requests an hour. Team starts at $25 per dev seat a month from 5 seats. Open-source projects can ask for a free Team account.",
+      "current_state": "Free is $0/dev seat/month with 1 dev seat, 1,000 scans/mo, 500 API requests, 2 attack campaigns, 1 repository label, 10,000 dependencies tracked, 14-day scan retention, and 1 API token. Team is $25/dev seat/month from 5 seats with 5,000 scans/mo, 2,500 API requests, unlimited attack campaigns, 3 repository labels, 1,000,000 dependencies tracked, 30-day scan retention, and 5 API tokens. Open-source projects can contact Socket for a free Team account.",
+      "source_url": "https://socket.dev/pricing",
+      "category": "Security",
+      "first_read_date": "2026-11-09"
+    },
+    {
+      "vendor": "Whereby",
+      "change_type": "restriction",
+      "impact": "medium",
+      "summary": "The current page still shows Explore at $0 with 2,000 participant minutes/mo, 200 participants, and 24 active videos. Now explicitly states a 30 minute time limit per meeting.",
+      "previous_state": "Embeddable video conferencing API. Free Explore plan: 2,000 participant-minutes/month, up to 200 participants per room, 24 active video feeds",
+      "current_state": "Explore is $0 and includes up to 2,000 participant minutes/mo, a 30 minute time limit per meeting, no additional participant minutes, no support SLA, and limited white labelling; the comparison table lists 200 video call participants and 24 active videos for Explore.",
+      "source_url": "https://whereby.com/information/embedded/pricing",
+      "category": "Video",
+      "first_read_date": "2026-11-09"
     }
   ],
   "resolved": [
