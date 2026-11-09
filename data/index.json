@@ -28888,7 +28888,7 @@
     {
       "vendor": "GoFile.io",
       "category": "Storage",
-      "description": "Free file sharing and storage by web UI or API, no account needed. Free files are kept while they keep being downloaded and deleted after 10 days without a download. Free accounts get 100 GB of traffic per 30 days; past it, some downloads are restricted until usage falls back under the limit. Uploading and basic file management work on free accounts; most other API endpoints need Premium.",
+      "description": "Free file sharing and storage by web UI or API, no account needed. Free files are kept for 10 days of inactivity and remain available as long as they keep being downloaded. After the storage period, content may move to cold storage and cannot be downloaded directly until imported back to an account space, which requires a Premium account. Free accounts get 100 GB of traffic per 30 days; past it, some downloads are restricted until usage falls back under the limit. Uploading and basic file management work on free accounts; most other API endpoints need Premium.",
       "tier": "Free",
       "url": "https://gofile.io/",
       "tags": [
