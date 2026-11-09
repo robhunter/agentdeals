@@ -226,7 +226,7 @@ describe("captures of a source URL and its destination", () => {
         for await (const part of request) body += part;
         const prompt = JSON.parse(body).messages[0].content;
         modelPrompts.push(prompt);
-        const answer = prompt.includes('"previous_values"')
+        const answer = prompt.includes('"current_values"') ? {current_values:[]} : prompt.includes('"previous_values"')
           ? { current_values: [], previous_values: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].includes(oldTerms) ? [{ previous: oldTerms, current: newTerms, old_page: oldTerms }] : [] }
           : prompt.includes('"changes"')
             ? { changes: [{ record: "now allows 1 project", old_page: prompt.split(/OLD PAGE \(saved [^)]*\):\n/)[1].includes(newTerms) ? newTerms : "" }] }
@@ -316,9 +316,12 @@ describe("grounding an earlier-value answer", () => {
     assert.ok(prompts[0].includes(boundary));
     const beyond = "x".repeat(100000) + OLD_MOBILE;
     assert.strictEqual((await read({ day: "2026-01-01", text: beyond })).status, "unknown");
-    const shown = prompts[1].split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].split("\n\nFind only")[0];
+    const shown = prompts[2].split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].split("\n\nFind only")[0];
     assert.strictEqual(shown, "x".repeat(100000));
     assert.ok(!shown.includes(OLD_MOBILE));
+    assert.equal(prompts.length, 4);
+    assert.ok(prompts[1].includes(boundary));
+    assert.ok(!prompts[3].split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].split("\n\nInspect every")[0].includes(OLD_MOBILE));
   });
 });
 
@@ -406,6 +409,7 @@ describe("first-pass records with archive excerpt fixtures", () => {
       const text = `${fixture.pages[latest]} ${FILLER}`;
       const client = {
         complete: async (prompt: string) => {
+          if (prompt.includes('"current_values"')) return JSON.stringify({current_values:[]});
           if (prompt.includes('"previous_values"')) {
             const earlier = prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].split("\n\nFind only")[0];
             return JSON.stringify({ current_values: [], previous_values: fixture.vendor === "GrowthBook" && earlier.includes(fixture.previous_state) ? [{ previous: fixture.previous_state, current: fixture.current_state, old_page: fixture.previous_state }] : [] });

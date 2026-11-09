@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 
-const { judgePreviousValue, previousValuePrompt, previousValueReaderFor, statedBeforeReaderFor, settleAgainstCaptures, bracketStatesRecord, MAX_READS_PER_BRACKET } = await import("../scripts/archive-captures.js");
+const { judgePreviousValue, previousValuePrompt, currentValuePrompt, previousValueReaderFor, statedBeforeReaderFor, settleAgainstCaptures, bracketStatesRecord, MAX_READS_PER_BRACKET } = await import("../scripts/archive-captures.js");
 const { archiveCheckFor } = await import("../scripts/write-settled-records.js");
 const row = { date: "2026-09-05", change_type: "limits_increased", summary: "The Free plan now includes 3 domains instead of 1 domain.", previous_state: "Free: 1 domain and 100 emails a day", current_state: "Free: 3 domains and 100 emails a day" };
 const previous = { previous: "1 domain", current: "3 domains", old_page: "Free Custom domains 1" };
@@ -57,9 +57,10 @@ describe("an older endpoint cannot already state replacement terms", () => {
     assert.equal(judgePreviousValue(answer, row, oldText.padEnd(100000, " ")).status, "stated");
     assert.equal(judgePreviousValue(answer, row, oldText.padEnd(100001, " ")).status, "unknown");
     assert.equal(judgePreviousValue({ ...answer, current_values: [current] }, row, bothText.padEnd(100001, " ")).status, "new_stated");
-    const prompt = previousValuePrompt(row, { day: "2026-08-21", text: bothText });
+    const prompt = currentValuePrompt(row, { day: "2026-08-21", text: bothText });
     assert.ok(prompt.includes("including both plan cards and comparison tables"));
     assert.ok(prompt.includes("Exclude unchanged allowances and other plans or features"));
+    assert.ok(!previousValuePrompt(row, {day:"2026-08-21",text:bothText}).includes('"current_values"'));
   });
 
   it("moves back past conflicting cards and tables and dates the actual first replacement", async () => {

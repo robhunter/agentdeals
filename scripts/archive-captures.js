@@ -711,10 +711,20 @@ ${String(older.text ?? "").slice(0, maxLength)}
 
 Find only one earlier value that THE RECORD says was replaced or removed. One supported value is sufficient: stop after the first clear witness. Do not include a value that is unchanged, or a limit merely absent from THE PREVIOUS DESCRIPTION. All quoted fragments must refer to the same plan and feature; a different plan's price is not evidence.
 Copy three short exact fragments: the earlier value from THE PREVIOUS DESCRIPTION or THE RECORD, its replacement from THE NEW DESCRIPTION, and the earlier value from ARCHIVED PAGE. Use the smallest fragment naming that value, without unrelated limits or extra parenthetical values. For a qualitative feature without a number, the earlier fragment must occur word for word in both THE RECORD or THE PREVIOUS DESCRIPTION and ARCHIVED PAGE. For example, quote "cloud models" against "Access cloud models", rather than a whole description naming individual models or other features. Generic words such as "Free plan" alone do not state a feature. ${record.change_type === "free_tier_removed" && /\bFree forever\b/.test(record.previous_state ?? "") ? 'For this free-plan removal, an exact "Free forever" fragment is sufficient evidence of the old free plan; do not include its unrelated numeric limits. ' : ""}Do not join separated words. Give an empty list if the page states no such earlier value.
-Also inspect every occurrence of the changed feature for the same plan, including both plan cards and comparison tables. In current_values, quote any replacement value already stated on ARCHIVED PAGE, even when a stale table also states the earlier value. Exclude unchanged allowances and other plans or features. Use the same previous and current record fragments, but old_page must quote the replacement on ARCHIVED PAGE. Return an empty current_values list only after checking the complete page.
 
 Respond with exactly one JSON object and no other text:
-{"previous_values":[{"previous":"<earlier value copied from the previous description or record>","current":"<replacement copied from the new description>","old_page":"<earlier value copied from the archived page>"}],"current_values":[{"previous":"<earlier value copied from the previous description or record>","current":"<replacement copied from the new description>","old_page":"<replacement value copied from the archived page>"}]}`;
+{"previous_values":[{"previous":"<earlier value copied from the previous description or record>","current":"<replacement copied from the new description>","old_page":"<earlier value copied from the archived page>"}]}`;
+}
+
+export function currentValuePrompt(record, older, maxLength = PREVIOUS_VALUE_MAX_PAGE_TEXT_LENGTH) {
+  const context = previousValuePrompt(record, older, maxLength).split("\n\nFind only")[0]
+    .replace("You are checking whether an archived page states an earlier value that a change record says changed.", "You are checking whether an archived page already states a replacement value.");
+  return `${context}
+
+Inspect every occurrence of each changed feature for the same plan, including both plan cards and comparison tables. Quote any replacement value from THE NEW DESCRIPTION that ARCHIVED PAGE already states, even when a stale table also states the earlier value. Exclude unchanged allowances and other plans or features. Copy the earlier value from THE PREVIOUS DESCRIPTION or THE RECORD and its replacement from THE NEW DESCRIPTION, then quote the replacement from ARCHIVED PAGE. All three fragments must be exact and refer to the same plan and feature. Never join separated words. Return an empty list only after checking the complete page.
+
+Respond with exactly one JSON object and no other text:
+{"current_values":[{"previous":"<earlier value copied from the previous description or record>","current":"<replacement copied from the new description>","old_page":"<replacement value copied from the archived page>"}]}`;
 }
 
 function changedValueOnPage(value, record, page, currentOnPage) {
@@ -759,7 +769,11 @@ export function judgePreviousValue(answer, record, olderText, maxLength = PREVIO
 }
 
 export function previousValueReaderFor(client, record) {
-  return async (older) => judgePreviousValue(parseAnswerHolding(await client.complete(previousValuePrompt(record, older)), "previous_values"), record, older.text);
+  return async (older) => {
+    const previous = parseAnswerHolding(await client.complete(previousValuePrompt(record, older)), "previous_values");
+    const current = parseAnswerHolding(await client.complete(currentValuePrompt(record, older)), "current_values");
+    return judgePreviousValue({ previous_values: previous?.previous_values, current_values: current?.current_values }, record, older.text);
+  };
 }
 
 export const CAPTURE_WINDOW_DAYS = 60;
