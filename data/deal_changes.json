@@ -1245,9 +1245,9 @@
       "vendor": "Terragrunt Scale",
       "change_type": "new_free_tier",
       "date": "2025-12-15",
-      "summary": "Gruntwork launches free tier for Terragrunt Scale IaC orchestration platform, positioned as HCP Terraform free tier alternative ahead of HashiCorp March 31, 2026 EOL. Includes GitOps, drift detection, and module update automation",
+      "summary": "Gruntwork announced a free tier for Terragrunt Scale and opened a waitlist for it, saying it would process applications in the new year. It positioned the tier as an alternative to the HCP Terraform free tier ahead of HashiCorp's March 31, 2026 end of life for that tier, \"with matching or higher limits compared to HCP Terraform\". Includes GitOps, drift detection, and module update automation",
       "previous_state": "No free tier — Team plan at $500/month",
-      "current_state": "Free tier with limits matching or exceeding HCP Terraform (500+ managed resources, GitOps, drift detection, Patcher)",
+      "current_state": "Free tier announced with a waitlist, \"for personal or small commercial use-cases\", with limits described as matching or higher than HCP Terraform's and no figure given (GitOps, drift detection, Patcher)",
       "impact": "medium",
       "source_url": "https://www.gruntwork.io/blog/announcing-the-terragrunt-scale-free-tier",
       "category": "Infrastructure",
@@ -7994,12 +7994,13 @@
     },
     {
       "vendor": "Retool",
-      "change_type": "limits_increased",
+      "change_type": "pricing_restructured",
       "date": "2026-06-17",
       "date_source": "discovered",
-      "summary": "The free tier also includes up to 20 hours/month of Agents and 250 AI credits/month.",
-      "previous_state": "Internal tools builder — free for up to 5 users, unlimited apps. Drag-and-drop UI, 100+ integrations, custom components",
-      "current_state": "The Free tier costs $0/mo and includes unlimited web & mobile apps, 500 workflow runs/month, 5GB of database capacity, 5GB of file storage, up to 5 users, up to 20 hours/month of Agents, and 250 AI credits/month.",
+      "summary": "Retool's Free plan replaced its AI prompting credits, up to 100 a month for each user, with 250 AI credits a month shared by the whole organization, between the Internet Archive's copies of retool.com/pricing of 2026-05-21 and 2026-06-17. The shared credits cover app building and AI Actions; the prompting credits had covered building and editing apps with Assist. The Free plan's 20 hours a month of Agents were already on the page before the change.",
+      "tier": "Free",
+      "previous_state": "Free: \"Up to 5 users\", \"Up to 20 hours/month of Agents\", \"Up to 100 monthly AI prompting credits per user\" (retool.com/pricing, archived 2026-05-21)",
+      "current_state": "Free: \"Up to 20 hours/month of Agents\", \"250 AI credits/month\"; \"AI credits are pooled at the account level and cover all app building and AI Actions.\" (retool.com/pricing, archived 2026-06-17)",
       "impact": "medium",
       "source_url": "https://retool.com/pricing",
       "category": "Low-Code Platforms",
@@ -8018,6 +8019,36 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Retool",
+      "change_type": "record_corrected",
+      "date": "2026-11-08",
+      "summary": "Data correction - in June 2026 Retool's Free plan replaced its AI prompting credits, up to 100 a month for each user, with 250 AI credits a month shared by the whole organization. We had recorded this as an increase that also added 20 hours a month of Agents; the Internet Archive's copy of retool.com/pricing of 2026-05-21 already lists the 20 Agent hours.",
+      "previous_state": "Recorded 2026-08-28 as limits_increased: the free tier also includes up to 20 hours/month of Agents and 250 AI credits/month",
+      "current_state": "pricing_restructured, between 2026-05-21 and 2026-06-17 from Internet Archive copies of retool.com/pricing",
+      "impact": "low",
+      "source_url": "https://retool.com/pricing",
+      "category": "Low-Code Platforms",
+      "alternatives": [],
+      "recorded_date": "2026-11-08",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Retool",
+      "change_type": "limits_reduced",
+      "date": "2027-01-01",
+      "date_source": "vendor_page",
+      "summary": "Retool Email can be used on Retool's Free plan until January 1, 2027. From that date, Free plan organizations can no longer use Retool Email to send emails from apps, workflows or other automations. Retool Email stays available on the Team, Business and Enterprise plans. Retool's changelog names SendGrid, Gmail, SMTP or an email provider's REST API as other ways to send email from Retool.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free plan organizations send emails from apps, workflows and other automations with Retool Email",
+      "current_state": "\"Starting January 1, 2027, Retool is deprecating Retool Email for organizations on the Free plan. After this date, Free plan organizations can no longer use Retool Email to send emails from apps, workflows, or other automations.\" (docs.retool.com changelog, 2026-09-30)",
+      "impact": "medium",
+      "source_url": "https://docs.retool.com/changelog/retool-email-free-plan-deprecation",
+      "category": "Low-Code Platforms",
+      "alternatives": [],
+      "recorded_date": "2026-11-08"
     },
     {
       "vendor": "LogRocket",
@@ -9810,20 +9841,22 @@
     },
     {
       "vendor": "Terragrunt Scale",
-      "change_type": "pricing_restructured",
+      "change_type": "new_free_tier",
       "date": "2026-05-21",
-      "date_source": "discovered",
-      "summary": "The free tier now has a limit of 25 infrastructure units, down from \"500+ managed resources\" or matching HCP Terraform's free tier.",
-      "previous_state": "IaC orchestration platform by Gruntwork — free tier with GitOps from GitHub/GitLab, dependency-ordered plan/apply, drift detection, and module update automation. Limits match or exceed HCP Terraform free tier (500+ managed resources). Positioned as HCP Terraform alternative",
-      "current_state": "All plans include unlimited runs and resources. Free Forever $0 Free Up to 25 infrastructure units* For individuals, start-ups, or teams looking to try before buying Terragrunt-native IaC Pipeline Unlimited Runs Unlimited Resources (no RUM) Community Support",
-      "impact": "high",
+      "date_source": "hand_written",
+      "summary": "Terragrunt Scale's pricing page added a Free Forever plan at $0, with up to 25 infrastructure units, between the Internet Archive's copies of 2026-03-18 and 2026-05-21. The copy of 2026-03-18 lists only Team, at \"$500/mo*\", and Enterprise. Gruntwork had opened a waitlist for the free tier on 2025-12-15.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "No free plan: Team (\"$500/mo*\") and Enterprise; \"Get unlimited runs, runners, and resources with either plan.\" (terragrunt.com/terragrunt-scale, archived 2026-03-18)",
+      "current_state": "\"Free Forever\", \"$0\": \"Up to 25 infrastructure units*\", \"For individuals, start-ups, or teams looking to try before buying\"; \"All plans include unlimited runs and resources.\" (terragrunt.com/terragrunt-scale, archived 2026-05-21)",
+      "impact": "medium",
       "source_url": "https://terragrunt.com/terragrunt-scale",
       "category": "Infrastructure",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-02",
       "archive_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-11-08",
         "outcome": "vendor_changed",
         "brackets": [
           {
@@ -9834,6 +9867,20 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Terragrunt Scale",
+      "change_type": "record_corrected",
+      "date": "2026-11-08",
+      "summary": "Data correction - between the Internet Archive's copies of 2026-03-18 and 2026-05-21, Terragrunt Scale's pricing page added its Free plan, with up to 25 infrastructure units. We had recorded this as a cut from 500+ managed resources, a figure Gruntwork never published: its post of 2025-12-15 promised limits matching or higher than HCP Terraform's and gave no number.",
+      "previous_state": "Recorded 2026-09-02 as pricing_restructured: a limit of 25 infrastructure units, down from 500+ managed resources",
+      "current_state": "new_free_tier, between 2026-03-18 and 2026-05-21 from Internet Archive copies of terragrunt.com/terragrunt-scale",
+      "impact": "low",
+      "source_url": "https://terragrunt.com/terragrunt-scale",
+      "category": "Infrastructure",
+      "alternatives": [],
+      "recorded_date": "2026-11-08",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Crystallize",
@@ -10552,6 +10599,12 @@
             "first_new_capture": "https://web.archive.org/web/20260924174254/https://gcore.com/pricing/edge-network"
           }
         ]
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-09",
+        "detail": "Retracted 2026-11-09: not a change by Gcore. The 10,000,000 included requests and the €0.20 per 1,000,000 belong to the PRO plan. Gcore's Managed DNS table gave the FREE plan unlimited requests, and PRO 10,000,000 requests with €0.20 per 1,000,000 after, in Internet Archive copies from 2026-02-13 and 2026-08-29 and on the live page on 2026-11-09.",
+        "source_url": "https://web.archive.org/web/20260829023155/https://gcore.com/pricing/edge-network"
       }
     },
     {
@@ -10898,9 +10951,9 @@
       "vendor": "Uploadcare",
       "change_type": "limits_increased",
       "date": "2026-05-17",
-      "date_source": "discovered",
-      "summary": "The free tier now includes 1,000 operations per month and a 500 MB max file size, instead of 100 MB. It also includes features like uploading widget, basic image transformations, and adaptive bitrate streaming.",
-      "previous_state": "File uploading API and image CDN — free tier for small-scale projects with file upload widget, image transformations, adaptive delivery. 100 MB file size limit. Usage resets monthly",
+      "date_source": "hand_written",
+      "summary": "Uploadcare raised its Free plan's max file size from 10 MB to 500 MB and added adaptive bitrate streaming, between the Internet Archive's copies of 2026-04-12 and 2026-05-17. The plan kept 1,000 operations per month and personal use only.",
+      "previous_state": "Free, $0: 1,000 operations per month, \"10 MB max file size\", uploading widget and API, basic image transformations; \"Personal use only\" (uploadcare.com/pricing, archived 2026-04-12)",
       "current_state": "Free tier includes 1,000 operations per month, 500 MB max file size, uploading widget, basic image transformations, and adaptive bitrate streaming. Personal use only.",
       "impact": "medium",
       "source_url": "https://uploadcare.com/pricing/",
@@ -10919,7 +10972,9 @@
             "first_new_capture": "https://web.archive.org/web/20260517044833/https://uploadcare.com/pricing/"
           }
         ]
-      }
+      },
+      "tier": "Free",
+      "tier_direction": "widened"
     },
     {
       "vendor": "DBOS",
@@ -11297,7 +11352,7 @@
       "change_type": "limits_reduced",
       "date": "2026-09-05",
       "date_source": "discovered",
-      "summary": "The Starter tier, which is free, now includes 10 users instead of 50, and carries a new limit of 100 prompt executions/month. Test results stay at 500/month.",
+      "summary": "The Starter tier, which is free, now includes 10 users instead of 50. Test results stay at 500/month and prompt executions at 100/month.",
       "previous_state": "50 users, 500 test results/month, 30-day data retention. Parallelization included. Separate OSS plan available (100K results/mo) via application",
       "current_state": "Starter is priced Free with no credit card required, and now includes 10 users, 500 test results / month and 100 prompt execs / month. The compare table prices Team at $799 / year and Business at $3,199 / year, and Cypress Cloud remains free to use for non-commercial open-source public projects.",
       "impact": "high",
@@ -11322,21 +11377,45 @@
     {
       "vendor": "ImageKit",
       "change_type": "limits_reduced",
-      "date": "2026-09-05",
-      "date_source": "discovered",
-      "summary": "The free tier now offers 3 GB of DAM storage and 500 video units instead of 20 GB storage and 1,000 video processing units. Bandwidth is 20 GB.",
-      "previous_state": "Real-time image and video optimization with CDN — 20 GB bandwidth/month, 20 GB media storage, unlimited image transformations, 1,000 video processing units. No credit card required",
-      "current_state": "Forever free $0 / mo. Includes: 20 GB bandwidth Monthly limit, 3 GB DAM storage Fixed limit, 500 video units Monthly limit, 650 extension units Monthly limit, 2 users Fixed limit, 500 purge requests Monthly limit.",
-      "impact": "high",
+      "date": "2025-08-03",
+      "date_source": "hand_written",
+      "summary": "Between July 13 and August 3, 2025, ImageKit cut its Free plan's DAM storage from 5 GB to 3 GB and its media delivery bandwidth from 25 GB to 20 GB a month. Video processing units stayed at 500 a month.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free plan inclusions: \"25GB media delivery bandwidth\", \"5GB DAM storage\", \"500 video processing units\" (imagekit.io/plans, archived 2025-07-13)",
+      "current_state": "Forever free $0 / mo: \"20 GB bandwidth\" (monthly limit), \"3 GB DAM storage\" (fixed limit), \"500 video units\" (monthly limit) (imagekit.io/plans, archived 2025-08-03). The same three figures on the 2026-09-06 copy.",
+      "impact": "medium",
       "source_url": "https://imagekit.io/plans/",
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-05",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-11-09",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2025-07-13",
+            "first_new": "2025-08-03",
+            "last_old_capture": "https://web.archive.org/web/20250713133415/https://imagekit.io/plans/",
+            "first_new_capture": "https://web.archive.org/web/20250803232310/https://imagekit.io/plans/"
+          }
+        ]
       }
+    },
+    {
+      "vendor": "ImageKit",
+      "change_type": "record_corrected",
+      "date": "2026-11-09",
+      "summary": "Data correction - ImageKit did cut its Free plan, but in 2025 and from other figures. Between 2025-07-13 and 2025-08-03 DAM storage went from 5 GB to 3 GB and bandwidth from 25 GB to 20 GB a month; video processing units were 500 on every copy from 2024-12-10 on. The record of 2026-09-05 compared the page with our own listing and dated the change the day we read it.",
+      "previous_state": "Recorded 2026-09-05 as limits_reduced, measured against the storage and video figures of our own listing",
+      "current_state": "limits_reduced, between 2025-07-13 and 2025-08-03 from Internet Archive copies of imagekit.io/plans",
+      "impact": "low",
+      "source_url": "https://imagekit.io/plans/",
+      "category": "Storage",
+      "alternatives": [],
+      "recorded_date": "2026-11-09",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Prisma Accelerate",
@@ -12265,6 +12344,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-09",
+        "detail": "Retracted 2026-11-09: not a change by Storj. The Internet Archive copy of Storj's pricing page from 2026-09-02, a week before this record, already offered the same free trial: 25GB free storage for 30 days, no credit card required and 2 free Object Mount licenses. It also gave the $5 minimum monthly fee, which does not apply during the trial or to accounts paying with STORJ token, the Standard plan at $7/TB storage and $7/TB egress, the Advanced plan, Object Mount Teams at $29 a license a month and Any S3 at $39 a license.",
+        "source_url": "https://web.archive.org/web/20260902224225/https://storj.io/pricing"
       }
     },
     {
@@ -18722,6 +18807,22 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Ably",
+      "change_type": "pricing_model_change",
+      "date": "2026-11-05",
+      "date_source": "vendor_page",
+      "summary": "On November 5, 2026, Ably moved to pricing on monthly active users (MAUs). The Free package now has a cap of 500 MAUs a month, which the free plan did not have before. It still allows 6M messages a month and 500 messages a second, and its concurrent connections rose from 200 to 500. Paid plans are now Pro and Business, from $29 and $349 a month for 1,000 MAUs billed annually. Accounts already on Ably's resource-based pricing keep their terms.",
+      "tier": "Free",
+      "previous_state": "Free: \"200 concurrent connections\", \"500 messages / second\", \"6M messages / month\", community & email support, no commitment, and no cap on users. Standard: $29 / month + usage. Pro: $399 / month + usage (ably.com/pricing, archived 2026-11-02).",
+      "current_state": "Free, $0 / month: \"Up to 500 MAUs\", community & email support (best effort), no commitment. Pro $29 and Business $349 a month for 1K MAUs, billed annually; \"We charge $0.05 for each additional MAU\" (ably.com/pricing, read 2026-11-09). Free package limits: 6,000,000 messages a month, 500 concurrent connections, 500 concurrent channels and 500 MAUs (ably.com/docs/platform/pricing/free, read 2026-11-09).",
+      "impact": "medium",
+      "source_url": "https://ably.com/blog/mau-pricing",
+      "category": "Messaging",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-09"
     }
   ]
 }

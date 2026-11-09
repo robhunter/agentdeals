@@ -2300,7 +2300,8 @@
       "source_url": "https://gcore.com/pricing/edge-network",
       "record_date": "2026-09-03",
       "change_type": "limits_reduced",
-      "summary": "The free tier for Managed DNS now has a request limit of 10,000,000 requests, and costs €0.20 per 1,000,000 requests over that limit."
+      "summary": "The free tier for Managed DNS now has a request limit of 10,000,000 requests, and costs €0.20 per 1,000,000 requests over that limit.",
+      "reverted_on": "2026-11-09"
     },
     {
       "vendor": "Lovable",

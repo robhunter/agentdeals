@@ -1,17 +1,6 @@
 {
   "held": [
     {
-      "vendor": "Ably",
-      "change_type": "pricing_model_change",
-      "impact": "high",
-      "summary": "Ably's free tier is now limited to 500 MAUs instead of the stored 6M messages/month, 200 concurrent connections, and 200 channels; pricing is now MAU-based across Free/Pro/Business/Enterprise tiers.",
-      "previous_state": "Real-time infrastructure — 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
-      "current_state": "Free: $0/month, up to 500 MAUs, community & email support (best effort), no commitment. Pro: $29/month for 1K MAUs billed annually. Business: $349/month for 1K MAUs billed annually. Enterprise: custom MAUs, annual billing only.",
-      "source_url": "https://ably.com/pricing",
-      "category": "Messaging",
-      "first_read_date": "2026-11-08"
-    },
-    {
       "vendor": "Harness CI",
       "change_type": "pricing_restructured",
       "impact": "high",
@@ -3401,6 +3390,18 @@
       "outcome": "baseline_moved",
       "detail": "the terms it was read against are no longer the terms we publish",
       "resolved_date": "2026-11-08"
+    },
+    {
+      "vendor": "Ably",
+      "change_type": "pricing_model_change",
+      "impact": "high",
+      "summary": "Ably's free tier is now limited to 500 MAUs instead of the stored 6M messages/month, 200 concurrent connections, and 200 channels; pricing is now MAU-based across Free/Pro/Business/Enterprise tiers.",
+      "previous_state": "Real-time infrastructure — 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
+      "source_url": "https://ably.com/pricing",
+      "first_read_date": "2026-11-08",
+      "outcome": "baseline_moved",
+      "detail": "the terms it was read against are no longer the terms we publish",
+      "resolved_date": "2026-11-09"
     }
   ]
 }

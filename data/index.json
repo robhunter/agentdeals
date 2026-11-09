@@ -3860,7 +3860,7 @@
     {
       "vendor": "Ably",
       "category": "Messaging",
-      "description": "Real-time infrastructure — 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
+      "description": "Up to 500 monthly active users (MAUs) for $0 on the Free package, with every Ably product (Pub/Sub, Chat, Spaces, LiveObjects, LiveSync and AI Transport), community and email support and no commitment. Ably has priced on MAUs since November 5, 2026. Accounts already on its resource-based pricing keep their terms. Pro costs $29 a month and Business $349 a month for 1,000 MAUs, billed annually, and on both each MAU over the allowance costs $0.05.",
       "tier": "Free",
       "url": "https://ably.com/pricing",
       "tags": [
@@ -3884,7 +3884,29 @@
         "text": "Free for everyone Start for free Community & email support (best effort) Up to 500 MAUs No commitment",
         "url": "https://ably.com/pricing",
         "read_on": "2026-11-08"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Besides 500 MAUs a month, Ably's docs give the Free package 6,000,000 messages a month, 500 concurrent connections and 500 concurrent channels. No credit card is needed, and the package has no time limit.",
+          "quote": "No credit card is required to sign up and there's no time limit on how long you can use it for.",
+          "url": "https://ably.com/docs/platform/pricing/free",
+          "read_on": "2026-11-09"
+        },
+        {
+          "text": "Ably does not cut off a Free package account that goes over a limit; it restricts the account until it recovers. Past 6,000,000 messages in a month, the account is limited to 1,600 messages an hour until the next month; connections and channels over 500 are rejected; past 500 MAUs, service may be degraded until the next month.",
+          "quote": "Ably won't cut you off when your Free package usage goes over a limit. Your account is restricted until it recovers",
+          "url": "https://ably.com/docs/platform/pricing/free",
+          "read_on": "2026-11-09",
+          "operating_detail": true
+        },
+        {
+          "text": "Ably counts a monthly active user by the clientId a device connects with, once a month however often it returns; servers and agents are not counted. A device that connects without a clientId is rejected.",
+          "quote": "A device that connects without one is rejected.",
+          "url": "https://ably.com/docs/platform/pricing",
+          "read_on": "2026-11-09",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "Bright Data MCP Server",
@@ -5915,7 +5937,7 @@
     {
       "vendor": "GitHub",
       "category": "Source Control",
-      "description": "Free access to GitHub Pro, JetBrains, Namecheap domain, and 100+ developer tools for verified students. Includes GitHub Copilot (new Copilot Student signups paused 2026-04-20 due to infrastructure strain — existing students unaffected), Codespaces, and Actions minutes",
+      "description": "Free GitHub Pro while you are a student, plus partner offers for verified students. GitHub Copilot Student includes unlimited code completions and an allowance of GitHub AI Credits, plus limited chat and agent usage with models available through auto model selection only. Also Pro-level Codespaces, a JetBrains IDE subscription renewed annually, and a 1-year .me domain from Namecheap.",
       "tier": "Student Pack",
       "url": "https://education.github.com/pack",
       "tags": [
@@ -6917,7 +6939,30 @@
         "text": "Free for everyone $ 0 / mo per builder Builder: A user who created or edited an app or workflow this billing cycle. You're billed per builder, per month.",
         "url": "https://retool.com/pricing",
         "read_on": "2026-11-08"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Retool's 250 free AI credits a month are one pool shared by every user in the organization, for app building and AI Actions. They renew monthly and do not roll over, and Free plan organizations cannot buy more.",
+          "quote": "250 credits shared across your account for app building and AI Actions. Renews monthly, doesn't roll over. Upgrade to Team for additional packs.",
+          "url": "https://retool.com/pricing",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
+          "text": "When a Free plan organization has used its AI credits, Retool's AI-powered features are unavailable until the credits renew at the start of the next month.",
+          "quote": "When no credits remain, AI-powered features are unavailable. Cloud organization admins on a paid plan can purchase additional credits. Otherwise, credits renew at the start of the next month.",
+          "url": "https://docs.retool.com/support/billing-usage/ai-credits",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
+          "text": "When a Free plan organization has used its 20 Agent hours for the month, agent execution pauses; upgrading to a paid plan lets agents continue.",
+          "quote": "Agent execution pauses. You can upgrade to a paid plan to continue without interruption.",
+          "url": "https://retool.com/pricing",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "MinIO",
@@ -28985,7 +29030,23 @@
         "checked": "2026-10-24",
         "outcome": "ok",
         "detail": "the page names MConverter as \"mconverter\" and states \"15 files per day\""
-      }
+      },
+      "conditions": [
+        {
+          "text": "MConverter's free daily limit of 15 files may be reduced to 3 conversions depending on use.",
+          "quote": "Note that the daily limit may be reduced to 3 conversions depending on use.",
+          "url": "https://mconverter.eu/",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
+          "text": "MConverter's site offers visitors who block ads 12 more free conversions for adding an exception for mconverter.eu in the ad blocker, and in Tracking Prevention if it is set to Strict.",
+          "quote": "Get 12 more conversions for free by adding an exception for our website in your ad blocker and in Tracking Prevention (if it's set to Strict).",
+          "url": "https://mconverter.eu/",
+          "read_on": "2026-11-08",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "nitropack.io",
@@ -35604,7 +35665,7 @@
     {
       "vendor": "Gcore DNS",
       "category": "DNS & Domain Management",
-      "description": "Managed DNS has a free tier with unlimited zones, Anycast across 210+ PoPs, DDoS protection, IPv4/IPv6, 10,000,000 requests included, and costs €0.20 per 1,000,000 requests over that limit. It also limits dynamic RRset to 1 per zone.",
+      "description": "Unlimited requests and unlimited zones on the Managed DNS Free plan, with Anycast across 210+ PoPs, IPv4/IPv6, 1 dynamic RRset per zone (3 records each), a 120-second minimum TTL and 1 health-check record checked every 300 seconds.",
       "tier": "Free",
       "url": "https://gcore.com/pricing/edge-network",
       "tags": [
@@ -35614,16 +35675,13 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-11-06",
+        "checked": "2026-11-09",
         "outcome": "ok",
-        "detail": "the page names Gcore DNS as \"dns\" and states \"€0.2\" and \"€0.20\""
+        "detail": "the page names Gcore DNS as \"dns\" and states amounts, none of which we matched to the terms we publish"
       },
-      "restated_from": {
-        "reading_date": "2026-09-03",
-        "source_url": "https://gcore.com/pricing/edge-network",
+      "restatement_reverted": {
         "record_date": "2026-09-03",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-11-09"
       }
     },
     {
@@ -37217,7 +37275,7 @@
     {
       "vendor": "Ollama Cloud",
       "category": "AI / ML",
-      "description": "Cloud-hosted Ollama for running open-source LLMs. Between October 26 and 27, 2026, Ollama replaced its Free plan, which included starter usage credits, with a $0 Pay as you go plan. Pay as you go charges per token for every cloud model, has no subscription and 3 concurrent requests. Running models on your own hardware is free. Reflection's Beam (beam:cloud) is free on Ollama's cloud until November 9, 2026, 12:01 AM PST, when Ollama starts charging $0.125 per million input tokens, $0.015 per million cached input tokens and $0.40 per million output tokens (ollama.com/library/beam). Ollama does not say which plans the free period covers. Beam is an open-weight model with a 1M-token context window. Pro costs $20 a month with $60 of usage credits, Max $100 a month with $300. Team, in early access, costs $500 a month for unlimited users and includes $1,000 of usage credits a month, shared across the team. Per million input and output tokens, glm-5.3 costs $1.40 and $4.40 and deepseek-v4-pro $1.32 and $3.96. Ollama Cloud serves kimi-k2.6 at $0.95 input and $4.00 output per million tokens, kimi-k2.7-code at $0.95 and $4.00, kimi-k3.1-pro at $2.00 and $10.00, and kimi-k3 at $3.00 and $15.00. kimi-k2.6 and kimi-k2.7-code are the cheapest Kimi models, and kimi-k3 is the most expensive. Usage is billed per million tokens at each model's rate, for example gpt-oss:120b at $0.15 input and $0.60 output, and some models, such as deepseek-v4.1-flash, cost half off-peak (outside 12:00 to 18:00 UTC on weekdays, and all weekend). To use cloud models without installing Ollama, send requests to https://ollama.com/api/chat with an API key from ollama.com in an \"Authorization: Bearer\" header, using the same model names, such as gpt-oss:120b; OpenAI and Anthropic clients also work.",
+      "description": "Cloud-hosted Ollama for running open-source LLMs. Between October 26 and 27, 2026, Ollama replaced its Free plan, which included starter usage credits, with a $0 Pay as you go plan. Pay as you go charges per token for every cloud model, has no subscription and 3 concurrent requests. Running models on your own hardware is free. Reflection's Beam (beam:cloud) was free on Ollama's cloud until November 9, 2026, 12:01 AM PST. Since then Ollama charges $0.125 per million input tokens, $0.015 per million cached input tokens and $0.40 per million output tokens for it (ollama.com/library/beam, read November 9, 2026). Beam is an open-weight model with a 1M-token context window. Pro costs $20 a month with $60 of usage credits, Max $100 a month with $300. Team, in early access, costs $500 a month for unlimited users and includes $1,000 of usage credits a month, shared across the team. Per million input and output tokens, glm-5.3 costs $1.40 and $4.40 and deepseek-v4-pro $1.32 and $3.96. Ollama Cloud serves kimi-k2.6 at $0.95 input and $4.00 output per million tokens, kimi-k2.7-code at $0.95 and $4.00, kimi-k3.1-pro at $2.00 and $10.00, and kimi-k3 at $3.00 and $15.00. kimi-k2.6 and kimi-k2.7-code are the cheapest Kimi models, and kimi-k3 is the most expensive. Usage is billed per million tokens at each model's rate, for example gpt-oss:120b at $0.15 input and $0.60 output, and some models, such as deepseek-v4.1-flash, cost half off-peak (outside 12:00 to 18:00 UTC on weekdays, and all weekend). To use cloud models without installing Ollama, send requests to https://ollama.com/api/chat with an API key from ollama.com in an \"Authorization: Bearer\" header, using the same model names, such as gpt-oss:120b; OpenAI and Anthropic clients also work.",
       "tier": "Pay-as-you-go",
       "url": "https://ollama.com/pricing",
       "tags": [

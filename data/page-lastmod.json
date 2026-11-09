@@ -2856,6 +2856,10 @@
       "hash": "d47e83f21d1f803f",
       "changed": "2026-10-09"
     },
+    "/digest/2025-w31": {
+      "hash": "88b01692852feebb",
+      "changed": "2026-11-09"
+    },
     "/digest/2025-w32": {
       "hash": "36748cf157dd63b3",
       "changed": "2026-10-09"
@@ -3100,6 +3104,10 @@
       "hash": "eb738fb59532fda1",
       "changed": "2026-11-09"
     },
+    "/digest/2026-w46": {
+      "hash": "bfa13ad38cfe1a49",
+      "changed": "2026-11-09"
+    },
     "/digest/2026-w47": {
       "hash": "ac5da01d198369cb",
       "changed": "2026-11-05"
@@ -3111,6 +3119,10 @@
     "/digest/2026-w50": {
       "hash": "04a2e9f8adb7d9ee",
       "changed": "2026-10-11"
+    },
+    "/digest/2026-w53": {
+      "hash": "197870a645cdd2c4",
+      "changed": "2026-11-08"
     },
     "/digest/2027-w01": {
       "hash": "a70f8bca7e94cfb9",
