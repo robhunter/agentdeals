@@ -27,7 +27,11 @@ describe("getWeeklyDigest logic", () => {
 
     const digest = getWeeklyDigest();
 
-    assert.ok(digest.upcoming_deadlines.length <= 25, "Should be capped at 25 entries");
+    const lastDate = digest.upcoming_deadlines.at(-1)?.date ?? "";
+    assert.ok(
+      digest.upcoming_deadlines.filter((d) => d.date < lastDate).length < 25,
+      "Only ties on the final date may extend the 25-deadline window"
+    );
     assert.ok(digest.upcoming_deadlines.length > 0, "Should have at least one upcoming deadline");
     for (const d of digest.upcoming_deadlines) {
       const match = futureChanges.find((fc: any) => fc.vendor === d.vendor && fc.date === d.date);
