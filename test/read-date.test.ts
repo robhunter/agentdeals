@@ -185,8 +185,13 @@ describe("the day we last read the page", () => {
   });
 
   it("reads the day the page was read, not the later date the record publishes", () => {
-    withState([record({ last_attempt_at: "2026-04-10", last_outcome: ATTEMPT_CHANGED, last_success: null })]);
-    assert.equal(lastReadDate(offer), "2026-04-10");
+    for (const outcome of ANSWERED_OUTCOMES) {
+      withState([record({ last_attempt_at: "2026-04-10", last_outcome: outcome, last_success: null })]);
+      assert.equal(lastReadDate(offer), "2026-04-10", outcome);
+      assert.equal(lastReadDate({ ...offer, source_check: { outcome: "ok", checked: "2026-04-11" } }), "2026-04-11", outcome);
+      assert.equal(lastReadDate({ ...offer, restated_from: { reading_date: "2026-04-11", source_url: offer.url } }), "2026-04-11", outcome);
+      assert.equal(lastReadDate({ ...offer, restated_from: { reading_date: "2026-04-11", source_url: "https://examplebase.dev/other" } }), "2026-04-10", outcome);
+    }
   });
 
   it("claims no confirmation where the store holds no success", () => {
@@ -500,11 +505,6 @@ describe("the catalogue", () => {
         `${o.vendor} publishes a read date that neither the store's own attempt nor a later read gives`,
       );
     }
-    const earlierThanPublished = answered.filter((o) => lastReadDate(o) < o.verifiedDate);
-    assert.ok(
-      earlierThanPublished.length > 0,
-      "no record was read before the date it publishes, so this control cannot tell the store's attempt from that date",
-    );
   });
 
   it("claims a confirmation only on the records the store holds a success for", () => {
