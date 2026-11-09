@@ -380,7 +380,7 @@ describe("writing the report a settle run produced", () => {
       archive,
       pairReaderForListing: termsPairReader,
       statedReaderForRecord,
-      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
+      previousReaderForRecord: () => async (older: { text: string }) => ({ status: "stated", current_values_checked: true, previous_values: [{ previous: "TERMS=A", current: "TERMS=B", old: older.text.split(" ")[0] }] }),
       fetchToday: async (url: string) => (url === urlOf("Gamma") ? { ok: false, error: "HTTP 403" } : { ok: true, text: "TERMS=B" }),
       textDayOf: () => "2026-02-10",
       badgeSetBy: (record: Change) => ({ Gamma: "risky", Delta: "caution", Zeta: "risky" } as Record<string, string>)[record.vendor] ?? null,
