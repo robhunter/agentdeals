@@ -10370,7 +10370,7 @@
     {
       "vendor": "FOSSA",
       "category": "Security",
-      "description": "Open source license compliance and software composition analysis (SCA). Free tier: 5 projects, 10 contributing developers, 1 release group, 5 dependency levels, container scanning, SBOM export, API access",
+      "description": "Open source license compliance and software composition analysis (SCA). Free tier: 5 projects, 10 contributing developers, 1 release group, 5 dependency levels for scans, 1 quality check (outdated packages), 5 imported SBOMs, container scanning, SBOM export, API access",
       "tier": "Free",
       "url": "https://fossa.com/pricing",
       "tags": [
@@ -39457,7 +39457,7 @@
     {
       "vendor": "Google Vector Search 2.0",
       "category": "AI / ML",
-      "description": "Vector Search 2.0 now GA on Vertex AI. High-performance approximate nearest neighbor (ANN) vector similarity search for AI/RAG applications. Supports billion-scale indexes.",
+      "description": "Agent Retrieval (formerly Vector Search 2.0) on Gemini Enterprise Agent Platform (formerly Vertex AI): approximate nearest neighbor (ANN) vector search for AI and RAG applications. Pay-as-you-go: pricing covers the virtual machines that host deployed indexes plus building and updating indexes; Google says a minimal setup costs under $100 a month.",
       "tier": "Pay-as-you-go",
       "url": "https://cloud.google.com/vertex-ai/docs/vector-search/overview",
       "tags": [

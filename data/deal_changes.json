@@ -18835,6 +18835,23 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-11-09"
+    },
+    {
+      "vendor": "Google Vector Search 2.0",
+      "change_type": "rebranded",
+      "date": "2026-04-22",
+      "date_source": "vendor_page",
+      "summary": "On April 22, 2026, Google renamed Vertex AI Vector Search 2.0 to Agent Retrieval, one of the product names it changed when Vertex AI became Gemini Enterprise Agent Platform. Google's documentation now titles it \"Agent Retrieval (formerly Vector Search 2.0)\".",
+      "tier": "Pay-as-you-go",
+      "tier_direction": "unchanged",
+      "previous_state": "\"Vertex AI Vector Search 2.0\" (the Vertex AI name in Google's naming-changes table, Gemini Enterprise Agent Platform release notes, April 22, 2026).",
+      "current_state": "\"Agent Retrieval\" (the Agent Platform name in the same table). Documentation title: \"Agent Retrieval (formerly Vector Search 2.0)\" (docs.cloud.google.com, read 2026-11-09).",
+      "impact": "low",
+      "source_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/release-notes#April_22_2026",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-09"
     }
   ]
 }

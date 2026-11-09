@@ -1,81 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-11-09/mapbox/new_free_tier",
-      "proposed_on": "2026-11-09",
-      "vendor": "Mapbox",
-      "change_type": "new_free_tier",
-      "date": "2026-11-09",
-      "date_source": "discovered",
-      "summary": "Navigation SDK v3.x free tier now offers two pricing options: the metered option still includes up to 100 MAUs and 1,000 trips free. A new unlimited-trips option provides up to 10 MAUs free with unlimited trips.",
-      "tier": "Navigation SDK v3.x",
-      "tier_direction": "widened",
-      "previous_state": "Maps, navigation and search APIs with monthly free tiers: 50,000 web map loads (GL JS), 25,000 mobile MAUs (Maps SDKs), 100,000 requests each for Temporary Geocoding, Directions and Tilequery, 200,000 vector tile requests, 50,000 Static Images requests; Navigation SDK v3.x up to 100 MAUs and 1,000 trips, then $0.30 per MAU and $0.08 per trip. Permanent Geocoding API is paid only.",
-      "current_state": "Navigation SDK v3.x offers two pricing options. Metered: up to 100 monthly active users free, then $0.30 per user; up to 1,000 monthly trips free, then $0.08 per trip (with volume discounts at higher tiers). Unlimited trips: up to 10 monthly active users free, then contact sales for discount; includes unlimited trips at no additional cost.",
-      "impact": "low",
-      "source_url": "https://www.mapbox.com/pricing",
-      "category": "Maps/Geolocation",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-09",
-      "restatement": [
-        {
-          "url": "https://www.mapbox.com/pricing",
-          "description": "Navigation SDK v3.x offers two pricing options. Metered: up to 100 monthly active users free, then $0.30 per user; up to 1,000 monthly trips free, then $0.08 per trip (with volume discounts at higher tiers). Unlimited trips: up to 10 monthly active users free, then contact sales for discount; includes unlimited trips at no additional cost."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-09/google-vector-search-2-0/rebranded",
-      "proposed_on": "2026-11-09",
-      "vendor": "Google Vector Search 2.0",
-      "change_type": "rebranded",
-      "date": "2026-11-09",
-      "date_source": "discovered",
-      "summary": "The current page shows the product has been rebranded: 'Vector Search 2.0' is now called 'Agent Retrieval (formerly Vector Search 2.0)', and the main 'Vector Search' product is now documented under 'Gemini Enterprise Agent Platform' rather than 'Vertex AI'. The page also states pricing includes VM costs for hosting deployed indexes plus index build/update costs, with a minimal setup under $100/month.",
-      "tier": "Pay-as-you-go",
-      "tier_direction": "unchanged",
-      "previous_state": "Vector Search 2.0 now GA on Vertex AI. High-performance approximate nearest neighbor (ANN) vector similarity search for AI/RAG applications. Supports billion-scale indexes.",
-      "current_state": "Vector Search is documented under Gemini Enterprise Agent Platform. Pricing includes the cost of virtual machines used to host deployed indexes, as well as expenses for building and updating indexes. A minimal setup (under $100 per month) can accommodate high throughput for moderate-sized use cases. 'Vector Search 2.0' is now referred to as 'Agent Retrieval (formerly Vector Search 2.0)'.",
-      "impact": "low",
-      "source_url": "https://cloud.google.com/vertex-ai/docs/vector-search/overview",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-09",
-      "restatement": [
-        {
-          "url": "https://cloud.google.com/vertex-ai/docs/vector-search/overview",
-          "refused": "tier_is_not_one_we_record_as_free"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-09/fossa/limits_increased",
-      "proposed_on": "2026-11-09",
-      "vendor": "FOSSA",
-      "change_type": "limits_increased",
-      "date": "2026-11-09",
-      "date_source": "discovered",
-      "summary": "The Free plan now includes additional limits not in previously: 1 quality check (outdated packages) and 5 imported SBOMs. Previously's core limits (5 projects, 10 contributing developers, 1 release group, 5 dependency levels, container scanning, SBOM export, API access) remain present.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Open source license compliance and software composition analysis (SCA). Free tier: 5 projects, 10 contributing developers, 1 release group, 5 dependency levels, container scanning, SBOM export, API access",
-      "current_state": "Free plan: 5 projects, 10 contributing developers, 1 release group, 5 dependency levels for scans, 1 quality check (outdated packages), 5 imported SBOMs; features include container scanning, basic email support, API access, SaaS, limited filters, and SBOM export.",
-      "impact": "low",
-      "source_url": "https://fossa.com/pricing",
-      "category": "Security",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-09",
-      "restatement": [
-        {
-          "url": "https://fossa.com/pricing",
-          "description": "Open source license compliance and software composition analysis (SCA) — Free plan: 5 projects, 10 contributing developers, 1 release group, 5 dependency levels for scans, 1 quality check (outdated packages), 5 imported SBOMs; features include container scanning, basic email support, API access, SaaS, limited filters, and SBOM export."
-        }
-      ]
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
@@ -2274,6 +2198,60 @@
       "restatement": [],
       "dropped_on": "2026-11-08",
       "drop_reason": "Not a change: supertokens.com/pricing, read 2026-11-08, still gives Cloud at $0.02 per MAU, free under 5K monthly active users, Multi-factor Authentication at $0.01 / MAU and Account Linking at $0.005 / MAU, each with a $100 monthly minimum, as our listing does. Its \"1 - 4,999 MAUs, that will be $100 / month\" example is Account Linking's minimum. The 2026-09-05 record making the same claim was retracted on 2026-09-28."
+    },
+    {
+      "proposal_id": "2026-11-09/fossa/limits_increased",
+      "proposed_on": "2026-11-09",
+      "vendor": "FOSSA",
+      "change_type": "limits_increased",
+      "date": "2026-11-09",
+      "date_source": "discovered",
+      "summary": "The Free plan now includes additional limits not in previously: 1 quality check (outdated packages) and 5 imported SBOMs. Previously's core limits (5 projects, 10 contributing developers, 1 release group, 5 dependency levels, container scanning, SBOM export, API access) remain present.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Open source license compliance and software composition analysis (SCA). Free tier: 5 projects, 10 contributing developers, 1 release group, 5 dependency levels, container scanning, SBOM export, API access",
+      "current_state": "Free plan: 5 projects, 10 contributing developers, 1 release group, 5 dependency levels for scans, 1 quality check (outdated packages), 5 imported SBOMs; features include container scanning, basic email support, API access, SaaS, limited filters, and SBOM export.",
+      "impact": "low",
+      "source_url": "https://fossa.com/pricing",
+      "category": "Security",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-09",
+      "restatement": [
+        {
+          "url": "https://fossa.com/pricing",
+          "description": "Open source license compliance and software composition analysis (SCA) — Free plan: 5 projects, 10 contributing developers, 1 release group, 5 dependency levels for scans, 1 quality check (outdated packages), 5 imported SBOMs; features include container scanning, basic email support, API access, SaaS, limited filters, and SBOM export."
+        }
+      ],
+      "dropped_on": "2026-11-09",
+      "drop_reason": "Not a change: fossa.com/pricing already listed '1 quality check (outdated packages)' and '5 imported SBOMs' under Free in the capture of 2026-04-14 (https://web.archive.org/web/20260414220842/https://fossa.com/pricing/), the same Free block as today's page. Our listing omitted the two limits; added to the listing in the same PR."
+    },
+    {
+      "proposal_id": "2026-11-09/mapbox/new_free_tier",
+      "proposed_on": "2026-11-09",
+      "vendor": "Mapbox",
+      "change_type": "new_free_tier",
+      "date": "2026-11-09",
+      "date_source": "discovered",
+      "summary": "Navigation SDK v3.x free tier now offers two pricing options: the metered option still includes up to 100 MAUs and 1,000 trips free. A new unlimited-trips option provides up to 10 MAUs free with unlimited trips.",
+      "tier": "Navigation SDK v3.x",
+      "tier_direction": "widened",
+      "previous_state": "Maps, navigation and search APIs with monthly free tiers: 50,000 web map loads (GL JS), 25,000 mobile MAUs (Maps SDKs), 100,000 requests each for Temporary Geocoding, Directions and Tilequery, 200,000 vector tile requests, 50,000 Static Images requests; Navigation SDK v3.x up to 100 MAUs and 1,000 trips, then $0.30 per MAU and $0.08 per trip. Permanent Geocoding API is paid only.",
+      "current_state": "Navigation SDK v3.x offers two pricing options. Metered: up to 100 monthly active users free, then $0.30 per user; up to 1,000 monthly trips free, then $0.08 per trip (with volume discounts at higher tiers). Unlimited trips: up to 10 monthly active users free, then contact sales for discount; includes unlimited trips at no additional cost.",
+      "impact": "low",
+      "source_url": "https://www.mapbox.com/pricing",
+      "category": "Maps/Geolocation",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-09",
+      "restatement": [
+        {
+          "url": "https://www.mapbox.com/pricing",
+          "description": "Navigation SDK v3.x offers two pricing options. Metered: up to 100 monthly active users free, then $0.30 per user; up to 1,000 monthly trips free, then $0.08 per trip (with volume discounts at higher tiers). Unlimited trips: up to 10 monthly active users free, then contact sales for discount; includes unlimited trips at no additional cost."
+        }
+      ],
+      "dropped_on": "2026-11-09",
+      "drop_reason": "Not a change: Mapbox's Navigation SDK pricing guide describes 'Option 2: Unlimited trips pricing' in captures of docs.mapbox.com/ios/navigation/guides/pricing/ from 2024-01-05 and 2026-05-16, and our 2026-08-28 reading of mapbox.com/pricing already quoted the flat per-MAU option free up to 10 MAUs (data/restated_terms.json). Our listing never stated the option; nothing changed on 2026-11-09."
     }
   ]
 }
