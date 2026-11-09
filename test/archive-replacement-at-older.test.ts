@@ -19,7 +19,7 @@ function client() {
       return JSON.stringify({ previous_values: text.includes("Free Custom domains 1") ? [previous] : [], current_values: text.includes("Free plan: 3 domains") ? [current] : [] });
     }
     const text = prompt.split(/OLD PAGE \(saved [^)]*\):\n/)[1].split("\n\nStep 1.")[0];
-    return JSON.stringify({ changes: [{ record: "includes 3 domains", old_page: text.includes("Free plan: 3 domains") ? "Free plan: 3 domains" : "" }] });
+    return JSON.stringify({ changes: [{ record: "3 domains", old_page: text.includes("Free plan: 3 domains") ? "Free plan: 3 domains" : "" }] });
   } };
 }
 

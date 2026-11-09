@@ -31,7 +31,7 @@ function archiveOf(pages: Record<string, string | null>, url = ONE_SIGNAL.source
 }
 
 function oneSignalOptions(pages: Record<string, string | null>, answer: (page: Page) => unknown = (page) => ({ current_values: [], previous_values: page.text.includes(OLD_MOBILE) ? [EARLIER_VALUE] : [] })) {
-  const client = { complete: async (prompt: string) => JSON.stringify(answer({ page: "", day: "", text: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1] ?? "" })) };
+  const client = { complete: async (prompt: string) => prompt.includes('"changes"') ? JSON.stringify({changes:[{record:prompt.split(/THE RECORD[^\n]*:\n/)[1].split("\n\nTHE NEW DESCRIPTION")[0],old_page:""}]}) : JSON.stringify(answer({ page: "", day: "", text: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1] ?? "" })) };
   const readings: unknown[] = [];
   return {
     url: ONE_SIGNAL.source_url, textDay: "2026-09-20", recordDay: ONE_SIGNAL.date,
@@ -155,7 +155,7 @@ describe("captures of a source URL and its destination", () => {
   async function settle(pages: Record<string, string>) {
     const fetched: string[] = [];
     const listed: string[] = [];
-    const client = { complete: async (prompt: string) => JSON.stringify({ current_values: [], previous_values: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].includes(oldTerms) ? [{ previous: oldTerms, current: newTerms, old_page: oldTerms }] : [] }) };
+    const client = { complete: async (prompt: string) => prompt.includes('"changes"') ? JSON.stringify({changes:[{record:prompt.split(/THE RECORD[^\n]*:\n/)[1].split("\n\nTHE NEW DESCRIPTION")[0],old_page:""}]}) : JSON.stringify({ current_values: [], previous_values: prompt.split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].includes(oldTerms) ? [{ previous: oldTerms, current: newTerms, old_page: oldTerms }] : [] }) };
     const result = await settleAgainstCaptures({
       url: source, finalUrl: destination, textDay: "2026-09-20", recordDay: record.date,
       today: "2026-11-08", todayText: `${newTerms} ${FILLER}`,
@@ -309,7 +309,7 @@ describe("grounding an earlier-value answer", () => {
 
   it("sends the complete page at its boundary and rejects a quote beyond the actual prompt window", async () => {
     const prompts: string[] = [];
-    const client = { complete: async (prompt: string) => { prompts.push(prompt); return JSON.stringify({ current_values: [], previous_values: [EARLIER_VALUE] }); } };
+    const client = { complete: async (prompt: string) => { prompts.push(prompt); return JSON.stringify(prompt.includes('"changes"') ? {changes:[{record:NEW_MOBILE,old_page:""}]} : { current_values: [], previous_values: [EARLIER_VALUE] }); } };
     const read = previousValueReaderFor(client, ONE_SIGNAL);
     const boundary = "x".repeat(100000 - OLD_MOBILE.length) + OLD_MOBILE;
     assert.strictEqual((await read({ day: "2026-01-01", text: boundary })).status, "stated");
@@ -321,7 +321,7 @@ describe("grounding an earlier-value answer", () => {
     assert.ok(!shown.includes(OLD_MOBILE));
     assert.equal(prompts.length, 4);
     assert.ok(prompts[1].includes(boundary));
-    assert.ok(!prompts[3].split(/ARCHIVED PAGE \(saved [^)]*\):\n/)[1].split("\n\nInspect every")[0].includes(OLD_MOBILE));
+    assert.ok(!prompts[3].split(/OLD PAGE \(saved [^)]*\):\n/)[1].split("\n\nStep 1.")[0].includes(OLD_MOBILE));
   });
 });
 

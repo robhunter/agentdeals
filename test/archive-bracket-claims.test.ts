@@ -16,7 +16,7 @@ const capture = (day: string) => ({ timestamp: `${day.replaceAll("-", "")}120000
 const page = (day: string, text: string) => ({ page: `capture ${day}`, day, text: `${text}. ${FILLER}`, capture: capture(day) });
 const proofReader = (status: string, fields = {}) => async () => ({ status, ...fields });
 const oldValues = [{ previous: "50 requests per day", current: "25 requests per day", old: "Free plan: 50 requests per day" }];
-const newValues = [{ record: "now allows 25 requests per day", old: "Free plan: 25 requests per day" }];
+const newValues = [{ record: "25 requests per day", old: "Free plan: 25 requests per day" }];
 
 function readers() {
   const client = { complete: async (prompt: string) => {
@@ -25,7 +25,7 @@ function readers() {
       return JSON.stringify({ current_values: [], previous_values: text.includes("Free plan: 50 requests per day") ? oldValues.map(({ previous, current, old }) => ({ previous, current, old_page: old })) : [] });
     }
     const text = prompt.split(/OLD PAGE \(saved [^)]*\):\n/)[1].split("\n\nStep 1.")[0];
-    return JSON.stringify({ changes: [{ record: "now allows 25 requests per day", old_page: text.includes("Free plan: 25 requests per day") ? "Free plan: 25 requests per day" : "" }] });
+    return JSON.stringify({ changes: [{ record: "25 requests per day", old_page: text.includes("Free plan: 25 requests per day") ? "Free plan: 25 requests per day" : "" }] });
   } };
   return { readPreviousValue: previousValueReaderFor(client, record), readStatedBefore: statedBeforeReaderFor(client, record) };
 }

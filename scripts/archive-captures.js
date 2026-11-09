@@ -553,13 +553,13 @@ Respond with exactly one JSON object and no other text:
 }
 
 function judgeFreeTierRemoval(answer, record, text) {
-  const refusal = (why) => ({ status: "unstated", why, review: [] });
+  const refusal = (why, claims_checked = false) => ({ status: "unstated", claims_checked, why, review: [] });
   const plans = answer?.offered_plans;
   if (!Array.isArray(plans) || plans.length === 0) return refusal("the capture has no readable offered-plan list");
   if (String(text ?? "").length < MIN_PAGE_TEXT_LENGTH) return refusal("too little page text to establish the offered plans");
   const claim = String(answer.record ?? "").trim();
   if (!claim || !comparableText(record.summary).includes(comparableText(claim)) || !(/\bfree\b/i.test(claim) && /\b(?:removed?|ended|no longer exists|no free|nothing free)\b/i.test(claim))) return refusal("the quoted record fragment does not state the free-plan removal");
-  if (/\bfree forever\b|[\p{Sc}]\s*0(?:\.0+)?\s*\/\s*(?:mo(?:nth)?|year|yr)\b/iu.test(decodedText(text))) return refusal("the capture still states permanent free-plan terms");
+  if (/\bfree forever\b|[\p{Sc}]\s*0(?:\.0+)?\s*\/\s*(?:mo(?:nth)?|year|yr)\b/iu.test(decodedText(text))) return refusal("the capture still states permanent free-plan terms", true);
   const page = comparableText(text);
   const quoted = [];
   const names = new Set();
@@ -569,7 +569,7 @@ function judgeFreeTierRemoval(answer, record, text) {
     if (!name || !line || !page.includes(comparableText(line)) || !comparableText(line).includes(comparableText(name))) return refusal("an offered plan is not quoted from the capture");
     if (names.has(comparableText(name))) return refusal("the offered-plan list repeats a plan");
     names.add(comparableText(name));
-    if (plan.kind === "free" || /\bfree\b/i.test(name) && plan.kind !== "trial") return refusal("the capture still offers a free plan");
+    if (plan.kind === "free" || /\bfree\b/i.test(name) && plan.kind !== "trial") return refusal("the capture still offers a free plan", true);
     if (plan.kind === "paid") {
       const price = [...decodedText(line).matchAll(/[\p{Sc}]\s*(\d[\d,]*(?:\.\d+)?)/gu)];
       if (price.length === 0 || price.some((match) => Number(match[1].replaceAll(",", "")) === 0)) return refusal("an offered paid plan has no positive quoted price");
@@ -655,18 +655,18 @@ export function resultingTermsIn(summary) {
 
 export function judgeStatedBefore(answer, record, olderText) {
   if (record.change_type === "free_tier_removed") return judgeFreeTierRemoval(answer, record, olderText);
-  if (!Array.isArray(answer?.changes)) return { status: "unstated", why: "the reader's answer could not be parsed", review: [] };
+  if (!Array.isArray(answer?.changes)) return { status: "unstated", claims_checked: false, why: "the reader's answer could not be parsed", review: [] };
   const changes = answer.changes
     .map((change) => ({ record: String(change?.record ?? "").trim(), old: String(change?.old_page ?? "").trim() }))
     .filter((change) => /[\p{L}\d]/u.test(resultingTermsIn(change.record)));
-  if (changes.length === 0) return { status: "unstated", why: "the reader named no change in the record", review: [] };
+  if (changes.length === 0) return { status: "unstated", claims_checked: false, why: "the reader named no change in the record", review: [] };
   const summary = comparableText(record.summary);
   const notInRecord = changes.filter((change) => !summary.includes(comparableText(change.record)));
-  if (notInRecord.length > 0) return { status: "unstated", why: `the reader named changes that are not the record's words: ${quoteAll(notInRecord.map((change) => change.record))}`, review: [] };
+  if (notInRecord.length > 0) return { status: "unstated", claims_checked: false, why: `the reader named changes that are not the record's words: ${quoteAll(notInRecord.map((change) => change.record))}`, review: [] };
   const named = new Set(changes.flatMap((change) => [...figuresStated(change.record)]));
   const reading = figuresStated(record.current_state);
   const leftOut = [...changedFiguresIn(resultingTermsIn(record.summary), record.previous_state)].filter((figure) => reading.has(figure) && !named.has(figure));
-  if (leftOut.length > 0) return { status: "unstated", why: `the reader named no change stating ${quoteAll(leftOut)}, which the record's summary and its reading both state`, review: [] };
+  if (leftOut.length > 0) return { status: "unstated", claims_checked: false, why: `the reader named no change stating ${quoteAll(leftOut)}, which the record's summary and its reading both state`, review: [] };
   const page = comparableText(olderText);
   const whyUnstated = (change) => {
     if (!comparableText(change.old)) return "the capture does not state it";
@@ -716,15 +716,20 @@ Respond with exactly one JSON object and no other text:
 {"previous_values":[{"previous":"<earlier value copied from the previous description or record>","current":"<replacement copied from the new description>","old_page":"<earlier value copied from the archived page>"}]}`;
 }
 
-export function currentValuePrompt(record, older, maxLength = PREVIOUS_VALUE_MAX_PAGE_TEXT_LENGTH) {
-  const context = previousValuePrompt(record, older, maxLength).split("\n\nFind only")[0]
-    .replace("You are checking whether an archived page states an earlier value that a change record says changed.", "You are checking whether an archived page already states a replacement value.");
-  return `${context}
+function replacementRecord(record, values) {
+  if (record.change_type === "free_tier_removed" || !values?.length) return record;
+  const replacement = values.map((value) => value.current).join("; ");
+  return { ...record, summary: replacement, current_state: replacement };
+}
 
-Inspect every occurrence of each changed feature for the same plan, including both plan cards and comparison tables. Quote any replacement value from THE NEW DESCRIPTION that ARCHIVED PAGE already states, even when a stale table also states the earlier value. Exclude unchanged allowances and other plans or features. Copy the earlier value from THE PREVIOUS DESCRIPTION or THE RECORD and its replacement from THE NEW DESCRIPTION, then quote the replacement from ARCHIVED PAGE. All three fragments must be exact and refer to the same plan and feature. Never join separated words. Return an empty list only after checking the complete page.
+export function currentValuePrompt(record, older, values = [], maxLength = PREVIOUS_VALUE_MAX_PAGE_TEXT_LENGTH) {
+  const focused = replacementRecord(record, values);
+  return statedBeforePrompt(focused, older, maxLength) + `
 
-Respond with exactly one JSON object and no other text:
-{"current_values":[{"previous":"<earlier value copied from the previous description or record>","current":"<replacement copied from the new description>","old_page":"<replacement value copied from the archived page>"}]}`;
+PLAN AND PRODUCT CONTEXT ONLY:
+${record.summary}
+
+Inspect every occurrence of the replacement for the same plan and feature, including both plan cards and comparison tables. A stale table's earlier value does not negate a replacement on the plan card. Copy the replacement only when it is actually present. If the page states only the earlier value, leave old_page empty. Exclude unchanged allowances and other plans or features.`;
 }
 
 function changedValueOnPage(value, record, page, currentOnPage) {
@@ -771,8 +776,14 @@ export function judgePreviousValue(answer, record, olderText, maxLength = PREVIO
 export function previousValueReaderFor(client, record) {
   return async (older) => {
     const previous = parseAnswerHolding(await client.complete(previousValuePrompt(record, older)), "previous_values");
-    const current = parseAnswerHolding(await client.complete(currentValuePrompt(record, older)), "current_values");
-    return judgePreviousValue({ previous_values: previous?.previous_values, current_values: current?.current_values }, record, older.text);
+    const initial = judgePreviousValue({ previous_values: previous?.previous_values, current_values: [] }, record, older.text);
+    const values = initial.previous_values ?? [];
+    const answer = parseStatedBeforeAnswer(await client.complete(currentValuePrompt(record, older, values)));
+    const current = judgeStatedBefore(answer, replacementRecord(record, values), older.text);
+    const checked = Array.isArray(answer?.changes) && answer.changes.length > 0 || record.change_type === "free_tier_removed" && Array.isArray(answer?.offered_plans) && answer.offered_plans.length > 0;
+    if (!checked || current.claims_checked === false) return { status: "unknown", why: "the replacement reader did not answer for this capture", replacement_reading: current };
+    if (["stated", "removal_stated"].includes(current.status)) return { status: "new_stated", current_values: current.stated_then, previous_values: values, replacement_reading: current };
+    return { ...judgePreviousValue({ previous_values: previous?.previous_values, current_values: [] }, record, older.text), replacement_reading: current };
   };
 }
 
