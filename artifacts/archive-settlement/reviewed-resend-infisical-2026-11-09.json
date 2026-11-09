@@ -1,0 +1,182 @@
+{
+  "version": 4,
+  "today": "2026-11-09",
+  "review_url": "https://github.com/robhunter/agentdeals/issues/3300#issuecomment-6732718937",
+  "evidence": {
+    "evaluation_run": "https://github.com/robhunter/agentdeals/actions/runs/42566721213",
+    "source": "cadf3b7a47544aed963e4d62b37ece620b6cdc22",
+    "runtime_sha256": "9031b8038ff173ef192176c840543733dd7d06daf6de7f961995e3144aa51767",
+    "evaluated_report_sha256": "fa7bc8244e67ee99139663cda0676123fac3b1f9ac80b2739701200c20588ed2"
+  },
+  "results": [
+    {
+      "vendor": "Resend",
+      "date": "2026-09-05",
+      "change_type": "limits_increased",
+      "source_url": "https://resend.com/pricing",
+      "operation": "vendor_change",
+      "expected_record": {
+        "vendor": "Resend",
+        "change_type": "limits_increased",
+        "date": "2026-09-05",
+        "date_source": "discovered",
+        "summary": "The free tier now has a limit of 3,000 emails/month (100/day) and includes 3 domains. Previously 3K emails/month (100/day) and 1 domain. The free tier also includes ticket support, 10,000 automation runs, and 30-day data retention.",
+        "previous_state": "Developer-first email API \u2014 3K emails/month free (100/day cap), 1 domain, 1K marketing contacts/month, 5 AI credits, 30-day data retention",
+        "current_state": "The free tier includes 3,000 emails / mo, 100 emails a day, 3 domains, ticket support, 10,000 automation runs, and 30-day data retention.",
+        "impact": "medium",
+        "source_url": "https://resend.com/pricing",
+        "category": "Email",
+        "alternatives": [],
+        "detected_by": "reverify-ai",
+        "recorded_date": "2026-09-05",
+        "archive_check": {
+          "checked": "2026-10-02",
+          "outcome": "no_usable_capture"
+        }
+      },
+      "outcome": "vendor_changed",
+      "date_from_captures": "2026-08-20",
+      "brackets": [
+        {
+          "last_old": "2026-08-19",
+          "first_new": "2026-08-20",
+          "last_old_capture": "https://web.archive.org/web/20260819205556/https://resend.com/pricing",
+          "first_new_capture": "https://web.archive.org/web/20260820220357/https://resend.com/pricing",
+          "claim_proof": {
+            "older": {
+              "day": "2026-08-19",
+              "url": "https://web.archive.org/web/20260819205556/https://resend.com/pricing",
+              "verdict": {
+                "status": "stated",
+                "current_values_checked": true,
+                "previous_values": [
+                  {
+                    "previous": "1 domain",
+                    "current": "3 domains",
+                    "old": "1 domain"
+                  }
+                ],
+                "replacement_reading": {
+                  "status": "unstated",
+                  "why": "no line already states \"3 domains\"",
+                  "review": [
+                    {
+                      "record": "3 domains",
+                      "old": "1 domain",
+                      "why": "the capture's words do not state \"3\""
+                    }
+                  ]
+                }
+              }
+            },
+            "newer": {
+              "day": "2026-08-20",
+              "url": "https://web.archive.org/web/20260820220357/https://resend.com/pricing",
+              "verdict": {
+                "status": "stated",
+                "stated_then": [
+                  {
+                    "record": "3 domains",
+                    "old": "3 domains"
+                  },
+                  {
+                    "record": "ticket support",
+                    "old": "Ticket support"
+                  },
+                  {
+                    "record": "10,000 automation runs",
+                    "old": "10,000 automation runs"
+                  },
+                  {
+                    "record": "30-day data retention",
+                    "old": "30-day data retention"
+                  }
+                ]
+              }
+            }
+          },
+          "rejected_older_endpoints": [
+            {
+              "day": "2026-08-21",
+              "url": "https://web.archive.org/web/20260821084728/https://resend.com/pricing",
+              "verdict": {
+                "status": "new_stated",
+                "current_values": [
+                  {
+                    "record": "3 domains",
+                    "old": "3 domains"
+                  }
+                ],
+                "previous_values": [
+                  {
+                    "previous": "1 domain",
+                    "current": "3 domains",
+                    "old": "1"
+                  }
+                ],
+                "replacement_reading": {
+                  "status": "stated",
+                  "stated_then": [
+                    {
+                      "record": "3 domains",
+                      "old": "3 domains"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "vendor": "Infisical",
+      "date": "2026-09-09",
+      "change_type": "limits_increased",
+      "source_url": "https://infisical.com/pricing",
+      "operation": "disposition",
+      "expected_record": {
+        "vendor": "Infisical",
+        "change_type": "limits_increased",
+        "date": "2026-09-09",
+        "date_source": "discovered",
+        "summary": "The free tier now offers unlimited projects instead of 3.",
+        "previous_state": "5 identities, 3 projects, 3 environments, 10 integrations. Includes CLI, SDKs, K8s operator, webhooks, 2FA, secret scanning and sharing",
+        "current_state": "Free tier includes 5 identities, unlimited projects, 100+ integrations, Secret Sharing, Secret References and Imports, Secret Overrides, 2FA.",
+        "impact": "low",
+        "source_url": "https://infisical.com/pricing",
+        "category": "Secrets Management",
+        "alternatives": [],
+        "detected_by": "reverify-ai",
+        "recorded_date": "2026-09-09",
+        "archive_check": {
+          "checked": "2026-10-02",
+          "outcome": "vendor_changed",
+          "brackets": [
+            {
+              "last_old": "2026-07-16",
+              "first_new": "2026-07-25",
+              "last_old_capture": "https://web.archive.org/web/20260716200743/https://infisical.com/pricing",
+              "first_new_capture": "https://web.archive.org/web/20260725022640/https://infisical.com/pricing"
+            },
+            {
+              "last_old": "2026-07-25",
+              "first_new": "2026-07-29",
+              "last_old_capture": "https://web.archive.org/web/20260725022640/https://infisical.com/pricing",
+              "first_new_capture": "https://web.archive.org/web/20260729161636/https://infisical.com/pricing"
+            }
+          ]
+        }
+      },
+      "outcome": "vendor_changed",
+      "brackets": [
+        {
+          "last_old": "2026-07-16",
+          "first_new": "2026-07-25",
+          "last_old_capture": "https://web.archive.org/web/20260716200743/https://infisical.com/pricing",
+          "first_new_capture": "https://web.archive.org/web/20260725022640/https://infisical.com/pricing"
+        }
+      ]
+    }
+  ]
+}
