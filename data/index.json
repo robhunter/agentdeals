@@ -13379,7 +13379,7 @@
           "read_on": "2026-10-23"
         },
         {
-          "text": "Colab Pro costs $9.99 a month for 100 compute units, Colab Pro+ $49.99 a month for 600, and Pay As You Go $9.99 for 100 compute units or $49.99 for 500 with no subscription. Compute units expire after 90 days and are not refundable. These are the US prices on Google's signup page.",
+          "text": "Google Colab offers Pay As You Go at $9.99 for 100 Compute Units or $49.99 for 500 Compute Units, with no subscription. Colab Pro is $9.99 per month for 100 compute units. Colab Pro+ is $49.99 per month for 600 compute units. Compute units are not refundable, not transferable, and expire after 90 days. These are US prices.",
           "quote": "Pay As You Go $9.99 for 100 Compute Units $49.99 for 500 Compute Units … No subscription required. … Colab Pro $9.99 per month … 100 compute units per month … Colab Pro+ $49.99 per month … An additional 500 compute units per month, totaling 600 compute units per month. … compute units purchased from Pay As You Go or granted via Colab Pro or Colab Pro+ are not refundable and not transferable, and expire after 90 days.",
           "url": "https://colab.research.google.com/signup",
           "read_on": "2026-11-09"
@@ -39463,7 +39463,7 @@
     {
       "vendor": "Google Vector Search 2.0",
       "category": "AI / ML",
-      "description": "Agent Retrieval (formerly Vector Search 2.0) on Gemini Enterprise Agent Platform (formerly Vertex AI): approximate nearest neighbor (ANN) vector search for AI and RAG applications. Pay-as-you-go: pricing covers the virtual machines that host deployed indexes plus building and updating indexes; Google says a minimal setup costs under $100 a month.",
+      "description": "Google Vector Search 2.0 is now Agent Retrieval. It is part of the Gemini Enterprise Agent Platform, formerly Vertex AI Platform. It does approximate nearest neighbor search for AI applications. Pricing is pay-as-you-go. A minimal setup costs under $100 per month.",
       "tier": "Pay-as-you-go",
       "url": "https://cloud.google.com/vertex-ai/docs/vector-search/overview",
       "tags": [
