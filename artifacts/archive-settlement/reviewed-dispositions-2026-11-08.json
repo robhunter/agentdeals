@@ -1,0 +1,218 @@
+{
+  "version": 3,
+  "today": "2026-11-08",
+  "review_url": "https://github.com/robhunter/agentdeals/issues/3300#issuecomment-6727186622",
+  "results": [
+    {
+      "vendor": "Prisma Accelerate",
+      "date": "2026-09-05",
+      "change_type": "limits_increased",
+      "expected_record": {
+        "vendor": "Prisma Accelerate",
+        "change_type": "limits_increased",
+        "date": "2026-09-05",
+        "date_source": "discovered",
+        "summary": "The free tier now offers 200,000 operations/month for Prisma Postgres, not 100,000 operations/month. The free tier also includes 1M requests/month for Prisma Compute, 360 GB-hours memory, 4 active vCPU-hours, and 10 GB outbound bandwidth.",
+        "previous_state": "Connection pooling and caching for any database \u2014 100,000 operations/month, 10 connection pool limit, auto-scaling. Also available: Prisma Postgres free tier with 500 MB storage and up to 5 databases",
+        "current_state": "Free tier includes 1M requests / month, 360 GB-hours memory / month, 4 active vCPU-hours / month, 10 GB outbound bandwidth / month and 200k operations / month for Prisma Postgres with 500 MB storage and 50 databases.",
+        "impact": "medium",
+        "source_url": "https://www.prisma.io/pricing",
+        "category": "Databases",
+        "alternatives": [],
+        "detected_by": "reverify-ai",
+        "recorded_date": "2026-09-05",
+        "archive_check": {
+          "checked": "2026-10-02",
+          "outcome": "vendor_changed",
+          "brackets": [
+            {
+              "last_old": "2026-04-18",
+              "first_new": "2026-06-22",
+              "last_old_capture": "https://web.archive.org/web/20260418051610/https://www.prisma.io/pricing",
+              "first_new_capture": "https://web.archive.org/web/20260622180731/https://www.prisma.io/pricing"
+            },
+            {
+              "last_old": "2026-07-31",
+              "first_new": "2026-08-27",
+              "last_old_capture": "https://web.archive.org/web/20260731203543/https://www.prisma.io/pricing",
+              "first_new_capture": "https://web.archive.org/web/20260827085630/https://www.prisma.io/pricing"
+            }
+          ]
+        }
+      },
+      "outcome": "vendor_changed",
+      "brackets": [
+        {
+          "last_old": "2026-07-31",
+          "first_new": "2026-08-27",
+          "last_old_capture": "https://web.archive.org/web/20260731203543/https://www.prisma.io/pricing",
+          "first_new_capture": "https://web.archive.org/web/20260827085630/https://www.prisma.io/pricing"
+        }
+      ]
+    },
+    {
+      "vendor": "Cypress Cloud",
+      "date": "2026-09-05",
+      "change_type": "limits_reduced",
+      "expected_record": {
+        "vendor": "Cypress Cloud",
+        "change_type": "limits_reduced",
+        "date": "2026-09-05",
+        "date_source": "discovered",
+        "summary": "The Starter tier, which is free, now includes 10 users instead of 50, and carries a new limit of 100 prompt executions/month. Test results stay at 500/month.",
+        "previous_state": "50 users, 500 test results/month, 30-day data retention. Parallelization included. Separate OSS plan available (100K results/mo) via application",
+        "current_state": "Starter is priced Free with no credit card required, and now includes 10 users, 500 test results / month and 100 prompt execs / month. The compare table prices Team at $799 / year and Business at $3,199 / year, and Cypress Cloud remains free to use for non-commercial open-source public projects.",
+        "impact": "high",
+        "source_url": "https://www.cypress.io/pricing",
+        "category": "Testing",
+        "alternatives": [],
+        "detected_by": "reverify-ai",
+        "recorded_date": "2026-09-05",
+        "archive_check": {
+          "checked": "2026-10-03",
+          "outcome": "vendor_changed",
+          "brackets": [
+            {
+              "last_old": "2026-07-11",
+              "first_new": "2026-08-19",
+              "last_old_capture": "https://web.archive.org/web/20260711080112/https://www.cypress.io/pricing",
+              "first_new_capture": "https://web.archive.org/web/20260819234557/https://www.cypress.io/pricing"
+            },
+            {
+              "last_old": "2026-08-28",
+              "first_new": "2026-09-07",
+              "last_old_capture": "https://web.archive.org/web/20260828130755/https://www.cypress.io/pricing",
+              "first_new_capture": "https://web.archive.org/web/20260907081649/https://www.cypress.io/pricing"
+            }
+          ]
+        }
+      },
+      "outcome": "vendor_changed",
+      "brackets": [
+        {
+          "last_old": "2026-08-28",
+          "first_new": "2026-09-07",
+          "last_old_capture": "https://web.archive.org/web/20260828130755/https://www.cypress.io/pricing",
+          "first_new_capture": "https://web.archive.org/web/20260907081649/https://www.cypress.io/pricing"
+        }
+      ]
+    },
+    {
+      "vendor": "Bench",
+      "date": "2026-08-28",
+      "change_type": "limits_increased",
+      "expected_record": {
+        "vendor": "Bench",
+        "change_type": "limits_increased",
+        "date": "2026-08-28",
+        "date_source": "discovered",
+        "summary": "The deal has changed from 20% off the first 6 months to 50% off the first 6 months for Stripe users.",
+        "previous_state": "20% off your first 6 months of bookkeeping with Bench. Access via: Free for Stripe users",
+        "current_state": "Stripe referrals get 50% off their first 6 months with Bench.",
+        "impact": "high",
+        "source_url": "https://bench.co/integrations/stripe/",
+        "category": "Startup Perks",
+        "alternatives": [],
+        "detected_by": "reverify-ai",
+        "recorded_date": "2026-08-28",
+        "archive_check": {
+          "checked": "2026-10-02",
+          "outcome": "vendor_changed",
+          "brackets": [
+            {
+              "last_old": "2026-03-12",
+              "first_new": null,
+              "last_old_capture": "https://web.archive.org/web/20260312100423/https://www.bench.co/integrations/stripe",
+              "first_new_capture": null
+            }
+          ]
+        }
+      },
+      "outcome": "no_usable_capture"
+    },
+    {
+      "vendor": "userforge.com",
+      "date": "2026-08-28",
+      "change_type": "limits_increased",
+      "expected_record": {
+        "vendor": "userforge.com",
+        "change_type": "limits_increased",
+        "date": "2026-08-28",
+        "date_source": "discovered",
+        "summary": "The free tier now allows unlimited personas and pages, with a limit of 3 persona reviews per month and 10 context sources. Previously 3 personas and 2 collaborators.",
+        "previous_state": "Interconnected online personas, user stories and context mapping. Helps keep design and dev in sync free for up to 3 personas and two collaborators.",
+        "current_state": "Free gets you started \u2014 you meet your personas and hear their first feedback. \u2713 3 personas with portraits & scenes \u2713 3 pages & 5 persona reviews a month \u2713 10 context sources to ground them \u2713 Live share links & clean printing \u2713 Bring a collaborator",
+        "impact": "medium",
+        "source_url": "https://userforge.com/",
+        "category": "Design",
+        "alternatives": [],
+        "detected_by": "reverify-ai",
+        "recorded_date": "2026-08-28",
+        "archive_check": {
+          "checked": "2026-10-03",
+          "outcome": "vendor_changed",
+          "brackets": [
+            {
+              "last_old": "2026-03-12",
+              "first_new": "2026-04-21",
+              "last_old_capture": "https://web.archive.org/web/20260312201642/https://userforge.com/",
+              "first_new_capture": "https://web.archive.org/web/20260421153608/https://userforge.com/"
+            },
+            {
+              "last_old": "2026-07-09",
+              "first_new": "2026-08-28",
+              "last_old_capture": "https://web.archive.org/web/20260709123552/https://userforge.com/",
+              "first_new_capture": "https://web.archive.org/web/20260828130948/https://userforge.com/"
+            }
+          ]
+        }
+      },
+      "outcome": "no_usable_capture"
+    },
+    {
+      "vendor": "tabler-icons.io",
+      "date": "2026-08-28",
+      "change_type": "limits_increased",
+      "expected_record": {
+        "vendor": "tabler-icons.io",
+        "change_type": "limits_increased",
+        "date": "2026-08-28",
+        "date_source": "discovered",
+        "summary": "While a free tier still exists, the number of icons has increased from 5,800 to 6184. There are also options to purchase bundles and support the project with optional payments.",
+        "previous_state": "Over 5,800 free copy-and-paste SVG editable icons.",
+        "current_state": "Tabler Icons offers 6184+ free vector icons. Users can get the source code for free under the MIT License with a personal & commercial license and community support. There are also paid bundles available for $9 and $69.",
+        "impact": "low",
+        "source_url": "https://tabler.io/icons",
+        "category": "Design",
+        "alternatives": [],
+        "detected_by": "reverify-ai",
+        "recorded_date": "2026-08-28",
+        "archive_check": {
+          "checked": "2026-10-02",
+          "outcome": "vendor_changed",
+          "brackets": [
+            {
+              "last_old": "2026-04-14",
+              "first_new": "2026-04-16",
+              "last_old_capture": "https://web.archive.org/web/20260414212920/https://tabler.io/icons",
+              "first_new_capture": "https://web.archive.org/web/20260416163551/https://tabler.io/icons"
+            },
+            {
+              "last_old": "2026-04-29",
+              "first_new": "2026-05-15",
+              "last_old_capture": "https://web.archive.org/web/20260429011134/https://tabler.io/icons",
+              "first_new_capture": "https://web.archive.org/web/20260515210713/https://tabler.io/icons"
+            },
+            {
+              "last_old": "2026-07-10",
+              "first_new": "2026-07-19",
+              "last_old_capture": "https://web.archive.org/web/20260710142335/https://tabler.io/icons",
+              "first_new_capture": "https://web.archive.org/web/20260719141323/https://tabler.io/icons"
+            }
+          ]
+        }
+      },
+      "outcome": "no_usable_capture"
+    }
+  ]
+}
