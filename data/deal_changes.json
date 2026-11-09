@@ -18807,6 +18807,22 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Ably",
+      "change_type": "pricing_model_change",
+      "date": "2026-11-05",
+      "date_source": "vendor_page",
+      "summary": "On November 5, 2026, Ably moved to pricing on monthly active users (MAUs). The Free package now has a cap of 500 MAUs a month, which the free plan did not have before. It still allows 6M messages a month and 500 messages a second, and its concurrent connections rose from 200 to 500. Paid plans are now Pro and Business, from $29 and $349 a month for 1,000 MAUs billed annually. Accounts already on Ably's resource-based pricing keep their terms.",
+      "tier": "Free",
+      "previous_state": "Free: \"200 concurrent connections\", \"500 messages / second\", \"6M messages / month\", community & email support, no commitment, and no cap on users. Standard: $29 / month + usage. Pro: $399 / month + usage (ably.com/pricing, archived 2026-11-02).",
+      "current_state": "Free, $0 / month: \"Up to 500 MAUs\", community & email support (best effort), no commitment. Pro $29 and Business $349 a month for 1K MAUs, billed annually; \"We charge $0.05 for each additional MAU\" (ably.com/pricing, read 2026-11-09). Free package limits: 6,000,000 messages a month, 500 concurrent connections, 500 concurrent channels and 500 MAUs (ably.com/docs/platform/pricing/free, read 2026-11-09).",
+      "impact": "medium",
+      "source_url": "https://ably.com/blog/mau-pricing",
+      "category": "Messaging",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-09"
     }
   ]
 }

@@ -3860,7 +3860,7 @@
     {
       "vendor": "Ably",
       "category": "Messaging",
-      "description": "Real-time infrastructure — 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
+      "description": "Real-time infrastructure: Pub/Sub, Chat, Spaces, LiveObjects, LiveSync and AI Transport. The Free package costs $0 a month for up to 500 monthly active users (MAUs), with community and email support and no commitment. Ably has priced on MAUs since November 5, 2026. Accounts already on its resource-based pricing keep their terms. Pro costs $29 a month and Business $349 a month for 1,000 MAUs, billed annually, and on both each MAU over the allowance costs $0.05.",
       "tier": "Free",
       "url": "https://ably.com/pricing",
       "tags": [
@@ -3884,7 +3884,29 @@
         "text": "Free for everyone Start for free Community & email support (best effort) Up to 500 MAUs No commitment",
         "url": "https://ably.com/pricing",
         "read_on": "2026-11-08"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Besides 500 MAUs a month, Ably's docs give the Free package 6,000,000 messages a month, 500 concurrent connections and 500 concurrent channels. No credit card is needed, and the package has no time limit.",
+          "quote": "No credit card is required to sign up and there's no time limit on how long you can use it for.",
+          "url": "https://ably.com/docs/platform/pricing/free",
+          "read_on": "2026-11-09"
+        },
+        {
+          "text": "Ably does not cut off a Free package account that goes over a limit; it restricts the account until it recovers. Past 6,000,000 messages in a month, the account is limited to 1,600 messages an hour until the next month; connections and channels over 500 are rejected; past 500 MAUs, service may be degraded until the next month.",
+          "quote": "Ably won't cut you off when your Free package usage goes over a limit. Your account is restricted until it recovers",
+          "url": "https://ably.com/docs/platform/pricing/free",
+          "read_on": "2026-11-09",
+          "operating_detail": true
+        },
+        {
+          "text": "Ably counts a monthly active user by the clientId a device connects with, once a month however often it returns; servers and agents are not counted. A device that connects without a clientId is rejected.",
+          "quote": "A device that connects without one is rejected.",
+          "url": "https://ably.com/docs/platform/pricing",
+          "read_on": "2026-11-09",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "Bright Data MCP Server",
