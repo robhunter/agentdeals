@@ -84,10 +84,11 @@ export function undatedMentions(text: string, name: string): string[] {
 
 function retiredFrontierClaim(html: string): boolean {
   const text = everySurface(html);
-  const sentence = String.raw`(?:(?![.!?]\s)[\s\S]){0,140}?`;
-  const old = String.raw`(?:Claude\s+)?Fable\s+5\.1`;
-  const position = String.raw`(?:top|newest|latest|flagship)\s+(?:Claude\s+)?model|(?:newest|latest|flagship)\s+Claude`;
-  return new RegExp(`(?:${position})${sentence}${old}|${old}${sentence}(?:${position})`, "i").test(text)
+  const old = String.raw`(?:Claude\s+)?Fable\s+5\.1(?!\d|\.\d)`;
+  const position = String.raw`(?:(?:top|newest|latest|flagship)\s+(?:Claude\s+)?model|(?:newest|latest|flagship)\s+Claude)`;
+  const assignment = String.raw`\s*(?:[:=—–-]\s*|(?:is|remains)\s+)?(?:the\s+)?`;
+  const attribution = String.raw`\s*(?:is|remains|,|—)\s+(?:(?:Anthropic['’]s|the)\s+){0,2}`;
+  return new RegExp(`${position}${assignment}${old}|${old}${attribution}${position}`, "i").test(text)
     || /OpenAI and Anthropic price their top model identically/i.test(text)
     || /each lab['’]s top model costs \$10\/\$50/i.test(text);
 }
@@ -135,6 +136,11 @@ describe("frontier model comparisons", () => {
       "The dearest is Claude Fable 5.1 at $10/$50.",
       "2026-09-22: Claude Fable 5.1 launched at $10/$50.",
       "Claude Fable 5.1 is $10/$50. Anthropic's newest model is Claude Fable 5.2.",
+      "Anthropic's newest model, Claude Fable 5.2, is cheaper than Claude Fable 5.1.",
+      "Claude Fable 5.1 costs more than Anthropic's top model, Claude Fable 5.2.",
+      "Anthropic's newest model is Claude Fable 5.10.",
+      "Claude Fable 5.1 is not Anthropic's newest model.",
+      "Anthropic's newest model is not Claude Fable 5.1.",
     ]) assert.strictEqual(retiredFrontierClaim(claim), false, claim);
   });
 
