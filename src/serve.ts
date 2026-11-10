@@ -29339,7 +29339,7 @@ function buildCiCdPricingPage(): string {
       category: "mobile",
       freeMinutes: "500 min/mo",
       concurrency: "Not stated",
-      selfHosted: "Paid only",
+      selfHosted: "1 on-prem runner free (Hobby)",
       paidFrom: "$89/mo billed annually, $99 monthly (Starter)",
       pricingModel: "Per-minute",
       freeDetails: "Hobby plan: 500 build minutes a month on Linux or macOS, 1 private app, unlimited public apps, unlimited team members, 90-minute build timeout. Mobile-first CI/CD with 400+ pre-built workflow steps (Xcode, Gradle, Fastlane, CocoaPods). Visual workflow editor.",
@@ -37272,7 +37272,7 @@ ${globalNavCss()}
         <td>90-min build timeout</td>
         <td>macOS Medium/Large, Linux Medium</td>
         <td>1 private app; unlimited public apps</td>
-        <td class="cross">Paid plans only</td>
+        <td class="check">1 on-prem runner free (Hobby)</td>
         <td style="color:#3fb950">Yes (Hobby)</td>
       </tr>${vendorPageConditionsRowHtml("bitrise", 8)}
       <tr>

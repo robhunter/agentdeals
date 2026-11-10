@@ -203,7 +203,8 @@ describe("/ci-cd-pricing states the current plans of Bitbucket Pipelines, Codema
   });
 
   it("states Bitrise Hobby minutes, unstated concurrency and Starter billing in each table and card", () => {
-    assert.deepStrictEqual(rowOf(tableRows(html, PRICING_TABLE), "Bitrise"), ["500 min/mo", "Not stated", "Paid only", "$89/mo billed annually, $99 monthly (Starter)", "Per-minute"]);
+    assert.deepStrictEqual(rowOf(tableRows(html, PRICING_TABLE), "Bitrise"), ["500 min/mo", "Not stated", "1 on-prem runner free (Hobby)", "$89/mo billed annually, $99 monthly (Starter)", "Per-minute"]);
+    assert.ok(!rowOf(tableRows(html, PRICING_TABLE), "Bitrise").includes("Paid only"));
     assert.strictEqual(rowOf(tableRows(html, FREE_TIER_TABLE), "Bitrise")[1], "500 min/mo");
     assert.deepStrictEqual(rowOf(tableRows(html, COST_TABLE), "Bitrise"), ["$0–99", "$89/mo annual billing; $99/mo monthly (Starter)", "Hobby: 500 min/mo. Starter: $89/mo billed annually, $99 monthly."]);
     assert.ok(cardText(html, "bitrise").startsWith("Hobby plan: 500 build minutes a month on Linux or macOS, 1 private app, unlimited public apps, unlimited team members, 90-minute build timeout."));

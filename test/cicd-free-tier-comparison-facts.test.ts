@@ -48,7 +48,7 @@ const MAIN_TABLE_ROWS: Record<string, string[]> = {
     "90-min build timeout",
     "macOS Medium/Large, Linux Medium",
     "1 private app; unlimited public apps",
-    "Paid plans only"
+    "1 on-prem runner free (Hobby)"
   ],
   "Drone CI": [
     "One machine (Community Edition)"
@@ -86,6 +86,7 @@ const MAIN_TABLE_CELLS_WITHDRAWN: Record<string, string[]> = {
     "Included in credits"
   ],
   "Bitrise": [
+    "Paid plans only",
     "300 credits/mo",
     "5 concurrent",
     "1 concurrent",
