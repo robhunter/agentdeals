@@ -83,6 +83,22 @@ function assertCountdowns(rows: ReturnType<typeof entries>) {
   }
 }
 
+function qualifyingDeadlineRows(html: string, records: Array<Parameters<typeof changeTouchesTheListing>[0] & { date: string; summary?: string }>, stated: ReturnType<typeof statedDeadlines>) {
+  const lines = [
+    ...records.map(record => ({ vendor: record.vendor, date: record.date, summary: record.summary ?? "", qualifies: changeTouchesTheListing(record) })),
+    ...stated.map(deadline => ({ vendor: deadline.vendor, date: deadline.date, summary: deadline.sentence, qualifies: !deadline.record || changeTouchesTheListing(deadline.record) })),
+  ].sort((a, b) => a.date.localeCompare(b.date));
+  const rows = entries(html, "dl");
+  assert.equal(rows.length, lines.length);
+  for (const [i, row] of rows.entries()) {
+    const line = lines[i];
+    assert.equal(pair(row), pair(line));
+    const summary = line.summary.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    assert.ok(row.body.includes(summary), `${pair(row)} should retain its own summary`);
+  }
+  return rows.filter((_, i) => lines[i].qualifies);
+}
+
 describe("the home page includes stated deadlines in its soonest five", () => {
   it("matches the deadline tracker's first five qualifying vendor/date pairs on live data", async () => {
     const changes = JSON.parse(readFileSync(path.join(REPO, "data/deal_changes.json"), "utf8")).changes;
@@ -93,21 +109,40 @@ describe("the home page includes stated deadlines in its soonest five", () => {
       records,
       TODAY,
     );
-    const recordByPair = new Map([
-      ...records.map(record => [pair(record), record] as const),
-      ...stated.flatMap(deadline => deadline.record ? [[pair(deadline), deadline.record] as const] : []),
-    ]);
     await withPages(null, null, (home, deadlines) => {
-      const expected = entries(deadlines, "dl").filter(entry => {
-        const dated = recordByPair.get(pair(entry));
-        return !dated || changeTouchesTheListing(dated);
-      }).slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE);
+      const expected = qualifyingDeadlineRows(deadlines, records, stated).slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE);
       const actual = entries(section(home), "cs");
       assert.deepEqual(actual.map(pair), expected.map(pair));
       assertCountdowns(actual);
       if (TODAY < "2026-11-25") assert.ok(actual.some(entry => entry.vendor === "Mem0" && entry.date === "2026-11-25"));
       if (TODAY < "2026-12-01") assert.ok(actual.some(entry => entry.vendor === "Cloudflare AI Search" && entry.date === "2026-12-01"));
     });
+  });
+
+  it("keeps same-vendor same-day records separate when only one affects the listing", async () => {
+    for (const reversed of [false, true]) {
+      const records = [
+        record("Shared", 3, "A sibling model retires.", { listing_effect: "none" }),
+        record("Shared", 3, "The Standard price doubles.", { change_type: "pricing_restructured", listing_effect: "none" }),
+        record("Shared", 4, "The listed API retires."),
+      ];
+      if (reversed) records.reverse();
+      await withPages([], records, (home, deadlines) => {
+        const expected = qualifyingDeadlineRows(deadlines, records, []);
+        const actual = entries(section(home), "cs");
+        const pairs = [pair({ vendor: "Shared", date: dateIn(3) }), pair({ vendor: "Shared", date: dateIn(4) })];
+        assert.deepEqual(expected.map(pair), pairs);
+        assert.deepEqual(actual.map(pair), pairs);
+        assert.ok(actual[0].body.includes("The Standard price doubles."));
+        assert.ok(!section(home).includes("A sibling model retires."));
+        const swapped = deadlines
+          .replaceAll("A sibling model retires.", "Swapped deadline summary.")
+          .replaceAll("The Standard price doubles.", "A sibling model retires.")
+          .replaceAll("Swapped deadline summary.", "The Standard price doubles.");
+        assert.throws(() => qualifyingDeadlineRows(swapped, records, []), /should retain its own summary/);
+        assertCountdowns(actual);
+      });
+    }
   });
 
   it("orders and caps mixed listing and record dates while preserving sources, quotations and conditions", async () => {

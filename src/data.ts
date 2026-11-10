@@ -2084,15 +2084,16 @@ export function getWeeklyDigest(): {
     }));
 
   const seen = new Set<string>();
-  const deadlines = [...expiringDeadlines, ...changeDeadlines]
+  const orderedDeadlines = [...expiringDeadlines, ...changeDeadlines]
     .sort((a, b) => a.date.localeCompare(b.date))
     .filter((d) => {
       const key = `${d.vendor}|${d.date}`;
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
-    })
-    .slice(0, 25);
+    });
+  const deadlineWindowEnd = orderedDeadlines[24]?.date ?? orderedDeadlines.at(-1)?.date ?? "";
+  const deadlines = orderedDeadlines.filter((d) => d.date <= deadlineWindowEnd);
 
   const parts: string[] = [];
   if (changes.length > 0) {
