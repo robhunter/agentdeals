@@ -18919,6 +18919,205 @@
       "date_source": "vendor_page",
       "tier": "Spark",
       "tier_direction": "narrowed"
+    },
+    {
+      "vendor": "Bitrise",
+      "change_type": "limits_increased",
+      "date": "2026-11-09",
+      "date_source": "hand_written",
+      "summary": "Bitrise changed its Hobby plan on November 9, 2026. Hobby now has unlimited team members, where it was for a team of one. It includes 500 build minutes a month on Linux or macOS, where it gave 300 credits a month. It now requires verifying a credit card, where no credit card was needed. Pay-As-You-Go up to $15 a month is now offered on Hobby.",
+      "tier": "Hobby",
+      "tier_direction": "widened",
+      "previous_state": "Hobby: \"Our Hobby tier is free. No strings attached, no credit card needed. We give you 1 private app, 5 concurrencies with 90 mins/build timeout and 300 credits per month.\" The Hobby card: \"Access for a team of one (that's you!)\". Pay-As-You-Go was offered to Pro plan users only (bitrise.io/pricing, archived 2026-10-28).",
+      "current_state": "\"The Hobby plan is free, with 500 build minutes a month on Linux or macOS, 1 private app, and unlimited public apps. It also includes Pipelines, unlimited workflow steps, 1 free on-prem runner, and unlimited team members. To keep usage fair for everyone, you’ll need to verify a credit card. You won’t be charged unless you turn on Pay-As-You-Go.\" Hobby: \"Run additional builds up to a monthly PAYG cap of $15.\" (bitrise.io/pricing, read 2026-11-10; bitrise.io/hobby-plan is headed \"Introducing our new hobby plan.\") AgentDeals read bitrise.io/pricing at 03:05 UTC on November 9, 2026, and it had no Hobby Pay-As-You-Go cap; Bitrise's current pages were published at 17:27:48 UTC on November 9, 2026.",
+      "impact": "medium",
+      "source_url": "https://bitrise.io/hobby-plan",
+      "category": "CI/CD",
+      "alternatives": [],
+      "recorded_date": "2026-11-10",
+      "archive_check": {
+        "checked": "2026-11-10",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-10-28",
+            "first_new": "2026-11-10",
+            "last_old_capture": "https://web.archive.org/web/20261028075952/https://bitrise.io/pricing",
+            "first_new_capture": "https://web.archive.org/web/20261110131249/https://bitrise.io/pricing"
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "LogRocket",
+      "change_type": "new_free_tier",
+      "date": "2026-11-05",
+      "date_source": "hand_written",
+      "summary": "By November 5, 2026, LogRocket's pricing page listed a Free plan again. It offers 1,000 sessions a month free forever. LogRocket Galileo is not included. No Free plan was on the page in captures from August 19 to October 16, 2026.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "No Free plan: Core, Pro and Enterprise each started with a free trial, no credit card required (logrocket.com/pricing, archived 2026-10-16).",
+      "current_state": "\"The Free plan includes 1,000 sessions a month, free forever.\" Price table: \"1,000 / Free / $0 / $0 / LogRocket Galileo: Not included\". The price list says \"Last updated November 5, 2026\" (logrocket.com/pricing, read 2026-11-10).",
+      "impact": "medium",
+      "source_url": "https://logrocket.com/pricing",
+      "category": "Error Tracking",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-10",
+      "archive_check": {
+        "checked": "2026-11-10",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-10-16",
+            "first_new": "2026-11-05",
+            "last_old_capture": "https://web.archive.org/web/20261016141823/https://logrocket.com/pricing",
+            "first_new_capture": null
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "ipbase.com",
+      "change_type": "limits_increased",
+      "date": "2026-11-10",
+      "date_source": "hand_written",
+      "summary": "By November 10, 2026, ipbase.com's free plan had 1,000 requests a month. On October 30, 2026, it had 150 requests a month. The rate limit of 10 requests a minute was unchanged. The $0 price was unchanged.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "\"The free plan includes 150 requests a month with location data and batch lookups, limited to 10 requests a minute. No credit card is required.\" (ipbase.com, archived 2026-10-30).",
+      "current_state": "\"Free $0 /month 1,000 requests a month – No VPN or proxy data – No ASN API ✓ No credit card\". FAQ: \"The free plan includes 1,000 requests a month with location data and batch lookups, limited to 10 requests a minute.\" (ipbase.com, read 2026-11-10).",
+      "impact": "medium",
+      "source_url": "https://ipbase.com",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-10",
+      "archive_check": {
+        "checked": "2026-11-10",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-10-30",
+            "first_new": "2026-11-10",
+            "last_old_capture": "https://web.archive.org/web/20261030193840/https://ipbase.com/",
+            "first_new_capture": null
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "numlookupapi.com",
+      "change_type": "limits_increased",
+      "date": "2026-11-10",
+      "date_source": "hand_written",
+      "summary": "By November 10, 2026, numlookupapi.com's free plan had 250 requests a month. On October 4, 2026, it had 100 requests a month. The rate limit of 10 requests a minute was unchanged. The $0 price was unchanged.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "\"100 free requests a month Enough to build and test your integration before you pay anything.\" (numlookupapi.com, archived 2026-10-04).",
+      "current_state": "\"250 free requests a month Enough to build and test your integration before you pay anything.\" Plans table: \"Free | $0 | 250 | 1 | 10 requests/min\" (numlookupapi.com and numlookupapi.com/pricing, read 2026-11-10).",
+      "impact": "low",
+      "source_url": "https://numlookupapi.com",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-10",
+      "archive_check": {
+        "checked": "2026-11-10",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-10-04",
+            "first_new": "2026-11-10",
+            "last_old_capture": "https://web.archive.org/web/20261004234501/https://numlookupapi.com/",
+            "first_new_capture": null
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "ipbase.com",
+      "change_type": "restriction",
+      "date": "2026-11-10",
+      "date_source": "hand_written",
+      "summary": "Between August 28, 2026 and November 10, 2026, ipbase.com limited its free plan to testing and non-commercial projects. Commercial use needs a paid plan. The pricing page of August 28, 2026 stated no commercial-use terms.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free \"Best for starters\": $0.00 /mo, \"150 Requests\", \"1 API Key\", \"10 Requests / Min.\", with no commercial-use terms on the plan or anywhere on the pricing page (ipbase.com/pricing, archived 2026-08-28).",
+      "current_state": "Free \"For testing and non-commercial projects\", $0.00 /mo, \"1,000 Requests\". llms.txt: \"free plan: 1,000 requests a month, up to 10 requests a minute, for testing and non-commercial projects; commercial use needs a paid plan\" (ipbase.com/pricing and ipbase.com/llms.txt, read 2026-11-10).",
+      "impact": "medium",
+      "source_url": "https://ipbase.com/pricing",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "recorded_date": "2026-11-10",
+      "archive_check": {
+        "checked": "2026-11-10",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-28",
+            "first_new": "2026-11-10",
+            "last_old_capture": "https://web.archive.org/web/20260828130820/https://ipbase.com/pricing",
+            "first_new_capture": null
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "numlookupapi.com",
+      "change_type": "restriction",
+      "date": "2026-11-10",
+      "date_source": "hand_written",
+      "summary": "Between August 28, 2026 and November 10, 2026, numlookupapi.com limited its free plan to testing and personal projects. Its pricing table marks the free plan \"No\" for commercial use. Paid plans allow commercial use. The pricing page of August 28, 2026 stated no commercial-use terms.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free \"Best for starters\": $0.00 /mo, \"100 Requests\", \"1 API Key\", \"10 Requests / Min.\", with no commercial-use terms on the plan or anywhere on the pricing page (numlookupapi.com/pricing, archived 2026-08-28).",
+      "current_state": "Plans table, column \"Commercial use\": \"Free | $0 | 250 | 1 | 10 requests/min | No (testing and personal projects)\". \"Paid plans allow commercial use, remove the rate limit and add requests and support.\" (numlookupapi.com/pricing, read 2026-11-10).",
+      "impact": "medium",
+      "source_url": "https://numlookupapi.com/pricing",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "recorded_date": "2026-11-10",
+      "archive_check": {
+        "checked": "2026-11-10",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-28",
+            "first_new": "2026-11-10",
+            "last_old_capture": "https://web.archive.org/web/20260828130543/https://numlookupapi.com/pricing",
+            "first_new_capture": null
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "Zipcodestack",
+      "change_type": "limits_increased",
+      "date": "2026-11-10",
+      "date_source": "hand_written",
+      "summary": "By November 10, 2026, Zipcodestack's free plan had 1,000 requests a month. On August 28, 2026, it had 300 credits a month. The rate limit of 10 requests a minute was unchanged. The $0 price was unchanged.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Free \"Best for starters\": $0 /mo, \"300 Credits\", \"1 API Key\", \"10 Requests / Min.\" (zipcodestack.com/pricing, archived 2026-08-28).",
+      "current_state": "Free: $0 /mo, \"1,000 Requests / month\", \"1 API Key\", \"10 Requests / Min.\" llms.txt: \"Free plan: $0, 1,000 requests a month, 10 requests a minute, 1 API key, no credit card.\" (zipcodestack.com/pricing and zipcodestack.com/llms.txt, read 2026-11-10).",
+      "impact": "low",
+      "source_url": "https://zipcodestack.com/pricing",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "recorded_date": "2026-11-10",
+      "archive_check": {
+        "checked": "2026-11-10",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-28",
+            "first_new": "2026-11-10",
+            "last_old_capture": "https://web.archive.org/web/20260828131245/https://zipcodestack.com/pricing/",
+            "first_new_capture": null
+          }
+        ]
+      }
     }
   ]
 }

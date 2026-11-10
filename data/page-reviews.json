@@ -197,14 +197,14 @@
       "review_note": "Every vendor claim checked against the vendors' own pricing pages and docs on 2026-11-01. June.so, recommended for startups, shut down its product in 2025; Mixpanel's free session replays, feature flags and retention, Heap's session replay, Pirsch's and Simple Analytics' free plans and Umami Cloud's retention and API were wrong. All were corrected in https://github.com/robhunter/agentdeals/issues/3168 and read right on production on 2026-11-01.",
       "partial_recheck": null,
       "reads_index": true,
-      "tables_read_index": false,
-      "table_figures": 32,
-      "table_figures_from_records": 3,
+      "tables_read_index": true,
+      "table_figures": 34,
+      "table_figures_from_records": 5,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 8,
-          "from_records": 0
+          "figures": 10,
+          "from_records": 2
         },
         {
           "label": "Self-Hosted Analytics",
@@ -642,8 +642,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 107,
-      "table_figures_from_records": 4,
+      "table_figures": 109,
+      "table_figures_from_records": 6,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -662,8 +662,8 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 4,
-          "from_records": 4
+          "figures": 6,
+          "from_records": 6
         }
       ],
       "reads_changes": true,
@@ -711,13 +711,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 64,
-      "table_figures_from_records": 14,
+      "table_figures": 68,
+      "table_figures_from_records": 18,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 38,
-          "from_records": 6
+          "figures": 40,
+          "from_records": 7
         },
         {
           "label": "General-Purpose CI/CD",
@@ -727,7 +727,7 @@
         {
           "label": "Developer-Focused CI/CD",
           "figures": 8,
-          "from_records": 2
+          "from_records": 3
         },
         {
           "label": "Mobile CI/CD",
@@ -746,8 +746,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 6,
-          "from_records": 6
+          "figures": 8,
+          "from_records": 8
         }
       ],
       "reads_changes": true,
@@ -2392,8 +2392,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 80,
-      "table_figures_from_records": 12,
+      "table_figures": 78,
+      "table_figures_from_records": 11,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2417,8 +2417,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 13,
-          "from_records": 12
+          "figures": 11,
+          "from_records": 11
         }
       ],
       "reads_changes": true,
