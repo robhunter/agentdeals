@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
 import type { DealChange } from "../dist/types.js";
 import type { VendorVerdictInput } from "../dist/vendor-verdict.js";
+import type { VendorVerdictContext } from "../dist/vendor-verdict-input.js";
 
 const {
   A_VERDICT_LAPSES_RULE,
@@ -18,6 +19,8 @@ const {
   demotionWithheldForNoSource,
   lapsingDemotionStated,
   loadOffers,
+  publishedRisk,
+  riskCauseOf,
   changesByVendor,
   refusalsForVendor,
   vendorRiskAssessment,
@@ -25,7 +28,7 @@ const {
 } = await import("../dist/data.js");
 const { demotionTheVerdictNames, withholdingThatDoesNotLapse } = await import("../dist/vendor-verdict.js");
 const { utcDate } = await import("../dist/ranking.js");
-const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
+const { vendorVerdictContextFrom, verdictLapseSentence } = await import("../dist/vendor-verdict-input.js");
 const { toSlug } = await import("../dist/vendor-slug.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -173,6 +176,124 @@ describe("a demotion resting on a dated record", () => {
   });
 });
 
+describe("a dated demotion with another standing cause", () => {
+  const contextFor = (changes: DealChange[], cause: DealChange): VendorVerdictContext => {
+    const primary = {
+      vendor: "Fixture Vendor", category: "Databases", tier: "Free",
+      description: "100 requests a day", url: "https://example.com/pricing",
+      tags: [], verifiedDate: "2026-11-10",
+    };
+    const context = vendorVerdictContextFrom({
+      vendor: primary.vendor, vendorOffers: [primary], vendorChanges: changes,
+      refusedReads: [], servedOn: "2026-11-10",
+    })!;
+    return {
+      ...context,
+      input: {
+        vendor: primary.vendor, tier: primary.tier, level: "caution", historyLevel: "caution",
+        cause: riskCauseOf(cause), changes, levelWithheld: null,
+        unconfirmableSince: "", termsConfirmedOn: "2026-11-10", lastReadOn: "2026-11-10",
+      },
+    };
+  };
+
+  const scenarios = [
+    { name: "discovered pricing restructure over a restriction", date: "2026-10-07", type: "pricing_restructured", source: "discovered", older: "2026-08-05", standing: "restriction", noun: "restriction" },
+    { name: "discovered pricing restructure over a removed free tier", date: "2026-10-07", type: "pricing_restructured", source: "discovered", older: "2025-08-31", standing: "free_tier_removed", noun: "free tier removal" },
+    { name: "effective limit reduction over a restriction", date: "2026-09-18", type: "limits_reduced", source: "vendor_page", older: "2026-03-01", standing: "restriction", noun: "restriction" },
+    { name: "effective pricing restructure over a removed free tier", date: "2026-09-25", type: "pricing_restructured", source: "vendor_page", older: "2025-07-01", standing: "free_tier_removed", noun: "free tier removal" },
+    { name: "announced limit reduction over a restriction", date: "2026-12-01", type: "limits_reduced", source: "vendor_page", older: "2026-02-03", standing: "restriction", noun: "restriction" },
+  ] as const;
+
+  for (const scenario of scenarios) {
+    it(`names the continuing cause for a ${scenario.name}`, () => {
+      const event = record({ date: scenario.date, change_type: scenario.type, date_source: scenario.source });
+      const standing = record({ date: scenario.older, change_type: scenario.standing });
+      const changes = [event, standing];
+      const expires = demotionLapsesOn(event.date);
+      const after = vendorRiskAssessment(changes, atDay(expires) + DAY);
+      assert.strictEqual(after.cause, standing);
+      assert.notStrictEqual(after.level, "stable");
+      const sentence = verdictLapseSentence(contextFor(changes, event))!;
+      assert.ok(sentence.startsWith(A_VERDICT_LAPSES_RULE));
+      assert.ok(sentence.includes(`stops counting on ${expires}; the rating then rests on the ${scenario.noun} recorded ${scenario.older}, a standing condition that does not lapse.`), sentence);
+      assert.doesNotMatch(sentence, /so it lapses on/);
+      assert.ok(sentence.includes(scenario.source === "discovered" ? `discovered ${scenario.date}` : `effective ${scenario.date}`), sentence);
+    });
+  }
+
+  it("keeps the original date sentence when no standing cause remains", () => {
+    const event = record();
+    assert.strictEqual(verdictLapseSentence(contextFor([event], event)), lapsingDemotionStated(event, [event]));
+  });
+
+  it("keeps an existing standing-condition sentence", () => {
+    const standing = record({ change_type: "restriction" });
+    assert.strictEqual(verdictLapseSentence(contextFor([standing], standing)), lapsingDemotionStated(standing, [standing]));
+  });
+
+  it("keeps the standing ending the page states instead of a later rating cause", () => {
+    const event = record({ date: "2026-09-25" });
+    const removal = record({ date: "2025-07-01", change_type: "free_tier_removed" });
+    const changes = [event, removal];
+    const context = contextFor(changes, event);
+    context.input.endingTheListingConfirms = riskCauseOf(removal);
+    assert.strictEqual(verdictLapseSentence(context), lapsingDemotionStated(removal, changes));
+  });
+
+  it("names the standing cause after a restored removal stops counting", () => {
+    const restored = record({ date: "2026-10-07", change_type: "free_tier_removed", resolution: { state: "reversed", date: "2026-10-10", detail: "The free plan returned" } });
+    const restriction = record({ date: "2026-03-01", change_type: "restriction" });
+    const changes = [restored, restriction];
+    const sentence = verdictLapseSentence(contextFor(changes, restored))!;
+    assert.ok(sentence.includes(`stops counting on ${demotionLapsesOn(restored.date)}; the rating then rests on the restriction recorded 2026-03-01`), sentence);
+  });
+
+  it("does not borrow a standing condition from another tier", () => {
+    const event = record();
+    const otherTier = record({ date: "2025-08-01", change_type: "restriction", tier: "Enterprise", summary: "Enterprise requests require a contract" });
+    assert.strictEqual(verdictLapseSentence(contextFor([event, otherTier], event)), lapsingDemotionStated(event, [event]));
+  });
+
+  it("does not continue a retracted, reversed or uncited restriction", () => {
+    const event = record();
+    for (const over of [
+      { resolution: { state: "retracted", date: "2025-09-01", note: "The restriction was an error" } },
+      { resolution: { state: "reversed", date: "2025-09-01", detail: "The restriction was lifted" } },
+      { source_url: "" },
+    ] satisfies Partial<DealChange>[]) {
+      const standing = record({ date: "2025-08-01", change_type: "restriction", ...over });
+      assert.strictEqual(verdictLapseSentence(contextFor([event, standing], event)), lapsingDemotionStated(event, [event, standing]));
+    }
+  });
+
+  it("does not call a restored free tier a standing condition", () => {
+    const event = record();
+    const removal = record({ date: "2025-08-01", change_type: "free_tier_removed" });
+    const restoration = record({ date: "2025-09-01", change_type: "new_free_tier", current_state: "Free plan: 100 requests/day" });
+    const changes = [event, removal, restoration];
+    assert.strictEqual(verdictLapseSentence(contextFor(changes, event)), lapsingDemotionStated(event, changes));
+  });
+
+  it("names the standing cause selected by the rating instead of the first standing record", () => {
+    const event = record({ date: "2026-01-04" });
+    const older = record({ date: "2025-07-01", change_type: "restriction" });
+    const newer = record({ date: "2025-08-01", change_type: "restriction" });
+    const sentence = verdictLapseSentence(contextFor([event, older, newer], event))!;
+    assert.ok(sentence.includes("the restriction recorded 2025-08-01, a standing condition"), sentence);
+    assert.ok(!sentence.includes("recorded 2025-07-01"), sentence);
+  });
+
+  it("keeps silence when the page names no demotion", () => {
+    const event = record();
+    const context = contextFor([event], event);
+    context.input.level = "stable";
+    context.input.historyLevel = "stable";
+    context.input.cause = null;
+    assert.strictEqual(verdictLapseSentence(context), null);
+  });
+});
+
 describe("the narrowing the page reads before it states a withholding", () => {
   const withheld = { reason: "no_source", records: 1 } as const;
   const input = (over: Partial<VendorVerdictInput> = {}): VendorVerdictInput => ({
@@ -283,6 +404,26 @@ describe("the vendor pages", () => {
       [],
       `${quiet.length} of ${givingAReason.length} vendor pages give a demotion as the reason for their rating without saying what makes it lapse`,
     );
+  });
+
+  it("never promise that a rating lapses while a cited cause still demotes its listed tier", async () => {
+    const primary = new Map<string, ReturnType<typeof loadOffers>[number]>();
+    for (const offer of loadOffers()) {
+      if (!primary.has(offer.vendor)) primary.set(offer.vendor, offer);
+    }
+    const promises: string[] = [];
+    const incorrect: string[] = [];
+    for (const [vendor, offer] of primary) {
+      const line = await lapseLineOf(toSlug(vendor));
+      const date = line?.match(/so it lapses on (\d{4}-\d{2}-\d{2})/)?.[1];
+      if (!date) continue;
+      promises.push(vendor);
+      const after = new Date(atDay(date) + DAY).toISOString().slice(0, 10);
+      const next = publishedRisk(offer, recordsFor(vendor), after, atDay(after));
+      if (next.history_level !== "stable" || next.cause !== null) incorrect.push(`${vendor}: ${line}`);
+    }
+    assert.ok(promises.length > 0, "no vendor page states a rating lapse date");
+    assert.deepStrictEqual(incorrect, []);
   });
 
   it("say nothing about lapsing where they publish no demotion", async () => {
