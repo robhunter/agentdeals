@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-09",
+  "generated": "2026-11-10",
   "pages": {
     "/": {
       "daily": true
@@ -1280,8 +1280,7 @@
       "changed": "2026-11-07"
     },
     "/category/project-management": {
-      "hash": "0e1cedc82cdd144d",
-      "changed": "2026-11-09"
+      "daily": true
     },
     "/category/search": {
       "hash": "8b1d708dedcfbcc8",
@@ -3105,8 +3104,7 @@
       "changed": "2026-11-09"
     },
     "/digest/2026-w46": {
-      "hash": "d3a0ca51666fd8b9",
-      "changed": "2026-11-09"
+      "daily": true
     },
     "/digest/2026-w47": {
       "hash": "72b2f2b31a626ecb",
@@ -3432,8 +3430,7 @@
       "changed": "2026-10-09"
     },
     "/project-management-alternatives": {
-      "hash": "e89b2ae7206c4365",
-      "changed": "2026-11-09"
+      "daily": true
     },
     "/q1-2026-developer-pricing-report": {
       "hash": "cc18edd3451dc863",
@@ -3650,8 +3647,7 @@
       "changed": "2026-11-09"
     },
     "/stack-check": {
-      "hash": "906384f8bff36e83",
-      "changed": "2026-11-09"
+      "daily": true
     },
     "/stacks": {
       "hash": "1438053a7388dfb6",
@@ -8813,8 +8809,7 @@
       "changed": "2026-11-09"
     },
     "/vendor/teaminal": {
-      "hash": "d321d56a519fc572",
-      "changed": "2026-11-09"
+      "daily": true
     },
     "/vendor/teamplify": {
       "hash": "f4558c4ecd6e0102",
