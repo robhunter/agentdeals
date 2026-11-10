@@ -19512,7 +19512,7 @@
       "category": "Security",
       "description": "All-in-one appsec platform covering SCA, SAST, CSPM, DAST, Secrets, IaC, Malware, Container scanning, EOL,... Free plan includes two users, scanning of 10 repos, 1 cloud, 2 containers & 1 domain.",
       "tier": "Free",
-      "url": "https://www.aikido.dev",
+      "url": "https://www.aikido.dev/pricing",
       "tags": [
         "security",
         "free-for-dev"
@@ -30312,9 +30312,9 @@
     {
       "vendor": "Logo.dev",
       "category": "Design",
-      "description": "Company logo API with 44M+ brands that's as easy as calling a URL. First 10,000 API calls are free.",
+      "description": "500K Logo CDN requests a month and $5 of API credits a month for the Brand API and the Logo.dev MCP. Logo images from img.logo.dev count as Logo CDN requests. One credit is 1 cent. A Brand API request costs 5 credits. No credit card is needed. The free plan allows 100 API requests per minute. Paid plans include Startup at $50 a month or $400 a year and Pro at $180 a month or $1,800 a year.",
       "tier": "Free",
-      "url": "https://www.logo.dev",
+      "url": "https://www.logo.dev/pricing",
       "tags": [
         "design",
         "ui",
@@ -30326,11 +30326,20 @@
         "outcome": "states_a_free_price",
         "detail": "the page names Logo.dev and states its price in words as \"free API\", and the 1 structured-data block in its markup states no price"
       },
-      "free_plan_excerpt": {
-        "text": "Free to try with no credit card required Deploy your first build within minutes. Upgrade anytime.",
-        "url": "https://www.logo.dev",
-        "read_on": "2026-11-04"
-      }
+      "conditions": [
+        {
+          "text": "On Logo.dev's free plan, commercial projects must link back to Logo.dev where logos appear or on a public page. Personal projects have no link-back requirement. Paid plans remove the link-back requirement.",
+          "quote": "Only on the free plan, and only for commercial projects. Show a link like \"Logos provided by Logo.dev\" where your logos appear, or on a public page such as your footer. Any paid plan removes it.",
+          "url": "https://www.logo.dev/pricing",
+          "read_on": "2026-11-10"
+        },
+        {
+          "text": "On Logo.dev's free plan, Logo CDN requests stop at the monthly limit until next month or an upgrade. API requests return a 402 when API credits run out until they renew. Logo.dev does not bill automatically for overage.",
+          "quote": "On the free plan, Logo CDN requests stop until next month or until you upgrade. Paid plans keep serving, and we get in touch if you stay over. When API credits run out, API requests return a 402 until your credits renew.",
+          "url": "https://www.logo.dev/pricing",
+          "read_on": "2026-11-10"
+        }
+      ]
     },
     {
       "vendor": "Lorem Picsum",
