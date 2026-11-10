@@ -403,13 +403,13 @@
       "vendor": "Apify",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-03 (confirmed_unchanged) stated the same 3 figures, so the page showed these terms before the date this record gives",
-      "summary": "The free plan now includes a $5 prepaid usage, but also states that unused credits expire at the end of the billing cycle, which was not mentioned in the stored information. The page also details add-ons for concurrent runs, Actor RAM, and proxies, which were not previously mentioned. The description of the free plan now explicitly states no Apify Store discount.",
-      "previous_state": "Web scraping and automation platform. The Free plan is $0 with $5 of prepaid usage a month to spend in Apify Store or on your own Actors, at $0.2 per compute unit, with up to 16 GB of Actor RAM and community support; no credit card is required. Starter is $19/month with $19 of usage a month. The Creator plan, for developers who run their own Actors, costs $1/month paid six months in advance, adds a one-time $500 of usage for those six months, and limits access to Apify Store Actors.",
-      "current_state": "The Free plan is $0 with $5 to spend in Apify Store or on your own Actors, $0.2 per compute unit, Community support, and No Apify Store discount. Unused usage credits expire at the end of the billing cycle.",
+      "detail": "the reading of this page refused on 2026-10-26 (repeats_a_refused_reading) stated the same 3 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier description has changed. The stored info mentioned $5 of prepaid usage a month to spend in Apify Store or on your own Actors, at $0.2 per compute unit, with up to 16 GB of Actor RAM and community support; no credit card is required. The current page states the Free plan has $5 to spend in Apify Store or on your own Actors, $0.2 per compute unit, Community support, and No Apify Store discount, and no mention of 16GB of Actor RAM.",
+      "previous_state": "Web scraping and automation platform. The Free plan is $0 with $5 of prepaid usage a month to spend in Apify Store or on your own Actors, at $0.2 per compute unit, with up to 16 GB of Actor RAM and community support; no credit card is required. Starter is $19/month with $19 of usage a month.",
+      "current_state": "Free $0 $5 to spend in Apify Store or on your own Actors $0.2 per compute unit Community support No Apify Store discount Start for free No credit card required.",
       "source_url": "https://apify.com/pricing",
       "category": "Web Scraping",
-      "refused_date": "2026-10-26"
+      "refused_date": "2026-11-10"
     },
     {
       "vendor": "Apify",
@@ -435,6 +435,18 @@
       "source_url": "https://apitemplate.io",
       "category": "Dev Utilities",
       "refused_date": "2026-10-10"
+    },
+    {
+      "vendor": "APIVerve",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-20 (repeats_a_refused_reading) claimed the same change, limits_increased, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier now offers 200 free credits per month instead of the stored 50 API Tokens per month, and the catalog has grown from 120+ APIs to 388+ production APIs.",
+      "previous_state": "Get instant access to over 120+ APIs for free, built with quality, consistency, and reliability in mind. The free plan covers up to 50 API Tokens per month. (Possibly taken down, 2025-06-25)",
+      "current_state": "Free plan includes 200 free credits per month with no credit card required; one credit pool spends across 388+ production APIs behind a single key.",
+      "source_url": "https://apiverve.com",
+      "category": "API Development",
+      "refused_date": "2026-11-10"
     },
     {
       "vendor": "APIVerve",
@@ -2207,6 +2219,18 @@
       "source_url": "https://www.codacy.com/",
       "category": "Code Quality",
       "refused_date": "2026-11-01"
+    },
+    {
+      "vendor": "CodedThemes",
+      "change_type": "pricing_model_change",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The stored deal information states the tier is 'Free' and the description is 'Free admin dashboard templates & UI kits for React, Angular, Vue, Bootstrap, Next.js, Django, and more.' The current page lists several free templates, but it also heavily promotes paid versions and bundles, and the free offerings are presented as individual freebies rather than a single comprehensive 'Free Tier' package as described.",
+      "previous_state": "Free admin dashboard templates & UI kits for React, Angular, Vue, Bootstrap, Next.js, Django, and more. Premium templates from $49.",
+      "current_state": "Free templates are available for specific frameworks (e.g., Mantis Angular 22 Free Admin Template, Able Pro Bootstrap 5 Free Admin Template), but the overall structure is heavily focused on paid products and bundles.",
+      "source_url": "https://codedthemes.com/",
+      "category": "Design",
+      "refused_date": "2026-11-10"
     },
     {
       "vendor": "CodeFactor",
@@ -6091,6 +6115,18 @@
     {
       "vendor": "IP2Location.io",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-25 (unquantified_limit) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier for the Hosted Domain API is now stated as up to 50 queries per month, whereas the stored deal info claims 500 free hosted domain lookups per month.",
+      "previous_state": "Freemium, fast, and reliable IP geolocation API. Get data like city, coordinates, ISP, ASN, AS data and more. The free plan includes 50k credits per month. IP2Location.io also offers 500 free WHOIS and hosted domain lookups per month. See domain registration details and find domains hosted on a specific IP. Upgrade to a paid plan for more features.",
+      "current_state": "The page states the Hosted Domain API retrieves domain names by IP address and offers up to 50 queries free each month. It also states the Domain WHOIS API offers up to 500 queries free each month.",
+      "source_url": "https://www.ip2location.io/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-11-10"
+    },
+    {
+      "vendor": "IP2Location.io",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 credit, 500 whoi)",
       "summary": "The free plan now offers 500 WHOIS queries and 50 hosted domain lookups per month, down from 500 WHOIS and unlimited hosted domain lookups.",
@@ -6136,6 +6172,18 @@
       "source_url": "https://www.iplocate.io",
       "category": "Dev Utilities",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "IPTrace",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://iptrace.io, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The free tier described in the stored deal info is no longer offered; the page now directs users to switch to ipstack.com for a free API key, and the only plans listed are paid Standard ($10), Basic ($49), and Pro ($99).",
+      "previous_state": "An embarrassingly simple API that provides your business with reliable and helpful IP geolocation data with 50,000 free lookups per month.",
+      "current_state": "The page states the product is joining ipstack.com and instructs users to switch to ipstack to get a free API key. The pricing plans listed are Standard $10 for 200k requests per month, Basic $49 for 500k requests per month, and Pro $99 for 1M requests per month, each with geolocation details and basic ASN details.",
+      "source_url": "https://iptrace.io",
+      "category": "Dev Utilities",
+      "refused_date": "2026-11-10"
     },
     {
       "vendor": "IPTrace",
@@ -7253,6 +7301,18 @@
       "source_url": "https://www.manageengine.com/cloud-siem/",
       "category": "Logging",
       "refused_date": "2026-10-30"
+    },
+    {
+      "vendor": "ManageEngine Log360 Cloud",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping or restatement rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free plan's retention terms have changed: the stored info says 15 days storage retention and 7 days search, while the page now lists 7 days Search Retention and 15 days Archival Retention.",
+      "previous_state": "Log Management service powered by Manage Engine. Free Plan offers 50 GB storage with 15 days Storage Retention and 7 days search.",
+      "current_state": "Free plan is $0 with 50 GB Storage, 50 GB Default Search Storage, 150 GB Default Archival Storage (3x of Search Storage), 7 days Search Retention, and 15 days Archival Retention.",
+      "source_url": "https://www.manageengine.com/cloud-siem/",
+      "category": "Logging",
+      "refused_date": "2026-11-10"
     },
     {
       "vendor": "MantleDB",
@@ -10346,6 +10406,18 @@
     {
       "vendor": "Semaphore CI",
       "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-26 (confirmed_unchanged) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "Free tier still exists with $15/month credits (~2,000 Ubuntu x64 2-vCPU minutes) and 20 concurrent jobs, but the stored description's cloud pricing is outdated: Ubuntu x64 2vCPU is now $0.0075/min (matching stored), but the page now lists Ubuntu ARM at $0.003/min, 4vCPU at $0.015/min, 8vCPU at $0.012/min, and macOS at $0.09/min, and self-hosted at $0.0025/min. The stored description's 'Cloud starts at $0.0075/min for Ubuntu' is no longer the entry point since ARM is $0.003/min.",
+      "previous_state": "CI/CD platform — free cloud plan: $15 credits/month (~2,000 Ubuntu build minutes), 20 concurrent jobs, YAML pipelines, secrets management. Self-hosted available at $0.0025/min. Cloud starts at $0.0075/min for Ubuntu",
+      "current_state": "Free credits: $15 free credits per month (≈ 2,000 Ubuntu x64 2-vCPU minutes), usable across available services. Includes 20 concurrent jobs by default, higher limits available on request. Artifacts free up to 20 GB/month egress and 100 GB/month storage; additional usage $0.35/GB egress and $0.07/GB storage. Each project includes 9.6 GB cache storage. Free support includes help with account setup, projects, and Git integration. Compute pricing: Ubuntu ARM $0.003/min 2vCPU, $0.006/min 4vCPU, $0.012/min 8vCPU; Ubuntu x64 $0.0075/min 2vCPU, $0.015/min 4vCPU; macOS $0.09/min 4vCPU; Self-Hosted $0.0025/min any machine.",
+      "source_url": "https://semaphore.io/pricing",
+      "category": "CI/CD",
+      "refused_date": "2026-11-10"
+    },
+    {
+      "vendor": "Semaphore CI",
+      "change_type": "pricing_restructured",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Semaphore CI|pricing_restructured|2026-08-28|https://semaphore.io/pricing",
       "summary": "The pricing has been restructured. While a free tier with $15 credits (~2,000 Ubuntu x64 2-vCPU minutes) and 20 concurrent jobs still exists, the pricing for paid plans has changed significantly, with different rates for different CPU configurations.",
@@ -10640,13 +10712,13 @@
       "vendor": "SimpleLocalize",
       "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-09-25 (same_transition_graded_differently) stated the same 4 figures, so the page showed these terms before the date this record gives",
-      "summary": "The Community plan now offers 500 translation keys instead of 250.",
+      "detail": "the reading of this page refused on 2026-10-19 (repeats_a_refused_reading) stated the same 4 figures, so the page showed these terms before the date this record gives",
+      "summary": "The Community plan's translation key limit is now 500, not the 250 stated in the stored deal info.",
       "previous_state": "Free Community plan — 250 translation keys, unlimited strings, 10 languages, 10 projects, 1 team member. Discount plans available for educational institutions, indie developers, and open-source projects (contact sales)",
-      "current_state": "The Community plan includes 500 translation keys, unlimited strings, 10 languages, 10 projects, and 1 team member.",
+      "current_state": "Community plan includes 500 translation keys, unlimited strings, 10 projects, 10 languages, and 1 team member.",
       "source_url": "https://simplelocalize.io/pricing",
       "category": "Localization",
-      "refused_date": "2026-10-19"
+      "refused_date": "2026-11-10"
     },
     {
       "vendor": "SimpleLocalize",
@@ -12679,6 +12751,18 @@
       "category": "AI / ML",
       "refused_date": "2026-09-20",
       "collided_with": "Weights & Biases|restriction|2026-09-03|https://wandb.ai/site/pricing/"
+    },
+    {
+      "vendor": "Whereby",
+      "change_type": "restriction",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The stored description says the Free Explore plan includes 'up to 200 participants per room, 24 active video feeds' but the current pricing page shows the Explore plan has a 30 minute time limit per meeting, which was not mentioned in the stored info. The participant and active video limits (200/24) remain the same.",
+      "previous_state": "Embeddable video conferencing API. Free Explore plan: 2,000 participant-minutes/month, up to 200 participants per room, 24 active video feeds",
+      "current_state": "Explore plan is $0, up to 2,000 participant minutes/mo, 30 minute time limit per meeting, no additional participant minutes, no support SLA, limited white labelling. Number of video call participants: 200. Active videos: 24.",
+      "source_url": "https://whereby.com/information/embedded/pricing",
+      "category": "Video",
+      "refused_date": "2026-11-10"
     },
     {
       "vendor": "whimsical.com",
