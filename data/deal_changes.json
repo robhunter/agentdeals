@@ -18887,6 +18887,38 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-11-09"
+    },
+    {
+      "vendor": "Firebase",
+      "change_type": "limits_reduced",
+      "date": "2026-09-01",
+      "summary": "From September 1, 2026, Firebase limits Remote Config on the no-cost Spark plan to 100,000 fetch requests a day per project. A Spark project over the limit keeps full service for 30 days from the first day it goes over, and after that requests above the limit are throttled unless it upgrades to Blaze. Blaze has the same 100,000 a day at no cost and then $0.06 per 10,000 requests. Firebase's pricing page had listed Remote Config as no-cost before. This applies to projects that enable Remote Config on or after September 1, 2026. Older Spark projects follow on December 1, 2026.",
+      "previous_state": "Remote Config: \"No-cost\" (firebase.google.com/pricing, Internet Archive 2026-06-28). No fetch limit stated.",
+      "current_state": "\"Spark (No-cost) Plan: Up to 100,000 fetch requests per day at no cost.\" Blaze: \"No-cost for the first 100,000 daily fetch requests, then: $0.06 per 10,000 requests ($0.000006/req) between 100,001 and 10,000,000 requests per day.\" \"Projects enjoy uninterrupted service for 30 days after the first time the daily limit has exceeded. To prevent throttling on Day 31 or beyond, you must upgrade to the Blaze plan.\" (firebase.google.com/docs/remote-config/pricing, read 2026-11-10)",
+      "impact": "medium",
+      "source_url": "https://firebase.google.com/docs/remote-config/pricing",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-11-10",
+      "date_source": "vendor_page",
+      "tier": "Spark",
+      "tier_direction": "narrowed"
+    },
+    {
+      "vendor": "Firebase",
+      "change_type": "limits_reduced",
+      "date": "2026-12-01",
+      "summary": "Firebase Spark projects that enabled Remote Config before September 1, 2026 can use it under the old terms until December 1, 2026. From December 1, 2026, the 100,000-fetches-a-day limit applies to them, with 30 days of full service from the first day they go over, then throttling unless they upgrade to Blaze. A Spark project that upgrades to Blaze before November 15, 2026 is not billed for Remote Config until February 1, 2027. Blaze projects from before September 1, 2026 start Remote Config billing on February 1, 2027.",
+      "previous_state": "Spark projects with Remote Config enabled before September 1, 2026: in a transition grace period before the 100,000 fetch requests a day limit is enforced.",
+      "current_state": "\"This transition grace period is relevant for projects that have Remote Config enabled before September 1, 2026.\" Spark Plan: \"December 1, 2026\". \"Bonus: If you upgrade before November 15, 2026, your grace period is extended to 5 months (Billing starts February 1, 2027).\" Blaze Plan: \"Projects will automatically transition to the standard pricing on February 1, 2027.\" (firebase.google.com/docs/remote-config/pricing, read 2026-11-10)",
+      "impact": "medium",
+      "source_url": "https://firebase.google.com/docs/remote-config/pricing",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-11-10",
+      "date_source": "vendor_page",
+      "tier": "Spark",
+      "tier_direction": "narrowed"
     }
   ]
 }
