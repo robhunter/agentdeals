@@ -13130,7 +13130,7 @@
       "source_check": {
         "checked": "2026-11-02",
         "outcome": "ok",
-        "detail": "the page names Bitrise as \"bitrise\" and states \"300 credits per month\""
+        "detail": "the page names Bitrise as \"bitrise\""
       },
       "conditions": [
         {
