@@ -809,6 +809,12 @@
           "read_on": "2026-11-07"
         },
         {
+          "text": "Railway's Hobby plan has a $5 monthly minimum, including $5 of usage credits. If usage is $5 or less per billing period, no extra charge applies. If usage exceeds $5, Railway charges the total usage. Included usage resets each billing cycle and does not accumulate.",
+          "quote": "Your Hobby plan subscription includes $5 of usage per month. If your total usage at the end of your billing period is $5 or less, you will not be charged extra for usage. If your total usage exceeds $5 in any given billing period, you will be charged total usage. … Included usage is reset at the end of every billing cycle and does not accumulate over time.",
+          "url": "https://railway.com/pricing",
+          "read_on": "2026-11-10"
+        },
+        {
           "text": "The Limited Trial for trial accounts not verified through GitHub has restricted outbound network access and only a limited set of ports. Verification is an automated process at railway.com/verify. Railway does not respond to requests for verification. The Hobby plan unlocks the full experience.",
           "quote": "Specifically, services on the Limited Trial have restricted outbound network access and only a limited set of ports are available.",
           "url": "https://docs.railway.com/pricing/free-trial",
