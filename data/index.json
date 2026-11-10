@@ -7457,8 +7457,8 @@
     {
       "vendor": "LogRocket",
       "category": "Error Tracking",
-      "description": "Session replay, product analytics and error monitoring, priced by sessions captured; analytics, logs and errors are unlimited on every plan. No free plan: Core, Pro and Enterprise each start with a free trial, no credit card required.",
-      "tier": "Trial",
+      "description": "1,000 sessions a month for $0 on the Free plan, free forever. LogRocket Galileo is not included. Analytics events, error events and logs are unlimited on every plan. LogRocket provides session replay, product analytics and error monitoring. Core starts at $83 a month for 10,000 sessions. Pro starts at $292 a month for 10,000 sessions. Both prices are billed annually. A 14-day free trial of the paid plans is available.",
+      "tier": "Free",
       "url": "https://logrocket.com/pricing",
       "tags": [
         "error-tracking",
@@ -15138,7 +15138,7 @@
     {
       "vendor": "ipbase.com",
       "category": "Dev Utilities",
-      "description": "IP Geolocation API - Forever free plan that spans 150 monthly requests.",
+      "description": "1,000 requests a month for $0 on the Free plan, up to 10 requests a minute, no credit card. The Free plan is for testing and non-commercial projects. ipbase.com is an IP geolocation API. The free plan has no VPN or proxy data and no ASN API. Commercial use needs a paid plan. Paid plans start at $9.99 a month.",
       "tier": "Free",
       "url": "https://ipbase.com",
       "tags": [
@@ -15607,7 +15607,7 @@
     {
       "vendor": "numlookupapi.com",
       "category": "Dev Utilities",
-      "description": "Free phone number validation API - 100 free requests / month.",
+      "description": "250 requests a month for $0 on the Free plan, up to 10 requests a minute, no credit card. The Free plan is for testing and personal projects. numlookupapi.com is a phone number validation API. Requests stop at the limit until the next month. Commercial use needs a paid plan. Paid plans start at $9.99 a month.",
       "tier": "Free",
       "url": "https://numlookupapi.com",
       "tags": [
@@ -16476,7 +16476,7 @@
     {
       "vendor": "Zipcodestack",
       "category": "Dev Utilities",
-      "description": "The free tier includes 300 requests / month. Free accounts have 100 requests per day with a maximum of 10 requests per minute.",
+      "description": "1,000 requests a month for $0 on the Free plan, up to 10 requests a minute, no credit card. The Free plan is for testing and personal projects. Zipcodestack is a ZIP and postal code API. The free plan includes 1 API key. Commercial use needs a paid plan. Paid plans start at $34.99 a month.",
       "tier": "Free",
       "url": "https://zipcodestack.com",
       "tags": [
@@ -16487,19 +16487,16 @@
       "source_check": {
         "checked": "2026-10-20",
         "outcome": "ok",
-        "detail": "the page names Zipcodestack as \"zipcodestack\" and states \"300 Free Requests / month\" and \"300 requests / month\" and \"300 requests a month\" and \"10 requests a minute\""
-      },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://zipcodestack.com",
-        "record_date": "2026-08-28",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "detail": "the page names Zipcodestack as \"zipcodestack\" and states \"10 requests a minute\""
       },
       "free_plan_excerpt": {
         "text": "Free plan 300 requests / month",
         "url": "https://zipcodestack.com",
         "read_on": "2026-10-20"
+      },
+      "restatement_reverted": {
+        "record_date": "2026-08-28",
+        "reverted_on": "2026-11-10"
       }
     },
     {
@@ -22999,7 +22996,7 @@
     {
       "vendor": "Emailvalidation.io",
       "category": "Email",
-      "description": "100 free email verifications total (one-time, not monthly)",
+      "description": "100 credits a month on the Free plan, no card required. An email validation costs 1 credit and an email search costs 10 credits. Emailvalidation.io provides email validation services. One-off credit packs, valid 12 months, are also usable on the free plan. Monthly plans start at $8.99 for 10,000 checks.",
       "tier": "Free",
       "url": "https://emailvalidation.io",
       "tags": [
@@ -33354,7 +33351,7 @@
     {
       "vendor": "Currencyapi",
       "category": "Payments",
-      "description": "Offers a free tier with 300 requests / month. Paid plans start at $7.99 / month with 15,000 requests / month and private forum access.",
+      "description": "300 requests a month for $0 on the Free plan, up to 10 requests a minute. The Free plan is for private use only. Currencyapi is a currency exchange rate API. The free plan has daily updates and historical rates back to 1999. Commercial use needs a paid plan. Paid plans start at $12.99 a month. The convert endpoint is not on the free plan.",
       "tier": "Free",
       "url": "https://currencyapi.com",
       "tags": [
@@ -33366,19 +33363,16 @@
       "source_check": {
         "checked": "2026-10-24",
         "outcome": "ok",
-        "detail": "the page names Currencyapi as \"currencyapi\" and states \"300 free requests a month\" and \"15,000 requests a month\""
-      },
-      "restated_from": {
-        "reading_date": "2026-09-02",
-        "source_url": "https://currencyapi.com",
-        "record_date": "2026-09-02",
-        "change_type": "new_tier",
-        "restated_on": "2026-09-20"
+        "detail": "the page names Currencyapi as \"currencyapi\" and states \"300 free requests a month\""
       },
       "free_plan_excerpt": {
         "text": "300 free requests every month",
         "url": "https://currencyapi.com",
         "read_on": "2026-10-24"
+      },
+      "restatement_reverted": {
+        "record_date": "2026-09-02",
+        "reverted_on": "2026-11-10"
       }
     },
     {

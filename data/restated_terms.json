@@ -1127,7 +1127,8 @@
       "source_url": "https://zipcodestack.com",
       "record_date": "2026-08-28",
       "change_type": "limits_reduced",
-      "summary": "The free tier now offers 300 requests/month, down from 10,000. The free tier also has a daily limit of 100 requests and a rate limit of 10 requests per minute."
+      "summary": "The free tier now offers 300 requests/month, down from 10,000. The free tier also has a daily limit of 100 requests and a rate limit of 10 requests per minute.",
+      "reverted_on": "2026-11-10"
     },
     {
       "vendor": "paperspace",
@@ -2208,7 +2209,8 @@
       "source_url": "https://currencyapi.com",
       "record_date": "2026-09-02",
       "change_type": "new_tier",
-      "summary": "The free tier now offers 300 requests per month. The page also mentions paid plans starting at $7.99/month with 15,000 requests/month and a private forum access."
+      "summary": "The free tier now offers 300 requests per month. The page also mentions paid plans starting at $7.99/month with 15,000 requests/month and a private forum access.",
+      "reverted_on": "2026-11-10"
     },
     {
       "vendor": "Qonversion",
