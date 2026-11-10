@@ -1,96 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-11-10/logrocket/new_free_tier",
-      "proposed_on": "2026-11-10",
-      "vendor": "LogRocket",
-      "change_type": "new_free_tier",
-      "date": "2026-11-10",
-      "date_source": "discovered",
-      "summary": "The pricing page now lists a Free plan with 1,000 sessions/month, free forever, in addition to the 14-day trial.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Session replay, product analytics and error monitoring, priced by sessions captured; analytics, logs and errors are unlimited on every plan. No free plan: Core, Pro and Enterprise each start with a free trial, no credit card required.",
-      "current_state": "The page lists a Free plan at $0/month and $0/year for 1,000 monthly sessions, described as 'free forever,' with unlimited analytics events, error events, and logs. A 14-day free trial with no credit card required is also still offered.",
-      "impact": "medium",
-      "source_url": "https://logrocket.com/pricing",
-      "category": "Error Tracking",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-10",
-      "restatement": []
-    },
-    {
-      "proposal_id": "2026-11-10/ipbase-com/limits_increased",
-      "proposed_on": "2026-11-10",
-      "vendor": "ipbase.com",
-      "change_type": "limits_increased",
-      "date": "2026-11-10",
-      "date_source": "discovered",
-      "summary": "The free plan now includes 1,000 requests a month instead of 150, and the page states a 10 requests/minute limit. Previously 150 monthly requests is outdated.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "IP Geolocation API - Forever free plan that spans 150 monthly requests.",
-      "current_state": "Free plan is $0/month with 1,000 requests a month, no VPN or proxy data, no ASN API, no credit card required, limited to 10 requests a minute.",
-      "impact": "medium",
-      "source_url": "https://ipbase.com",
-      "category": "Dev Utilities",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-10",
-      "restatement": [
-        {
-          "url": "https://ipbase.com",
-          "description": "IP Geolocation API — Free plan is $0/month with 1,000 requests a month, no VPN or proxy data, no ASN API, no credit card required, limited to 10 requests a minute."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-10/numlookupapi-com/limits_increased",
-      "proposed_on": "2026-11-10",
-      "vendor": "numlookupapi.com",
-      "change_type": "limits_increased",
-      "date": "2026-11-10",
-      "date_source": "discovered",
-      "summary": "The stored free tier description says 100 free requests/month, but the pricing page now advertises 250 free requests a month.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Free phone number validation API - 100 free requests / month.",
-      "current_state": "250 free requests a month.",
-      "impact": "low",
-      "source_url": "https://numlookupapi.com",
-      "category": "Dev Utilities",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-10",
-      "restatement": [
-        {
-          "url": "https://numlookupapi.com",
-          "description": "250 free requests a month."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-10/directus/pricing_restructured",
-      "proposed_on": "2026-11-10",
-      "vendor": "Directus",
-      "change_type": "pricing_restructured",
-      "date": "2026-11-10",
-      "date_source": "discovered",
-      "summary": "Directus's own page now redirects to directus.com. Directus Cloud Core pricing changed from $99/mo monthly to $89/mo billed yearly (or $99 monthly), and Team pricing changed from $499/mo billed annually to $588/mo billed yearly (or $698 monthly). The self-hosted Core free tier limits (3 seats, 25 collections, 5 flows) remain the same, and the Open Innovation Grant terms are unchanged.",
-      "tier": "Core",
-      "tier_direction": "unchanged",
-      "previous_state": "Self-hostable headless CMS. Core is $0 a month with 3 user seats, 25 collections and 5 flows. The Open Innovation Grant gives organizations under $5M in annual revenue and fewer than 50 employees a fully permissive license at no cost. Directus Cloud hosting is a $99 a month add-on; Team is $499 a month billed annually.",
-      "current_state": "Self-hosted Core is free with 3 user seats, 25 collections, and 5 flows. Directus Cloud hosting on Core is $89/mo billed yearly or $99 monthly. Team is $588/mo billed yearly or $698 monthly, with 10 SSO seats, 50 collections, and 20 flows. The Open Innovation Grant gives qualifying organizations (under $5M annual revenue, fewer than 50 employees) a fully permissive license at no cost for self-hosted, or $99/mo for cloud hosting.",
-      "impact": "medium",
-      "source_url": "https://directus.io/pricing",
-      "category": "Headless CMS",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-10",
-      "restatement": []
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
@@ -2343,6 +2252,28 @@
       ],
       "dropped_on": "2026-11-09",
       "drop_reason": "Not a change: Mapbox's Navigation SDK pricing guide describes 'Option 2: Unlimited trips pricing' in captures of docs.mapbox.com/ios/navigation/guides/pricing/ from 2024-01-05 and 2026-05-16, and our 2026-08-28 reading of mapbox.com/pricing already quoted the flat per-MAU option free up to 10 MAUs (data/restated_terms.json). Our listing never stated the option; nothing changed on 2026-11-09."
+    },
+    {
+      "proposal_id": "2026-11-10/directus/pricing_restructured",
+      "proposed_on": "2026-11-10",
+      "vendor": "Directus",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-10",
+      "date_source": "discovered",
+      "summary": "Directus's own page now redirects to directus.com. Directus Cloud Core pricing changed from $99/mo monthly to $89/mo billed yearly (or $99 monthly), and Team pricing changed from $499/mo billed annually to $588/mo billed yearly (or $698 monthly). The self-hosted Core free tier limits (3 seats, 25 collections, 5 flows) remain the same, and the Open Innovation Grant terms are unchanged.",
+      "tier": "Core",
+      "tier_direction": "unchanged",
+      "previous_state": "Self-hostable headless CMS. Core is $0 a month with 3 user seats, 25 collections and 5 flows. The Open Innovation Grant gives organizations under $5M in annual revenue and fewer than 50 employees a fully permissive license at no cost. Directus Cloud hosting is a $99 a month add-on; Team is $499 a month billed annually.",
+      "current_state": "Self-hosted Core is free with 3 user seats, 25 collections, and 5 flows. Directus Cloud hosting on Core is $89/mo billed yearly or $99 monthly. Team is $588/mo billed yearly or $698 monthly, with 10 SSO seats, 50 collections, and 20 flows. The Open Innovation Grant gives qualifying organizations (under $5M annual revenue, fewer than 50 employees) a fully permissive license at no cost for self-hosted, or $99/mo for cloud hosting.",
+      "impact": "medium",
+      "source_url": "https://directus.io/pricing",
+      "category": "Headless CMS",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-10",
+      "restatement": [],
+      "dropped_on": "2026-11-10",
+      "drop_reason": "Not a change: the Team card on the pricing page's default Cloud tab adds the Directus Cloud add-on to Team ($588 = $499 + $89 billed yearly, $698 = $599 + $99 monthly); the FAQ still prices Team at $499/mo with an annual commitment or $599/mo monthly, and self-hosted Core is still $0 with 3 seats, 25 collections and 5 flows. Only the Cloud add-on gained a yearly price ($89/mo billed yearly, $99 monthly) between the 2026-09-26 and 2026-11-05 captures, a paid add-on our listing prices at $99 a month."
     }
   ]
 }
