@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { visibleText } from "./change-vendor-index-observer.ts";
+import { assertChangeTimelineReadingBudget } from "./change-timeline-reading-budget.ts";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const scratch = mkdtempSync(path.join(tmpdir(), "timeline-upcoming-"));
@@ -132,7 +133,6 @@ describe("the change timelines separate announced changes from their history", (
     const latestStart = html.indexOf('class="latest-section"');
     const latestEnd = html.indexOf('</section>', latestStart);
     const upcomingStart = html.indexOf('class="upcoming-section"');
-    const upcomingEnd = route === "/changes" ? html.indexOf('</section>', upcomingStart) : html.indexOf('<div class="pc-filters">', upcomingStart);
     assert.ok(indexEnd < latestStart && latestEnd < upcomingStart);
     const latest = html.slice(latestStart, latestEnd);
     assert.match(latest, /Latest Pricing Changes/);
@@ -141,13 +141,7 @@ describe("the change timelines separate announced changes from their history", (
     assert.equal(dates(latest).length, 10);
     assert.deepEqual(dates(latest), [...dates(latest)].sort().reverse());
     assert.ok(dates(latest).every(date => date <= today));
-    const prefix = html.slice(html.indexOf("<body>"), upcomingEnd + "</section>".length)
-      .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/g, "");
-    const links = [...prefix.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>/g)].reduce((length, link) =>
-      length + new URL(link[1].replaceAll("&amp;", "&"), "https://agentdeals.dev").href.length
-        + (link[0].match(/title="([^"]*)"/)?.[1].length ?? 0) + 8, 0);
-    const markupAllowance = (prefix.match(/<[^>]+>/g) ?? []).length * 8;
-    assert.ok(visibleText(prefix).length + links + markupAllowance < 100_000);
+    assertChangeTimelineReadingBudget(html);
     if (name === "fixtures") {
       assert.deepEqual(dates(latest), [0, -1, -2, -3, -3, -4, -5, -6, -7, -8].map(day));
       assert.doesNotMatch(latest, /Correction Service|Retracted Service|Undated Service/);

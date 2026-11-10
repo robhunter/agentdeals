@@ -28903,7 +28903,7 @@
     {
       "vendor": "GoFile.io",
       "category": "Storage",
-      "description": "Free file sharing and storage by web UI or API, no account needed. Free files are kept while they keep being downloaded and deleted after 10 days without a download. Free accounts get 100 GB of traffic per 30 days; past it, some downloads are restricted until usage falls back under the limit. Uploading and basic file management work on free accounts; most other API endpoints need Premium.",
+      "description": "Free file sharing and storage by web UI or API, no account needed. Free files are kept for 10 days of inactivity and remain available as long as they keep being downloaded. After the storage period, content may move to cold storage and cannot be downloaded directly until imported back to an account space, which requires a Premium account. Free accounts get 100 GB of traffic per 30 days; past it, some downloads are restricted until usage falls back under the limit. Uploading and basic file management work on free accounts; most other API endpoints need Premium.",
       "tier": "Free",
       "url": "https://gofile.io/",
       "tags": [
@@ -31406,9 +31406,9 @@
     {
       "vendor": "geoapify.com",
       "category": "Maps/Geolocation",
-      "description": "Vector and raster map tiles, geocoding, places, routing, isolines APIs. Three thousand free requests/day.",
+      "description": "Geoapify offers map tiles, geocoding, places, routing and isolines APIs. The Free plan includes 3,000 credits/day, no credit card, and up to 5 requests/second. Geocoding costs 1 credit/request, map tiles 0.25 credits/tile, routing 1 credit/waypoint pair, and isochrones 1 credit/5 minutes.",
       "tier": "Free",
-      "url": "https://www.geoapify.com/",
+      "url": "https://www.geoapify.com/pricing/",
       "tags": [
         "maps",
         "geolocation",
@@ -31420,11 +31420,14 @@
         "outcome": "states_a_free_price",
         "detail": "the page names geoapify.com and states its price in words as \"free API\", and the 2 structured-data blocks in its markup state no price"
       },
-      "free_plan_excerpt": {
-        "text": "You can use it for commercial projects and stay on the free plan as long as your usage remains within the limits, which usually covers development, educational, and startup needs.",
-        "url": "https://www.geoapify.com/",
-        "read_on": "2026-11-03"
-      }
+      "conditions": [
+        {
+          "text": "Geoapify allows commercial and production use on the Free plan. Attribution is required: include a follow-link such as Powered by Geoapify near the map or information provided by the service.",
+          "quote": "Yes. You can use the Free plan for commercial websites, apps, and business projects, including in production. Stay within the Free plan's credit quota, rate limits, and API feature limits, and provide the required Geoapify and data-source attribution. … For Geoapify attribution, include a follow-link such as … near the map or information provided by the service.",
+          "url": "https://www.geoapify.com/pricing/",
+          "read_on": "2026-11-09"
+        }
+      ]
     },
     {
       "vendor": "geocodify.com",

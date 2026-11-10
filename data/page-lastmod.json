@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-09",
+  "generated": "2026-11-10",
   "pages": {
     "/": {
       "daily": true
@@ -1248,7 +1248,7 @@
       "changed": "2026-11-09"
     },
     "/category/maps-geolocation": {
-      "hash": "93f9c9a4b7bcebbc",
+      "hash": "d864cb77072bdd57",
       "changed": "2026-11-09"
     },
     "/category/messaging": {
@@ -1280,8 +1280,7 @@
       "changed": "2026-11-07"
     },
     "/category/project-management": {
-      "hash": "0e1cedc82cdd144d",
-      "changed": "2026-11-09"
+      "daily": true
     },
     "/category/search": {
       "hash": "8b1d708dedcfbcc8",
@@ -1312,7 +1311,7 @@
       "changed": "2026-11-09"
     },
     "/category/storage": {
-      "hash": "da5425b6311c0dfc",
+      "hash": "3829c71fee1e0acf",
       "changed": "2026-11-09"
     },
     "/category/team-collaboration": {
@@ -3105,8 +3104,7 @@
       "changed": "2026-11-09"
     },
     "/digest/2026-w46": {
-      "hash": "d3a0ca51666fd8b9",
-      "changed": "2026-11-09"
+      "daily": true
     },
     "/digest/2026-w47": {
       "hash": "72b2f2b31a626ecb",
@@ -3432,8 +3430,7 @@
       "changed": "2026-10-09"
     },
     "/project-management-alternatives": {
-      "hash": "e89b2ae7206c4365",
-      "changed": "2026-11-09"
+      "daily": true
     },
     "/q1-2026-developer-pricing-report": {
       "hash": "cc18edd3451dc863",
@@ -3650,8 +3647,7 @@
       "changed": "2026-11-09"
     },
     "/stack-check": {
-      "hash": "019a4ae807496336",
-      "changed": "2026-11-09"
+      "daily": true
     },
     "/stacks": {
       "hash": "1438053a7388dfb6",
@@ -3686,7 +3682,7 @@
       "changed": "2026-11-09"
     },
     "/storage-alternatives": {
-      "hash": "c68e5c5d3d38cbf1",
+      "hash": "001a6630692d3ed9",
       "changed": "2026-11-09"
     },
     "/storage-comparison-2026": {
@@ -5884,7 +5880,7 @@
       "changed": "2026-11-09"
     },
     "/vendor/geoapify-com": {
-      "hash": "88e06d45f89b2d42",
+      "hash": "b12ecb3f3f0243cf",
       "changed": "2026-11-09"
     },
     "/vendor/geocodify-com": {
@@ -6019,7 +6015,7 @@
       "changed": "2026-11-09"
     },
     "/vendor/gofile-io": {
-      "hash": "ecb2a979aba52855",
+      "hash": "eb0b59805a48170a",
       "changed": "2026-11-09"
     },
     "/vendor/gokanban-io": {
@@ -8813,8 +8809,7 @@
       "changed": "2026-11-09"
     },
     "/vendor/teaminal": {
-      "hash": "d321d56a519fc572",
-      "changed": "2026-11-09"
+      "daily": true
     },
     "/vendor/teamplify": {
       "hash": "f4558c4ecd6e0102",

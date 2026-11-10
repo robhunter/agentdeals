@@ -16,6 +16,7 @@ import {
 import { FEED_CORRECTIONS } from "../dist/feed-corrections.js";
 import { recordsStillInForce, CORRECTION_TO_OUR_OWN_RECORD } from "../dist/change-resolution.js";
 import { statesWhenItTookEffect } from "./effective-date-rule.ts";
+import { assertFutureChangesInDigestWindow } from "./weekly-deadline-window.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -91,7 +92,9 @@ function announcedChange(vendor: string, date: string) {
 function weeklyDigestAt(instant: string, changes: unknown[]) {
   const dir = mkdtempSync(path.join(tmpdir(), "weekly-window-at-"));
   const changesPath = path.join(dir, "deal_changes.json");
+  const indexPath = path.join(dir, "index.json");
   writeFileSync(changesPath, JSON.stringify({ changes }));
+  writeFileSync(indexPath, JSON.stringify({ offers: [] }));
   try {
     const dataModule = pathToFileURL(path.join(REPO, "dist", "data.js")).href;
     const run = spawnSync(
@@ -106,6 +109,7 @@ function weeklyDigestAt(instant: string, changes: unknown[]) {
         env: {
           ...process.env,
           AGENTDEALS_CHANGES_PATH: changesPath,
+          AGENTDEALS_INDEX_PATH: indexPath,
           AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(instant) - Date.now()),
           TZ: "UTC",
         },
@@ -485,15 +489,52 @@ describe("the digest returns only what the window it names contains", () => {
     const { getWeeklyDigest } = await import("../dist/data.js");
     const digest = getWeeklyDigest();
     const today = new Date().toISOString().slice(0, 10);
-    for (const c of digest.deal_changes) {
-      assert.ok(c.date <= today, `${c.vendor} ${c.date} should not be reported as a change already tracked`);
-    }
-    for (const c of publishedChanges.filter((c) => eventDated(c) && c.date > today)) {
-      assert.ok(
-        digest.upcoming_deadlines.some((d) => d.vendor === c.vendor && d.date === c.date),
-        `${c.vendor} ${c.date} should be an upcoming deadline`
-      );
-    }
+    assertFutureChangesInDigestWindow(digest, publishedChanges.filter((c) => eventDated(c) && c.date > today), today);
+  });
+
+  it("finishes the 25th deadline's whole day and leaves later records outside the stated window", () => {
+    const earlier = Array.from({ length: 24 }, (_, i) =>
+      announcedChange(`Earlier Model ${i + 1}`, `2026-11-${String(i + 2).padStart(2, "0")}`)
+    );
+    const finalDay = [announcedChange("Final Model A", "2026-11-26"), announcedChange("Final Model B", "2026-11-26")];
+    const later = announcedChange("Later Model", "2026-11-27");
+    const records = [later, ...finalDay, ...earlier.reverse(), finalDay[0]];
+    const digest = weeklyDigestAt("2026-11-01T12:00:00Z", records);
+    assert.strictEqual(digest.upcoming_deadlines.length, 26);
+    assert.match(digest.summary, /26 upcoming deadlines through 2026-11-26\./);
+    assert.deepStrictEqual(digest.upcoming_deadlines.slice(-2).map((d: { vendor: string }) => d.vendor), ["Final Model A", "Final Model B"]);
+    assert.ok(!digest.upcoming_deadlines.some((d: { vendor: string }) => d.vendor === later.vendor));
+    assertFutureChangesInDigestWindow(digest, records, "2026-11-01");
+  });
+
+  it("keeps exactly 25 deadlines when their dates are distinct", () => {
+    const records = Array.from({ length: 26 }, (_, i) =>
+      announcedChange(`Distinct Day Model ${i + 1}`, `2026-11-${String(i + 2).padStart(2, "0")}`)
+    );
+    const digest = weeklyDigestAt("2026-11-01T12:00:00Z", [...records].reverse());
+    assert.strictEqual(digest.upcoming_deadlines.length, 25);
+    assert.match(digest.summary, /25 upcoming deadlines through 2026-11-26\./);
+    assertFutureChangesInDigestWindow(digest, records, "2026-11-01");
+  });
+
+  it("keeps a first deadline day with more than 25 records whole", () => {
+    const records = Array.from({ length: 30 }, (_, i) => announcedChange(`Same Day Model ${i + 1}`, "2026-11-02"));
+    const later = announcedChange("Next Day Model", "2026-11-03");
+    const digest = weeklyDigestAt("2026-11-01T12:00:00Z", [later, ...records]);
+    assert.strictEqual(digest.upcoming_deadlines.length, 30);
+    assert.match(digest.summary, /30 upcoming deadlines through 2026-11-02\./);
+    assertFutureChangesInDigestWindow(digest, [...records, later], "2026-11-01");
+  });
+
+  it("states the last date of a short window and no date for an empty one", () => {
+    const record = announcedChange("Only Future Model", "2026-11-03");
+    const digest = weeklyDigestAt("2026-11-01T12:00:00Z", [record]);
+    assert.deepStrictEqual(digest.upcoming_deadlines.map((d: { vendor: string }) => d.vendor), [record.vendor]);
+    assert.match(digest.summary, /1 upcoming deadline through 2026-11-03\./);
+    assertFutureChangesInDigestWindow(digest, [record], "2026-11-01");
+    const empty = weeklyDigestAt("2026-11-01T12:00:00Z", []);
+    assert.deepStrictEqual(empty.upcoming_deadlines, []);
+    assertFutureChangesInDigestWindow(empty, [], "2026-11-01");
   });
 
   it("on a Monday, counts only the change that has taken effect and leaves the week's later ones to the deadlines", () => {
