@@ -5342,7 +5342,7 @@
     {
       "vendor": "PostHog",
       "category": "Analytics",
-      "description": "Product analytics — 1M events/month, 5K session replays, 1M feature flag requests, 100K error tracking exceptions, A/B testing. No credit card required",
+      "description": "1M analytics events, 5K session recordings, 1M feature flag requests, experiments billed with feature flags, 100K error tracking exceptions, 1,500 survey responses, 10 GB of logs, 100K AI observability (LLM tracing) events shared with evaluations, 1M data warehouse source rows, 10K destination events and 1M rows, 10K workflow messages per channel, 500 PostHog AI credits worth $5. All allowances reset monthly. The same allowance applies with or without a card on file. No credit card is required.",
       "tier": "Free",
       "url": "https://posthog.com/pricing",
       "tags": [
@@ -5363,7 +5363,22 @@
         "text": "Free No credit card, not a trial. This is 97% of companies . Full monthly free tier on every product Unlimited team members 1 project, 1-year data retention Community support Usage stops at the free tier limits, so you can",
         "url": "https://posthog.com/pricing",
         "read_on": "2026-11-02"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Self-driving uses AI credits at $0.01 each. The first month includes 1,000 credits worth $10, for up to 5 reports and 3 scouts. There is no recurring free tier after the first month. Pull requests are off by default and cost money when enabled.",
+          "quote": "Your first month of Self-driving comes with 1,000 AI credits, worth $10, so you can see what the agents find in your product before you pay anything. During your first month, Self-driving creates up to 5 reports and runs up to 3 scouts. After that, there's no recurring free tier. You pay for what you use.",
+          "url": "https://posthog.com/docs/self-driving/pricing",
+          "read_on": "2026-11-10"
+        },
+        {
+          "text": "Self-driving has a default $150 billing limit that can be changed on the billing settings page. When the limit is reached, new signals are dropped, scheduled scout runs are skipped, and research pauses. Signals past a limit are dropped, not queued, and never delivered after the reset.",
+          "quote": "When you reach either limit, new signals from your sources are dropped, scheduled scout runs are skipped, and research pauses.",
+          "url": "https://posthog.com/docs/self-driving/pricing",
+          "read_on": "2026-11-10",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "Amplitude",
@@ -5510,7 +5525,7 @@
     {
       "vendor": "PostHog",
       "category": "Startup Perks",
-      "description": "$50,000 a year in PostHog credits for Y Combinator companies in any batch, renewing automatically while the company has raised less than $25M. Apply through PostHog's YC page, linked from Bookface, from a PostHog account on the company's email domain. Not open to YC alumni who started another company, or to a YC company acquired by a non-YC parent. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). It doesn't stack with PostHog for Startups.",
+      "description": "$50,000 a year in PostHog credits for Y Combinator companies in any batch, renewing automatically while the company has raised less than $25M. Apply through PostHog's YC page, linked from Bookface, from a PostHog account on the company's email domain. Not open to YC alumni who started another company, or to a YC company acquired by a non-YC parent. Since 2026-09-14 the startup credits don't pay for bills on AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). It doesn't stack with PostHog for Startups.",
       "tier": "Startup Credits",
       "url": "https://posthog.com/handbook/marketing/startups",
       "tags": [
@@ -5546,7 +5561,7 @@
     {
       "vendor": "PostHog",
       "category": "Startup Perks",
-      "description": "$50,000 in PostHog credits for 12 months, plus $12,000 in partner perks, for companies less than 2 years old that have raised less than $5M. Apply from a PostHog account on a paid plan (billed for usage only) that uses the company's email domain and signed up on or after 2023-01-01. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). Y Combinator companies get a separate deal instead; the two don't stack.",
+      "description": "$50,000 in PostHog credits for 12 months, plus $12,000 in partner perks, for companies less than 2 years old that have raised less than $5M. Apply from a PostHog account on a paid plan (billed for usage only) that uses the company's email domain and signed up on or after 2023-01-01. Since 2026-09-14 the startup credits don't pay for bills on AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). Y Combinator companies get a separate deal instead; the two don't stack.",
       "tier": "Startup Credits",
       "url": "https://posthog.com/startups",
       "tags": [
