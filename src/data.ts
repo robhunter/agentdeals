@@ -2087,7 +2087,7 @@ export function getWeeklyDigest(): {
   const orderedDeadlines = [...expiringDeadlines, ...changeDeadlines]
     .sort((a, b) => a.date.localeCompare(b.date))
     .filter((d) => {
-      const key = `${d.vendor}|${d.date}`;
+      const key = JSON.stringify([d.vendor, d.date, d.change_type, d.summary]);
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
