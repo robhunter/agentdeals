@@ -28,6 +28,7 @@ const publishedChanges = JSON.parse(
   date_source: string;
   change_type: string;
   vendor: string;
+  summary: string;
   resolution?: { state: string; date: string } | null;
 }>;
 
@@ -504,6 +505,41 @@ describe("the digest returns only what the window it names contains", () => {
     assert.match(digest.summary, /26 upcoming deadlines through 2026-11-26\./);
     assert.deepStrictEqual(digest.upcoming_deadlines.slice(-2).map((d: { vendor: string }) => d.vendor), ["Final Model A", "Final Model B"]);
     assert.ok(!digest.upcoming_deadlines.some((d: { vendor: string }) => d.vendor === later.vendor));
+    assertFutureChangesInDigestWindow(digest, records, "2026-11-01");
+  });
+
+  it("retains distinct records sharing a vendor and date in either input order", () => {
+    const shutdown = announcedChange("Shared Day API", "2026-11-26");
+    const price = { ...shutdown, change_type: "pricing_restructured", summary: "Input and output prices rise." };
+    const anotherShutdown = { ...shutdown, summary: "A different model retires." };
+    for (const pair of [[shutdown, price], [shutdown, anotherShutdown]]) {
+      for (const records of [pair, [...pair].reverse()]) {
+        const digest = weeklyDigestAt("2026-11-01T12:00:00Z", records);
+        assert.deepStrictEqual(digest.upcoming_deadlines, records.map(({ vendor, date, change_type, summary }) => ({ vendor, date, change_type, summary })));
+        assert.match(digest.summary, /2 upcoming deadlines through 2026-11-26\./);
+        assertFutureChangesInDigestWindow(digest, records, "2026-11-01");
+      }
+    }
+  });
+
+  it("collapses exact duplicate deadlines without collapsing distinct same-day records", () => {
+    const shutdown = announcedChange("Shared Day API", "2026-11-26");
+    const price = { ...shutdown, change_type: "pricing_restructured", summary: "Input and output prices rise." };
+    const digest = weeklyDigestAt("2026-11-01T12:00:00Z", [shutdown, { ...shutdown }, price, { ...price }]);
+    assert.deepStrictEqual(digest.upcoming_deadlines, [shutdown, price].map(({ vendor, date, change_type, summary }) => ({ vendor, date, change_type, summary })));
+    assertFutureChangesInDigestWindow(digest, [shutdown, price], "2026-11-01");
+  });
+
+  it("finishes the final day when distinct records on it share a vendor", () => {
+    const earlier = Array.from({ length: 24 }, (_, i) => announcedChange(`Earlier Model ${i + 1}`, `2026-11-${String(i + 2).padStart(2, "0")}`));
+    const shutdown = announcedChange("Shared Day API", "2026-11-26");
+    const price = { ...shutdown, change_type: "pricing_restructured", summary: "Input and output prices rise." };
+    const later = announcedChange("Later Model", "2026-11-27");
+    const records = [...earlier, shutdown, price, later];
+    const digest = weeklyDigestAt("2026-11-01T12:00:00Z", records);
+    assert.strictEqual(digest.upcoming_deadlines.length, 26);
+    assert.deepStrictEqual(digest.upcoming_deadlines.slice(-2).map((d: { summary: string }) => d.summary), [shutdown.summary, price.summary]);
+    assert.match(digest.summary, /26 upcoming deadlines through 2026-11-26\./);
     assertFutureChangesInDigestWindow(digest, records, "2026-11-01");
   });
 
