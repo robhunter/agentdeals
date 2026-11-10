@@ -3363,7 +3363,7 @@
       "changed": "2026-11-10"
     },
     "/llm-api-pricing": {
-      "hash": "0e11f5d419299502",
+      "hash": "a5ffdbc1d86c2b30",
       "changed": "2026-11-10"
     },
     "/localstack-alternatives": {
@@ -3403,8 +3403,8 @@
       "changed": "2026-11-06"
     },
     "/openai-assistants-migration": {
-      "hash": "7ec248697ead5bad",
-      "changed": "2026-11-06"
+      "hash": "70efa6b27e894af0",
+      "changed": "2026-11-10"
     },
     "/openai-assistants-migration-2026": {
       "hash": "657972816e3f452c",
