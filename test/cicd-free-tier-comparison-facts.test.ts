@@ -249,6 +249,7 @@ const STATED_ON_THE_PAGE: string[] = [
   "GitLab CI: 400 min/mo, unlimited minutes on your own runners (up to 50 per project) and a built-in container registry.",
   "First-class Flutter, iOS and Android support",
   "400+ pre-built steps for mobile workflows.",
+  "400+ pre-built steps for mobile workflows. 500 build minutes/month, macOS runners for iOS builds, pre-configured steps for common mobile workflows.",
   "skips tasks that already ran with the same inputs",
   "Drone's Community Edition runs on one machine; Woodpecker is an Apache 2.0 community fork of Drone.",
   "See Hidden Costs and Gotchas for what you pay past the free limits."
