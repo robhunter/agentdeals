@@ -18887,6 +18887,34 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-11-09"
+    },
+    {
+      "vendor": "Bitrise",
+      "change_type": "limits_increased",
+      "date": "2026-11-09",
+      "date_source": "hand_written",
+      "summary": "Bitrise changed its Hobby plan on November 9, 2026. Hobby now has unlimited team members, where it was for a team of one. It includes 500 build minutes a month on Linux or macOS, where it gave 300 credits a month. It now requires verifying a credit card, where no credit card was needed. Pay-As-You-Go up to $15 a month is now offered on Hobby.",
+      "tier": "Hobby",
+      "tier_direction": "widened",
+      "previous_state": "Hobby: \"Our Hobby tier is free. No strings attached, no credit card needed. We give you 1 private app, 5 concurrencies with 90 mins/build timeout and 300 credits per month.\" The Hobby card: \"Access for a team of one (that's you!)\". Pay-As-You-Go was offered to Pro plan users only (bitrise.io/pricing, archived 2026-10-28).",
+      "current_state": "\"The Hobby plan is free, with 500 build minutes a month on Linux or macOS, 1 private app, and unlimited public apps. It also includes Pipelines, unlimited workflow steps, 1 free on-prem runner, and unlimited team members. To keep usage fair for everyone, you’ll need to verify a credit card. You won’t be charged unless you turn on Pay-As-You-Go.\" Hobby: \"Run additional builds up to a monthly PAYG cap of $15.\" (bitrise.io/pricing, read 2026-11-10; bitrise.io/hobby-plan is headed \"Introducing our new hobby plan.\") AgentDeals read bitrise.io/pricing at 03:05 UTC on November 9, 2026, and it had no Hobby Pay-As-You-Go cap; Bitrise's current pages were published at 17:27:48 UTC on November 9, 2026.",
+      "impact": "medium",
+      "source_url": "https://bitrise.io/hobby-plan",
+      "category": "CI/CD",
+      "alternatives": [],
+      "recorded_date": "2026-11-10",
+      "archive_check": {
+        "checked": "2026-11-10",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-10-28",
+            "first_new": "2026-11-10",
+            "last_old_capture": "https://web.archive.org/web/20261028075952/https://bitrise.io/pricing",
+            "first_new_capture": "https://web.archive.org/web/20261110131249/https://bitrise.io/pricing"
+          }
+        ]
+      }
     }
   ]
 }

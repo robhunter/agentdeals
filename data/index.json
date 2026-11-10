@@ -13114,7 +13114,7 @@
     {
       "vendor": "Bitrise",
       "category": "CI/CD",
-      "description": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app, 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
+      "description": "Mobile CI/CD platform — free Hobby plan: 500 build minutes/month on Linux or macOS, 1 private app, unlimited public apps, unlimited team members, 1 free on-prem runner, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
       "tier": "Hobby",
       "url": "https://bitrise.io/pricing",
       "tags": [
@@ -13132,17 +13132,18 @@
         "outcome": "ok",
         "detail": "the page names Bitrise as \"bitrise\" and states \"300 credits per month\""
       },
-      "free_plan_excerpt": {
-        "text": "Hobby Build and distribute your passion project without the extra cost. ‍ Free Forever Get started Access for a team of one (that's you!) Enough build credits for you to build your small project a few times per month",
-        "url": "https://bitrise.io/pricing",
-        "read_on": "2026-11-02"
-      },
       "conditions": [
         {
-          "text": "No credit card is needed for the Hobby plan.",
-          "quote": "Our Hobby tier is free. No strings attached, no credit card needed.",
+          "text": "Bitrise's Hobby plan requires a verified credit card. Verification is a $0 authorization that is never charged, and a new account verifies the card before its first six builds run out. Without a card, Bitrise support can review an account by hand.",
+          "quote": "Before your first six builds run out, verify a card: a $0 check, never charged. … Verification runs a $0 authorization, auto-voided within minutes … No card on hand? Contact support for a manual review",
+          "url": "https://bitrise.io/hobby-plan",
+          "read_on": "2026-11-10"
+        },
+        {
+          "text": "On the Hobby plan, builds past the 500 monthly minutes need Pay-As-You-Go switched on. Pay-As-You-Go charges each minute at 1.5 times the base rate, up to $15 a month. At the $15 cap, no new builds start until the next billing cycle.",
+          "quote": "If you’re on the Hobby or Pro plan, you can keep building after you use up your monthly builds or minutes by switching on Pay-As-You-Go. … Run additional builds up to a monthly PAYG cap of $15. Each minute is charged at 1.5x per minute and counts toward your $15 cap. Once you reach the $15 cap, you won’t be able to start new builds until your next billing cycle begins.",
           "url": "https://bitrise.io/pricing",
-          "read_on": "2026-10-06"
+          "read_on": "2026-11-10"
         },
         {
           "text": "Creating more than one account requires Bitrise's permission.",

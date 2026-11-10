@@ -681,6 +681,11 @@
       "vendor": "geoapify.com",
       "tier": "Free",
       "since": "2026-11-11"
+    },
+    {
+      "vendor": "Bitrise",
+      "tier": "Hobby",
+      "since": "2026-11-11"
     }
   ]
 }
