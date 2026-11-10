@@ -508,14 +508,14 @@ describe("the digest returns only what the window it names contains", () => {
     assertFutureChangesInDigestWindow(digest, records, "2026-11-01");
   });
 
-  it("retains distinct records sharing a vendor and date in either input order", () => {
+  it("retains distinct records whenever a deadline field differs, in either input order", () => {
     const shutdown = announcedChange("Shared Day API", "2026-11-26");
     const price = { ...shutdown, change_type: "pricing_restructured", summary: "Input and output prices rise." };
     const anotherShutdown = { ...shutdown, summary: "A different model retires." };
-    for (const pair of [[shutdown, price], [shutdown, anotherShutdown]]) {
+    for (const pair of [[shutdown, price], [shutdown, anotherShutdown], [shutdown, { ...shutdown, change_type: "pricing_restructured" }], [shutdown, { ...shutdown, vendor: "Other API" }], [shutdown, { ...shutdown, date: "2026-11-25" }]]) {
       for (const records of [pair, [...pair].reverse()]) {
         const digest = weeklyDigestAt("2026-11-01T12:00:00Z", records);
-        assert.deepStrictEqual(digest.upcoming_deadlines, records.map(({ vendor, date, change_type, summary }) => ({ vendor, date, change_type, summary })));
+        assert.deepStrictEqual(digest.upcoming_deadlines, [...records].sort((a, b) => a.date.localeCompare(b.date)).map(({ vendor, date, change_type, summary }) => ({ vendor, date, change_type, summary })));
         assert.match(digest.summary, /2 upcoming deadlines through 2026-11-26\./);
         assertFutureChangesInDigestWindow(digest, records, "2026-11-01");
       }

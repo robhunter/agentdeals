@@ -21,6 +21,7 @@ it("REST and initialized MCP retain distinct same-day deadlines and collapse exa
   const cases = [
     { label: "shutdown before price rise", expected: [shutdown, priceRise] },
     { label: "price rise before shutdown", expected: [priceRise, shutdown] },
+    { label: "same summary, different types", expected: [shutdown, { ...shutdown, change_type: "pricing_restructured" }] },
     { label: "same type, different summaries", expected: [shutdown, { ...shutdown, summary: "Another Gemini model shuts down." }] },
   ];
   for (const { label, expected } of cases) {
