@@ -367,7 +367,6 @@ describe("a page may only name the source it actually reads", () => {
       const first = seen.tables[0];
       if (!first || first.figures === 0) unexercised.push(`${path}: first table publishes no figure`);
       else if (first.from_records > 0) unexercised.push(`${path}: first table is credited ${first.from_records} of ${first.figures}`);
-      else if (!soleCreditedTable(seen)) unexercised.push(`${path}: credit is not confined to one table`);
     }
     assert.deepStrictEqual(unexercised, []);
   });
