@@ -26533,7 +26533,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
       migrationEffort: "Medium\u2013High",
       freeOption: "Monthly credits for Max, Ultra and Team plans",
       bestFor: "Teams wanting longer context, better reasoning, or tool use capabilities",
-      details: "Drop-in replacement for many use cases. Current models: Claude Fable 5.1, Opus 5.5, Sonnet 5 and Haiku 4.5. Tool use (function calling) built in. 200K\u20131M context window vs GPT-4o's 128K. Prompt caching reduces costs 90% for repeated context.",
+      details: "Drop-in replacement for many use cases. Current models: Claude Fable 5.2, Fable 5.1, Opus 5.5, Sonnet 5.5, Sonnet 5, Haiku 5.5 and Haiku 4.5. Tool use (function calling) built in. 200K\u20131M context window vs GPT-4o's 128K. Prompt caching reduces costs 90% for repeated context.",
     },
     {
       name: "Google Gemini API",
@@ -26872,7 +26872,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '    <div class="verdict-item"><strong>Fastest migration:</strong><p>OpenAI Responses API \u2014 same provider, same models, just new API patterns. Minimal code changes.</p></div>\n' +
     '    <div class="verdict-item"><strong>Lowest cost:</strong><p>Google Gemini API \u2014 a free tier on its 3.x Flash models. OpenAI-compatible endpoint eases migration.</p></div>\n' +
     '    <div class="verdict-item"><strong>Enterprise / compliance:</strong><p>Azure OpenAI \u2014 same GPT models, enterprise SLAs, data residency. Rebuild on ' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.azureSuccessor) + ': Microsoft retired the Azure Assistants API on ' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.date) + ' too, so this path is a change of platform, not a way to keep the old API.</p></div>\n' +
-    '    <div class="verdict-item"><strong>Best reasoning quality:</strong><p>Anthropic Claude \u2014 Claude Fable 5.1 for demanding reasoning and long-horizon agentic work. Tool use built in. Prompt caching reduces costs 90% for repeated context.</p></div>\n' +
+    '    <div class="verdict-item"><strong>Best reasoning quality:</strong><p>Anthropic Claude \u2014 Claude Fable 5.2 for demanding reasoning and long-horizon agentic work. Tool use built in. Prompt caching reduces costs 90% for repeated context.</p></div>\n' +
     '    <div class="verdict-item"><strong>Maximum flexibility:</strong><p>LangChain + BYO LLM \u2014 swap models anytime, no platform lock-in. More work upfront but full control.</p></div>\n' +
     '    <div class="verdict-item"><strong>Multi-agent workflows:</strong><p>CrewAI \u2014 if your Assistants setup used multiple coordinating agents, CrewAI\'s role-based agent model is a natural fit.</p></div>\n' +
     '  </div>\n' +
@@ -32591,7 +32591,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>LLM API pricing:</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. OpenAI and Anthropic price their top model identically: GPT-6 Astra and Claude Fable 5.1 are both $10/$50 per M tokens. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models; 3.1 Pro Preview is paid-only. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak.' + (freeInferenceLeaders === "" ? '' : ' ' + freeInferenceLeaders) + '</p>\n' +
+    '    <p><strong>LLM API pricing:</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. GPT-6 Astra is $10/$50 per M tokens. Claude Fable 5.2 is $8/$40. Claude Fable 5.1 is $10/$50. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models; 3.1 Pro Preview is paid-only. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak.' + (freeInferenceLeaders === "" ? '' : ' ' + freeInferenceLeaders) + '</p>\n' +
     '    <p><strong>Key trends:</strong> Inference providers (' + namedAsFree(["groq", "cerebras", "openrouter"]) + ') are commoditizing open-source model access — free tiers with no credit card required. xAI retired Grok 4.1 Fast on 2026-05-15; requests to its model names now go to grok-4.3 at $1.25/M input and $2.50/M output (under 200k prompt tokens). The gap between frontier and open-source quality is narrowing, making the price delta harder to justify for many use cases.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, provider breakdowns, free tier analysis, pricing gotchas, recent changes, and options by use case.</p>\n' +
     '  </div>\n' +
@@ -32672,7 +32672,7 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Complex reasoning</strong>\n' +
-    '      <p><a href="/vendor/anthropic-api">Claude Opus 5.5</a> ($4/$20/M), or <a href="/vendor/anthropic-api">Claude Fable 5.1</a> ($10/$50/M) for long-horizon agentic work. <a href="/vendor/deepseek-api">DeepSeek V4-Pro</a> ($1.32/$3.96/M at peak, half off-peak), thinking mode on by default. OpenAI GPT-6 Astra ($10/$50/M) for the hardest end-to-end work.</p>\n' +
+    '      <p><a href="/vendor/anthropic-api">Claude Opus 5.5</a> ($4/$20/M), or <a href="/vendor/anthropic-api">Claude Fable 5.2</a> ($8/$40/M) for long-horizon agentic work. <a href="/vendor/deepseek-api">DeepSeek V4-Pro</a> ($1.32/$3.96/M at peak, half off-peak), thinking mode on by default. OpenAI GPT-6 Astra ($10/$50/M) for the hardest end-to-end work.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -32682,7 +32682,7 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Long context (100K+ tokens)</strong>\n' +
-    '      <p><a href="/vendor/deepseek-api">deepseek-flash</a> (1M context, $0.30/$1.20/M at peak). <a href="/vendor/anthropic-api">Claude</a> Fable 5.1, Opus 5.5, Sonnet 5.5 or Sonnet 5 (1M context each).</p>\n' +
+    '      <p><a href="/vendor/deepseek-api">deepseek-flash</a> (1M context, $0.30/$1.20/M at peak). <a href="/vendor/anthropic-api">Claude</a> Fable 5.2, Fable 5.1, Opus 5.5, Sonnet 5.5 or Sonnet 5 (1M context each).</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -32708,7 +32708,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Anthropic Thinking: Output Tokens Add Up</h4>\n' +
-    '    <p>Claude\'s thinking tokens are billed at output rates ($20/M on Opus 5.5, $50/M on Fable 5.1). A complex reasoning task can produce 10K+ thinking tokens before the actual answer. Budget for 2–5x the output tokens you\'d expect from a non-thinking request. Fable 5.1, Opus 5.5, Sonnet 5.5 and Sonnet 5 decide their own thinking budget (adaptive thinking) rather than taking one from the request, so the multiplier is harder to cap than it was on the 4.6 generation.</p>\n' +
+    '    <p>Claude\'s thinking tokens are billed at output rates ($20/M on Opus 5.5, $40/M on Fable 5.2, $50/M on Fable 5.1). A complex reasoning task can produce 10K+ thinking tokens before the actual answer. Budget for 2–5x the output tokens you\'d expect from a non-thinking request. Fable 5.2, Fable 5.1, Opus 5.5, Sonnet 5.5 and Sonnet 5 decide their own thinking budget (adaptive thinking) rather than taking one from the request, so the multiplier is harder to cap than it was on the 4.6 generation.</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Gemini Free Tier: Gemini 3.1 Pro Needs a Paid Account</h4>\n' +
@@ -32731,7 +32731,7 @@ function buildLlmApiPricingPage(): string {
     upcomingChangesSection +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The trend:</strong> Opus-class prices fell from $15/$75 per M tokens (Opus 4.1) to $5/$25 in November 2025 and $4/$20 with Opus 5.5, while each lab\'s top model costs $10/$50 (Claude Fable 5.1, OpenAI GPT-6 Astra). Open-weight inference is cheap: Groq\'s free plan allows 200K tokens a day on each of its free chat models. The implication: if you\'re paying more than $5/M input tokens, you should evaluate whether a cheaper model handles your use case.\n' +
+    '    <strong>The trend:</strong> Opus-class prices fell from $15/$75 per M tokens (Opus 4.1) to $5/$25 in November 2025 and $4/$20 with Opus 5.5. Claude Fable 5.2, launched November 9, 2026, is $8/$40, below Claude Fable 5.1 and OpenAI GPT-6 Astra at $10/$50. Open-weight inference is cheap: Groq\'s free plan allows 200K tokens a day on each of its free chat models. The implication: if you\'re paying more than $5/M input tokens, you should evaluate whether a cheaper model handles your use case.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
