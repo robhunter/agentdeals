@@ -809,6 +809,12 @@
           "read_on": "2026-11-07"
         },
         {
+          "text": "Railway's Hobby plan has a $5 monthly minimum, including $5 of usage credits. If usage is $5 or less per billing period, no extra charge applies. If usage exceeds $5, Railway charges the total usage. Included usage resets each billing cycle and does not accumulate.",
+          "quote": "Your Hobby plan subscription includes $5 of usage per month. If your total usage at the end of your billing period is $5 or less, you will not be charged extra for usage. If your total usage exceeds $5 in any given billing period, you will be charged total usage. … Included usage is reset at the end of every billing cycle and does not accumulate over time.",
+          "url": "https://railway.com/pricing",
+          "read_on": "2026-11-10"
+        },
+        {
           "text": "The Limited Trial for trial accounts not verified through GitHub has restricted outbound network access and only a limited set of ports. Verification is an automated process at railway.com/verify. Railway does not respond to requests for verification. The Hobby plan unlocks the full experience.",
           "quote": "Specifically, services on the Limited Trial have restricted outbound network access and only a limited set of ports are available.",
           "url": "https://docs.railway.com/pricing/free-trial",
@@ -2252,6 +2258,14 @@
           "doc_url": "https://xata.io/docs/platform/mcp",
           "source_quote": "A hosted MCP server that runs alongside the Xata API — there is nothing to install or run locally.",
           "read_on": "2026-10-20"
+        }
+      ],
+      "conditions": [
+        {
+          "text": "Xata announced on November 9, 2026 that it is joining ClickHouse. Xata continues to accept new sign-ups and customers can use it as usual. Xata will eventually migrate customers to ClickHouse Managed Postgres after feature parity. Xata did not give a date for the migration.",
+          "quote": "Nothing changes for Xata customers in the short term and we continue to accept new sign-ups. In parallel, we're working on bringing branching and an agentic tier to ClickHouse Managed Postgres. We will eventually migrate Xata customers to ClickHouse Managed Postgres.",
+          "url": "https://xata.io/blog/xata-is-joining-clickhouse",
+          "read_on": "2026-11-10"
         }
       ]
     },
@@ -39898,6 +39912,12 @@
           "quote": "Today Storj Labs, Inc. voluntarily filed Chapter 11 in the United States Bankruptcy Court for the Northern District of West Virginia … Storj will continue operating in the ordinary course throughout the Chapter 11 process. Storj also does not anticipate any interruptions in service to its customers",
           "url": "https://www.storj.io/blog/storj-announces-voluntary-financial-restructuring-to-resolve-legacy-liabilities-and-position-the-business-for-growth/",
           "read_on": "2026-11-01"
+        },
+        {
+          "text": "Storj Labs filed for Chapter 11 on July 26, 2026, in West Virginia; the case is now in the Northern District of Georgia. Storj Object Storage is being sold as a running business with customer contracts. A hearing on bidding procedures for Storj Object Storage is set for December 3, 2026. Storj Object Storage bids are expected December 20, 2026, auction December 21, 2026. Object Mount is offered for sale separately. The network runs as normal.",
+          "quote": "Storj Labs Inc. (\"Storj\") is selling three distinct, production-grade technology assets under Chapter 11 of the U.S. Bankruptcy Code (Case No. 26-62642-PWB, Bankr. N.D. Ga.). … The Court scheduled a hearing on December 3, 2026 to approve the bidding procedures. We are confident that the Court will approve a bidding deadline date of December 20, 2026, and auction date of December 21, 2026.",
+          "url": "https://www.storj.io/asset-sale/",
+          "read_on": "2026-11-10"
         }
       ],
       "free_plan_excerpt": {
