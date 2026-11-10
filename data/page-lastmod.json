@@ -1346,15 +1346,15 @@
       "daily": true
     },
     "/ci-cd-alternatives": {
-      "hash": "8b788219115db968",
+      "hash": "b14d13a7d34ca793",
       "changed": "2026-11-10"
     },
     "/ci-cd-pricing": {
-      "hash": "23fc7eafdb4863ec",
+      "hash": "398f61c0264f91c5",
       "changed": "2026-11-10"
     },
     "/cicd-free-tier-comparison-2026": {
-      "hash": "00d48403b096de55",
+      "hash": "8738350da9d16d36",
       "changed": "2026-11-10"
     },
     "/circleci-vs-github-actions": {

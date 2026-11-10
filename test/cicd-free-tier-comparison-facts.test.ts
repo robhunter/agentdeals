@@ -43,7 +43,8 @@ const MAIN_TABLE_ROWS: Record<string, string[]> = {
     "2 GB cache; 1 GB transfer"
   ],
   "Bitrise": [
-    "5 concurrent",
+    "500 min/mo",
+    "Not stated",
     "90-min build timeout",
     "macOS Medium/Large, Linux Medium",
     "1 private app; unlimited public apps",
@@ -85,6 +86,8 @@ const MAIN_TABLE_CELLS_WITHDRAWN: Record<string, string[]> = {
     "Included in credits"
   ],
   "Bitrise": [
+    "300 credits/mo",
+    "5 concurrent",
     "1 concurrent",
     "10-min build time limit",
     "Standard runners",
@@ -157,10 +160,11 @@ const SECTION_TABLE_ROWS: Array<{ section: string; vendor: string; cells: string
     "section": "mobile",
     "vendor": "Bitrise",
     "cells": [
-      "300 credits/mo, 5 concurrent",
+      "500 min/mo",
       "iOS, Android and cross-platform apps"
     ],
     "withdrawn": [
+      "300 credits/mo, 5 concurrent",
       "300 credits/mo, 1 concurrent",
       "Broadest mobile platform support"
     ]
@@ -225,8 +229,8 @@ const SECTION_TABLE_ROWS: Array<{ section: string; vendor: string; cells: string
 
 const STATED_ON_THE_PAGE: string[] = [
   "Quick verdict: On public repositories, GitHub Actions' standard runners are free with no minute limit. For private repositories, GitHub Free includes 2,000 minutes a month. GitLab Free includes 400 compute minutes a month and a container registry. CircleCI Free gives 30,000 credits a month (up to 6,000 minutes on a small Docker resource class) and 30 concurrent jobs. Buildkite's Free plan includes 5 users, 10 concurrent jobs and 2,000 Linux vCPU minutes a month (1,000 minutes on its 2-vCPU agent).",
-  "The CI/CD landscape in 2026: GitHub announced a charge for self-hosted runners on 2025-12-16 and postponed it the next day, with no new date. GitLab Free has included 400 compute minutes a month since October 2020. Drone's free open-source edition runs on a single machine; Woodpecker CI is a community fork of Drone. For mobile CI, Bitrise's free Hobby plan gives 300 credits a month and Codemagic 500 macOS M2 build minutes.",
-  "Minutes vs credits: GitHub charges each runner type its own per-minute rate. GitLab multiplies job time by a cost factor. CircleCI and Bitrise use their own credits, which do not compare across vendors. On public repositories, GitHub Actions' standard runners have no minute limit. For private repositories, CircleCI's 30,000 monthly credits cover up to 6,000 minutes on a small Docker resource class.",
+  "The CI/CD landscape in 2026: GitHub announced a charge for self-hosted runners on 2025-12-16 and postponed it the next day, with no new date. GitLab Free has included 400 compute minutes a month since October 2020. Drone's free open-source edition runs on a single machine; Woodpecker CI is a community fork of Drone. For mobile CI, Bitrise's free Hobby plan gives 500 build minutes a month and Codemagic 500 macOS M2 build minutes.",
+  "Minutes vs credits: GitHub charges each runner type its own per-minute rate. GitLab multiplies job time by a cost factor. CircleCI uses its own credits, which do not compare across vendors. On public repositories, GitHub Actions' standard runners have no minute limit. For private repositories, CircleCI's 30,000 monthly credits cover up to 6,000 minutes on a small Docker resource class.",
   "Four hosted CI/CD services with free tiers: GitHub Actions, GitLab CI, CircleCI and Bitbucket Pipelines.",
   "GitHub Marketplace lists more than 33,000 actions. GitLab puts CI/CD, a container registry and issue tracking in one platform. CircleCI Free runs 30 concurrent Linux jobs, against GitHub Free's 20. Bitbucket Pipelines Free gives 50 build minutes a month on cloud runners, the smallest of these four, and does not charge build minutes for self-hosted runners.",
   "Buildkite's Free plan supports up to 5 users and 10 concurrent jobs, with 2,000 Linux vCPU minutes a month on Buildkite-hosted agents, which is 1,000 minutes on its 2-vCPU Small agent. Jobs can also run on your own agents.",
@@ -238,7 +242,7 @@ const STATED_ON_THE_PAGE: string[] = [
   "Drone's open-source edition runs on one machine. Its Enterprise edition is free for individuals and small companies; larger ones get a trial. Woodpecker CI is an Apache 2.0 community fork of Drone. You pay for the machines that run them.",
   "Past the free quota, GitHub charges $0.006 a minute for Linux 2-core, $0.010 for Windows 2-core and $0.062 for macOS 3- or 4-core. Its docs no longer list multipliers but say usage totals include them. GitLab's cost factor multiplies job time: 1 on small Linux, 2 on medium, 6 on macOS M1 (paid tiers only).",
   "GitLab: each project's 10 GiB covers its Git repository and LFS only. Artifacts can be up to 1 GB each and expire after 30 days unless set otherwise. CircleCI: Artifacts stored for 30 days on free plan. No cache is unlimited: GitHub includes 10 GB per repository and drops entries unused for 7 days; GitLab-hosted runners drop caches not updated in 14 days; CircleCI keeps caches 15 days; Bitbucket caches are 1 GB each, kept 7 days.",
-  "Bitbucket Pipelines Free runs up to 10 steps at once on cloud runners and 100 on self-hosted runners. Codemagic's free plan runs one build at a time; Bitrise Hobby allows 5. GitHub Free allows 20 concurrent jobs on standard runners (5 for macOS).",
+  "Bitbucket Pipelines Free runs up to 10 steps at once on cloud runners and 100 on self-hosted runners. Codemagic's free plan runs one build at a time. GitHub Free allows 20 concurrent jobs on standard runners (5 for macOS).",
   "Google Cloud Build charges network egress at standard rates; its pricing page names no free allowance. CircleCI meters network transfer only to self-hosted runners: Free includes 1 GB, then draws from credits. GitLab publishes no data-transfer allowance for its Free tier.",
   "GitHub and GitLab charge nothing for jobs on your own runners. Buildkite's Free plan allows up to 10 concurrent jobs on self-hosted agents. CircleCI Free runs at most 5 self-hosted tasks at once and draws credits for storage and network use past its allotments. You pay for the machines that host the runners.",
   "Unlimited free minutes for public repos on standard runners, 33,000+ marketplace actions, native GitHub integration.",
@@ -387,6 +391,16 @@ describe("the CI/CD free tier comparison states each service's terms as the vend
     const standing = Object.entries(MAIN_TABLE_CELLS_WITHDRAWN).flatMap(([vendor, cells]) =>
       cells.filter((cell) => rowOf(rows, vendor)?.includes(cell)).map((cell) => `${vendor}: ${cell}`));
     assert.deepStrictEqual(standing, []);
+  });
+
+  it("gives Bitrise minutes and leaves Hobby concurrency unstated on all three comparison tables", () => {
+    for (const route of [PAGE, PRICING, ALTERNATIVES]) {
+      const row = rowOf(rowsOf(served.get(route)!), "Bitrise");
+      assert.ok(row, route);
+      assert.ok(row.includes("500 min/mo"), route);
+      assert.ok(row.includes("Not stated"), route);
+      assert.doesNotMatch(row.join(" | "), /300 credits|team of one|\b\d+ concurrent|\b1 build\b/i);
+    }
   });
 
   it("sets each section table cell as the vendor's own pages state it", () => {

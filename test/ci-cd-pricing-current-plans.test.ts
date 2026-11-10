@@ -202,19 +202,19 @@ describe("/ci-cd-pricing states the current plans of Bitbucket Pipelines, Codema
     }
   });
 
-  it("states Bitrise Hobby credits, five builds at once and Starter billing in each table and card", () => {
-    assert.deepStrictEqual(rowOf(tableRows(html, PRICING_TABLE), "Bitrise"), ["300 credits/mo", "5 concurrent", "Paid only", "$89/mo billed annually, $99 monthly (Starter)", "Credits"]);
-    assert.strictEqual(rowOf(tableRows(html, FREE_TIER_TABLE), "Bitrise")[1], "300 credits/mo");
-    assert.deepStrictEqual(rowOf(tableRows(html, COST_TABLE), "Bitrise"), ["$0–99", "$89/mo annual billing; $99/mo monthly (Starter)", "Hobby: 300 credits/mo. Starter: $89/mo billed annually, $99 monthly."]);
-    assert.ok(cardText(html, "bitrise").startsWith("Hobby plan: 300 credits a month, 5 concurrent builds, 1 private app, a team of one, 90-minute build timeout."));
-    assert.doesNotMatch(readableText(html), /Bitrise offers 300 free minutes|300 free min\)|300 minutes on standard VMs|Velocity|unlimited team members/);
-    assert.ok(readableText(html).includes("Bitrise (300 credits/month, 5 concurrent builds on Hobby)"));
+  it("states Bitrise Hobby minutes, unstated concurrency and Starter billing in each table and card", () => {
+    assert.deepStrictEqual(rowOf(tableRows(html, PRICING_TABLE), "Bitrise"), ["500 min/mo", "Not stated", "Paid only", "$89/mo billed annually, $99 monthly (Starter)", "Per-minute"]);
+    assert.strictEqual(rowOf(tableRows(html, FREE_TIER_TABLE), "Bitrise")[1], "500 min/mo");
+    assert.deepStrictEqual(rowOf(tableRows(html, COST_TABLE), "Bitrise"), ["$0–99", "$89/mo annual billing; $99/mo monthly (Starter)", "Hobby: 500 min/mo. Starter: $89/mo billed annually, $99 monthly."]);
+    assert.ok(cardText(html, "bitrise").startsWith("Hobby plan: 500 build minutes a month on Linux or macOS, 1 private app, unlimited public apps, unlimited team members, 90-minute build timeout."));
+    assert.doesNotMatch(readableText(html), /Bitrise offers 300 free minutes|300 free min\)|300 minutes on standard VMs|Velocity/);
+    assert.ok(readableText(html).includes("Bitrise (500 build minutes a month on Hobby)"));
   });
 
-  it("states Bitrise credits and concurrency in both copies of the mobile FAQ", () => {
+  it("states Bitrise minutes and team access in both copies of the mobile FAQ", () => {
     const answers = faqAnswers(html, "What is the cheapest CI/CD for mobile apps?");
     assert.strictEqual(answers.length, 2);
-    for (const answer of answers) assert.ok(answer.includes("Bitrise Hobby offers 300 credits a month and 5 concurrent builds for a team of one."), answer);
+    for (const answer of answers) assert.ok(answer.includes("Bitrise Hobby offers 500 build minutes a month on Linux or macOS, with unlimited team members."), answer);
   });
 
   it("states both CircleCI macOS M4 Pro rates and distinguishes small Linux Docker", () => {
@@ -301,10 +301,10 @@ describe("/ci-cd-pricing states the current plans of Bitbucket Pipelines, Codema
     assert.doesNotMatch(text, /macOS build minutes costing 2–10x|budget 5–10x/);
   });
 
-  it("gives the six free concurrency allowances without applying hosted Azure prices to self-hosted jobs", () => {
+  it("gives the five free concurrency allowances without applying hosted Azure prices to self-hosted jobs", () => {
     const paragraph = [...html.matchAll(/<div class="hidden-cost-card">([\s\S]*?)<\/div>/g)].find(([, body]) => readableText(body).startsWith("Parallel Job Limits"));
     assert.ok(paragraph);
-    assert.strictEqual(readableText(paragraph![1]), "Parallel Job Limits Free tiers allow 1 to 30 concurrent jobs. Examples: Azure DevOps 1, Codemagic 1, Bitrise 5, Buildkite 10, GitHub Actions 20, CircleCI 30.");
+    assert.strictEqual(readableText(paragraph![1]), "Parallel Job Limits Free tiers allow 1 to 30 concurrent jobs. Examples: Azure DevOps 1, Codemagic 1, Buildkite 10, GitHub Actions 20, CircleCI 30.");
   });
 
   it("keeps self-hosted Jenkins and Woodpecker free without a time-to-upgrade limit", () => {

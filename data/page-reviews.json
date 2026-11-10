@@ -642,22 +642,22 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 104,
+      "table_figures": 107,
       "table_figures_from_records": 4,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 32,
+          "figures": 33,
           "from_records": 0
         },
         {
           "label": "What You Actually Get for Free",
-          "figures": 14,
+          "figures": 15,
           "from_records": 0
         },
         {
           "label": "Cost Comparison by Team Size",
-          "figures": 54,
+          "figures": 55,
           "from_records": 0
         },
         {
@@ -711,12 +711,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 62,
+      "table_figures": 64,
       "table_figures_from_records": 14,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 37,
+          "figures": 38,
           "from_records": 6
         },
         {
@@ -731,7 +731,7 @@
         },
         {
           "label": "Mobile CI/CD",
-          "figures": 3,
+          "figures": 4,
           "from_records": 0
         },
         {

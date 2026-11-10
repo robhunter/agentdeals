@@ -12163,8 +12163,8 @@ ${buildCards(specialized)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/bitrise" style="color:var(--text)">Bitrise</a></td>
         <td>Mobile</td>
-        <td>300 credits/mo</td>
-        <td>1 build</td>
+        <td>500 min/mo</td>
+        <td>Not stated</td>
         <td>Mobile CI/CD, iOS + Android + Flutter</td>
       </tr>
       <tr>
@@ -29337,16 +29337,16 @@ function buildCiCdPricingPage(): string {
       name: "Bitrise",
       slug: "bitrise",
       category: "mobile",
-      freeMinutes: "300 credits/mo",
-      concurrency: "5 concurrent",
+      freeMinutes: "500 min/mo",
+      concurrency: "Not stated",
       selfHosted: "Paid only",
       paidFrom: "$89/mo billed annually, $99 monthly (Starter)",
-      pricingModel: "Credits",
-      freeDetails: "Hobby plan: 300 credits a month, 5 concurrent builds, 1 private app, a team of one, 90-minute build timeout. Mobile-first CI/CD with 400+ pre-built workflow steps (Xcode, Gradle, Fastlane, CocoaPods). Visual workflow editor.",
+      pricingModel: "Per-minute",
+      freeDetails: "Hobby plan: 500 build minutes a month on Linux or macOS, 1 private app, unlimited public apps, unlimited team members, 90-minute build timeout. Mobile-first CI/CD with 400+ pre-built workflow steps (Xcode, Gradle, Fastlane, CocoaPods). Visual workflow editor.",
       freeType: "limited",
       monthlyCostSmall: "$0–99",
       monthlyCostTeam: "$89/mo annual billing; $99/mo monthly (Starter)",
-      keyCostFactor: "Hobby: 300 credits/mo. Starter: $89/mo billed annually, $99 monthly.",
+      keyCostFactor: "Hobby: 500 min/mo. Starter: $89/mo billed annually, $99 monthly.",
     },
     {
       name: "Codemagic",
@@ -29522,7 +29522,7 @@ function buildCiCdPricingPage(): string {
     { q: "Is Jenkins really free?", a: "Yes, Jenkins is 100% free and open-source (MIT license). The software costs nothing. However, you need to provide and maintain your own servers, which typically costs $20-100/month in cloud hosting. You also handle security patches, plugin updates, and scaling." },
     { q: "How do CI/CD pricing models differ?", a: "There are three main models: per-seat (GitLab, Buildkite), per-minute/credit (CircleCI, AWS CodeBuild, Google Cloud Build), and per-parallel-job (Azure DevOps). Per-seat is predictable but penalizes large teams. Per-minute rewards fast builds but can spike. Per-parallel-job charges for concurrency." },
     { q: "GitHub Actions vs GitLab CI — which is cheaper?", a: "For open-source: GitHub Actions (unlimited free minutes). For small private projects: both are effectively free (GitHub: 2,000 min, GitLab: 400 min + free self-hosted runners). For teams: GitLab Premium is $29/user/month, GitHub Team is $4/user/month but with limited CI minutes. GitLab includes more DevOps features (registry, security scanning) in its price." },
-    { q: "What is the cheapest CI/CD for mobile apps?", a: "Codemagic offers 500 free minutes/month with Apple Silicon (M2) builds included on the free tier. Bitrise Hobby offers 300 credits a month and 5 concurrent builds for a team of one. For maximum savings, use GitHub Actions with self-hosted macOS runners — the CI/CD is free, you just pay for the Mac hardware or cloud Mac rental." },
+    { q: "What is the cheapest CI/CD for mobile apps?", a: "Codemagic offers 500 free minutes/month with Apple Silicon (M2) builds included on the free tier. Bitrise Hobby offers 500 build minutes a month on Linux or macOS, with unlimited team members. For maximum savings, use GitHub Actions with self-hosted macOS runners — the CI/CD is free, you just pay for the Mac hardware or cloud Mac rental." },
     { q: "How many build minutes do I need per month?", a: "A solo developer on a small project: 200-500 min/month. A small team (5 devs) with moderate CI: 2,000-5,000 min/month. An active team with comprehensive testing: 5,000-20,000 min/month. Mobile builds (especially iOS) consume 2-5x more minutes than web/backend builds." },
     { q: "Should I use self-hosted CI/CD runners?", a: "Self-hosted runners make sense when: you need custom hardware (GPUs, Apple Silicon), your builds need access to internal resources, you want to avoid per-minute charges at scale, or you have strict data residency requirements. The trade-off is maintenance overhead — you handle updates, security, and scaling." },
     { q: "Which CI/CD tools support Docker and Kubernetes natively?", a: "Drone CI and Woodpecker CI run every pipeline step in a container. CircleCI runs jobs on Docker, Linux VM, Windows, Arm and macOS. Google Cloud Build uses containerized build steps. Buildkite supports Docker and Kubernetes agents. GitLab CI has strong Kubernetes integration with Auto DevOps." },
@@ -29751,7 +29751,7 @@ function buildCiCdPricingPage(): string {
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Parallel Job Limits</h4>\n' +
-    '    <p>Free tiers allow 1 to 30 concurrent jobs. Examples: Azure DevOps 1, Codemagic 1, Bitrise 5, Buildkite 10, GitHub Actions 20, CircleCI 30.</p>\n' +
+    '    <p>Free tiers allow 1 to 30 concurrent jobs. Examples: Azure DevOps 1, Codemagic 1, Buildkite 10, GitHub Actions 20, CircleCI 30.</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Data Transfer and Egress</h4>\n' +
@@ -29790,7 +29790,7 @@ function buildCiCdPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for mobile app development</strong>\n' +
-    '      <p><a href="/vendor/codemagic">Codemagic</a> (500 free min/month with Apple Silicon) for Flutter and cross-platform. <a href="/vendor/bitrise">Bitrise</a> (300 credits/month, 5 concurrent builds on Hobby) for native iOS/Android with the largest mobile integration library.</p>\n' +
+    '      <p><a href="/vendor/codemagic">Codemagic</a> (500 free min/month with Apple Silicon) for Flutter and cross-platform. <a href="/vendor/bitrise">Bitrise</a> (500 build minutes a month on Hobby) for native iOS/Android with the largest mobile integration library.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -37158,7 +37158,7 @@ ${globalNavCss()}
 
   <div class="executive-summary">
     <p><strong>Quick verdict:</strong> On public repositories, GitHub Actions' standard runners are free with no minute limit. For private repositories, GitHub Free includes 2,000 minutes a month. GitLab Free includes 400 compute minutes a month and a container registry. CircleCI Free gives 30,000 credits a month (up to 6,000 minutes on a small Docker resource class) and 30 concurrent jobs. Buildkite's Free plan includes 5 users, 10 concurrent jobs and 2,000 Linux vCPU minutes a month (1,000 minutes on its 2-vCPU agent).</p>
-    <p><strong>The CI/CD landscape in 2026:</strong> GitHub announced a charge for self-hosted runners on 2025-12-16 and postponed it the next day, with no new date. GitLab Free has included 400 compute minutes a month since October 2020. Drone's free open-source edition runs on a single machine; Woodpecker CI is a community fork of Drone. For mobile CI, Bitrise's free Hobby plan gives 300 credits a month and Codemagic 500 macOS M2 build minutes.</p>
+    <p><strong>The CI/CD landscape in 2026:</strong> GitHub announced a charge for self-hosted runners on 2025-12-16 and postponed it the next day, with no new date. GitLab Free has included 400 compute minutes a month since October 2020. Drone's free open-source edition runs on a single machine; Woodpecker CI is a community fork of Drone. For mobile CI, Bitrise's free Hobby plan gives 500 build minutes a month and Codemagic 500 macOS M2 build minutes.</p>
   </div>
 
   <div class="toc">
@@ -37267,8 +37267,8 @@ ${globalNavCss()}
       </tr>${vendorPageConditionsRowHtml("google-cloud-build", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/bitrise" style="color:var(--text)">Bitrise</a></td>
-        <td style="font-family:var(--mono)">300 credits/mo</td>
-        <td>5 concurrent</td>
+        <td style="font-family:var(--mono)">500 min/mo</td>
+        <td>Not stated</td>
         <td>90-min build timeout</td>
         <td>macOS Medium/Large, Linux Medium</td>
         <td>1 private app; unlimited public apps</td>
@@ -37300,7 +37300,7 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>Minutes vs credits:</strong> GitHub charges each runner type its own per-minute rate. GitLab multiplies job time by a cost factor. CircleCI and Bitrise use their own credits, which do not compare across vendors. On public repositories, GitHub Actions' standard runners have no minute limit. For private repositories, CircleCI's 30,000 monthly credits cover up to 6,000 minutes on a small Docker resource class.
+    <strong>Minutes vs credits:</strong> GitHub charges each runner type its own per-minute rate. GitLab multiplies job time by a cost factor. CircleCI uses its own credits, which do not compare across vendors. On public repositories, GitHub Actions' standard runners have no minute limit. For private repositories, CircleCI's 30,000 monthly credits cover up to 6,000 minutes on a small Docker resource class.
   </div>
 
   <h2 id="general-purpose">General-Purpose CI/CD</h2>
@@ -37428,7 +37428,7 @@ ${globalNavCss()}
     <tbody>
       <tr>
         <td class="provider-col">Bitrise</td>
-        <td>300 credits/mo, 5 concurrent</td>
+        <td>500 min/mo</td>
         <td class="check">macOS runners</td>
         <td class="check">Linux runners</td>
         <td class="check">Supported</td>
@@ -37577,7 +37577,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Mobile apps (native iOS/Android) &rarr; Bitrise</strong>
-      <p>400+ pre-built steps for mobile workflows. 300 credits/month, macOS runners for iOS builds, pre-configured steps for common mobile workflows. <a href="/vendor/bitrise">View Bitrise details &rarr;</a></p>
+      <p>400+ pre-built steps for mobile workflows. 500 build minutes/month, macOS runners for iOS builds, pre-configured steps for common mobile workflows. <a href="/vendor/bitrise">View Bitrise details &rarr;</a></p>
     </div>
 
     <div class="verdict-item">
@@ -37606,7 +37606,7 @@ ${globalNavCss()}
 
   <div class="diff-card" style="border-left-color:#d29922">
     <h3>Concurrent job limits</h3>
-    <p class="diff-desc">Free tiers typically limit concurrent jobs: Bitbucket Pipelines Free runs up to 10 steps at once on cloud runners and 100 on self-hosted runners. Codemagic's free plan runs one build at a time; Bitrise Hobby allows 5. GitHub Free allows 20 concurrent jobs on standard runners (5 for macOS). For teams with multiple developers pushing frequently, concurrent job limits matter more than total minutes.</p>
+    <p class="diff-desc">Free tiers typically limit concurrent jobs: Bitbucket Pipelines Free runs up to 10 steps at once on cloud runners and 100 on self-hosted runners. Codemagic's free plan runs one build at a time. GitHub Free allows 20 concurrent jobs on standard runners (5 for macOS). For teams with multiple developers pushing frequently, concurrent job limits matter more than total minutes.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
