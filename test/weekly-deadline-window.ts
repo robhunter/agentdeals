@@ -2,13 +2,15 @@ import assert from "node:assert";
 
 type VendorDate = { vendor: string; date: string };
 
+type Deadline = VendorDate & { change_type: string; summary: string };
+
 type DigestWindow = {
   summary: string;
-  upcoming_deadlines: VendorDate[];
+  upcoming_deadlines: Deadline[];
   deal_changes: VendorDate[];
 };
 
-export function assertFutureChangesInDigestWindow(digest: DigestWindow, futureChanges: VendorDate[], today: string): void {
+export function assertFutureChangesInDigestWindow(digest: DigestWindow, futureChanges: Deadline[], today: string): void {
   for (const c of digest.deal_changes) {
     assert.ok(c.date <= today, `${c.vendor} ${c.date} should not be reported as a change already tracked`);
   }
@@ -24,8 +26,8 @@ export function assertFutureChangesInDigestWindow(digest: DigestWindow, futureCh
   assert.strictEqual(end, [...digest.upcoming_deadlines].map((d) => d.date).sort().at(-1), "The stated last date must end the returned window");
   for (const c of futureChanges.filter((c) => c.date > today && c.date <= end)) {
     assert.ok(
-      digest.upcoming_deadlines.some((d) => d.vendor === c.vendor && d.date === c.date),
-      `${c.vendor} ${c.date} should be an upcoming deadline through ${end}`
+      digest.upcoming_deadlines.some((d) => d.vendor === c.vendor && d.date === c.date && d.change_type === c.change_type && d.summary === c.summary),
+      `${c.vendor} ${c.date} should be an upcoming deadline through ${end} (${c.change_type}: ${c.summary})`
     );
   }
 }

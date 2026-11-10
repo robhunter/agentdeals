@@ -82,6 +82,17 @@ export function undatedMentions(text: string, name: string): string[] {
   return found;
 }
 
+function retiredFrontierClaim(html: string): boolean {
+  const text = everySurface(html);
+  const old = String.raw`(?:Claude\s+)?Fable\s+5\.1(?!\d|\.\d)`;
+  const position = String.raw`(?:(?:top|newest|latest|flagship)\s+(?:Claude\s+)?model|(?:newest|latest|flagship)\s+Claude)`;
+  const assignment = String.raw`\s*(?:[:=—–-]\s*|(?:is|remains)\s+)?(?:the\s+)?`;
+  const attribution = String.raw`\s*(?:is|remains|,|—)\s+(?:(?:Anthropic['’]s|the)\s+){0,2}`;
+  return new RegExp(`${position}${assignment}${old}|${old}${attribution}${position}`, "i").test(text)
+    || /OpenAI and Anthropic price their top model identically/i.test(text)
+    || /each lab['’]s top model costs \$10\/\$50/i.test(text);
+}
+
 let routes: string[] = [];
 const bodies = new Map<string, string>();
 
@@ -104,6 +115,41 @@ before(async () => {
 });
 
 after(() => { if (server) server.kill(); });
+
+describe("frontier model comparisons", () => {
+  it("recognizes the retired top-model claim across visible and structured text", () => {
+    for (const claim of [
+      "OpenAI and Anthropic price their top model identically: GPT-6 Astra and Claude Fable 5.1 are both $10/$50 per M tokens.",
+      "Each lab's top model costs $10/$50 (Claude Fable 5.1, OpenAI GPT-6 Astra).",
+      "Anthropic's newest model is Claude Fable 5.1.",
+      "Claude Fable 5.1 is Anthropic's top model.",
+      "Anthropic's flagship model: <strong>Claude Fable 5.1</strong>.",
+      '<meta name="description" content="Anthropic latest model: Claude Fable 5.1">',
+      '<script type="application/ld+json">{"text":"Claude Fable 5.1 is the newest Claude model"}</script>',
+    ]) assert.ok(retiredFrontierClaim(claim), claim);
+  });
+
+  it("allows older prices, computed price spans and dated history", () => {
+    for (const claim of [
+      "GPT-6 Astra is $10/$50 per M tokens. Claude Fable 5.2 is $8/$40. Claude Fable 5.1 is $10/$50.",
+      "Claude Haiku 5.5 $0.10/$0.50 – Claude Fable 5.1 $10/$50",
+      "The dearest is Claude Fable 5.1 at $10/$50.",
+      "2026-09-22: Claude Fable 5.1 launched at $10/$50.",
+      "Claude Fable 5.1 is $10/$50. Anthropic's newest model is Claude Fable 5.2.",
+      "Anthropic's newest model, Claude Fable 5.2, is cheaper than Claude Fable 5.1.",
+      "Claude Fable 5.1 costs more than Anthropic's top model, Claude Fable 5.2.",
+      "Anthropic's newest model is Claude Fable 5.10.",
+      "Claude Fable 5.1 is not Anthropic's newest model.",
+      "Anthropic's newest model is not Claude Fable 5.1.",
+    ]) assert.strictEqual(retiredFrontierClaim(claim), false, claim);
+  });
+
+  it("never presents Fable 5.1 as the newest or top model on a published page", async () => {
+    const carrying: string[] = [];
+    for (const route of routes) if (retiredFrontierClaim(await body(route))) carrying.push(route);
+    assert.deepStrictEqual(carrying, []);
+  });
+});
 
 describe("#1362 a superseded Claude version is not published as the current one", () => {
   it("reads a claim that reaches a reader only through metadata or structured data", () => {
@@ -190,7 +236,7 @@ describe("#1362 a superseded Claude version is not published as the current one"
     const asked = faq.mainEntity.find((q: { name: string }) => /How much does Claude cost/i.test(q.name));
     assert.ok(asked, "the FAQ structured data does not answer what Claude costs");
     const answer = decode(asked.acceptedAnswer.text);
-    for (const model of ["Fable 5.1", "Opus 5.5", "Sonnet 5", "Haiku 4.5"]) {
+    for (const model of ["Fable 5.2", "Fable 5.1", "Opus 5.5", "Sonnet 5.5", "Sonnet 5", "Haiku 5.5", "Haiku 4.5"]) {
       assert.ok(answer.includes(model), `the structured answer never names ${model}`);
     }
     for (const old of SUPERSEDED_BY.keys()) {
