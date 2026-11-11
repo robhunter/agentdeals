@@ -1928,8 +1928,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 132,
-      "table_figures_from_records": 83,
+      "table_figures": 142,
+      "table_figures_from_records": 93,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1953,8 +1953,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 21,
-          "from_records": 21
+          "figures": 31,
+          "from_records": 31
         }
       ],
       "reads_changes": true,
@@ -2304,8 +2304,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 108,
-      "table_figures_from_records": 107,
+      "table_figures": 118,
+      "table_figures_from_records": 117,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2319,8 +2319,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 20,
-          "from_records": 20
+          "figures": 30,
+          "from_records": 30
         },
         {
           "label": "Recent Pricing Changes",
@@ -2924,8 +2924,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 24,
-      "table_figures_from_records": 24,
+      "table_figures": 34,
+      "table_figures_from_records": 34,
       "tables": [
         {
           "label": "Related Pricing Changes",
@@ -2934,8 +2934,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 21,
-          "from_records": 21
+          "figures": 31,
+          "from_records": 31
         }
       ],
       "reads_changes": true,
