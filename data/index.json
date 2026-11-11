@@ -5400,6 +5400,12 @@
           "url": "https://posthog.com/docs/self-driving/pricing",
           "read_on": "2026-11-10",
           "operating_detail": true
+        },
+        {
+          "text": "The Free plan keeps events for 1 year. Organizations that start a paid plan on or after November 5, 2026, including upgrades from Free, keep events for 2 years by default (up to 3, 5 or 7 years with the Boost, Scale or Enterprise package); paid plans started before then keep 7 years.",
+          "quote": "Your retention period changes to 1 year, the only period the Free plan offers.",
+          "url": "https://posthog.com/docs/data/events-retention",
+          "read_on": "2026-11-11"
         }
       ]
     },
