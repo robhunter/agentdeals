@@ -376,6 +376,18 @@
       "refused_date": "2026-10-13"
     },
     {
+      "vendor": "Anthropic API",
+      "change_type": "new_free_tier",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored info says 'Anthropic's pages state no free credit amount for new API users,' but the current pricing page FAQ says new users receive a small amount of free credits to test the API.",
+      "previous_state": "Claude API with usage-based pricing per million tokens (input/output). Claude Fable 5.2 $8/$40. Claude Fable 5.1 $10/$50. Claude Opus 5.5 $4/$20. Claude Sonnet 5.5 $2/$10. Claude Sonnet 5 $2/$10. Claude Haiku 5.5 $0.10/$0.50 (for prompts up to 100,000 tokens; longer prompts cost five times as much). Claude Haiku 4.5 $1/$5. Anthropic released Claude Fable 5.2 and Claude Mythos 5.2 on November 9, 2026. Claude Mythos 5.2 has the same prices as Claude Fable 5.2 and is offered only to organizations verified through Anthropic's verification programs. The Batch API gives a 50% discount on input and output tokens. Claude Fable 5.2 and Claude Mythos 5.2 fast mode cost $16 per million input tokens and $80 per million output tokens. Claude Opus 5.5 fast mode costs $8 per million input tokens and $40 per million output tokens. Fast mode is not available with the Batch API. Claude Fable 5.2, Claude Mythos 5.2 and Claude Opus 5.5 cache hits $0.20, Claude Sonnet 5.5 cache hits $0.10, Claude Fable 5.1 cache hits $0.25. Other models’ cache hits cost 0.1x the input price. Cache writes cost 1.25x the input price for 5-minute lifetime and 2x for 1-hour lifetime. Anthropic states \"Claude Max, Ultra, and Team plans include monthly credits for the Claude API.\" Max gets $100 a month, Ultra gets $200, and Team gets $20 per Standard seat and $100 per Premium seat, pooled up to $500. Anthropic's pages state no free credit amount for new API users.",
+      "current_state": "The FAQ states: 'New users receive a small amount of free credits to test the API. Contact sales for information about extended trials for enterprise evaluation.'",
+      "source_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-11-11"
+    },
+    {
       "vendor": "Apify",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -2308,13 +2320,13 @@
       "vendor": "coderabbit.ai",
       "change_type": "free_tier_removed",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-09-09 (no_baseline) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
-      "summary": "The free tier as described is no longer available. The lowest tier is now 'Essentials' at $24/user/month, which includes many features not present in the previously described free tier. The free trial is now a 14-day trial of the Essentials plan.",
+      "detail": "the reading of this vendor refused on 2026-10-20 (repeats_a_refused_claim) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored free tier described a Free plan with basic PR summarization and IDE reviews on unlimited public and private repos plus a 14-day Pro trial. The current page shows no Free tier at all — the entry plan is Essentials at $24/user/mo billed annually ($30 monthly), with no free plan listed for private repos; only free-for-open-source (public repositories) remains, and Pro/Pro Plus have been renamed Essentials/Team.",
       "previous_state": "AI-powered code review tool for GitHub/GitLab/Bitbucket. Free tier: basic PR summarization and reviews in IDE on unlimited public and private repositories, with a 14-day Pro trial included (no credit card). Paid Pro is $24/user/month billed annually and adds detailed reviews with 5 reviews/hour; Pro Plus adds 10 reviews/hour. Free-for-open-source may still apply but is no longer prominently featured on the pricing page.",
-      "current_state": "Essentials plan is $24 /user/mo. Includes AI Code Review before the PR in CLI, IDE, and coding-agent loops, plain language summary & walkthrough, CodeRabbit Chat, learnings, autofix, slop detection, and pre-merge checks. Review velocity is 5 reviews/hour.",
+      "current_state": "The page lists only paid plans (Essentials $24/user/mo annual, Team $48/user/mo annual, Advanced $72/user/mo annual, Enterprise by contact) plus separate on-demand products, with a 14-day trial on each paid plan. The only free offering stated is a free open-source plan: reviews forever for public repositories when CodeRabbit is installed on a public repo. No free private-repo tier is stated.",
       "source_url": "https://www.coderabbit.ai/pricing",
       "category": "Code Quality",
-      "refused_date": "2026-10-20"
+      "refused_date": "2026-11-11"
     },
     {
       "vendor": "Cohere",
@@ -4316,6 +4328,18 @@
       "category": "Dev Utilities",
       "refused_date": "2026-09-10",
       "collided_with": "FreeIPAPI|limits_reduced|2026-08-28|https://freeipapi.com"
+    },
+    {
+      "vendor": "freetools.site",
+      "change_type": "product_deprecated",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names freetools.site and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page is a Dutch casino affiliate site about 'casino zonder CRUKS' bonuses; it contains no information about freetools.site or its free online tools (document/image/audio/video conversion and editing).",
+      "previous_state": "Free online tools. Convert or edit documents, images, audio, video, and more.",
+      "current_state": "The page is entirely about online casinos without CRUKS, listing casino welcome bonuses, licensing, payments, and responsible gambling; it does not mention freetools.site or any free online tools for converting or editing documents, images, audio, or video.",
+      "source_url": "https://freetools.site/",
+      "category": "Storage",
+      "refused_date": "2026-11-11"
     },
     {
       "vendor": "Freshworks for Startups",
@@ -9191,6 +9215,18 @@
     },
     {
       "vendor": "Plunk",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "Both stored and current pages state a 1,000 emails/month free limit; the reported 10,000 figure is not supported by the current page.",
+      "summary": "Free tier email limit changed from 1,000 to 10,000 emails/month",
+      "previous_state": "Open-source email platform with 1,000 transactional/marketing emails/month free",
+      "current_state": "Free plan covers 1,000 emails a month with Plunk branding; paid plan is $0.001 per email with no branding and no feature tiers; contacts unlimited on both.",
+      "source_url": "https://useplunk.com",
+      "category": "Email",
+      "refused_date": "2026-11-11"
+    },
+    {
+      "vendor": "Plunk",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
       "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 1,000 transactional/mo against 1,000 email/mo",
@@ -9541,6 +9577,18 @@
       "source_url": "https://www.pulumi.com/pricing/",
       "category": "Infrastructure",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Pulumi",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-08-28 (confirmed_unchanged) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The Free tier no longer lists 500 deployment minutes/mo, 25 secrets, or 10K secret API calls/mo as included limits; it now shows 'Up to 500 workflow minutes' and the secrets/API-call limits appear only as metered pricing rows (25 free secrets, 10K free API calls) rather than as stated plan inclusions.",
+      "previous_state": "Infrastructure as Code platform — free for individuals with 1 user, unlimited projects/stacks/updates, 500 deployment minutes/mo, 25 secrets, 10K secret API calls/mo",
+      "current_state": "Free edition: 1 user, IaC state management, Pulumi Deployments Basic, Pulumi ESC, unlimited projects/stacks/environments, unlimited updates and history, up to 500 workflow minutes; secrets priced at 25 free then $0.000685/hour ($0.50/month), and API calls at 10K free then $0.10 per 10K.",
+      "source_url": "https://www.pulumi.com/pricing/",
+      "category": "Infrastructure",
+      "refused_date": "2026-11-11"
     },
     {
       "vendor": "PythonAnywhere",

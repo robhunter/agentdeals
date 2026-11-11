@@ -1,6 +1,28 @@
 {
   "held": [
     {
+      "vendor": "cDox",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier still exists with unlimited public links and sharing. The unit/scope of the 150-item limit has changed from pages and sheets to documents.",
+      "previous_state": "Private document editor hosted in Canada. Write, format, collaborate, and publish documents with clean public links. Data is never used for AI training. Free plan includes 150 pages and sheets and unlimited public links.",
+      "current_state": "Free plan is $0 and includes 150 documents, unlimited public links, unlimited sharing and shared folders, real-time collaboration, sync across all devices, PDF/Word/Excel/PowerPoint/Markdown/CSV export, dark mode, no AI training on content, API access at 100 req/min, and support up to three days. Pro is $8/month CAD or $70/year CAD and includes unlimited documents, guest editing, image uploads up to 1 GB, Pro templates, Pro fonts, and API access at 300 req/min.",
+      "source_url": "https://cdox.studio/pricing",
+      "category": "Team Collaboration",
+      "first_read_date": "2026-11-11"
+    },
+    {
+      "vendor": "Corgea",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The Free plan no longer includes the 10 PR scans per month and 10 SAST auto fixes described in previously info. The pricing page now lists PR Scanning and SAST Auto fixes as Growth-plan features, with the Free plan limited to 2 team members and 10 repositories.",
+      "previous_state": "Free autonomous security platform that finds, validates and fixes insecure code and packages across +20 languages and frameworks. Free plan for up to 2 team members and 10 repositories, with 10 PR scans a month and 10 SAST auto fixes. Features: AI SAST, Logic/Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, IaC Scanning.",
+      "current_state": "Free is $0 for individual devs and includes AI SAST, Logic and Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, and IaC Scanning, with a team size of 2 minimum and 10 repositories. PR scans per month and SAST Auto fixes are not listed under Free; PR Scanning appears under Growth, and SAST Auto fixes are listed with limits of 10 (Growth), 50 (Scale), 200 (Enterprise), and Unlimited (Enterprise).",
+      "source_url": "https://corgea.com/pricing/",
+      "category": "Security",
+      "first_read_date": "2026-11-11"
+    },
+    {
       "vendor": "Harness CI",
       "change_type": "pricing_restructured",
       "impact": "high",
@@ -12,37 +34,37 @@
       "first_read_date": "2026-11-01"
     },
     {
-      "vendor": "IP Geolocation API by ipwho.org",
+      "vendor": "Logo.dev",
       "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The page now lists a 'Launch' plan from $2.50/mo with 5,000 requests/day and a 'Startup' plan from $10/mo with 250,000 requests/day.",
-      "previous_state": "IP geolocation API. Free forever for side projects, learning and non-profits: 2,000 lookups/day, all features, 100 requests/second burst cap, no card, no support. Commercial use needs a paid plan: $2.50/mo clears you for business use. 16 global data centres.",
-      "current_state": "Free plan: 2,000 requests/day with every field included, no credit card required, described as 'Perfect for testing.' Paid plans: Launch from $2.50/mo (5,000 requests/day), Startup from $10/mo (250,000 requests/day, email support), Enterprise from $69/mo (unlimited requests, guaranteed throughput, priority routing, dedicated account manager).",
-      "source_url": "https://ipwho.org/",
-      "category": "Dev Utilities",
-      "first_read_date": "2026-11-10"
+      "impact": "low",
+      "summary": "Startup and Pro plan pricing changed: Startup is now $33/mo (was $50/mo or $400/yr) and Pro is now $150/mo (was $180/mo or $1,800/yr). The free Community plan's terms (500K Logo CDN requests, $5 API credits, 100 API requests/min, no credit card) remain the same.",
+      "previous_state": "500K Logo CDN requests a month and $5 of API credits a month for the Brand API and the Logo.dev MCP. Logo images from img.logo.dev count as Logo CDN requests. One credit is 1 cent. A Brand API request costs 5 credits. No credit card is needed. The free plan allows 100 API requests per minute. Paid plans include Startup at $50 a month or $400 a year and Pro at $180 a month or $1,800 a year.",
+      "current_state": "Community is free with 500K Logo CDN requests, $5 API credits, 100 API requests per minute, attribution required for commercial projects, and no credit card needed. Startup is $33/mo with 1M Logo CDN requests and $15 API credits. Pro is $150/mo with 5M Logo CDN requests and $150 API credits. Enterprise is custom.",
+      "source_url": "https://www.logo.dev/pricing",
+      "category": "Design",
+      "first_read_date": "2026-11-11"
     },
     {
-      "vendor": "ipapi.is",
+      "vendor": "Pingram.io",
       "change_type": "restriction",
       "impact": "medium",
-      "summary": "The free plan now requires a free account/API key for the full 1,000 daily requests. Unauthenticated requests are limited to 10 fields.",
-      "previous_state": "A reliable IP Address API from Developers for Developers with the best Hosting Detection capabilities that exist. The free plan offers 1000 lookups without signup.",
-      "current_state": "The free plan with 1,000 free daily requests covers most use cases — full API output, commercial use included, no subscription required. Unauthenticated requests get limited output (10 fields); logging in or signing up free returns the complete API response.",
-      "source_url": "https://ipapi.is/",
-      "category": "Dev Utilities",
-      "first_read_date": "2026-11-10"
+      "summary": "The current page's free tier only mentions 100 SMS & Calls/mo and 3,000 Emails/mo, and WhatsApp is listed as 'Soon' rather than available.",
+      "previous_state": "Communication infrastructure in 5 minutes. Free tier includes: 100 SMS and calls, 3000 Emails, Push, Slack, MS Teams, WhatsApp, and more.",
+      "current_state": "Free tier includes 100 SMS & Calls per month and 3,000 Emails per month, with no credit card required; WhatsApp is listed as 'Soon' and Push, Slack, and MS Teams are not mentioned as free-tier channels.",
+      "source_url": "https://www.pingram.io/",
+      "category": "Messaging",
+      "first_read_date": "2026-11-11"
     },
     {
-      "vendor": "OpenAI",
+      "vendor": "Stoplight",
       "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The flagship table now lists only gpt-6-astra, gpt-6.1-sol, gpt-6.1-terra, and gpt-6-luna. The page still notes GPT-5.6 Sol's promotional pricing until November 30, 2026.",
-      "previous_state": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. No GPT model is priced free. GPT prices per 1M tokens (Standard, short context): gpt-6-astra $10.00/$50.00; gpt-6.1-sol $2.00/$10.00; gpt-6.1-terra $1.00/$5.00; gpt-6-sol $2.00/$10.00; gpt-6-luna $0.10/$0.50; gpt-5.6-sol $4.00/$20.00; gpt-5.6-terra $2.00/$12.00; gpt-5.6-luna $0.20/$1.20. OpenAI's promotional pricing for gpt-5.6-sol is available until November 30, 2026. Batch and Flex processing halve these prices. gpt-6-astra cached input $1.00 per 1M tokens, against $10.00 uncached. gpt-6.1-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6.1-terra cached input $0.05 per 1M tokens, against $1.00 uncached. gpt-6-luna cached input $0.01 per 1M tokens, against $0.10 uncached. Prompt caching is on by default. Cache writes cost 1.25× the input price for 30 minutes or 2.5× for 12 hours. Embeddings from $0.02 per 1M tokens. Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models. Since 2026-10-28, OpenAI's API docs say: \"Eligible ChatGPT Pro and Business subscriptions can claim free API credits as part of their subscription benefits.\" Pro's $100, $200 and $500 tiers get $100, $200 and $500 in API credits a month. Business gets $20 per paid Standard seat and $100 per paid Premium seat, pooled and capped at $500 per workspace a month.",
-      "current_state": "The flagship models table lists gpt-6-astra at $10.00/$50.00, gpt-6.1-sol at $2.00/$10.00, gpt-6.1-terra at $1.00/$5.00, and gpt-6-luna at $0.10/$0.50 per 1M tokens (Standard), with cached input prices of $1.00, $0.10, $0.05, and $0.01 respectively. Batch, Fast, and Ultrafast tables are also shown. The page states GPT-5.6 Sol's promotional pricing is available until November 30, 2026, but no GPT-5.6 model rows appear in the pricing tables.",
-      "source_url": "https://developers.openai.com/api/docs/pricing",
-      "category": "AI / ML",
-      "first_read_date": "2026-11-10"
+      "impact": "low",
+      "summary": "The stored free tier (1 user, 1 project) still appears in the comparison table, but the page now shows a 'Basic' plan at $44/month (annual) or $56/month (monthly) with the first 3 users free, and the Free plan's feature set is not clearly enumerated in the page text. The page's plan comparison lists 'Free' as a column but the feature checkmarks are not legible in the provided text, so the free tier's exact limits cannot be confirmed from this page.",
+      "previous_state": "API design and documentation platform — free tier: 1 user, 1 project. Includes OpenAPI visual designer, API editor, interactive docs, API console, code generation, Git sync, automatic SSL",
+      "current_state": "The page lists a Free plan column in the comparison table with 1 user included and 1 maximum project, alongside paid Basic ($44/mo annual, $56/mo monthly, first 3 users free), Startup ($113/mo annual, $147/mo monthly, first 8 users free), Pro Team ($362/mo annual, $453/mo monthly, first 15 users free), and Enterprise (custom) plans.",
+      "source_url": "https://stoplight.io/pricing",
+      "category": "API Development",
+      "first_read_date": "2026-11-11"
     }
   ],
   "resolved": [
@@ -3495,6 +3517,42 @@
       "outcome": "contradicted",
       "detail": "a reading on 2026-11-10 read a change the gate refused as states_no_difference",
       "resolved_date": "2026-11-10"
+    },
+    {
+      "vendor": "IP Geolocation API by ipwho.org",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The page now lists a 'Launch' plan from $2.50/mo with 5,000 requests/day and a 'Startup' plan from $10/mo with 250,000 requests/day.",
+      "previous_state": "IP geolocation API. Free forever for side projects, learning and non-profits: 2,000 lookups/day, all features, 100 requests/second burst cap, no card, no support. Commercial use needs a paid plan: $2.50/mo clears you for business use. 16 global data centres.",
+      "source_url": "https://ipwho.org/",
+      "first_read_date": "2026-11-10",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-11 read it as pricing_restructured too",
+      "resolved_date": "2026-11-11"
+    },
+    {
+      "vendor": "ipapi.is",
+      "change_type": "restriction",
+      "impact": "medium",
+      "summary": "The free plan now requires a free account/API key for the full 1,000 daily requests. Unauthenticated requests are limited to 10 fields.",
+      "previous_state": "A reliable IP Address API from Developers for Developers with the best Hosting Detection capabilities that exist. The free plan offers 1000 lookups without signup.",
+      "source_url": "https://ipapi.is/",
+      "first_read_date": "2026-11-10",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-11 read it as restriction too",
+      "resolved_date": "2026-11-11"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The flagship table now lists only gpt-6-astra, gpt-6.1-sol, gpt-6.1-terra, and gpt-6-luna. The page still notes GPT-5.6 Sol's promotional pricing until November 30, 2026.",
+      "previous_state": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. No GPT model is priced free. GPT prices per 1M tokens (Standard, short context): gpt-6-astra $10.00/$50.00; gpt-6.1-sol $2.00/$10.00; gpt-6.1-terra $1.00/$5.00; gpt-6-sol $2.00/$10.00; gpt-6-luna $0.10/$0.50; gpt-5.6-sol $4.00/$20.00; gpt-5.6-terra $2.00/$12.00; gpt-5.6-luna $0.20/$1.20. OpenAI's promotional pricing for gpt-5.6-sol is available until November 30, 2026. Batch and Flex processing halve these prices. gpt-6-astra cached input $1.00 per 1M tokens, against $10.00 uncached. gpt-6.1-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6.1-terra cached input $0.05 per 1M tokens, against $1.00 uncached. gpt-6-luna cached input $0.01 per 1M tokens, against $0.10 uncached. Prompt caching is on by default. Cache writes cost 1.25× the input price for 30 minutes or 2.5× for 12 hours. Embeddings from $0.02 per 1M tokens. Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models. Since 2026-10-28, OpenAI's API docs say: \"Eligible ChatGPT Pro and Business subscriptions can claim free API credits as part of their subscription benefits.\" Pro's $100, $200 and $500 tiers get $100, $200 and $500 in API credits a month. Business gets $20 per paid Standard seat and $100 per paid Premium seat, pooled and capped at $500 per workspace a month.",
+      "source_url": "https://developers.openai.com/api/docs/pricing",
+      "first_read_date": "2026-11-10",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-11 read it as pricing_restructured too",
+      "resolved_date": "2026-11-11"
     }
   ]
 }
