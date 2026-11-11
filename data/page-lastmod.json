@@ -15,7 +15,7 @@
     },
     "/agent-stack": {
       "hash": "d24a429b47fbd6e3",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/ai-coding-tools-pricing": {
       "hash": "ac727f11b0bba342",
@@ -31,7 +31,7 @@
     },
     "/alternative-to": {
       "hash": "270c0d9fb091bf49",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/alternative-to/360-monitoring": {
       "daily": true
@@ -790,7 +790,7 @@
     },
     "/amplitude-vs-posthog": {
       "hash": "351845026daeb0d8",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/analytics-alternatives": {
       "hash": "9313c45cba9d3f33",
@@ -798,7 +798,7 @@
     },
     "/analytics-free-tier-comparison-2026": {
       "hash": "9252071b45215ef1",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/api-development-alternatives": {
       "hash": "cd82c9b35d478b16",
@@ -1113,7 +1113,7 @@
     },
     "/category/analytics": {
       "hash": "4841577634a1ef7d",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/category/api-development": {
       "hash": "8841d2b78989b5d6",
@@ -1141,7 +1141,7 @@
     },
     "/category/ci-cd": {
       "hash": "4e97fd10ee65e19d",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/category/cloud-hosting": {
       "hash": "86eabb1b69fa5c4b",
@@ -1189,7 +1189,7 @@
     },
     "/category/dev-utilities": {
       "hash": "2b9a0470a909ad57",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/category/diagramming": {
       "hash": "4c85b466300ad9f6",
@@ -1209,11 +1209,11 @@
     },
     "/category/email": {
       "hash": "4c6e293b9a7d08d2",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/category/error-tracking": {
       "hash": "05cbf7207f0f0f76",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/category/feature-flags": {
       "hash": "5860cb0488e09e56",
@@ -1273,7 +1273,7 @@
     },
     "/category/payments": {
       "hash": "e580706e5ab535a4",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/category/productivity-notes": {
       "hash": "649d4c6f357b70ce",
@@ -1305,7 +1305,7 @@
     },
     "/category/startup-perks": {
       "hash": "1252fd9318f42656",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/category/status-pages": {
       "hash": "59d40e18afe0e11d",
@@ -1544,11 +1544,11 @@
     },
     "/compare/bitrise-vs-appveyor-com": {
       "hash": "203294e12d69ddb8",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/compare/bitrise-vs-codefresh": {
       "hash": "061020e7a8344c63",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/compare/blender-vs-gimp": {
       "hash": "4d501dc5fcd52533",
@@ -2084,7 +2084,7 @@
     },
     "/compare/glitchtip-vs-logrocket": {
       "hash": "1524521e45718577",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/compare/glitchtip-vs-memfault-com": {
       "hash": "4dfcb4002c0390e2",
@@ -2352,7 +2352,7 @@
     },
     "/compare/logrocket-vs-rollbar": {
       "hash": "36ff40b95d720982",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/compare/luadns-com-vs-zilore-com": {
       "hash": "4b1191efff381a8a",
@@ -3074,7 +3074,7 @@
     },
     "/digest/2026-w38": {
       "hash": "f0e00dbc81a16c2d",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/digest/2026-w39": {
       "hash": "bb8fc1487bc96459",
@@ -3102,7 +3102,7 @@
     },
     "/digest/2026-w45": {
       "hash": "a571351e1298064a",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/digest/2026-w46": {
       "hash": "e2d033ca035499eb",
@@ -3198,7 +3198,7 @@
     },
     "/estimate": {
       "hash": "11c84140623a3cae",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/events": {
       "hash": "10c036e7bfb60e32",
@@ -3313,8 +3313,8 @@
       "changed": "2026-11-06"
     },
     "/groq-vs-mistral-ai": {
-      "hash": "051d8dcf34dc1893",
-      "changed": "2026-11-06"
+      "hash": "08b18d4e90b226ca",
+      "changed": "2026-11-10"
     },
     "/guides": {
       "hash": "7a92aabfb38ffb2a",
@@ -3353,7 +3353,7 @@
       "changed": "2026-11-11"
     },
     "/hosting-free-tier-comparison-2026": {
-      "hash": "bc88cec01467c64a",
+      "hash": "aabfa4e8906ee71c",
       "changed": "2026-11-10"
     },
     "/hosting-pricing": {
@@ -3386,7 +3386,7 @@
     },
     "/monitoring-comparison-2026": {
       "hash": "4bbd79a33162257f",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/neon-vs-supabase": {
       "hash": "6c2a7a032dd9df9f",
@@ -3759,11 +3759,11 @@
     },
     "/trends/ci-cd": {
       "hash": "ad64ca45f67fc715",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/trends/cloud-hosting": {
       "hash": "106e6a64e371061a",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/trends/cloud-iaas": {
       "hash": "801475df49eb560a",
@@ -3806,7 +3806,7 @@
     },
     "/trends/dev-utilities": {
       "hash": "e40b5dd0cec7be63",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/trends/diagramming": {
       "hash": "38ec8439d4f60e90",
@@ -3830,7 +3830,7 @@
     },
     "/trends/error-tracking": {
       "hash": "e49d8c3086c03cb0",
-      "changed": "2026-11-11"
+      "changed": "2026-11-10"
     },
     "/trends/feature-flags": {
       "hash": "bdf6cdd9f3cb0d11",
