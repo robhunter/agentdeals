@@ -75,17 +75,20 @@ describe("/feed.xml weekly digest feed", () => {
     assert.ok(xml.includes("Week of"), "Entry titles should start with 'Week of'");
   });
 
-  it("entries link to correctly-formatted /this-week URLs", async () => {
+  it("entries link to the current week or dated archive URLs", async () => {
     proc = await startHttpServer();
     const res = await fetch(`http://localhost:${serverPort}/feed.xml`);
     const xml = await res.text();
-    const hrefs = [...xml.matchAll(/<link href="([^"]*\/this-week[^"]*)" rel="alternate"\/>/g)].map((m) => m[1]);
-    assert.ok(hrefs.length > 0, "Should have at least one /this-week entry link");
+    const hrefs = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)]
+      .map(match => match[1]!)
+      .filter(entry => entry.includes("<id>urn:agentdeals:weekly-digest:"))
+      .map(entry => entry.match(/<link href="([^"]*)" rel="alternate"\/>/)![1]!);
+    assert.ok(hrefs.length > 0, "Should have at least one weekly entry link");
     for (const href of hrefs) {
       assert.match(
         href,
-        /^https?:\/\/[^/"]+\/this-week(\?week=[1-9][0-9]*)?$/,
-        `this-week link should be bare /this-week or /this-week?week=N, got: ${href}`,
+        /^https?:\/\/[^/"]+\/(?:this-week|digest\/\d{4}-w\d{2})$/,
+        `weekly link should name the current page or a dated archive, got: ${href}`,
       );
     }
   });
