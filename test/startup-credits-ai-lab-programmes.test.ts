@@ -132,14 +132,6 @@ function allCards(): Card[] {
   return ["cat-cloud-infrastructure", "cat-fintech-banking", "cat-developer-tools", "cat-ai-tools"].flatMap((id) => cardsIn(section(id)));
 }
 
-function tableRow(name: string): string[] {
-  for (const row of html.matchAll(/<tr>([\s\S]*?)<\/tr>/g)) {
-    const cells = [...row[1].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map((c) => readable(c[1]));
-    if (cells[0] === name) return cells;
-  }
-  assert.fail(`${PAGE}'s comparison table has no row for ${name}`);
-}
-
 describe("/startup-credits lists the AI labs' own startup programmes", () => {
   it("prints the three AI lab programmes first under AI Tool Credits, before Amazon Kiro", () => {
     const names = cardsIn(section("cat-ai-tools")).map((c) => c.name);
@@ -164,16 +156,28 @@ describe("/startup-credits lists the AI labs' own startup programmes", () => {
     }
   });
 
-  it("gives each programme a comparison-table row from its card's fields", () => {
-    for (const [name, expected] of Object.entries(EXPECTED)) {
-      const fields = new Map(expected.lines);
-      assert.deepStrictEqual(tableRow(name), [
-        name,
-        fields.get("Credit value"),
-        fields.get("Eligibility")!.split(".")[0],
-        fields.get("Duration") ?? "—",
-        expected.label,
-      ]);
+  it("keeps programme terms under their own headings without a summary table", () => {
+    assert.doesNotMatch(html, /(?:id|href)=["']#?comparison-table["']/);
+    for (const [, table] of html.matchAll(/<table\b[^>]*>([\s\S]*?)<\/table>/g)) {
+      assert.doesNotMatch(readable(table), /Credit Value.*Eligibility.*Application/i);
+    }
+  });
+
+  it("retains every programme's credit value, eligibility, duration and application status in its own section", async () => {
+    const { STARTUP_PROGRAMS } = await import("../dist/startup-programmes.js");
+    const labels = {
+      open: "Open application", "vc-backed": "VC/funding required", "vc-referral": "Referral from a partner VC",
+      "accelerator-only": "Accelerator required", "invite-only": "Invite only", closed: "Not accepting applications",
+    };
+    const cards = allCards();
+    assert.deepStrictEqual(cards.map((card) => card.name), STARTUP_PROGRAMS.map((programme) => programme.name));
+    for (const programme of STARTUP_PROGRAMS) {
+      const card = cards.find((item) => item.name === programme.name)!;
+      assert.strictEqual(card.label, labels[programme.applicationDifficulty], programme.name);
+      for (const [label, value] of [["Credit value", programme.creditValue], ["Eligibility", programme.eligibility],
+        ["Duration", programme.duration], ["Status", programme.status]]) {
+        if (value !== undefined) assert.strictEqual(card.lines.get(label), value, `${programme.name}: ${label}`);
+      }
     }
   });
 
@@ -191,9 +195,8 @@ describe("/startup-credits lists the AI labs' own startup programmes", () => {
     const card = cardsIn(section("cat-ai-tools")).find((c) => c.name === CLAUDE)!;
     assert.strictEqual(card.label, "Not accepting applications");
     assert.ok(card.lines.get("Credit value")?.startsWith("Not accepting new applications."));
-    assert.strictEqual(tableRow(CLAUDE)[4], "Not accepting applications");
     assert.ok(html.includes('<div class="diff-card" style="border-left-color:#f85149"><h3><a href="https://claude.com/programs/startups"'));
-    assert.ok(html.includes('<span style="color:#f85149;font-size:.8rem;font-weight:600">Not accepting applications</span>'));
+    assert.ok(html.includes('<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">Not accepting applications</span>'));
   });
 
   it("links Grok's billing continuation to the programme with citation attributes", () => {

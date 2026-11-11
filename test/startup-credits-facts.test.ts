@@ -289,14 +289,9 @@ describe("the startup credits guide states each programme's terms as the program
     assert.deepStrictEqual(found, []);
   });
 
-  it("states the current Azure entry credit in both the comparison and programme card", () => {
+  it("states the current Azure entry credit in the programme card", () => {
     const html = served.get("/startup-credits")!;
     const value = PROGRAMMES["Microsoft for Startups (formerly Founders Hub)"][0];
-    const table = html.split('id="comparison-table"')[1]?.split("</table>")[0] ?? "";
-    const row = [...table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)]
-      .find(([, markup]) => readable(markup.match(/<td[^>]*>([\s\S]*?)<\/td>/)?.[1] ?? "") === "Microsoft for Startups (formerly Founders Hub)")?.[1] ?? "";
-    const cells = [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => readable(cell));
-    assert.strictEqual(cells[1], value);
     assert.strictEqual(programmeCards(html).get("Microsoft for Startups (formerly Founders Hub)")?.["Credit value"], value);
   });
 
@@ -335,30 +330,17 @@ describe("the startup credits guide states each programme's terms as the program
     assert.deepStrictEqual(wrong, []);
   });
 
-  it("marks DigitalOcean applications closed in the comparison and card while preserving member benefits", () => {
+  it("marks DigitalOcean applications closed in its card while preserving member benefits", () => {
     const html = served.get("/startup-credits")!;
-    const table = html.split('id="comparison-table"')[1]?.split("</table>")[0] ?? "";
-    const row = [...table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)]
-      .find(([, markup]) => readable(markup.match(/<td[^>]*>([\s\S]*?)<\/td>/)?.[1] ?? "") === "DigitalOcean Startups")?.[1] ?? "";
-    const cells = [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => readable(cell));
-    assert.strictEqual(cells.length, 5);
-    assert.strictEqual(cells[1], "Not accepting new applications until an updated program launches in early 2027. Members: credits for 12 months; amount varies, up to $10,000 a month");
-    assert.strictEqual(cells[2], "Not accepting new applications: paused until early 2027");
-    assert.strictEqual(cells[4], "Not accepting applications");
     const card = programmeCardMarkup(html).get("DigitalOcean Startups") ?? "";
     assert.strictEqual(readable(card.match(/<h3>([\s\S]*?)<\/h3>/)?.[1] ?? ""), "DigitalOcean Startups Not accepting applications");
     assert.strictEqual(programmeCards(html).get("DigitalOcean Startups")?.Status,
       "DigitalOcean's FAQ, read 2026-10-30: applications for the current cohort are temporarily paused while it prepares an updated program for early 2027; active members are not affected.");
   });
 
-  it("states the invite-only AWS AI startup tier in the comparison cell and programme card", () => {
+  it("states the invite-only AWS AI startup tier in its programme card", () => {
     const html = served.get("/startup-credits")!;
     const value = "$1K–$5K (Founders), up to $200K (Portfolio), $200K+ (AI Startups, invite only)";
-    const table = html.split('id="comparison-table"')[1]?.split("</table>")[0] ?? "";
-    const row = [...table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)]
-      .find(([, markup]) => readable(markup.match(/<td[^>]*>([\s\S]*?)<\/td>/)?.[1] ?? "") === "AWS Activate")?.[1] ?? "";
-    const cells = [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => readable(cell));
-    assert.strictEqual(cells[1], value);
     const card = programmeCards(html).get("AWS Activate");
     assert.strictEqual(card?.["Credit value"], value);
     assert.ok(card?.Eligibility.endsWith('AWS Credits for AI Startups is by invitation only, for startups ready to scale after Activate Portfolio, through an AWS account manager; AWS states "$200,000+" with no upper amount.'));

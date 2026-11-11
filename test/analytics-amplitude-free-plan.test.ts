@@ -233,4 +233,21 @@ describe(`${PAGE} states Amplitude's Free plan and GA4's sampling quota as the v
   it("does not publish the withdrawn replay exclusion, third-party prices or bundle multiplier", () => {
     assert.doesNotMatch(html, /Mixpanel doesn't offer replay at all|FullStory \(\$300\+\/mo\)|Hotjar \(\$80\+\/mo\)|LogRocket \(\$99\+\/mo\)|2(?:&ndash;|–|-)3x what PostHog charges/);
   });
+
+  it("introduces both complete bundles and Mixpanel's bundle without surveys", () => {
+    const intro = body.match(/<strong>The all-in-one shift:<\/strong>([\s\S]*?)<\/p>/)?.[1];
+    assert.ok(intro);
+    assert.strictEqual(plain(intro), "PostHog and Amplitude both bundle analytics, session replays, feature flags, experiments and surveys into their free plans. Mixpanel's free plan has analytics, session replays, heatmaps, experiments and feature flags, but no surveys. The privacy-focused segment (Plausible, Fathom, Umami) targets teams that need GDPR compliance without cookie banners.");
+  });
+
+  it("does not describe Mixpanel or Amplitude as analytics-only in prose or embedded text", () => {
+    const text = plain(html);
+    assert.doesNotMatch(text, /remain focused on behavioral|rather than bundling|Mixpanel \(analytics\)|(?:Mixpanel|Amplitude)[^.!?]*analytics-only/i);
+  });
+
+  it("keeps the behavioral-analytics recommendation's terms without denying its other products", () => {
+    const verdict = body.match(/<strong>Best behavioral analytics &rarr; Mixpanel<\/strong>\s*<p>([\s\S]*?)<\/p>/)?.[1];
+    assert.ok(verdict);
+    assert.strictEqual(plain(verdict), "1M events free, with data kept 2 years by default. The most polished UI for funnels, retention, and cohort analysis.");
+  });
 });
