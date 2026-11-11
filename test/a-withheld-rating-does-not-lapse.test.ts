@@ -216,7 +216,8 @@ describe("a dated demotion with another standing cause", () => {
       assert.notStrictEqual(after.level, "stable");
       const sentence = verdictLapseSentence(contextFor(changes, event))!;
       assert.ok(sentence.startsWith(A_VERDICT_LAPSES_RULE));
-      assert.ok(sentence.includes(`stops counting on ${expires}; the rating then rests on the ${scenario.noun} recorded ${scenario.older}, a standing condition that does not lapse.`), sentence);
+      assert.ok(sentence.includes(`This rating does not lapse: it also rests on the ${scenario.noun} recorded ${scenario.older}, a standing condition. The record `), sentence);
+      assert.ok(sentence.endsWith(`stops counting on ${expires}, and the rating stays ${after.level} after that date.`), sentence);
       assert.doesNotMatch(sentence, /so it lapses on/);
       assert.ok(sentence.includes(scenario.source === "discovered" ? `discovered ${scenario.date}` : `effective ${scenario.date}`), sentence);
     });
@@ -246,7 +247,8 @@ describe("a dated demotion with another standing cause", () => {
     const restriction = record({ date: "2026-03-01", change_type: "restriction" });
     const changes = [restored, restriction];
     const sentence = verdictLapseSentence(contextFor(changes, restored))!;
-    assert.ok(sentence.includes(`stops counting on ${demotionLapsesOn(restored.date)}; the rating then rests on the restriction recorded 2026-03-01`), sentence);
+    assert.ok(sentence.includes("This rating does not lapse: it also rests on the restriction recorded 2026-03-01, a standing condition."), sentence);
+    assert.ok(sentence.endsWith(`stops counting on ${demotionLapsesOn(restored.date)}, and the rating stays caution after that date.`), sentence);
   });
 
   it("does not borrow a standing condition from another tier", () => {

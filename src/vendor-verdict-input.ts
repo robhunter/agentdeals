@@ -38,9 +38,10 @@ export function verdictLapseSentence(context: VendorVerdictContext): string | nu
   const grading = changesRatingTheListedTier(context.primary, context.vendorChanges);
   if (demotionCanLapse(cause.change_type) || freeTierRestoredOn(cause, grading) !== null) {
     const lapsesOn = demotionLapsesOn(cause.date);
-    const remaining = vendorRiskAssessment(grading, Date.parse(`${lapsesOn}T00:00:00Z`)).cause;
+    const assessment = vendorRiskAssessment(grading, Date.parse(`${lapsesOn}T00:00:00Z`));
+    const remaining = assessment.cause;
     if (remaining && !demotionCanLapse(remaining.change_type) && freeTierRestoredOn(remaining, grading) === null) {
-      return `${A_VERDICT_LAPSES_RULE} This one rests on a record ${changeEntryDateLabel(cause)}, so it stops counting on ${lapsesOn}; the rating then rests on the ${changeKindNoun(remaining.change_type)} recorded ${remaining.date}, a standing condition that does not lapse.`;
+      return `${A_VERDICT_LAPSES_RULE} This rating does not lapse: it also rests on the ${changeKindNoun(remaining.change_type)} recorded ${remaining.date}, a standing condition. The record ${changeEntryDateLabel(cause)} stops counting on ${lapsesOn}, and the rating stays ${assessment.level} after that date.`;
     }
   }
   return lapsingDemotionStated(cause, grading);
