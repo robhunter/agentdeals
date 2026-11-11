@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 
 const root = new URL("../", import.meta.url);
-const release = "24.22.1";
+const release = "24.22.3";
 const read = (path: string) => readFileSync(new URL(path, root), "utf8");
 
 describe("deployment and workflows use the same patched Node release", () => {

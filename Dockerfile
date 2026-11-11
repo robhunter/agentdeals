@@ -1,4 +1,4 @@
-FROM node:24.22.1-slim AS build
+FROM node:24.22.3-slim AS build
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY src/ src/
 
 RUN npx tsc
 
-FROM node:24.22.1-slim
+FROM node:24.22.3-slim
 
 WORKDIR /app
 
