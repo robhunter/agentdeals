@@ -1096,8 +1096,8 @@
       "changed": "2026-11-11"
     },
     "/business-bank-account-fees-2026": {
-      "hash": "39165afd7ce02750",
-      "changed": "2026-11-06"
+      "hash": "ae41d1e87ca3e619",
+      "changed": "2026-11-11"
     },
     "/category": {
       "hash": "259228a9963daccb",
@@ -3105,7 +3105,7 @@
       "changed": "2026-11-11"
     },
     "/digest/2026-w46": {
-      "hash": "c4efb564742574c9",
+      "hash": "fd2d609522edaaf6",
       "changed": "2026-11-11"
     },
     "/digest/2026-w47": {
@@ -3113,7 +3113,7 @@
       "changed": "2026-11-09"
     },
     "/digest/2026-w49": {
-      "hash": "77a23639623f1b23",
+      "hash": "09a075185b7cbe90",
       "changed": "2026-11-11"
     },
     "/digest/2026-w50": {
@@ -3213,11 +3213,11 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "hash": "5b1ae8acb0bc3c61",
+      "hash": "f6ccf9e1907a01d6",
       "changed": "2026-11-11"
     },
     "/events/google-io-2026": {
-      "hash": "68eac5d6fde36548",
+      "hash": "b090f9fac40437e7",
       "changed": "2026-11-11"
     },
     "/events/microsoft-build-2026": {
@@ -3228,7 +3228,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "e73d6acb2b94ed79",
+      "hash": "59bb4c9f3fdc18ff",
       "changed": "2026-11-11"
     },
     "/firebase-alternatives": {
@@ -3297,7 +3297,7 @@
       "changed": "2026-11-09"
     },
     "/gcp-free-tier-2026": {
-      "hash": "92943ed7e01e24dc",
+      "hash": "ef38a6a80c006459",
       "changed": "2026-11-11"
     },
     "/gemini-api-pricing-2026": {
@@ -3373,7 +3373,7 @@
       "changed": "2026-11-11"
     },
     "/llm-api-pricing": {
-      "hash": "59b833081cfb3eb0",
+      "hash": "da83ce3f2ff91621",
       "changed": "2026-11-11"
     },
     "/localstack-alternatives": {
@@ -3599,7 +3599,7 @@
       "daily": true
     },
     "/reports/2026-12": {
-      "hash": "ebcb1466375b4ece",
+      "hash": "d5e4f3fc1f70d5c4",
       "changed": "2026-11-11"
     },
     "/reports/2027-01": {
@@ -3690,7 +3690,7 @@
       "changed": "2026-11-11"
     },
     "/state-of-free-tiers": {
-      "hash": "21b59eedb020b928",
+      "hash": "e505c7624c3b9b38",
       "changed": "2026-11-11"
     },
     "/storage-alternatives": {
