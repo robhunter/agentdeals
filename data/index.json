@@ -14336,7 +14336,7 @@
       "category": "AI / ML",
       "description": "Integration platform for AI Agents and LLMs — Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
       "tier": "Free",
-      "url": "https://composio.dev/pricing",
+      "url": "https://composio.dev/pricing/platform",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -14369,14 +14369,20 @@
         {
           "text": "On the free Hobby plan, calls stop at the monthly limit and Composio does not charge overage.",
           "quote": "The Hobby plan stops at your included limit, so we won't charge you unexpectedly.",
-          "url": "https://composio.dev/pricing",
-          "read_on": "2026-10-20"
+          "url": "https://composio.dev/pricing/platform",
+          "read_on": "2026-11-11"
         },
         {
-          "text": "Tool calls and trigger events made through Composio-managed apps count only up to 20,000 of the 100,000 free tool calls and 10,000 of the 50,000 free trigger events a month; your own OAuth app gets the full allowance.",
-          "quote": "Up to 20K of your 100K free, then $0.0005 / tool call",
-          "url": "https://composio.dev/pricing",
-          "read_on": "2026-10-20"
+          "text": "Of the 100,000 free tool calls a month, up to 20,000 can use Composio-managed apps; calls through your own app, API key or MCP server can use the full allowance.",
+          "quote": "Up to 20,000 of these can use Composio-managed apps.",
+          "url": "https://composio.dev/pricing/platform",
+          "read_on": "2026-11-11"
+        },
+        {
+          "text": "Of the 50,000 free trigger events a month, up to 10,000 can use Composio-managed apps.",
+          "quote": "Up to 10,000 can use Composio-managed apps.",
+          "url": "https://composio.dev/pricing/platform",
+          "read_on": "2026-11-11"
         }
       ]
     },
@@ -39732,7 +39738,7 @@
     {
       "vendor": "Together AI",
       "category": "AI / ML",
-      "description": "Inference API for open-source models, billed per token. Together AI does not currently offer free trials; access requires a minimum $15 credit purchase for an organization's first purchase ($5 for later purchases), and the platform is fully prepaid. gpt-oss-120B $0.15/$0.60 (per 1M tokens). Together deprecated Llama 3.3 70B (meta-llama/Llama-3.3-70B-Instruct-Turbo) and removed it from serverless inference on 2026-10-22; Together's deprecations page (docs.together.ai/docs/deprecations) recommends meta-models/Muse-Glimmer-30B ($0.35/$1.50) or a dedicated endpoint instead. Together also removed deepseek-ai/DeepSeek-V4-Flash-0731 from serverless on 2026-10-22; its recommended replacement, deepseek-ai/DeepSeek-V4.1-Flash, costs $0.30/$1.20. DeepSeek V4 Pro is served today as deepseek-ai/DeepSeek-V4-Pro-0813 ($1.32/$3.96); the earlier ID deepseek-ai/DeepSeek-V4-Pro was removed on 2026-08-27. Together AI serverless serves Kimi K3 (moonshotai/Kimi-K3) at $3.00/$15.00 and Kimi K3.1 Pro (moonshotai/Kimi-K3.1-Pro) at $2.00/$10.00; moonshotai/Kimi-K2.7-Code was removed on 2026-08-27, moonshotai/Kimi-K2.6 on 2026-08-19 and moonshotai/Kimi-K2.5 on 2026-05-21. Together also removed these models from serverless inference in 2026, so requests for them fail: openai/gpt-oss-20b on 2026-09-15 (Together recommends Qwen/Qwen3.5-9B); google/gemma-4-31B-it on 2026-09-15 (recommended: zai-org/GLM-5.3-Flash); zai-org/GLM-5.1 on 2026-07-10; Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8 on 2026-06-04; deepseek-ai/DeepSeek-R1 on 2026-05-14; deepseek-ai/DeepSeek-V3.1 on 2026-05-14; meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8 on 2026-03-31; meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo on 2026-03-06; meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo on 2026-02-25; meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo on 2026-02-06; meta-llama/Llama-4-Scout-17B-16E-Instruct on 2026-02-06. Together's deprecations page says a model can still appear in catalog listings during a transition, and that the runtime API and that page are the source of truth.",
+      "description": "Inference API for open-source models, billed per token. Together AI does not currently offer free trials; access requires a minimum $15 credit purchase for an organization's first purchase ($5 for later purchases), and the platform is fully prepaid. gpt-oss-120B $0.15/$0.60 (per 1M tokens). Together deprecated Llama 3.3 70B (meta-llama/Llama-3.3-70B-Instruct-Turbo) and removed it from serverless inference on 2026-10-22; Together's deprecations page (docs.together.ai/docs/deprecations) recommends meta-models/Muse-Glimmer-30B ($0.35/$1.50) or a dedicated endpoint instead. Together also removed deepseek-ai/DeepSeek-V4-Flash-0731 from serverless on 2026-10-22; its recommended replacement, deepseek-ai/DeepSeek-V4.1-Flash, costs $0.30/$1.20. DeepSeek V4 Pro is served today as deepseek-ai/DeepSeek-V4-Pro-0813 ($1.32/$3.96); the earlier ID deepseek-ai/DeepSeek-V4-Pro was removed on 2026-08-27. Together AI serverless serves Kimi K3 (moonshotai/Kimi-K3) at $3.00/$15.00 and Kimi K3.1 Pro (moonshotai/Kimi-K3.1-Pro) at $2.00/$10.00; moonshotai/Kimi-K2.7-Code was removed on 2026-08-27, moonshotai/Kimi-K2.6 on 2026-08-19 and moonshotai/Kimi-K2.5 on 2026-05-21. Together removed MiniMaxAI/MiniMax-M3 and thinkingmachines/Inkling from serverless inference on 2026-11-06; its deprecations page recommends MiniMaxAI/MiniMax-M3.1-Flash ($0.15/$0.60) and meta-models/Muse-Spark-Open-816B-A42B ($1.25/$4.25). It removed Qwen/Qwen3.8-2.4T-A95B on 2026-11-04 and recommends Qwen/Qwen3.7-Max ($2.50/$7.50); the old model is not offered on dedicated endpoints. Together also removed these models from serverless inference in 2026, so requests for them fail: openai/gpt-oss-20b on 2026-09-15 (Together recommends Qwen/Qwen3.5-9B); google/gemma-4-31B-it on 2026-09-15 (recommended: zai-org/GLM-5.3-Flash); zai-org/GLM-5.1 on 2026-07-10; Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8 on 2026-06-04; deepseek-ai/DeepSeek-R1 on 2026-05-14; deepseek-ai/DeepSeek-V3.1 on 2026-05-14; meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8 on 2026-03-31; meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo on 2026-03-06; meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo on 2026-02-25; meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo on 2026-02-06; meta-llama/Llama-4-Scout-17B-16E-Instruct on 2026-02-06. Together's deprecations page says a model can still appear in catalog listings during a transition, and that the runtime API and that page are the source of truth.",
       "conditions": [
         {
           "text": "By default, Together stores prompts and responses and may use them for product improvements. Organization admins can turn storage off in privacy settings, enabling zero data retention.",

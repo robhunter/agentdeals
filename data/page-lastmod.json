@@ -22,11 +22,11 @@
       "changed": "2026-11-11"
     },
     "/ai-free-tiers": {
-      "hash": "9c41e9fa110dbe80",
+      "hash": "6f633975d6bbb9ae",
       "changed": "2026-11-11"
     },
     "/ai-ml-alternatives": {
-      "hash": "8bd8c0199fc45bfe",
+      "hash": "e05ba3aa2dd0db53",
       "changed": "2026-11-11"
     },
     "/alternative-to": {
@@ -1108,7 +1108,7 @@
       "changed": "2026-11-11"
     },
     "/category/ai-ml": {
-      "hash": "4b5020b2cabf1a6a",
+      "hash": "d73e4a390bb846e8",
       "changed": "2026-11-11"
     },
     "/category/analytics": {
@@ -3101,7 +3101,7 @@
       "changed": "2026-11-05"
     },
     "/digest/2026-w45": {
-      "hash": "c97ebe1b3e1c6277",
+      "hash": "c779facb9bed3576",
       "changed": "2026-11-11"
     },
     "/digest/2026-w46": {
@@ -3658,7 +3658,7 @@
       "changed": "2026-11-11"
     },
     "/stack-check": {
-      "hash": "c5f9273256885e30",
+      "hash": "d3c3bb46ff51d40a",
       "changed": "2026-11-11"
     },
     "/stacks": {
@@ -5027,7 +5027,7 @@
       "changed": "2026-11-11"
     },
     "/vendor/composio": {
-      "hash": "3b8189921eb3142c",
+      "hash": "49be95fcdfb7c91f",
       "changed": "2026-11-11"
     },
     "/vendor/configcat": {
