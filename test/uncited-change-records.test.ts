@@ -295,7 +295,7 @@ describe("the vendor page, for a vendor whose records cite no source", () => {
     for (const { offer, input } of withheldSubjects) {
       const html = await get(`/vendor/${toSlug(offer.vendor)}`);
       if (vendorBadge(input).kind === "none") {
-        const h1 = html.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+        const h1 = html.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)?.[0] ?? "";
         assert.strictEqual(
           h1.match(/<span class="risk-badge"[^>]*>([a-z]+)<\/span>/)?.[1] ?? null,
           null,

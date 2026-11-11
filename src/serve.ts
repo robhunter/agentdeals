@@ -6278,7 +6278,7 @@ a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);tex
 .breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
 .breadcrumb a{color:var(--text-muted)}
 h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
-h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radius:12px;vertical-align:middle;margin-left:.5rem}
+h1 + .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radius:12px;vertical-align:middle;margin-left:.5rem}
 .page-meta{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
 .quick-verdict{margin-bottom:1.25rem;padding:.75rem 1rem;background:var(--accent-glow);border-radius:10px;border:1px solid rgba(59,130,246,0.2);font-size:.9rem;color:var(--text-muted);line-height:1.7}
 .category-context{margin-bottom:2rem;font-size:.85rem;color:var(--text-dim)}
@@ -6348,7 +6348,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
-  <h1>${escHtmlServer(headline)}${h1RiskBadge}</h1>${gateLine}
+  <h1>${escHtmlServer(headline)}</h1>${h1RiskBadge}${gateLine}
 ${riskCauseLine}${verdictLapseLine}${ratingWithheldLine}
 ${linkUnreachableLine}${amountUnstatedLine}${freePriceLine}
 ${productRoleLine}${productSubtypesLine}

@@ -636,7 +636,7 @@ describe("vendor verdict — as rendered", () => {
   };
 
   const badgeWord = (html: string): string | null => {
-    const h1 = html.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+    const h1 = html.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)?.[0] ?? "";
     return h1.match(/<span class="risk-badge"[^>]*>([a-z ]+)<\/span>/)?.[1] ?? null;
   };
 
@@ -690,16 +690,16 @@ describe("vendor verdict — as rendered", () => {
 
         if (badge !== null && badge !== ENDED_BADGE_LABEL && badge !== row.endingLabel) rating++;
         if (row.gate && !row.badgeEnded && badge !== null) {
-          wrong.push(`${row.slug}: the h1 of a ${row.gate.code} record rates it ${badge}`);
+          wrong.push(`${row.slug}: the heading of a ${row.gate.code} record rates it ${badge}`);
         }
         if (row.gate && row.badgeEnded && badge !== (row.endingLabel ?? ENDED_BADGE_LABEL)) {
-          wrong.push(`${row.slug}: the h1 of an ended offer reads ${badge ?? "nothing"}`);
+          wrong.push(`${row.slug}: the heading of an ended offer reads ${badge ?? "nothing"}`);
         }
         if (row.badgeRendered && badge !== row.badge) {
-          wrong.push(`${row.slug}: h1 badge is ${badge ?? "absent"}, expected ${row.badge}`);
+          wrong.push(`${row.slug}: heading badge is ${badge ?? "absent"}, expected ${row.badge}`);
         }
         if (!row.badgeRendered && badge !== null) {
-          wrong.push(`${row.slug}: h1 badge renders ${badge} for a rating we are withholding`);
+          wrong.push(`${row.slug}: heading badge renders ${badge} for a rating we are withholding`);
         }
         if (!verdict.includes(row.verdictOnThePage)) {
           wrong.push(`${row.slug}: verdict does not render "${row.verdictOnThePage}"`);
@@ -714,7 +714,7 @@ describe("vendor verdict — as rendered", () => {
           wrong.push(`${row.slug}: comparison table rates a gated record ${cell.word}`);
         }
         if (cell.rendered && !row.withheld && !row.gate && cell.word !== row.expected) {
-          wrong.push(`${row.slug}: comparison table says ${cell.word ?? "nothing"}, h1 badge says ${row.expected}`);
+          wrong.push(`${row.slug}: comparison table says ${cell.word ?? "nothing"}, heading badge says ${row.expected}`);
         }
       }
     };
@@ -981,7 +981,7 @@ describe("vendor verdict — a product being sunset with no date past, as render
     const pageMeta = html.match(/<p class="page-meta">([\s\S]*?)<\/p>/)?.[1] ?? "";
     assert.match(pageMeta, new RegExp(`(${CONFIRMED_DATE_LABEL}|${UNCONFIRMED_DATE_LABEL}) [A-Z][a-z]+ \\d{4}`));
     assert.doesNotMatch(pageMeta, /Discontinued/);
-    const h1 = html.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+    const h1 = html.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)?.[0] ?? "";
     assert.strictEqual(
       h1.match(/<span class="risk-badge"[^>]*>([a-z ]+)<\/span>/)?.[1] ?? null,
       "deprecated",

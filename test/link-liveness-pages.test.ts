@@ -98,8 +98,8 @@ describe("#1046 a vendor page whose link is confirmed unreachable", () => {
 
   it("does not render a stable badge", async () => {
     const { body } = await get(`/vendor/${slugOf(goneVendor.vendor)}`);
-    const h1 = body.match(/<h1>[\s\S]*?<\/h1>/)![0];
-    assert.doesNotMatch(h1, /risk-badge/, "the h1 must carry no risk badge while the link is confirmed gone");
+    const h1 = body.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)![0];
+    assert.doesNotMatch(h1, /risk-badge/, "the heading must have no risk badge while the link is confirmed gone");
   });
 
   it("does not claim a verification month anywhere on the page or in its meta description", async () => {
@@ -143,7 +143,7 @@ describe("#1046 a vendor page whose link we were merely refused", () => {
   it("is untouched — being refused is evidence about us, not about them", async () => {
     const { status, body } = await get(`/vendor/${slugOf(refusedVendor.vendor)}`);
     assert.equal(status, 200);
-    const h1 = body.match(/<h1>[\s\S]*?<\/h1>/)![0];
+    const h1 = body.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)![0];
     assert.match(h1, /risk-badge[^>]*>stable</);
     assert.match(body, /class="detail-label">Verified</);
     assert.doesNotMatch(body, /class="link-unreachable-line"/);
@@ -164,7 +164,7 @@ describe("#1046 a vendor page we never checked", () => {
   it("renders exactly as it did before, badge and verification date included", async () => {
     const { status, body } = await get(`/vendor/${slugOf(controlVendor.vendor)}`);
     assert.equal(status, 200);
-    const h1 = body.match(/<h1>[\s\S]*?<\/h1>/)![0];
+    const h1 = body.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)![0];
     assert.match(h1, /risk-badge[^>]*>stable</);
     const dated = body.match(DATED_LINE);
     assert.ok(dated, "the page states no dated line at all");

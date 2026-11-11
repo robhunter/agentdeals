@@ -102,7 +102,7 @@ describe("#1038 — the level is earned", () => {
         warned.push(`${vendor} has a favourable-only history and no page at /vendor/${slug} (${status})`);
         continue;
       }
-      const h1 = text.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+      const h1 = text.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)?.[0] ?? "";
       if (h1.length === 0) warned.push(`no <h1> on /vendor/${slug}`);
       else if (/caution|risky/.test(h1)) warned.push(`${vendor}: ${h1.replace(/\s+/g, " ")}`);
     }
@@ -163,7 +163,7 @@ describe("#1038 — the level is checkable", () => {
     assert.strictEqual(uncaused.length, 0);
   });
 
-  it("the vendor page publishes the dated cause beside the badge in the <h1>", async () => {
+  it("the vendor page publishes the dated cause beside its heading badge", async () => {
     const { enrichOffers, gateForOffer, loadOffers, loadDealChanges, vendorRiskAssessment } = await import("../dist/data.js");
     const { utcDate } = await import("../dist/ranking.js");
     const changes = loadDealChanges();
@@ -189,7 +189,7 @@ describe("#1038 — the level is checkable", () => {
     for (const offer of gated) {
       assert.strictEqual(offer.risk_level, null, `${offer.vendor} is gated and /api/offers publishes ${offer.risk_level}`);
       const { text } = await get(`/vendor/${toSlug(offer.vendor)}`);
-      const h1 = text.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+      const h1 = text.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)?.[0] ?? "";
       for (const level of ["stable", "caution", "risky"]) {
         assert.ok(
           !new RegExp(level).test(h1),
@@ -200,15 +200,15 @@ describe("#1038 — the level is checkable", () => {
 
     for (const offer of listed) {
       const { text } = await get(`/vendor/${toSlug(offer.vendor)}`);
-      const h1 = text.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+      const h1 = text.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)?.[0] ?? "";
       const ending = h1.match(/<span class="risk-badge"[^>]*>(free tier removed|deprecated)<\/span>/)?.[1];
       if (ending) {
-        assert.ok(text.includes("How it ended:"), `${offer.vendor}: <h1> says ${ending} and the page never says how it ended`);
+        assert.ok(text.includes("How it ended:"), `${offer.vendor}: heading badge says ${ending} and the page never says how it ended`);
       } else {
-        assert.ok(new RegExp(offer.risk_level!).test(h1), `${offer.vendor}: expected ${offer.risk_level} in the <h1>`);
+        assert.ok(new RegExp(offer.risk_level!).test(h1), `${offer.vendor}: expected ${offer.risk_level} beside the heading`);
         assert.ok(
           text.includes(`Why ${offer.risk_level}:`),
-          `${offer.vendor}: <h1> says ${offer.risk_level} and the page never says why`,
+          `${offer.vendor}: heading badge says ${offer.risk_level} and the page never says why`,
         );
       }
       assert.ok(
