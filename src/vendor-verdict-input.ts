@@ -1,5 +1,5 @@
 import type { DealChange, Offer, RiskCause } from "./types.js";
-import { A_VERDICT_LAPSES_RULE, changesByVendor, demotionCanLapse, demotionLapsesOn, enrichOffers, freeTierEndingRecord, freeTierRestoredOn, lapsingDemotionStated, publishedRisk, refusalsForVendor, riskCauseOf, changesRatingTheListedTier, vendorRiskAssessment, withheldRecordCounts } from "./data.js";
+import { A_VERDICT_LAPSES_RULE, changesByVendor, demotionCanLapse, demotionLapsesOn, enrichOffers, freeTierEndingRecord, freeTierRestoredOn, lapsingDemotionStated, publishedRisk, refusalsForVendor, riskCauseOf, changesRatingTheListedTier, withheldRecordCounts } from "./data.js";
 import { changeEntryDateLabel } from "./change-dates.js";
 
 type EnrichedOfferRow = ReturnType<typeof enrichOffers>[number];
@@ -38,9 +38,10 @@ export function verdictLapseSentence(context: VendorVerdictContext): string | nu
   const grading = changesRatingTheListedTier(context.primary, context.vendorChanges);
   if (demotionCanLapse(cause.change_type) || freeTierRestoredOn(cause, grading) !== null) {
     const lapsesOn = demotionLapsesOn(cause.date);
-    const remaining = vendorRiskAssessment(grading, Date.parse(`${lapsesOn}T00:00:00Z`)).cause;
+    const remainingRisk = publishedRisk(context.primary, context.vendorChanges, lapsesOn, Date.parse(`${lapsesOn}T00:00:00Z`));
+    const remaining = remainingRisk.cause;
     if (remaining && !demotionCanLapse(remaining.change_type) && freeTierRestoredOn(remaining, grading) === null) {
-      return `${A_VERDICT_LAPSES_RULE} This one rests on a record ${changeEntryDateLabel(cause)}, so it stops counting on ${lapsesOn}; the rating then rests on the ${changeKindNoun(remaining.change_type)} recorded ${remaining.date}, a standing condition that does not lapse.`;
+      return `${A_VERDICT_LAPSES_RULE} This rating does not lapse: it also rests on the ${changeKindNoun(remaining.change_type)} recorded ${remaining.date}, a standing condition. The record ${changeEntryDateLabel(cause)} stops counting on ${lapsesOn}, and the rating stays ${remainingRisk.history_level} after that date.`;
     }
   }
   return lapsingDemotionStated(cause, grading);
