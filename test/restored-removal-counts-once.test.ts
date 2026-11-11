@@ -277,7 +277,7 @@ describe("pages rate a vendor whose removed free tier came back as caution, and 
 
   it("rates it caution on its page, names both dates in the verdict and the production answer, and says when the rating lapses", async () => {
     const page = await get(`/vendor/${subject.slug}`);
-    assert.match(page, /<h1>[^<]*<span class="risk-badge"[^>]*>caution<\/span>/, "the heading badge is not caution");
+    assert.match(page, /<h1>[^<]*<\/h1>\s*<span class="risk-badge"[^>]*>caution<\/span>/, "the heading badge is not caution");
     const reason = new RegExp(`The one change we have recorded, a free tier removal [^<]*${REMOVED_ON}, was reversed on ${RESTORED_ON}\\.`);
     const verdict = page.match(/<div class="quick-verdict">\s*<p>([\s\S]*?)<\/p>/)?.[1] ?? "";
     assert.match(verdict, new RegExp(`We rate it caution\\. ${reason.source}`), verdict);
@@ -293,7 +293,7 @@ describe("pages rate a vendor whose removed free tier came back as caution, and 
 
   it("rates a removal a later vendor record restored caution, says when that lapses, and never says the free tier ended", async () => {
     const page = await get(`/vendor/${restoredByALaterRecord.slug}`);
-    assert.match(page, /<h1>[^<]*<span class="risk-badge"[^>]*>caution<\/span>/, "the heading badge is not caution");
+    assert.match(page, /<h1>[^<]*<\/h1>\s*<span class="risk-badge"[^>]*>caution<\/span>/, "the heading badge is not caution");
     const lapse = page.match(/<p class="verdict-lapse-line"[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "";
     assert.match(lapse, new RegExp(`lapses on ${demotionLapsesOn(REMOVED_ON)} unless`), lapse);
     assert.ok(lapse.includes("a standing condition — a free tier withdrawn and not restored, a product retired — does not lapse with time."), lapse);
@@ -311,7 +311,7 @@ describe("pages rate a vendor whose removed free tier came back as caution, and 
 
   it("names the reversal after the removal's date in the verdict and the production answer when the vendor holds other records", async () => {
     const page = await get(`/vendor/${reversedBesideAnotherRecord.slug}`);
-    assert.match(page, /<h1>[^<]*<span class="risk-badge"[^>]*>caution<\/span>/, "the heading badge is not caution");
+    assert.match(page, /<h1>[^<]*<\/h1>\s*<span class="risk-badge"[^>]*>caution<\/span>/, "the heading badge is not caution");
     const reason = `one recorded free tier removal, on ${REMOVED_ON}, reversed on ${RESTORED_ON}.`;
     assert.ok(quickVerdictOf(page).includes(`We rate it caution — ${reason}`), quickVerdictOf(page));
     assert.ok(productionAnswerOf(page).includes(`but we rate it caution because of ${reason}`), productionAnswerOf(page));

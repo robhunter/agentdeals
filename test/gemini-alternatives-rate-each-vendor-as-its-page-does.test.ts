@@ -57,7 +57,7 @@ async function riskRows(): Promise<Array<{ slug: string; rating: string }>> {
 }
 
 async function headingRating(slug: string): Promise<string> {
-  const h1 = (await get(`/vendor/${slug}`)).match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+  const h1 = (await get(`/vendor/${slug}`)).match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)?.[0] ?? "";
   return h1.match(/<span class="risk-badge"[^>]*>([^<]*)<\/span>/)?.[1] ?? NO_RATING;
 }
 
