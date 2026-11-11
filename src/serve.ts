@@ -5043,8 +5043,9 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 </html>`;
 }
 
-function buildThisWeekPage(weeksAgo: number): string {
-  const wholeWeek = getFormattedWeeklyDigest(weeksAgo, Infinity);
+function buildThisWeekPage(): string {
+  const previousWeek = archivedWeekAtOffset(1);
+  const wholeWeek = getFormattedWeeklyDigest(0, Infinity);
   const digest = { ...wholeWeek, top_changes: wholeWeek.top_changes.slice(0, 50), discovered_changes: wholeWeek.discovered_changes.slice(0, 50) };
   const servedOn = new Date().toISOString().slice(0, 10);
   const isScheduled = (c: DealChange) => c.date >= servedOn;
@@ -5052,18 +5053,16 @@ function buildThisWeekPage(weeksAgo: number): string {
   const headline = scheduledCount > 0
     ? `${digest.changes_in_week} developer tool pricing change${digest.changes_in_week === 1 ? "" : "s"} tracked this week. ${scheduledCount} scheduled for ${servedOn} or later.`
     : digest.headline;
-  const calendarNotice = weeksAgo === 0 ? datedSectionNoticeHtml(
+  const calendarNotice = datedSectionNoticeHtml(
     `Entries with an effective date on or after ${servedOn} appear in Scheduled this week. After that date they appear under the other sections for this week.`,
     [{ when: "Every recorded change remains in", text: "the full change log", href: "/changes" }],
     escHtmlServer,
-  ) : "";
+  );
   const dateRange = weekRangeLabel(digest.week_of, digest.week_ending);
 
-  const title = weeksAgo === 0
-    ? `This Week in Developer Pricing \u2014 ${dateRange} \u2014 AgentDeals`
-    : `Developer Pricing: ${dateRange} \u2014 AgentDeals`;
+  const title = `This Week in Developer Pricing \u2014 ${dateRange} \u2014 AgentDeals`;
   const metaDesc = headline + (digest.announcement_note ? `${headline.endsWith(".") ? " " : ". "}${digest.announcement_note}` : "");
-  const canonicalPath = weeksAgo === 0 ? "/this-week" : `/this-week?week=${weeksAgo}`;
+  const canonicalPath = "/this-week";
 
   const negativeTypes = NEGATIVE_CHANGE_TYPES;
   const positiveTypes = POSITIVE_CHANGE_TYPES;
@@ -5104,7 +5103,7 @@ function buildThisWeekPage(weeksAgo: number): string {
         renderSection("Bright Spots", brightSpots, "#3fb950"),
         renderSection("Other Notable Changes", other, "#d29922"),
       ].filter(Boolean).join("\n")
-    : `<div class="empty-msg"><p>No pricing changes tracked this week.</p><p style="margin-top:.5rem"><a href="/this-week?week=${weeksAgo + 1}">View previous week</a> or <a href="/feed.xml">subscribe via RSS</a>.</p></div>`;
+    : `<div class="empty-msg"><p>No pricing changes tracked this week.</p><p style="margin-top:.5rem"><a href="${previousWeek ? `/digest/${previousWeek}` : "/digest/archive"}">${previousWeek ? "View previous week" : "Browse the archive"}</a> or <a href="/feed.xml">subscribe via RSS</a>.</p></div>`;
 
   const firstReadHtml = digest.discovered_in_week > 0
     ? `<section class="tw-section tw-first-read">
@@ -5128,9 +5127,7 @@ function buildThisWeekPage(weeksAgo: number): string {
 
   const contentHtml = [changesHtml, firstReadHtml, weeklyAnnouncementsSectionHtml(digest.announced_changes ?? [], "tw-section")].filter(Boolean).join("\n");
 
-  const comingUpHtml = weeksAgo === 0
-    ? comingUpSectionHtml(new Date().toISOString().slice(0, 10), new Set([...digest.top_changes, ...digest.discovered_changes]), "tw-section tw-coming-up")
-    : "";
+  const comingUpHtml = comingUpSectionHtml(new Date().toISOString().slice(0, 10), new Set([...digest.top_changes, ...digest.discovered_changes]), "tw-section tw-coming-up");
 
   const pastChanges = wholeWeek.top_changes.filter(c => !isScheduled(c));
   const s = {
@@ -5153,9 +5150,9 @@ function buildThisWeekPage(weeksAgo: number): string {
   const summaryBar = summaryPills.length > 0 ? `<div class="tw-summary-bar">${summaryPills.join("")}</div>` : "";
 
   const navHtml = `<div class="tw-nav">
-    <a href="/this-week?week=${weeksAgo + 1}">&larr; Previous week</a>
+    ${previousWeek ? `<a href="/digest/${previousWeek}">&larr; Previous week</a>` : "<span></span>"}
     <a href="/digest/archive">Full archive</a>
-    ${weeksAgo > 0 ? `<a href="/this-week${weeksAgo > 1 ? `?week=${weeksAgo - 1}` : ""}">${weeksAgo === 1 ? "Current week" : "Next week"} &rarr;</a>` : "<span></span>"}
+    <span></span>
   </div>`;
 
   const jsonLd = {
@@ -5258,6 +5255,15 @@ function getCurrentWeekKey(): string {
 function getRecentWeekKeys(n: number): string[] {
   const byWeek = getChangesByWeek();
   return Array.from(byWeek.keys()).sort().reverse().slice(0, n);
+}
+
+function archivedWeekAtOffset(weeksAgo: number): string | null {
+  const { year, week } = isoWeekOf(new Date());
+  const currentStart = getWeekStart(year, week).getTime();
+  return getAllWeekKeys().find(key => {
+    const archived = parseWeekKey(key)!;
+    return (currentStart - getWeekStart(archived.year, archived.week).getTime()) / (7 * 86400000) === weeksAgo;
+  }) ?? null;
 }
 
 function getAllWeekKeys(): string[] {
@@ -54622,7 +54628,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     for (let w = 0; w < 4; w++) {
       const digest = getFormattedWeeklyDigest(w, 50);
       if (digest.top_changes.length === 0 && !digest.announced_changes?.length) continue;
-      const weekUrl = w === 0 ? `${baseUrl}/this-week` : `${baseUrl}/this-week?week=${w}`;
+      const weekUrl = w === 0 ? `${baseUrl}/this-week` : `${baseUrl}${digestWeekPath(digest.week_of)}`;
       const newestChange = latestChangeDate([...digest.top_changes, ...(digest.announced_changes ?? []).map(c => ({ date: c.announced_on }))]) ?? digest.week_of;
       const pubDate = feedEntryUpdated(newestChange, servedAt);
       entryUpdates.push(pubDate);
@@ -54660,7 +54666,7 @@ ${[...corrections, ...weekEntries].join("\n")}
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
     res.end(INDEXNOW_KEY);
   } else if (url.pathname === "/robots.txt" && isGetOrHead) {
-    const robotsTxt = `User-agent: *\n${SEARCH_QUERY_DISALLOW}\nAllow: /\n\nSitemap: ${BASE_URL}/sitemap.xml\n`;
+    const robotsTxt = `User-agent: *\n${SEARCH_QUERY_DISALLOW}\nAllow: /\n\nSitemap: ${BASE_URL}/sitemap.xml\n${["vendors", "comparisons", "pages", "reports", "misc"].map(name => `Sitemap: ${BASE_URL}/sitemap-${name}.xml\n`).join("")}`;
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": `public, max-age=${ROBOTS_MAX_AGE_SECONDS}` });
     res.end(robotsTxt);
   } else if (url.pathname === "/impact-verification" && isGetOrHead) {
@@ -55068,11 +55074,24 @@ ${catList}
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparison not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Comparison not found.</p><p style="margin-top:1rem"><a href="/compare">Browse all comparisons</a></p></div></body></html>`);
     }
   } else if (url.pathname === "/this-week" && isGetOrHead) {
-    const weeksAgo = Math.max(0, parseInt(url.searchParams.get("week") ?? "0", 10) || 0);
+    if (url.searchParams.has("week")) {
+      const values = url.searchParams.getAll("week");
+      const weeksAgo = values.length === 1 && /^\d+$/.test(values[0]!) ? Number(values[0]) : NaN;
+      const archived = Number.isSafeInteger(weeksAgo) ? archivedWeekAtOffset(weeksAgo) : null;
+      if (archived) {
+        res.writeHead(301, { Location: `/digest/${archived}`, "Cache-Control": "public, max-age=3600" });
+        res.end();
+      } else {
+        res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+        res.end("Week not found. Browse /digest/archive for available weeks.");
+      }
+      return;
+    }
+    const weeksAgo = 0;
     recordApiHit("/this-week");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/this-week", params: { week: String(weeksAgo) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildThisWeekPage(weeksAgo));
+    res.end(buildThisWeekPage());
   } else if (url.pathname === "/digest" && isGetOrHead) {
     const currentWeek = getCurrentWeekKey();
     res.writeHead(302, { Location: `/digest/${currentWeek}` });
