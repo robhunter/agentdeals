@@ -3573,6 +3573,12 @@
           "quote": "No card to start. The allowance below resets monthly and applies before anything is metered.",
           "url": "https://www.tigrisdata.com/pricing/",
           "read_on": "2026-10-23"
+        },
+        {
+          "text": "Tigris announced on 2026-11-05 that Dropbox plans to acquire it. Tigris says nothing changes for its customers: the same product, the same S3-compatible API and the same pricing with zero egress fees.",
+          "quote": "Dropbox plans to acquire Tigris. Nothing about your experience changes: the same product, the same S3-compatible API, the same pricing with zero egress fees, and the same team.",
+          "url": "https://www.tigrisdata.com/blog/dropbox-plans-acquire-tigris/",
+          "read_on": "2026-11-11"
         }
       ]
     },
