@@ -39,6 +39,7 @@ interface Entry {
   recordedDate: string;
   effectiveDate: string | null;
   anchorDate: string;
+  sourceUrl: string | null;
 }
 
 function tag(xml: string, name: string): string | null {
@@ -81,8 +82,10 @@ function holdsATopLevelComma(args: string): boolean {
 function parseEntries(doc: string): Entry[] {
   return [...doc.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map((m) => {
     const body = m[1];
+    const sourceUrl = body.match(/<link href="([^"]*)" rel="via"\/>/)?.[1];
     return {
       title: tag(body, "title") ?? "",
+      sourceUrl: sourceUrl ? unescapeXml(sourceUrl) : null,
       updated: tag(body, "updated") ?? "",
       summary: tag(body, "summary") ?? "",
       dateSource: tag(body, "ad:date_source") ?? "",
@@ -188,11 +191,48 @@ describe("the change feeds date every entry by when we recorded it and say what 
     assert.strictEqual(entries.length, CHANGE_FEED_ENTRY_LIMIT);
   });
 
-  function recordFor(entry: Entry): Record<string, any> | undefined {
-    return apiChanges.changes.find(
-      (c: any) => c.date === entry.anchorDate && feedEntryTitle(c) === entry.title
+  function recordFor(entry: Entry, records = apiChanges.changes): Record<string, any> {
+    const candidates = records.filter((record: any) =>
+      record.date === entry.anchorDate && feedEntryTitle(record) === entry.title &&
+      recordedOn(record) === entry.recordedDate && (record.source_url?.trim() || null) === entry.sourceUrl
     );
+    const matches = candidates.length > 1
+      ? candidates.filter((record: any) => entry.summary.includes(` ${record.summary}${printsBeforeAndAfter(record) ? " Before: " : ""}`))
+      : candidates;
+    assert.strictEqual(matches.length, 1, `${entry.title}: expected one source record, found ${matches.length}`);
+    return matches[0];
   }
+
+  function expectedStates(record: Record<string, any>): string {
+    const closed = (state: string) => (/[.!?…]["'”’]*$/.test(state) ? state : `${state}.`);
+    return ` Before: ${closed(record.previous_state.trim())} After: ${closed(record.current_state.trim())}`;
+  }
+
+  it("matches each published entry to a distinct source record", () => {
+    const matched = entries.map(entry => recordFor(entry));
+    assert.strictEqual(new Set(matched).size, entries.length);
+  });
+
+  it("keeps shared-date entries tied to their own states in either order, including shared sources and recording dates", async () => {
+    const first = fixtureChange("Shared Date Vendor", dayOffset(20), "vendor_page", dayOffset(-2));
+    const second = {
+      ...first, summary: "A different model has lower paid limits.",
+      previous_state: "Second model allowed 30 GB.", current_state: "Second model allows 10 GB",
+    };
+    for (const sharedProvenance of [false, true]) {
+      const distinct = sharedProvenance ? second : { ...second, recorded_date: dayOffset(-1), source_url: "https://example.com/second-model" };
+      for (const records of [[first, distinct], [distinct, first]]) {
+        const served = parseEntries(await feedServedFrom(records));
+        assert.strictEqual(served.length, 2);
+        const matched = served.map(entry => recordFor(entry, records));
+        assert.strictEqual(new Set(matched).size, 2);
+        for (const entry of served) {
+          const record = recordFor(entry, records);
+          assert.ok(entry.summary.endsWith(expectedStates(record)), `${record.summary}: ${entry.summary}`);
+        }
+      }
+    }
+  });
 
   it("agrees with /api/changes about the provenance of every entry it publishes", () => {
     let checked = 0;
@@ -219,14 +259,13 @@ describe("the change feeds date every entry by when we recorded it and say what 
   });
 
   it("closes each state an entry prints with one full stop, and adds none to a state that already ends a sentence", () => {
-    const closed = (state: string) => (/[.!?…]["'”’]*$/.test(state) ? state : `${state}.`);
     let printed = 0;
     const misprinted: string[] = [];
     for (const entry of entries) {
       const record = recordFor(entry);
       if (!record || !printsBeforeAndAfter(record)) continue;
       printed++;
-      const expected = ` Before: ${closed(record.previous_state.trim())} After: ${closed(record.current_state.trim())}`;
+      const expected = expectedStates(record);
       if (!entry.summary.endsWith(expected)) misprinted.push(`${entry.title}: …${entry.summary.slice(-100)}`);
     }
     assert.deepStrictEqual(misprinted, []);
