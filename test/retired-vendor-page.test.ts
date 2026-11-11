@@ -193,10 +193,11 @@ describe("an ended offer is not rated, on every surface that rates one", () => {
 
   it("heads the page with the retirement form and badges it retired", async () => {
     for (const record of endedRecords) {
-      const heading = headingOf(await page(`/vendor/${slugOf(record.vendor)}`));
+      const html = await page(`/vendor/${slugOf(record.vendor)}`);
+      const heading = headingOf(html);
       assert.ok(heading.includes(endedHeadline(record.vendor)), `${record.vendor} still heads with the free-tier form`);
       assert.ok(!/Free Tier \d{4}/.test(heading), `${record.vendor} still heads with a free-tier year`);
-      assert.match(heading, new RegExp(`risk-badge[^>]*>${ENDED_BADGE_LABEL}<`), `${record.vendor} carries no retired badge`);
+      assert.match(html, new RegExp(`</h1>\\s*<span class="risk-badge"[^>]*>${ENDED_BADGE_LABEL}<`), `${record.vendor} carries no retired badge`);
     }
   });
 
