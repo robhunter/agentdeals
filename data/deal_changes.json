@@ -19152,6 +19152,23 @@
       "listing_effect": "none",
       "what_ends": "gpt-5.5-cyber-preview",
       "announced_on": "2026-11-05"
+    },
+    {
+      "vendor": "Val Town",
+      "change_type": "product_deprecated",
+      "date": "2026-11-10",
+      "discontinued_date": "2027-01-10",
+      "date_source": "vendor_page",
+      "summary": "Val Town can be used until January 10, 2027, when all its services end. Val Town announced on 2026-11-10 that it is winding down: new signups and plan upgrades ended that day, and Val Town becomes read-only on December 10, 2026, except SQLite and blob storage. Billing is paused, and existing subscriptions continue free until the end.",
+      "what_ends": "Val Town",
+      "listing_effect": "none",
+      "previous_state": "Val Town offered a Free plan (100,000 runs a day, 1 minute wall clock per run, unlimited public vals) and paid plans, with no announced end.",
+      "current_state": "\"We've made the difficult decision to wind down Val Town.\" Timeline: new signups and plan upgrades, Nov 10, 2026; read-only mode (not including sqlite and blob storage), Dec 10, 2026; all other services, Jan 10, 2027 (blog.val.town/winding-down). The pricing page reads \"Val Town is shutting down on January 10, 2027.\"",
+      "impact": "high",
+      "source_url": "https://blog.val.town/winding-down",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-11"
     }
   ]
 }
