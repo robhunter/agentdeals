@@ -1,5 +1,6 @@
 import type { DealChange, Offer, RiskCause } from "./types.js";
-import { changesByVendor, enrichOffers, freeTierEndingRecord, publishedRisk, refusalsForVendor, riskCauseOf, changesRatingTheListedTier, withheldRecordCounts } from "./data.js";
+import { A_VERDICT_LAPSES_RULE, changesByVendor, demotionCanLapse, demotionLapsesOn, enrichOffers, freeTierEndingRecord, freeTierRestoredOn, lapsingDemotionStated, publishedRisk, refusalsForVendor, riskCauseOf, changesRatingTheListedTier, vendorRiskAssessment, withheldRecordCounts } from "./data.js";
+import { changeEntryDateLabel } from "./change-dates.js";
 
 type EnrichedOfferRow = ReturnType<typeof enrichOffers>[number];
 import { gateFor, utcDate, type Gate } from "./ranking.js";
@@ -10,7 +11,7 @@ import { levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, type
 import type { RefusedRead } from "./change-refusal.js";
 import { restatedReadingDate } from "./read-date.js";
 import { storedTermsAreSuperseded } from "./superseded-description.js";
-import { whyWeCannotConfirmTheseTerms, type UnconfirmedTerms, type VendorVerdictInput } from "./vendor-verdict.js";
+import { changeKindNoun, demotionTheVerdictNames, endingStatedInPlaceOfARating, whyWeCannotConfirmTheseTerms, type UnconfirmedTerms, type VendorVerdictInput } from "./vendor-verdict.js";
 
 export interface VendorVerdictContext {
   vendorOffers: Offer[];
@@ -29,6 +30,20 @@ export interface VendorVerdictEvidence {
   vendorChanges: DealChange[];
   refusedReads: readonly RefusedRead[];
   servedOn: string;
+}
+
+export function verdictLapseSentence(context: VendorVerdictContext): string | null {
+  const cause = endingStatedInPlaceOfARating(context.input) ?? demotionTheVerdictNames(context.input);
+  if (!cause) return null;
+  const grading = changesRatingTheListedTier(context.primary, context.vendorChanges);
+  if (demotionCanLapse(cause.change_type) || freeTierRestoredOn(cause, grading) !== null) {
+    const lapsesOn = demotionLapsesOn(cause.date);
+    const remaining = vendorRiskAssessment(grading, Date.parse(`${lapsesOn}T00:00:00Z`)).cause;
+    if (remaining && !demotionCanLapse(remaining.change_type) && freeTierRestoredOn(remaining, grading) === null) {
+      return `${A_VERDICT_LAPSES_RULE} This one rests on a record ${changeEntryDateLabel(cause)}, so it stops counting on ${lapsesOn}; the rating then rests on the ${changeKindNoun(remaining.change_type)} recorded ${remaining.date}, a standing condition that does not lapse.`;
+    }
+  }
+  return lapsingDemotionStated(cause, grading);
 }
 
 export function endingTheListingConfirms(
