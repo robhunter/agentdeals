@@ -249,7 +249,7 @@ describe("/ci-cd-pricing states the current plans of Bitbucket Pipelines, Codema
   it("carries Buddy's current excerpt and login-based inactivity condition across both guides and its vendor page", async () => {
     const listing = cicdListing("Buddy");
     assert.match(listing.description, /1 seat, 2 concurrent pipeline runs, a \$1 monthly usage credit for compute and storage, 1 GB pipeline cache/);
-    assert.match(listing.free_plan_excerpt.text, /2 concurrents \(no extra concurrents\).*\$1\/mo\. usage credit/);
+    assert.match(listing.free_plan_excerpt.text, /2 concurrents \(no extra concurrents\).*\$1\s*\/mo\. usage credit/);
     assert.match(listing.free_plan_excerpt.read_on, /^\d{4}-\d{2}-\d{2}$/);
     assert.strictEqual(listing.conditions.length, 1);
     const condition = listing.conditions[0];

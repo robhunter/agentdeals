@@ -72,11 +72,12 @@ type VerificationState = { records: Array<Record<string, unknown>> };
 
 const EARLIER_VERIFIED = "2026-01-01";
 const LATER_READ = "2026-01-02";
+const REFUSAL_READ = "2026-01-03";
 
 const listingVerifiedEarlier: Catalogue = {
   ...shipped,
   offers: shipped.offers.map((o) => (o.vendor === LISTING
-    ? { ...o, verifiedDate: EARLIER_VERIFIED, ...(o.source_check ? { source_check: { ...o.source_check, checked: EARLIER_VERIFIED } } : {}) }
+    ? { ...o, verifiedDate: EARLIER_VERIFIED, restated_from: null, ...(o.source_check ? { source_check: { ...o.source_check, checked: EARLIER_VERIFIED } } : {}) }
     : o)),
 };
 
@@ -99,8 +100,21 @@ const verificationReadingTheListingLater: VerificationState = {
   ],
 };
 
-async function servePage(catalogue: Catalogue | null, changes: ChangeLog | null = null, verification: VerificationState | null = null): Promise<string> {
-  const dir = catalogue || changes || verification ? mkdtempSync(path.join(tmpdir(), "llm-lineup-")) : null;
+type RefusalLog = { refusals: Array<Record<string, unknown>> };
+
+const unrelatedRefusal = {
+  vendor: LISTING,
+  source_url: "https://example.invalid/other-pricing",
+  refused_date: "2026-01-04",
+  reason: "states_no_terms",
+};
+
+const refusedRead: RefusalLog = { refusals: [unrelatedRefusal, {
+  ...unrelatedRefusal, source_url: shippedListing.url, refused_date: REFUSAL_READ,
+}] };
+
+async function servePage(catalogue: Catalogue | null, changes: ChangeLog | null = null, verification: VerificationState | null = null, refusals: RefusalLog | null = null): Promise<string> {
+  const dir = catalogue || changes || verification || refusals ? mkdtempSync(path.join(tmpdir(), "llm-lineup-")) : null;
   const env: NodeJS.ProcessEnv = { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" };
   if (dir && catalogue) {
     const indexPath = path.join(dir, "index.json");
@@ -116,6 +130,11 @@ async function servePage(catalogue: Catalogue | null, changes: ChangeLog | null 
     const verificationPath = path.join(dir, "verification_state.json");
     writeFileSync(verificationPath, JSON.stringify(verification));
     env.AGENTDEALS_VERIFICATION_STATE_PATH = verificationPath;
+  }
+  if (dir && refusals) {
+    const refusalsPath = path.join(dir, "change_refusals.json");
+    writeFileSync(refusalsPath, JSON.stringify(refusals));
+    env.AGENTDEALS_REFUSALS_PATH = refusalsPath;
   }
   const proc: ChildProcess = spawn("node", [path.join(REPO, "dist", "serve.js")], { stdio: ["pipe", "pipe", "pipe"], env });
   try {
@@ -224,15 +243,19 @@ let launched = "";
 let unpriced = "";
 let superseded = "";
 let readLater = "";
+let refusalLater = "";
+let unrelatedRefusalLater = "";
 
 before(async () => {
   assert.ok(shippedRates.length >= 2, `the ${LISTING} listing prices ${shippedRates.length} named models`);
-  [served, launched, unpriced, superseded, readLater] = await Promise.all([
+  [served, launched, unpriced, superseded, readLater, refusalLater, unrelatedRefusalLater] = await Promise.all([
     servePage(null),
     servePage(withListingTerms(launchedTerms)),
     servePage(withListingTerms(UNPRICED_TERMS)),
     servePage(null, changesSupersedingTheListing),
-    servePage(listingVerifiedEarlier, null, verificationReadingTheListingLater),
+    servePage(listingVerifiedEarlier, null, verificationReadingTheListingLater, { refusals: [] }),
+    servePage(listingVerifiedEarlier, null, verificationReadingTheListingLater, refusedRead),
+    servePage(listingVerifiedEarlier, null, verificationReadingTheListingLater, { refusals: [unrelatedRefusal] }),
   ]);
 });
 
@@ -262,6 +285,16 @@ describe("#2446 /llm-api-pricing answers what Claude costs from the Anthropic AP
 
   it("dates the structured answer by the day the listing was last read, not the day it was last verified", () => {
     const answer = structuredAnswer(readLater, CLAUDE_PRICE);
+    assert.ok(answer.endsWith(`Figures from our ${LISTING} record, last read ${LATER_READ}.`), answer);
+  });
+
+  it("dates the structured answer by a newer refused reading of its cited page", () => {
+    const answer = structuredAnswer(refusalLater, CLAUDE_PRICE);
+    assert.ok(answer.endsWith(`Figures from our ${LISTING} record, last read ${REFUSAL_READ}.`), answer);
+  });
+
+  it("keeps another page's newer refusal out of the structured answer's read date", () => {
+    const answer = structuredAnswer(unrelatedRefusalLater, CLAUDE_PRICE);
     assert.ok(answer.endsWith(`Figures from our ${LISTING} record, last read ${LATER_READ}.`), answer);
   });
 
