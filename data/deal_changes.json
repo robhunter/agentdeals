@@ -19169,6 +19169,24 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "recorded_date": "2026-11-11"
+    },
+    {
+      "vendor": "Google Gemini API",
+      "change_type": "pricing_restructured",
+      "date": "2026-12-01",
+      "summary": "Gemini 4 Carbon (gemini-4-carbon), generally available on the Gemini API since November 10, 2026, has introductory pricing through November 30, 2026. Standard input is $2.00 per million tokens through November 30, 2026, then $4.00 from December 1, 2026. Output is $10.00 then $20.00. Batch and Flex input is $1.00 then $2.00, output $5.00 then $10.00. Priority input is $3.60 then $7.20, output $18.00 then $36.00. It is not available on the Free tier.",
+      "previous_state": "Gemini 4 Carbon, paid tier, per 1M tokens, through November 30, 2026 (introductory pricing): Standard $2.00 input, $10.00 output, $0.10 context caching; Batch and Flex $1.00 input, $5.00 output; Priority $3.60 input, $18.00 output.",
+      "current_state": "From December 1, 2026: Standard $4.00 input, $20.00 output, $0.20 context caching; Batch and Flex $2.00 input, $10.00 output; Priority $7.20 input, $36.00 output. Gemini 4 Carbon is not available on the Free tier.",
+      "impact": "medium",
+      "source_url": "https://aistudio.google.com/docs/pricing#gemini-4-carbon",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-11",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "tier": "Paid Tier",
+      "tier_direction": "unchanged",
+      "announced_on": "2026-11-10"
     }
   ]
 }
