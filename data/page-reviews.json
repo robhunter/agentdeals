@@ -3119,19 +3119,7 @@
       "published": "2026-03-27",
       "tier": "A",
       "vendors_asserted": [],
-      "vendors_tabulated": [
-        "amazon-kiro-aws-startups",
-        "amplitude",
-        "aws-activate",
-        "brex-partner-perks",
-        "cloudflare-for-startups",
-        "digitalocean",
-        "microsoft-for-startups",
-        "posthog",
-        "ramp-partner-rewards",
-        "stripe-atlas",
-        "svb-startup-banking-offers"
-      ],
+      "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-11-01",
@@ -3141,14 +3129,9 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 91,
+      "table_figures": 39,
       "table_figures_from_records": 39,
       "tables": [
-        {
-          "label": "Comparison Table",
-          "figures": 52,
-          "from_records": 0
-        },
         {
           "label": "Recent Changes",
           "figures": 39,

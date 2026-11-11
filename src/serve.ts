@@ -28041,17 +28041,6 @@ function buildStartupCreditsPage(): string {
   const openCount = STARTUP_PROGRAMS.filter(p => p.applicationDifficulty === "open").length;
   const categories: Array<"cloud-infrastructure" | "fintech-banking" | "developer-tools" | "ai-tools"> = ["cloud-infrastructure", "fintech-banking", "developer-tools", "ai-tools"];
 
-  const heroTableRows = STARTUP_PROGRAMS.map(p => {
-    const diffColor = difficultyColors[p.applicationDifficulty] || "var(--text-muted)";
-    return '<tr>' +
-      '<td style="font-weight:600">' + escHtmlServer(p.name) + '</td>' +
-      '<td style="font-family:var(--mono);font-size:.85rem;color:var(--accent)">' + escHtmlServer(p.creditValue) + '</td>' +
-      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(p.eligibility.split(".")[0]) + '</td>' +
-      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.duration ?? "\u2014") + '</td>' +
-      '<td><span style="color:' + diffColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(difficultyLabels[p.applicationDifficulty]) + '</span></td>' +
-      '</tr>';
-  }).join("\n        ");
-
   const programmeNameHtml = (p: StartupProgram) =>
     p.programmePage
       ? '<a href="' + escHtmlServer(p.programmePage) + '" rel="nofollow noopener" style="color:var(--text)">' + escHtmlServer(p.name) + '</a>'
@@ -28239,7 +28228,6 @@ function buildStartupCreditsPage(): string {
     '  <div class="toc">\n' +
     '    <h3>Jump to section</h3>\n' +
     '    <ol>\n' +
-    '      <li><a href="#comparison-table">Comparison Table</a></li>\n' +
     '      <li><a href="#categories">Category Breakdown</a> (Cloud, Fintech, Dev Tools, AI)</li>\n' +
     '      <li><a href="#hidden-constraints">Hidden Constraints</a></li>\n' +
     '      <li><a href="#stacking">Stacking Strategy</a></li>\n' +
@@ -28247,26 +28235,6 @@ function buildStartupCreditsPage(): string {
     upcomingChangesTocLineHtml(startupChangesByDayServed.upcoming) +
     '      <li><a href="#faq">Frequently Asked Questions</a></li>\n' +
     '    </ol>\n' +
-    '  </div>\n' +
-    '\n' +
-    '  <h2 id="comparison-table">Comparison Table</h2>\n' +
-    '  <p class="section-intro">[[freshness]] Hover rows to highlight. Programs sorted by category.</p>\n' +
-    '\n' +
-    '  <div style="overflow-x:auto">\n' +
-    '  <table class="pricing-table">\n' +
-    '    <thead>\n' +
-    '      <tr>\n' +
-    '        <th>Program</th>\n' +
-    '        <th>Credit Value</th>\n' +
-    '        <th>Eligibility</th>\n' +
-    '        <th>Duration</th>\n' +
-    '        <th>Application</th>\n' +
-    '      </tr>\n' +
-    '    </thead>\n' +
-    '    <tbody>\n' +
-    '        ' + heroTableRows + '\n' +
-    '    </tbody>\n' +
-    '  </table>\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="categories">Category Breakdown</h2>\n' +
