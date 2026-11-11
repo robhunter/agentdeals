@@ -681,6 +681,21 @@
       "vendor": "geoapify.com",
       "tier": "Free",
       "since": "2026-11-11"
+    },
+    {
+      "vendor": "Logo.dev",
+      "tier": "Free",
+      "since": "2026-11-11"
+    },
+    {
+      "vendor": "aikido.dev",
+      "tier": "Free",
+      "since": "2026-11-11"
+    },
+    {
+      "vendor": "Google Gemini Embedding 2",
+      "tier": "Free",
+      "since": "2026-11-11"
     }
   ]
 }

@@ -149,6 +149,22 @@
         }
       },
       {
+        "bank": "Found",
+        "change": "Domestic wires on paid plans",
+        "before": "$10 per outgoing wire on Found Plus and Found Pro",
+        "after": "$12 on Found Plus, $8 on Found Pro; $15 on the free account, as before",
+        "when": "Between 2026-11-10 and 2026-11-11",
+        "source": {
+          "text": "found.com/legal/fee-schedule-lead (read 2026-11-10 and 2026-11-11)",
+          "links": [
+            {
+              "text": "found.com/legal/fee-schedule-lead",
+              "url": "https://found.com/legal/fee-schedule-lead"
+            }
+          ]
+        }
+      },
+      {
         "bank": "Relay",
         "change": "Plans",
         "before": "Relay (free) and Relay Pro ($30)",
@@ -398,13 +414,13 @@
         "bank": "Found",
         "plan": "Plus",
         "per_month": "$35, or $315 a year",
-        "notes": "1.50% APY on up to $20,000"
+        "notes": "1.50% APY on up to $20,000; domestic wires $12"
       },
       {
         "bank": "Found",
         "plan": "Pro",
         "per_month": "$80, or $720 a year",
-        "notes": "2.50% APY on all balances; domestic wires $10"
+        "notes": "2.50% APY on all balances; domestic wires $8"
       },
       {
         "bank": "Lili",
@@ -610,6 +626,10 @@
         {
           "url": "https://found.com/help/funding-your-found-account/wire-transfers",
           "covers": "incoming international wires, read 2026-11-06"
+        },
+        {
+          "url": "https://found.com/legal/fee-schedule-lead",
+          "covers": "wire fees by plan, read 2026-11-11"
         }
       ]
     },

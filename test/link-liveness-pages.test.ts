@@ -1,10 +1,11 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
+import { writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import type { Offer } from "../dist/types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -14,45 +15,44 @@ const { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, confirmationDate } = await
 const MONTH_NAMES = "January|February|March|April|May|June|July|August|September|October|November|December";
 const DATED_LINE = new RegExp(`(${CONFIRMED_DATE_LABEL}|${UNCONFIRMED_DATE_LABEL}) (?:${MONTH_NAMES}) \\d{4}`);
 
-type Offer = { vendor: string; url: string; verifiedDate: string };
-
 function slugOf(vendor: string): string {
   return vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
-const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
-const changed = new Set<string>(
-  JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes.map(
-    (c: { vendor: string }) => c.vendor.toLowerCase()
-  )
-);
-
-const rowsPerVendor = new Map<string, number>();
-for (const o of offers) rowsPerVendor.set(o.vendor, (rowsPerVendor.get(o.vendor) ?? 0) + 1);
-
-const unblemished = offers.filter(
-  (o) =>
-    !changed.has(o.vendor.toLowerCase()) &&
-    slugOf(o.vendor).length > 2 &&
-    o.url.startsWith("http") &&
-    rowsPerVendor.get(o.vendor) === 1
-);
-
-const goneVendor = unblemished[0];
-const refusedVendor = unblemished.find((o) => o.url !== goneVendor.url && o.vendor !== goneVendor.vendor)!;
-const controlVendor = unblemished.find(
-  (o) => o.url !== goneVendor.url && o.url !== refusedVendor.url && o.vendor !== goneVendor.vendor && o.vendor !== refusedVendor.vendor
-)!;
+const checkedOn = new Date().toISOString().slice(0, 10);
+const [goneVendor, refusedVendor, controlVendor]: Offer[] = ["Gone", "Refused", "Control"].map(state => ({
+  vendor: `Fixture ${state} Link`,
+  category: "Cloud Hosting",
+  description: "Free service with 100 requests per month.",
+  tier: "Free",
+  url: `https://${state.toLowerCase()}-link.example/pricing`,
+  tags: [],
+  verifiedDate: checkedOn,
+  source_check: { checked: checkedOn, outcome: "ok", detail: "The pricing page states the free plan." },
+  product_role: { deployment_model: "hosted", is_addon: false, source_url: `https://${state.toLowerCase()}-link.example/pricing`, source_quote: "Hosted service.", reviewed: checkedOn },
+  product_subtypes: { taxonomy: "Cloud Hosting", labels: [{ subtype: "static_site", source_url: `https://${state.toLowerCase()}-link.example/pricing`, source_quote: "Static site hosting." }], reviewed: checkedOn },
+}));
 
 let fixtureDir = "";
 let serverPort = 0;
 let proc: ChildProcess | null = null;
+let previousEnvironment: NodeJS.ProcessEnv = {};
 
-function startServer(fixturePath: string): Promise<ChildProcess> {
+function fixtureEnvironment(): NodeJS.ProcessEnv {
+  return {
+    AGENTDEALS_INDEX_PATH: path.join(fixtureDir, "index.json"),
+    AGENTDEALS_CHANGES_PATH: path.join(fixtureDir, "changes.json"),
+    AGENTDEALS_REFUSALS_PATH: path.join(fixtureDir, "refusals.json"),
+    AGENTDEALS_VERIFICATION_STATE_PATH: path.join(fixtureDir, "verification_state.json"),
+    AGENTDEALS_LINK_HEALTH_PATH: path.join(fixtureDir, "link_health.json"),
+  };
+}
+
+function startServer(): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_LINK_HEALTH_PATH: fixturePath },
+      env: { ...process.env, ...fixtureEnvironment(), PORT: "0", BASE_URL: "http://localhost" },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 20000);
     child.stderr!.on("data", (data: Buffer) => {
@@ -64,15 +64,27 @@ function startServer(fixturePath: string): Promise<ChildProcess> {
 }
 
 const get = async (p: string) => {
-  const res = await fetch(`http://localhost:${serverPort}${p}`);
+  const res = await fetch(`http://localhost:${serverPort}${p}`, { redirect: "error" });
   return { status: res.status, body: await res.text() };
 };
 
 before(async () => {
-  assert.ok(goneVendor && refusedVendor && controlVendor, "fixture needs three distinct vendors carrying no change records");
-
   fixtureDir = mkdtempSync(path.join(tmpdir(), "link-health-"));
   const fixturePath = path.join(fixtureDir, "link_health.json");
+  writeFileSync(path.join(fixtureDir, "index.json"), JSON.stringify({ offers: [goneVendor, refusedVendor, controlVendor] }));
+  writeFileSync(path.join(fixtureDir, "changes.json"), JSON.stringify({ changes: [] }));
+  writeFileSync(path.join(fixtureDir, "refusals.json"), JSON.stringify({ refusals: [] }));
+  writeFileSync(path.join(fixtureDir, "verification_state.json"), JSON.stringify({ records: [goneVendor, refusedVendor, controlVendor].map(offer => ({
+    vendor: offer.vendor,
+    url: offer.url,
+    last_attempt_at: checkedOn,
+    last_outcome: "confirmed",
+    last_success: checkedOn,
+    last_error: null,
+    failure_category: null,
+    consecutive_failures: 0,
+    quarantined_since: null,
+  })) }));
   writeFileSync(fixturePath, JSON.stringify({
     generated_at: "2026-08-25",
     links: [
@@ -81,12 +93,19 @@ before(async () => {
     ],
   }, null, 2));
 
-  proc = await startServer(fixturePath);
+  const environment = fixtureEnvironment();
+  previousEnvironment = Object.fromEntries(Object.keys(environment).map(key => [key, process.env[key]]));
+  Object.assign(process.env, environment);
+  proc = await startServer();
 });
 
 after(() => {
   if (proc) proc.kill();
   if (fixtureDir) rmSync(fixtureDir, { recursive: true, force: true });
+  for (const [key, value] of Object.entries(previousEnvironment)) {
+    if (value === undefined) delete process.env[key];
+    else process.env[key] = value;
+  }
 });
 
 describe("#1046 a vendor page whose link is confirmed unreachable", () => {
@@ -148,7 +167,7 @@ describe("#1046 a vendor page whose link we were merely refused", () => {
     assert.match(body, /class="detail-label">Verified</);
     assert.doesNotMatch(body, /class="link-unreachable-line"/);
     assert.doesNotMatch(body, /pricing page has not resolved/);
-    assert.match(body, /<tr class="current-vendor-row">[\s\S]*?stability-dot[\s\S]*?<\/tr>/);
+    assert.match(body.match(/<tr class="current-vendor-row">[\s\S]*?<\/tr>/)?.[0] ?? "", /stability-dot/);
   });
 
   it("publishes no link claim in the API in either direction", async () => {
@@ -174,13 +193,13 @@ describe("#1046 a vendor page we never checked", () => {
       `the page labels its date ${dated[1]} while the store ${confirmationDate(controlVendor) ? "holds" : "holds no"} confirmation for it`,
     );
     assert.doesNotMatch(body, /class="link-unreachable-line"/);
+    assert.match(body.match(/<tr class="current-vendor-row">[\s\S]*?<\/tr>/)?.[0] ?? "", /stability-dot/);
   });
 });
 
 describe("#1046 the MCP tool that answers whether a vendor is risky", () => {
   it("does not tell an agent a vendor has a stable pricing history when we cannot reach its page", async () => {
     const { checkVendorRisk, resetCache } = await import("../dist/data.js");
-    process.env.AGENTDEALS_LINK_HEALTH_PATH = path.join(fixtureDir, "link_health.json");
     resetCache();
     try {
     const gone = checkVendorRisk(goneVendor.vendor);
@@ -196,7 +215,6 @@ describe("#1046 the MCP tool that answers whether a vendor is risky", () => {
     assert.equal(refused.result.link_unreachable, null);
     assert.match(refused.result.summary, /has a stable pricing history/);
     } finally {
-      delete process.env.AGENTDEALS_LINK_HEALTH_PATH;
       resetCache();
     }
   });

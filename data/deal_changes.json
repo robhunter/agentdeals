@@ -19118,6 +19118,40 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2027-02-10",
+      "summary": "The OpenAI API keeps running. The gpt-image-2 model and its gpt-image-2-2026-04-21 snapshot can be called until February 10, 2027, when OpenAI removes them from the API. OpenAI names gpt-image-2.6-sunburst or gpt-image-2.6-flare as the replacement.",
+      "previous_state": "gpt-image-2 (snapshot gpt-image-2-2026-04-21) was callable in the OpenAI API at pay-as-you-go rates, with no shutdown date.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-11-10) gives February 10, 2027 as the date gpt-image-2 and gpt-image-2-2026-04-21 are removed from the API. They can be called until then.",
+      "impact": "medium",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-11",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "gpt-image-2",
+      "announced_on": "2026-11-10"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2027-02-01",
+      "summary": "The OpenAI API keeps running. The gpt-5.5-cyber-preview model can be called until February 1, 2027, when OpenAI removes it from the API. OpenAI tells users to move to the most capable cyber model available to them.",
+      "previous_state": "gpt-5.5-cyber-preview was callable in the OpenAI API, with no shutdown date.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-11-05) gives February 1, 2027 as the date gpt-5.5-cyber-preview is removed from the API: \"Migrate to the most capable cyber model available to you before the shutdown date.\"",
+      "impact": "low",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-11",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "gpt-5.5-cyber-preview",
+      "announced_on": "2026-11-05"
     }
   ]
 }
