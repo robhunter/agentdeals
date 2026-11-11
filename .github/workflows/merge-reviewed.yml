@@ -40,7 +40,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: "24.22.1"
+          node-version: "24.22.3"
           cache: npm
       - name: Observe a publication turn without changing main
         if: inputs.verify_queue
