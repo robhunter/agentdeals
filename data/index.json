@@ -955,7 +955,7 @@
     {
       "vendor": "Val Town",
       "category": "Cloud Hosting",
-      "description": "Serverless scripting platform — 100K runs/day, 1 minute wall clock per run, unlimited public vals, MCP integration",
+      "description": "Serverless scripting platform, shutting down on January 10, 2027, with no new signups since November 10, 2026. Free plan for existing users: 100K runs/day, 1 minute wall clock per run, unlimited public vals, MCP integration",
       "tier": "Free",
       "url": "https://www.val.town/pricing",
       "tags": [
@@ -983,11 +983,14 @@
         ],
         "reviewed": "2026-08-31"
       },
-      "free_plan_excerpt": {
-        "text": "Free Start using Val Town today $ 0 Sign up MCP integration No custom domains 15 min cron intervals 1 min wall clock time / run Unlimited public vals 3 days log retention 100,000 runs / day Email yourself",
-        "url": "https://www.val.town/pricing",
-        "read_on": "2026-11-05"
-      }
+      "conditions": [
+        {
+          "text": "Val Town is winding down: new signups and plan upgrades ended on November 10, 2026, Val Town becomes read-only on December 10, 2026 (except SQLite and blob storage), and all other services end on January 10, 2027. Billing is paused, and existing subscriptions continue free until then.",
+          "quote": "We are pausing billing today, and will continue servicing existing subscriptions for free.",
+          "url": "https://blog.val.town/winding-down",
+          "read_on": "2026-11-11"
+        }
+      ]
     },
     {
       "vendor": "Koyeb",
