@@ -167,7 +167,7 @@ describe("#1046 a vendor page whose link we were merely refused", () => {
     assert.match(body, /class="detail-label">Verified</);
     assert.doesNotMatch(body, /class="link-unreachable-line"/);
     assert.doesNotMatch(body, /pricing page has not resolved/);
-    assert.match(body, /<tr class="current-vendor-row">[\s\S]*?stability-dot[\s\S]*?<\/tr>/);
+    assert.match(body.match(/<tr class="current-vendor-row">[\s\S]*?<\/tr>/)?.[0] ?? "", /stability-dot/);
   });
 
   it("publishes no link claim in the API in either direction", async () => {
@@ -193,7 +193,7 @@ describe("#1046 a vendor page we never checked", () => {
       `the page labels its date ${dated[1]} while the store ${confirmationDate(controlVendor) ? "holds" : "holds no"} confirmation for it`,
     );
     assert.doesNotMatch(body, /class="link-unreachable-line"/);
-    assert.match(body, /<tr class="current-vendor-row">[\s\S]*?stability-dot[\s\S]*?<\/tr>/);
+    assert.match(body.match(/<tr class="current-vendor-row">[\s\S]*?<\/tr>/)?.[0] ?? "", /stability-dot/);
   });
 });
 
