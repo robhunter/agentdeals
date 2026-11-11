@@ -18,15 +18,15 @@
       "changed": "2026-11-10"
     },
     "/ai-coding-tools-pricing": {
-      "hash": "daec0e62a45d1ed2",
+      "hash": "5f3d6a1b135577f8",
       "changed": "2026-11-11"
     },
     "/ai-free-tiers": {
-      "hash": "a5cfe9ed01c65195",
+      "hash": "8d37e46a99b7e0f0",
       "changed": "2026-11-11"
     },
     "/ai-ml-alternatives": {
-      "hash": "02396ae8c7f6aea3",
+      "hash": "0f54d6ab17c5e800",
       "changed": "2026-11-11"
     },
     "/alternative-to": {
@@ -1104,8 +1104,8 @@
       "changed": "2026-11-06"
     },
     "/category/ai-coding": {
-      "hash": "ef064a16786f094a",
-      "changed": "2026-11-09"
+      "hash": "da98e250b7c167c6",
+      "changed": "2026-11-11"
     },
     "/category/ai-ml": {
       "hash": "810699450f6ef035",
@@ -3369,7 +3369,7 @@
       "changed": "2026-11-11"
     },
     "/ide-code-editors-alternatives": {
-      "hash": "7b788fbd6d73d30f",
+      "hash": "dcb2b4c52adfeafa",
       "changed": "2026-11-11"
     },
     "/llm-api-pricing": {
@@ -3658,7 +3658,7 @@
       "changed": "2026-11-11"
     },
     "/stack-check": {
-      "hash": "9124874079874f63",
+      "hash": "7a52c622eb7df739",
       "changed": "2026-11-11"
     },
     "/stacks": {
@@ -6043,7 +6043,7 @@
       "changed": "2026-11-11"
     },
     "/vendor/google-antigravity": {
-      "hash": "254f620063e1152a",
+      "hash": "0299478b60f512ae",
       "changed": "2026-11-11"
     },
     "/vendor/google-artifact-registry": {
