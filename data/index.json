@@ -3573,6 +3573,12 @@
           "quote": "No card to start. The allowance below resets monthly and applies before anything is metered.",
           "url": "https://www.tigrisdata.com/pricing/",
           "read_on": "2026-10-23"
+        },
+        {
+          "text": "Tigris announced on 2026-11-05 that Dropbox plans to acquire it. Tigris says nothing changes for its customers: the same product, the same S3-compatible API and the same pricing with zero egress fees.",
+          "quote": "Dropbox plans to acquire Tigris. Nothing about your experience changes: the same product, the same S3-compatible API, the same pricing with zero egress fees, and the same team.",
+          "url": "https://www.tigrisdata.com/blog/dropbox-plans-acquire-tigris/",
+          "read_on": "2026-11-11"
         }
       ]
     },
@@ -5272,7 +5278,7 @@
     {
       "vendor": "Cloudflare Workers AI",
       "category": "AI / ML",
-      "description": "Workers AI runs AI models on Cloudflare's global network. Every account gets 10,000 Neurons per day at no charge, reset daily at 00:00 UTC; on the Workers Free plan, requests beyond that fail until the reset. On the Workers Paid plan (from $5 per month), usage above 10,000 Neurons per day costs $0.011 per 1,000 Neurons. Eight models, including @cf/moonshotai/kimi-k2.6, @cf/zai-org/glm-5.3 and @cf/deepseek-ai/deepseek-v4-pro-0813, require the Workers Paid plan or prepaid AI Gateway credits. On 2026-05-30, Cloudflare deprecated 18 models and told users to remove references to them: @cf/meta/llama-3.1-8b-instruct, @cf/meta/llama-3.1-8b-instruct-awq, @cf/meta/llama-3.1-70b-instruct, @cf/meta/llama-3-8b-instruct, @cf/meta/llama-3-8b-instruct-awq, @hf/meta-llama/meta-llama-3-8b-instruct, @cf/meta/llama-2-7b-chat-int8, @cf/meta/llama-2-7b-chat-fp16, @cf/mistral/mistral-7b-instruct-v0.1, @hf/mistral/mistral-7b-instruct-v0.2, @hf/google/gemma-7b-it, @cf/google/gemma-3-12b-it, @hf/nousresearch/hermes-2-pro-mistral-7b, @cf/microsoft/phi-2, @cf/defog/sqlcoder-7b-2, @cf/unum/uform-gen2-qwen-500m, @cf/facebook/bart-large-cnn and @cf/moonshotai/kimi-k2.5. On 2026-10-15, Cloudflare's model catalog still lists @cf/meta/llama-3.1-8b-instruct-fp8, @cf/meta/llama-3.3-70b-instruct-fp8-fast and the -lora variants, but no longer lists @cf/meta/llama-3.1-8b-instruct-fast. Cloudflare's suggested replacements are @cf/zai-org/glm-4.7-flash, @cf/google/gemma-4-26b-a4b-it and @cf/moonshotai/kimi-k2.6. Since 2026-05-30, requests to @cf/moonshotai/kimi-k2.5 go to @cf/moonshotai/kimi-k2.6, which costs more and requires the Workers Paid plan or prepaid AI Gateway credits; without them, requests get HTTP 403 (error 5035).",
+      "description": "Workers AI runs AI models on Cloudflare's global network. Every account gets 10,000 Neurons per day at no charge, reset daily at 00:00 UTC; on the Workers Free plan, requests beyond that fail until the reset. On the Workers Paid plan (from $5 per month), usage above 10,000 Neurons per day costs $0.011 per 1,000 Neurons. Eight models require the Workers Paid plan or prepaid AI Gateway credits: @cf/moonshotai/kimi-k2.6, @cf/moonshotai/kimi-k2.7-code, @cf/zai-org/glm-5.2, @cf/zai-org/glm-5.3, @cf/zai-org/glm-5.3-flash, @cf/deepseek-ai/deepseek-v4-flash-0731, @cf/deepseek-ai/deepseek-v4.1-flash-1017 and @cf/deepseek-ai/deepseek-v4-pro-0813. Cloudflare removes 24 models from Workers AI on 2026-11-20, including six of those eight (all but glm-5.3 and deepseek-v4.1-flash-1017); they can be called until then, and from 2026-11-20 requests to them fail with HTTP 410 Gone (error 5028). On 2026-05-30, Cloudflare deprecated 18 models and told users to remove references to them: @cf/meta/llama-3.1-8b-instruct, @cf/meta/llama-3.1-8b-instruct-awq, @cf/meta/llama-3.1-70b-instruct, @cf/meta/llama-3-8b-instruct, @cf/meta/llama-3-8b-instruct-awq, @hf/meta-llama/meta-llama-3-8b-instruct, @cf/meta/llama-2-7b-chat-int8, @cf/meta/llama-2-7b-chat-fp16, @cf/mistral/mistral-7b-instruct-v0.1, @hf/mistral/mistral-7b-instruct-v0.2, @hf/google/gemma-7b-it, @cf/google/gemma-3-12b-it, @hf/nousresearch/hermes-2-pro-mistral-7b, @cf/microsoft/phi-2, @cf/defog/sqlcoder-7b-2, @cf/unum/uform-gen2-qwen-500m, @cf/facebook/bart-large-cnn and @cf/moonshotai/kimi-k2.5. On 2026-10-15, Cloudflare's model catalog still listed @cf/meta/llama-3.1-8b-instruct-fp8, @cf/meta/llama-3.3-70b-instruct-fp8-fast and the -lora variants, but no longer listed @cf/meta/llama-3.1-8b-instruct-fast; llama-3.1-8b-instruct-fp8 and the -lora variants are among the 24 models removed on 2026-11-20. Cloudflare's suggested replacements were @cf/zai-org/glm-4.7-flash, @cf/google/gemma-4-26b-a4b-it and @cf/moonshotai/kimi-k2.6, which is itself removed on 2026-11-20. Since 2026-05-30, requests to @cf/moonshotai/kimi-k2.5 go to @cf/moonshotai/kimi-k2.6, which costs more and requires the Workers Paid plan or prepaid AI Gateway credits; without them, requests get HTTP 403 (error 5035).",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
       "tags": [
@@ -5394,6 +5400,12 @@
           "url": "https://posthog.com/docs/self-driving/pricing",
           "read_on": "2026-11-10",
           "operating_detail": true
+        },
+        {
+          "text": "The Free plan keeps events for 1 year. Organizations that start a paid plan on or after November 5, 2026, including upgrades from Free, keep events for 2 years by default (up to 3, 5 or 7 years with the Boost, Scale or Enterprise package); paid plans started before then keep 7 years.",
+          "quote": "Your retention period changes to 1 year, the only period the Free plan offers.",
+          "url": "https://posthog.com/docs/data/events-retention",
+          "read_on": "2026-11-11"
         }
       ]
     },
@@ -14346,7 +14358,7 @@
       "category": "AI / ML",
       "description": "Integration platform for AI Agents and LLMs — Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
       "tier": "Free",
-      "url": "https://composio.dev/pricing",
+      "url": "https://composio.dev/pricing/platform",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -14379,14 +14391,20 @@
         {
           "text": "On the free Hobby plan, calls stop at the monthly limit and Composio does not charge overage.",
           "quote": "The Hobby plan stops at your included limit, so we won't charge you unexpectedly.",
-          "url": "https://composio.dev/pricing",
-          "read_on": "2026-10-20"
+          "url": "https://composio.dev/pricing/platform",
+          "read_on": "2026-11-11"
         },
         {
-          "text": "Tool calls and trigger events made through Composio-managed apps count only up to 20,000 of the 100,000 free tool calls and 10,000 of the 50,000 free trigger events a month; your own OAuth app gets the full allowance.",
-          "quote": "Up to 20K of your 100K free, then $0.0005 / tool call",
-          "url": "https://composio.dev/pricing",
-          "read_on": "2026-10-20"
+          "text": "Of the 100,000 free tool calls a month, up to 20,000 can use Composio-managed apps; calls through your own app, API key or MCP server can use the full allowance.",
+          "quote": "Up to 20,000 of these can use Composio-managed apps.",
+          "url": "https://composio.dev/pricing/platform",
+          "read_on": "2026-11-11"
+        },
+        {
+          "text": "Of the 50,000 free trigger events a month, up to 10,000 can use Composio-managed apps.",
+          "quote": "Up to 10,000 can use Composio-managed apps.",
+          "url": "https://composio.dev/pricing/platform",
+          "read_on": "2026-11-11"
         }
       ]
     },
@@ -15159,7 +15177,7 @@
     {
       "vendor": "ipapi.is",
       "category": "Dev Utilities",
-      "description": "A reliable IP Address API from Developers for Developers with the best Hosting Detection capabilities that exist. The free plan offers 1000 lookups without signup.",
+      "description": "IP address API with geolocation, ASN and company data and hosting, VPN, proxy, Tor and abuser detection. A free account (API key, no card) gets 1,000 lookups a day with the full response, commercial use included. Without a key, 30 lookups per client IP per UTC day return ownership and location only.",
       "tier": "Free",
       "url": "https://ipapi.is/",
       "tags": [
@@ -15176,7 +15194,21 @@
         "text": "The free plan with 1,000 free daily requests covers most use cases — full API output, commercial use included , no subscription required.",
         "url": "https://ipapi.is/",
         "read_on": "2026-11-11"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Without an API key, lookups are capped at 30 per client IP per UTC day and return ten fields (owner and location). Since September 1, 2026 the VPN, proxy, Tor, hosting and abuser flags need a key, and bulk and ASN lookups are refused without one.",
+          "quote": "Anonymous use is capped at 30 lookups per client IP per UTC day.",
+          "url": "https://ipapi.is/free-tier.html",
+          "read_on": "2026-11-11"
+        },
+        {
+          "text": "Since September 21, 2026 the free account's 1,000 requests a day may be used in commercial products; it is not a trial. One account per person or company.",
+          "quote": "The free tier is explicitly free for commercial use.",
+          "url": "https://ipapi.is/changelog.html",
+          "read_on": "2026-11-11"
+        }
+      ]
     },
     {
       "vendor": "ipbase.com",
@@ -39792,7 +39824,7 @@
     {
       "vendor": "Together AI",
       "category": "AI / ML",
-      "description": "Inference API for open-source models, billed per token. Together AI does not currently offer free trials; access requires a minimum $15 credit purchase for an organization's first purchase ($5 for later purchases), and the platform is fully prepaid. gpt-oss-120B $0.15/$0.60 (per 1M tokens). Together deprecated Llama 3.3 70B (meta-llama/Llama-3.3-70B-Instruct-Turbo) and removed it from serverless inference on 2026-10-22; Together's deprecations page (docs.together.ai/docs/deprecations) recommends meta-models/Muse-Glimmer-30B ($0.35/$1.50) or a dedicated endpoint instead. Together also removed deepseek-ai/DeepSeek-V4-Flash-0731 from serverless on 2026-10-22; its recommended replacement, deepseek-ai/DeepSeek-V4.1-Flash, costs $0.30/$1.20. DeepSeek V4 Pro is served today as deepseek-ai/DeepSeek-V4-Pro-0813 ($1.32/$3.96); the earlier ID deepseek-ai/DeepSeek-V4-Pro was removed on 2026-08-27. Together AI serverless serves Kimi K3 (moonshotai/Kimi-K3) at $3.00/$15.00 and Kimi K3.1 Pro (moonshotai/Kimi-K3.1-Pro) at $2.00/$10.00; moonshotai/Kimi-K2.7-Code was removed on 2026-08-27, moonshotai/Kimi-K2.6 on 2026-08-19 and moonshotai/Kimi-K2.5 on 2026-05-21. Together also removed these models from serverless inference in 2026, so requests for them fail: openai/gpt-oss-20b on 2026-09-15 (Together recommends Qwen/Qwen3.5-9B); google/gemma-4-31B-it on 2026-09-15 (recommended: zai-org/GLM-5.3-Flash); zai-org/GLM-5.1 on 2026-07-10; Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8 on 2026-06-04; deepseek-ai/DeepSeek-R1 on 2026-05-14; deepseek-ai/DeepSeek-V3.1 on 2026-05-14; meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8 on 2026-03-31; meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo on 2026-03-06; meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo on 2026-02-25; meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo on 2026-02-06; meta-llama/Llama-4-Scout-17B-16E-Instruct on 2026-02-06. Together's deprecations page says a model can still appear in catalog listings during a transition, and that the runtime API and that page are the source of truth.",
+      "description": "Inference API for open-source models, billed per token. Together AI does not currently offer free trials; access requires a minimum $15 credit purchase for an organization's first purchase ($5 for later purchases), and the platform is fully prepaid. gpt-oss-120B $0.15/$0.60 (per 1M tokens). Together deprecated Llama 3.3 70B (meta-llama/Llama-3.3-70B-Instruct-Turbo) and removed it from serverless inference on 2026-10-22; Together's deprecations page (docs.together.ai/docs/deprecations) recommends meta-models/Muse-Glimmer-30B ($0.35/$1.50) or a dedicated endpoint instead. Together also removed deepseek-ai/DeepSeek-V4-Flash-0731 from serverless on 2026-10-22; its recommended replacement, deepseek-ai/DeepSeek-V4.1-Flash, costs $0.30/$1.20. DeepSeek V4 Pro is served today as deepseek-ai/DeepSeek-V4-Pro-0813 ($1.32/$3.96); the earlier ID deepseek-ai/DeepSeek-V4-Pro was removed on 2026-08-27. Together AI serverless serves Kimi K3 (moonshotai/Kimi-K3) at $3.00/$15.00 and Kimi K3.1 Pro (moonshotai/Kimi-K3.1-Pro) at $2.00/$10.00; moonshotai/Kimi-K2.7-Code was removed on 2026-08-27, moonshotai/Kimi-K2.6 on 2026-08-19 and moonshotai/Kimi-K2.5 on 2026-05-21. Together removed MiniMaxAI/MiniMax-M3 and thinkingmachines/Inkling from serverless inference on 2026-11-06; its deprecations page recommends MiniMaxAI/MiniMax-M3.1-Flash ($0.15/$0.60) and meta-models/Muse-Spark-Open-816B-A42B ($1.25/$4.25). It removed Qwen/Qwen3.8-2.4T-A95B on 2026-11-04 and recommends Qwen/Qwen3.7-Max ($2.50/$7.50); the old model is not offered on dedicated endpoints. Together also removed these models from serverless inference in 2026, so requests for them fail: openai/gpt-oss-20b on 2026-09-15 (Together recommends Qwen/Qwen3.5-9B); google/gemma-4-31B-it on 2026-09-15 (recommended: zai-org/GLM-5.3-Flash); zai-org/GLM-5.1 on 2026-07-10; Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8 on 2026-06-04; deepseek-ai/DeepSeek-R1 on 2026-05-14; deepseek-ai/DeepSeek-V3.1 on 2026-05-14; meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8 on 2026-03-31; meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo on 2026-03-06; meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo on 2026-02-25; meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo on 2026-02-06; meta-llama/Llama-4-Scout-17B-16E-Instruct on 2026-02-06. Together's deprecations page says a model can still appear in catalog listings during a transition, and that the runtime API and that page are the source of truth.",
       "conditions": [
         {
           "text": "By default, Together stores prompts and responses and may use them for product improvements. Organization admins can turn storage off in privacy settings, enabling zero data retention.",
