@@ -37,7 +37,7 @@ const LEDES_LISTING_WHAT_THE_PAGE_COMPARES = ["/hosting-pricing", "/serverless-f
 const PICKS_NO_LONGER_MADE: Record<string, { withdrawn: string[]; served: string[] }> = {
   "/serverless-free-tier-comparison-2026": {
     withdrawn: ["Quick scripts and prototypes → Val Town or Deno Deploy", "Deno Deploy: full TypeScript runtime with Web APIs"],
-    served: ["Quick scripts and prototypes → Val Town Val Town: write a function, get a URL. 100K runs/day free with MCP integration, and instant deployment with no build step."],
+    served: ["Quick scripts and prototypes → Cloudflare Workers Cloudflare Workers: write a function in the Cloudflare dashboard and get a workers.dev URL."],
   },
   "/hosting-alternatives": {
     withdrawn: ["Deno Deploy for TypeScript-native."],

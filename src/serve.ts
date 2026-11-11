@@ -1,3 +1,4 @@
+import { measuredValue, quantifiedAttributes } from "./quantity-reading.js";
 import { announcementsInWeek, weeklyAnnouncementNote, weeklyAnnouncementHeading, announcementDateLabel, WEEKLY_ANNOUNCEMENTS_INTRO } from "./weekly-announcements.js";
 import { createServer as createHttpServer, ServerResponse, type IncomingMessage } from "node:http";
 import { readFileSync, existsSync, statSync, writeFileSync, writeSync } from "node:fs";
@@ -37655,6 +37656,12 @@ function buildServerlessFreeTierComparison2026Page(): string {
   const title = "Serverless Free Tier Comparison 2026 — AWS Lambda vs Cloud Functions vs Azure Functions vs Workers";
   const metaDescServerless = "Side-by-side comparison of 10+ serverless free tiers in 2026. Compare AWS Lambda, Google Cloud Functions, Azure Functions, Cloudflare Workers, Deno Deploy, Cloud Run, Val Town, and more — invocations, compute, cold starts, and billing models.";
   const slug = "serverless-free-tier-comparison-2026";
+  const workers = offers.find(offer => offer.vendor === "Cloudflare Workers" && offer.tier === "Free");
+  const workersRequests = quantifiedAttributes(workers?.description.split(/\.\s|;/, 1)[0]).find(quantity =>
+    quantity.words.includes("request") && quantity.period?.unit === "day" &&
+    Number(quantity.period.count ?? 1) === 1 && !quantity.scope
+  );
+  const workersFreeRequests = workersRequests ? measuredValue(workersRequests) : null;
   const pubDate = "2026-03-31";
 
   const serverlessVendorKeywords = ["Vercel", "Cloudflare Workers", "Cloudflare Durable Objects", "Cloudflare Queues", "Deno Deploy", "Val Town", "Google Cloud", "AWS", "Azure", "Cloud Run", "Lambda", "Cloud Functions", "Azure Functions", "DBOS", "Inngest", "Trigger.dev"];
@@ -38121,7 +38128,7 @@ ${globalNavCss()}
         <td>100K runs/day, unlimited public vals</td>
         <td>Script-as-a-service, shareable functions</td>
         <td>SQLite storage, blob storage</td>
-        <td>Quick scripts, prototypes, public APIs, MCP servers</td>
+        <td>Existing vals until January 10, 2027; no new signups</td>
       </tr>
       <tr>
         <td class="provider-col">DBOS</td>
@@ -38156,7 +38163,7 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>Val Town</strong> is the easiest way to get serverless functions running — write a function, get a URL, share it with anyone. Great for prototyping and small tools. <strong>DBOS</strong> solves a hard problem: durable, exactly-once execution with transactional guarantees. <strong>Inngest</strong> and <strong>Trigger.dev</strong> both handle background jobs but with different models — Inngest is event-driven (runs on your serverless), Trigger.dev provides managed compute. <strong>Cloudflare Durable Objects</strong> uniquely enables stateful serverless at the edge.
+    <strong>Val Town</strong> is winding down: new signups ended on November 10, 2026, it becomes read-only on December 10, 2026, and all services end on January 10, 2027. <strong>DBOS</strong> solves a hard problem: durable, exactly-once execution with transactional guarantees. <strong>Inngest</strong> and <strong>Trigger.dev</strong> both handle background jobs but with different models — Inngest is event-driven (runs on your serverless), Trigger.dev provides managed compute. <strong>Cloudflare Durable Objects</strong> uniquely enables stateful serverless at the edge.
   </div>
 
   <h2 id="billing-gotcha">The Billing Gotcha: CPU-Time vs Wall-Clock-Time</h2>
@@ -38195,8 +38202,8 @@ ${globalNavCss()}
     </div>
 
     <div class="verdict-item">
-      <strong>Quick scripts and prototypes &rarr; Val Town</strong>
-      <p>Val Town: write a function, get a URL. 100K runs/day free with MCP integration, and instant deployment with no build step.</p>
+      <strong>Quick scripts and prototypes &rarr; Cloudflare Workers</strong>
+      <p>Cloudflare Workers: write a function in the Cloudflare dashboard and get a workers.dev URL. ${workersFreeRequests === null ? "See its listing for Free plan limits." : `The Free plan gives ${workersFreeRequests.toLocaleString("en-US")} requests a day.`}</p>
     </div>
 
     <div class="verdict-item">
