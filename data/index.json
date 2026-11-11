@@ -39606,9 +39606,9 @@
     {
       "vendor": "Google Gemini Embedding 2",
       "category": "AI / ML",
-      "description": "First natively multimodal embedding model — text, images, video, audio, and documents in a single embedding space. Enables cross-modal similarity search and retrieval. Available via Vertex AI and Gemini API.",
-      "tier": "Pay-as-you-go",
-      "url": "https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-text-embeddings",
+      "description": "Free of charge text, image, audio, and video input on the Gemini API free tier, with Google using the content to improve its products. Batch is not available on the free tier. Paid rates are $0.20 per 1M text tokens, $0.45 per 1M image tokens, $6.50 per 1M audio tokens, and $12.00 per 1M video tokens. Batch paid rates are $0.10 per 1M text tokens, $0.225 per 1M image tokens, $3.25 per 1M audio tokens, and $6.00 per 1M video tokens. The same paid rates apply on Google's Gemini Enterprise Agent Platform (formerly Vertex AI). It embeds text, images, video, audio, and PDFs into one embedding space.",
+      "tier": "Free",
+      "url": "https://ai.google.dev/gemini-api/docs/pricing",
       "tags": [
         "ai",
         "embeddings",
