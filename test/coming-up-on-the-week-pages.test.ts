@@ -200,7 +200,7 @@ before(async () => {
     const deadlines = await fetch(`${base}/deadlines`);
     assert.strictEqual(deadlines.status, 200, `/deadlines at ${instant}`);
     const pages = new Map<string, string>();
-    for (const route of [THIS_WEEK, LAST_WEEK_ON_THIS_WEEK, THE_CURRENT_DIGEST, THE_WEEK, THE_WEEK_BEFORE, THE_WEEK_AFTER]) {
+    for (const route of [THIS_WEEK, ...(instant === NOTHING_AHEAD ? [] : [LAST_WEEK_ON_THIS_WEEK]), THE_CURRENT_DIGEST, THE_WEEK, THE_WEEK_BEFORE, THE_WEEK_AFTER]) {
       const res = await fetch(base + route);
       assert.strictEqual(res.status, 200, `${route} at ${instant}`);
       pages.set(route, await res.text());

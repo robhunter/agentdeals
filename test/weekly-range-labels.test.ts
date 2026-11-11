@@ -89,11 +89,17 @@ describe("calendar ranges on weekly digest routes", () => {
         noteMatches(body, week.label);
       });
     }
-    it(`${week.start}: the weekly page labels its heading and discovery notes alike`, async () => {
-      const page = await read(`/this-week?week=${week.ago}`);
+    if (week.ago === 0) it(`${week.start}: the current weekly page labels its heading and discovery notes alike`, async () => {
+      const page = await read("/this-week");
       assert.ok(page.includes(`<span class="tw-date">${week.label}</span>`));
       noteMatches(page, week.label);
       assert.equal(page.split(`during ${week.label}`).length - 1, 2);
+    });
+    it(`${week.start}: its query offset redirects to the dated archive`, async () => {
+      const response = await fetch(`${base}/this-week?week=${week.ago}`, { redirect: "manual" });
+      assert.equal(response.status, 301);
+      assert.equal(response.headers.get("location"), `/digest/${week.slug}`);
+      assert.equal(await (await fetch(base + response.headers.get("location"), { redirect: "error" })).text(), await read(`/digest/${week.slug}`));
     });
     it(`${week.start}: the archive page and index share the full range`, async () => {
       const page = await read(`/digest/${week.slug}`);

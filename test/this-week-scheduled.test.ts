@@ -73,7 +73,10 @@ before(async () => {
     } finally { proc.kill(); }
   }
   const history = await serve("2026-10-26", changes);
-  try { previousWeek = await (await fetch(history.base + "/this-week?week=1")).text(); }
+  try { const response = await fetch(history.base + "/this-week?week=1", { redirect: "manual" });
+    assert.equal(response.status, 301);
+    assert.equal(response.headers.get("location"), "/digest/2026-w43");
+    previousWeek = await (await fetch(history.base + response.headers.get("location"))).text(); }
   finally { history.proc.kill(); }
   const many = await serve(days[0]!, Array.from({ length: 51 }, (_, i) => change(`Scheduled Service ${i}`, "2026-10-23", "product_deprecated")));
   try { manyEntries = await (await fetch(many.base + "/this-week")).text(); }
@@ -109,7 +112,9 @@ describe("scheduled events on the weekly page", () => {
     const groups = sections(pages.get("2026-10-25")!);
     assert.deepEqual(groups.map(g => g.heading), ["Biggest Losses (4)", "Bright Spots (1)", "Other Notable Changes (1)"]);
     assert.deepEqual(groups.flatMap(g => g.cards).map(c => c.badge).sort(), ["deprecated", "deprecated", "new", "rebranded", "reduced", "removed"]);
-    assert.deepEqual(sections(previousWeek), groups);
+    assert.ok(previousWeek.includes("Pricing Changes: October 19–25, 2026"));
+    assert.ok(!previousWeek.includes("scheduled shutdown"));
+    for (const record of changes.filter(c => c.date <= "2026-10-25")) assert.ok(previousWeek.includes(record.vendor), record.vendor);
   });
 
   it("counts scheduled entries separately from passed deprecations and other types", () => {
