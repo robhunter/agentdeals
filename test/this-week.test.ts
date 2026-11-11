@@ -99,19 +99,18 @@ describe("/this-week page", () => {
 
     });
     const html = await res.text();
-    assert.ok(html.includes("this-week?week=1"), "Should link to previous week");
+    assert.match(html, /href="\/digest\/\d{4}-w\d{2}">\&larr; Previous week/, "Should link to the archived previous week");
     assert.ok(html.includes("digest/archive"), "Should link to full archive");
   });
 
-  it("?week=1 returns previous week's digest", async () => {
+  it("?week=1 redirects to the archived previous week", async () => {
     proc = await startHttpServer();
-    const res = await fetch(`http://localhost:${serverPort}/this-week?week=1`, {
-
-    });
-    assert.strictEqual(res.status, 200);
-    const html = await res.text();
-    assert.ok(html.includes("Developer Pricing"), "Should have title");
-    assert.ok(html.includes("Current week") || html.includes("Next week"), "Should have forward navigation");
+    const res = await fetch(`http://localhost:${serverPort}/this-week?week=1`, { redirect: "manual" });
+    assert.strictEqual(res.status, 301);
+    assert.match(res.headers.get("location")!, /^\/digest\/\d{4}-w\d{2}$/);
+    const archive = await fetch(`http://localhost:${serverPort}${res.headers.get("location")}`, { redirect: "error" });
+    assert.strictEqual(archive.status, 200);
+    assert.ok((await archive.text()).includes("Pricing Changes:"));
   });
 
   it("page has global navigation with This Week active", async () => {

@@ -19152,6 +19152,41 @@
       "listing_effect": "none",
       "what_ends": "gpt-5.5-cyber-preview",
       "announced_on": "2026-11-05"
+    },
+    {
+      "vendor": "Val Town",
+      "change_type": "product_deprecated",
+      "date": "2026-11-10",
+      "discontinued_date": "2027-01-10",
+      "date_source": "vendor_page",
+      "summary": "Val Town can be used until January 10, 2027, when all its services end. Val Town announced on 2026-11-10 that it is winding down: new signups and plan upgrades ended that day, and Val Town becomes read-only on December 10, 2026, except SQLite and blob storage. Billing is paused, and existing subscriptions continue free until the end.",
+      "what_ends": "Val Town",
+      "listing_effect": "none",
+      "previous_state": "Val Town offered a Free plan (100,000 runs a day, 1 minute wall clock per run, unlimited public vals) and paid plans, with no announced end.",
+      "current_state": "\"We've made the difficult decision to wind down Val Town.\" Timeline: new signups and plan upgrades, Nov 10, 2026; read-only mode (not including sqlite and blob storage), Dec 10, 2026; all other services, Jan 10, 2027 (blog.val.town/winding-down). The pricing page reads \"Val Town is shutting down on January 10, 2027.\"",
+      "impact": "high",
+      "source_url": "https://blog.val.town/winding-down",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-11"
+    },
+    {
+      "vendor": "Google Gemini API",
+      "change_type": "pricing_restructured",
+      "date": "2026-12-01",
+      "summary": "Gemini 4 Carbon (gemini-4-carbon), generally available on the Gemini API since November 10, 2026, has introductory pricing through November 30, 2026. Standard input is $2.00 per million tokens through November 30, 2026, then $4.00 from December 1, 2026. Output is $10.00 then $20.00. Batch and Flex input is $1.00 then $2.00, output $5.00 then $10.00. Priority input is $3.60 then $7.20, output $18.00 then $36.00. It is not available on the Free tier.",
+      "previous_state": "Gemini 4 Carbon, paid tier, per 1M tokens, through November 30, 2026 (introductory pricing): Standard $2.00 input, $10.00 output, $0.10 context caching; Batch and Flex $1.00 input, $5.00 output; Priority $3.60 input, $18.00 output.",
+      "current_state": "From December 1, 2026: Standard $4.00 input, $20.00 output, $0.20 context caching; Batch and Flex $2.00 input, $10.00 output; Priority $7.20 input, $36.00 output. Gemini 4 Carbon is not available on the Free tier.",
+      "impact": "medium",
+      "source_url": "https://aistudio.google.com/docs/pricing#gemini-4-carbon",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-11",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "tier": "Paid Tier",
+      "tier_direction": "unchanged",
+      "announced_on": "2026-11-10"
     }
   ]
 }

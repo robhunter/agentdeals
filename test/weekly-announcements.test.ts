@@ -91,7 +91,7 @@ describe("weekly vendor announcements", () => {
       assert.equal(digest.changes_in_week, 2);
       assert.equal(digest.top_changes.length, 1);
       assert.ok(digest.headline.includes("across 2 developer tool pricing changes"));
-      for (const route of ["/this-week", "/this-week?week=0", "/digest/2026-w45"]) {
+      for (const route of ["/this-week", "/digest/2026-w45"]) {
         const html = await get(route);
         const section = announcedSection(html);
         assert.match(text(section), /Announced this week \(3\)/);
@@ -127,10 +127,10 @@ describe("weekly vendor announcements", () => {
       assert.ok(summary.indexOf("Middle Vendor") < summary.indexOf("Later Vendor"));
       assert.ok(entry.includes('<link href="https://example.com/Sooner-Vendor" rel="via"/>'));
       assert.ok(!entry.includes("2026-12-20T00:00:00"));
-      const previous = announcedSection(await get("/this-week?week=1"));
+      const previous = announcedSection(await get("/digest/2026-w44"));
       assert.ok(previous.includes("Last Week"));
       assert.ok(!previous.includes("Sooner Vendor"));
-      assert.ok(text(await get("/this-week?week=1")).includes("1 change announced this week takes effect later."));
+      assert.ok(text(await get("/digest/2026-w44")).includes("1 change announced this week takes effect later."));
       assert.ok(announcedSection(await get("/digest/2026-w44")).includes("Last Week"));
     });
   });
@@ -152,7 +152,7 @@ describe("weekly vendor announcements", () => {
     };
     await withServer(records, async get => {
       const expected = `1 product deprecated across 1 developer tool pricing change. ${sentence}`;
-      for (const route of ["/this-week", "/this-week?week=0", "/this-week?week=1"]) assertDescriptions(await get(route), expected);
+      for (const route of ["/this-week"]) assertDescriptions(await get(route), expected);
       for (const route of ["/digest/2026-w45", "/digest/2026-w44"]) {
         const html = await get(route);
         const description = unescapeXml(html.match(/<meta name="description" content="([^"]*)"/)![1]!);
