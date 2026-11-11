@@ -19187,6 +19187,23 @@
       "tier": "Paid Tier",
       "tier_direction": "unchanged",
       "announced_on": "2026-11-10"
+    },
+    {
+      "vendor": "Cloudflare Workers AI",
+      "change_type": "product_deprecated",
+      "date": "2026-11-20",
+      "summary": "Workers AI keeps running. Cloudflare removes 24 Workers AI models on November 20, 2026: they can be called until then, and from that date requests to them fail with HTTP 410 Gone (error code 5028). Language models: @cf/moonshotai/kimi-k2.6, @cf/moonshotai/kimi-k2.7-code, @cf/zai-org/glm-5.2, @cf/zai-org/glm-5.3-flash, @cf/deepseek-ai/deepseek-v4-flash-0731, @cf/deepseek-ai/deepseek-v4-pro-0813, @cf/deepseek-ai/deepseek-r1-distill-qwen-32b, @cf/nvidia/nemotron-3-120b-a12b, @cf/qwen/qwq-32b, @cf/qwen/qwen3-30b-a3b-fp8, @cf/meta/llama-3.1-8b-instruct-fp8, @cf/meta/llama-3.2-1b-instruct, @cf/meta/llama-3.2-3b-instruct, @cf/meta-llama/llama-2-7b-chat-hf-lora, @cf/google/gemma-2b-it-lora and @cf/google/gemma-7b-it-lora; Cloudflare recommends @cf/deepseek-ai/deepseek-v4.1-flash-1017 or @cf/zai-org/glm-5.3 for frontier model needs and @cf/google/gemma-4-26b-a4b-it or @cf/qwen/qwen3.8-27b for smaller ones. Other models, each with Cloudflare's replacement: @cf/myshell-ai/melotts (@cf/deepgram/aura-2-en); @cf/stabilityai/stable-diffusion-xl-base-1.0, @cf/runwayml/stable-diffusion-v1-5-inpainting, @cf/bytedance/stable-diffusion-xl-lightning and @cf/lykon/dreamshaper-8-lcm (@cf/black-forest-labs/flux-2-klein-9b); @cf/openai/whisper-tiny-en (@cf/deepgram/nova-3); @cf/llava-hf/llava-1.5-7b-hf (@cf/moondream/moondream3.1-9B-A2B); @cf/google/embeddinggemma-300m (@cf/google/embeddinggemma-2, not yet available).",
+      "previous_state": "The 24 models could be called on Workers AI with no removal date; six of them (kimi-k2.6, kimi-k2.7-code, glm-5.2, glm-5.3-flash, deepseek-v4-flash-0731 and deepseek-v4-pro-0813) only on the Workers Paid plan or with prepaid AI Gateway credits.",
+      "current_state": "Cloudflare's changelog post of 2026-11-05, \"Planned model deprecations on Workers AI\": \"Update your apps to remove references to the models listed below before November 20, 2026. We originally stated these models would be deprecated on November 15, 2026, and have moved the deprecation date to November 20, 2026.\" and \"Starting November 20, 2026, these models will stop returning responses. Requests to them will fail with an HTTP 410 Gone error and error code 5028.\"",
+      "impact": "medium",
+      "source_url": "https://developers.cloudflare.com/changelog/post/2026-11-05-planned-model-deprecations/",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-11",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "24 Workers AI models, including kimi-k2.6, glm-5.2, llama-3.2-3b-instruct and whisper-tiny-en",
+      "announced_on": "2026-11-05"
     }
   ]
 }
