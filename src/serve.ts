@@ -42644,7 +42644,7 @@ ${globalNavCss()}
 
   <div class="executive-summary">
     <p><strong>Quick verdict:</strong> <strong>PostHog</strong> offers 1M events/month free plus 5K session replays, 1M feature flag evaluations, and experiments. <strong>Mixpanel</strong> matches with 1M events/month on a polished behavioral analytics UI. <strong>Amplitude</strong> gives 2M events/month free, with 1 year of data access. <strong>Google Analytics</strong> is unlimited and free but comes with privacy trade-offs and data sampling. For privacy-focused analytics, <strong>Plausible</strong> and <strong>Umami</strong> are the leading options (self-hosted free, cloud plans paid).</p>
-    <p><strong>The all-in-one shift:</strong> PostHog has redefined the category by bundling analytics, session replays, feature flags, experiments, and surveys into one platform with a generous free tier. Mixpanel and Amplitude remain focused on behavioral analytics, while the privacy-focused segment (Plausible, Fathom, Umami) targets teams that need GDPR compliance without cookie banners.</p>
+    <p><strong>The all-in-one shift:</strong> PostHog and Amplitude both bundle analytics, session replays, feature flags, experiments and surveys into their free plans. Mixpanel's free plan has analytics, session replays, heatmaps, experiments and feature flags, but no surveys. The privacy-focused segment (Plausible, Fathom, Umami) targets teams that need GDPR compliance without cookie banners.</p>
   </div>
 
   <div class="toc">
@@ -42883,7 +42883,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>PostHog &mdash; The All-in-One Standard</h3>
-    <div class="diff-desc">Both PostHog and Amplitude offer analytics, session replays, feature flags, A/B testing, and surveys in a single free tier. Instead of stitching together Mixpanel (analytics) + FullStory (replays) + LaunchDarkly (flags) + Optimizely (experiments), PostHog does it all. The trade-off: each individual module may not be best-in-class (Mixpanel's behavioral analytics UI is more polished, FullStory's replays are richer), but the integration advantage is substantial. One SDK, one data model, one billing meter.</div>
+    <div class="diff-desc">Both PostHog and Amplitude offer analytics, session replays, feature flags, A/B testing, and surveys in a single free tier. The trade-off: each individual module may not be best-in-class (Mixpanel's behavioral analytics UI is more polished, FullStory's replays are richer), but the integration advantage is substantial. One SDK, one data model, one billing meter.</div>
   </div>
 
   <div class="context-box">
@@ -43051,7 +43051,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Best behavioral analytics &rarr; Mixpanel</strong>
-      <p>1M events free, with data kept 2 years by default. The most polished UI for funnels, retention, and cohort analysis. Focused on doing behavioral analytics exceptionally well rather than bundling everything.</p>
+      <p>1M events free, with data kept 2 years by default. The most polished UI for funnels, retention, and cohort analysis.</p>
     </div>
 
     <div class="verdict-item">
