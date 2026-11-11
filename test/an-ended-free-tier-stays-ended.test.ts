@@ -242,7 +242,7 @@ describe("the vendor page heading states the ending its badge states", () => {
       fetch(`http://localhost:${port}/vendor/${slug}`).then((r) => r.text()),
       fetch(`http://localhost:${port}/badge/${slug}.svg`).then((r) => r.text()),
     ]);
-    const h1 = page.match(/<h1>([\s\S]*?)<\/h1>/)?.[1] ?? "";
+    const h1 = page.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)?.[0] ?? "";
     const heading = h1.match(/<span class="risk-badge"[^>]*>([^<]*)<\/span>/)?.[1] ?? null;
     const causeLine = page.match(/<p class="risk-cause-line"[^>]*><strong[^>]*>([^<]*)<\/strong> <span class="risk-cause-date"[^>]*>([^<]*)<\/span>/);
     const lapseLine = page.match(/<p class="verdict-lapse-line"[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? null;

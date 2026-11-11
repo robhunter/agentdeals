@@ -77,7 +77,7 @@ function reliabilityAnswerOf(html: string): string {
 }
 
 function headingBadgeOf(html: string): string | null {
-  const heading = html.match(/<h1>([\s\S]*?)<\/h1>/)?.[1] ?? "";
+  const heading = html.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)?.[0] ?? "";
   return heading.match(/<span class="risk-badge"[^>]*>([^<]*)<\/span>/)?.[1] ?? null;
 }
 

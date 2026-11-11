@@ -232,9 +232,9 @@ describe("#1389 the badge withholds wherever the vendor page withholds", () => {
       for (const subject of group.slice(0, 3)) {
         const { status, text } = await get(`/vendor/${subject.slug}`);
         if (status !== 200) { wrong.push(`/vendor/${subject.slug} returned ${status}`); continue; }
-        const h1 = text.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+        const h1 = text.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)?.[0] ?? "";
         if (/risk-badge/.test(h1)) {
-          wrong.push(`/vendor/${subject.slug} carries a risk badge in its <h1> and /badge/${subject.slug}.svg withholds for ${reason}`);
+          wrong.push(`/vendor/${subject.slug} carries a risk badge beside its heading and /badge/${subject.slug}.svg withholds for ${reason}`);
         }
         if (subject.levelWithheld && !statesTheReason(text, subject.levelWithheld, subject.vendor)) {
           wrong.push(`/vendor/${subject.slug} never states the ${subject.levelWithheld} reason the badge names`);
@@ -253,7 +253,7 @@ describe("#1389 the badge withholds wherever the vendor page withholds", () => {
     const missing: string[] = [];
     for (const subject of sample) {
       const { text } = await get(`/vendor/${subject.slug}`);
-      const h1 = text.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+      const h1 = text.match(/<h1>[\s\S]*?<\/h1>(?:\s*<span class="risk-badge"[^>]*>[^<]*<\/span>)?/)?.[0] ?? "";
       if (!/risk-badge/.test(h1)) missing.push(`/vendor/${subject.slug} publishes no badge and /badge/${subject.slug}.svg reads ${subject.word}`);
     }
     assert.deepStrictEqual(missing, [], missing.join("\n"));
