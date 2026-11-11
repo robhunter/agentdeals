@@ -15171,7 +15171,7 @@
     {
       "vendor": "ipapi.is",
       "category": "Dev Utilities",
-      "description": "A reliable IP Address API from Developers for Developers with the best Hosting Detection capabilities that exist. The free plan offers 1000 lookups without signup.",
+      "description": "IP address API with geolocation, ASN and company data and hosting, VPN, proxy, Tor and abuser detection. A free account (API key, no card) gets 1,000 lookups a day with the full response, commercial use included. Without a key, 30 lookups per client IP per UTC day return ownership and location only.",
       "tier": "Free",
       "url": "https://ipapi.is/",
       "tags": [
@@ -15188,7 +15188,21 @@
         "text": "The free plan with 1,000 free daily requests covers most use cases — full API output, commercial use included , no subscription required.",
         "url": "https://ipapi.is/",
         "read_on": "2026-11-11"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Without an API key, lookups are capped at 30 per client IP per UTC day and return ten fields (owner and location). Since September 1, 2026 the VPN, proxy, Tor, hosting and abuser flags need a key, and bulk and ASN lookups are refused without one.",
+          "quote": "Anonymous use is capped at 30 lookups per client IP per UTC day.",
+          "url": "https://ipapi.is/free-tier.html",
+          "read_on": "2026-11-11"
+        },
+        {
+          "text": "Since September 21, 2026 the free account's 1,000 requests a day may be used in commercial products; it is not a trial. One account per person or company.",
+          "quote": "The free tier is explicitly free for commercial use.",
+          "url": "https://ipapi.is/changelog.html",
+          "read_on": "2026-11-11"
+        }
+      ]
     },
     {
       "vendor": "ipbase.com",
