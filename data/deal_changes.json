@@ -19345,19 +19345,19 @@
     {
       "vendor": "Google Jules",
       "change_type": "product_deprecated",
-      "date": "2026-10-29",
-      "discontinued_date": "2026-12-31",
-      "date_source": "vendor_page",
+      "date": "2026-12-31",
       "summary": "Jules, Google's asynchronous coding agent, has been read-only since November 11, 2026, and winds down on December 31, 2026. Google announced this on 2026-10-29, giving users until November 11, 2026 to finish their sessions. Code, branches and pull requests Jules created stay in GitHub; settings, memories and session histories can be exported to a local folder.",
-      "what_ends": "Google Jules",
-      "listing_effect": "none",
       "previous_state": "Jules took new coding sessions on connected GitHub repositories, with no announced end.",
       "current_state": "Jules changelog, \"Jules Turndown\", October 29, 2026 (read 2026-11-12): \"Jules will wind down on December 31, 2026. You have until November 11, 2026 to continue finishing up sessions. After November 11, 2026, we will be turning Jules to read-only until the end of the year.\"",
       "impact": "high",
       "source_url": "https://jules.google/docs/changelog",
       "category": "AI Coding",
       "alternatives": [],
-      "recorded_date": "2026-11-12"
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Google Jules",
+      "announced_on": "2026-10-29"
     }
   ]
 }
