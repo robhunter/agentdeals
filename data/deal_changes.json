@@ -19508,6 +19508,22 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "what_ends": "HCP Vagrant and the Vagrant Public Registry"
+    },
+    {
+      "vendor": "Stackify Retrace",
+      "change_type": "product_deprecated",
+      "date": "2027-03-31",
+      "summary": "Stackify Retrace, BMC Helix's SaaS application performance monitoring service, is in maintenance mode until its end of life on March 31, 2027: no new features, only critical fixes and security updates. After March 31, 2027, customers cannot log in, send data or access stored data, so anything worth keeping must be exported before then. Stackify Prefix itself is not being shut down on that date; only Premium support for Prefix ends. BMC Helix recommends Retrace customers move to BMC Helix AIOps with OpenTelemetry.",
+      "previous_state": "Stackify Retrace offered hosted application performance monitoring, with no announced end.",
+      "current_state": "BMC Helix's \"Stackify Retrace End of Life Announcement\" (read 2026-11-12): \"Stackify Retrace will officially reach End of Life on March 31, 2027. Until that date, the product will remain in maintenance mode, meaning: No new features will be introduced. Critical fixes and security updates will be provided as needed.\" \"because Stackify is a SaaS-only product, it will no longer be available or accessible after March 31, 2027. Customers will not be able to log in to the service, ingest data, or access stored information after this date.\" \"Customers are responsible for exporting any data they wish to retain prior to the End of Life date.\" Its \"Stackify Prefix Premium End of Life Announcement\" (read 2026-11-12): \"Stackify Prefix functionality is not being shut down on March 31, 2027. Customers are expected to be able to continue using Prefix beyond this date. However, Premium support for Stackify Prefix will be discontinued\". The Internet Archive holds the same Retrace notice and date from 2026-04-03.",
+      "impact": "high",
+      "source_url": "https://docs.stackify.com/docs/stackify-end-of-life-customer-letter",
+      "category": "Monitoring",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Stackify Retrace"
     }
   ]
 }
