@@ -805,7 +805,8 @@
       "source_url": "https://www.trychroma.com/pricing",
       "record_date": "2026-09-07",
       "change_type": "pricing_model_change",
-      "summary": "The free tier has changed. The current pricing page shows a Starter plan with $5 in free credits and usage-based pricing for writes, storage, and queries."
+      "summary": "The free tier has changed. The current pricing page shows a Starter plan with $5 in free credits and usage-based pricing for writes, storage, and queries.",
+      "reverted_on": "2026-11-12"
     },
     {
       "vendor": "Weights & Biases",
