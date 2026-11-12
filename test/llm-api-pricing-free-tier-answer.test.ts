@@ -96,7 +96,7 @@ describe("the LLM API free-tier answer follows its provider listings", () => {
     }));
     noApi = await serve(fixture({ "Mistral AI": "Free", OpenAI: "Free", "Anthropic API": "Community", Baseten: "Free" }, {
       "Mistral AI": "Free mode covers Vibe and Studio and does not include API access.",
-      OpenAI: "Free plan: no API access.",
+      OpenAI: "Free plan: NO API ACCESS.",
       "Anthropic API": "The Free plan does not include API access.",
       Baseten: "Free API access.",
     }));
@@ -138,6 +138,9 @@ describe("the LLM API free-tier answer follows its provider listings", () => {
 
   it("requires API access as well as a free product plan, regardless of the vendor", () => {
     assert.deepEqual(namesIn(noApi), ["Baseten"]);
+    const generous = noApi.match(/<div class="stat-number green">(\d+)<\/div><div class="stat-label">Generous Free Tier/);
+    assert.ok(generous);
+    assert.equal(Number(generous[1]), 0);
   });
 
   it("does not keep a provider whose listing is missing", () => {
