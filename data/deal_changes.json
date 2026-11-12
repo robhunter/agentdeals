@@ -19329,7 +19329,7 @@
       "vendor": "Google Programmable Search Engine",
       "change_type": "product_deprecated",
       "date": "2027-01-01",
-      "summary": "Existing customers can call Google's Custom Search JSON API until January 1, 2027, when Google discontinues it. It has been closed to new customers since January 20, 2026. Programmable Search Engine engines set to search the entire web, or more than 50 domains, can do so until the same date. Google names Vertex AI Search as the alternative for up to 50 domains.",
+      "summary": "Existing customers can call Google's Custom Search JSON API until January 1, 2027, when Google discontinues it. It is closed to new customers. Programmable Search Engine engines set to search the entire web, or more than 50 domains, can do so until the same date. Google names Vertex AI Search as the alternative for up to 50 domains.",
       "previous_state": "Existing customers could call the Custom Search JSON API with 100 free queries a day, then $5 per 1,000 queries up to 10,000 a day.",
       "current_state": "Google's Custom Search JSON API overview (read 2026-11-12): \"The following pricing applies only to existing Custom Search JSON API customers until the service discontinuation on January 1, 2027. This API is not available for new customers.\" Google's Programmable Search Engine blog, 2026-01-20: \"Your transition to an alternative solution needs to be completed by January 1, 2027.\"",
       "impact": "high",
