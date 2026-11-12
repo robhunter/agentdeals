@@ -12080,7 +12080,7 @@
     {
       "vendor": "Chroma",
       "category": "Databases",
-      "description": "Open-source AI-native embedding database — Starter plan per month + $5 in free credits. Write per GiB written $2.50, Storage per GiB per month $0.33, Query per TiB queried $0.0075, Network per GiB returned $0.09. Starter plan includes 10 databases and 10 team members.",
+      "description": "Open-source AI-native embedding database (Apache 2.0). Chroma Cloud, its hosted service, is winding down: read-only from December 7, 2026, no reads from December 22, 2026. Until then, Chroma Cloud's Starter plan is $0 a month plus usage, with $5 in free credits. Write per GiB written $2.50, Storage per GiB per month $0.33, Query per TiB queried $0.0075, Network per GiB returned $0.09. Starter plan includes 10 databases and 10 team members.",
       "tier": "Open Source",
       "url": "https://www.trychroma.com/pricing",
       "tags": [
@@ -12124,6 +12124,12 @@
           "quote": "Both result in a pausing of the service until the limit is changed.",
           "url": "https://www.trychroma.com/pricing",
           "read_on": "2026-10-07"
+        },
+        {
+          "text": "Chroma Cloud is winding down: it becomes read-only on December 7, 2026, and stops serving reads on December 22, 2026, so data must be exported before then. Open-source ChromaDB stays available under the Apache 2.0 license.",
+          "quote": "Chroma Cloud is winding down over the next 60 days.",
+          "url": "https://www.trychroma.com/cloud-wind-down",
+          "read_on": "2026-11-12"
         }
       ],
       "free_plan_excerpt": {
@@ -18084,7 +18090,7 @@
     {
       "vendor": "Solo",
       "category": "Headless CMS",
-      "description": "Free AI website creator from Mozilla, create a beautiful website for your business from a few simple inputs. Free custom domain, no credit card needed.",
+      "description": "Free AI website creator from Mozilla, shutting down: all Solo websites and data are deleted on November 30, 2026. Free custom domain, no credit card needed.",
       "tier": "Free",
       "url": "https://soloist.ai",
       "tags": [
@@ -18098,7 +18104,15 @@
         "checked": "2026-10-06",
         "outcome": "states_no_terms",
         "detail": "the page names Solo but states no amount, tier or rate we can read, and its markup carries no structured data"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Solo is shutting down: all Solo websites and data are deleted on November 30, 2026, with no way to recover them afterwards. Before then, Solo sends each site's owner a ZIP with an HTML export of the site; image source files must be downloaded separately.",
+          "quote": "All Solo websites and data will be deleted on November 30, 2026.",
+          "url": "https://support.soloist.ai/doc/solo-shutdown-faq",
+          "read_on": "2026-11-12"
+        }
+      ]
     },
     {
       "vendor": "Squidex",

@@ -19392,6 +19392,56 @@
       "listing_effect": "none",
       "what_ends": "Conductor Cloud",
       "announced_on": "2026-11-04"
+    },
+    {
+      "vendor": "OpenAI custom GPTs",
+      "change_type": "product_deprecated",
+      "date": "2026-12-11",
+      "summary": "On December 11, 2026, OpenAI retires custom GPTs on every ChatGPT plan, and custom GPTs and their GPT pages become inaccessible. FedRAMP workspaces and Enterprise workspaces with an approved deferral keep them until February 11, 2027. Existing GPTs keep working until the retirement date. A creator can migrate a GPT to a ChatGPT plugin, which carries its instructions, knowledge files and connected apps but not its custom actions; replacing a custom action may need a custom MCP server. Conversations with custom GPTs stay accessible after retirement.",
+      "previous_state": "Custom GPTs could be built, shared and used in ChatGPT, including custom actions that call outside APIs, with no announced end.",
+      "current_state": "OpenAI's Custom GPT retirement and migration FAQ (read 2026-11-12): \"Custom GPTs are scheduled to retire on Dec 11, 2026. FedRAMP workspaces and affected Enterprise workspaces with a qualifying, approved deferral have a retirement date of Feb 11, 2027.\" \"At the applicable retirement date, custom GPTs and their GPT pages become inaccessible.\" \"GPT custom actions do not transfer through the migration workflow.\"",
+      "impact": "high",
+      "source_url": "https://help.openai.com/en/articles/20001519-custom-gpt-retirement-and-migration-faq",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "custom GPTs in ChatGPT"
+    },
+    {
+      "vendor": "Solo",
+      "change_type": "product_deprecated",
+      "date": "2026-10-01",
+      "discontinued_date": "2026-11-30",
+      "date_source": "vendor_page",
+      "summary": "Solo can be used until November 30, 2026, when all Solo websites and data are deleted, with no way to recover a site, account or data afterwards. Solo announced on 2026-10-01 that it is shutting down. Solo sends each site's owner a ZIP with an HTML export of the site, a CSV of links to its images, and its contact form and newsletter submissions; image source files are not in the ZIP and must be downloaded one by one. Pro and Grow subscriptions get a prorated refund calculated as of October 1, 2026, and do not renew.",
+      "what_ends": "Solo",
+      "listing_effect": "none",
+      "previous_state": "Solo offered a free AI website builder with a free custom domain and no card needed, with no announced end.",
+      "current_state": "Solo Shutdown FAQ, initial notice October 1, 2026 (support.soloist.ai, read 2026-11-12): \"All Solo websites and data will be deleted on November 30, 2026. There will be no way to recover your site, account, or data after that date.\"",
+      "impact": "high",
+      "source_url": "https://support.soloist.ai/doc/solo-shutdown-faq",
+      "category": "Headless CMS",
+      "alternatives": [],
+      "recorded_date": "2026-11-12"
+    },
+    {
+      "vendor": "Chroma",
+      "change_type": "product_deprecated",
+      "date": "2026-12-22",
+      "date_source": "vendor_page",
+      "summary": "On December 7, 2026, Chroma Cloud becomes read-only: applications can no longer create, update or delete data in it. On December 22, 2026, Chroma Cloud stops serving reads, so data must be exported before then. Open-source ChromaDB keeps running under the Apache 2.0 license. Chroma announced the wind-down on 2026-10-23, as it joins Replit.",
+      "what_ends": "Chroma Cloud",
+      "listing_effect": "none",
+      "previous_state": "Chroma Cloud, Chroma's hosted database, offered a Starter plan at $0 a month plus usage with $5 in free credits, with no announced end.",
+      "current_state": "Chroma Cloud wind-down timeline, published October 23, 2026 (trychroma.com, read 2026-11-12): \"December 7, 2026 — Writes disabled\", \"December 22, 2026 — Reads disabled\", and \"This transition applies only to the existing Chroma Cloud service. Open-source ChromaDB remains available under the Apache 2.0 license.\"",
+      "impact": "high",
+      "source_url": "https://www.trychroma.com/cloud-wind-down",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "announced_on": "2026-10-23"
     }
   ]
 }

@@ -3498,6 +3498,11 @@
           "label": "Recent Pricing Changes",
           "figures": 13,
           "from_records": 13
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
