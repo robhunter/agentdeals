@@ -168,10 +168,9 @@ function quotesAStoredSentence(sentence: string, at: number, end: number, stored
 
 type Scan = { violations: string[]; claimsRead: number; nonFreeVendorsNamed: Set<string> };
 
-function scan(page: string, html: string, catalogue: Catalogue): Scan {
+function scan(page: string, html: string, catalogue: Catalogue, stored: string[] = storedSentences(catalogue)): Scan {
   const free = vendorIsFree(catalogue);
   const vendors = [...free.keys()];
-  const stored = storedSentences(catalogue);
   const result: Scan = { violations: [], claimsRead: 0, nonFreeVendorsNamed: new Set() };
   for (const sentence of sentencesOnThePage(html)) {
     const mentions = mentionsIn(sentence, vendors);
@@ -261,7 +260,7 @@ describe("a free-plan reference can deny API access without offering a free API"
       `<script type="application/ld+json">${JSON.stringify({ description: denial })}</script>`,
       `<p>${denial.replace("Free plan", "<strong>Free plan</strong>")}</p>`,
     ]) {
-      const result = scan("/fixture", html, catalogue);
+      const result = scan("/fixture", html, catalogue, []);
       assert.deepStrictEqual([...result.nonFreeVendorsNamed], ["Mistral AI"]);
       assert.deepStrictEqual(result.violations, []);
       assert.strictEqual(result.claimsRead, 0);
@@ -269,13 +268,13 @@ describe("a free-plan reference can deny API access without offering a free API"
   });
 
   it("still flags the same plan when the API denial is removed", () => {
-    const result = scan("/fixture", `<p>${denial.replace("no API access", "API access")}</p>`, catalogue);
+    const result = scan("/fixture", `<p>${denial.replace("no API access", "API access")}</p>`, catalogue, []);
     assert.strictEqual(result.violations.length, 1);
     assert.strictEqual(result.claimsRead, 1);
   });
 
   it("does not let the denial hide a separate free API claim in the same sentence", () => {
-    const result = scan("/fixture", `<p>${denial.slice(0, -1)}; Mistral AI offers genuinely free API access.</p>`, catalogue);
+    const result = scan("/fixture", `<p>${denial.slice(0, -1)}; Mistral AI offers genuinely free API access.</p>`, catalogue, []);
     assert.strictEqual(result.violations.length, 1);
     assert.match(result.violations[0], /"genuinely free"/);
   });
