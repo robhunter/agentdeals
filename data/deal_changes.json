@@ -19252,6 +19252,34 @@
       "date_source": "hand_written",
       "listing_effect": "none",
       "what_ends": "text-embedding-005, text-embedding-004, text-multilingual-embedding-002 and multimodalembedding@001 on Gemini Enterprise Agent Platform (formerly Vertex AI)"
+    },
+    {
+      "vendor": "Cloudflare for Startups",
+      "change_type": "limits_reduced",
+      "date": "2026-11-11",
+      "date_source": "hand_written",
+      "summary": "By November 11, 2026, Cloudflare for Startups had stopped covering Workers AI for startups joining the programme. Members who joined earlier keep their Workers AI cap ($2,500 for Tier 3, $10,000 for Tier 2, $50,000 for Tier 1) until the start of December. Workers, R2 (up to $10,000) and the programme's other usage-based services are still covered.",
+      "tier": "Startup Credits",
+      "tier_direction": "narrowed",
+      "previous_state": "\"Workers AI: Covered up to a $2,500 cap for Tier 3, $10,000 for Tier 2, and $50,000 for Tier 1 (standard partner model pricing applies).\" The \"Covered by Credits\" list included \"Workers AI (up to $50,000)\" (cloudflare.com/startups, Internet Archive capture of 2026-11-03).",
+      "current_state": "\"Workers AI: Effective Dec 1 and for all incoming startups: Workers AI is not covered by credits. For existing startups until Dec 1: Workers AI is covered up to a $2,500 cap for Tier 3, $10,000 for Tier 2, and $50,000 for Tier 1 (standard partner model pricing applies).\" Workers AI is no longer on the \"Covered by Credits\" list (cloudflare.com/startups, Internet Archive capture of 2026-11-11 and read 2026-11-12).",
+      "impact": "medium",
+      "source_url": "https://www.cloudflare.com/startups/",
+      "category": "Startup Perks",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "archive_check": {
+        "checked": "2026-11-12",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-11-03",
+            "first_new": "2026-11-11",
+            "last_old_capture": "https://web.archive.org/web/20261103184100/https://www.cloudflare.com/startups/",
+            "first_new_capture": "https://web.archive.org/web/20261111044501/https://www.cloudflare.com/startups/"
+          }
+        ]
+      }
     }
   ]
 }

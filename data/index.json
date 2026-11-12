@@ -8117,7 +8117,7 @@
     {
       "vendor": "Cloudflare for Startups",
       "category": "Startup Perks",
-      "description": "Credits for one year or until used up, in three tiers: Tier 3 gives $10K to bootstrapped or self-funded startups with under $1M raised; Tier 2 ($100K) and Tier 1 ($350K) are for startups funded by an affiliated partner, Tier 1 with $5M+ raised. Credits cover usage-based services such as Workers and R2 (R2 up to $10K; Workers AI up to $2.5K, $10K or $50K by tier). AI Gateway is not covered. Core security and networking features are free at every tier.",
+      "description": "Credits for one year or until used up, in three tiers: Tier 3 gives $10K to bootstrapped or self-funded startups with under $1M raised; Tier 2 ($100K) and Tier 1 ($350K) are for startups funded by an affiliated partner, Tier 1 with $5M+ raised. Credits cover usage-based services such as Workers and R2 (R2 up to $10K). Workers AI is not covered by credits for startups joining the programme now. Startups already in the programme keep Workers AI coverage, up to $2.5K for Tier 3, $10K for Tier 2 or $50K for Tier 1, until December 1, 2026. From that date, Workers AI is not covered for them either. AI Gateway and domain registration and renewal on Cloudflare Registrar are not covered by credits. Core security and networking features are free at every tier.",
       "tier": "Startup Credits",
       "url": "https://www.cloudflare.com/startups/",
       "tags": [

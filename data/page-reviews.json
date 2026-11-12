@@ -3143,13 +3143,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 39,
-      "table_figures_from_records": 39,
+      "table_figures": 42,
+      "table_figures_from_records": 42,
       "tables": [
         {
           "label": "Recent Changes",
-          "figures": 39,
-          "from_records": 39
+          "figures": 42,
+          "from_records": 42
         }
       ],
       "reads_changes": true,
