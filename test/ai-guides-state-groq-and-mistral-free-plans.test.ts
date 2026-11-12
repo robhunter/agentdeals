@@ -290,8 +290,26 @@ describe("the AI guides state Groq's and Mistral's free plans as the vendors lis
 
   it("keeps Groq's one thousand daily requests per model on both comparison guides", () => {
     for (const page of ["/free-llm-apis", "/llm-api-pricing"]) {
-      assert.ok(unitsOf(served.get(page)!).some((unit) => /Groq/.test(unit) && /1,000 requests/.test(unit) && /(?:a day|daily)/.test(unit) && /per model|each at/.test(unit)), page);
+      const rows = [...served.get(page)!.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/g)]
+        .filter(([, row]) => row.includes('href="/vendor/groq"'))
+        .map(([, row]) => textOf(row));
+      assert.ok(rows.some((row) => /1,000 requests/.test(row) && /a day/.test(row) && /per model|each at/.test(row)), page);
     }
+  });
+
+  it("keeps Mistral out of the generated free API answer in both visible and structured FAQs", () => {
+    const html = served.get("/llm-api-pricing")!;
+    const question = "Which LLM API has the best free tier in 2026?";
+    const faq = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+      .map(([, raw]) => JSON.parse(raw))
+      .find((node) => node["@type"] === "FAQPage");
+    assert.ok(faq);
+    const answer = faq.mainEntity.find((entry: { name: string }) => entry.name === question).acceptedAnswer.text;
+    assert.match(answer, /Groq/);
+    assert.doesNotMatch(answer, /Mistral/);
+    const visible = html.match(/Which LLM API has the best free tier in 2026\?<\/[^>]+>\s*<[^>]+>([\s\S]*?)<\//)?.[1];
+    assert.ok(visible);
+    assert.doesNotMatch(textOf(visible), /Mistral/);
   });
 
   it("states Groq's 30 RPM and Mistral's API billing requirement beside their names", () => {

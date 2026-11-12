@@ -32265,7 +32265,7 @@ function buildLlmApiPricingPage(): string {
 
   const freeApiProviders = providers.filter(p => {
     const offer = offerForSlug(p.slug);
-    return listingOffersAFreeTier(offer)
+    return p.freeType !== "pay-as-you-go" && listingOffersAFreeTier(offer)
       && !/\bno (?:included )?inference(?: providers)? credits\b/i.test(offer?.description ?? "");
   });
   const groqFreeTierLead = freeApiProviders.some(p => p.slug === "groq")
