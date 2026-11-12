@@ -48,7 +48,7 @@ const STATED: Record<string, string[]> = {
     "offers blazing-fast gpt-oss-120b inference at 30 RPM free",
     "with gpt-oss-120b, 30 RPM free",
     "The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.",
-    "Mistral AI — The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits..",
+    "Mistral AI — The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.",
     "Mistral AI LLM API The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits. No",
   ],
   "/free-llm-apis": [

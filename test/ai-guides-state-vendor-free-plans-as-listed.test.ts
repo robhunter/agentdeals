@@ -10,7 +10,7 @@ const REPO = path.join(__dirname, "..");
 const STATED: Record<string, string[]> = {
   "/ai-ml-alternatives": [
     "Mistral: The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.",
-    "Mistral AI — The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits..",
+    "Mistral AI — The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.",
     "Kaggle — a weekly quota of 30 GPU hours (one P100 or two T4s) and up to 20 TPU hours, at no charge.",
     "Qdrant — a free single-node cluster (0.5 vCPU, 1 GB RAM, 4 GB disk) for testing, suspended after a week unused.",
   ],

@@ -13773,7 +13773,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/groq">Groq</a> \u2014 ultra-fast inference on LPU hardware with gpt-oss-120b, 30 RPM free. <a href="/vendor/openrouter">OpenRouter</a> for access to 25+ free models through one API.</dd>
 
       <dt>Want access to all frontier models?</dt>
-      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits..</dd>
+      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.</dd>
 
       <dt>Looking for an AI coding assistant?</dt>
       <dd><a href="/vendor/github-copilot">GitHub Copilot</a> for IDE-integrated autocomplete (2,000/mo free). <a href="/vendor/cursor">Cursor</a> for an AI-native editor. <a href="/vendor/gemini-cli">Gemini CLI</a> and <a href="/vendor/cline">Cline</a> for free open-source terminal agents (BYOK).</dd>
