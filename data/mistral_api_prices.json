@@ -1,8 +1,8 @@
 {
   "published": "2026-10-11",
   "title": "Mistral API Pricing 2026: Free Tier, Costs and Limits",
-  "meta_description": "Mistral API prices run from $0.10 to $7.50 per million tokens. The Free plan's monthly usage has no stated amount since 2026-10-07. The API is for business customers only.",
-  "lead": "Mistral API prices range from $0.10 to $7.50 per million tokens. New accounts start in Mistral's Free mode, with monthly usage shared across the API, Studio and Vibe Code; when it runs out, requests stop until the next month unless pay-as-you-go is on. Since August 2026, Mistral's API is for business customers only, under its Commercial Terms of Service.",
+  "meta_description": "Mistral API prices run from $0.10 to $7.50 per million tokens. The Free plan has included no API access since about 2026-11-05. The API is for business customers only.",
+  "lead": "Mistral API prices run from $0.10 to $7.50 per million tokens. The Free plan covers Vibe and Studio and, since about 2026-11-05, does not include API access. To call the API you enable billing and pay-as-you-go with prepaid credits, or take Mistral Pro ($14.99 a month, $25.50 of API credits). The API is for business customers only since August 2026, under Mistral's Commercial Terms of Service.",
   "prices": {
     "heading": "What does the Mistral API cost per million tokens?",
     "intro": "The cheapest text model is Ministral 3 3B at $0.10 per million input and output tokens. The most expensive output is Mistral Medium 3.5 at $7.50 per million output tokens. Mistral Large 4's API price is $0.70 input, $0.07 cached input and $2.10 output per million tokens from 2026-10-29. From 2026-10-20 until then, it was $1.36 input, $0.14 cached input and $4.18 output per million tokens. To call Mistral Large 4, use the model name mistral-large-4; mistral-large-latest still points to Mistral Large 3 (mistral-large-2512). Batch requests cost 50% less.",
@@ -115,7 +115,7 @@
   "answers": [
     {
       "heading": "Is the Mistral API free?",
-      "text": "Yes, within a monthly allowance. New accounts start in Mistral's Free mode, and every plan includes monthly usage shared across Studio, the API and Vibe Code. Mistral's pricing page listed $10 a month of API credits on the Free plan until 2026-10-07 and now states no amount. When the usage runs out, requests stop until the next billing period unless pay-as-you-go is enabled with prepaid credits. Models whose names start with \"labs-\" are free, but experimental and not for production. To use Codestral in a code editor, an editor plugin calling the API is billed at the API price and draws on the plan's monthly usage. Mistral's own editor tool is Vibe Code. Mistral says the Free plan is for getting started with Vibe, and Pro gives full access to coding with Mistral Vibe. NVIDIA serves Mistral Large 4 on a free endpoint at build.nvidia.com with model ID mistralai/mistral-large-4-1t-a52b. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production."
+      "text": "No. Since about 2026-11-05, Free mode covers Vibe and Studio and does not include API access. API keys and API calls require billing activation and pay-as-you-go with prepaid credits. Before then, Free mode let you create API keys with no credit card, and the pricing page listed $10 a month of API credits on the Free plan until 2026-10-07. Mistral Pro at $14.99 a month includes $25.50 a month in API credits. \"labs-\" models are free of charge once you have API access, but experimental and not for production. To use Codestral in a code editor, an editor plugin calls the API and is billed at the API price. Mistral's own editor tool is Vibe Code. Mistral says the Free plan is for getting started with Vibe, and Pro gives full access to coding with Mistral Vibe. NVIDIA's free endpoint for Mistral Large 4 (model ID mistralai/mistral-large-4-1t-a52b) allows free use for testing and evaluation only, not production."
     },
     {
       "heading": "How does Mistral's pay-as-you-go billing work?",
@@ -123,7 +123,7 @@
     },
     {
       "heading": "Who can use Mistral's API?",
-      "text": "Since 2026-08-05 (2026-08-07 in the EU), Mistral's consumer terms exclude Mistral AI Studio and API access, which are limited to business customers. API use falls under Mistral's Commercial Terms of Service, for the organization, company or other entity you represent. A business can use Mistral's API in a commercial product on any plan, including the Free plan; individuals cannot use the API for personal projects. Labs or Preview Models, such as Mistral Large 4, are provided for testing purposes."
+      "text": "Since 2026-08-05 (2026-08-07 in the EU), Mistral's consumer terms exclude Mistral AI Studio and API access, which are limited to business customers. API use falls under Mistral's Commercial Terms of Service, for the organization, company or other entity you represent. A business can use Mistral's API in a commercial product; individuals cannot use the API for personal projects. Labs or Preview Models, such as Mistral Large 4, are provided for testing purposes."
     },
     {
       "heading": "Do Mistral Pro and the Education plan include API credits?",
@@ -131,7 +131,7 @@
     },
     {
       "heading": "What are the Mistral API rate limits?",
-      "text": "Mistral publishes no rate-limit numbers. Limits apply to each Workspace and are shared by every API key in it: requests per second, tokens per minute and tokens per month. Each organization sees its own limits in Admin Panel > API > Limits. Mistral's help center (2026-08-12) says Free mode has the lowest limits and enabling pay-as-you-go unlocks Tier 1. With pay-as-you-go, tiers upgrade automatically based on the cumulative billed amount: Tier 2 over $20 billed, Tier 3 over $100, Tier 4 over $500. Over $2,000 billed, contact support for higher limits. Adding credits does not raise your rate limits. Priority Tier has a 99.5% uptime SLA and needs setup with Mistral. Standard and Batch have no SLA."
+      "text": "Mistral publishes no rate-limit numbers. Limits apply to each Workspace and are shared by every API key in it: requests per second, tokens per minute and tokens per month. Each organization sees its own limits in Admin Panel > API > Limits. Mistral's help center (2026-08-12) says enabling pay-as-you-go unlocks Tier 1. With pay-as-you-go, tiers upgrade automatically based on the cumulative billed amount: Tier 2 over $20 billed, Tier 3 over $100, Tier 4 over $500. Over $2,000 billed, contact support for higher limits. Adding credits does not raise your rate limits. Priority Tier has a 99.5% uptime SLA and needs setup with Mistral. Standard and Batch have no SLA."
     },
     {
       "heading": "Where does Mistral process API requests?",
