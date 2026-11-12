@@ -19363,7 +19363,7 @@
       "vendor": "Zeabur",
       "change_type": "product_deprecated",
       "date": "2026-12-31",
-      "summary": "Zeabur is winding down, and all its dedicated servers and shared clusters stop on December 31, 2026. New dedicated servers and domains can no longer be bought since October 17, 2026. From December 1, 2026, dedicated server renewals are disabled, each server shuts down on its own expiration date, and running services on shared clusters are paused; they can be restarted by hand to back up data.",
+      "summary": "Zeabur is winding down. On December 1, 2026, services running on its shared clusters are paused (they can be restarted by hand to back up data), dedicated server renewals are disabled, and each dedicated server shuts down on its own expiration date. On December 31, 2026, all dedicated servers and shared clusters stop. New dedicated servers and domains can no longer be bought since October 17, 2026.",
       "previous_state": "Zeabur ran services on shared clusters and dedicated servers and sold domains, with no announced end.",
       "current_state": "Zeabur's blog, \"Zeabur is shutting down: what happens next\", October 17, 2026 (read 2026-11-12): \"Some services will begin shutting down on December 1, 2026, and all dedicated servers and shared clusters will be shut down by December 31.\" Zeabur says the data deletion date, the final data export deadline and the support closing date are to be announced.",
       "impact": "high",
