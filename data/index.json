@@ -41641,6 +41641,48 @@
           "read_on": "2026-11-03"
         }
       ]
+    },
+    {
+      "vendor": "Valyu",
+      "category": "AI / ML",
+      "description": "Search and research API for AI agents: one credit balance covers Search, Contents and DeepResearch. Accounts without a plan get free credits every month, which reset and do not roll over: 2,000 with a work email, no card needed; 1,000 with a personal or university email, which needs a card on the account from the second month (adding one charges nothing; one card unlocks free credits for one account, and prepaid cards don't count). Free monthly credits cover web search, arXiv and PubMed; other sources need a plan. A web search returning ten results uses 1 credit. Then pay as you go: $10 buys 1,600 credits, which last 12 months; Ridiculously Cheap is $29 a month for 5,000 credits. There are no overage charges: a request the balance cannot cover gets HTTP 402.",
+      "tier": "Free",
+      "url": "https://docs.valyu.ai/pricing",
+      "tags": [
+        "ai",
+        "search",
+        "api",
+        "web-search",
+        "agents",
+        "research",
+        "free tier"
+      ],
+      "verifiedDate": "2026-11-12",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "web_search_api",
+            "source_url": "https://docs.valyu.ai/llms.txt",
+            "source_quote": "One API finds evidence in filings, papers, trials, patents, market data and the web, and returns it with citations."
+          }
+        ],
+        "reviewed": "2026-11-12"
+      },
+      "conditions": [
+        {
+          "text": "In the first month only, the first 1,000 free credits with a work email (500 with a personal email) also work on every source on Valyu's standard plans, such as filings, trials or patents. Valyu's own pricing page at www.valyu.ai states the 1,000 without the first-month limit or the personal-email figure.",
+          "quote": "In your first month, the first 1,000 free credits with a work email (500 with a personal email) work on every source on our standard plans.",
+          "url": "https://docs.valyu.ai/pricing",
+          "read_on": "2026-11-12"
+        },
+        {
+          "text": "Valyu's free credits were a one-time grant until late 2026: its changelog entry for October 2026 gives new accounts $10 of credits, or $20 with a company email, usable on every standard-plan source. Its pricing page now gives a monthly allowance that resets each month.",
+          "quote": "Your free credits reset each month. Unused free credits don’t roll over.",
+          "url": "https://docs.valyu.ai/pricing",
+          "read_on": "2026-11-12"
+        }
+      ]
     }
   ],
   "changes": []
