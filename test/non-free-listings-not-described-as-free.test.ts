@@ -41,6 +41,7 @@ const FREE_CLAIMS: RegExp[] = [
 ];
 
 const DENIED_JUST_BEFORE = /\b(?:no|not a|never a)(?:\s+[a-z]+)?\s+$/i;
+const NO_API_ACCESS_AFTER_FREE_PLAN = /^\s+has included no API access\b/i;
 
 const PRODUCT_NAMES: Record<string, string[]> = {
   "Google Gemini API": ["Gemini"],
@@ -182,6 +183,7 @@ function scan(page: string, html: string, catalogue: Catalogue): Scan {
         const end = at + claim[0].length;
         const justBefore = sentence.slice(Math.max(0, at - 40), at);
         if (DENIED_JUST_BEFORE.test(justBefore)) continue;
+        if (/^free plan$/i.test(claim[0]) && NO_API_ACCESS_AFTER_FREE_PLAN.test(sentence.slice(end))) continue;
         if (quotesAStoredSentence(sentence, at, end, stored)) continue;
         result.claimsRead++;
         const before = mentions.map((m, i) => ({ m, i })).filter(({ m }) => m.end <= at).pop();
@@ -247,6 +249,37 @@ function bestFreeTiersBox(html: string): string {
 }
 
 const SUBJECT = "Groq";
+
+describe("a free-plan reference can deny API access without offering a free API", () => {
+  const catalogue: Catalogue = { offers: [{ vendor: "Mistral AI", tier: "Pay-as-you-go", description: "" }] };
+  const denial = "Mistral AI: The Free plan has included no API access since about 2026-11-05.";
+
+  it("reads the denial in visible text, metadata and structured data", () => {
+    for (const html of [
+      `<p>${denial}</p>`,
+      `<meta name="description" content="${denial}">`,
+      `<script type="application/ld+json">${JSON.stringify({ description: denial })}</script>`,
+      `<p>${denial.replace("Free plan", "<strong>Free plan</strong>")}</p>`,
+    ]) {
+      const result = scan("/fixture", html, catalogue);
+      assert.deepStrictEqual([...result.nonFreeVendorsNamed], ["Mistral AI"]);
+      assert.deepStrictEqual(result.violations, []);
+      assert.strictEqual(result.claimsRead, 0);
+    }
+  });
+
+  it("still flags the same plan when the API denial is removed", () => {
+    const result = scan("/fixture", `<p>${denial.replace("no API access", "API access")}</p>`, catalogue);
+    assert.strictEqual(result.violations.length, 1);
+    assert.strictEqual(result.claimsRead, 1);
+  });
+
+  it("does not let the denial hide a separate free API claim in the same sentence", () => {
+    const result = scan("/fixture", `<p>${denial.slice(0, -1)}; Mistral AI offers genuinely free API access.</p>`, catalogue);
+    assert.strictEqual(result.violations.length, 1);
+    assert.match(result.violations[0], /"genuinely free"/);
+  });
+});
 
 describe("a vendor whose listing is not a free tier is not described as free on the AI guides", () => {
   let shippedPages = new Map<string, string>();

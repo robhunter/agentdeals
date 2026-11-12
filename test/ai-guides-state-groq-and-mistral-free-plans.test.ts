@@ -277,6 +277,27 @@ describe("the AI guides state Groq's and Mistral's free plans as the vendors lis
     assert.match(textOf(paragraph), /Groq/);
   });
 
+  it("describes Mistral as a paid API rather than a free API in comparison metadata", () => {
+    for (const page of ["/free-llm-apis", "/ai-free-tiers"]) {
+      const html = served.get(page)!;
+      const descriptions = [...html.matchAll(/<meta (?:name|property)="(?:description|og:description)" content="([^"]+)"/g)]
+        .map(([, value]) => decode(value));
+      assert.strictEqual(descriptions.length, 2, page);
+      const item = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+        .map(([, raw]) => JSON.parse(raw)).find((node) => node["@type"] === "ItemList");
+      assert.ok(item, page);
+      assert.strictEqual(item.description, descriptions[0], page);
+      for (const description of descriptions) {
+        if (page === "/ai-free-tiers") assert.doesNotMatch(description, /Mistral/);
+        else {
+          const [free, paid] = description.split("beside paid APIs from ");
+          assert.doesNotMatch(free, /Mistral/);
+          assert.match(paid, /OpenAI, Anthropic, Mistral and Cerebras/);
+        }
+      }
+    }
+  });
+
   it("opens the Mistral free API answer with no and preserves Pro's price and credits", () => {
     const html = served.get(MISTRAL_GUIDE)!;
     const paragraph = html.match(/<h2>Is the Mistral API free\?<\/h2>\s*<p[^>]*>([\s\S]*?)<\/p>/)?.[1];

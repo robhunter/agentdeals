@@ -8067,7 +8067,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "ai-free-tiers",
     title: "Best Free AI APIs and Coding Tools in 2026",
-    metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Mistral, Gemini, Cursor, GitHub Copilot, and 50+ more. [[freshness]]",
+    metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Gemini, Cursor, GitHub Copilot, and 50+ more. [[freshness]]",
     contextHtml: "",
     tag: "ai-free-tier",
     primaryVendor: "OpenAI",
@@ -8281,7 +8281,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "free-llm-apis",
     title: "Best Free LLM APIs in 2026 — Compare Free Inference Tiers, Rate Limits & Models",
-    metaDesc: "Compare 25+ LLM API providers and their free tiers — Groq, OpenRouter, Gemini, Mistral, NVIDIA NIM, and more, beside paid APIs from OpenAI, Anthropic and Cerebras. Exact rate limits and token quotas. [[freshness]]",
+    metaDesc: "Compare 25+ LLM API providers and their free tiers — Groq, OpenRouter, Gemini, NVIDIA NIM, and more, beside paid APIs from OpenAI, Anthropic, Mistral and Cerebras. Exact rate limits and token quotas. [[freshness]]",
     contextHtml: "",
     tag: "llm-api-hub",
     primaryVendor: "OpenAI",
@@ -10688,7 +10688,7 @@ ${globalNavCss()}
 
 function buildAiFreeTiersPage(): string {
   const title = "Best Free AI APIs and Coding Tools in 2026";
-  const metaDesc = "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Mistral, Gemini, Cursor, GitHub Copilot, and 50+ more. [[freshness]]";
+  const metaDesc = "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Gemini, Cursor, GitHub Copilot, and 50+ more. [[freshness]]";
   const slug = "ai-free-tiers";
 
   const aiMlOffers = offers.filter(o => o.category === "AI / ML");
@@ -15121,7 +15121,7 @@ ${buildCards(other)}
 
 function buildFreeLlmApisPage(): string {
   const title = "Best Free LLM APIs in 2026 — Compare Free Inference Tiers, Rate Limits & Models";
-  const metaDesc = "Compare 25+ LLM API providers and their free tiers — Groq, OpenRouter, Gemini, Mistral, NVIDIA NIM, and more, beside paid APIs from OpenAI, Anthropic and Cerebras. Exact rate limits and token quotas. [[freshness]]";
+  const metaDesc = "Compare 25+ LLM API providers and their free tiers — Groq, OpenRouter, Gemini, NVIDIA NIM, and more, beside paid APIs from OpenAI, Anthropic, Mistral and Cerebras. Exact rate limits and token quotas. [[freshness]]";
   const slug = "free-llm-apis";
 
   const aiOffers = offers.filter(o => o.category === "AI / ML");
