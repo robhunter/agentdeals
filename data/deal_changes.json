@@ -19204,6 +19204,54 @@
       "listing_effect": "none",
       "what_ends": "24 Workers AI models, including kimi-k2.6, glm-5.2, llama-3.2-3b-instruct and whisper-tiny-en",
       "announced_on": "2026-11-05"
+    },
+    {
+      "vendor": "Google Gemini API",
+      "change_type": "product_deprecated",
+      "date": "2026-12-13",
+      "summary": "gemini-live-2.5-flash-native-audio can be called on Gemini Enterprise Agent Platform (formerly Vertex AI) until December 13, 2026, when Google retires it. Google names gemini-3.8-live as the replacement.",
+      "previous_state": "gemini-live-2.5-flash-native-audio could be called on Gemini Enterprise Agent Platform (formerly Vertex AI).",
+      "current_state": "Google's Agent Platform model versions page (read 2026-11-12) lists December 13, 2026 as the retirement date for gemini-live-2.5-flash-native-audio, released December 12, 2025, with gemini-3.8-live as the replacement.",
+      "impact": "low",
+      "source_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/model-versions",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "gemini-live-2.5-flash-native-audio on Gemini Enterprise Agent Platform (formerly Vertex AI)"
+    },
+    {
+      "vendor": "Google Gemini API",
+      "change_type": "product_deprecated",
+      "date": "2027-01-28",
+      "summary": "gemini-3.7-flash can be called on Gemini Enterprise Agent Platform (formerly Vertex AI) until January 28, 2027, when Google retires it. Google names gemini-3.8-flash as the replacement. On the Gemini API it is not shutting down and Google routes its requests to gemini-3.8-flash.",
+      "previous_state": "gemini-3.7-flash could be called on Gemini Enterprise Agent Platform (formerly Vertex AI).",
+      "current_state": "Google's Agent Platform model versions page (read 2026-11-12) lists January 28, 2027 as the retirement date for gemini-3.7-flash, released August 13, 2026, with gemini-3.8-flash as the replacement. Google's Gemini API deprecations page (read 2026-11-12) says the gemini-3.7-flash endpoint is not shutting down and routes API requests to gemini-3.8-flash.",
+      "impact": "low",
+      "source_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/model-versions",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "gemini-3.7-flash on Gemini Enterprise Agent Platform (formerly Vertex AI)"
+    },
+    {
+      "vendor": "Google Gemini API",
+      "change_type": "product_deprecated",
+      "date": "2027-04-01",
+      "summary": "text-embedding-005, text-embedding-004, text-multilingual-embedding-002 and multimodalembedding@001 can be called on Gemini Enterprise Agent Platform (formerly Vertex AI) until April 1, 2027, when Google retires them. Google’s table names no replacement for them.",
+      "previous_state": "text-embedding-005, text-embedding-004, text-multilingual-embedding-002 and multimodalembedding@001 could be called on Gemini Enterprise Agent Platform (formerly Vertex AI).",
+      "current_state": "Google's Agent Platform model versions page (read 2026-11-12) lists April 1, 2027 as the retirement date for text-embedding-005, text-embedding-004, text-multilingual-embedding-002 and multimodalembedding@001, with no replacement model ID.",
+      "impact": "medium",
+      "source_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/model-versions",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "text-embedding-005, text-embedding-004, text-multilingual-embedding-002 and multimodalembedding@001 on Gemini Enterprise Agent Platform (formerly Vertex AI)"
     }
   ]
 }
