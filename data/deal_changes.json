@@ -19358,6 +19358,40 @@
       "listing_effect": "none",
       "what_ends": "Google Jules",
       "announced_on": "2026-10-29"
+    },
+    {
+      "vendor": "Zeabur",
+      "change_type": "product_deprecated",
+      "date": "2026-12-31",
+      "summary": "Zeabur is winding down, and all its dedicated servers and shared clusters stop on December 31, 2026. New dedicated servers and domains can no longer be bought since October 17, 2026. From December 1, 2026, dedicated server renewals are disabled, each server shuts down on its own expiration date, and running services on shared clusters are paused; they can be restarted by hand to back up data.",
+      "previous_state": "Zeabur ran services on shared clusters and dedicated servers and sold domains, with no announced end.",
+      "current_state": "Zeabur's blog, \"Zeabur is shutting down: what happens next\", October 17, 2026 (read 2026-11-12): \"Some services will begin shutting down on December 1, 2026, and all dedicated servers and shared clusters will be shut down by December 31.\" Zeabur says the data deletion date, the final data export deadline and the support closing date are to be announced.",
+      "impact": "high",
+      "source_url": "https://zeabur.com/blogs/zeabur-is-shutting-down",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Zeabur",
+      "announced_on": "2026-10-17"
+    },
+    {
+      "vendor": "Conductor",
+      "change_type": "product_deprecated",
+      "date": "2026-11-20",
+      "summary": "Conductor Cloud, where Conductor runs teams of Claude Code, Codex, Cursor and OpenCode agents on hosted sandboxes, shuts down on November 20, 2026, when Conductor begins deleting its user data. It goes read-only on November 13, 2026: old chats can still be read and exported, but no new messages sent. Conductor is joining Meta. Since November 4, 2026, new users cannot sign up or download the app. The local Mac app keeps working and gets new models and critical bug fixes until early 2027.",
+      "previous_state": "Conductor ran coding agents in parallel workspaces on a Mac and in Conductor Cloud, on a free plan or a Pro plan, with no announced end.",
+      "current_state": "Conductor's changelog, 0.93.0, \"Conductor is joining Meta\", November 4, 2026 (read 2026-11-12): \"Conductor Cloud goes read-only on November 13 and shuts down on November 20. Local Conductor keeps getting new models and critical bug fixes until early 2027.\" Its announcement: \"New users can no longer sign up for Conductor or download the app. Existing free users can't upgrade to a pro plan, but pro users can keep using pro features for free.\"",
+      "impact": "medium",
+      "source_url": "https://www.conductor.build/changelog/0.93.0-conductor-is-joining-meta",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Conductor Cloud",
+      "announced_on": "2026-11-04"
     }
   ]
 }
