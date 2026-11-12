@@ -4408,10 +4408,10 @@ const VS_PAGES: VsPageConfig[] = [
   {
     vendorA: "Groq", vendorB: "Mistral AI",
     category: "AI / ML",
-    verdict: "Groq provides ultra-fast inference for open models on custom hardware. Mistral AI offers its own proprietary models (Mistral Large, Codestral, Pixtral) and its Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. Groq wins on speed; Mistral wins on model variety.",
+    verdict: "Groq provides ultra-fast inference for open models on custom hardware. Mistral AI offers its own proprietary models (Mistral Large, Codestral, Pixtral) and its Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits. Groq wins on speed; Mistral wins on model variety.",
     keyDifferences: `<ul>
       <li><strong>Models:</strong> Groq serves open-weight models (gpt-oss, Qwen) on its hardware. Mistral serves its own proprietary models (Mistral Large, Codestral, Pixtral) plus Mistral-tuned open models.</li>
-      <li><strong>Free tier volume:</strong> Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. Groq allows 200K tokens a day per model (about 6M a month) at 30 RPM.</li>
+      <li><strong>Free tier volume:</strong> Mistral's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits. Groq allows 200K tokens a day per model (about 6M a month) at 30 RPM.</li>
       <li><strong>Speed:</strong> Groq's custom LPU hardware delivers significantly faster inference. Mistral runs on standard GPU infrastructure.</li>
       <li><strong>Code models:</strong> Mistral has Codestral, a dedicated coding model. Groq serves general models that also handle code but without a specialized coding model.</li>
     </ul>`,
@@ -10877,7 +10877,7 @@ ${buildCards(mlPlatforms)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras achieve 500+ tokens/second via custom silicon (LPU and WSE respectively). Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenAI prices one model Free, the moderation model omni-moderation-latest; no GPT model is priced free. Gemini free tier limits were quietly reduced in late 2025.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras achieve 500+ tokens/second via custom silicon (LPU and WSE respectively). Mistral's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits. OpenAI prices one model Free, the moderation model omni-moderation-latest; no GPT model is priced free. Gemini free tier limits were quietly reduced in late 2025.</p>
 
   <h2>Free AI Coding Tools</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">AI-powered code editors, assistants, and autonomous coding agents. From IDE plugins to fully autonomous engineers.</p>
@@ -13638,7 +13638,7 @@ ${globalNavCss()}
   <h1>Best Free AI &amp; ML Tools for Developers</h1>
 
   <div class="context">
-    <p>AI infrastructure is evolving faster than any other developer tooling category. The good news: competition has driven generous free tiers. <strong>Groq</strong> offers blazing-fast gpt-oss-120b inference at 30 RPM free. <strong>Mistral</strong>'s Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. And open-source tools like <strong>Cline</strong>, <strong>Aider</strong>, and <strong>Gemini CLI</strong> are completely free \u2014 just bring your own API key.</p>
+    <p>AI infrastructure is evolving faster than any other developer tooling category. The good news: competition has driven generous free tiers. <strong>Groq</strong> offers blazing-fast gpt-oss-120b inference at 30 RPM free. <strong>Mistral</strong>'s Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits. And open-source tools like <strong>Cline</strong>, <strong>Aider</strong>, and <strong>Gemini CLI</strong> are completely free \u2014 just bring your own API key.</p>
     <p>This page compares every AI and ML tool in our index \u2014 <strong>${aiOffers.length} tools</strong> across LLM APIs, AI coding assistants, ML platforms, observability, and specialized services. Whether you need an OpenAI alternative or a free AI coding assistant, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -13694,7 +13694,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/mistral-ai" style="color:var(--text)">Mistral AI</a></td>
         <td>LLM API</td>
-        <td>Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07</td>
+        <td>Free plan has no API access; API keys and calls require billing activation and pay-as-you-go with prepaid credits</td>
         <td>No</td>
         <td>Access to all Mistral models including Codestral</td>
       </tr>
@@ -13773,7 +13773,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/groq">Groq</a> \u2014 ultra-fast inference on LPU hardware with gpt-oss-120b, 30 RPM free. <a href="/vendor/openrouter">OpenRouter</a> for access to 25+ free models through one API.</dd>
 
       <dt>Want access to all frontier models?</dt>
-      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07. API keys need no credit card.</dd>
+      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 Free plan has no API access; API keys and calls require billing activation and pay-as-you-go with prepaid credits.</dd>
 
       <dt>Looking for an AI coding assistant?</dt>
       <dd><a href="/vendor/github-copilot">GitHub Copilot</a> for IDE-integrated autocomplete (2,000/mo free). <a href="/vendor/cursor">Cursor</a> for an AI-native editor. <a href="/vendor/gemini-cli">Gemini CLI</a> and <a href="/vendor/cline">Cline</a> for free open-source terminal agents (BYOK).</dd>
@@ -15288,7 +15288,7 @@ ${globalNavCss()}
   <h1>Best Free LLM APIs for Developers</h1>
 
   <div class="context">
-    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers gpt-oss-120b at 30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Mistral</strong>'s Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. <strong>OpenRouter</strong> aggregates 25+ free models through one OpenAI-compatible API. ${ledeClause}</p>
+    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers gpt-oss-120b at 30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Mistral</strong>'s Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits. <strong>OpenRouter</strong> aggregates 25+ free models through one OpenAI-compatible API. ${ledeClause}</p>
     <p>This page compares <strong>${allLlmOffers.length} LLM API providers</strong> \u2014 from proprietary model APIs (OpenAI, Anthropic, Gemini) to open-model inference platforms (Groq, Cerebras, NVIDIA NIM) and AI gateways (OpenRouter, Portkey). The rate limit comparison table below has the data developers actually need when choosing a provider.</p>
   </div>
 
@@ -15323,7 +15323,7 @@ ${buildCards(aiGateways)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenRouter gives one API key for 25+ free models. ${summaryClause} Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic's Claude Max, Ultra and Team plans include monthly credits for the Claude API), and OpenAI prices no GPT model free. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits. OpenRouter gives one API key for 25+ free models. ${summaryClause} Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic's Claude Max, Ultra and Team plans include monthly credits for the Claude API), and OpenAI prices no GPT model free. [[freshness]]</p>
 
   <h2>Which Free LLM API Should I Use?</h2>
   <div class="decision-guide">
@@ -15332,7 +15332,7 @@ ${buildCards(aiGateways)}
       <dd><a href="/vendor/groq">Groq</a> \u2014 custom LPU hardware delivers the fastest token generation, 30 RPM free with gpt-oss-120b. No credit card required.</dd>
 
       <dt>Need maximum free token volume?</dt>
-      <dd><a href="/vendor/groq">Groq</a> \u2014 200,000 tokens a day on each of its three free chat models, the largest renewing quota stated on this page. Cerebras's trial allows 1M tokens a day but only for 30 days and $5 of credits. Mistral and Gemini state no amount.</dd>
+      <dd><a href="/vendor/groq">Groq</a> \u2014 200,000 tokens a day on each of its three free chat models, the largest renewing quota stated on this page. Cerebras's trial allows 1M tokens a day but only for 30 days and $5 of credits. Gemini states no amount.</dd>
 
       <dt>Want one API key for many models?</dt>
       <dd><a href="/vendor/openrouter">OpenRouter</a> \u2014 25+ free models through one OpenAI-compatible API; free models are capped at 20 requests a minute and 50 a day, or 1,000 a day once you have bought at least $10 of credits. ${manyModelsAnswer}</dd>
@@ -21304,7 +21304,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
   const llmAlternatives = [
     { vendor: "Groq", free: "30 RPM; 1K requests and 200K tokens/day per model", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B", link: "/vendor/groq" },
     { vendor: "OpenRouter", free: "Free models available", models: "500+ models aggregated", link: "/vendor/openrouter" },
-    { vendor: "Mistral AI", free: "Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07", models: "Mistral Large 3, Medium 3.5, Small 4", link: "/vendor/mistral-ai" },
+    { vendor: "Mistral AI", free: "Free plan has no API access; API keys and calls require billing activation and pay-as-you-go with prepaid credits", models: "Mistral Large 3, Medium 3.5, Small 4", link: "/vendor/mistral-ai" },
     { vendor: "Cohere", free: "Trial key available", models: "Command, Embed, Rerank", link: "/vendor/cohere" },
   ];
 
@@ -23561,7 +23561,7 @@ ${globalNavCss()}
   </table>
 
   <div class="context-box">
-    <strong>Key takeaway:</strong> <a href="/vendor/groq">Groq</a>'s free plan allows 30 requests a minute and 1,000 a day per model. <a href="/vendor/mistral-ai">Mistral AI</a>'s Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. <a href="/vendor/openrouter">OpenRouter</a> serves 25+ free models through one API. For the full comparison, see our <a href="/free-llm-apis">Free LLM APIs</a> guide.
+    <strong>Key takeaway:</strong> <a href="/vendor/groq">Groq</a>'s free plan allows 30 requests a minute and 1,000 a day per model. <a href="/vendor/mistral-ai">Mistral AI</a>'s Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits. <a href="/vendor/openrouter">OpenRouter</a> serves 25+ free models through one API. For the full comparison, see our <a href="/free-llm-apis">Free LLM APIs</a> guide.
   </div>
 
   <h2 id="what-to-do">7. What to Do</h2>
@@ -32099,8 +32099,8 @@ function buildLlmApiPricingPage(): string {
       name: "Mistral AI",
       slug: "mistral-ai",
       category: "frontier",
-      freeTier: "Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07",
-      freeType: "generous",
+      freeTier: "Free plan has no API access; API keys and calls require billing activation and pay-as-you-go with prepaid credits",
+      freeType: "pay-as-you-go",
     },
     {
       name: "Cohere",
@@ -32566,7 +32566,8 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '  <div class="highlight-box">\n' +
     '    <h3>Best Free Tiers</h3>\n' +
-    '    <p><strong>Most generous:</strong> ' + namedWithTheirFreeTier(["groq", "mistral-ai", "cerebras"]) + ' &middot; <strong>Best for prototyping:</strong> ' + namedWithTheirFreeTier(["openrouter", "cloudflare-workers-ai"]) + ' &middot; <strong>Free for light use:</strong> ' + namedWithTheirFreeTier(["llm7-io", "ollama"]) + '</p>\n' +
+    "    <p>Mistral AI's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.</p>\n" +
+    '    <p><strong>Most generous:</strong> ' + namedWithTheirFreeTier(["groq", "cerebras"]) + ' &middot; <strong>Best for prototyping:</strong> ' + namedWithTheirFreeTier(["openrouter", "cloudflare-workers-ai"]) + ' &middot; <strong>Free for light use:</strong> ' + namedWithTheirFreeTier(["llm7-io", "ollama"]) + '</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="toc">\n' +

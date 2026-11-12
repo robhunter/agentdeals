@@ -11,13 +11,17 @@ const REPO = path.join(__dirname, "..");
 const { readMistralPrices, retiredTermsSentences } = await import("../dist/mistral-prices.js");
 const MARKED_RETIRED_TERMS: string[] = retiredTermsSentences(readMistralPrices());
 const MISTRAL_GUIDE = "/mistral-api-pricing-2026";
+const MISTRAL_API_PAGES = [
+  "/ai-free-tiers", "/ai-ml-alternatives", "/free-llm-apis", "/gemini-api-pricing-2026",
+  "/google-developer-program-2026", "/groq-vs-mistral-ai", "/llm-api-pricing", MISTRAL_GUIDE,
+];
 
 const GROQ_RETIRED = /Llama 3\.3|Llama 3\.1|Llama 4|Llama, Mixtral|Mixtral|Gemma|Qwen3(?![.\d])|100K-500K|14\.4K RPD|3-15M/;
 const MISTRAL_RETIRED = /1B tokens|1B tok|1 billion tokens|2 RPM|2\.8K RPD|Experiment tier/;
 
 const TOKEN_VOLUME_QUESTION = "Need maximum free token volume?";
 const TOKEN_VOLUME_ANSWER =
-  "Groq — 200,000 tokens a day on each of its three free chat models, the largest renewing quota stated on this page. Cerebras's trial allows 1M tokens a day but only for 30 days and $5 of credits. Mistral and Gemini state no amount.";
+  "Groq — 200,000 tokens a day on each of its three free chat models, the largest renewing quota stated on this page. Cerebras's trial allows 1M tokens a day but only for 30 days and $5 of credits. Gemini states no amount.";
 const LISTED_FIGURES_QUOTED: Record<string, string[]> = {
   Groq: ["Free plan: gpt-oss-20b, gpt-oss-120b and Qwen3.8 27B, each at", "200,000 tokens a day"],
   Cerebras: ["$5 in free credits", "expiring 30 days after they are granted", "1M tokens/day"],
@@ -28,10 +32,10 @@ const STATED: Record<string, string[]> = {
     "30 RPM; 1K requests and 200K tokens/day per model",
     "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B",
     "Mistral Large 3, Medium 3.5, Small 4",
-    "Mistral AI Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07 Mistral Large 3, Medium 3.5, Small 4",
+    "Mistral AI Free plan has no API access; API keys and calls require billing activation and pay-as-you-go with prepaid credits Mistral Large 3, Medium 3.5, Small 4",
   ],
   "/gemini-api-pricing-2026": [
-    "Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
+    "Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
   ],
   "/free-ai-stack": [
     "Ultra-fast inference on LPU hardware — 30 RPM, 1,000 requests and 200K tokens a day per model, free. Serves gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B. Best balance of speed, limits, and model quality for prototyping.",
@@ -40,19 +44,19 @@ const STATED: Record<string, string[]> = {
   "/ai-ml-alternatives": [
     "offers blazing-fast gpt-oss-120b inference at 30 RPM free",
     "with gpt-oss-120b, 30 RPM free",
-    "Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
-    "Mistral AI — Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07. API keys need no credit card.",
-    "Mistral AI LLM API Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07 No",
+    "Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
+    "Mistral AI — Free plan has no API access; API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
+    "Mistral AI LLM API Free plan has no API access; API keys and calls require billing activation and pay-as-you-go with prepaid credits No",
   ],
   "/free-llm-apis": [
     "delivers gpt-oss-120b at 30 RPM",
     "30 RPM free with gpt-oss-120b",
-    "Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
-    "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
+    "Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
+    "Mistral's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
   ],
   "/llm-api-pricing": [
     "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model",
-    "Mistral AI — Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07",
+    "Mistral AI's Free plan does not include API access.",
     "For open models, SiliconFlow's international site lists gpt-oss-120b at $0.05/$0.45 and DeepSeek-V4.1-Flash at $0.15/$0.60 (per 1M tokens).",
     "Open-weight inference is cheap: Groq's free plan allows 200K tokens a day on each of its free chat models.",
     "Opus-class prices fell from $15/$75 per M tokens (Opus 4.1) to $5/$25 in November 2025 and $4/$20 with Opus 5.5",
@@ -63,21 +67,21 @@ const STATED: Record<string, string[]> = {
     "Groq serves a short list of open-weight models on its hardware; the free plan covers gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B.",
   ],
   "/groq-vs-mistral-ai": [
-    "Mistral AI offers its own proprietary models (Mistral Large, Codestral, Pixtral) and its Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
+    "Mistral AI offers its own proprietary models (Mistral Large, Codestral, Pixtral) and its Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
     "Groq serves open-weight models (gpt-oss, Qwen) on its hardware.",
-    "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
+    "Mistral's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
     "Groq allows 200K tokens a day per model (about 6M a month) at 30 RPM.",
     "want to use open-weight models such as gpt-oss",
     "Groq wins on speed; Mistral wins on model variety.",
     "(especially Codestral for code), or prefer European-based AI providers.",
   ],
   [MISTRAL_GUIDE]: [
-    "New accounts start in Mistral's Free mode, and every plan includes monthly usage shared across Studio, the API and Vibe Code.",
+    "Free mode covers Vibe and Studio and does not include API access.",
     "Mistral publishes no rate-limit numbers.",
   ],
   "/ai-free-tiers": [
     "Groq serves fast inference on a free plan, and Google Antigravity has a free individual plan with weekly limits.",
-    "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
+    "Mistral's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
   ],
 };
 
@@ -254,13 +258,49 @@ describe("the AI guides state Groq's and Mistral's free plans as the vendors lis
     assert.deepStrictEqual(left, []);
   });
 
-  it("still states Groq's 30 RPM beside Groq, and Mistral's monthly API usage beside Mistral", () => {
+  it("never offers monthly API usage or card-free API keys on Mistral's Free plan", () => {
+    for (const page of MISTRAL_API_PAGES) {
+      const html = served.get(page)!;
+      for (const surface of [decode(html), textOf(html)]) {
+        assert.doesNotMatch(surface, /Free plan includes monthly API usage|API keys need no credit card|within a monthly allowance|monthly usage shared across Studio, the API/i, page);
+      }
+    }
+  });
+
+  it("excludes Mistral from the Most generous free APIs while retaining Groq", () => {
+    const paragraph = served.get("/llm-api-pricing")!.match(/<strong>Most generous:<\/strong>([\s\S]*?)<strong>Best for prototyping:/)?.[1];
+    assert.ok(paragraph);
+    assert.doesNotMatch(textOf(paragraph), /Mistral/i);
+    assert.match(textOf(paragraph), /Groq/);
+  });
+
+  it("opens the Mistral free API answer with no and preserves Pro's price and credits", () => {
+    const html = served.get(MISTRAL_GUIDE)!;
+    const paragraph = html.match(/<h2>Is the Mistral API free\?<\/h2>\s*<p[^>]*>([\s\S]*?)<\/p>/)?.[1];
+    assert.ok(paragraph);
+    const answer = decode(paragraph.replace(/<[^>]+>/g, "")).replace(/\s+/g, " ");
+    const article = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)![1]);
+    assert.match(article.description, /Free plan has included no API access/);
+    assert.match(answer, /^No\. Since about 2026-11-05, Free mode covers Vibe and Studio and does not include API access\./);
+    assert.match(answer, /Mistral Pro at \$14\.99 a month includes \$25\.50 a month in API credits/);
+    assert.match(answer, /"labs-" models are free of charge once you have API access/);
+    assert.match(answer, /free use for testing and evaluation only, not production/);
+    assert.match(textOf(html), /Mistral Pro costs \$14\.99 a month and includes \$25\.50 a month in API credits/);
+  });
+
+  it("keeps Groq's one thousand daily requests per model on both comparison guides", () => {
+    for (const page of ["/free-llm-apis", "/llm-api-pricing"]) {
+      assert.ok(unitsOf(served.get(page)!).some((unit) => /Groq/.test(unit) && /1,000 requests/.test(unit) && /(?:a day|daily)/.test(unit) && /per model|each at/.test(unit)), page);
+    }
+  });
+
+  it("states Groq's 30 RPM and Mistral's API billing requirement beside their names", () => {
     for (const page of ["/free-llm-apis", "/gemini-api-pricing-2026"]) {
       assert.ok(unitsOf(served.get(page)!).some((unit) => /Groq/.test(unit) && /30 RPM/.test(unit)), page);
     }
     assert.ok(textOf(served.get("/llm-api-pricing")!).includes("gpt-oss-120b"));
     for (const page of ["/llm-api-pricing", "/free-llm-apis"]) {
-      assert.ok(unitsOf(served.get(page)!).some((unit) => /Mistral/.test(unit) && /monthly API usage/.test(unit)), page);
+      assert.ok(unitsOf(served.get(page)!).some((unit) => /Mistral/.test(unit) && /does not include API access/.test(unit)), page);
     }
   });
 
