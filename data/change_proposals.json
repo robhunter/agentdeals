@@ -1,5 +1,104 @@
 {
-  "proposals": [],
+  "proposals": [
+    {
+      "proposal_id": "2026-11-12/airtop/record_corrected",
+      "proposed_on": "2026-11-12",
+      "vendor": "Airtop",
+      "change_type": "record_corrected",
+      "date": "2026-11-12",
+      "date_source": "discovered",
+      "summary": "The Free plan's sign-up bonus is now described as a 10,000 one-time credit bonus. The page also adds a 7-day trial limit for the Free plan.",
+      "tier": "Free",
+      "tier_direction": "unchanged",
+      "previous_state": "Cloud browsers that AI agents control in plain language. The Free plan gives 1,000 credits a month, which reset and do not roll over; new accounts also get a sign-up bonus for their first billing cycle only (10,000 credits on the pricing page, 30,000 in Airtop's billing help). Free allows 3 simultaneous sessions and 1 deployed agent, with no integrated proxy. Airtop does not publish what a credit buys in browser time, and more credits need a subscription. Starter is $29 a month for 30,000 credits.",
+      "current_state": "Free is $0/mo with 1,000 Credits, 3 simultaneous sessions, 1 deployed agent, and a 10,000 one-time credit bonus. Mark trial for 7 days or until credits are consumed.",
+      "impact": "low",
+      "source_url": "https://www.airtop.ai/pricing",
+      "category": "Browser Automation",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-12",
+      "restatement": [
+        {
+          "url": "https://www.airtop.ai/pricing",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$ 29"
+          ]
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-12/corgea/limits_reduced",
+      "proposed_on": "2026-11-12",
+      "vendor": "Corgea",
+      "change_type": "limits_reduced",
+      "date": "2026-11-12",
+      "date_source": "discovered",
+      "summary": "The Free plan no longer includes the 10 PR scans per month or 10 SAST auto fixes described in previously info. The pricing page now lists PR Scanning and SAST Auto fixes as paid-plan features (Growth and above), with the Free plan limited to 2 team members and 10 repositories.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free autonomous security platform that finds, validates and fixes insecure code and packages across +20 languages and frameworks. Free plan for up to 2 team members and 10 repositories, with 10 PR scans a month and 10 SAST auto fixes. Features: AI SAST, Logic/Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, IaC Scanning.",
+      "current_state": "Free is $0 for individual devs and includes AI SAST, Logic and Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, and IaC Scanning, with a team size of 2 and 10 repositories. PR scans per month and SAST auto fixes are not listed under Free; PR Scanning appears under Growth, and SAST Auto fixes limits are 50 (Growth), 200 (Scale), and Unlimited (Enterprise).",
+      "impact": "medium",
+      "source_url": "https://corgea.com/pricing/",
+      "category": "Security",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-12",
+      "restatement": [
+        {
+          "url": "https://corgea.com/pricing/",
+          "description": "Free is $0 for individual devs and includes AI SAST, Logic and Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, and IaC Scanning, with a team size of 2 and 10 repositories. PR scans per month and SAST auto fixes are not listed under Free; PR Scanning appears under Growth, and SAST Auto fixes limits are 50 (Growth), 200 (Scale), and Unlimited (Enterprise)."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-12/logo-dev/pricing_restructured",
+      "proposed_on": "2026-11-12",
+      "vendor": "Logo.dev",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-12",
+      "date_source": "discovered",
+      "summary": "Paid plan pricing changed: Startup is now $33/mo (was $50/mo or $400/yr) and Pro is now $150/mo (was $180/mo or $1,800/yr).",
+      "tier": "Startup",
+      "tier_direction": "unchanged",
+      "previous_state": "500K Logo CDN requests a month and $5 of API credits a month for the Brand API and the Logo.dev MCP. Logo images from img.logo.dev count as Logo CDN requests. One credit is 1 cent. A Brand API request costs 5 credits. No credit card is needed. The free plan allows 100 API requests per minute. Paid plans include Startup at $50 a month or $400 a year and Pro at $180 a month or $1,800 a year.",
+      "current_state": "Community (Free) still offers 500K Logo CDN requests, $5 API credits, 100 API requests per minute, no credit card required, attribution required for commercial projects. Startup is $33/mo with 1M Logo CDN requests and $15 API credits. Pro is $150/mo with 5M Logo CDN requests and $150 API credits.",
+      "impact": "low",
+      "source_url": "https://www.logo.dev/pricing",
+      "category": "Design",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-12",
+      "restatement": []
+    },
+    {
+      "proposal_id": "2026-11-12/stoplight/pricing_restructured",
+      "proposed_on": "2026-11-12",
+      "vendor": "Stoplight",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-12",
+      "date_source": "discovered",
+      "summary": "The stored free tier (1 user, 1 project) no longer appears as a standalone free plan; the page now shows a 'Basic' plan starting at $44/month (billed annually) or $56/month (billed monthly) with a 14-day free trial, and a 'Free' column appears only in the comparison table with 1 user and 1 project.",
+      "tier": "Free",
+      "tier_direction": "unchanged",
+      "previous_state": "API design and documentation platform — free tier: 1 user, 1 project. Includes OpenAPI visual designer, API editor, interactive docs, API console, code generation, Git sync, automatic SSL",
+      "current_state": "The page lists paid plans Basic ($44/mo annual, $56/mo monthly, first 3 users free), Startup ($113/mo annual, $147/mo monthly, first 8 users free), Pro Team ($362/mo annual, $453/mo monthly, first 15 users free), and Enterprise (custom). A 'Free' column in the comparison table shows 1 user included and maximum 1 project. Basic, Startup, and Pro Team each include a 14-day free trial.",
+      "impact": "low",
+      "source_url": "https://stoplight.io/pricing",
+      "category": "API Development",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-12",
+      "restatement": [
+        {
+          "url": "https://stoplight.io/pricing",
+          "refused": "reading_describes_the_page_not_the_terms"
+        }
+      ]
+    }
+  ],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
