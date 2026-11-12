@@ -19348,7 +19348,7 @@
       "date": "2026-10-29",
       "discontinued_date": "2026-12-31",
       "date_source": "vendor_page",
-      "summary": "Jules, Google's asynchronous coding agent, winds down on December 31, 2026. Google announced on 2026-10-29 that sessions could be finished until November 11, 2026, and that Jules is read-only from then until the end of the year. Code, branches and pull requests Jules created stay in GitHub; settings, memories and session histories can be exported to a local folder.",
+      "summary": "Jules, Google's asynchronous coding agent, has been read-only since November 11, 2026, and winds down on December 31, 2026. Google announced this on 2026-10-29, giving users until November 11, 2026 to finish their sessions. Code, branches and pull requests Jules created stay in GitHub; settings, memories and session histories can be exported to a local folder.",
       "what_ends": "Google Jules",
       "listing_effect": "none",
       "previous_state": "Jules took new coding sessions on connected GitHub repositories, with no announced end.",
