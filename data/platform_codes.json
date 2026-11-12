@@ -56,16 +56,18 @@
       "vendor": "Lovable",
       "code": "L3XZSUB",
       "referral_url": "https://lovable.dev/invite/L3XZSUB",
-      "referrer_benefit": "100 bonus credits when the referred account pays for its first Pro or Business subscription",
+      "referrer_benefit": "100 bonus credits on the referred person's first monthly payment, then 25 for each later monthly payment, up to 400 per person; all 400 at once if they pay for a year",
       "referrer_compensation": "credit",
       "referee_benefit": "10 bonus credits",
       "restrictions": [
+        "Only a first paid plan with at least 100 credits a month counts, and a referral whose first plan has fewer, or whose first month is free through a discount, earns nothing",
+        "Up to 100 people can join through one workspace's invite link",
         "Referral credits expire 12 months after Lovable grants them"
       ],
       "source": "platform",
       "active": true,
       "added_at": "2026-10-07",
-      "terms_verified": "2026-10-07"
+      "terms_verified": "2026-11-12"
     },
     {
       "vendor": "Bolt.new",
