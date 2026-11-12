@@ -8133,7 +8133,7 @@
         "type": "startup",
         "conditions": [
           "Tier 3 ($10K): bootstrapped or self-funded, under $1M raised",
-          "Tier 2 ($100K): funded by an affiliated partner",
+          "Tier 2 ($100K): funded by an affiliated partner, under $5M raised",
           "Tier 1 ($350K): funded by an affiliated partner, $5M+ raised"
         ],
         "program": "Cloudflare for Startups"

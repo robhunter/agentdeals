@@ -19280,6 +19280,22 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Cloudflare for Startups",
+      "change_type": "limits_reduced",
+      "date": "2026-12-01",
+      "date_source": "vendor_page",
+      "summary": "From December 1, 2026, Cloudflare for Startups credits no longer pay for Workers AI for startups already in the programme, who until then keep a Workers AI cap of $2,500 (Tier 3), $10,000 (Tier 2) or $50,000 (Tier 1). Startups joining now already get no Workers AI coverage. Workers, R2 (up to $10,000) and the other usage-based services stay covered.",
+      "tier": "Startup Credits",
+      "tier_direction": "narrowed",
+      "previous_state": "Startups already in the programme: \"For existing startups until Dec 1: Workers AI is covered up to a $2,500 cap for Tier 3, $10,000 for Tier 2, and $50,000 for Tier 1 (standard partner model pricing applies).\" (cloudflare.com/startups FAQ, read 2026-11-12).",
+      "current_state": "\"Effective Dec 1 and for all incoming startups: Workers AI is not covered by credits.\" (cloudflare.com/startups FAQ, read 2026-11-12).",
+      "impact": "medium",
+      "source_url": "https://www.cloudflare.com/startups/",
+      "category": "Startup Perks",
+      "alternatives": [],
+      "recorded_date": "2026-11-12"
     }
   ]
 }
