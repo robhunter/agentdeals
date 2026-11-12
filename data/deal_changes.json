@@ -19442,6 +19442,22 @@
       "alternatives": [],
       "recorded_date": "2026-11-12",
       "announced_on": "2026-10-23"
+    },
+    {
+      "vendor": "remove.bg",
+      "change_type": "product_deprecated",
+      "date": "2026-12-01",
+      "summary": "On December 1, 2026, at 9:00 CET, remove.bg's self-service API stops accepting requests, and its standalone website and accounts close; unused pay-as-you-go credits expire the same day. remove.bg moves its background removal to Canva, and its API to Leonardo.Ai's API, also part of Canva. Enterprise API contracts continue as normal.",
+      "previous_state": "remove.bg offered background removal on its website and through a self-service API, with no announced end.",
+      "current_state": "remove.bg's FAQ (read 2026-11-12): \"The self-service API will stop accepting requests from 1 December 2026.\" \"From 1 December 2026 at 9:00am CET, remove.bg's standalone website will no longer be available. Background removal is moving to Canva and API access to Leonardo.ai, with upgraded offerings on both. Enterprise API contracts aren't affected and continue as normal.\" \"Any unused PAYG credits will expire on 1 December 2026.\"",
+      "impact": "high",
+      "source_url": "https://www.remove.bg/faq",
+      "category": "Design",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "remove.bg's self-service API and website"
     }
   ]
 }
