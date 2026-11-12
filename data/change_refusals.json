@@ -863,6 +863,18 @@
     {
       "vendor": "Axiom",
       "change_type": "limits_increased",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-30 (states_no_difference) stated the same 5 figures, so the page showed these terms before the date this record gives",
+      "summary": "The Personal plan's free allowance now includes 500 GB/mo data loading compute, 10 GB-hours query compute, 25 GB storage, and 30-day retention, but the stored description's other details (2 datasets, 1 user, 256 fields/dataset, 3 monitors, Email/Discord notifiers only) are no longer stated; the page now lists 'Soft limits' for datasets/fields/query concurrency and says alerting is included, and it no longer mentions a 1-user cap or notifier restrictions.",
+      "previous_state": "Observability platform — 500 GB ingest/month, 25 GB storage, 30-day retention, 2 datasets, 1 user, 10 GB-hrs/mo query compute, 256 fields/dataset, 3 monitors, Email/Discord notifiers only",
+      "current_state": "Personal is $0/month permanent, no credit card required, with 500 GB/mo data loading compute, 10 GB-hours query compute, 25 GB storage, 30-day retention, full APL access, all integrations, community support, alerting included, and soft limits (can be lifted on request) for datasets/fields per dataset/query concurrency.",
+      "source_url": "https://axiom.co/pricing",
+      "category": "Monitoring",
+      "refused_date": "2026-11-12"
+    },
+    {
+      "vendor": "Axiom",
+      "change_type": "limits_increased",
       "reason": "states_no_difference",
       "detail": "limits_increased claimed, and every figure the summary carried sat in a clause about our own record rather than about the vendor's terms",
       "summary": "The Personal tier is still offered, but the Always Free allowance for Axiom Cloud is now 1 TB / 100 GB-hrs / 100 GB, up from the stored value of 500 GB ingest/month, 25 GB storage, 30-day retention, 256 fields/dataset, 10 GB-hrs/mo query compute, 3 monitors.",
@@ -883,6 +895,18 @@
       "source_url": "https://backgroundstyler.com",
       "category": "Dev Utilities",
       "refused_date": "2026-10-16"
+    },
+    {
+      "vendor": "Basecamp",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-21 (unquantified_limit) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free plan now allows only 3 users instead of 5, and the free tier is described as 'Basecamp Personal' with one project free forever.",
+      "previous_state": "To-do lists, milestone management, forum-like messaging, file sharing, and time tracking — Free plan includes 1 project, 1 GB of storage space, and a maximum of 5 users.",
+      "current_state": "One project, free forever. Invite up to 3 people. Limited, but plenty for personal use. 1 GB storage space, 3 users max.",
+      "source_url": "https://basecamp.com/personal",
+      "category": "Project Management",
+      "refused_date": "2026-11-12"
     },
     {
       "vendor": "Basecamp",
@@ -1458,6 +1482,18 @@
     {
       "vendor": "Burnermail",
       "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://burnermail.io/, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The page announces removal of Burner Mail's free plan, but does not state the effective date or the specific limits for existing free users.",
+      "previous_state": "Burner Mail gives users burner email addresses that hide their personal email address. There has been no free plan for new users since 2026-06-27. Existing free users keep their current free limits.",
+      "current_state": "The page states that Burner Mail is removing its free plan, with a link to read more, but provides no details about when this takes effect or what happens to existing free users.",
+      "source_url": "https://burnermail.io/",
+      "category": "Email",
+      "refused_date": "2026-11-12"
+    },
+    {
+      "vendor": "Burnermail",
+      "change_type": "free_tier_removed",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Burnermail|free_tier_removed|2026-08-28|https://burnermail.io/",
       "summary": "Burner Mail is removing its free plan.",
@@ -1467,6 +1503,18 @@
       "category": "Email",
       "refused_date": "2026-09-18",
       "collided_with": "Burnermail|free_tier_removed|2026-08-28|https://burnermail.io/"
+    },
+    {
+      "vendor": "Cal.com",
+      "change_type": "record_corrected",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-08-29 (states_no_difference) stated the same 3 figures, so the page showed these terms before the date this record gives",
+      "summary": "The stored free-tier description says 'Unlimited event types & calendars,' but the current pricing page lists the Individuals Free plan as having 'Unlimited links & calendars.' The free tier still exists and remains free forever with 1 user, but the feature wording has changed from 'event types' to 'links.'",
+      "previous_state": "Open-source scheduling — Individuals Free Everything you could need for scheduling as an individual. Use for free *Free forever Free features: 1 user Unlimited event types & calendars Email & SMS notifications Integrate with 100+ apps Mobile App Browser Extension Accept Stripe & PayPal payments Two-way Salesforce & HubSpot sync 1-click import Calendly events",
+      "current_state": "Individuals Free is still offered as 'Free forever' with 1 user, Unlimited links & calendars, Email & SMS notifications, Integrate with 100+ apps, Mobile App, Browser Extension, Accept Stripe & PayPal payments, Two-way Salesforce & HubSpot sync, and 1-click import Calendly events.",
+      "source_url": "https://cal.com/pricing",
+      "category": "Team Collaboration",
+      "refused_date": "2026-11-12"
     },
     {
       "vendor": "Cal.com",
@@ -1540,6 +1588,18 @@
       "category": "Error Tracking",
       "refused_date": "2026-09-15",
       "collided_with": "CatchJS.com|limits_reduced|2026-09-01|https://catchjs.com/"
+    },
+    {
+      "vendor": "cDox",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (150 pag)",
+      "summary": "Free plan now includes 150 documents (not 150 pages and sheets); the page also lists 8 templates and API access at 100 req/min, and Pro adds guest editing, image uploads, Pro fonts, and unlimited documents.",
+      "previous_state": "Private document editor hosted in Canada. Write, format, collaborate, and publish documents with clean public links. Data is never used for AI training. Free plan includes 150 pages and sheets and unlimited public links.",
+      "current_state": "Free gives you 150 documents, unlimited public links, unlimited sharing and shared folders, real-time collaboration, sync across devices, export options, dark mode, no AI training on your content, 8 templates, and API access at 100 req/min.",
+      "source_url": "https://cdox.studio/pricing",
+      "category": "Team Collaboration",
+      "refused_date": "2026-11-12"
     },
     {
       "vendor": "Cerbos Hub",
@@ -2159,6 +2219,18 @@
       "source_url": "https://www.cmyktopantone.com/",
       "category": "Design",
       "refused_date": "2026-11-05"
+    },
+    {
+      "vendor": "CMYK Pantone",
+      "change_type": "rebranded",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-11-05 (page_does_not_name_vendor) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal describes a free CMYK-to-Pantone converter from 'CMYK Pantone', but the current page is for 'Color Mapper', a different product/brand offering a broader free color toolkit. The specific Pantone conversion feature is not mentioned; the page only lists converters between RGB, CMYK, HEX, HSL, and HSV.",
+      "previous_state": "Easily convert CMYK values to the closest Pantone colors and other color models in seconds for free.",
+      "current_state": "Color Mapper is a free, no-signup browser-based color toolkit including a random color generator, palette generator, color wheel, gradient generator, WCAG contrast checker, print gamut checker, color comparator, tint and shade scale builder, image palette extractor, color blindness simulator, and 18 converters between RGB, CMYK, HEX, HSL, and HSV. Pantone conversion is not mentioned.",
+      "source_url": "https://www.cmyktopantone.com/",
+      "category": "Design",
+      "refused_date": "2026-11-12"
     },
     {
       "vendor": "cocalc.com",
@@ -3064,6 +3136,18 @@
       "source_url": "https://deepsource.io/",
       "category": "Code Quality",
       "refused_date": "2026-10-11"
+    },
+    {
+      "vendor": "degoo.com",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already mentioned the 90-day inactivity condition and 20 GB/3 devices; the page still states these same terms, and the 100 GB headline is an additional marketing claim not contradicting the stored free-tier terms.",
+      "summary": "The free tier now offers 20 GB (matching previously). The page no longer mentions the 90-day account inactivity condition and instead lists '90 days account inactivity' as a feature line. The headline also advertises '100 GB free cloud storage' which conflicts with the 20 GB free plan shown.",
+      "previous_state": "AI based cloud storage with free up to 20 GB, three devices, 5 GB referral bonus (90 days account inactivity).",
+      "current_state": "Free plan: 20 GB cloud space, 3 devices, access to web app, 5 GB referral bonus (250 MB per referred friend), 100% encrypted communication, 90 days account inactivity, basic storage replication, no ads, zero knowledge encryption, photo storage maximizer. The page headline also states '100 GB free cloud storage'.",
+      "source_url": "https://degoo.com/",
+      "category": "Storage",
+      "refused_date": "2026-11-12"
     },
     {
       "vendor": "deployhq.com",
@@ -4547,6 +4631,18 @@
       "refused_date": "2026-09-10"
     },
     {
+      "vendor": "GForge",
+      "change_type": "open_source_killed",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The stored description says the SaaS free plan offers the first five users free and is free for Open Source Projects. The current pricing page no longer mentions a free-for-Open-Source-Projects SaaS offering; it now describes the hosted SaaS plan as starting at $6/user/month with the first 5 users free, and the free tier is now a Self-Hosted Free edition limited to 5 active users.",
+      "previous_state": "Project Management and issue Tracking toolset for complex projects with self-premises and SaaS options. SaaS free plan offers the first five users free & free for Open Source Projects.",
+      "current_state": "Hosted SaaS pricing starts at $6/user/month with the first 5 users free; a Self-Hosted Free edition is available for up to 5 active users with all features included, no time limits, and no credit card required. No free Open Source Projects plan is mentioned.",
+      "source_url": "https://gforge.com",
+      "category": "Project Management",
+      "refused_date": "2026-11-12"
+    },
+    {
       "vendor": "GitBook",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -5470,6 +5566,18 @@
       "collided_with": "HeroUI|new_tier|2026-08-28|https://heroui.com/"
     },
     {
+      "vendor": "Hetzner",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page is a less detailed category-level view; it does not contradict the stored per-plan prices, and the different starting prices are just category minimums not previously claimed.",
+      "summary": "The page does not confirm CPX02 at €6.49, CPX12 at €11.99, CPX22 at €19.99, or CCX13 at €43.49, and shows different starting prices (€5.99, €5.49, €36.99).",
+      "previous_state": "Budget cloud VMs, no free tier. As of 2026-10-07 hetzner.com marks every Cost-Optimized plan — CX23, CX33, CX43, CX53 and the Arm CAX11–CAX41 — \"not available\". The cheapest orderable plan is CPX02 at €6.49/month (1 vCPU AMD, 1 GB RAM, 20 GB NVMe), which Hetzner added on 2026-10-06 in the EU and Singapore (€7.99 there). CPX12 is €11.99 (1 vCPU, 2 GB, 40 GB) and CPX22 is €19.99 (2 vCPU, 4 GB, 80 GB). All three include 20 TB of traffic a month in the EU and less in Singapore (0.5 TB for CPX02 and CPX12). Dedicated-vCPU CCX13 is €43.49/month in the EU and $51.59 in the US. These are hetzner.com's displayed prices and include the €0.50/month primary IPv4. Two 2026 increases: April 1 across all lines, then June 15, which applies to new orders and rescales only — existing contracts keep their terms. The June standardization renamed dedicated server models (-1, -2 and -3 suffixes, plus a -1-Ltd limited line) and left the cloud plan names unchanged; the older CX22/CX32/CX42 names went before it. Server Auction, IPs, storage, Load Balancers, Volumes, Snapshots and Object Storage were excluded from the June round. New accounts can get €50 of credit with Hetzner's sign-up code (hetzner.com/promo-code), valid only for the billing period in which it is redeemed.",
+      "current_state": "The page lists three cloud plan categories: Cost-Optimized (marked 'Currently not available', starting from €5.99/month excl. VAT), Regular Performance (starting from €5.49/month excl. VAT), and General Purpose (dedicated vCPUs, starting from €36.99/month excl. VAT). No individual plan names or per-plan prices are shown.",
+      "source_url": "https://www.hetzner.com/cloud/",
+      "category": "Infrastructure",
+      "refused_date": "2026-11-12"
+    },
+    {
       "vendor": "Hex",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_claim",
@@ -5516,6 +5624,18 @@
       "source_url": "https://github.com/highlight/highlight",
       "category": "Logging",
       "refused_date": "2026-10-25"
+    },
+    {
+      "vendor": "HiveMQ",
+      "change_type": "product_deprecated",
+      "reason": "confirmed_unchanged",
+      "detail": "The page matches the stored Lab and Starter terms; the only difference is the absence of Serverless retirement details, which the stored description did not claim were still on the page.",
+      "summary": "The free self-managed option is now called 'Lab' (free, 1 broker, 25 connections, 25 msg/sec, community support, 30-day license renewable manually at no charge). Matches the stored Lab description. The fully-managed entry-level plan is now 'Starter' at from $0.34/hour + $0.80/million messages with a 15-day trial, matching the stored Starter pricing. The Serverless retirement details are absent from the page.",
+      "previous_state": "HiveMQ retires the HiveMQ Cloud Serverless plan on 2026-12-31. New Serverless clusters cannot be created. Existing Serverless clusters run until 2026-12-31, after which clients cannot connect and data is deleted. The Lab license is for learning, evaluation, and small-scale testing on your own infrastructure. It is free, allows one broker deployment, requires no credit card, and supports 25 connections and 25 messages per second with community support. The license is valid for 30 days and can be renewed manually at no charge. HiveMQ Cloud Starter costs from $0.34 an hour plus $0.80 per million messages, with a 15-day trial.",
+      "current_state": "The page does not mention a Serverless plan. It lists self-managed plans (Lab free; Launch $299/month; Run $499/month; Enterprise custom) and a fully-managed Starter plan from $0.34/hour + $0.80/million messages with a 15-day trial, plus fully-managed Enterprise with custom pricing. Lab is free, 1 broker, 25 connections, 25 messages/sec, community support, license valid 30 days and renewable manually at no charge.",
+      "source_url": "https://www.hivemq.com/pricing/",
+      "category": "Messaging",
+      "refused_date": "2026-11-12"
     },
     {
       "vendor": "holistic.dev",
@@ -6674,13 +6794,13 @@
       "vendor": "Liveblocks",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-09-30 (restates_stored_quantities) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
-      "summary": "The Free tier now has a monthly credit of $30, and realtime data storage is 1 GB included, with $0.15 per GB overage. The stored information stated unlimited MAU, unlimited monthly active rooms, 3,000 realtime collaboration minutes, 200 comments, 1 GB realtime data storage, 512 MB file storage, 3 dashboard seats, and 10 projects.",
+      "detail": "the reading of this vendor refused on 2026-10-22 (repeats_a_refused_claim) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "Free tier monthly active rooms dropped from unlimited to 500, and the free tier now lists 3M realtime data storage updates included; the stored description said unlimited monthly active rooms.",
       "previous_state": "Real-time collaboration infrastructure — Free tier includes: Unlimited MAU, Unlimited monthly active rooms, 3,000 realtime collaboration minutes, 200 comments, 1 GB realtime data storage, 512 MB file storage, 3 dashboard seats, 10 projects.",
-      "current_state": "Free tier includes: $30 monthly credits, Unlimited MAU, Unlimited monthly active rooms, 3,000 realtime collaboration minutes, 200 comments, 1 GB realtime data storage, 512 MB file storage, 3 dashboard seats, 10 projects.",
+      "current_state": "Free plan: Unlimited monthly active users, 500 monthly active rooms, 10 simultaneous connections per room, 3,000 realtime collaboration minutes included, 1 GB realtime data stored included, 3M realtime data storage updates included, 200 comments included, 512 MB file storage, 10 projects, 3 dashboard seats.",
       "source_url": "https://liveblocks.io/pricing",
       "category": "Team Collaboration",
-      "refused_date": "2026-10-22"
+      "refused_date": "2026-11-12"
     },
     {
       "vendor": "Liveblocks",
@@ -7096,6 +7216,18 @@
       "category": "AI Coding",
       "refused_date": "2026-09-20",
       "collided_with": "Lovable|limits_increased|2026-09-03|https://lovable.dev/pricing"
+    },
+    {
+      "vendor": "Lumenfall.ai",
+      "change_type": "limits_reduced",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (1 currency), and drops 5 the stored description carried",
+      "summary": "The stored deal mentioned a specific free model, FLUX.1 [schnell] FP8, being free per image via Fireworks AI. The current page lists 'Flux' as a model available, but does not specify that it is free per image or mention the Fireworks AI serving mechanism for this free tier. It only mentions a '$1 credit' for new signups.",
+      "previous_state": "AI media gateway: one OpenAI-compatible API to image and video generation models from several providers, billed at each provider's price with no markup, platform fee or subscription. One model, FLUX.1 [schnell] FP8, is listed free per image (\"Free to try\", served through Fireworks AI). New accounts also get a $1 credit with no card required; Lumenfall's terms say promotional credits typically expire after 90 days. After that you top up prepaid credits. Under Lumenfall's terms (2026-03-05), content sent through free features, including free API usage, may be used to train AI models.",
+      "current_state": "Start Free with $1 Credit No credit card No commitment",
+      "source_url": "https://lumenfall.ai/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-11-12"
     },
     {
       "vendor": "mailchannels.com",
@@ -13523,6 +13655,18 @@
       "source_url": "https://zonomi.com/",
       "category": "DNS & Domain Management",
       "refused_date": "2026-10-22"
+    },
+    {
+      "vendor": "Zonomi",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-22 (no_baseline) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier's DNS record limit is now 10 records in the sign-up section, while the main free tier description still says 20 records; the stored info says 20 records.",
+      "previous_state": "Free DNS hosting: 1 DNS zone (domain name). Up to 20 DNS records. Up to 1 million DNS queries per month.",
+      "current_state": "Free DNS hosting: 1 DNS zone (domain name). Up to 20 DNS records. Up to 1 million DNS queries per month. It's free! However, the sign-up section says: 1 DNS zone (domain name). Up to 10 DNS records. Up to 1 million DNS queries per month.",
+      "source_url": "https://zonomi.com/",
+      "category": "DNS & Domain Management",
+      "refused_date": "2026-11-12"
     },
     {
       "vendor": "Zonomi",

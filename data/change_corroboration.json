@@ -1,26 +1,15 @@
 {
   "held": [
     {
-      "vendor": "cDox",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The free tier still exists with unlimited public links and sharing. The unit/scope of the 150-item limit has changed from pages and sheets to documents.",
-      "previous_state": "Private document editor hosted in Canada. Write, format, collaborate, and publish documents with clean public links. Data is never used for AI training. Free plan includes 150 pages and sheets and unlimited public links.",
-      "current_state": "Free plan is $0 and includes 150 documents, unlimited public links, unlimited sharing and shared folders, real-time collaboration, sync across all devices, PDF/Word/Excel/PowerPoint/Markdown/CSV export, dark mode, no AI training on content, API access at 100 req/min, and support up to three days. Pro is $8/month CAD or $70/year CAD and includes unlimited documents, guest editing, image uploads up to 1 GB, Pro templates, Pro fonts, and API access at 300 req/min.",
-      "source_url": "https://cdox.studio/pricing",
-      "category": "Team Collaboration",
-      "first_read_date": "2026-11-11"
-    },
-    {
-      "vendor": "Corgea",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The Free plan no longer includes the 10 PR scans per month and 10 SAST auto fixes described in previously info. The pricing page now lists PR Scanning and SAST Auto fixes as Growth-plan features, with the Free plan limited to 2 team members and 10 repositories.",
-      "previous_state": "Free autonomous security platform that finds, validates and fixes insecure code and packages across +20 languages and frameworks. Free plan for up to 2 team members and 10 repositories, with 10 PR scans a month and 10 SAST auto fixes. Features: AI SAST, Logic/Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, IaC Scanning.",
-      "current_state": "Free is $0 for individual devs and includes AI SAST, Logic and Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, and IaC Scanning, with a team size of 2 minimum and 10 repositories. PR scans per month and SAST Auto fixes are not listed under Free; PR Scanning appears under Growth, and SAST Auto fixes are listed with limits of 10 (Growth), 50 (Scale), 200 (Enterprise), and Unlimited (Enterprise).",
-      "source_url": "https://corgea.com/pricing/",
-      "category": "Security",
-      "first_read_date": "2026-11-11"
+      "vendor": "Coupler",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The page now presents a 7-day free trial with no credit card required, and paid plans priced by number of connected accounts: Starter from $24/month (billed annually) for one person with 3 accounts, Active from $99 for a team with 15 accounts and unlimited users, Pro from $199 for 50 accounts and hourly refresh, and Custom with higher limits, 15-minute refresh and SSO.",
+      "previous_state": "Data integration tool that syncs between apps. It can create live dashboards and reports, transform and manipulate values, and collect and back up insights. The free plan is limited to one user, data connection, data source, and data destination. Also requires manual data refresh.",
+      "current_state": "Coupler.io is priced by the number of accounts you connect, such as an ad account, an analytics property or a CRM, not by reports or data flows. Every plan includes all sources and destinations, AI Integrations and unlimited data flows. Starter (from $24 a month, billed annually) suits one person with 3 accounts; Active (from $99) suits a team with 15 accounts and unlimited users; Pro (from $199) suits agencies and teams with 50 accounts and hourly refresh; Custom adds higher limits, refresh every 15 minutes and SSO. You can try Coupler.io free for 7 days, no credit card required.",
+      "source_url": "https://www.coupler.io/",
+      "category": "Notebooks & Data Science",
+      "first_read_date": "2026-11-12"
     },
     {
       "vendor": "Harness CI",
@@ -34,37 +23,48 @@
       "first_read_date": "2026-11-01"
     },
     {
-      "vendor": "Logo.dev",
+      "vendor": "Jina AI",
       "change_type": "pricing_restructured",
-      "impact": "low",
-      "summary": "Startup and Pro plan pricing changed: Startup is now $33/mo (was $50/mo or $400/yr) and Pro is now $150/mo (was $180/mo or $1,800/yr). The free Community plan's terms (500K Logo CDN requests, $5 API credits, 100 API requests/min, no credit card) remain the same.",
-      "previous_state": "500K Logo CDN requests a month and $5 of API credits a month for the Brand API and the Logo.dev MCP. Logo images from img.logo.dev count as Logo CDN requests. One credit is 1 cent. A Brand API request costs 5 credits. No credit card is needed. The free plan allows 100 API requests per minute. Paid plans include Startup at $50 a month or $400 a year and Pro at $180 a month or $1,800 a year.",
-      "current_state": "Community is free with 500K Logo CDN requests, $5 API credits, 100 API requests per minute, attribution required for commercial projects, and no credit card needed. Startup is $33/mo with 1M Logo CDN requests and $15 API credits. Pro is $150/mo with 5M Logo CDN requests and $150 API credits. Enterprise is custom.",
-      "source_url": "https://www.logo.dev/pricing",
-      "category": "Design",
-      "first_read_date": "2026-11-11"
-    },
-    {
-      "vendor": "Pingram.io",
-      "change_type": "restriction",
       "impact": "medium",
-      "summary": "The current page's free tier only mentions 100 SMS & Calls/mo and 3,000 Emails/mo, and WhatsApp is listed as 'Soon' rather than available.",
-      "previous_state": "Communication infrastructure in 5 minutes. Free tier includes: 100 SMS and calls, 3000 Emails, Push, Slack, MS Teams, WhatsApp, and more.",
-      "current_state": "Free tier includes 100 SMS & Calls per month and 3,000 Emails per month, with no credit card required; WhatsApp is listed as 'Soon' and Push, Slack, and MS Teams are not mentioned as free-tier channels.",
-      "source_url": "https://www.pingram.io/",
-      "category": "Messaging",
-      "first_read_date": "2026-11-11"
+      "summary": "The current page's FAQ now states that Reader models (ReaderLM-v2, jina-vlm) are CC-BY-NC 4.0 and that Elastic has sold a commercial license separately since August 10, 2026, and that Jina On-Prem is sold as its own SKU since that date. The free tier itself (10M free tokens per new API key, shared across APIs) is still stated on the page.",
+      "previous_state": "Search, Reader, embeddings and reranker APIs. Each new API key comes with 10M free tokens, shared across these APIs; no page says they renew. Jina's FAQ states for the hosted API: \"No separate license needed. Commercial use is covered by the service terms: sign up and pay through this site or the cloud marketplace.\" CC BY-NC 4.0 covers self-hosting the model weights. The exception is jina-embeddings-v4, which is non-commercial only even through the API. Search (s.jina.ai) needs a key and costs at least 10,000 tokens a request, so the free tokens cover at most 1,000 searches. Search allows 100 requests a minute with a free key and the same with a paid key; only a premium key raises it, to 1,000. Reader (r.jina.ai), which converts a URL to LLM-friendly text, allows 500 requests a minute with a free or paid key, 5,000 with a premium key, and 20 without a key. Reader without a key is free and uses no tokens, so it keeps working after a key's free tokens run out. Paid tokens are prepaid: 1 billion for $50 ($0.05 per million), or 11 billion for $500 with a premium key. Jina AI has been part of Elastic since October 2025.",
+      "current_state": "Every new API key comes with 10M free tokens usable across all models; one API key is valid for all Jina AI search foundation products with tokens shared across them. Reader API is free without a key (20 RPM) and with a free key (500 RPM). Search (s.jina.ai) costs a fixed number of tokens starting from 10,000 per request. Reader models (ReaderLM-v2, jina-vlm) are CC-BY-NC 4.0; commercial production use requires a commercial license, which Elastic has sold separately since August 10, 2026. Jina On-Prem is a commercial license sold by Elastic as its own SKU since August 10, 2026.",
+      "source_url": "https://jina.ai/reader/",
+      "category": "AI / ML",
+      "first_read_date": "2026-11-12"
     },
     {
-      "vendor": "Stoplight",
+      "vendor": "Linkup",
       "change_type": "pricing_restructured",
-      "impact": "low",
-      "summary": "The stored free tier (1 user, 1 project) still appears in the comparison table, but the page now shows a 'Basic' plan at $44/month (annual) or $56/month (monthly) with the first 3 users free, and the Free plan's feature set is not clearly enumerated in the page text. The page's plan comparison lists 'Free' as a column but the feature checkmarks are not legible in the provided text, so the free tier's exact limits cannot be confirmed from this page.",
-      "previous_state": "API design and documentation platform — free tier: 1 user, 1 project. Includes OpenAPI visual designer, API editor, interactive docs, API console, code generation, Git sync, automatic SSL",
-      "current_state": "The page lists a Free plan column in the comparison table with 1 user included and 1 maximum project, alongside paid Basic ($44/mo annual, $56/mo monthly, first 3 users free), Startup ($113/mo annual, $147/mo monthly, first 8 users free), Pro Team ($362/mo annual, $453/mo monthly, first 15 users free), and Enterprise (custom) plans.",
-      "source_url": "https://stoplight.io/pricing",
-      "category": "API Development",
-      "first_read_date": "2026-11-11"
+      "impact": "medium",
+      "summary": "The pricing page no longer mentions the $20 monthly credit for professional email sign-ups or the 10 queries/second rate limit; it now advertises 'Run 4,000 queries for free' with no period stated, and the Research tier is now priced at $0.25-$2.50 per request (previously deep search was $0.05-$0.055).",
+      "previous_state": "Web search API for AI agents. Accounts created with a professional email address get $20 of credit, topped back up to $20 each month (Linkup's docs); the pricing page calls this 4,000 free queries and states no period. Linkup's app asks other sign-ups to add a card, with no charge, to unlock the credit. Rate limit: 10 queries a second per organization. Then pay as you go from a prepaid balance: search $0.005 a call ($0.006 with a sourced answer or structured output), deep search $0.05 to $0.055, fetch from $0.001. Top-ups of $1,000 or more earn 10-20% bonus credit.",
+      "current_state": "The page states 'Run 4,000 queries for free' with no period specified. Search is priced at $0.005-$0.006 per request, Fetch at $0.001-$0.006 per request, and Research at $0.25-$2.50 per request. SOC 2 Type II is included on all plans, and ZDR is available with the Enterprise plan.",
+      "source_url": "https://www.linkup.so/pricing",
+      "category": "AI / ML",
+      "first_read_date": "2026-11-12"
+    },
+    {
+      "vendor": "Mem0",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "New adds return an error). The page now presents only Free and Custom plans, with Free described as: unlimited end users. First 30 days 10,000 adds and 1,000 retrievals a month with model calls on Mem0. Your own LLM key, 50,000 adds and 10,000 retrievals a month. Usage-based billing past your limits with a monthly cap you set. Community support.",
+      "previous_state": "Memory layer for AI agents and apps. Free plan: unlimited end users and community support. For the first 30 days Mem0 pays for the model calls, with 10,000 adds and 1,000 retrievals a month. After that, adding memories needs your own LLM key (OpenAI, Anthropic, Azure OpenAI or OpenRouter), billed by your provider; Mem0 puts its recommended models at about $3.55 to $5.34 per 1,000 adds. With a key, Free allows 50,000 adds and 10,000 retrievals a month at no charge from Mem0. Without one, stored memories stay and up to 1,000 searches a month still work, but new adds return an error. Calls past a monthly limit return an error until the next month, unless you connect a key and turn on usage-based billing with a monthly cap you set (Mem0 shows the rate when you turn it on). Mem0 Free accounts that signed up before October 26, 2026 have model calls paid by Mem0 until November 25, 2026; after that, adding memories requires their own LLM key. Starter ($19/month), Growth and Pro are no longer sold to new accounts; existing subscribers keep their plans. Graph memory, user profiles, SSO and on-prem deployment are on the Custom plan, priced by Mem0's sales team. Under Mem0's terms (2026-08-03), Free Plan users grant Mem0 a perpetual licence to their content, including to train AI models; paid plans exclude that, apart from aggregated, de-identified data. Mem0 Open-Source (Apache 2.0) can be self-hosted.",
+      "current_state": "Free plan: unlimited end users; first 30 days 10,000 adds and 1,000 retrievals a month with model calls on Mem0; with your own LLM key, 50,000 adds and 10,000 retrievals a month; usage-based billing past your limits with a monthly cap you set; community support. Custom plan: everything in Free, limits set to your volume, graph memory (entity linking), user profiles, Dream (memory consolidation), advanced analytics, private Slack support, SSO, audit logs and SLA, on-prem deployment, custom integrations.",
+      "source_url": "https://mem0.ai/pricing",
+      "category": "AI / ML",
+      "first_read_date": "2026-11-12"
+    },
+    {
+      "vendor": "ScrumFast",
+      "change_type": "pricing_model_change",
+      "impact": "medium",
+      "summary": "The pricing page now states a paid price of $4 per person per month, contradicting previously 'No paid options.'.",
+      "previous_state": "Up to 15 Users Free. No paid options.",
+      "current_state": "Up to 15 Users Free. No paid options. Price (per person / per month) $12 to $25 + Add-ons. The page also states 'At only $4 per person per month - no ifs and or buts' and 'Up to 15 Users, Always Free!'",
+      "source_url": "https://www.scrumfast.com",
+      "category": "Project Management",
+      "first_read_date": "2026-11-12"
     }
   ],
   "resolved": [
@@ -3553,6 +3553,66 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-11-11 read it as pricing_restructured too",
       "resolved_date": "2026-11-11"
+    },
+    {
+      "vendor": "cDox",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier still exists with unlimited public links and sharing. The unit/scope of the 150-item limit has changed from pages and sheets to documents.",
+      "previous_state": "Private document editor hosted in Canada. Write, format, collaborate, and publish documents with clean public links. Data is never used for AI training. Free plan includes 150 pages and sheets and unlimited public links.",
+      "source_url": "https://cdox.studio/pricing",
+      "first_read_date": "2026-11-11",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-12 read a change the gate refused as unquantified_limit",
+      "resolved_date": "2026-11-12"
+    },
+    {
+      "vendor": "Corgea",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The Free plan no longer includes the 10 PR scans per month and 10 SAST auto fixes described in previously info. The pricing page now lists PR Scanning and SAST Auto fixes as Growth-plan features, with the Free plan limited to 2 team members and 10 repositories.",
+      "previous_state": "Free autonomous security platform that finds, validates and fixes insecure code and packages across +20 languages and frameworks. Free plan for up to 2 team members and 10 repositories, with 10 PR scans a month and 10 SAST auto fixes. Features: AI SAST, Logic/Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, IaC Scanning.",
+      "source_url": "https://corgea.com/pricing/",
+      "first_read_date": "2026-11-11",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-12 read it as limits_reduced too",
+      "resolved_date": "2026-11-12"
+    },
+    {
+      "vendor": "Logo.dev",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "Startup and Pro plan pricing changed: Startup is now $33/mo (was $50/mo or $400/yr) and Pro is now $150/mo (was $180/mo or $1,800/yr). The free Community plan's terms (500K Logo CDN requests, $5 API credits, 100 API requests/min, no credit card) remain the same.",
+      "previous_state": "500K Logo CDN requests a month and $5 of API credits a month for the Brand API and the Logo.dev MCP. Logo images from img.logo.dev count as Logo CDN requests. One credit is 1 cent. A Brand API request costs 5 credits. No credit card is needed. The free plan allows 100 API requests per minute. Paid plans include Startup at $50 a month or $400 a year and Pro at $180 a month or $1,800 a year.",
+      "source_url": "https://www.logo.dev/pricing",
+      "first_read_date": "2026-11-11",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-12 read it as pricing_restructured too",
+      "resolved_date": "2026-11-12"
+    },
+    {
+      "vendor": "Pingram.io",
+      "change_type": "restriction",
+      "impact": "medium",
+      "summary": "The current page's free tier only mentions 100 SMS & Calls/mo and 3,000 Emails/mo, and WhatsApp is listed as 'Soon' rather than available.",
+      "previous_state": "Communication infrastructure in 5 minutes. Free tier includes: 100 SMS and calls, 3000 Emails, Push, Slack, MS Teams, WhatsApp, and more.",
+      "source_url": "https://www.pingram.io/",
+      "first_read_date": "2026-11-11",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-12 read the page as unchanged",
+      "resolved_date": "2026-11-12"
+    },
+    {
+      "vendor": "Stoplight",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "The stored free tier (1 user, 1 project) still appears in the comparison table, but the page now shows a 'Basic' plan at $44/month (annual) or $56/month (monthly) with the first 3 users free, and the Free plan's feature set is not clearly enumerated in the page text. The page's plan comparison lists 'Free' as a column but the feature checkmarks are not legible in the provided text, so the free tier's exact limits cannot be confirmed from this page.",
+      "previous_state": "API design and documentation platform — free tier: 1 user, 1 project. Includes OpenAPI visual designer, API editor, interactive docs, API console, code generation, Git sync, automatic SSL",
+      "source_url": "https://stoplight.io/pricing",
+      "first_read_date": "2026-11-11",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-12 read it as pricing_restructured too",
+      "resolved_date": "2026-11-12"
     }
   ]
 }
