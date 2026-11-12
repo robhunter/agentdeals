@@ -19296,6 +19296,34 @@
       "category": "Startup Perks",
       "alternatives": [],
       "recorded_date": "2026-11-12"
+    },
+    {
+      "vendor": "Mistral AI",
+      "change_type": "free_tier_removed",
+      "date": "2026-11-05",
+      "date_source": "discovered",
+      "summary": "Mistral's Free plan no longer includes API access. Free mode covers Vibe and Studio; creating API keys and calling the API require billing activation and pay-as-you-go with prepaid credits.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "The 2026-11-01 archive capture of docs.mistral.ai/admin/billing-usage/usage-limits: \"Free mode lets you create API keys and use included monthly usage within the limits shown on the Limits page.\" The 2026-10-31 capture of Mistral's API key quickstart: \"Free mode: API access is enabled by default with no credit card required.\"",
+      "current_state": "docs.mistral.ai/admin/billing-usage/usage-limits, read 2026-11-12: \"Free mode includes a monthly usage budget for trying Vibe and Studio. It doesn't include API access. Creating API keys and using the API require billing activation and pay-as-you-go.\" The API key quickstart now requires \"a plan with API access\" and points to billing setup to add a payment method.",
+      "impact": "high",
+      "source_url": "https://docs.mistral.ai/admin/billing-usage/usage-limits",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "archive_check": {
+        "checked": "2026-11-12",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-11-01",
+            "first_new": "2026-11-11",
+            "last_old_capture": "https://web.archive.org/web/20261101104148/https://docs.mistral.ai/admin/billing-usage/usage-limits",
+            "first_new_capture": "https://web.archive.org/web/20261111075828/https://docs.mistral.ai/getting-started/quickstarts/studio/activate-and-generate-api-key"
+          }
+        ]
+      }
     }
   ]
 }
