@@ -78,6 +78,7 @@ describe("the LLM API free-tier answer follows its provider listings", () => {
   let empty: string;
   let groqOnly: string;
   let missing: string;
+  let noApi: string;
 
   before(async () => {
     current = await serve(shipped);
@@ -88,9 +89,16 @@ describe("the LLM API free-tier answer follows its provider listings", () => {
       SiliconFlow: "Free Credits", "LLM7.io": "Paid", "Ollama Cloud": "Paid",
       "Hugging Face": "Free",
     }));
-    restored = await serve(fixture({ "Hugging Face": "Free", OpenRouter: "Free", Cohere: "Free" }, {
+    restored = await serve(fixture({ "Hugging Face": "Free", OpenRouter: "Free", Cohere: "Free", "Mistral AI": "Free" }, {
       "Hugging Face": "Free accounts get monthly Inference Providers API usage.",
       OpenRouter: "Free accounts get no included inference credits. Storage is free.",
+      "Mistral AI": "Free API access.",
+    }));
+    noApi = await serve(fixture({ "Mistral AI": "Free", OpenAI: "Free", "Anthropic API": "Community", Baseten: "Free" }, {
+      "Mistral AI": "Free mode covers Vibe and Studio and does not include API access.",
+      OpenAI: "Free plan: no API access.",
+      "Anthropic API": "The Free plan does not include API access.",
+      Baseten: "Free API access.",
     }));
     empty = await serve(fixture({}));
     groqOnly = await serve(fixture({ Groq: "Free" }));
@@ -112,6 +120,8 @@ describe("the LLM API free-tier answer follows its provider listings", () => {
       const record = records[0];
       return classifyTier(record.tier).class === "free" && !/retired|deprecated|discontinued|sunset|withdrawn/i.test(record.tier)
         && !record.description.toLowerCase().includes("no included inference providers credits")
+        && !record.description.toLowerCase().includes("does not include api access")
+        && !record.description.toLowerCase().includes("no api access")
         ? [readable(cells[0])] : [];
     });
     assert.deepEqual(new Set(namesIn(current)), new Set(expected));
@@ -123,13 +133,17 @@ describe("the LLM API free-tier answer follows its provider listings", () => {
   });
 
   it("follows inference-credit terms without a vendor exclusion", () => {
-    assert.deepEqual(namesIn(restored), ["Cohere", "Hugging Face"]);
+    assert.deepEqual(namesIn(restored), ["Mistral AI", "Cohere", "Hugging Face"]);
+  });
+
+  it("requires API access as well as a free product plan, regardless of the vendor", () => {
+    assert.deepEqual(namesIn(noApi), ["Baseten"]);
   });
 
   it("does not keep a provider whose listing is missing", () => {
     assert.ok(!namesIn(missing).includes("Google Gemini"));
     assert.ok(!namesIn(missing).includes("Groq"));
-    assert.ok(namesIn(missing).includes("Mistral AI"));
+    assert.deepEqual(new Set(namesIn(missing)), new Set(namesIn(current).filter(name => !["Google Gemini", "Groq"].includes(name))));
   });
 
   it("keeps Groq's separate lead when it is the only ongoing free tier", () => {
@@ -147,14 +161,14 @@ describe("the LLM API free-tier answer follows its provider listings", () => {
   });
 
   it("carries the same answer in HTML and structured data, with only the existing figure provenance suffix", () => {
-    for (const html of [current, changed, restored, empty, groqOnly, missing]) {
+    for (const html of [current, changed, restored, empty, groqOnly, missing, noApi]) {
       const { visible, structured } = answers(html);
       assert.equal(structured.replace(/ Figures compiled \d{4}-\d{2}-\d{2}[^.]*\.$/, ""), visible);
     }
   });
 
   it("does not single out Mistral as the frontier free option", () => {
-    for (const html of [current, changed, restored, empty, groqOnly, missing]) {
+    for (const html of [current, changed, restored, empty, groqOnly, missing, noApi]) {
       for (const answer of Object.values(answers(html))) assert.ok(!answer.includes("For frontier models specifically"));
     }
   });
