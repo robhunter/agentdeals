@@ -36268,12 +36268,12 @@
       },
       "referral_program": {
         "available": true,
-        "referrer_benefit": "100 bonus credits on the referred person's first monthly payment, then 25 for each later monthly payment, up to 400 per person; all 400 at once if they pay for a year",
+        "referrer_benefit": "100 bonus credits on the referred person's first monthly payment, then 25 for each later monthly payment, up to 400 per person (375 after a year of 12 monthly payments, 400 at the 13th); all 400 at once if they pay for a year up front",
         "referee_benefit": "10 bonus credits on signing up through the link",
-        "program_url": "https://docs.lovable.dev/introduction/faq",
+        "program_url": "https://docs.lovable.dev/introduction/referral-program",
         "type": "self-service",
         "commission_type": "credits",
-        "notes": "A sign-up alone earns the referrer nothing (Lovable FAQ, read 2026-11-12).",
+        "notes": "A sign-up alone earns the referrer nothing (Lovable referral program docs, read 2026-11-12).",
         "read_on": "2026-11-12"
       },
       "free_plan_excerpt": {
