@@ -9,14 +9,14 @@ const REPO = path.join(__dirname, "..");
 
 const STATED: Record<string, string[]> = {
   "/ai-ml-alternatives": [
-    "Mistral's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
-    "Mistral AI — Free plan has no API access; API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
+    "Mistral: The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.",
+    "Mistral AI — The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits..",
     "Kaggle — a weekly quota of 30 GPU hours (one P100 or two T4s) and up to 20 TPU hours, at no charge.",
     "Qdrant — a free single-node cluster (0.5 vCPU, 1 GB RAM, 4 GB disk) for testing, suspended after a week unused.",
   ],
   "/free-llm-apis": [
-    "Mistral's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits. OpenRouter aggregates",
-    "Mistral's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits. OpenRouter gives one API key",
+    "Mistral: The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits. OpenRouter aggregates",
+    "Mistral: The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits. OpenRouter gives one API key",
     "Cloudflare Workers AI — 10,000 Neurons a day at no charge on every account; on the Workers Free plan, requests beyond that fail until the daily reset at 00:00 UTC. Some models, including Kimi K2.6 and GLM-5.3, need the Workers Paid plan or prepaid AI Gateway credits.",
     "Ollama — open source (MIT) and free to run on your own machine; its cloud models are paid per token on the $0 Pay as you go plan. Pro and higher plans include monthly usage credits.",
   ],

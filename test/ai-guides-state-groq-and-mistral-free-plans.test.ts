@@ -35,10 +35,10 @@ const STATED: Record<string, string[]> = {
     "30 RPM; 1K requests and 200K tokens/day per model",
     "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B",
     "Mistral Large 3, Medium 3.5, Small 4",
-    "Mistral AI Free plan has no API access; API keys and calls require billing activation and pay-as-you-go with prepaid credits Mistral Large 3, Medium 3.5, Small 4",
+    "Mistral AI The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits. Mistral Large 3, Medium 3.5, Small 4",
   ],
   "/gemini-api-pricing-2026": [
-    "Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
+    "The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.",
   ],
   "/free-ai-stack": [
     "Ultra-fast inference on LPU hardware — 30 RPM, 1,000 requests and 200K tokens a day per model, free. Serves gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B. Best balance of speed, limits, and model quality for prototyping.",
@@ -47,19 +47,19 @@ const STATED: Record<string, string[]> = {
   "/ai-ml-alternatives": [
     "offers blazing-fast gpt-oss-120b inference at 30 RPM free",
     "with gpt-oss-120b, 30 RPM free",
-    "Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
-    "Mistral AI — Free plan has no API access; API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
-    "Mistral AI LLM API Free plan has no API access; API keys and calls require billing activation and pay-as-you-go with prepaid credits No",
+    "The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.",
+    "Mistral AI — The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits..",
+    "Mistral AI LLM API The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits. No",
   ],
   "/free-llm-apis": [
     "delivers gpt-oss-120b at 30 RPM",
     "30 RPM free with gpt-oss-120b",
-    "Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
-    "Mistral's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
+    "The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.",
+    "Mistral: The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.",
   ],
   "/llm-api-pricing": [
     "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model",
-    "Mistral AI's Free plan does not include API access.",
+    "Mistral AI: The Free plan has included no API access since about 2026-11-05.",
     "For open models, SiliconFlow's international site lists gpt-oss-120b at $0.05/$0.45 and DeepSeek-V4.1-Flash at $0.15/$0.60 (per 1M tokens).",
     "Open-weight inference is cheap: Groq's free plan allows 200K tokens a day on each of its free chat models.",
     "Opus-class prices fell from $15/$75 per M tokens (Opus 4.1) to $5/$25 in November 2025 and $4/$20 with Opus 5.5",
@@ -70,9 +70,9 @@ const STATED: Record<string, string[]> = {
     "Groq serves a short list of open-weight models on its hardware; the free plan covers gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B.",
   ],
   "/groq-vs-mistral-ai": [
-    "Mistral AI offers its own proprietary models (Mistral Large, Codestral, Pixtral) and its Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
+    "Mistral AI offers its own proprietary models (Mistral Large, Codestral, Pixtral). The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.",
     "Groq serves open-weight models (gpt-oss, Qwen) on its hardware.",
-    "Mistral's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
+    "Mistral: The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.",
     "Groq allows 200K tokens a day per model (about 6M a month) at 30 RPM.",
     "want to use open-weight models such as gpt-oss",
     "Groq wins on speed; Mistral wins on model variety.",
@@ -84,7 +84,7 @@ const STATED: Record<string, string[]> = {
   ],
   "/ai-free-tiers": [
     "Groq serves fast inference on a free plan, and Google Antigravity has a free individual plan with weekly limits.",
-    "Mistral's Free plan does not include API access. API keys and calls require billing activation and pay-as-you-go with prepaid credits.",
+    "Mistral: The Free plan has included no API access since about 2026-11-05. API keys and API calls require billing activation and pay-as-you-go with prepaid credits.",
   ],
 };
 
@@ -331,7 +331,7 @@ describe("the AI guides state Groq's and Mistral's free plans as the vendors lis
     }
     assert.ok(textOf(served.get("/llm-api-pricing")!).includes("gpt-oss-120b"));
     for (const page of ["/llm-api-pricing", "/free-llm-apis"]) {
-      assert.ok(unitsOf(served.get(page)!).some((unit) => /Mistral/.test(unit) && /does not include API access/.test(unit)), page);
+      assert.ok(unitsOf(served.get(page)!).some((unit) => /Mistral/.test(unit) && /has included no API access/.test(unit)), page);
     }
   });
 
