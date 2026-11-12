@@ -10342,6 +10342,13 @@
           "quote": "Have an active, paid ChatGPT Pro or Business subscription that is at least seven days old. Free trials and complimentary subscriptions don't qualify.",
           "url": "https://developers.openai.com/api/docs/guides/chatgpt-api-credits",
           "read_on": "2026-10-29"
+        },
+        {
+          "text": "OpenAI's API has three paid usage tiers, Build, Launch and Grow, which replaced five tiers on 2026-10-06. Build is from $5 to under $100 in total credit purchases, Launch from $100 to under $500, and Grow from $500. Monthly usage limits are Build $500, Launch $5,000, Grow $200,000. Your tier upgrades automatically as total credit purchases reach each threshold. Higher tiers generally provide higher rate limits.",
+          "quote": "The three paid usage tiers are Build, Launch, and Grow. Your organization's usage tier upgrades automatically as its total credit purchases reach each threshold. Higher tiers generally provide higher rate limits across models.",
+          "url": "https://developers.openai.com/api/docs/guides/rate-limits",
+          "read_on": "2026-11-12",
+          "operating_detail": true
         }
       ],
       "tier": "Pay-as-you-go",
