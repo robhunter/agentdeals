@@ -3231,7 +3231,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "e95cae1404123e4d",
+      "hash": "70c1e0e8b1c706a2",
       "changed": "2026-11-12"
     },
     "/firebase-alternatives": {
@@ -3661,7 +3661,7 @@
       "changed": "2026-11-12"
     },
     "/stack-check": {
-      "hash": "5ce67b6e88b56d9d",
+      "hash": "336945973ce93999",
       "changed": "2026-11-12"
     },
     "/stacks": {
@@ -3689,11 +3689,11 @@
       "changed": "2026-11-10"
     },
     "/startup-credits": {
-      "hash": "78f93372d3083db4",
+      "hash": "98dc8634e5cf65fd",
       "changed": "2026-11-12"
     },
     "/state-of-free-tiers": {
-      "hash": "dd0be10b8498c5b5",
+      "hash": "5f29af39edc1f940",
       "changed": "2026-11-12"
     },
     "/storage-alternatives": {
@@ -3931,7 +3931,7 @@
       "changed": "2026-11-09"
     },
     "/trends/startup-perks": {
-      "hash": "256074dffd4ea2a7",
+      "hash": "3d515ca65855c35c",
       "changed": "2026-11-12"
     },
     "/trends/status-pages": {
