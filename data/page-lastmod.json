@@ -3188,8 +3188,8 @@
       "changed": "2026-11-12"
     },
     "/disclosure": {
-      "hash": "6fa2a1e69b4b3957",
-      "changed": "2026-11-03"
+      "hash": "1940fc44b776f232",
+      "changed": "2026-11-12"
     },
     "/email-alternatives": {
       "hash": "65b48ea867d59eee",
@@ -3463,8 +3463,8 @@
       "changed": "2026-11-08"
     },
     "/referral-programs": {
-      "hash": "fadac09c37545d06",
-      "changed": "2026-10-15"
+      "hash": "f83f49902f2164b0",
+      "changed": "2026-11-12"
     },
     "/reports": {
       "hash": "a442710be1b600db",
@@ -6960,7 +6960,7 @@
       "changed": "2026-11-12"
     },
     "/vendor/lovable": {
-      "hash": "e7f1eda873d32f2d",
+      "hash": "26b537c5e158871b",
       "changed": "2026-11-12"
     },
     "/vendor/luadns-com": {

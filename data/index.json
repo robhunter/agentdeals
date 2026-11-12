@@ -1192,13 +1192,13 @@
       },
       "referral_program": {
         "available": true,
-        "referrer_benefit": "$25 credit",
+        "referrer_benefit": "$25 credit after the referred account spends its first $25",
         "referee_benefit": "No credit stated on the referral page",
         "program_url": "https://www.digitalocean.com/referral-program",
         "type": "self-service",
         "commission_type": "credits",
         "notes": "The referrer gets $25 after the referred account spends its first $25. The referral page states no credit for the referred account.",
-        "read_on": "2026-10-08"
+        "read_on": "2026-11-12"
       },
       "source_check": {
         "checked": "2026-10-31",
@@ -1241,13 +1241,13 @@
       },
       "referral_program": {
         "available": true,
-        "referrer_benefit": "$25 credit",
+        "referrer_benefit": "$25 credit after the referred account spends its first $25",
         "referee_benefit": "No credit stated on the referral page",
         "program_url": "https://www.digitalocean.com/referral-program",
         "type": "self-service",
         "commission_type": "credits",
         "notes": "The referrer gets $25 after the referred account spends its first $25. The referral page states no credit for the referred account.",
-        "read_on": "2026-10-08"
+        "read_on": "2026-11-12"
       },
       "source_check": {
         "checked": "2026-10-31",
@@ -36268,13 +36268,13 @@
       },
       "referral_program": {
         "available": true,
-        "referrer_benefit": "100 bonus credits when they pay for their first Pro or Business subscription",
+        "referrer_benefit": "100 bonus credits on the referred person's first monthly payment, then 25 for each later monthly payment, up to 400 per person; all 400 at once if they pay for a year",
         "referee_benefit": "10 bonus credits on signing up through the link",
         "program_url": "https://docs.lovable.dev/introduction/faq",
         "type": "self-service",
         "commission_type": "credits",
-        "notes": "A sign-up alone earns the referrer nothing (Lovable FAQ, read 2026-10-05).",
-        "read_on": "2026-10-05"
+        "notes": "A sign-up alone earns the referrer nothing (Lovable FAQ, read 2026-11-12).",
+        "read_on": "2026-11-12"
       },
       "free_plan_excerpt": {
         "text": "The free plan includes a daily grant of 5 build credits (up to 30 a month), plus monthly grants of 20 Cloud credits. The free plan also grants 4 credits usable by AI features built into user apps, to try the feature before subscribing.",
