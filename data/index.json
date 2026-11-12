@@ -25587,7 +25587,7 @@
     {
       "vendor": "Choreo",
       "category": "Cloud Hosting",
-      "description": "AI-native internal developer platform as a service. The free tier includes up to 5 components and $100 credits per month.",
+      "description": "Choreo is now WSO2 Developer Platform, an internal developer platform as a service. Its free Developer plan, for proofs of concept and low-traffic workloads, allows up to 5 components and gives US$1,000 a year of data plane credits.",
       "tier": "Free",
       "url": "https://wso2.com/choreo/",
       "tags": [
