@@ -19492,6 +19492,22 @@
       "listing_effect": "none",
       "what_ends": "Sourcegraph Cody",
       "announced_on": "2026-11-09"
+    },
+    {
+      "vendor": "HCP Vagrant",
+      "change_type": "product_deprecated",
+      "date": "2026-12-31",
+      "summary": "On December 31, 2026, HashiCorp decommissions all remaining HCP Vagrant deployments. After the shutdown dates, boxes can no longer be created or shared through HCP Vagrant or the Vagrant Public Registry: new boxes and registries could not be created from October 1, 2026, and support and maintenance for existing deployments ended on November 2, 2026. The Vagrant CLI and its source on GitHub stay available; boxes must move to a repository the team hosts, which serves the .box files and catalog metadata to the Vagrant CLI.",
+      "previous_state": "HCP Vagrant and the Vagrant Public Registry hosted Vagrant boxes for the Vagrant CLI to download and share, with no announced end.",
+      "current_state": "HashiCorp's blog, \"HCP Vagrant deprecation: important dates and migration guidance\" (read 2026-11-12): \"End of new creation: October 1, 2026. After this date, users cannot create new Vagrant boxes or registries\", \"End of support and maintenance: November 2, 2026\", \"End of operations: December 31, 2026. HashiCorp will decommission all remaining Vagrant deployments\". \"This deprecation applies only to HCP Vagrant. The Vagrant CLI and source repository on GitHub will remain available.\"",
+      "impact": "high",
+      "source_url": "https://www.hashicorp.com/en/blog/hcp-vagrant-deprecation-important-dates-and-migration-guidance",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "HCP Vagrant and the Vagrant Public Registry"
     }
   ]
 }
