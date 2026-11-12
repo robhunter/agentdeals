@@ -19458,6 +19458,40 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "what_ends": "remove.bg's self-service API and website"
+    },
+    {
+      "vendor": "Gadget",
+      "change_type": "product_deprecated",
+      "date": "2027-03-31",
+      "summary": "Gadget, the hosted platform for building web and Shopify apps, is shutting down. New applications cannot be started since November 9, 2026, and first-time deploys to production are allowed until the end of November 2026. Gadget support remains available until the end of 2026. Existing apps keep running until March 31, 2027, when the platform shuts down.",
+      "previous_state": "Gadget hosted web and Shopify apps with their backend, database and API, with no announced end.",
+      "current_state": "Gadget's blog, \"Gadget is winding down: Here's what it means for your apps\", November 9, 2026 (read 2026-11-12): \"We've decided to shut down Gadget. The platform will stay up until March 31, 2027, and nothing changes for your apps until then.\" \"New applications cannot be started effective immediately. First-time deploys to production will be allowed until end of November.\" \"Gadget support remains available until end of year.\"",
+      "impact": "high",
+      "source_url": "https://gadget.dev/blog/gadget-wind-down",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Gadget",
+      "announced_on": "2026-11-09"
+    },
+    {
+      "vendor": "Sourcegraph Cody",
+      "change_type": "product_deprecated",
+      "date": "2027-01-31",
+      "summary": "Sourcegraph Cody, Sourcegraph's AI coding assistant, reaches end of life on January 31, 2027. Sourcegraph announced this on 2026-11-09. For code understanding it points Cody users to its Deep Search and MCP integrations, which it says are not one-for-one replacements for every Cody capability.",
+      "previous_state": "Sourcegraph offered Cody, an AI coding assistant with IDE integrations, with no announced end.",
+      "current_state": "Sourcegraph's blog, \"Sunsetting Sourcegraph Cody and building the future of code intelligence\", November 9, 2026 (read 2026-11-12): \"Today, we're announcing that we will end of life Sourcegraph Cody on January 31, 2027.\"",
+      "impact": "high",
+      "source_url": "https://sourcegraph.com/blog/sunsetting-cody-future-of-code-intelligence",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Sourcegraph Cody",
+      "announced_on": "2026-11-09"
     }
   ]
 }
