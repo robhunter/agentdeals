@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-11",
+  "generated": "2026-11-12",
   "pages": {
     "/": {
       "daily": true
@@ -3686,8 +3686,8 @@
       "changed": "2026-11-10"
     },
     "/startup-credits": {
-      "hash": "ff99ffbd0939117b",
-      "changed": "2026-11-11"
+      "hash": "553908d4519add6b",
+      "changed": "2026-11-12"
     },
     "/state-of-free-tiers": {
       "hash": "bc71c96fe18fe096",
