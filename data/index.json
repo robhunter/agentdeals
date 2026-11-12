@@ -5331,10 +5331,10 @@
           "read_on": "2026-10-22"
         },
         {
-          "text": "Cloudflare prices models in Neurons per million tokens. @cf/openai/gpt-oss-20b costs 18,182 Neurons per million input tokens and 27,273 per million output tokens. @cf/openai/gpt-oss-120b costs 31,818 and 68,182 Neurons respectively. @cf/meta/llama-3.3-70b-instruct-fp8-fast costs 26,668 and 204,805 Neurons. 10,000 Neurons pay for about 367,000 output tokens of gpt-oss-20b, 147,000 of gpt-oss-120b, or 49,000 of llama-3.3-70b-instruct-fp8-fast, not counting input tokens.",
+          "text": "Cloudflare prices models in Neurons per million tokens. @cf/openai/gpt-oss-20b costs 18,182 Neurons per million input tokens and 27,273 per million output tokens. @cf/openai/gpt-oss-120b costs 31,818 and 68,182 Neurons respectively. @cf/meta/llama-3.3-70b-instruct-fp8-fast costs 26,668 and 204,805 Neurons. @cf/meta/llama-3.1-8b-instruct-fp8-fast costs 4,119 and 34,868 Neurons. 10,000 Neurons pay for about 367,000 output tokens of gpt-oss-20b, 147,000 of gpt-oss-120b, 49,000 of llama-3.3-70b-instruct-fp8-fast, or 287,000 of llama-3.1-8b-instruct-fp8-fast, not counting input tokens. Other models have their own rates on Cloudflare's pricing page.",
           "quote": "The Price in Tokens column is equivalent to the Price in Neurons column - the different units are displayed so you can easily compare and understand pricing.",
           "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
-          "read_on": "2026-11-03"
+          "read_on": "2026-11-12"
         },
         {
           "text": "Workers AI is subject to Cloudflare's Self-Serve Subscription Agreement. The agreement does not restrict commercial use.",
