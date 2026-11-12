@@ -1144,8 +1144,8 @@
       "changed": "2026-11-11"
     },
     "/category/cloud-hosting": {
-      "hash": "cdf593a9de4f3566",
-      "changed": "2026-11-11"
+      "hash": "fdac92b45b8eedd1",
+      "changed": "2026-11-12"
     },
     "/category/cloud-iaas": {
       "hash": "22272ebf5153f70f",
@@ -3360,7 +3360,7 @@
       "changed": "2026-11-12"
     },
     "/hosting-alternatives": {
-      "hash": "93cf463a06c0d475",
+      "hash": "d15e65ee067bea8d",
       "changed": "2026-11-12"
     },
     "/hosting-free-tier-comparison-2026": {
@@ -3661,7 +3661,7 @@
       "changed": "2026-11-12"
     },
     "/stack-check": {
-      "hash": "ad03ea424512189b",
+      "hash": "915498084780c557",
       "changed": "2026-11-12"
     },
     "/stacks": {
