@@ -19324,6 +19324,40 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Google Programmable Search Engine",
+      "change_type": "product_deprecated",
+      "date": "2027-01-01",
+      "summary": "Existing customers can call Google's Custom Search JSON API until January 1, 2027, when Google discontinues it. It has been closed to new customers since January 20, 2026. Programmable Search Engine engines set to search the entire web, or more than 50 domains, can do so until the same date. Google names Vertex AI Search as the alternative for up to 50 domains.",
+      "previous_state": "Existing customers could call the Custom Search JSON API with 100 free queries a day, then $5 per 1,000 queries up to 10,000 a day.",
+      "current_state": "Google's Custom Search JSON API overview (read 2026-11-12): \"The following pricing applies only to existing Custom Search JSON API customers until the service discontinuation on January 1, 2027. This API is not available for new customers.\" Google's Programmable Search Engine blog, 2026-01-20: \"Your transition to an alternative solution needs to be completed by January 1, 2027.\"",
+      "impact": "high",
+      "source_url": "https://developers.google.com/custom-search/v1/overview",
+      "category": "Search",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Google's Custom Search JSON API",
+      "announced_on": "2026-01-20"
+    },
+    {
+      "vendor": "Google Jules",
+      "change_type": "product_deprecated",
+      "date": "2026-10-29",
+      "discontinued_date": "2026-12-31",
+      "date_source": "vendor_page",
+      "summary": "Jules, Google's asynchronous coding agent, winds down on December 31, 2026. Google announced on 2026-10-29 that sessions could be finished until November 11, 2026, and that Jules is read-only from then until the end of the year. Code, branches and pull requests Jules created stay in GitHub; settings, memories and session histories can be exported to a local folder.",
+      "what_ends": "Google Jules",
+      "listing_effect": "none",
+      "previous_state": "Jules took new coding sessions on connected GitHub repositories, with no announced end.",
+      "current_state": "Jules changelog, \"Jules Turndown\", October 29, 2026 (read 2026-11-12): \"Jules will wind down on December 31, 2026. You have until November 11, 2026 to continue finishing up sessions. After November 11, 2026, we will be turning Jules to read-only until the end of the year.\"",
+      "impact": "high",
+      "source_url": "https://jules.google/docs/changelog",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-11-12"
     }
   ]
 }
