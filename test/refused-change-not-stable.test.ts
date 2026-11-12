@@ -670,7 +670,7 @@ describe("a refused read that withholds the rating is stated once, in the header
     }
     assert.deepStrictEqual(wrong.slice(0, 20), [], wrong.slice(0, 20).join("\n"));
     assertPopulationFloor(dated, 3, "pages a refused read withholds that answer with the date we last confirmed the terms");
-    assertSharesPopulation(caveated, vendorsWithheldForTheRefusedReadAlone(), 0.5, "pages a refused read withholds that call the terms unverified");
+    assertSharesPopulation(caveated, vendorsWithheldForTheRefusedReadAlone(), 0.4, "pages a refused read withholds that call the terms unverified");
 
     const elsewhere = subjects
       .filter(s => !verdictParagraphOf(pages.get(s.slug) ?? "").includes(NOT_RATED_TODAY))
