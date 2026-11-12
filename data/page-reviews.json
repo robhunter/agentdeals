@@ -1832,6 +1832,7 @@
         "localstack",
         "minimax",
         "minio",
+        "mistral-ai",
         "neon",
         "odrive",
         "ollama-cloud",
@@ -1928,8 +1929,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 142,
-      "table_figures_from_records": 93,
+      "table_figures": 143,
+      "table_figures_from_records": 94,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1953,8 +1954,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 31,
-          "from_records": 31
+          "figures": 32,
+          "from_records": 32
         }
       ],
       "reads_changes": true,
@@ -2167,8 +2168,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 109,
-      "table_figures_from_records": 32,
+      "table_figures": 110,
+      "table_figures_from_records": 33,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2187,8 +2188,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 0,
-          "from_records": 0
+          "figures": 1,
+          "from_records": 1
         }
       ],
       "reads_changes": true,

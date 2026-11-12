@@ -19296,6 +19296,102 @@
       "category": "Startup Perks",
       "alternatives": [],
       "recorded_date": "2026-11-12"
+    },
+    {
+      "vendor": "Mistral AI",
+      "change_type": "free_tier_removed",
+      "date": "2026-11-05",
+      "date_source": "discovered",
+      "summary": "Mistral's Free plan no longer includes API access. Free mode covers Vibe and Studio; creating API keys and calling the API require billing activation and pay-as-you-go with prepaid credits.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "The 2026-11-01 archive capture of docs.mistral.ai/admin/billing-usage/usage-limits: \"Free mode lets you create API keys and use included monthly usage within the limits shown on the Limits page.\" The 2026-10-31 capture of Mistral's API key quickstart: \"Free mode: API access is enabled by default with no credit card required.\"",
+      "current_state": "docs.mistral.ai/admin/billing-usage/usage-limits, read 2026-11-12: \"Free mode includes a monthly usage budget for trying Vibe and Studio. It doesn't include API access. Creating API keys and using the API require billing activation and pay-as-you-go.\" The API key quickstart now requires \"a plan with API access\" and points to billing setup to add a payment method.",
+      "impact": "high",
+      "source_url": "https://docs.mistral.ai/admin/billing-usage/usage-limits",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "archive_check": {
+        "checked": "2026-11-12",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-11-01",
+            "first_new": "2026-11-11",
+            "last_old_capture": "https://web.archive.org/web/20261101104148/https://docs.mistral.ai/admin/billing-usage/usage-limits",
+            "first_new_capture": "https://web.archive.org/web/20261111075828/https://docs.mistral.ai/getting-started/quickstarts/studio/activate-and-generate-api-key"
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "Google Programmable Search Engine",
+      "change_type": "product_deprecated",
+      "date": "2027-01-01",
+      "summary": "Existing customers can call Google's Custom Search JSON API until January 1, 2027, when Google discontinues it. It is closed to new customers. Programmable Search Engine engines set to search the entire web, or more than 50 domains, can do so until the same date. Google names Vertex AI Search as the alternative for up to 50 domains.",
+      "previous_state": "Existing customers could call the Custom Search JSON API with 100 free queries a day, then $5 per 1,000 queries up to 10,000 a day.",
+      "current_state": "Google's Custom Search JSON API overview (read 2026-11-12): \"The following pricing applies only to existing Custom Search JSON API customers until the service discontinuation on January 1, 2027. This API is not available for new customers.\" Google's Programmable Search Engine blog, 2026-01-20: \"Your transition to an alternative solution needs to be completed by January 1, 2027.\"",
+      "impact": "high",
+      "source_url": "https://developers.google.com/custom-search/v1/overview",
+      "category": "Search",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Google's Custom Search JSON API",
+      "announced_on": "2026-01-20"
+    },
+    {
+      "vendor": "Google Jules",
+      "change_type": "product_deprecated",
+      "date": "2026-12-31",
+      "summary": "Jules, Google's asynchronous coding agent, has been read-only since November 11, 2026, and winds down on December 31, 2026. Google announced this on 2026-10-29, giving users until November 11, 2026 to finish their sessions. Code, branches and pull requests Jules created stay in GitHub; settings, memories and session histories can be exported to a local folder.",
+      "previous_state": "Jules took new coding sessions on connected GitHub repositories, with no announced end.",
+      "current_state": "Jules changelog, \"Jules Turndown\", October 29, 2026 (read 2026-11-12): \"Jules will wind down on December 31, 2026. You have until November 11, 2026 to continue finishing up sessions. After November 11, 2026, we will be turning Jules to read-only until the end of the year.\"",
+      "impact": "high",
+      "source_url": "https://jules.google/docs/changelog",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Google Jules",
+      "announced_on": "2026-10-29"
+    },
+    {
+      "vendor": "Zeabur",
+      "change_type": "product_deprecated",
+      "date": "2026-12-31",
+      "summary": "Zeabur is winding down. On December 1, 2026, services running on its shared clusters are paused (they can be restarted by hand to back up data), dedicated server renewals are disabled, and each dedicated server shuts down on its own expiration date. On December 31, 2026, all dedicated servers and shared clusters stop. New dedicated servers and domains can no longer be bought since October 17, 2026.",
+      "previous_state": "Zeabur ran services on shared clusters and dedicated servers and sold domains, with no announced end.",
+      "current_state": "Zeabur's blog, \"Zeabur is shutting down: what happens next\", October 17, 2026 (read 2026-11-12): \"Some services will begin shutting down on December 1, 2026, and all dedicated servers and shared clusters will be shut down by December 31.\" Zeabur says the data deletion date, the final data export deadline and the support closing date are to be announced.",
+      "impact": "high",
+      "source_url": "https://zeabur.com/blogs/zeabur-is-shutting-down",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Zeabur",
+      "announced_on": "2026-10-17"
+    },
+    {
+      "vendor": "Conductor",
+      "change_type": "product_deprecated",
+      "date": "2026-11-20",
+      "summary": "Conductor Cloud, where Conductor runs teams of Claude Code, Codex, Cursor and OpenCode agents on hosted sandboxes, shuts down on November 20, 2026, when Conductor begins deleting its user data. It goes read-only on November 13, 2026: old chats can still be read and exported, but no new messages sent. Conductor is joining Meta. Since November 4, 2026, new users cannot sign up or download the app. The local Mac app keeps working and gets new models and critical bug fixes until early 2027.",
+      "previous_state": "Conductor ran coding agents in parallel workspaces on a Mac and in Conductor Cloud, on a free plan or a Pro plan, with no announced end.",
+      "current_state": "Conductor's changelog, 0.93.0, \"Conductor is joining Meta\", November 4, 2026 (read 2026-11-12): \"Conductor Cloud goes read-only on November 13 and shuts down on November 20. Local Conductor keeps getting new models and critical bug fixes until early 2027.\" Its announcement: \"New users can no longer sign up for Conductor or download the app. Existing free users can't upgrade to a pro plan, but pro users can keep using pro features for free.\"",
+      "impact": "medium",
+      "source_url": "https://www.conductor.build/changelog/0.93.0-conductor-is-joining-meta",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Conductor Cloud",
+      "announced_on": "2026-11-04"
     }
   ]
 }
