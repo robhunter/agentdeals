@@ -22,11 +22,11 @@
       "changed": "2026-11-12"
     },
     "/ai-free-tiers": {
-      "hash": "051be45780a4ef66",
+      "hash": "4ca980a5a8d96372",
       "changed": "2026-11-12"
     },
     "/ai-ml-alternatives": {
-      "hash": "86b28f1fc86e74e5",
+      "hash": "fac580787e7700f3",
       "changed": "2026-11-12"
     },
     "/alternative-to": {
@@ -1108,7 +1108,7 @@
       "changed": "2026-11-11"
     },
     "/category/ai-ml": {
-      "hash": "f55432c831e4842a",
+      "hash": "166c49e540217675",
       "changed": "2026-11-12"
     },
     "/category/analytics": {
@@ -3266,7 +3266,7 @@
       "changed": "2026-11-12"
     },
     "/free-llm-apis": {
-      "hash": "68821f9eb8cb943b",
+      "hash": "b689ee937321347e",
       "changed": "2026-11-12"
     },
     "/free-nextjs-stack": {
@@ -3304,7 +3304,7 @@
       "changed": "2026-11-12"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "eb785c179bd49d70",
+      "hash": "3821a6a1447ff8bc",
       "changed": "2026-11-12"
     },
     "/github-actions-alternatives": {
@@ -3316,7 +3316,7 @@
       "changed": "2026-11-09"
     },
     "/google-developer-program-2026": {
-      "hash": "445a545c98e1aa1c",
+      "hash": "c855775e2dc1b19d",
       "changed": "2026-11-12"
     },
     "/groq-vs-hugging-face": {
@@ -3324,8 +3324,8 @@
       "changed": "2026-11-06"
     },
     "/groq-vs-mistral-ai": {
-      "hash": "10ae6ea803392b13",
-      "changed": "2026-11-11"
+      "hash": "07ca0451fabc730d",
+      "changed": "2026-11-12"
     },
     "/guides": {
       "hash": "7a92aabfb38ffb2a",
@@ -3376,7 +3376,7 @@
       "changed": "2026-11-12"
     },
     "/llm-api-pricing": {
-      "hash": "0057ecfce91ab328",
+      "hash": "1e1fb52d7258fdf1",
       "changed": "2026-11-12"
     },
     "/localstack-alternatives": {
@@ -3412,16 +3412,16 @@
       "changed": "2026-11-07"
     },
     "/openai-assistants-alternatives": {
-      "hash": "49592375a8bae9d0",
-      "changed": "2026-11-11"
+      "hash": "57219ae62fcf4974",
+      "changed": "2026-11-12"
     },
     "/openai-assistants-migration": {
       "hash": "45934ee03d95c063",
       "changed": "2026-11-11"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "7185b24b1eeaeceb",
-      "changed": "2026-11-11"
+      "hash": "d9c60502b7a4e062",
+      "changed": "2026-11-12"
     },
     "/postman-alternatives": {
       "hash": "d4b234f7203c6dc4",
@@ -3661,7 +3661,7 @@
       "changed": "2026-11-12"
     },
     "/stack-check": {
-      "hash": "ea086401feb09190",
+      "hash": "ed415216f330e27a",
       "changed": "2026-11-12"
     },
     "/stacks": {
