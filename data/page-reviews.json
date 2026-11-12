@@ -1989,8 +1989,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 71,
-      "table_figures_from_records": 57,
+      "table_figures": 70,
+      "table_figures_from_records": 56,
       "tables": [
         {
           "label": "1. What Changed on April 1",
@@ -2004,8 +2004,8 @@
         },
         {
           "label": "6. Free LLM API Comparison",
-          "figures": 57,
-          "from_records": 57
+          "figures": 56,
+          "from_records": 56
         }
       ],
       "reads_changes": true,
@@ -2314,8 +2314,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 118,
-      "table_figures_from_records": 117,
+      "table_figures": 117,
+      "table_figures_from_records": 116,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2324,8 +2324,8 @@
         },
         {
           "label": "What You Actually Get for Free",
-          "figures": 30,
-          "from_records": 29
+          "figures": 29,
+          "from_records": 28
         },
         {
           "label": "Upcoming Changes",
@@ -3143,13 +3143,18 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 39,
-      "table_figures_from_records": 39,
+      "table_figures": 45,
+      "table_figures_from_records": 45,
       "tables": [
         {
           "label": "Recent Changes",
-          "figures": 39,
-          "from_records": 39
+          "figures": 42,
+          "from_records": 42
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 3,
+          "from_records": 3
         }
       ],
       "reads_changes": true,
