@@ -19709,6 +19709,23 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "what_ends": "Inception's Mercury API"
+    },
+    {
+      "vendor": "GitHub Actions",
+      "change_type": "product_deprecated",
+      "date": "2026-12-08",
+      "summary": "GitHub Actions keeps running. GitHub-hosted runners end support for ARM32 (32-bit ARM) jobs on Linux and Windows by December 8, 2026, including native AArch32 user-space execution, because Node 24 does not support ARM32. Self-hosted runners on ARM32 have not been supported since Node 20 was removed in September 2026.",
+      "previous_state": "GitHub-hosted Linux and Windows runners ran ARM32 jobs, including native AArch32 user-space execution, with no announced end.",
+      "current_state": "GitHub's changelog (posted 2026-11-12, read 2026-11-13): \"GitHub Actions hosted runners will be ending support for ARM32 job execution on Windows and Linux by 8th Dec 2026. This follows our end of support for node20 where Node 24 does not support ARM32.\" \"This includes the removal of support on hosted runners for native AArch32 User-space execution.\" Its Node 20 notice (posted 2026-09-23): \"Node 24 is incompatible with macOS 13.4 and earlier, and it doesn't officially support ARM32. Self-hosted runners using these operating systems or architectures are no longer supported.\"",
+      "impact": "low",
+      "source_url": "https://github.blog/changelog/2026-11-12-actions-for-arm32-linux-windows-retirement",
+      "category": "CI/CD",
+      "alternatives": [],
+      "recorded_date": "2026-11-13",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "ARM32 job execution on GitHub-hosted runners",
+      "announced_on": "2026-11-12"
     }
   ]
 }
