@@ -485,8 +485,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 89,
-      "table_figures_from_records": 60,
+      "table_figures": 88,
+      "table_figures_from_records": 59,
       "tables": [
         {
           "label": "Always Free Services",
@@ -510,8 +510,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 1,
-          "from_records": 1
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
