@@ -19575,6 +19575,22 @@
       "listing_effect": "none",
       "what_ends": "Azure Fluid Relay",
       "announced_on": "2026-11-02"
+    },
+    {
+      "vendor": "Inception",
+      "change_type": "product_deprecated",
+      "date": "2026-12-28",
+      "summary": "Inception is winding down the Mercury API, which serves Inception's Mercury diffusion language models. The API and the Inception Platform dashboard keep working as they do today through December 28, 2026. After that date the API stops serving requests, and users lose access to the dashboard and to any data submitted to it, such as request logs, billing history and invoices, so those must be saved before then. OpenRouter no longer lists any Mercury model.",
+      "previous_state": "Inception served its Mercury diffusion language models through the Mercury API, on Free, Pay As You Go and Enterprise tiers, with no announced end.",
+      "current_state": "Inception's documentation, \"Mercury API wind-down\" (read 2026-11-13): \"The Mercury API remains fully available through December 28, 2026.\" Its timeline: \"After December 28, 2026: API requests stop being served, and you lose access to the platform and to any data submitted to it.\" \"Anything stored on the platform will not be accessible after December 28, 2026. Before then, save what you need from the dashboard, such as your request logs and your billing history and invoices.\" OpenRouter's model list (read 2026-11-13) has no Mercury model.",
+      "impact": "high",
+      "source_url": "https://docs.inceptionlabs.ai/support/wind-down",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-13",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Inception's Mercury API"
     }
   ]
 }
