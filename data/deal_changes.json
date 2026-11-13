@@ -15340,9 +15340,9 @@
       "vendor": "OpenAI",
       "change_type": "product_deprecated",
       "date": "2027-02-26",
-      "summary": "The OpenAI API keeps running. The whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe and gpt-4o-transcribe-diarize models can be called until February 26, 2027. OpenAI's substitute for each is gpt-live-transcribe or gpt-transcribe.",
+      "summary": "The OpenAI API keeps running. The whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe and gpt-4o-transcribe-diarize models can be called until February 26, 2027. OpenAI's substitute for each is gpt-live-transcribe or gpt-transcribe. The /v1/audio/translations endpoint also shuts down on February 26, 2027. OpenAI's replacement is /v1/realtime/translations.",
       "previous_state": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe and gpt-4o-transcribe-diarize were callable in the OpenAI API at pay-as-you-go rates.",
-      "current_state": "OpenAI's deprecations page (notice of 2026-08-26) lists February 26, 2027 as the date the four models are removed from the API.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-08-26) lists February 26, 2027 as the date the four models are removed from the API, and as the shutdown date of the /v1/audio/translations endpoint, with /v1/realtime/translations as its replacement (read 2026-11-13).",
       "impact": "medium",
       "source_url": "https://developers.openai.com/api/docs/deprecations",
       "category": "AI / ML",
@@ -15350,7 +15350,7 @@
       "recorded_date": "2026-10-10",
       "date_source": "hand_written",
       "listing_effect": "none",
-      "what_ends": "whisper-1 and the gpt-4o transcription models"
+      "what_ends": "whisper-1, the gpt-4o transcription models and /v1/audio/translations"
     },
     {
       "vendor": "OpenAI",
@@ -17873,9 +17873,9 @@
       "vendor": "Google Antigravity",
       "change_type": "product_deprecated",
       "date": "2026-11-18",
-      "summary": "Google Antigravity's Free and Google AI Plus plans keep running. Until November 18, 2026, they include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date, leaving Gemini 3.8 Flash as the only reasoning model on those plans.",
+      "summary": "Google Antigravity's Free and Google AI Plus plans keep running. Until November 18, 2026, they include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date. After that date, Antigravity's models page lists two reasoning models for the Free and Google AI Plus plans: Gemini 3.8 Flash and Gemini 4 Hydrogen.",
       "previous_state": "On 2026-10-17, Google Antigravity's Free and Google AI Plus plans offered Claude Sonnet 4.6, Claude Opus 4.6, GPT-OSS-120b and Gemini 3.8 Flash.",
-      "current_state": "Google Antigravity's models page (read 2026-11-03) marks Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b: \"Will be removed on November 18, 2026.\"",
+      "current_state": "Google Antigravity's models page (read 2026-11-13) marks Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b: \"Will be removed on November 18, 2026.\" Its plan table lists Gemini 3.8 Flash and Gemini 4 Hydrogen for Free and Google AI Plus.",
       "impact": "low",
       "source_url": "https://antigravity.google/docs/models",
       "category": "AI Coding",
@@ -19541,6 +19541,40 @@
       "listing_effect": "none",
       "what_ends": "AWS Infrastructure Composer's standalone console",
       "announced_on": "2026-09-29"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2027-01-06",
+      "summary": "The OpenAI API keeps running. From January 6, 2027, no organization can create new fine-tuning jobs on OpenAI's self-serve fine-tuning platform. Since May 7, 2026, organizations that never ran fine-tuning cannot create jobs. Since July 2, 2026, organizations that have not run inference on a fine-tuned model in the past 60 days cannot either. Fine-tuned models keep serving inference until their base model is deprecated.",
+      "previous_state": "Any OpenAI API organization could create fine-tuning jobs on OpenAI's self-serve fine-tuning platform.",
+      "current_state": "OpenAI's deprecations page (read 2026-11-13) lists \"Self-serve fine-tuning job creation\" as \"Restricted access\" with a shutdown date of Jan 6, 2027 (notice of May 7, 2026). Its fine-tuning timeline: \"Creating fine-tuning jobs or training is not available to organizations that have not previously run fine-tuning.\" (May 7, 2026) \"Creating fine-tuning jobs is no longer available to organizations that have not run inference on a fine-tuned model in the past 60 days.\" (July 2, 2026) \"Active existing customers will no longer be able to create new fine-tuning jobs on this date. Inference on fine-tuned models will be disabled only when the underlying base model is deprecated.\" (Jan 6, 2027)",
+      "impact": "medium",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-13",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "creating fine-tuning jobs on OpenAI's self-serve platform",
+      "announced_on": "2026-05-07"
+    },
+    {
+      "vendor": "Azure Fluid Relay",
+      "change_type": "product_deprecated",
+      "date": "2027-06-02",
+      "summary": "Azure Fluid Relay retires on June 2, 2027. It can be used until June 1, 2027. The Fluid Framework remains open source. Replace it with a self-hosted Fluid service you run yourself.",
+      "previous_state": "Azure Fluid Relay offered a Microsoft-hosted Fluid service for real-time collaborative web apps, with no announced retirement.",
+      "current_state": "Azure Updates (posted 2026-11-02, read 2026-11-13): \"On June 2, 2027, we will retire Azure Fluid Relay.\" \"You can continue using Azure Fluid Relay until June 1, 2027 while you complete your transition.\" \"A self-hosted Fluid service solution is available as the replacement.\"",
+      "impact": "medium",
+      "source_url": "https://azure.microsoft.com/updates?id=570498",
+      "category": "Infrastructure",
+      "alternatives": [],
+      "recorded_date": "2026-11-13",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Azure Fluid Relay",
+      "announced_on": "2026-11-02"
     }
   ]
 }

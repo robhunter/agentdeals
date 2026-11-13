@@ -36571,10 +36571,10 @@
       },
       "conditions": [
         {
-          "text": "Until November 18, 2026, the Free and Google AI Plus plans include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date, leaving Gemini 3.8 Flash as the only reasoning model for those plans.",
+          "text": "Until November 18, 2026, the Free and Google AI Plus plans include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date. After that date, Antigravity's models page lists two reasoning models for the Free and Google AI Plus plans: Gemini 3.8 Flash and Gemini 4 Hydrogen.",
           "quote": "Will be removed on November 18, 2026.",
           "url": "https://antigravity.google/docs/models",
-          "read_on": "2026-11-03"
+          "read_on": "2026-11-13"
         },
         {
           "text": "Google AI Pro and Ultra include Gemini 4 Argon, Claude Sonnet 5.5 and Claude Opus 5.5. On a Google AI Pro trial, Claude Sonnet 5.5 and Claude Opus 5.5 are not included and Gemini 4 Argon is included only on trials with eligible premium devices.",
@@ -36587,6 +36587,12 @@
           "quote": "Starting today, Google AI Ultra subscribers can build with Gemini 4 Carbon in the Antigravity App, the Antigravity CLI, and Antigravity IDE extensions",
           "url": "https://antigravity.google/blog/gemini-4-carbon-in-google-antigravity",
           "read_on": "2026-11-11"
+        },
+        {
+          "text": "Gemini 4 Hydrogen has been in Antigravity since November 12, 2026. Antigravity's models page lists it on every plan, including Free and Google AI Plus. Google's announcement says it is rolling out across paid Google AI Pro and Ultra subscribers. Orchestrator (Argon) is on paid Google AI Pro and Google AI Ultra, Orchestrator (Carbon) on Google AI Ultra only. Each pairs a planner (Gemini 4 Argon or Gemini 4 Carbon) with Gemini 4 Hydrogen.",
+          "quote": "Starting today, Gemini 4 Hydrogen is rolling out across paid Google AI Pro and Ultra subscribers.",
+          "url": "https://antigravity.google/blog/gemini-4-hydrogen-in-google-antigravity",
+          "read_on": "2026-11-13"
         },
         {
           "text": "Google's FAQ says some models \"are not included in free trials\" and directs memberships through third-party partners, Pixel Pass, or Google Fi to Google One help for subscription management.",
