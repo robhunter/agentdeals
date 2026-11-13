@@ -22,11 +22,11 @@
       "changed": "2026-11-13"
     },
     "/ai-free-tiers": {
-      "hash": "dda6bb7b7e99027f",
+      "hash": "b5934aaffdc3a5cd",
       "changed": "2026-11-13"
     },
     "/ai-ml-alternatives": {
-      "hash": "f64cb2dc121cb6cd",
+      "hash": "12448a8e5b2d06a8",
       "changed": "2026-11-13"
     },
     "/alternative-to": {
@@ -1111,7 +1111,7 @@
       "changed": "2026-11-13"
     },
     "/category/ai-ml": {
-      "hash": "b56a3252d66e9f7f",
+      "hash": "8fe193f77606781f",
       "changed": "2026-11-13"
     },
     "/category/analytics": {
@@ -3224,12 +3224,12 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "hash": "b6e982d56d2d7b3b",
-      "changed": "2026-11-12"
+      "hash": "ec86888884c4abc7",
+      "changed": "2026-11-13"
     },
     "/events/google-io-2026": {
-      "hash": "4d0959ddc5f9226b",
-      "changed": "2026-11-12"
+      "hash": "f8a2d28b029844fb",
+      "changed": "2026-11-13"
     },
     "/events/microsoft-build-2026": {
       "hash": "68da4ed4b2f0df89",
@@ -3274,7 +3274,7 @@
       "changed": "2026-11-13"
     },
     "/free-llm-apis": {
-      "hash": "7d5c9999ddbf73d7",
+      "hash": "11a2370041844911",
       "changed": "2026-11-13"
     },
     "/free-nextjs-stack": {
@@ -3312,7 +3312,7 @@
       "changed": "2026-11-13"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "dc3d1ab62285be2a",
+      "hash": "de19bb55c3541d51",
       "changed": "2026-11-13"
     },
     "/github-actions-alternatives": {
@@ -3384,7 +3384,7 @@
       "changed": "2026-11-13"
     },
     "/llm-api-pricing": {
-      "hash": "99d47ded5f562c23",
+      "hash": "b88ab3a3d37b1856",
       "changed": "2026-11-13"
     },
     "/localstack-alternatives": {
@@ -3669,7 +3669,7 @@
       "changed": "2026-11-13"
     },
     "/stack-check": {
-      "hash": "eec806f5f9c26444",
+      "hash": "dcc60acacfa128d1",
       "changed": "2026-11-13"
     },
     "/stacks": {
