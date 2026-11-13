@@ -2,6 +2,9 @@ import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
+import { mkdtempSync, readFileSync, writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { createDocument } from "@mixmark-io/domino";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
 import { statesWhenItTookEffect } from "./effective-date-rule.ts";
@@ -98,6 +101,59 @@ function claimsTheWholeLog(text: string, index: number): boolean {
   return !NAMES_A_WINDOW.test(sentenceAround(text, index));
 }
 
+type SliceFigure = { id: string; noun: string; count: number };
+
+function nonTrackedSliceFigures(body: string, slices: SliceFigure[]) {
+  const document = createDocument(body);
+  for (const node of document.querySelectorAll(".pc-states, .change-states, .change-detail, .pc-summary, .chg-summary, .change-summary")) {
+    node.parentNode!.removeChild(node);
+  }
+  const text = visibleText(document.body.innerHTML);
+  return slices.flatMap(slice => {
+    const displayed = slice.count.toLocaleString("en-US");
+    return [...text.matchAll(new RegExp(`(?<![\\w.,$/-])${displayed}(?![\\w.,%/-])`, "g"))].flatMap(match => {
+      const sentence = sentenceAround(text, match.index ?? 0);
+      if (!/\bchange|\brecords?\b|\btrack/i.test(sentence)) return [];
+      if (COUNTS_FREE_TIERS_NOT_CHANGES.test(text.slice((match.index ?? 0) + match[0].length))) return [];
+      return [{ ...slice, displayed, sentence }];
+    });
+  });
+}
+
+function assertNamedSliceFigures(body: string, slices: SliceFigure[], route: string) {
+  const figures = nonTrackedSliceFigures(body, slices);
+  const unnamed = figures.filter(figure => !figure.sentence.includes(figure.noun))
+    .map(figure => `${route}: ${figure.displayed} (${figure.id}) in "${figure.sentence.trim().slice(0, 90)}"`);
+  assert.deepStrictEqual(unnamed, []);
+  return figures;
+}
+
+function nonTrackedSlices(changes: any[]): SliceFigure[] {
+  return CHANGE_SLICES.filter((slice: any) => slice.id !== "tracked")
+    .map((slice: any) => ({ id: slice.id, noun: slice.noun, count: slice.of(changes).length }));
+}
+
+function startCensusServer(extraEnv: Record<string, string> = {}): Promise<{ child: ChildProcess; port: number }> {
+  return new Promise((resolve, reject) => {
+    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+      stdio: ["pipe", "pipe", "pipe"],
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", ...extraEnv },
+    });
+    const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 30000);
+    child.stderr!.on("data", (data: Buffer) => {
+      const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+      if (match) { clearTimeout(timeout); resolve({ child, port: parseInt(match[1], 10) }); }
+    });
+    child.on("error", err => { clearTimeout(timeout); reject(err); });
+    child.on("exit", code => { clearTimeout(timeout); reject(new Error(`Server exited with ${code}`)); });
+  });
+}
+
+async function stopCensusServer(child: ChildProcess) {
+  if (child.exitCode !== null || child.signalCode !== null) return;
+  await new Promise<void>(resolve => { child.once("exit", () => resolve()); child.kill(); });
+}
+
 describe("the change census separates four totals and names each", () => {
   it("nests the four slices, widest last", () => {
     const counts = CHANGE_SLICES.map((s: any) => s.of(dealChanges).length);
@@ -158,23 +214,12 @@ describe("every published total is the tracked count or names the slice it is", 
   let port = 0;
 
   before(async () => {
-    const started = await new Promise<{ child: ChildProcess; port: number }>((resolve, reject) => {
-      const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
-        stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
-      });
-      const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 30000);
-      child.stderr!.on("data", (data: Buffer) => {
-        const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
-        if (m) { clearTimeout(timeout); resolve({ child, port: parseInt(m[1], 10) }); }
-      });
-      child.on("error", (err) => { clearTimeout(timeout); reject(err); });
-    });
+    const started = await startCensusServer();
     proc = started.child;
     port = started.port;
   });
 
-  after(() => { proc?.kill(); });
+  after(async () => { if (proc) await stopCensusServer(proc); });
 
   const get = async (route: string) => {
     const res = await fetch(`http://localhost:${port}${route}`, {
@@ -232,24 +277,12 @@ describe("every published total is the tracked count or names the slice it is", 
   });
 
   it("names the slice in the same sentence wherever it publishes a figure that is not the tracked count", async () => {
-    const superseded = CHANGE_SLICES.filter((s: any) => s.id !== "tracked")
-      .map((s: any) => ({ noun: s.noun, id: s.id, count: s.of(dealChanges).length }));
-    const unnamed: string[] = [];
+    const slices = nonTrackedSlices(dealChanges);
     let examined = 0;
     for (const route of SURFACES_THAT_PUBLISH_A_TOTAL) {
-      const text = visibleText(await get(route));
-      for (const slice of superseded) {
-        for (const match of text.matchAll(new RegExp(`(?<![\\w.,$/-])${slice.count}(?![\\w.,%/-])`, "g"))) {
-          const sentence = sentenceAround(text, match.index ?? 0);
-          if (!/\bchange|\brecords?\b|\btrack/i.test(sentence)) continue;
-          if (COUNTS_FREE_TIERS_NOT_CHANGES.test(text.slice((match.index ?? 0) + match[0].length))) continue;
-          examined++;
-          if (!sentence.includes(slice.noun)) unnamed.push(`${route}: ${slice.count} (${slice.id}) in "${sentence.trim().slice(0, 90)}"`);
-        }
-      }
+      examined += assertNamedSliceFigures(await get(route), slices, route).length;
     }
     assertPopulationFloor(examined, 2, "figures from a slice other than the tracked count");
-    assert.deepStrictEqual(unnamed, []);
   });
 
   it("states the rule on /changes with a count for each slice", async () => {
@@ -377,4 +410,78 @@ describe("every published total is the tracked count or names the slice it is", 
     }
     assert.deepStrictEqual(linkless, []);
   });
+});
+
+describe("slice figures use the displayed number and exclude vendor state quotations", () => {
+  for (const count of [999, 1000, 1001, 10000]) {
+    for (const slice of nonTrackedSlices(dealChanges)) {
+      it(`checks the ${slice.id} noun at ${count} records`, () => {
+        const displayed = count.toLocaleString("en-US");
+        const subject = { ...slice, count };
+        const body = `<p>${displayed} ${slice.noun}.</p>`;
+        const figures = assertNamedSliceFigures(body, [subject], "/changes");
+        assert.strictEqual(figures.length, 1);
+        assert.strictEqual(figures[0].sentence, `${displayed} ${slice.noun}.`);
+        assert.throws(() => assertNamedSliceFigures(`<p>${displayed} records.</p>`, [subject], "/changes"));
+      });
+    }
+  }
+
+  for (const className of ["pc-states", "change-states", "change-detail", "pc-summary", "chg-summary", "change-summary"]) {
+    it(`excludes bare and formatted vendor allowances inside ${className}`, () => {
+      const held = { id: "held", noun: "records in the change log", count: 1000 };
+      const body = `<p>1,000 records in the change log.</p><div class="${className}"><strong>Before:</strong> 1000 resource records per domain. <span><strong>After:</strong> 1,000 resource records per domain.</span></div>`;
+      const figures = assertNamedSliceFigures(body, [held], "/pricing-changes");
+      assert.strictEqual(figures.length, 1);
+      assert.strictEqual(figures[0].sentence, "1,000 records in the change log.");
+      assert.throws(() => assertNamedSliceFigures(body.replace("1,000 records in the change log", "1,000 records"), [held], "/pricing-changes"));
+    });
+  }
+
+  for (const total of [1000, 1001]) {
+    it(`checks real timeline responses with ${total} held records and rejects an unnamed held total`, async () => {
+      const scratch = mkdtempSync(path.join(tmpdir(), "change-census-"));
+      const original = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf8"));
+      const records = (Array.isArray(original) ? original : original.changes).slice(0, total);
+      while (records.length < total) records.push({
+        vendor: `Census Fixture ${records.length}`,
+        change_type: "limits_reduced", date: "2026-02-15", date_source: "announced",
+        impact: "low", category: "DNS",
+        summary: "The resource record allowance changed.",
+        previous_state: "1000 resource records per domain",
+        current_state: "1,000 resource records per domain",
+        source_url: "https://example.com/pricing",
+      });
+      const changesPath = path.join(scratch, "changes.json");
+      writeFileSync(changesPath, JSON.stringify({ changes: records }));
+      let child: ChildProcess | undefined;
+      try {
+        const started = await startCensusServer({ AGENTDEALS_CHANGES_PATH: changesPath });
+        child = started.child;
+        for (const route of ["/changes", "/pricing-changes"]) {
+          const response = await fetch(`http://localhost:${started.port}${route}`, {
+            headers: { "user-agent": "agentdeals-internal/1.0 (change-census-test)" },
+          });
+          assert.strictEqual(response.status, 200);
+          const body = await response.text();
+          const figures = assertNamedSliceFigures(body, nonTrackedSlices(records), route);
+          const held = figures.filter(figure => figure.id === "held");
+          assert.ok(held.length > 0, `${route} examined no held total`);
+          assert.ok(held.every(figure => figure.displayed === total.toLocaleString("en-US")));
+          const document = createDocument(body);
+          const phrase = `${total.toLocaleString("en-US")} records in the change log`;
+          const heldText = [...document.body.querySelectorAll("*")]
+            .flatMap(element => [...element.childNodes])
+            .find(node => node.nodeType === 3 && node.nodeValue!.includes(phrase));
+          assert.ok(heldText, `${route} has no held figure to change`);
+          heldText.nodeValue = heldText.nodeValue!.replace(phrase, `${total.toLocaleString("en-US")} records`);
+          const mutated = document.documentElement.outerHTML;
+          assert.throws(() => assertNamedSliceFigures(mutated, nonTrackedSlices(records), route));
+        }
+      } finally {
+        if (child) await stopCensusServer(child);
+        rmSync(scratch, { recursive: true, force: true });
+      }
+    });
+  }
 });
