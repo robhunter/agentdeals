@@ -54,6 +54,9 @@ const UNCONFIRMED = forecast("Smartlook.com", 46, "Fixture no archived copy conf
   archive_check: { checked: dayFromToday(-1), outcome: "no_usable_capture" },
 });
 
+const ON_APP_RUNNERS_CARD = { ...A_DEPRECATION, vendor: "AWS", date: "2026-04-30", recorded_date: "2026-04-10", summary: "Fixture of App Runner closing to new customers.", source_url: "https://docs.aws.amazon.com/apprunner/latest/dg/apprunner-availability-change.html", listing_effect: "none" };
+const BESIDE_APP_RUNNERS_CARD = { ...ON_APP_RUNNERS_CARD, summary: "Another AWS product retires on April 30.", source_url: "https://example.com/notices/another-aws-product" };
+
 const ON_PROTONS_CARD = { ...A_DEPRECATION, vendor: "AWS", date: "2026-10-07", recorded_date: "2026-04-10", summary: "Fixture of the AWS Proton shutdown.", source_url: "https://example.com/notices/proton", listing_effect: "none" };
 const COVERED_BY_TENORS_CARD = { ...A_DEPRECATION, vendor: "Google Tenor API", date: "2026-06-30", recorded_date: "2026-03-14", summary: "Fixture of the Tenor API shutdown.", source_url: "https://example.com/notices/tenor" };
 const COVERED_BY_THIN_CLIENTS_CARD = { ...A_DEPRECATION, vendor: "AWS", date: "2026-04-20", recorded_date: "2026-04-10", summary: "Fixture of the end of WorkSpaces Thin Client sales.", source_url: "https://example.com/notices/thin-client", listing_effect: "none" };
@@ -64,7 +67,8 @@ const UNLISTED_ON_TENORS_DATE = { ...A_DEPRECATION, vendor: "Qwzx Clips", date: 
 const SAME_DAY_AS_UPCOMING = forecast("Pipedream", 60, "Fixture of a Pipedream shutdown on the day the apiary.io fixture closes.");
 
 const RECORDED_FIRST = forecast("OpenAI Codex", 70, "Fixture of a shutdown as first recorded.", { recorded_date: dayFromToday(-30) });
-const RECORDED_AGAIN = forecast("OpenAI Codex", 70, "Fixture of the same shutdown as recorded again.", { recorded_date: dayFromToday(-3) });
+const RECORDED_AGAIN = { ...RECORDED_FIRST, recorded_date: dayFromToday(-3) };
+const DISTINCT_ON_SAME_DAY = { ...RECORDED_FIRST, summary: "A different product on the same vendor page retires that day.", what_ends: "Another fixture product" };
 
 const DATED_IN_ITS_SUMMARY = forecast("Pipedream", -3, `Pipedream said the fixture product will shut down on ${dayFromToday(150)}.`, { recorded_date: dayFromToday(-2) });
 const DATED_BY_ITS_FIELD = forecast("apiary.io", -4, `A fixture product beside the listing shuts down on ${dayFromToday(130)}.`, {
@@ -80,9 +84,9 @@ const CLOSES_TOMORROW = forecast("Smartlook.com", 1, "Fixture closes tomorrow.")
 const FIXTURES = [
   IMMINENT, UPCOMING, LATER, COMPLETED,
   WRITTEN_AFTER, WRITTEN_ON_THE_DAY, RETRACTED, REVERSED, UNSOURCED, UNCONFIRMED,
-  ON_PROTONS_CARD, COVERED_BY_TENORS_CARD, COVERED_BY_THIN_CLIENTS_CARD,
+  ON_APP_RUNNERS_CARD, BESIDE_APP_RUNNERS_CARD, ON_PROTONS_CARD, COVERED_BY_TENORS_CARD, COVERED_BY_THIN_CLIENTS_CARD,
   AWS_ON_ANOTHER_DATE, ANOTHER_VENDOR_ON_A_CARDS_DATE, UNLISTED_ON_TENORS_DATE, SAME_DAY_AS_UPCOMING,
-  RECORDED_FIRST, RECORDED_AGAIN,
+  RECORDED_FIRST, RECORDED_AGAIN, DISTINCT_ON_SAME_DAY, RECORDED_AGAIN,
   DATED_IN_ITS_SUMMARY, DATED_BY_ITS_FIELD,
   NAMES_WHAT_ENDS, LEAVES_WHAT_ENDS_BLANK, CLOSES_TOMORROW,
 ];
@@ -173,9 +177,9 @@ describe("/shutdowns prints a card for each shutdown a record forecast and no ca
 
   it("prints a card for exactly the records its rules admit", () => {
     const admitted = [
-      IMMINENT, UPCOMING, LATER, COMPLETED,
+      IMMINENT, UPCOMING, LATER, COMPLETED, BESIDE_APP_RUNNERS_CARD,
       AWS_ON_ANOTHER_DATE, ANOTHER_VENDOR_ON_A_CARDS_DATE, UNLISTED_ON_TENORS_DATE, SAME_DAY_AS_UPCOMING,
-      RECORDED_AGAIN, DATED_IN_ITS_SUMMARY, DATED_BY_ITS_FIELD,
+      RECORDED_AGAIN, DISTINCT_ON_SAME_DAY, DATED_IN_ITS_SUMMARY, DATED_BY_ITS_FIELD,
       NAMES_WHAT_ENDS, LEAVES_WHAT_ENDS_BLANK, CLOSES_TOMORROW,
     ];
     assert.deepStrictEqual(fromFixtures(cards).map((card) => card.source).sort(), admitted.map((record) => record.source_url).sort());
@@ -238,6 +242,12 @@ describe("/shutdowns prints a card for each shutdown a record forecast and no ca
     assert.strictEqual(cards.filter((card) => card.title === "AWS Proton").length, 1);
   });
 
+  it("keeps another AWS shutdown beside the handwritten App Runner card without repeating App Runner", () => {
+    assert.deepStrictEqual(cardFor(cards, ON_APP_RUNNERS_CARD), []);
+    assert.deepStrictEqual(cardFor(cards, BESIDE_APP_RUNNERS_CARD).map(card => [card.what, card.section]), [[BESIDE_APP_RUNNERS_CARD.summary, "completed"]]);
+    assert.strictEqual(cards.filter(card => card.title === "AWS App Runner (New Customers)").length, 1);
+  });
+
   it("prints a shutdown once when a hand-typed card names the record it covers", () => {
     assert.deepStrictEqual([...cardFor(cards, COVERED_BY_TENORS_CARD), ...cardFor(cards, COVERED_BY_THIN_CLIENTS_CARD)], []);
     assert.strictEqual(cards.filter((card) => card.title === "Tenor API").length, 1);
@@ -265,6 +275,20 @@ describe("/shutdowns prints a card for each shutdown a record forecast and no ca
   it("prints a shutdown recorded twice once, in the words of the later record", () => {
     const sameShutdown = cards.filter((card) => card.title === "OpenAI Codex" && card.date === shownDate(RECORDED_FIRST.date));
     assert.deepStrictEqual(sameShutdown.map((card) => card.what), [RECORDED_AGAIN.summary]);
+  });
+
+  it("keeps different shutdowns on one vendor page and date in cards, the month list and structured data", () => {
+    const pair = cards.filter(card => card.href === "/vendor/openai-codex" && card.date === shownDate(RECORDED_FIRST.date));
+    assert.deepStrictEqual(pair.map(card => card.what).sort(), [RECORDED_AGAIN.summary, DISTINCT_ON_SAME_DAY.summary].sort());
+    const month = page.match(new RegExp(`<li data-month="${RECORDED_FIRST.date.slice(0, 7)}">([\\s\\S]*?)<\\/li>`))![1];
+    const entries = [...month.matchAll(/<span class="shutdown-month-entry">([\s\S]*?)<\/span>/g)].map(match => textOf(match[1]));
+    const day = shownDate(RECORDED_FIRST.date).replace(/, \d{4}$/, "");
+    assert.strictEqual(entries.filter(entry => entry === `OpenAI Codex (${day})`).length, 1);
+    assert.strictEqual(entries.filter(entry => entry === `Another fixture product (${day})`).length, 1);
+    const listed = JSON.parse(page.match(/<script type="application\/ld\+json">(\{"@context":"https:\/\/schema.org","@type":"ItemList"[\s\S]*?)<\/script>/)![1]);
+    for (const record of [RECORDED_AGAIN, DISTINCT_ON_SAME_DAY]) {
+      assert.strictEqual(listed.itemListElement.filter((item: { description: string }) => item.description === record.summary).length, 1);
+    }
   });
 
   it("dates a card from the record's discontinued date, else the date its summary gives, else the record's date", () => {

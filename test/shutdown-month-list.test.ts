@@ -25,6 +25,10 @@ const fixtures = [
   source_url: "https://example.com/shutdown", impact: "high", category: "Developer Tools",
   alternatives: [], date_source: "hand_written", listing_effect: "ends",
 }));
+fixtures.push(
+  { ...fixtures[0], vendor: "Calendar fixture shared vendor", date: "2026-12-11", summary: "The first product retires." },
+  { ...fixtures[0], vendor: "Calendar fixture shared vendor", date: "2026-12-11", summary: "The second product retires." },
+);
 
 function textOf(html: string): string {
   return html.replace(/<[^>]*>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
@@ -137,6 +141,11 @@ describe("shutdowns by calendar month", () => {
     assert.equal(entries.length, Number(page.match(/(\d+) active shutdowns/)?.[1]));
     assert.ok(!monthSection(page).includes("Calendar fixture completed"));
     assert.equal(entries.filter(entry => entry.startsWith("Calendar fixture same service")).length, 2);
+  });
+
+  it("keeps different records on one vendor page and date as separate month entries", () => {
+    const december = monthLines(page).find(line => line.month === "2026-12")!;
+    assert.equal(december.entries.filter(entry => entry === "Calendar fixture shared vendor (December 11)").length, 2);
   });
 
   it("escapes service titles as text", () => {

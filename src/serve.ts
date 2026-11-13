@@ -26952,6 +26952,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "AWS App Runner (New Customers)",
       vendorSlug: "aws",
+      covers: [{ vendor: "AWS", deadline: "2026-04-30", sourceUrl: "https://docs.aws.amazon.com/apprunner/latest/dg/apprunner-availability-change.html" }],
       what: "App Runner closed to new customers — existing users can continue, but no new features. AWS recommends ECS Express Mode.",
       deadline: "2026-04-30",
       dateSource: "https://web.archive.org/web/20260415193500/https://docs.aws.amazon.com/apprunner/latest/dg/apprunner-availability-change.html",
