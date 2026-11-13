@@ -19335,7 +19335,11 @@
       "impact": "high",
       "source_url": "https://developers.google.com/custom-search/v1/overview",
       "category": "Search",
-      "alternatives": [],
+      "alternatives": [
+        "Brave Search API",
+        "SerpAPI",
+        "Meilisearch"
+      ],
       "recorded_date": "2026-11-12",
       "date_source": "vendor_page",
       "listing_effect": "none",
