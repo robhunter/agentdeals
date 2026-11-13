@@ -11,6 +11,7 @@ const { SOURCE_MARKER_IN_A_CELL } = await import("../dist/page-reviews.js");
 const PAGE = "/aws-free-tier-2026";
 
 const WITHDRAWN: Record<string, RegExp> = {
+  "Studio Lab offered to new customers without an AWS account": /Studio Lab is free|Studio Lab[^.]*needs no AWS account/,
   "the 12-Month Free tier as a current tier": /12-Month Free/,
   "12-month services that expire silently": /expire silently|silently convert/i,
   "a tier that ends with no automatic notification": /no automatic notification/i,
@@ -55,7 +56,7 @@ const STATED_ON_THE_PAGE = [
   "Trials are for Paid plan services and start when you activate the service; credits cover usage past the trial limits.",
   "Only the always-free services stay at zero cost after the Free plan; S3, EC2, RDS and Aurora draw on the credits.",
   "On the Free plan nothing is billed: the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade. On the Paid plan, usage past the credits is billed.",
-  "SageMaker Studio Lab is free and needs no AWS account. Amazon Bedrock has no free tier and is billed per token. For more options",
+  "SageMaker Studio Lab has been closed to new customers since June 30, 2026; existing users can keep using it. AWS points new users to SageMaker Studio, which runs in an AWS account. Amazon Bedrock has no free tier and is billed per token. For more options",
 ];
 
 const ALWAYS_FREE_ROWS: [string, string][] = [
