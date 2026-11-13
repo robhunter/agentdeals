@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-12",
+  "measured_on": "2026-11-13",
   "pages": [
     {
       "path": "/agent-payments",
@@ -507,6 +507,11 @@
           "label": "Recent AWS Changes",
           "figures": 9,
           "from_records": 9
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -567,6 +572,11 @@
           "label": "Recent Azure Changes",
           "figures": 2,
           "from_records": 2
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -815,6 +825,11 @@
           "label": "Pricing Change Timeline",
           "figures": 14,
           "from_records": 14
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
