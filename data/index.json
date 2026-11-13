@@ -8122,7 +8122,7 @@
     {
       "vendor": "Cloudflare for Startups",
       "category": "Startup Perks",
-      "description": "Credits for one year or until used up, in three tiers: Tier 3 gives $10K to bootstrapped or self-funded startups with under $1M raised; Tier 2 ($100K) and Tier 1 ($350K) are for startups funded by an affiliated partner, Tier 1 with $5M+ raised. Credits cover usage-based services such as Workers and R2 (R2 up to $10K). Workers AI is not covered by credits for startups joining the programme now. Startups already in the programme keep Workers AI coverage, up to $2.5K for Tier 3, $10K for Tier 2 or $50K for Tier 1, until December 1, 2026. From that date, Workers AI is not covered for them either. AI Gateway and domain registration and renewal on Cloudflare Registrar are not covered by credits. Core security and networking features are free at every tier.",
+      "description": "Credits for one year or until used up, in three tiers: Tier 3 gives $10K to bootstrapped or self-funded startups with under $1M raised; Tier 2 ($100K) and Tier 1 ($350K) are for startups funded by an affiliated partner, Tier 1 with $5M+ raised. Credits cover usage-based services such as Workers and R2 (R2 up to $10K). Workers AI is not covered by credits for startups joining the programme now. Startups already in the programme keep Workers AI coverage, up to $2.5K for Tier 3, $10K for Tier 2 or $50K for Tier 1, until November 30, 2026. From December 1, 2026, Workers AI is not covered for them either. AI Gateway and domain registration and renewal on Cloudflare Registrar are not covered by credits. Core security and networking features are free at every tier.",
       "tier": "Startup Credits",
       "url": "https://www.cloudflare.com/startups/",
       "tags": [
@@ -14471,9 +14471,9 @@
     {
       "vendor": "Coupler",
       "category": "Notebooks & Data Science",
-      "description": "Data integration tool that syncs between apps. It can create live dashboards and reports, transform and manipulate values, and collect and back up insights. The free plan is limited to one user, data connection, data source, and data destination. Also requires manual data refresh.",
+      "description": "Data integration tool that syncs between apps. It can create live dashboards and reports, transform and manipulate values, and collect and back up insights. The free plan is limited to one user, data connection, data source, and data destination, with 100 rows per run. Also requires manual data refresh.",
       "tier": "Free",
-      "url": "https://www.coupler.io/",
+      "url": "https://www.coupler.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -14483,11 +14483,6 @@
         "checked": "2026-11-13",
         "outcome": "ok",
         "detail": "the page names Coupler as \"coupler\" and states amounts, none of which we matched to the terms we publish"
-      },
-      "free_plan_excerpt": {
-        "text": "You can try Coupler.io free for 7 days, no credit card required.",
-        "url": "https://www.coupler.io/",
-        "read_on": "2026-11-13"
       }
     },
     {
