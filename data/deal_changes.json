@@ -19550,7 +19550,7 @@
       "previous_state": "Any OpenAI API organization could create fine-tuning jobs on OpenAI's self-serve fine-tuning platform.",
       "current_state": "OpenAI's deprecations page (read 2026-11-13) lists \"Self-serve fine-tuning job creation\" as \"Restricted access\" with a shutdown date of Jan 6, 2027 (notice of May 7, 2026). Its fine-tuning timeline: \"Creating fine-tuning jobs or training is not available to organizations that have not previously run fine-tuning.\" (May 7, 2026) \"Creating fine-tuning jobs is no longer available to organizations that have not run inference on a fine-tuned model in the past 60 days.\" (July 2, 2026) \"Active existing customers will no longer be able to create new fine-tuning jobs on this date. Inference on fine-tuned models will be disabled only when the underlying base model is deprecated.\" (Jan 6, 2027)",
       "impact": "medium",
-      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "source_url": "https://developers.openai.com/api/docs/deprecations#update-to-openais-self-serve-fine-tuning",
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-11-13",
