@@ -34159,7 +34159,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>AI/ML experimentation</strong>
-      <p>SageMaker Studio Lab is free and needs no AWS account. Amazon Bedrock has no free tier and is billed per token. For more options, see our <a href="/ai-ml-alternatives">AI/ML tools guide</a>.</p>
+      <p>SageMaker Studio Lab has been closed to new customers since June 30, 2026; existing users can keep using it. AWS points new users to SageMaker Studio, which runs in an AWS account. Amazon Bedrock has no free tier and is billed per token. For more options, see our <a href="/ai-ml-alternatives">AI/ML tools guide</a>.</p>
     </div>
 
     <div class="verdict-item">
