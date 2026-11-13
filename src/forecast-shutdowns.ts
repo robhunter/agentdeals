@@ -9,6 +9,7 @@ import { statedShutdownDateOf } from "./shutdown-date.js";
 export interface RecordACardCovers {
   vendor: string;
   deadline: string;
+  sourceUrl?: string;
 }
 
 export interface HandTypedShutdown {
@@ -41,12 +42,17 @@ function ratingWouldBeWithheld(record: DealChange): boolean {
 
 function aCardAlreadyStates(shutdown: ForecastShutdown, cards: readonly HandTypedShutdown[]): boolean {
   return cards.some((card) =>
-    (shutdown.vendorPage !== null && servedVendorSlug(card.vendorSlug) === shutdown.vendorPage && card.deadline === shutdown.deadline)
-    || (card.covers ?? []).some((covered) => covered.vendor === shutdown.record.vendor && covered.deadline === shutdown.deadline));
+    (card.covers === undefined && shutdown.vendorPage !== null && servedVendorSlug(card.vendorSlug) === shutdown.vendorPage && card.deadline === shutdown.deadline)
+    || (card.covers ?? []).some((covered) => covered.vendor === shutdown.record.vendor && covered.deadline === shutdown.deadline
+      && (covered.sourceUrl === undefined || covered.sourceUrl === shutdown.record.source_url)));
 }
 
 function sameShutdown(a: ForecastShutdown, b: ForecastShutdown): boolean {
-  return a.deadline === b.deadline && (a.vendorPage ?? a.record.vendor) === (b.vendorPage ?? b.record.vendor);
+  return a.deadline === b.deadline
+    && (a.vendorPage ?? a.record.vendor) === (b.vendorPage ?? b.record.vendor)
+    && whatEnds(a.record) === whatEnds(b.record)
+    && a.record.summary === b.record.summary
+    && a.record.source_url === b.record.source_url;
 }
 
 function latestRecordedFirst(a: ForecastShutdown, b: ForecastShutdown): number {
