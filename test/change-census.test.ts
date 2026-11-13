@@ -467,7 +467,7 @@ describe("slice figures use the displayed number and exclude vendor state quotat
           const figures = assertNamedSliceFigures(body, nonTrackedSlices(records), route);
           const held = figures.filter(figure => figure.id === "held");
           assert.ok(held.length > 0, `${route} examined no held total`);
-          assert.ok(held.every(figure => figure.displayed === total.toLocaleString("en-US")));
+          assert.deepStrictEqual([...new Set(held.map(figure => figure.displayed))], [total.toLocaleString("en-US")]);
           const document = createDocument(body);
           const phrase = `${total.toLocaleString("en-US")} records in the change log`;
           const heldText = [...document.body.querySelectorAll("*")]
