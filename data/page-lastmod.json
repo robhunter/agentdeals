@@ -18,15 +18,15 @@
       "changed": "2026-11-11"
     },
     "/ai-coding-tools-pricing": {
-      "hash": "3bd85d51a209f359",
+      "hash": "7cd2f708e2f60da2",
       "changed": "2026-11-13"
     },
     "/ai-free-tiers": {
-      "hash": "7a21783f0a126da1",
+      "hash": "2737b1f61da434b6",
       "changed": "2026-11-13"
     },
     "/ai-ml-alternatives": {
-      "hash": "3795e3b16c7fe49a",
+      "hash": "debe41757e6c358e",
       "changed": "2026-11-13"
     },
     "/alternative-to": {
@@ -1107,7 +1107,7 @@
       "changed": "2026-11-13"
     },
     "/category/ai-coding": {
-      "hash": "cb41e8c60326e957",
+      "hash": "293eb408cdcc6670",
       "changed": "2026-11-13"
     },
     "/category/ai-ml": {
@@ -3108,12 +3108,12 @@
       "changed": "2026-11-12"
     },
     "/digest/2026-w46": {
-      "hash": "b9205eab1609c8ae",
+      "hash": "5f312a627fe8fca3",
       "changed": "2026-11-13"
     },
     "/digest/2026-w47": {
-      "hash": "561df51e31ba3a80",
-      "changed": "2026-11-12"
+      "hash": "d76ffa459e6490f2",
+      "changed": "2026-11-13"
     },
     "/digest/2026-w49": {
       "hash": "9edc153e144aef78",
@@ -3156,7 +3156,7 @@
       "changed": "2026-11-12"
     },
     "/digest/2027-w08": {
-      "hash": "132b664fd93405c5",
+      "hash": "dd033cbb4c75394e",
       "changed": "2026-11-13"
     },
     "/digest/2027-w11": {
@@ -3244,11 +3244,11 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "hash": "4ec051da68f9a00b",
+      "hash": "6ced9e01add1e01e",
       "changed": "2026-11-13"
     },
     "/events/google-io-2026": {
-      "hash": "5d2d1bde29d03949",
+      "hash": "f82ac4d9c9e24f21",
       "changed": "2026-11-13"
     },
     "/events/microsoft-build-2026": {
@@ -3328,7 +3328,7 @@
       "changed": "2026-11-13"
     },
     "/gcp-free-tier-2026": {
-      "hash": "b2e2fb460f086115",
+      "hash": "061d27ed4eaf5f1d",
       "changed": "2026-11-13"
     },
     "/gemini-api-pricing-2026": {
@@ -3400,11 +3400,11 @@
       "changed": "2026-11-13"
     },
     "/ide-code-editors-alternatives": {
-      "hash": "41a5ee8ff5da62fe",
+      "hash": "eaad7e37d4d4ffc6",
       "changed": "2026-11-13"
     },
     "/llm-api-pricing": {
-      "hash": "5c2abccfe6d0ba70",
+      "hash": "ed170e4ce1cf8ff4",
       "changed": "2026-11-13"
     },
     "/localstack-alternatives": {
@@ -3440,15 +3440,15 @@
       "changed": "2026-11-07"
     },
     "/openai-assistants-alternatives": {
-      "hash": "12546773c9e77e66",
+      "hash": "105ef35b0a903185",
       "changed": "2026-11-13"
     },
     "/openai-assistants-migration": {
-      "hash": "94c1e4a0f79acdda",
+      "hash": "e1c44ad4ad659a11",
       "changed": "2026-11-13"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "2d268db10e5ba691",
+      "hash": "e4773a18179d1094",
       "changed": "2026-11-13"
     },
     "/postman-alternatives": {
@@ -3638,7 +3638,7 @@
       "changed": "2026-11-12"
     },
     "/reports/2027-02": {
-      "hash": "45bc83c1dfda1d62",
+      "hash": "2103538e7df434c1",
       "changed": "2026-11-13"
     },
     "/reports/2027-03": {
@@ -3693,11 +3693,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "f499f895b8ac3791",
+      "hash": "7c3627cdd0985e15",
       "changed": "2026-11-13"
     },
     "/stack-check": {
-      "hash": "8f53094252759f39",
+      "hash": "b0410235c304a636",
       "changed": "2026-11-13"
     },
     "/stacks": {
@@ -6074,7 +6074,7 @@
       "changed": "2026-11-13"
     },
     "/vendor/google-antigravity": {
-      "hash": "0f67f8d39b31ae0d",
+      "hash": "124d2429d800757c",
       "changed": "2026-11-13"
     },
     "/vendor/google-artifact-registry": {
@@ -9724,8 +9724,8 @@
       "changed": "2026-11-13"
     },
     "/whatsapp-business-api-pricing-2026": {
-      "hash": "7f8d16dbf028aa09",
-      "changed": "2026-11-12"
+      "hash": "4f1b91b5595ebe20",
+      "changed": "2026-11-13"
     },
     "/x402-services": {
       "hash": "fc7609330e337fb3",
