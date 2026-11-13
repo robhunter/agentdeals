@@ -3173,7 +3173,7 @@
     },
     "/digest/2027-w22": {
       "hash": "39631bd7588a2508",
-      "changed": "2026-11-13"
+      "changed": "2026-11-12"
     },
     "/digest/2027-w39": {
       "hash": "bee4b37e4f2f2266",
@@ -3189,11 +3189,11 @@
     },
     "/digest/2028-w38": {
       "hash": "3e36f1d335e1228c",
-      "changed": "2026-11-13"
+      "changed": "2026-11-12"
     },
     "/digest/2028-w39": {
       "hash": "0df462ff3f9e490e",
-      "changed": "2026-11-13"
+      "changed": "2026-11-12"
     },
     "/digest/archive": {
       "hash": "343570155fb8d571",
@@ -3643,7 +3643,7 @@
     },
     "/reports/2027-06": {
       "hash": "7f3b6b0ff649daff",
-      "changed": "2026-11-13"
+      "changed": "2026-11-12"
     },
     "/reports/2027-09": {
       "hash": "88430f71a02c982d",
@@ -3659,7 +3659,7 @@
     },
     "/reports/2028-09": {
       "hash": "d83299e6b59b4681",
-      "changed": "2026-11-13"
+      "changed": "2026-11-12"
     },
     "/security-alternatives": {
       "hash": "5627f1ff269832fc",
