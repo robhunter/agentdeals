@@ -1244,6 +1244,13 @@
           "Message content sent or received through Cloud API",
           "Meta keeps message content for at most 30 days. Local storage, a setting on each business phone number, keeps message content at rest only in one chosen region; while a message is processed, its content may be held in Meta data centers in other countries for up to 60 minutes."
         ]
+      },
+      {
+        "label": "On-Premises API",
+        "cells": [
+          "Self-hosting the WhatsApp Business API on your own servers instead of Meta's Cloud API",
+          "Retired. Its last version, v2.63, expired on 2025-10-23, and messages to or from numbers still registered on it are not delivered. Since 2024-07-01 business phone numbers can be registered only for Cloud API. Meta says to use Cloud API."
+        ]
       }
     ]
   },
@@ -1293,7 +1300,7 @@
     "heading": "Why other pages say replies are free",
     "text": "Many third-party pages, and some copies of Meta's own page, still say service messages are free. That was Meta's rule from 2024-11-01 to 2026-09-30. The current rule applies from 2026-10-01.",
     "sources": {
-      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-10-15, read 2026-10-23), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11; Meta's messaging-limits page (updated 2026-05-21) and Twilio's WhatsApp pricing page (current as of September 2026), read 2026-10-18; Meta's About the WhatsApp Business Platform page (updated 2026-08-04) and its WhatsApp accounts and Messaging accounts page (updated 2026-08-05), read 2026-11-01; Meta's Cloud API error codes page (updated 2026-06-18), read 2026-11-01. Meta's Calling API pricing page and its USD calling rate card effective 2026-10-01, its Cloud API Calling page, its per-user marketing template message limits page, its throughput page, its page on onboarding WhatsApp Business app users and its Groups API pricing page, read 2026-11-04. Meta's template categorization page (updated 2026-09-15), its page on setting a max price for marketing messages (updated 2026-11-09), its Data Privacy & Security page (updated 2026-06-16) and its local storage page (updated 2026-05-21), read 2026-11-13.",
+      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-10-15, read 2026-10-23), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11; Meta's messaging-limits page (updated 2026-05-21) and Twilio's WhatsApp pricing page (current as of September 2026), read 2026-10-18; Meta's About the WhatsApp Business Platform page (updated 2026-08-04) and its WhatsApp accounts and Messaging accounts page (updated 2026-08-05), read 2026-11-01; Meta's Cloud API error codes page (updated 2026-06-18), read 2026-11-01. Meta's Calling API pricing page and its USD calling rate card effective 2026-10-01, its Cloud API Calling page, its per-user marketing template message limits page, its throughput page, its page on onboarding WhatsApp Business app users and its Groups API pricing page, read 2026-11-04. Meta's template categorization page (updated 2026-09-15), its page on setting a max price for marketing messages (updated 2026-11-09), its Data Privacy & Security page (updated 2026-06-16) and its local storage page (updated 2026-05-21), read 2026-11-13. Meta's On-Premises API sunset page, read 2026-11-13.",
       "links": [
         {
           "text": "developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
@@ -1374,6 +1381,10 @@
         {
           "text": "its local storage page",
           "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/local-storage/"
+        },
+        {
+          "text": "Meta's On-Premises API sunset page",
+          "url": "https://developers.facebook.com/docs/whatsapp/on-premises/sunset"
         }
       ]
     }
