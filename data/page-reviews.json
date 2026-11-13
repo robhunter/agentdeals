@@ -572,11 +572,6 @@
           "label": "Recent Azure Changes",
           "figures": 2,
           "from_records": 2
-        },
-        {
-          "label": "Upcoming Changes",
-          "figures": 0,
-          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -2330,8 +2325,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 118,
-      "table_figures_from_records": 117,
+      "table_figures": 117,
+      "table_figures_from_records": 116,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2345,8 +2340,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 31,
-          "from_records": 31
+          "figures": 30,
+          "from_records": 30
         },
         {
           "label": "Recent Pricing Changes",
@@ -2538,8 +2533,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 57,
-      "table_figures_from_records": 57,
+      "table_figures": 56,
+      "table_figures_from_records": 56,
       "tables": [
         {
           "label": "What’s Changing",
@@ -2558,8 +2553,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 1,
-          "from_records": 1
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -2590,8 +2585,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 30,
-      "table_figures_from_records": 3,
+      "table_figures": 29,
+      "table_figures_from_records": 2,
       "tables": [
         {
           "label": "Cost Comparison by Usage Tier",
@@ -2615,8 +2610,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 1,
-          "from_records": 1
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -2648,8 +2643,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 62,
-      "table_figures_from_records": 62,
+      "table_figures": 61,
+      "table_figures_from_records": 61,
       "tables": [
         {
           "label": "2. Feature Migration Map",
@@ -2683,8 +2678,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 1,
-          "from_records": 1
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -2959,8 +2954,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 35,
-      "table_figures_from_records": 35,
+      "table_figures": 34,
+      "table_figures_from_records": 34,
       "tables": [
         {
           "label": "Related Pricing Changes",
@@ -2969,8 +2964,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 32,
-          "from_records": 32
+          "figures": 31,
+          "from_records": 31
         }
       ],
       "reads_changes": true,
