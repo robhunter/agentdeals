@@ -19626,6 +19626,39 @@
       "listing_effect": "none",
       "what_ends": "Azure Communication Services (ACS) standalone services",
       "announced_on": "2026-09-23"
+    },
+    {
+      "vendor": "Google Cloud Video Intelligence API",
+      "change_type": "product_deprecated",
+      "date": "2027-09-14",
+      "summary": "Google Cloud Video Intelligence API shuts down on September 14, 2027. It has been deprecated and unsupported since September 14, 2026, and can be used until its shutdown. Google recommends migrating to its Gemini family of models.",
+      "previous_state": "Google Cloud Video Intelligence API offered label, shot and object detection on video, with 1,000 free units a month on the Google Cloud free tier and no announced end.",
+      "current_state": "Google Cloud's \"Video Intelligence API Deprecations\" (read 2026-11-13): \"Starting on September 14, 2026, Video Intelligence API is officially deprecated and will no longer be supported. You can continue using Video Intelligence API until September 14, 2027, when it will be shut down. We recommend migrating to Gemini family of models.\"",
+      "impact": "medium",
+      "source_url": "https://docs.cloud.google.com/video-intelligence/docs/deprecations",
+      "category": "AI/ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-13",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Google Cloud Video Intelligence API",
+      "announced_on": "2026-09-14"
+    },
+    {
+      "vendor": "Google Cloud Deployment Manager",
+      "change_type": "product_deprecated",
+      "date": "2027-06-30",
+      "summary": "Google Cloud Deployment Manager is turned down after June 30, 2027. Support ended April 1, 2026. Existing users can use it until shutdown. New users have been blocked from enabling its API or creating their first deployment since June 30, 2026. Existing resources created by Deployment Manager continue to function and can be managed with standard Google Cloud tools. Google recommends Infrastructure Manager.",
+      "previous_state": "Google Cloud Deployment Manager deployed Google Cloud resources from YAML configurations with Jinja or Python templates, open to new users, with no announced end.",
+      "current_state": "Google Cloud's \"Deployment Manager deprecation\" (read 2026-11-13): \"Support for Google Cloud Deployment Manager was discontinued on April 1, 2026.\" \"As of June 30, 2026, new users are blocked from enabling Google Cloud Deployment Manager V2 API or creating their first deployment.\" \"After June 30, 2027, you won't be able to use the Deployment Manager service, and it will be turned down.\" \"Your existing resources created by Deployment Manager will continue to function.\"",
+      "impact": "medium",
+      "source_url": "https://docs.cloud.google.com/deployment-manager/docs/deprecations",
+      "category": "Infrastructure",
+      "alternatives": [],
+      "recorded_date": "2026-11-13",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Google Cloud Deployment Manager"
     }
   ]
 }
