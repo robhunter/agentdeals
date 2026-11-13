@@ -738,6 +738,9 @@
     "/alternative-to/val-town": {
       "daily": true
     },
+    "/alternative-to/valyu": {
+      "daily": true
+    },
     "/alternative-to/vercel": {
       "daily": true
     },
@@ -1838,14 +1841,6 @@
       "hash": "696defa0f89843cb",
       "changed": "2026-11-10"
     },
-    "/compare/deepar-vs-exa": {
-      "hash": "7a48cd50da9636a0",
-      "changed": "2026-11-03"
-    },
-    "/compare/deepar-vs-serper": {
-      "hash": "b3ee42b62a1e5034",
-      "changed": "2026-11-12"
-    },
     "/compare/diawi-vs-expo": {
       "hash": "f490b1dc9c0248ca",
       "changed": "2026-11-01"
@@ -1933,14 +1928,6 @@
     "/compare/emaillabs-io-vs-resend": {
       "hash": "79f6b1e8936a6df8",
       "changed": "2026-11-09"
-    },
-    "/compare/exa-vs-letta": {
-      "hash": "c880a10c06da4108",
-      "changed": "2026-11-03"
-    },
-    "/compare/exa-vs-serper": {
-      "hash": "193da81af7093fcf",
-      "changed": "2026-11-12"
     },
     "/compare/expo-vs-loadly": {
       "hash": "5e7c0647da3764e3",
@@ -2102,6 +2089,14 @@
       "hash": "b6cdb9b510c40b9d",
       "changed": "2026-11-08"
     },
+    "/compare/google-colab-vs-jina-ai": {
+      "hash": "93948ac387b3c6f5",
+      "changed": "2026-11-12"
+    },
+    "/compare/google-colab-vs-maxim-ai": {
+      "hash": "f9742d45c17d2f83",
+      "changed": "2026-11-12"
+    },
     "/compare/google-keep-vs-todoist": {
       "hash": "91c8381e4aad6290",
       "changed": "2026-10-15"
@@ -2129,6 +2124,14 @@
     "/compare/google-secret-manager-vs-infisical": {
       "hash": "e156046ec9dade29",
       "changed": "2026-11-09"
+    },
+    "/compare/gpu-bridge-vs-google-colab": {
+      "hash": "9a2ad32e1aca77d2",
+      "changed": "2026-11-12"
+    },
+    "/compare/gpu-bridge-vs-jina-ai": {
+      "hash": "02bd2f3c442ee1e2",
+      "changed": "2026-11-12"
     },
     "/compare/grafana-cloud-vs-sentry": {
       "hash": "1bff547f5ad978b6",
@@ -2262,6 +2265,10 @@
       "hash": "f01c8a09c27a971f",
       "changed": "2026-11-08"
     },
+    "/compare/jina-ai-vs-maxim-ai": {
+      "hash": "6d8902f0319fc5ca",
+      "changed": "2026-11-12"
+    },
     "/compare/jotform-vs-smartforms-dev": {
       "hash": "9785320b721a6e41",
       "changed": "2026-11-09"
@@ -2325,10 +2332,6 @@
     "/compare/lastpass-vs-zoho-vault": {
       "hash": "7865fa820d6df6dd",
       "changed": "2026-11-09"
-    },
-    "/compare/letta-vs-serper": {
-      "hash": "42314fe8cf01ac11",
-      "changed": "2026-11-12"
     },
     "/compare/loadly-vs-shake": {
       "hash": "be4122f47715dd2c",
@@ -9210,6 +9213,9 @@
       "changed": "2026-11-12"
     },
     "/vendor/val-town": {
+      "daily": true
+    },
+    "/vendor/valyu": {
       "daily": true
     },
     "/vendor/vaocherapp-qr-code-generator": {
