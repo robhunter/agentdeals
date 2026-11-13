@@ -33864,8 +33864,7 @@ function buildAwsFreeTier2026Page(): string {
   );
 
   const awsChanges = changesTheVendorMade(dealChanges).filter((c: any) =>
-    c.vendor === "AWS" || c.vendor.startsWith("Amazon ") || c.vendor.startsWith("AWS ") ||
-    c.vendor === "GitHub Actions"
+    c.vendor === "AWS" || c.vendor.startsWith("Amazon ") || c.vendor.startsWith("AWS ")
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   interface AwsService {
