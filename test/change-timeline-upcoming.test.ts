@@ -5,6 +5,7 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createDocument } from "@mixmark-io/domino";
 import { visibleText } from "./change-vendor-index-observer.ts";
 import { assertChangeTimelineReadingBudget } from "./change-timeline-reading-budget.ts";
 
@@ -16,7 +17,7 @@ const day = (offset: number) => new Date(Date.parse(today) + offset * 86_400_000
 const record = (vendor: string, offset: number, extra = {}) => ({
   vendor, date: day(offset), date_source: "vendor_page", recorded_date: today,
   change_type: "pricing_restructured", summary: `${vendor} changes its plan`,
-  previous_state: "Before", current_state: "After", impact: "medium",
+  previous_state: `${vendor} earlier terms <before> & limits`, current_state: `${vendor} revised terms <after> & limits`, impact: "medium",
   category: "APIs", source_url: "https://example.com/pricing", alternatives: [], ...extra,
 });
 const fixtures = [
@@ -149,6 +150,35 @@ describe("the change timelines separate announced changes from their history", (
   });
 
   for (const route of ["/changes", "/pricing-changes"]) {
+    it(`omits state details from every upcoming card on ${route}`, () => {
+      for (const name of ["catalogue", "fixtures", "tomorrow", "announcementDay", "retirementDay"]) {
+        const document = createDocument(pages.get(`${name} ${route}`)!);
+        const cards = [...document.querySelectorAll(".upcoming-section .pc-entry, .upcoming-section .chg-entry, .upcoming-section .chg-preview")];
+        assert.ok(cards.length > 0);
+        for (const card of cards) {
+          assert.equal(card.querySelectorAll(".pc-states, .pc-state, .chg-states, .chg-state, .state-label").length, 0);
+          assert.doesNotMatch(card.textContent!, /Before:|After:|earlier terms|revised terms/);
+        }
+      }
+    });
+
+    it(`retains every upcoming card's facts and source on ${route}`, () => {
+      const document = createDocument(pages.get(`fixtures ${route}`)!);
+      const cards = [...document.querySelectorAll(".upcoming-section .pc-entry, .upcoming-section .chg-entry, .upcoming-section .chg-preview")];
+      const expected = fixtures.filter(c => ["Sooner Future", "Later Future", "Future Announcement", "Retiring Service"].includes(c.vendor) && c.date_source === "vendor_page");
+      assert.equal(cards.length, expected.length);
+      for (const change of expected) {
+        const matching = cards.filter(card => card.querySelector(".pc-vendor, .chg-vendor")?.textContent === change.vendor);
+        assert.equal(matching.length, 1, change.vendor);
+        const card = matching[0];
+        const effective = (change as typeof change & { discontinued_date?: string }).discontinued_date ?? change.date;
+        assert.ok(card.querySelector(".pc-date, .chg-date")!.textContent!.includes(effective));
+        assert.equal(card.querySelector(".badge")!.textContent, change.change_type === "product_deprecated" ? "deprecated" : "restructured");
+        assert.ok(card.querySelector(".pc-impact, .chg-impact")!.textContent!.includes(change.impact));
+        assert.ok(card.querySelector(".pc-summary, .chg-summary")!.textContent!.includes(change.summary));
+        assert.ok([...card.querySelectorAll("a[href]")].some(link => link.getAttribute("href") === change.source_url));
+      }
+    });
 
     it(`treats today's event as in effect throughout ${route}`, () => {
       for (const [name, vendor, effectiveDay] of [["fixtures", "Today Event", today], ["tomorrow", "Sooner Future", day(1)], ["retirementDay", "Retiring Service", day(20)]]) {
@@ -221,4 +251,17 @@ describe("the change timelines separate announced changes from their history", (
       assert.match(timeline(after), /Retiring Service/);
     });
   }
+  it("retains state details in latest and monthly pricing entries, including on their effective day", () => {
+    for (const [name, vendor] of [["fixtures", "Today Event"], ["tomorrow", "Sooner Future"], ["announcementDay", "Future Announcement"], ["retirementDay", "Retiring Service"]]) {
+      const document = createDocument(pages.get(`${name} /pricing-changes`)!);
+      const change = fixtures.find(c => c.vendor === vendor && c.date_source === "vendor_page")!;
+      const cards = [...document.querySelectorAll(".pc-entry, .pc-preview")].filter(card => !card.closest(".upcoming-section") && card.querySelector(".pc-vendor")?.textContent === vendor);
+      assert.ok(cards.some(card => card.closest(".latest-section")), `${name}: latest entry`);
+      assert.ok(cards.some(card => !card.closest(".latest-section")), `${name}: monthly entry`);
+      for (const card of cards) {
+        const states = [...card.querySelectorAll(".pc-state")].map(node => node.textContent!.trim());
+        assert.deepEqual(states, [`Before: ${change.previous_state}`, `After: ${change.current_state}`]);
+      }
+    }
+  });
 });
