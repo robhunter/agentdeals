@@ -67,7 +67,7 @@
   },
   "rates": {
     "heading": "Rates per message by market",
-    "intro": "Rates are per delivered message in US dollars, by the user's country calling code. Every country on Meta's rate card has a row in the table. Thirty-nine countries have their own rates. Regional countries show their region's rates, with the region named in brackets. Any country with no row pays the Other rate. At list rates, utility, authentication and service cost the same in each market. Past a monthly volume, utility and authentication cost less: in North America, past 80,000 utility or 100,000 authentication messages a month. Every business pays the table's rates, except AI Providers offering a general-purpose AI assistant. Meta permits these only in Brazil, the EU and EEA, and Türkiye, so not in the United Kingdom, which is in neither the EU nor the EEA. In the EU and EEA, including Germany, France, Spain and the Netherlands, Meta does not charge them. In Brazil, Meta charges them $0.0625 for every non-template message, with no free messages. In Türkiye, since 2026-10-15, Meta does not charge. No end date is given. A business using AI to answer its own customers pays the table's rates. For users in Brazil, BRL rates are R$0.3217 per marketing message and R$0.035 per utility, authentication or service message, when the account is billed in Brazilian reais.",
+    "intro": "Rates are per delivered message in US dollars, by the user's country calling code. Every country on Meta's rate card has a row in the table. Thirty-nine countries have their own rates. Regional countries show their region's rates, with the region named in brackets. Any country with no row pays the Other rate. At list rates, utility, authentication and service cost the same in each market. Past a monthly volume, utility and authentication cost less: in North America, past 80,000 utility or 100,000 authentication messages a month. Apart from marketing messages sent with a max price on the Marketing Messages API for WhatsApp, every business pays the table's rates, except AI Providers offering a general-purpose AI assistant. Meta permits these only in Brazil, the EU and EEA, and Türkiye, so not in the United Kingdom, which is in neither the EU nor the EEA. In the EU and EEA, including Germany, France, Spain and the Netherlands, Meta does not charge them. In Brazil, Meta charges them $0.0625 for every non-template message, with no free messages. In Türkiye, since 2026-10-15, Meta does not charge. No end date is given. A business using AI to answer its own customers pays the table's rates. For users in Brazil, BRL rates are R$0.3217 per marketing message and R$0.035 per utility, authentication or service message, when the account is billed in Brazilian reais.",
     "columns": [
       "Market",
       "Marketing",
@@ -1169,6 +1169,20 @@
         ]
       },
       {
+        "label": "Template category",
+        "cells": [
+          "Marketing, utility and authentication templates",
+          "Each template message is charged at its template's category rate. A template mixing utility and marketing content, such as an order update with a discount code, is a marketing template. Meta can change an approved utility template to marketing with one day's notice, or with no notice for a business it has warned for misusing categories; the template stays approved and its messages then cost the marketing rate. A business can request a review within 60 days of the change."
+        ]
+      },
+      {
+        "label": "Max price for marketing messages",
+        "cells": [
+          "Marketing messages sent through the Marketing Messages API for WhatsApp, not Cloud API, by a business in a country eligible for that API",
+          "A business can set the most it will pay per delivered marketing message, the same as, below or above the table's rate. Meta charges at most that max price, so a max price above the table's rate can make a message cost more than the table's rate, and one below it can cost less. Delivery rates vary with the max price. Open beta since October 2026; general availability is planned for Q2 2027. Fixed table rates stay available on that API, and on Cloud API marketing messages cost the table's rate."
+        ]
+      },
+      {
         "label": "Test phone number",
         "cells": [
           "Test WhatsApp account, test Messaging account and test business phone number created automatically when starting with Cloud API",
@@ -1223,6 +1237,13 @@
           "Groups API, for an Official Business Account; a group has up to 8 participants",
           "Each delivered copy of a billable message is charged at its recipient's country rate. A billable message delivered to 5 members is 5 charged messages. Any member's message opens a customer service window with the whole group. Since 2026-10-01, utility messages in it are charged and non-template messages are free only within the free tier"
         ]
+      },
+      {
+        "label": "Message data",
+        "cells": [
+          "Message content sent or received through Cloud API",
+          "Meta keeps message content for at most 30 days. Local storage, a setting on each business phone number, keeps message content at rest only in one chosen region; while a message is processed, its content may be held in Meta data centers in other countries for up to 60 minutes."
+        ]
       }
     ]
   },
@@ -1272,7 +1293,7 @@
     "heading": "Why other pages say replies are free",
     "text": "Many third-party pages, and some copies of Meta's own page, still say service messages are free. That was Meta's rule from 2024-11-01 to 2026-09-30. The current rule applies from 2026-10-01.",
     "sources": {
-      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-10-15, read 2026-10-23), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11; Meta's messaging-limits page (updated 2026-05-21) and Twilio's WhatsApp pricing page (current as of September 2026), read 2026-10-18; Meta's About the WhatsApp Business Platform page (updated 2026-08-04) and its WhatsApp accounts and Messaging accounts page (updated 2026-08-05), read 2026-11-01; Meta's Cloud API error codes page (updated 2026-06-18), read 2026-11-01. Meta's Calling API pricing page and its USD calling rate card effective 2026-10-01, its Cloud API Calling page, its per-user marketing template message limits page, its throughput page, its page on onboarding WhatsApp Business app users and its Groups API pricing page, read 2026-11-04.",
+      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-10-15, read 2026-10-23), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11; Meta's messaging-limits page (updated 2026-05-21) and Twilio's WhatsApp pricing page (current as of September 2026), read 2026-10-18; Meta's About the WhatsApp Business Platform page (updated 2026-08-04) and its WhatsApp accounts and Messaging accounts page (updated 2026-08-05), read 2026-11-01; Meta's Cloud API error codes page (updated 2026-06-18), read 2026-11-01. Meta's Calling API pricing page and its USD calling rate card effective 2026-10-01, its Cloud API Calling page, its per-user marketing template message limits page, its throughput page, its page on onboarding WhatsApp Business app users and its Groups API pricing page, read 2026-11-04. Meta's template categorization page (updated 2026-09-15), its page on setting a max price for marketing messages (updated 2026-11-09), its Data Privacy & Security page (updated 2026-06-16) and its local storage page (updated 2026-05-21), read 2026-11-13.",
       "links": [
         {
           "text": "developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
@@ -1337,6 +1358,22 @@
         {
           "text": "its Groups API pricing page",
           "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/groups/pricing/"
+        },
+        {
+          "text": "Meta's template categorization page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/template-categorization/"
+        },
+        {
+          "text": "its page on setting a max price for marketing messages",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/marketing-messages/pricing/"
+        },
+        {
+          "text": "its Data Privacy & Security page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/data-privacy-and-security/"
+        },
+        {
+          "text": "its local storage page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/local-storage/"
         }
       ]
     }
