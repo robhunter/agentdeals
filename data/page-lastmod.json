@@ -3175,6 +3175,14 @@
       "hash": "f5f6c6035f20c600",
       "changed": "2026-10-31"
     },
+    "/digest/2027-w26": {
+      "hash": "9b91f2679d8e822d",
+      "changed": "2026-11-13"
+    },
+    "/digest/2027-w37": {
+      "hash": "3b555d54f1791711",
+      "changed": "2026-11-13"
+    },
     "/digest/2027-w39": {
       "hash": "bee4b37e4f2f2266",
       "changed": "2026-10-31"
@@ -3186,6 +3194,14 @@
     "/digest/2028-w19": {
       "hash": "4f12f36f28c06a6b",
       "changed": "2026-10-31"
+    },
+    "/digest/2028-w38": {
+      "hash": "3e36f1d335e1228c",
+      "changed": "2026-11-13"
+    },
+    "/digest/2028-w39": {
+      "hash": "0df462ff3f9e490e",
+      "changed": "2026-11-13"
     },
     "/digest/archive": {
       "hash": "6360755604323e5e",
@@ -3633,6 +3649,10 @@
       "hash": "809641f611226139",
       "changed": "2026-10-30"
     },
+    "/reports/2027-06": {
+      "hash": "dbb708f476bfc475",
+      "changed": "2026-11-13"
+    },
     "/reports/2027-09": {
       "hash": "88430f71a02c982d",
       "changed": "2026-10-31"
@@ -3644,6 +3664,10 @@
     "/reports/2028-05": {
       "hash": "4319acf583ce9c9a",
       "changed": "2026-10-31"
+    },
+    "/reports/2028-09": {
+      "hash": "d83299e6b59b4681",
+      "changed": "2026-11-13"
     },
     "/security-alternatives": {
       "hash": "7e8b241edeae5ee9",
