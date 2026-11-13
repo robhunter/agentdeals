@@ -15340,9 +15340,9 @@
       "vendor": "OpenAI",
       "change_type": "product_deprecated",
       "date": "2027-02-26",
-      "summary": "The OpenAI API keeps running. The whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe and gpt-4o-transcribe-diarize models can be called until February 26, 2027. OpenAI's substitute for each is gpt-live-transcribe or gpt-transcribe.",
+      "summary": "The OpenAI API keeps running. The whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe and gpt-4o-transcribe-diarize models can be called until February 26, 2027. OpenAI's substitute for each is gpt-live-transcribe or gpt-transcribe. The /v1/audio/translations endpoint also shuts down on February 26, 2027. OpenAI's replacement is /v1/realtime/translations.",
       "previous_state": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe and gpt-4o-transcribe-diarize were callable in the OpenAI API at pay-as-you-go rates.",
-      "current_state": "OpenAI's deprecations page (notice of 2026-08-26) lists February 26, 2027 as the date the four models are removed from the API.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-08-26) lists February 26, 2027 as the date the four models are removed from the API, and as the shutdown date of the /v1/audio/translations endpoint, with /v1/realtime/translations as its replacement (read 2026-11-13).",
       "impact": "medium",
       "source_url": "https://developers.openai.com/api/docs/deprecations",
       "category": "AI / ML",
@@ -15350,7 +15350,7 @@
       "recorded_date": "2026-10-10",
       "date_source": "hand_written",
       "listing_effect": "none",
-      "what_ends": "whisper-1 and the gpt-4o transcription models"
+      "what_ends": "whisper-1, the gpt-4o transcription models and /v1/audio/translations"
     },
     {
       "vendor": "OpenAI",
@@ -17873,9 +17873,9 @@
       "vendor": "Google Antigravity",
       "change_type": "product_deprecated",
       "date": "2026-11-18",
-      "summary": "Google Antigravity's Free and Google AI Plus plans keep running. Until November 18, 2026, they include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date, leaving Gemini 3.8 Flash as the only reasoning model on those plans.",
+      "summary": "Google Antigravity's Free and Google AI Plus plans keep running. Until November 18, 2026, they include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date. After that date, Antigravity's models page lists two reasoning models for the Free and Google AI Plus plans: Gemini 3.8 Flash and Gemini 4 Hydrogen.",
       "previous_state": "On 2026-10-17, Google Antigravity's Free and Google AI Plus plans offered Claude Sonnet 4.6, Claude Opus 4.6, GPT-OSS-120b and Gemini 3.8 Flash.",
-      "current_state": "Google Antigravity's models page (read 2026-11-03) marks Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b: \"Will be removed on November 18, 2026.\"",
+      "current_state": "Google Antigravity's models page (read 2026-11-13) marks Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b: \"Will be removed on November 18, 2026.\" Its plan table lists Gemini 3.8 Flash and Gemini 4 Hydrogen for Free and Google AI Plus.",
       "impact": "low",
       "source_url": "https://antigravity.google/docs/models",
       "category": "AI Coding",
