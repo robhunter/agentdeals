@@ -19524,6 +19524,23 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "what_ends": "Stackify Retrace"
+    },
+    {
+      "vendor": "AWS Infrastructure Composer",
+      "change_type": "product_deprecated",
+      "date": "2026-12-07",
+      "summary": "The standalone AWS Infrastructure Composer console shuts down on December 7, 2026. New customers have not been able to sign up since October 29, 2026. Existing customers can use the console until December 7, 2026. The visual editor remains in the AWS Toolkit for Visual Studio Code. CloudFormation templates and stacks continue to work normally.",
+      "previous_state": "AWS Infrastructure Composer offered a standalone console for designing CloudFormation and AWS SAM templates visually, open to new customers, with no announced end.",
+      "current_state": "AWS's \"AWS Infrastructure Composer end of support\" (read 2026-11-12): \"we decided to end support for AWS Infrastructure Composer, effective December 7, 2026. Infrastructure Composer will no longer accept new customers beginning October 29, 2026.\" \"The AWS Toolkit for Visual Studio Code retains the full Infrastructure Composer visual authoring experience with no changes.\" The Internet Archive holds the same notice and dates from 2026-09-30.",
+      "impact": "medium",
+      "source_url": "https://docs.aws.amazon.com/infrastructure-composer/latest/dg/infrastructure-composer-end-of-support.html",
+      "category": "Infrastructure",
+      "alternatives": [],
+      "recorded_date": "2026-11-12",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "AWS Infrastructure Composer's standalone console",
+      "announced_on": "2026-09-29"
     }
   ]
 }
