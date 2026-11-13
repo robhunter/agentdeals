@@ -49193,7 +49193,7 @@ function buildPricingChangesPage(): string {
     const altHtml = c.alternatives && c.alternatives.length > 0
       ? `<div class="pc-alts"><span class="pc-alts-label">Alternatives:</span> ${c.alternatives.map(a => changeVendorLinkHtml(a)).join(", ")}</div>`
       : "";
-    const stateHtml = printsBeforeAndAfter(c)
+    const stateHtml = !isUpcoming && printsBeforeAndAfter(c)
       ? `<div class="pc-states">
           <div class="pc-state"><span class="pc-state-label">Before:</span> ${escHtmlServer(c.previous_state)}</div>
           <div class="pc-state"><span class="pc-state-label">After:</span> ${escHtmlServer(c.current_state)}</div>
