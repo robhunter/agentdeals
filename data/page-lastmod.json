@@ -3175,12 +3175,8 @@
       "hash": "f5f6c6035f20c600",
       "changed": "2026-10-31"
     },
-    "/digest/2027-w22": {
-      "hash": "39bfc4d49ae2a480",
-      "changed": "2026-11-13"
-    },
     "/digest/2027-w26": {
-      "hash": "21b8ed7fb8f1ecc4",
+      "hash": "9b91f2679d8e822d",
       "changed": "2026-11-13"
     },
     "/digest/2027-w37": {
@@ -3654,7 +3650,7 @@
       "changed": "2026-10-30"
     },
     "/reports/2027-06": {
-      "hash": "6cd5666b49af555a",
+      "hash": "dbb708f476bfc475",
       "changed": "2026-11-13"
     },
     "/reports/2027-09": {

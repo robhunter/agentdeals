@@ -19594,23 +19594,6 @@
       "announced_on": "2026-09-29"
     },
     {
-      "vendor": "Azure Fluid Relay",
-      "change_type": "product_deprecated",
-      "date": "2027-06-02",
-      "summary": "Azure Fluid Relay retires on June 2, 2027. It can be used until June 1, 2027. The Fluid Framework remains open source. Replace it with a self-hosted Fluid service you run yourself.",
-      "previous_state": "Azure Fluid Relay offered a Microsoft-hosted Fluid service for real-time collaborative web apps, with no announced retirement.",
-      "current_state": "Azure Updates (posted 2026-11-02, read 2026-11-13): \"On June 2, 2027, we will retire Azure Fluid Relay.\" \"You can continue using Azure Fluid Relay until June 1, 2027 while you complete your transition.\" \"A self-hosted Fluid service solution is available as the replacement.\"",
-      "impact": "medium",
-      "source_url": "https://azure.microsoft.com/updates?id=570498",
-      "category": "Infrastructure",
-      "alternatives": [],
-      "recorded_date": "2026-11-13",
-      "date_source": "vendor_page",
-      "listing_effect": "none",
-      "what_ends": "Azure Fluid Relay",
-      "announced_on": "2026-11-02"
-    },
-    {
       "vendor": "Azure Communication Services",
       "change_type": "product_deprecated",
       "date": "2028-09-30",
