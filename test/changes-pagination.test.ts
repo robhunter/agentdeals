@@ -9,6 +9,7 @@ import { getDealChanges, loadDealChanges } from "../dist/data.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const DEFAULT_BUDGET_BYTES = 40000;
+const wholeWindowQuery = `?limit=${loadDealChanges().length}`;
 
 const SHAPE_KEYS = [
   "changes",
@@ -103,7 +104,7 @@ describe("/api/changes answers one shape and pages", () => {
   });
 
   it("reports the unlimited count so a caller can page", async () => {
-    const full = await get("?limit=1000");
+    const full = await get(wholeWindowQuery);
     const paged = await get("?limit=2");
     assert.strictEqual(paged.json.total, full.json.total, "total moved with the page size");
     assert.strictEqual(paged.json.total, (full.json.changes as unknown[]).length);
@@ -111,7 +112,7 @@ describe("/api/changes answers one shape and pages", () => {
   });
 
   it("pages through the window without repeating or skipping a record", async () => {
-    const full = await get("?limit=1000");
+    const full = await get(wholeWindowQuery);
     const all = (full.json.changes as { vendor: string; date: string; change_type: string }[])
       .map((c) => `${c.vendor}|${c.date}|${c.change_type}`);
     const walked: string[] = [];
@@ -148,7 +149,7 @@ describe("/api/changes answers one shape and pages", () => {
 
   it("reaches the whole window by asking rather than by omitting a parameter", async () => {
     const windowSize = getDealChanges().changes.length;
-    const { json } = await get("?limit=1000");
+    const { json } = await get(wholeWindowQuery);
     assert.strictEqual((json.changes as unknown[]).length, windowSize);
     assert.strictEqual(json.total, windowSize);
   });
@@ -206,14 +207,6 @@ describe("/api/changes answers one shape and pages", () => {
       if (body === baseline) inert.push(name);
     }
     assert.deepStrictEqual(inert, [], "/developers publishes parameters that do not change the response");
-  });
-
-  it("keeps the stdio proxy's pinned page size above the whole window", async () => {
-    const { TRACK_CHANGES_LIMIT } = await import("../dist/server-remote.js");
-    assert.ok(
-      TRACK_CHANGES_LIMIT >= loadDealChanges().length,
-      `the proxy pins ${TRACK_CHANGES_LIMIT} against ${loadDealChanges().length} stored changes, so it would truncate`,
-    );
   });
 });
 

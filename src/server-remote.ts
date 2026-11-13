@@ -5,7 +5,6 @@ import {
   fetchCategories,
   fetchOffers,
   fetchOfferDetails,
-  fetchDealChanges,
   fetchEveryDealChange,
   fetchStackRecommendation,
   fetchCosts,
@@ -29,7 +28,6 @@ import { publishedDateLine, restatedReadingLine, storedConfirmationClause, verif
 import { INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
 import { INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS } from "./change-census.js";
 
-export const TRACK_CHANGES_LIMIT = 1000;
 import type { LinkUnreachable, ListingCondition, ProductRole, ProductSubtypes, SourceCheck } from "./types.js";
 import { conditionsBesidePublishedTerms, withConditionsAfter } from "./listing-conditions.js";
 import type { RefusedReadWeHold } from "./change-refusal.js";
@@ -336,11 +334,11 @@ export function createServer(): McpServer {
           return mcpText(data);
         }
 
-        const params: Record<string, string | undefined> = { since, type: change_type, vendor, vendors, limit: String(TRACK_CHANGES_LIMIT) };
+        const params: Record<string, string | undefined> = { since, type: change_type, vendor, vendors };
         if (categories) params.categories = categories;
         if (include_retracted !== undefined) params.include_retracted = String(include_retracted);
         if (include_index_housekeeping !== undefined) params.include_index_housekeeping = String(include_index_housekeeping);
-        const changes = await fetchDealChanges(params) as Record<string, unknown>;
+        const changes = await fetchEveryDealChange(params) as Record<string, unknown>;
         const doExpiring = include_expiring !== false;
         const days = Math.min(Math.max(lookahead_days ?? 30, 1), 365);
 
