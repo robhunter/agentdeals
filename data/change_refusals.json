@@ -1457,15 +1457,15 @@
     },
     {
       "vendor": "Bugsink",
-      "change_type": "limits_reduced",
+      "change_type": "limits_increased",
       "reason": "unquantified_limit",
-      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5,000 error)",
-      "summary": "The free tier now has a limit of 15,000 monthly events, and includes a single user. The stored information stated 5,000 errors/month or unlimited with self-hosting.",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (5,000 error)",
+      "summary": "The stored free tier described 'Free for up to 5,000 errors/month, or unlimited use when self-hosted.' The page now shows a free 'Evaluation' plan with 15K monthly events, single user, and 5K events retained, while self-hosted is listed as Free with unlimited users and all features. The free hosted limit increased from 5,000 to 15,000 events/month, and self-hosting remains free.",
       "previous_state": "Error-tracking with Sentry-SDK compatability. Free for up to 5,000 errors/month, or unlimited use when self-hosted.",
-      "current_state": "15K / Evaluation Free 15K monthly events Single user 5K events retained Chat/email alerts",
+      "current_state": "Evaluation Free: 15K monthly events, single user, 5K events retained, chat/email alerts. Self-hosted: Free, unlimited users, all features, volume based on hardware.",
       "source_url": "https://www.bugsink.com/",
       "category": "Error Tracking",
-      "refused_date": "2026-10-23"
+      "refused_date": "2026-11-13"
     },
     {
       "vendor": "Bugsnag",
@@ -2411,6 +2411,18 @@
       "source_url": "https://cohere.com/pricing",
       "category": "AI / ML",
       "refused_date": "2026-09-02"
+    },
+    {
+      "vendor": "CoinMarketCap",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-30 (unquantified_limit) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier's monthly call credits increased from 10K to 15K, and the plan is now named 'Basic Plan' rather than just 'Free'.",
+      "previous_state": "Provides cryptocurrency market data including the latest crypto and fiat currency exchange rates. The free tier offers 10K call credits/month.",
+      "current_state": "Basic Plan is free forever with 15K monthly call credits, 50 requests per minute, historical data, and commercial use, available by signing up for a free Developer Portal account.",
+      "source_url": "https://coinmarketcap.com/api/",
+      "category": "Payments",
+      "refused_date": "2026-11-13"
     },
     {
       "vendor": "CoinMarketCap",
@@ -5663,6 +5675,18 @@
     },
     {
       "vendor": "Hotjar",
+      "change_type": "rebranded",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-30 (confirmed_unchanged) claimed the same change, rebranded, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "Hotjar has been rebranded/merged into Contentsquare; the free tier now exists as 'Contentsquare Free' with 200k sessions/month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations, plus a 15-day Growth trial. New Hotjar accounts can no longer be created.",
+      "previous_state": "Website Analytics and Reports — The Contentsquare Free plan includes 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations. It also includes a 15-day trial of the Growth plan.",
+      "current_state": "Contentsquare Free includes 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations, plus a 15-day trial of the Growth plan. It is no longer possible to create a new account on Hotjar; new users sign up on Contentsquare.",
+      "source_url": "https://hotjar.com",
+      "category": "Analytics",
+      "refused_date": "2026-11-13"
+    },
+    {
+      "vendor": "Hotjar",
       "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-09-30 (confirmed_unchanged) stated the same figure, so the page showed these terms before the date this record gives",
@@ -6040,6 +6064,18 @@
     {
       "vendor": "Imitate Email",
       "change_type": "limits_increased",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-23 (repeats_a_refused_reading) claimed the same change, limits_increased, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored deal info says free accounts get 15 emails a day forever, but the current page states free accounts get 450 test emails a month, free forever.",
+      "previous_state": "Sandbox Email Server for testing email functionality across build/qa and ci/cd. Free accounts get 15 emails a day forever.",
+      "current_state": "Get started with 450 test emails a month, free forever; Get 450 emails a month for free forever as a solo developer.",
+      "source_url": "https://imitate.email",
+      "category": "Email",
+      "refused_date": "2026-11-13"
+    },
+    {
+      "vendor": "Imitate Email",
+      "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-09-30 (measures_no_change) stated the same figure, so the page showed these terms before the date this record gives",
       "summary": "The free tier now offers 450 test emails a month, instead of 15 emails a day.",
@@ -6379,6 +6415,18 @@
       "refused_date": "2026-10-25"
     },
     {
+      "vendor": "Jina AI",
+      "change_type": "open_source_killed",
+      "reason": "confirmed_unchanged",
+      "detail": "The report restates the stored description's existing terms (10M free tokens, jina-embeddings-v4 non-commercial via API, CC-BY-NC 4.0 weights, commercial licensing) and adds details the stored description never claimed, such as the May 6th 2025 pricing model and August 10 2026 license sale date; no developer-facing term differs.",
+      "summary": "Every new API key comes with 10M free tokens!' which confirms this. It also introduces a new pricing model effective May 6th, 2025, stating, 'We introduced a new pricing model on May 6th, 2025. If you enabled auto-recharge before this date, you'll continue to pay the old price (the one when you purchased). Is non-commercial only even through the API.' The page mentions the models are licensed CC-BY-NC 4.0 but then states, 'Elastic has sold that license separately since August 10, 2026. Contact Elastic Sales to arrange one,' which is a significant change regarding commercial use of the weights.",
+      "previous_state": "Search, Reader, embeddings and reranker APIs. Each new API key comes with 10M free tokens, shared across these APIs; no page says they renew. Jina's FAQ states for the hosted API: \"No separate license needed. Commercial use is covered by the service terms: sign up and pay through this site or the cloud marketplace.\" CC BY-NC 4.0 covers self-hosting the model weights. The exception is jina-embeddings-v4, which is non-commercial only even through the API. Search (s.jina.ai) needs a key and costs at least 10,000 tokens a request, so the free tokens cover at most 1,000 searches. Search allows 100 requests a minute with a free key and the same with a paid key; only a premium key raises it, to 1,000. Reader (r.jina.ai), which converts a URL to LLM-friendly text, allows 500 requests a minute with a free or paid key, 5,000 with a premium key, and 20 without a key. Reader without a key is free and uses no tokens, so it keeps working after a key's free tokens run out. Paid tokens are prepaid: 1 billion for $50 ($0.05 per million), or 11 billion for $500 with a premium key. Jina AI has been part of Elastic since October 2025.",
+      "current_state": "The models used by Reader, including ReaderLM-v2 and jina-vlm , are licensed CC-BY-NC 4.0, which is not an open-source license: they are free to download and use non-commercially, but commercial production use requires a commercial license. Elastic has sold that license separately since August 10, 2026; contact Elastic Sales to arrange one.",
+      "source_url": "https://jina.ai/reader/",
+      "category": "AI / ML",
+      "refused_date": "2026-11-13"
+    },
+    {
       "vendor": "jitpack.io",
       "change_type": "limits_reduced",
       "reason": "no_price_signal",
@@ -6716,6 +6764,18 @@
       "source_url": "https://www.lemonsqueezy.com/pricing",
       "category": "Payments",
       "refused_date": "2026-09-09"
+    },
+    {
+      "vendor": "Letta",
+      "change_type": "limits_reduced",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (0 currency/mo, 3 stateful, 5 MIB storage), and drops 5 the stored description carried",
+      "summary": "The Free plan no longer includes limited use of Letta Auto or a limited number of LLM requests on rotating free models; the page now says the Free plan has no included model usage and requires bringing your own API keys/external coding plan or purchasing credits.",
+      "previous_state": "Stateful AI agents that keep their memory across sessions. The Free plan is $0/month for the Letta app, CLI and web app: up to 3 stateful agents, 5 MiB of storage per memory repository, limited use of Letta Auto, a limited number of LLM requests on rotating free models, and your own model API keys or coding plans. Free is a Personal Plan; API-key access to the Letta API is sold as a Developer Plan, the API Plan at $20/month plus $0.10 per active agent a month and pay-as-you-go model usage. Pro is $20/month for up to 20 stateful agents. The Letta agent harness is open source (Apache 2.0) and runs on your own infrastructure with no Letta account.",
+      "current_state": "Free is $0/month with up to 3 stateful agents, 5 MiB of storage per memory repository, bring your own API keys and external coding plans, and the ability to purchase credits for Letta-hosted models. The Free plan has no included model usage.",
+      "source_url": "https://docs.letta.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-11-13"
     },
     {
       "vendor": "libraries.io",
@@ -10342,13 +10402,13 @@
       "vendor": "robusta.dev",
       "change_type": "free_tier_removed",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-09-30 (dangling_reference) claimed the same change, free_tier_removed, against the same stored description",
-      "summary": "The pricing page does not mention a free tier with up to 20 Kubernetes nodes. It focuses on a usage-based pricing model tied to AI incident investigations, with costs scaling based on the number of unique incidents rather than nodes.",
+      "detail": "the reading of this vendor refused on 2026-10-23 (repeats_a_refused_claim) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The pricing page no longer describes a Kubernetes monitoring free tier with up to 20 nodes. It now positions Robusta as an AI SRE with per-incident pricing and no free tier or node limits mentioned.",
       "previous_state": "Powerful Kubernetes monitoring based on Prometheus. Bring your own Prometheus or install the all-in-one bundle. The free tier includes up to 20 Kubernetes nodes. Alerts via Slack, Microsoft Teams, Discord, and more. Integrations with PagerDuty, OpsGenie, VictorOps, DataDog, and many other tools.",
-      "current_state": "The pricing is based on the number of incidents investigated by the AI, with costs determined by the number of alerts and investigations. There is no mention of a free tier with a node limit.",
+      "current_state": "The page describes Robusta as an AI SRE with per-incident pricing ($2.50/investigation benchmark, $3,500/year with grouping example). It mentions self-hosting is available but optional, and offers a 'Try now' trial, but does not state any free tier, node limits, or the previously described free monitoring features.",
       "source_url": "https://home.robusta.dev/",
       "category": "Monitoring",
-      "refused_date": "2026-10-23"
+      "refused_date": "2026-11-13"
     },
     {
       "vendor": "robusta.dev",

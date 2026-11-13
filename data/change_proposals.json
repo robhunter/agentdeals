@@ -1,5 +1,56 @@
 {
-  "proposals": [],
+  "proposals": [
+    {
+      "proposal_id": "2026-11-13/coupler/free_tier_removed",
+      "proposed_on": "2026-11-13",
+      "vendor": "Coupler",
+      "change_type": "free_tier_removed",
+      "date": "2026-11-13",
+      "date_source": "discovered",
+      "summary": "The page now states Coupler.io is priced by number of connected accounts, with paid plans Starter (from $24/mo, 3 accounts), Active (from $99, 15 accounts, unlimited users), Pro (from $199, 50 accounts, hourly refresh), and Custom, plus a 7-day free trial with no credit card required. No free tier is mentioned.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Data integration tool that syncs between apps. It can create live dashboards and reports, transform and manipulate values, and collect and back up insights. The free plan is limited to one user, data connection, data source, and data destination. Also requires manual data refresh.",
+      "current_state": "Pricing is by number of connected accounts (e.g., ad account, analytics property, CRM), not by reports or data flows. Every plan includes all sources and destinations, AI Integrations, and unlimited data flows. Starter from $24/month billed annually for one person with 3 accounts; Active from $99 for a team with 15 accounts and unlimited users; Pro from $199 for agencies and teams with 50 accounts and hourly refresh; Custom adds higher limits, refresh every 15 minutes, and SSO. A 7-day free trial is available, no credit card required.",
+      "impact": "high",
+      "source_url": "https://www.coupler.io/",
+      "category": "Notebooks & Data Science",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-13",
+      "restatement": [
+        {
+          "url": "https://www.coupler.io/",
+          "refused": "reading_answers_for_something_else"
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-13/linkup/pricing_restructured",
+      "proposed_on": "2026-11-13",
+      "vendor": "Linkup",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-13",
+      "date_source": "discovered",
+      "summary": "The pricing page no longer mentions the $20 monthly credit for professional email sign-ups or the 10 queries/second rate limit.",
+      "tier": "Free",
+      "tier_direction": "unchanged",
+      "previous_state": "Web search API for AI agents. Accounts created with a professional email address get $20 of credit, topped back up to $20 each month (Linkup's docs); the pricing page calls this 4,000 free queries and states no period. Linkup's app asks other sign-ups to add a card, with no charge, to unlock the credit. Rate limit: 10 queries a second per organization. Then pay as you go from a prepaid balance: search $0.005 a call ($0.006 with a sourced answer or structured output), deep search $0.05 to $0.055, fetch from $0.001. Top-ups of $1,000 or more earn 10-20% bonus credit.",
+      "current_state": "The page states 'Run 4,000 queries for free' with no period specified. Search is priced at $0.005 - $0.006 per request, Fetch at $0.001 - $0.006 per request, and Research at $0.25 - $2.50 per request. SOC 2 Type II is included on all plans; ZDR is available with the Enterprise plan.",
+      "impact": "medium",
+      "source_url": "https://www.linkup.so/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-13",
+      "restatement": [
+        {
+          "url": "https://www.linkup.so/pricing",
+          "refused": "reading_describes_the_page_not_the_terms"
+        }
+      ]
+    }
+  ],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",

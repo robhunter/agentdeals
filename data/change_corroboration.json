@@ -1,17 +1,6 @@
 {
   "held": [
     {
-      "vendor": "Coupler",
-      "change_type": "free_tier_removed",
-      "impact": "high",
-      "summary": "The page now presents a 7-day free trial with no credit card required, and paid plans priced by number of connected accounts: Starter from $24/month (billed annually) for one person with 3 accounts, Active from $99 for a team with 15 accounts and unlimited users, Pro from $199 for 50 accounts and hourly refresh, and Custom with higher limits, 15-minute refresh and SSO.",
-      "previous_state": "Data integration tool that syncs between apps. It can create live dashboards and reports, transform and manipulate values, and collect and back up insights. The free plan is limited to one user, data connection, data source, and data destination. Also requires manual data refresh.",
-      "current_state": "Coupler.io is priced by the number of accounts you connect, such as an ad account, an analytics property or a CRM, not by reports or data flows. Every plan includes all sources and destinations, AI Integrations and unlimited data flows. Starter (from $24 a month, billed annually) suits one person with 3 accounts; Active (from $99) suits a team with 15 accounts and unlimited users; Pro (from $199) suits agencies and teams with 50 accounts and hourly refresh; Custom adds higher limits, refresh every 15 minutes and SSO. You can try Coupler.io free for 7 days, no credit card required.",
-      "source_url": "https://www.coupler.io/",
-      "category": "Notebooks & Data Science",
-      "first_read_date": "2026-11-12"
-    },
-    {
       "vendor": "Harness CI",
       "change_type": "pricing_restructured",
       "impact": "high",
@@ -23,48 +12,37 @@
       "first_read_date": "2026-11-01"
     },
     {
-      "vendor": "Jina AI",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The current page's FAQ now states that Reader models (ReaderLM-v2, jina-vlm) are CC-BY-NC 4.0 and that Elastic has sold a commercial license separately since August 10, 2026, and that Jina On-Prem is sold as its own SKU since that date. The free tier itself (10M free tokens per new API key, shared across APIs) is still stated on the page.",
-      "previous_state": "Search, Reader, embeddings and reranker APIs. Each new API key comes with 10M free tokens, shared across these APIs; no page says they renew. Jina's FAQ states for the hosted API: \"No separate license needed. Commercial use is covered by the service terms: sign up and pay through this site or the cloud marketplace.\" CC BY-NC 4.0 covers self-hosting the model weights. The exception is jina-embeddings-v4, which is non-commercial only even through the API. Search (s.jina.ai) needs a key and costs at least 10,000 tokens a request, so the free tokens cover at most 1,000 searches. Search allows 100 requests a minute with a free key and the same with a paid key; only a premium key raises it, to 1,000. Reader (r.jina.ai), which converts a URL to LLM-friendly text, allows 500 requests a minute with a free or paid key, 5,000 with a premium key, and 20 without a key. Reader without a key is free and uses no tokens, so it keeps working after a key's free tokens run out. Paid tokens are prepaid: 1 billion for $50 ($0.05 per million), or 11 billion for $500 with a premium key. Jina AI has been part of Elastic since October 2025.",
-      "current_state": "Every new API key comes with 10M free tokens usable across all models; one API key is valid for all Jina AI search foundation products with tokens shared across them. Reader API is free without a key (20 RPM) and with a free key (500 RPM). Search (s.jina.ai) costs a fixed number of tokens starting from 10,000 per request. Reader models (ReaderLM-v2, jina-vlm) are CC-BY-NC 4.0; commercial production use requires a commercial license, which Elastic has sold separately since August 10, 2026. Jina On-Prem is a commercial license sold by Elastic as its own SKU since August 10, 2026.",
-      "source_url": "https://jina.ai/reader/",
+      "vendor": "ReportGPT",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The current pricing page now shows a free demo limited to 1 document and paid one-time plans ($5, $10, $25) for additional reports.",
+      "previous_state": "AI Powered Writing Assistant. The entire platform is free as long as you bring your own API key.",
+      "current_state": "1 Free Demo Document at $0/one-time, allowing users to generate document structures, generate chapters, and run AI-plagiarism checks; paid one-time plans offer 1 AI-Report for $5, 3 AI-Reports for $10, and 10 AI-Reports for $25, each with access to GPT-5, unlimited document structures, unlimited generated chapters, and unlimited AI-plagiarism checks.",
+      "source_url": "https://ReportGPT.app",
       "category": "AI / ML",
-      "first_read_date": "2026-11-12"
+      "first_read_date": "2026-11-13"
     },
     {
-      "vendor": "Linkup",
+      "vendor": "Steel",
       "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The pricing page no longer mentions the $20 monthly credit for professional email sign-ups or the 10 queries/second rate limit; it now advertises 'Run 4,000 queries for free' with no period stated, and the Research tier is now priced at $0.25-$2.50 per request (previously deep search was $0.05-$0.055).",
-      "previous_state": "Web search API for AI agents. Accounts created with a professional email address get $20 of credit, topped back up to $20 each month (Linkup's docs); the pricing page calls this 4,000 free queries and states no period. Linkup's app asks other sign-ups to add a card, with no charge, to unlock the credit. Rate limit: 10 queries a second per organization. Then pay as you go from a prepaid balance: search $0.005 a call ($0.006 with a sourced answer or structured output), deep search $0.05 to $0.055, fetch from $0.001. Top-ups of $1,000 or more earn 10-20% bonus credit.",
-      "current_state": "The page states 'Run 4,000 queries for free' with no period specified. Search is priced at $0.005-$0.006 per request, Fetch at $0.001-$0.006 per request, and Research at $0.25-$2.50 per request. SOC 2 Type II is included on all plans, and ZDR is available with the Enterprise plan.",
-      "source_url": "https://www.linkup.so/pricing",
-      "category": "AI / ML",
-      "first_read_date": "2026-11-12"
+      "impact": "low",
+      "summary": "Launch plan still exists with $30 one-time credits valid 90 days. Browser hour rate is now $0.10/hour on Launch (page headline says 'from $0.08/hour' which applies to Scale), and CAPTCHA solves on Launch are $3/1k vs Scale's $1/1k.",
+      "previous_state": "Cloud browser API for AI agents. The Launch plan is $0 a month plus usage and comes with a one-time $30 credit, valid for 90 days, which Steel puts at about 300 browser hours at $0.10 an hour. Launch allows 10 concurrent sessions, 15-minute sessions, 60 requests a minute and 7-day data retention; CAPTCHA solving and Steel's proxies need a $10 deposit first. Scale is $250 a month plus usage, with $100 of credit each month.",
+      "current_state": "Launch is $0 + usage with $30 one-time free usage credits valid for 90 days, 10 concurrent sessions, 15-minute max session time, 60 requests per minute, 7-day data retention, up to 3 seats, browser hours at $0.10/hour, proxy bandwidth at $10/GB, CAPTCHA solves at $3/1k, Browser Tools at $5/1k. CAPTCHA solving and Steel-provided proxies on Launch require a $10 paid deposit (free credits do not count).",
+      "source_url": "https://docs.steel.dev/overview/pricinglimits",
+      "category": "Browser Automation",
+      "first_read_date": "2026-11-13"
     },
     {
-      "vendor": "Mem0",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "New adds return an error). The page now presents only Free and Custom plans, with Free described as: unlimited end users. First 30 days 10,000 adds and 1,000 retrievals a month with model calls on Mem0. Your own LLM key, 50,000 adds and 10,000 retrievals a month. Usage-based billing past your limits with a monthly cap you set. Community support.",
-      "previous_state": "Memory layer for AI agents and apps. Free plan: unlimited end users and community support. For the first 30 days Mem0 pays for the model calls, with 10,000 adds and 1,000 retrievals a month. After that, adding memories needs your own LLM key (OpenAI, Anthropic, Azure OpenAI or OpenRouter), billed by your provider; Mem0 puts its recommended models at about $3.55 to $5.34 per 1,000 adds. With a key, Free allows 50,000 adds and 10,000 retrievals a month at no charge from Mem0. Without one, stored memories stay and up to 1,000 searches a month still work, but new adds return an error. Calls past a monthly limit return an error until the next month, unless you connect a key and turn on usage-based billing with a monthly cap you set (Mem0 shows the rate when you turn it on). Mem0 Free accounts that signed up before October 26, 2026 have model calls paid by Mem0 until November 25, 2026; after that, adding memories requires their own LLM key. Starter ($19/month), Growth and Pro are no longer sold to new accounts; existing subscribers keep their plans. Graph memory, user profiles, SSO and on-prem deployment are on the Custom plan, priced by Mem0's sales team. Under Mem0's terms (2026-08-03), Free Plan users grant Mem0 a perpetual licence to their content, including to train AI models; paid plans exclude that, apart from aggregated, de-identified data. Mem0 Open-Source (Apache 2.0) can be self-hosted.",
-      "current_state": "Free plan: unlimited end users; first 30 days 10,000 adds and 1,000 retrievals a month with model calls on Mem0; with your own LLM key, 50,000 adds and 10,000 retrievals a month; usage-based billing past your limits with a monthly cap you set; community support. Custom plan: everything in Free, limits set to your volume, graph memory (entity linking), user profiles, Dream (memory consolidation), advanced analytics, private Slack support, SSO, audit logs and SLA, on-prem deployment, custom integrations.",
-      "source_url": "https://mem0.ai/pricing",
-      "category": "AI / ML",
-      "first_read_date": "2026-11-12"
-    },
-    {
-      "vendor": "ScrumFast",
+      "vendor": "Zenable",
       "change_type": "pricing_model_change",
       "impact": "medium",
-      "summary": "The pricing page now states a paid price of $4 per person per month, contradicting previously 'No paid options.'.",
-      "previous_state": "Up to 15 Users Free. No paid options.",
-      "current_state": "Up to 15 Users Free. No paid options. Price (per person / per month) $12 to $25 + Add-ons. The page also states 'At only $4 per person per month - no ifs and or buts' and 'Up to 15 Users, Always Free!'",
-      "source_url": "https://www.scrumfast.com",
-      "category": "Project Management",
-      "first_read_date": "2026-11-12"
+      "summary": "The stored free-tier description (15 PR reviews/week and 100 agentic reviews/day) is no longer how the page describes the Free plan. The page now states Free accounts get 5,000 Zenable Credits/seat/week, with credits covering PR/MR bot reviews, agentic code reviews, and chat tools.",
+      "previous_state": "Free accounts get 15 PR reviews/week and 100 agentic reviews/day.",
+      "current_state": "Free accounts get 5,000 credits/seat/week, covering PR/MR bot reviews, agentic code reviews (CLI, MCP server, or API), and chat tools; deterministic verifier rules are free.",
+      "source_url": "https://zenable.io",
+      "category": "AI / ML",
+      "first_read_date": "2026-11-13"
     }
   ],
   "resolved": [
@@ -3613,6 +3591,66 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-11-12 read it as pricing_restructured too",
       "resolved_date": "2026-11-12"
+    },
+    {
+      "vendor": "Coupler",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The page now presents a 7-day free trial with no credit card required, and paid plans priced by number of connected accounts: Starter from $24/month (billed annually) for one person with 3 accounts, Active from $99 for a team with 15 accounts and unlimited users, Pro from $199 for 50 accounts and hourly refresh, and Custom with higher limits, 15-minute refresh and SSO.",
+      "previous_state": "Data integration tool that syncs between apps. It can create live dashboards and reports, transform and manipulate values, and collect and back up insights. The free plan is limited to one user, data connection, data source, and data destination. Also requires manual data refresh.",
+      "source_url": "https://www.coupler.io/",
+      "first_read_date": "2026-11-12",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-13 read it as free_tier_removed too",
+      "resolved_date": "2026-11-13"
+    },
+    {
+      "vendor": "Jina AI",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The current page's FAQ now states that Reader models (ReaderLM-v2, jina-vlm) are CC-BY-NC 4.0 and that Elastic has sold a commercial license separately since August 10, 2026, and that Jina On-Prem is sold as its own SKU since that date. The free tier itself (10M free tokens per new API key, shared across APIs) is still stated on the page.",
+      "previous_state": "Search, Reader, embeddings and reranker APIs. Each new API key comes with 10M free tokens, shared across these APIs; no page says they renew. Jina's FAQ states for the hosted API: \"No separate license needed. Commercial use is covered by the service terms: sign up and pay through this site or the cloud marketplace.\" CC BY-NC 4.0 covers self-hosting the model weights. The exception is jina-embeddings-v4, which is non-commercial only even through the API. Search (s.jina.ai) needs a key and costs at least 10,000 tokens a request, so the free tokens cover at most 1,000 searches. Search allows 100 requests a minute with a free key and the same with a paid key; only a premium key raises it, to 1,000. Reader (r.jina.ai), which converts a URL to LLM-friendly text, allows 500 requests a minute with a free or paid key, 5,000 with a premium key, and 20 without a key. Reader without a key is free and uses no tokens, so it keeps working after a key's free tokens run out. Paid tokens are prepaid: 1 billion for $50 ($0.05 per million), or 11 billion for $500 with a premium key. Jina AI has been part of Elastic since October 2025.",
+      "source_url": "https://jina.ai/reader/",
+      "first_read_date": "2026-11-12",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-13 read a change the gate refused as confirmed_unchanged",
+      "resolved_date": "2026-11-13"
+    },
+    {
+      "vendor": "Linkup",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The pricing page no longer mentions the $20 monthly credit for professional email sign-ups or the 10 queries/second rate limit; it now advertises 'Run 4,000 queries for free' with no period stated, and the Research tier is now priced at $0.25-$2.50 per request (previously deep search was $0.05-$0.055).",
+      "previous_state": "Web search API for AI agents. Accounts created with a professional email address get $20 of credit, topped back up to $20 each month (Linkup's docs); the pricing page calls this 4,000 free queries and states no period. Linkup's app asks other sign-ups to add a card, with no charge, to unlock the credit. Rate limit: 10 queries a second per organization. Then pay as you go from a prepaid balance: search $0.005 a call ($0.006 with a sourced answer or structured output), deep search $0.05 to $0.055, fetch from $0.001. Top-ups of $1,000 or more earn 10-20% bonus credit.",
+      "source_url": "https://www.linkup.so/pricing",
+      "first_read_date": "2026-11-12",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-13 read it as pricing_restructured too",
+      "resolved_date": "2026-11-13"
+    },
+    {
+      "vendor": "Mem0",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "New adds return an error). The page now presents only Free and Custom plans, with Free described as: unlimited end users. First 30 days 10,000 adds and 1,000 retrievals a month with model calls on Mem0. Your own LLM key, 50,000 adds and 10,000 retrievals a month. Usage-based billing past your limits with a monthly cap you set. Community support.",
+      "previous_state": "Memory layer for AI agents and apps. Free plan: unlimited end users and community support. For the first 30 days Mem0 pays for the model calls, with 10,000 adds and 1,000 retrievals a month. After that, adding memories needs your own LLM key (OpenAI, Anthropic, Azure OpenAI or OpenRouter), billed by your provider; Mem0 puts its recommended models at about $3.55 to $5.34 per 1,000 adds. With a key, Free allows 50,000 adds and 10,000 retrievals a month at no charge from Mem0. Without one, stored memories stay and up to 1,000 searches a month still work, but new adds return an error. Calls past a monthly limit return an error until the next month, unless you connect a key and turn on usage-based billing with a monthly cap you set (Mem0 shows the rate when you turn it on). Mem0 Free accounts that signed up before October 26, 2026 have model calls paid by Mem0 until November 25, 2026; after that, adding memories requires their own LLM key. Starter ($19/month), Growth and Pro are no longer sold to new accounts; existing subscribers keep their plans. Graph memory, user profiles, SSO and on-prem deployment are on the Custom plan, priced by Mem0's sales team. Under Mem0's terms (2026-08-03), Free Plan users grant Mem0 a perpetual licence to their content, including to train AI models; paid plans exclude that, apart from aggregated, de-identified data. Mem0 Open-Source (Apache 2.0) can be self-hosted.",
+      "source_url": "https://mem0.ai/pricing",
+      "first_read_date": "2026-11-12",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-13 read it as pricing_restructured too",
+      "resolved_date": "2026-11-13"
+    },
+    {
+      "vendor": "ScrumFast",
+      "change_type": "pricing_model_change",
+      "impact": "medium",
+      "summary": "The pricing page now states a paid price of $4 per person per month, contradicting previously 'No paid options.'.",
+      "previous_state": "Up to 15 Users Free. No paid options.",
+      "source_url": "https://www.scrumfast.com",
+      "first_read_date": "2026-11-12",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-13 read the page as unchanged",
+      "resolved_date": "2026-11-13"
     }
   ]
 }
