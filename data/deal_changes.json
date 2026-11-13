@@ -19648,7 +19648,7 @@
       "vendor": "Google Cloud Deployment Manager",
       "change_type": "product_deprecated",
       "date": "2027-06-30",
-      "summary": "Google Cloud Deployment Manager is turned down after June 30, 2027. Support ended April 1, 2026. Existing users can use it until shutdown. New users have been blocked from enabling its API or creating their first deployment since June 30, 2026. Existing resources created by Deployment Manager continue to function and can be managed with standard Google Cloud tools. Google recommends Infrastructure Manager.",
+      "summary": "Google Cloud Deployment Manager is turned down after June 30, 2027. Support ended April 1, 2026. Since June 30, 2026, new users cannot enable the Deployment Manager API or create a first deployment. Existing deployments can use Deployment Manager until June 30, 2027. After that date, Deployment Manager can no longer be used. Resources it created continue to run and are managed with standard Google Cloud tools. Google recommends Infrastructure Manager.",
       "previous_state": "Google Cloud Deployment Manager deployed Google Cloud resources from YAML configurations with Jinja or Python templates, open to new users, with no announced end.",
       "current_state": "Google Cloud's \"Deployment Manager deprecation\" (read 2026-11-13): \"Support for Google Cloud Deployment Manager was discontinued on April 1, 2026.\" \"As of June 30, 2026, new users are blocked from enabling Google Cloud Deployment Manager V2 API or creating their first deployment.\" \"After June 30, 2027, you won't be able to use the Deployment Manager service, and it will be turned down.\" \"Your existing resources created by Deployment Manager will continue to function.\"",
       "impact": "medium",
