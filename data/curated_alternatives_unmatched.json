@@ -621,13 +621,6 @@
       ]
     },
     {
-      "name": "SerpAPI",
-      "named_by": [
-        "Brave Search API",
-        "Google Programmable Search Engine"
-      ]
-    },
-    {
       "name": "Shopify API",
       "named_by": [
         "Amazon SP-API",

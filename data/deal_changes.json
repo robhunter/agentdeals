@@ -201,7 +201,7 @@
       "source_url": "https://brave.com/blog/most-powerful-search-api-for-ai/",
       "category": "AI / ML",
       "alternatives": [
-        "SerpAPI"
+        "SerpApi"
       ],
       "recorded_date": "2026-04-15",
       "date_source": "hand_written"
@@ -921,7 +921,7 @@
       "category": "Search",
       "alternatives": [
         "Brave Search API",
-        "SerpAPI",
+        "SerpApi",
         "Meilisearch"
       ],
       "recorded_date": "2026-02-26",
@@ -2121,7 +2121,8 @@
       ],
       "recorded_date": "2026-04-10",
       "date_source": "hand_written",
-      "listing_effect": "none"
+      "listing_effect": "none",
+      "what_ends": "AWS Lambda's Node.js 20 runtime (nodejs20.x)"
     },
     {
       "vendor": "Google Maps",
@@ -19337,7 +19338,7 @@
       "category": "Search",
       "alternatives": [
         "Brave Search API",
-        "SerpAPI",
+        "SerpApi",
         "Meilisearch"
       ],
       "recorded_date": "2026-11-12",
@@ -19730,6 +19731,23 @@
       "listing_effect": "none",
       "what_ends": "ARM32 job execution on GitHub-hosted runners",
       "announced_on": "2026-11-12"
+    },
+    {
+      "vendor": "GitHub Copilot",
+      "change_type": "product_deprecated",
+      "date": "2026-12-14",
+      "summary": "GitHub Copilot keeps running. On December 14, 2026, GitHub deprecates six models across all Copilot experiences, including Copilot Chat, inline edits, ask and agent modes, and code completions: Claude Fable 5 (GitHub's suggested alternative is Claude Fable 5.2), Claude Haiku 4.5 (Claude Haiku 5.5), Gemini 3.8 Flash (Gemini 4 Hydrogen), Gemini 4 Argon (Gemini 4 Carbon), Grok 4.6 (Grok 4.7) and Kimi K3 (alternative to be announced). Claude Haiku 4.5 stays available to individual Copilot subscribers on annual plans.",
+      "previous_state": "GitHub Copilot offered Claude Fable 5, Claude Haiku 4.5, Gemini 3.8 Flash, Gemini 4 Argon, Grok 4.6 and Kimi K3 with no announced end.",
+      "current_state": "GitHub's changelog (posted 2026-11-13, read 2026-11-13): \"We will deprecate the following models across all GitHub Copilot experiences (including Copilot Chat, inline edits, ask and agent modes, and code completions) on December 14, 2026\". \"Claude Haiku 4.5 will remain available to individual GitHub Copilot subscribers on annual plans. The deprecation of Claude Haiku 4.5 does not apply to these customers.\" \"No action is required to remove the models after they have been deprecated.\"",
+      "impact": "low",
+      "source_url": "https://github.blog/changelog/2026-11-13-upcoming-deprecation-of-selected-github-copilot-models-in-december",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-11-13",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Claude Fable 5, Claude Haiku 4.5, Gemini 3.8 Flash, Gemini 4 Argon, Grok 4.6 and Kimi K3 in GitHub Copilot",
+      "announced_on": "2026-11-13"
     }
   ]
 }
