@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-14",
+  "measured_on": "2026-11-13",
   "pages": [
     {
       "path": "/agent-payments",
@@ -2776,8 +2776,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 79,
-      "table_figures_from_records": 36,
+      "table_figures": 76,
+      "table_figures_from_records": 33,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -2791,8 +2791,8 @@
         },
         {
           "label": "5. Other PaaS Alternatives",
-          "figures": 37,
-          "from_records": 36
+          "figures": 34,
+          "from_records": 33
         }
       ],
       "reads_changes": true,

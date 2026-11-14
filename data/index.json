@@ -519,7 +519,7 @@
           "read_on": "2026-11-14"
         },
         {
-          "text": "On Free or Personal plans, Netlify Server allows one instance at a time, with 1 GB of memory and one shared vCPU. A request or WebSocket connection runs up to 30 minutes, or 2 hours on Pro, Business and Enterprise, then closes. An instance stops after 5 minutes without requests.",
+          "text": "On Free or Personal plans, Netlify Server allows one instance at a time, with 1 GB of memory and one shared vCPU. A request or WebSocket connection runs up to 30 minutes, or 2 hours on Pro and Enterprise, then closes. An instance stops after 5 minutes without requests.",
           "quote": "On a Free or Personal plan, a server can only have one running instance at a time.",
           "url": "https://docs.netlify.com/build/server/limits/",
           "read_on": "2026-11-14"
