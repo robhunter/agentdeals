@@ -19945,6 +19945,39 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "announced_on": "2026-07-28"
+    },
+    {
+      "vendor": "Twilio",
+      "change_type": "product_deprecated",
+      "date": "2027-01-31",
+      "summary": "Twilio keeps running. Twilio Notify reaches end of life on January 31, 2027 for existing customers. Twilio stopped selling Notify in 2022, so new customers cannot use it. Twilio has said requests made to the Notify API will fail after its end of life, and has moved the date three times since 2022. Push notifications sent through Twilio Verify, Voice, Conversations or Engage are not affected.",
+      "what_ends": "Twilio Notify",
+      "previous_state": "Existing Twilio Notify customers could still send notifications through the Notify API, which Twilio stopped selling in 2022.",
+      "current_state": "Twilio's support article Transitioning off Notify (read 2026-11-14): \"Twilio Notify will reach end of life on January 31, 2027 for existing customers. This EOL doesn’t affect other push notification use cases powered through other Twilio products such as Verify, Voice, Conversations or Engage.\" Twilio's changelog, about an earlier end-of-life date: \"After this date, any requests made to the Notify API will fail.\"",
+      "impact": "medium",
+      "source_url": "https://support.twilio.com/hc/en-us/articles/9198083260571-Transitioning-off-Notify",
+      "category": "Communication",
+      "alternatives": [],
+      "recorded_date": "2026-11-14",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
+    },
+    {
+      "vendor": "Auth0",
+      "change_type": "product_deprecated",
+      "date": "2027-05-10",
+      "summary": "Auth0 keeps running. Auth0's grace period for the Node.js 18 extensibility runtime ends on May 10, 2027. This deprecation covers Actions, Rules, Hooks, Custom Database Connections, and Custom Social Connections. Before the grace period ends, Auth0 says to change the tenant's default Runtime setting and the runtime of every Action still running on Node.js 18. After the grace period, Auth0 begins the end-of-life phase for the Node.js 18 runtime, which ends with its removal, and code still targeting it will eventually be forced to run on a newer runtime.",
+      "what_ends": "Auth0's Node.js 18 extensibility runtime",
+      "previous_state": "Auth0 tenants could select the Node.js 18 runtime for Actions, Rules, Hooks, Custom Database Connections and Custom Social Connections, with no end date set.",
+      "current_state": "Auth0's Deprecations and Migrations page, Node.js 18 Extensibility Runtime (read 2026-11-14): \"End of life: May 10, 2027\". \"This deprecation affects all extensibility features, including Actions, Rules, Hooks, Custom Database Connections, and Custom Social Connections. Before the grace period ends on May 10, 2027, update your tenant’s default Runtime setting, as well as manually update the runtime for any individual Action still executing on Node.js 18. Extensibility that remains unmigrated and targets the Node.js 18 runtime will eventually be forced to run on a newer runtime.\" \"After the grace period ends, Auth0 will begin the end-of-life phase for the Node.js 18 extensibility runtime, culminating in its complete removal.\"",
+      "impact": "medium",
+      "source_url": "https://auth0.com/docs/troubleshoot/product-lifecycle/deprecations-and-migrations",
+      "category": "Auth",
+      "alternatives": [],
+      "recorded_date": "2026-11-14",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "announced_on": "2026-11-10"
     }
   ]
 }
