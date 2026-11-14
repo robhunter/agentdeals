@@ -15420,18 +15420,18 @@
     {
       "vendor": "Google Gemini API",
       "change_type": "product_deprecated",
-      "date": "2026-11-17",
-      "summary": "The Gemini API keeps running. The text-to-speech previews gemini-2.5-flash-preview-tts, gemini-2.5-pro-preview-tts and gemini-3.1-flash-tts-preview, and the Live API previews gemini-3.1-flash-live-preview and gemini-2.5-flash-native-audio-preview-12-2025, can be called until November 17, 2026, when Google shuts them down. Google names gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts as the replacement for each text-to-speech preview, and gemini-3.8-live for both Live API previews.",
-      "previous_state": "gemini-2.5-flash-preview-tts, gemini-2.5-pro-preview-tts, gemini-3.1-flash-tts-preview, gemini-3.1-flash-live-preview and gemini-2.5-flash-native-audio-preview-12-2025 could be called on the Gemini API.",
-      "current_state": "Google's deprecations page (last updated 2026-10-09) lists November 17, 2026 as the shutdown date for gemini-2.5-flash-preview-tts, gemini-2.5-pro-preview-tts and gemini-3.1-flash-tts-preview (replacement gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts) and for gemini-3.1-flash-live-preview and gemini-2.5-flash-native-audio-preview-12-2025 (replacement gemini-3.8-live).",
+      "date": "2026-12-18",
+      "summary": "The Gemini API keeps running. The text-to-speech preview models gemini-2.5-flash-preview-tts, gemini-2.5-pro-preview-tts and gemini-3.1-flash-tts-preview can be called until December 18, 2026, when Google shuts them down. Google names gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts as the replacement. Google moved this shutdown from an earlier date in November.",
+      "previous_state": "gemini-2.5-flash-preview-tts, gemini-2.5-pro-preview-tts and gemini-3.1-flash-tts-preview could be called on the Gemini API.",
+      "current_state": "Google's deprecations page lists December 18, 2026 as the shutdown date for gemini-2.5-flash-preview-tts, gemini-2.5-pro-preview-tts and gemini-3.1-flash-tts-preview (replacement gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts).",
       "impact": "low",
       "source_url": "https://ai.google.dev/gemini-api/docs/deprecations",
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-10-10",
-      "date_source": "hand_written",
+      "date_source": "vendor_page",
       "listing_effect": "none",
-      "what_ends": "five Gemini text-to-speech and Live API preview models"
+      "what_ends": "three Gemini text-to-speech preview models"
     },
     {
       "vendor": "Google Gemini API",
@@ -19748,6 +19748,68 @@
       "listing_effect": "none",
       "what_ends": "Claude Fable 5, Claude Haiku 4.5, Gemini 3.8 Flash, Gemini 4 Argon, Grok 4.6 and Kimi K3 in GitHub Copilot",
       "announced_on": "2026-11-13"
+    },
+    {
+      "vendor": "Google Gemini API",
+      "change_type": "product_deprecated",
+      "date": "2027-03-31",
+      "summary": "The Gemini API keeps running. Live API preview model gemini-2.5-flash-native-audio-preview-12-2025 can be called until March 31, 2027, when Google shuts it down. Google names gemini-3.8-live as the replacement. The other Live API preview, gemini-3.1-flash-live-preview, has no shutdown date. Google had dated both in November and moved the dates.",
+      "previous_state": "gemini-2.5-flash-native-audio-preview-12-2025 could be called through the Gemini Live API.",
+      "current_state": "Google's deprecations page lists March 31, 2027 as the shutdown date for gemini-2.5-flash-native-audio-preview-12-2025 (replacement gemini-3.8-live) and gives gemini-3.1-flash-live-preview no shutdown date.",
+      "impact": "low",
+      "source_url": "https://ai.google.dev/gemini-api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-14",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "the Live API preview gemini-2.5-flash-native-audio-preview-12-2025"
+    },
+    {
+      "vendor": "Google Gemini API",
+      "change_type": "record_corrected",
+      "date": "2026-11-14",
+      "summary": "Data correction - our record of five Gemini API preview models carried the November 17, 2026 date that Google's deprecations page gave until at least 2026-11-13. Read on 2026-11-14, Google's page dates the three text-to-speech previews December 18, 2026 and gemini-2.5-flash-native-audio-preview-12-2025 March 31, 2027, and gives gemini-3.1-flash-live-preview no date, so that record now covers the text-to-speech previews and a second record covers the native audio preview.",
+      "previous_state": "One record for five text-to-speech and Live API previews, dated 2026-11-17",
+      "current_state": "Text-to-speech previews dated 2026-12-18 and the native audio preview dated 2027-03-31, from Google's deprecations page",
+      "impact": "low",
+      "source_url": "https://ai.google.dev/gemini-api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-14",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Opsgenie",
+      "change_type": "product_deprecated",
+      "date": "2027-04-05",
+      "summary": "Opsgenie shuts down on April 5, 2027, when it stops being accessible and Atlassian deletes any Opsgenie data that has not been moved. Existing customers can use it until then. Atlassian no longer sells Opsgenie. An owner who is also a site admin starts the move to Jira Service Management under Settings > Plan your move.",
+      "what_ends": "Opsgenie, Atlassian's on-call and alerting service",
+      "previous_state": "Opsgenie ran on-call schedules and alerting for Atlassian customers, and Atlassian sold new Opsgenie sites.",
+      "current_state": "\"Existing customers will be able to continue to use Opsgenie without interruption until April 5th, 2027. At that point, Opsgenie will be shut down, and the product will no longer be accessible; any customer data in Opsgenie that has not been moved will also be deleted.\" (atlassian.com/software/opsgenie/migration)",
+      "impact": "high",
+      "source_url": "https://www.atlassian.com/software/opsgenie/migration",
+      "category": "Monitoring",
+      "alternatives": [],
+      "recorded_date": "2026-11-14",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
+    },
+    {
+      "vendor": "CocoaPods",
+      "change_type": "product_deprecated",
+      "date": "2026-12-02",
+      "summary": "CocoaPods trunk stops accepting new pods and new versions on December 2, 2026, under the CocoaPods team's read-only plan. Existing builds keep working because the Specs repo and CDN stay up, but dependencies published through trunk get no more updates. Projects with their own specs repos are not affected.",
+      "what_ends": "publishing new pods and versions to CocoaPods trunk",
+      "previous_state": "CocoaPods trunk accepted new pods and new versions of existing pods.",
+      "current_state": "\"December 2nd 2026 I will switch trunk to not accept new Podspecs permanently.\" (CocoaPods Trunk Read-only Plan, blog.cocoapods.org)",
+      "impact": "medium",
+      "source_url": "https://blog.cocoapods.org/CocoaPods-Specs-Repo/",
+      "category": "Mobile Development",
+      "alternatives": [],
+      "recorded_date": "2026-11-14",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
     }
   ]
 }
