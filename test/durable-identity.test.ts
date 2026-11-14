@@ -1,3 +1,4 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, before, after, beforeEach } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -8,32 +9,14 @@ import os from "node:os";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
-const REQUESTS_PATH = path.join(__dirname, "..", "data", "referral_requests.json");
+const AGENTS_PATH = identityPaths.agents;
+const REQUESTS_PATH = identityPaths.requests;
 
 const managedPaths: [string, string][] = [
   [AGENTS_PATH, JSON.stringify({ agents: [] })],
   [REQUESTS_PATH, JSON.stringify({ referral_requests: [] })],
 ];
-const managedOriginals = new Map<string, string | null>();
-
-function holdManagedFiles(): void {
-  for (const [p] of managedPaths) {
-    managedOriginals.set(p, fs.existsSync(p) ? fs.readFileSync(p, "utf-8") : null);
-  }
-  for (const [p, empty] of managedPaths) fs.writeFileSync(p, empty, "utf-8");
-}
-
-function releaseManagedFiles(): void {
-  for (const [p] of managedPaths) {
-    const held = managedOriginals.get(p) ?? null;
-    if (held !== null) fs.writeFileSync(p, held, "utf-8");
-    else if (fs.existsSync(p)) fs.unlinkSync(p);
-  }
-}
-
-holdManagedFiles();
-process.on("exit", releaseManagedFiles);
+for (const [file, empty] of managedPaths) fs.writeFileSync(file, empty, "utf-8");
 
 const {
   createDurableStore,

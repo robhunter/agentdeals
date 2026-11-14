@@ -1,3 +1,4 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, before, after, beforeEach } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -6,11 +7,11 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
-const CODES_PATH = path.join(__dirname, "..", "data", "referral_codes.json");
-const LEDGER_PATH = path.join(__dirname, "..", "data", "ledger_entries.json");
-const BALANCES_PATH = path.join(__dirname, "..", "data", "agent_balances.json");
-const REQUESTS_PATH = path.join(__dirname, "..", "data", "referral_requests.json");
+const AGENTS_PATH = identityPaths.agents;
+const CODES_PATH = identityPaths.codes;
+const LEDGER_PATH = identityPaths.ledger;
+const BALANCES_PATH = identityPaths.balances;
+const REQUESTS_PATH = identityPaths.requests;
 
 let serverPort = 0;
 let serverProc: ChildProcess;

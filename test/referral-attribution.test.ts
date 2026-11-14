@@ -1,16 +1,14 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, before, after, beforeEach } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import fs from "node:fs";
-import os from "node:os";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const SCRATCH = fs.mkdtempSync(path.join(os.tmpdir(), "referral-attribution-"));
-const REQUESTS_PATH = path.join(SCRATCH, "referral_requests.json");
-process.env.AGENTDEALS_REFERRAL_REQUESTS_PATH = REQUESTS_PATH;
-const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
+const REQUESTS_PATH = identityPaths.requests;
+const AGENTS_PATH = identityPaths.agents;
 
 const { logReferralRequest, getRequestsByAgent, getRequestById, resetReferralRequestsCache } = await import("../dist/referral-requests.js");
 const { registerAgent, resetAgentsCache } = await import("../dist/agents.js");

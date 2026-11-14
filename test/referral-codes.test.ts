@@ -1,3 +1,4 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, before, after, beforeEach } from "node:test";
 import assert from "node:assert";
 import path from "node:path";
@@ -5,8 +6,8 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const CODES_PATH = path.join(__dirname, "..", "data", "referral_codes.json");
-const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
+const CODES_PATH = identityPaths.codes;
+const AGENTS_PATH = identityPaths.agents;
 
 const {
   submitReferralCode,
@@ -522,7 +523,7 @@ describe("Active Codes for Vendor", () => {
 
   it("expires codes past their expiry date", () => {
     const { agent } = createTestAgent();
-    const codesPath = path.join(__dirname, "..", "data", "referral_codes.json");
+    const codesPath = identityPaths.codes;
     const data = JSON.parse(fs.readFileSync(codesPath, "utf-8"));
     data.referral_codes.push({
       id: "code_expired_test",

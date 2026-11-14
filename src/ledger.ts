@@ -7,9 +7,9 @@ import { calculateTrustTier, getCodesByAgent, submitterOfCode } from "./referral
 import { createDurableStore } from "./durable-store.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const LEDGER_PATH = path.join(__dirname, "..", "data", "ledger_entries.json");
-const BALANCES_PATH = path.join(__dirname, "..", "data", "agent_balances.json");
-const CLAWBACK_CONFIG_PATH = path.join(__dirname, "..", "data", "vendor_clawback.json");
+const LEDGER_PATH = process.env.AGENTDEALS_LEDGER_PATH || path.join(__dirname, "..", "data", "ledger_entries.json");
+const BALANCES_PATH = process.env.AGENTDEALS_BALANCES_PATH || path.join(__dirname, "..", "data", "agent_balances.json");
+const CLAWBACK_CONFIG_PATH = process.env.AGENTDEALS_CLAWBACK_CONFIG_PATH || path.join(__dirname, "..", "data", "vendor_clawback.json");
 
 export const SUBMITTER_SHARE_RATE = 0.4;
 
