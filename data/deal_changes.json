@@ -19810,6 +19810,22 @@
       "recorded_date": "2026-11-14",
       "date_source": "vendor_page",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "Firecrawl",
+      "change_type": "product_deprecated",
+      "date": "2026-12-10",
+      "summary": "On December 10, 2026 at 15:00 UTC, Firecrawl's v1 API and its /extract endpoint on both v1 and v2 stop working and return HTTP 410. /v2/extract ends too. Its replacements are /v2/scrape with a JSON format and /v2/agent. firecrawl-py 2.x calls the v1 API despite its version number. Old SDK versions that call v1 are firecrawl-py 1.x and 2.x, @mendable/firecrawl-js 1.x and firecrawl-mcp 1.x. Upgrade to the latest SDK release. Moving a v1 REST call to v2 means changing the base URL from https://api.firecrawl.dev/v1 to https://api.firecrawl.dev/v2. Every other v2 endpoint keeps running.",
+      "what_ends": "Firecrawl's v1 API and the /extract endpoint",
+      "previous_state": "Firecrawl served the v1 API's scrape, crawl, batch scrape, search, map and account endpoints alongside v2, and /extract on both versions.",
+      "current_state": "\"The v1 scrape, crawl, batch scrape, search, map, and account endpoints stop working on Thursday, December 10, 2026, 15:00 UTC, and from then on they return HTTP 410.\" (docs.firecrawl.dev/migrate-to-v2, read 2026-11-14) \"/extract shuts down on Thursday, December 10, 2026, 15:00 UTC. After that, POST /v1/extract, POST /v2/extract and their GET /extract/{id} status routes fail with HTTP 410 Gone.\" (docs.firecrawl.dev/migrating-from-extract)",
+      "impact": "medium",
+      "source_url": "https://docs.firecrawl.dev/migrate-to-v2",
+      "category": "Web Scraping",
+      "alternatives": [],
+      "recorded_date": "2026-11-14",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
     }
   ]
 }
