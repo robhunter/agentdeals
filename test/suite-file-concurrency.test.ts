@@ -28,6 +28,7 @@ function exercise(command: string, shard = "", red = false, dataChange = "") {
       writeFileSync(join(work, `test/workers/worker-${index}.test.ts`), `
 import { it } from "node:test";
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { writeFileSync, readdirSync, unlinkSync } from "node:fs";
 import { setTimeout } from "node:timers/promises";
 it("worker ${index}", async () => {
@@ -37,8 +38,8 @@ it("worker ${index}", async () => {
   while (readdirSync("started").length < required && Date.now() < deadline) await setTimeout(10);
   assert.ok(readdirSync("started").length >= required, "test files must overlap");
   if (${index} === 0) {
-    if (process.env.SUITE_DATA_CHANGE === "modify") writeFileSync("data/seed.json", "changed");
-    if (process.env.SUITE_DATA_CHANGE === "delete") unlinkSync("data/seed.json");
+    if (process.env.SUITE_DATA_CHANGE === "modify") assert.equal(spawnSync("sh", ["-c", "printf changed > data/seed.json"]).status, 0);
+    if (process.env.SUITE_DATA_CHANGE === "delete") assert.equal(spawnSync("sh", ["-c", "rm data/seed.json"]).status, 0);
     if (process.env.SUITE_DATA_CHANGE === "untracked") writeFileSync("data/telemetry.json", "runtime");
   }
   writeFileSync("finished/${index}", "");
