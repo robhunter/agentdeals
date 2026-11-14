@@ -404,6 +404,13 @@
           "quote": "Start building for free — no credit card required.",
           "url": "https://www.cloudflare.com/products/workers/",
           "read_on": "2026-10-22"
+        },
+        {
+          "text": "An account can set a monthly spending limit that blocks new Workers invocations (error 1103) once request and CPU charges past included usage reach it. It covers all Workers in the account but not KV, R2 or Workers AI charges. Durable Objects can have a spending limit of its own, set separately. The limit is not an exact maximum bill: usage can continue past it while reporting and blocking catch up, and the Workers Paid subscription fee is still charged.",
+          "quote": "Once the limit takes effect, Cloudflare rejects new invocations of your Workers",
+          "url": "https://developers.cloudflare.com/workers/platform/spend-management/",
+          "read_on": "2026-11-14",
+          "operating_detail": true
         }
       ],
       "free_plan_excerpt": {
