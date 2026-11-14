@@ -19778,6 +19778,38 @@
       "alternatives": [],
       "recorded_date": "2026-11-14",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Opsgenie",
+      "change_type": "product_deprecated",
+      "date": "2027-04-05",
+      "summary": "Opsgenie shuts down on April 5, 2027, when it stops being accessible and Atlassian deletes any Opsgenie data that has not been moved. Existing customers can use it until then. Atlassian no longer sells Opsgenie. An owner who is also a site admin starts the move to Jira Service Management under Settings > Plan your move.",
+      "what_ends": "Opsgenie, Atlassian's on-call and alerting service",
+      "previous_state": "Opsgenie ran on-call schedules and alerting for Atlassian customers, and Atlassian sold new Opsgenie sites.",
+      "current_state": "\"Existing customers will be able to continue to use Opsgenie without interruption until April 5th, 2027. At that point, Opsgenie will be shut down, and the product will no longer be accessible; any customer data in Opsgenie that has not been moved will also be deleted.\" (atlassian.com/software/opsgenie/migration)",
+      "impact": "high",
+      "source_url": "https://www.atlassian.com/software/opsgenie/migration",
+      "category": "Monitoring",
+      "alternatives": [],
+      "recorded_date": "2026-11-14",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
+    },
+    {
+      "vendor": "CocoaPods",
+      "change_type": "product_deprecated",
+      "date": "2026-12-02",
+      "summary": "CocoaPods trunk stops accepting new pods and new versions on December 2, 2026, under the CocoaPods team's read-only plan. Existing builds keep working because the Specs repo and CDN stay up, but dependencies published through trunk get no more updates. Projects with their own specs repos are not affected.",
+      "what_ends": "publishing new pods and versions to CocoaPods trunk",
+      "previous_state": "CocoaPods trunk accepted new pods and new versions of existing pods.",
+      "current_state": "\"December 2nd 2026 I will switch trunk to not accept new Podspecs permanently.\" (CocoaPods Trunk Read-only Plan, blog.cocoapods.org)",
+      "impact": "medium",
+      "source_url": "https://blog.cocoapods.org/CocoaPods-Specs-Repo/",
+      "category": "Mobile Development",
+      "alternatives": [],
+      "recorded_date": "2026-11-14",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
     }
   ]
 }
