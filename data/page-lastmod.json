@@ -1147,8 +1147,8 @@
       "changed": "2026-11-13"
     },
     "/category/cloud-hosting": {
-      "hash": "144e198b68a08670",
-      "changed": "2026-11-13"
+      "hash": "afbac60ad236c357",
+      "changed": "2026-11-14"
     },
     "/category/cloud-iaas": {
       "hash": "502c7f4883d891c3",
@@ -1370,8 +1370,8 @@
       "changed": "2026-11-14"
     },
     "/cloudflare-pages-vs-vercel": {
-      "hash": "ea9420d8e1fe95b4",
-      "changed": "2026-11-07"
+      "hash": "2e93463a1477eaa6",
+      "changed": "2026-11-14"
     },
     "/cloudinary-vs-imagekit": {
       "hash": "ce618f32a28bbe9c",
@@ -1658,16 +1658,16 @@
       "changed": "2026-11-01"
     },
     "/compare/cloudflare-pages-vs-netlify": {
-      "hash": "6025134bb5f6c7be",
-      "changed": "2026-11-06"
+      "hash": "2240826dfb952070",
+      "changed": "2026-11-14"
     },
     "/compare/cloudflare-pages-vs-render": {
-      "hash": "78ab775b468fdf9b",
-      "changed": "2026-11-07"
+      "hash": "786dedd3ffe232d7",
+      "changed": "2026-11-14"
     },
     "/compare/cloudflare-pages-vs-vercel": {
-      "hash": "7432b93bd3e44895",
-      "changed": "2026-11-07"
+      "hash": "8973a9f0c0f11e0e",
+      "changed": "2026-11-14"
     },
     "/compare/cloudflare-warp-vs-proton-vpn": {
       "hash": "6f08682198ab2736",
@@ -3243,8 +3243,8 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "229c80876862886d",
-      "changed": "2026-11-11"
+      "hash": "727be06baf4183ca",
+      "changed": "2026-11-14"
     },
     "/events": {
       "hash": "10c036e7bfb60e32",
@@ -3293,7 +3293,7 @@
       "changed": "2026-11-14"
     },
     "/free-frontend-stack": {
-      "hash": "6f18eff1c99038c3",
+      "hash": "8bfed852487fd48f",
       "changed": "2026-11-14"
     },
     "/free-go-stack": {
@@ -3395,15 +3395,15 @@
       "changed": "2026-11-14"
     },
     "/hosting-alternatives": {
-      "hash": "798249b3c5e632e2",
+      "hash": "6c1429619df62ebb",
       "changed": "2026-11-14"
     },
     "/hosting-free-tier-comparison-2026": {
-      "hash": "7552da26b9bc22ca",
-      "changed": "2026-11-13"
+      "hash": "556ff11612a4feb6",
+      "changed": "2026-11-14"
     },
     "/hosting-pricing": {
-      "hash": "3d0c07d61cbea238",
+      "hash": "7c6f2aee8a39db9e",
       "changed": "2026-11-14"
     },
     "/ide-code-editors-alternatives": {
@@ -3704,7 +3704,7 @@
       "changed": "2026-11-14"
     },
     "/stack-check": {
-      "hash": "fd79f48daf3a77cd",
+      "hash": "8c68a5ef2c96541b",
       "changed": "2026-11-14"
     },
     "/stacks": {
@@ -4459,7 +4459,7 @@
       "changed": "2026-11-14"
     },
     "/vendor/bismuth-cloud": {
-      "hash": "4136cbcf5378b22f",
+      "hash": "cd9975ee7693805c",
       "changed": "2026-11-14"
     },
     "/vendor/bitbucket-pipelines": {
@@ -4798,7 +4798,7 @@
       "daily": true
     },
     "/vendor/claw-cloud": {
-      "hash": "19c14f3857806247",
+      "hash": "5a38923afcb258a0",
       "changed": "2026-11-14"
     },
     "/vendor/clerk": {
@@ -5194,7 +5194,7 @@
       "changed": "2026-11-14"
     },
     "/vendor/cstate": {
-      "hash": "410e53f4aa9fc30b",
+      "hash": "beb198f0dfe25da6",
       "changed": "2026-11-14"
     },
     "/vendor/cube": {
@@ -5600,7 +5600,7 @@
       "changed": "2026-11-14"
     },
     "/vendor/engagespot-co": {
-      "hash": "8d58bac3f5f4281f",
+      "hash": "5d7e5d5180f43b3b",
       "changed": "2026-11-14"
     },
     "/vendor/ente": {
@@ -5616,11 +5616,11 @@
       "changed": "2026-11-14"
     },
     "/vendor/etlr": {
-      "hash": "b38f51b45bd54222",
+      "hash": "65f46e59320eed54",
       "changed": "2026-11-14"
     },
     "/vendor/evernote": {
-      "hash": "a8f9cdd1a505a146",
+      "hash": "600b5f289181d667",
       "changed": "2026-11-14"
     },
     "/vendor/everystep-automation-com": {
@@ -6165,7 +6165,7 @@
       "daily": true
     },
     "/vendor/google-vertex-ai-agent-engine": {
-      "hash": "43fcac2aa0c679a8",
+      "hash": "bef69e6e668b5df4",
       "changed": "2026-11-14"
     },
     "/vendor/goreportcard-com": {
@@ -6354,7 +6354,7 @@
       "changed": "2026-11-14"
     },
     "/vendor/hosting-checker": {
-      "hash": "7ecb47475a05dd96",
+      "hash": "4a0d78984cf9ddca",
       "changed": "2026-11-14"
     },
     "/vendor/hotjar": {
@@ -6791,7 +6791,7 @@
       "daily": true
     },
     "/vendor/langtrace": {
-      "hash": "5e5bc22ab2589b59",
+      "hash": "46900a055ee93c3f",
       "changed": "2026-11-14"
     },
     "/vendor/langwatch": {
@@ -7309,7 +7309,7 @@
       "daily": true
     },
     "/vendor/moss-sh": {
-      "hash": "73585125a4c0fe85",
+      "hash": "94ee2b2f5d481824",
       "changed": "2026-11-14"
     },
     "/vendor/mossaik": {
@@ -7932,7 +7932,7 @@
       "changed": "2026-11-14"
     },
     "/vendor/proxysentry": {
-      "hash": "9e8a352f684ad87a",
+      "hash": "cd753dbded4f1a50",
       "changed": "2026-11-14"
     },
     "/vendor/public-cloud-threat-intelligence": {
@@ -8557,7 +8557,7 @@
       "daily": true
     },
     "/vendor/soos": {
-      "hash": "00eddd9d67d8bf06",
+      "hash": "e5449d860e55e233",
       "changed": "2026-11-14"
     },
     "/vendor/sourceforge": {
@@ -8856,7 +8856,7 @@
       "changed": "2026-11-14"
     },
     "/vendor/teaminal": {
-      "hash": "9c0139955a81cc3c",
+      "hash": "67fea19e074968e5",
       "changed": "2026-11-14"
     },
     "/vendor/teamplify": {
@@ -9339,7 +9339,7 @@
       "changed": "2026-11-14"
     },
     "/vendor/volaryddns": {
-      "hash": "fba3cfd8f36653cb",
+      "hash": "8546c80de7c723b7",
       "changed": "2026-11-14"
     },
     "/vendor/volume": {
@@ -9382,7 +9382,7 @@
       "changed": "2026-11-14"
     },
     "/vendor/wdrfree-svg": {
-      "hash": "6f9686dd342b70dd",
+      "hash": "02a15623c8eb74b2",
       "changed": "2026-11-14"
     },
     "/vendor/we-team": {
@@ -9472,7 +9472,7 @@
       "changed": "2026-11-14"
     },
     "/vendor/whitespace": {
-      "hash": "f1143e11df84dde9",
+      "hash": "83f2b1f3453b53e3",
       "changed": "2026-11-14"
     },
     "/vendor/windmill-dev": {
@@ -9720,11 +9720,11 @@
       "changed": "2026-11-14"
     },
     "/vercel-alternatives": {
-      "hash": "27655b0bb41b5d72",
-      "changed": "2026-11-13"
+      "hash": "31916d3faea85d90",
+      "changed": "2026-11-14"
     },
     "/vercel-vs-netlify": {
-      "hash": "b3ef64d77b176ca3",
+      "hash": "abdec32f797560f5",
       "changed": "2026-11-14"
     },
     "/whatsapp-business-api-pricing-2026": {
