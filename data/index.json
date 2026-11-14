@@ -684,6 +684,12 @@
           "operating_detail": true
         },
         {
+          "text": "An account can have at most 100 Pages projects; once the limit is reached, Cloudflare blocks new projects.",
+          "quote": "This limit is not routinely increased. If you need to host more than 100 sites, use one of these products designed for scale",
+          "url": "https://developers.cloudflare.com/pages/platform/limits/",
+          "read_on": "2026-11-14"
+        },
+        {
           "text": "For more than 100 sites, Cloudflare points to Workers for Platforms, which has no project limit, or Workers Static Assets, which runs each site as its own Worker. Workers have a separate limit of 100 on the Free plan and 500 on paid plans.",
           "quote": "The Workers project limit (100 on Free, 500 on paid plans) is separate from the Pages project limit.",
           "url": "https://developers.cloudflare.com/pages/platform/limits/",
@@ -697,7 +703,7 @@
           "read_on": "2026-10-29"
         },
         {
-          "text": "Cloudflare's Pro and Business plans raise Pages' limits. Pro allows 5 concurrent builds, 5,000 builds per month and 250 custom domains per project. Business allows 20 concurrent builds, 20,000 builds per month and 500 custom domains per project.",
+          "text": "Cloudflare's Pro and Business plans raise Pages' build and custom domain limits. Cloudflare lists no higher project limit for any plan. Pro allows 5 concurrent builds, 5,000 builds per month and 250 custom domains per project. Business allows 20 concurrent builds, 20,000 builds per month and 500 custom domains per project.",
           "quote": "Builds per month | 500 | 5,000 | 20,000",
           "url": "https://developers.cloudflare.com/pages/platform/limits/",
           "read_on": "2026-10-29"
