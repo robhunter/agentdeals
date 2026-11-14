@@ -1,3 +1,4 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert";
 import fs from "node:fs";
@@ -5,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const REQUESTS_PATH = path.join(__dirname, "..", "data", "referral_requests.json");
+const REQUESTS_PATH = identityPaths.requests;
 
 const {
   logReferralRequest,

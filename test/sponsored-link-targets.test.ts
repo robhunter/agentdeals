@@ -1,3 +1,4 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
@@ -9,7 +10,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
-const PLATFORM_CODES_PATH = path.join(REPO, "data", "platform_codes.json");
+const PLATFORM_CODES_PATH = identityPaths.platformCodes;
 
 const { anchorsIn, isSponsored, offersAReaderBenefit, sponsoredAnchorsIn } = await import("../dist/referral-anchors.js");
 const { ourReferralLinkFor, allOurReferralLinks, REFERRAL_CONDITIONS_HEADING } = await import("../dist/referral-surfaces.js");

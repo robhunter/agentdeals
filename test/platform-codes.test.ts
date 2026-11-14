@@ -1,3 +1,4 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, after, beforeEach } from "node:test";
 import assert from "node:assert";
 import path from "node:path";
@@ -5,7 +6,7 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PLATFORM_CODES_PATH = path.join(__dirname, "..", "data", "platform_codes.json");
+const PLATFORM_CODES_PATH = identityPaths.platformCodes;
 
 const {
   getPlatformCodeForVendor,
