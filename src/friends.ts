@@ -5,7 +5,7 @@ import { getAgentById } from "./agents.js";
 import { getActiveCodesForVendor, getAllActiveCodes, calculateCodeScore, type SubmittedReferralCode } from "./referral-codes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const FRIENDS_PATH = path.join(__dirname, "..", "data", "agent_friends.json");
+const FRIENDS_PATH = process.env.AGENTDEALS_FRIENDS_PATH || path.join(__dirname, "..", "data", "agent_friends.json");
 
 export interface AgentFriendship {
   agent_id: string;

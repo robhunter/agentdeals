@@ -1,3 +1,4 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, after, before, beforeEach } from "node:test";
 import assert from "node:assert";
 import path from "node:path";
@@ -5,9 +6,9 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const FRIENDS_PATH = path.join(__dirname, "..", "data", "agent_friends.json");
-const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
-const CODES_PATH = path.join(__dirname, "..", "data", "referral_codes.json");
+const FRIENDS_PATH = identityPaths.friends;
+const AGENTS_PATH = identityPaths.agents;
+const CODES_PATH = identityPaths.codes;
 
 const { addFriend, removeFriend, getFriends, getFriendIds, isFriend, getFriendCodesForVendors, selectCodeWithFriendPreference, resetFriendsCache } = await import("../dist/friends.js");
 const { registerAgent, resetAgentsCache } = await import("../dist/agents.js");

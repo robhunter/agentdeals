@@ -5,7 +5,7 @@ import type { Agent } from "./types.js";
 import { createDurableStore } from "./durable-store.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
+const AGENTS_PATH = process.env.AGENTDEALS_AGENTS_PATH || path.join(__dirname, "..", "data", "agents.json");
 
 const agentStore = createDurableStore<Agent>({
   name: "agents",

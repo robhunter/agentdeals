@@ -1,3 +1,4 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, before, after, beforeEach } from "node:test";
 import assert from "node:assert";
 import path from "node:path";
@@ -5,11 +6,11 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const LEDGER_PATH = path.join(__dirname, "..", "data", "ledger_entries.json");
-const BALANCES_PATH = path.join(__dirname, "..", "data", "agent_balances.json");
-const CLAWBACK_PATH = path.join(__dirname, "..", "data", "vendor_clawback.json");
-const CODES_PATH = path.join(__dirname, "..", "data", "referral_codes.json");
-const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
+const LEDGER_PATH = identityPaths.ledger;
+const BALANCES_PATH = identityPaths.balances;
+const CLAWBACK_PATH = identityPaths.clawback;
+const CODES_PATH = identityPaths.codes;
+const AGENTS_PATH = identityPaths.agents;
 
 const {
   recordConversion,

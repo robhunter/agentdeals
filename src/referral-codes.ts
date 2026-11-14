@@ -6,7 +6,7 @@ import { getAgentById } from "./agents.js";
 import { loadOffers } from "./data.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const CODES_PATH = path.join(__dirname, "..", "data", "referral_codes.json");
+const CODES_PATH = process.env.AGENTDEALS_REFERRAL_CODES_PATH || path.join(__dirname, "..", "data", "referral_codes.json");
 
 export type CodeStatus = "pending" | "active" | "expired" | "revoked";
 export type TrustTier = "new" | "verified" | "trusted";

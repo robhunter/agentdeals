@@ -1,3 +1,4 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, before, after, beforeEach } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -7,7 +8,7 @@ import { createServer, type Server } from "node:http";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
+const AGENTS_PATH = identityPaths.agents;
 
 const { registerAgent, hashApiKey, getAgentByApiKeyHash, getAgentById, authenticateRequest, resetAgentsCache } = await import("../dist/agents.js");
 
