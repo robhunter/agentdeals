@@ -507,6 +507,24 @@
           "read_on": "2026-10-21"
         },
         {
+          "text": "Netlify Server launched on 2026-11-10. It is a long-running Node.js server that handles requests and holds WebSocket connections. Express, Hono and Fastify apps run on it. It is available in Early Access on Netlify's credit-based plans including Free.",
+          "quote": "Netlify Server is available today in Early Access, on credit-based plans and on Enterprise plans with credits enabled.",
+          "url": "https://www.netlify.com/blog/introducing-netlify-server/",
+          "read_on": "2026-11-14"
+        },
+        {
+          "text": "Netlify Server is free to use during Early Access. Requests count toward the web requests meter. At General Availability, it will charge for reserved memory (GB-hours) and active CPU time (vCPU-hours). Credit rates are not yet announced.",
+          "quote": "Netlify Server is free to use during Early Access. When it reaches General Availability (GA), usage will be charged in credits, based on two meters:",
+          "url": "https://docs.netlify.com/build/server/",
+          "read_on": "2026-11-14"
+        },
+        {
+          "text": "On Free or Personal plans, Netlify Server allows one instance at a time, with 1 GB of memory and one shared vCPU. A request or WebSocket connection runs up to 30 minutes, or 2 hours on Pro, Business and Enterprise, then closes. An instance stops after 5 minutes without requests.",
+          "quote": "On a Free or Personal plan, a server can only have one running instance at a time.",
+          "url": "https://docs.netlify.com/build/server/limits/",
+          "read_on": "2026-11-14"
+        },
+        {
           "text": "Netlify's Free plan needs no credit card; the paid Personal and Pro plans need a payment method.",
           "quote": "You must have a valid payment method saved to your Netlify team account to keep your web projects active with the Personal or Pro Credit-based plans.",
           "url": "https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/billing-faq-for-credit-based-plans/",
@@ -2287,10 +2305,10 @@
       "url": "https://developers.cloudflare.com/d1/platform/pricing/",
       "conditions": [
         {
-          "text": "On the Free plan, once the account reaches its daily read or write limit, D1 refuses queries and returns errors until the limits reset at 00:00 UTC; upgrading to Workers Paid removes the limits.",
+          "text": "On the Free plan, Cloudflare D1 stops running queries once the account reaches its daily read or write limit and returns errors; limits reset at 00:00 UTC, and Workers Paid removes the limits.",
           "quote": "When your account hits the daily read and/or write limits, you will not be able to run queries against D1. D1 API will return errors to your client indicating that your daily limits have been exceeded.",
           "url": "https://developers.cloudflare.com/d1/platform/pricing/",
-          "read_on": "2026-10-20"
+          "read_on": "2026-11-14"
         },
         {
           "text": "On the Free plan a single D1 database can hold at most 500 MB, and an account can have at most 10 databases, within the 5 GB account total.",
