@@ -66,9 +66,20 @@ function askTheStdioPackage(base: string, requests: Array<{ method: string; para
       const lines = buffer.split("\n");
       buffer = lines.pop() ?? "";
       for (const line of lines) {
-        let payload: { id?: number; result?: unknown };
+        let payload: { id?: number; result?: unknown; error?: unknown };
         try { payload = JSON.parse(line); } catch { continue; }
-        if (typeof payload.id !== "number" || payload.id < 2) continue;
+        if (typeof payload.id !== "number" || payload.id < 1) continue;
+        if (payload.error || payload.result === undefined) {
+          clearTimeout(timer);
+          child.kill();
+          reject(new Error(JSON.stringify({ request: requests[payload.id - 2] ?? "initialize", response: payload })));
+          return;
+        }
+        if (payload.id === 1) {
+          child.stdin!.write(`${JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" })}\n`);
+          requests.forEach((request, index) => child.stdin!.write(`${JSON.stringify({ jsonrpc: "2.0", id: index + 2, ...request })}\n`));
+          continue;
+        }
         answers.set(payload.id, payload.result);
         if (answers.size === requests.length) {
           clearTimeout(timer);
@@ -79,8 +90,6 @@ function askTheStdioPackage(base: string, requests: Array<{ method: string; para
     });
     child.on("error", (err) => { clearTimeout(timer); reject(err); });
     child.stdin!.write(`${JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "stdio-resources-read-every-record", version: "1" } } })}\n`);
-    child.stdin!.write(`${JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" })}\n`);
-    requests.forEach((request, index) => child.stdin!.write(`${JSON.stringify({ jsonrpc: "2.0", id: index + 2, ...request })}\n`));
   });
 }
 
