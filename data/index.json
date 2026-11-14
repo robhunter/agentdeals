@@ -1517,10 +1517,10 @@
           "read_on": "2026-11-01"
         },
         {
-          "text": "Running out of CU-hours or network transfer suspends the compute until the next billing period or an upgrade.",
-          "quote": "when you run out of CU-hours or public network transfer, your compute is suspended until the next billing period or until you upgrade.",
-          "url": "https://neon.com/docs/introduction/plans",
-          "read_on": "2026-10-04"
+          "text": "If a Neon Free plan project's allowance of 100 CU-hours or 5 GB of network transfer is used up, its compute suspends until the next billing period or an upgrade.",
+          "quote": "If a project uses up its 100 CU-hours or 5 GB of network transfer for the month, its compute is suspended until the next billing period",
+          "url": "https://neon.com/pricing",
+          "read_on": "2026-11-14"
         },
         {
           "text": "Neon's Free plan provides 100 CU-hours per project per month. One CU allocates about 4 GB of RAM, and 100 CU-hours is enough to run a 0.25 CU compute (about 1 GB of RAM) for 400 hours, about 17 days of continuous running. All computes in a project count toward usage, including those for each branch and any read replicas.",
@@ -1569,6 +1569,12 @@
           "quote": "Paid plans are pay-as-you-go: usage is metered hourly and billed at the end of the month, with no monthly minimum.",
           "url": "https://neon.com/pricing.md",
           "read_on": "2026-10-15"
+        },
+        {
+          "text": "Upgrading to Launch does not raise the 100-project limit. Scale includes 1,000 projects, with more on request.",
+          "quote": "Launch includes 100 projects, and Scale includes 1,000, with more on request.",
+          "url": "https://neon.com/pricing",
+          "read_on": "2026-11-14"
         },
         {
           "text": "Neon Realtime has been in public beta since 2026-10-15. It provides live updates from SQL queries without polling and is free during the beta. Compute and egress are billed under the plan; beta runs in four AWS regions: us-east-1, us-east-2, eu-central-1 and ap-southeast-1.",
@@ -4517,7 +4523,15 @@
       "restatement_reverted": {
         "record_date": "2026-09-25",
         "reverted_on": "2026-09-27"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Fastly pricing is pay-as-you-go; usage beyond each product's monthly free allowance is billed per unit. Volume discounts apply automatically. Platform packages that bundle products and support are optional.",
+          "quote": "Fastly offers pay-as-you-go, usage-based pricing so you only pay for the services you use, helping you scale without paying for unused capacity.",
+          "url": "https://www.fastly.com/pricing",
+          "read_on": "2026-11-14"
+        }
+      ]
     },
     {
       "vendor": "jsDelivr",
@@ -6805,6 +6819,12 @@
           "quote": "To get started with GitHub.com, you need to have a personal account and a verified email address.",
           "url": "https://docs.github.com/en/account-and-profile/how-tos/account-management/creating-an-account-on-github",
           "read_on": "2026-10-22"
+        },
+        {
+          "text": "GitHub may stop serving a site once it exceeds the soft 100 GB monthly bandwidth limit, or may email the owner suggesting a CDN in front of the site or a different host. The limits page names no plan that raises this limit.",
+          "quote": "If your site exceeds these usage quotas, we may not be able to serve your site, or you may receive a polite email from GitHub Support suggesting strategies for reducing your site's impact on our servers, including putting a third-party content distribution network (CDN) in front of your site",
+          "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits",
+          "read_on": "2026-11-14"
         }
       ]
     },
@@ -7861,7 +7881,15 @@
         "text": "Monthly active users Up to 10 11+ Cost per user Free Contact sales for discount Monthly cost 0 Contact us for discount",
         "url": "https://www.mapbox.com/pricing",
         "read_on": "2026-11-09"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Mapbox pricing is pay-as-you-go; usage beyond each product's monthly free tier is billed per unit. Volume discounts apply automatically. Annual commitments are optional and give further discounts.",
+          "quote": "Pay-as-you-go Sign up and start building with meaningful free tiers for most products.",
+          "url": "https://www.mapbox.com/pricing",
+          "read_on": "2026-11-14"
+        }
+      ]
     },
     {
       "vendor": "Google Maps Platform",
@@ -10674,10 +10702,10 @@
           "read_on": "2026-10-06"
         },
         {
-          "text": "Without a payment method on file, you cannot create or resume a codespace once the month's quota is used up. You can still export unpushed changes to a branch, and the quota resets at the start of the next billing cycle.",
+          "text": "Usage beyond the included quota is billed to the personal account, and without a payment method on file GitHub blocks usage once the quota is used up. You can still export unpushed changes to a branch, and the quota resets at the start of the next billing cycle.",
           "quote": "If your account does not have a valid payment method on file, usage is blocked once you use up your quota.",
           "url": "https://docs.github.com/en/billing/concepts/product-billing/github-codespaces",
-          "read_on": "2026-10-06"
+          "read_on": "2026-11-14"
         },
         {
           "text": "By default a stopped codespace is deleted after 30 days without use, even if it holds unpushed changes. Opening it again restarts the count.",
@@ -37632,6 +37660,12 @@
           "url": "https://build.nvidia.com/api/runtime/content/help-center-faq.yaml",
           "read_on": "2026-11-05",
           "operating_detail": true
+        },
+        {
+          "text": "NVIDIA gives no official way to get a higher rate limit on the free API endpoints. A forum moderator wrote on 2026-04-29 that the limit depends on the model, the use case and current overall traffic.",
+          "quote": "There is no official way to circumvent this rate limit or to receive a rate limit increase on that same tier.",
+          "url": "https://forums.developer.nvidia.com/t/api-rate-limit-increase-is-not-granted-by-requesting-it-here/368420",
+          "read_on": "2026-11-14"
         }
       ],
       "free_plan_excerpt": {
