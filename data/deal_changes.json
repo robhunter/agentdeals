@@ -19826,6 +19826,23 @@
       "recorded_date": "2026-11-14",
       "date_source": "vendor_page",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "Netlify",
+      "change_type": "product_deprecated",
+      "date": "2027-02-08",
+      "summary": "Netlify keeps running. Netlify Visual Editor, previously called Netlify Create, reaches end of life on February 8, 2027, when it is no longer available or supported. As of 2026-11-10, no new teams or projects can enable it. Teams that already have it enabled can keep using it until then. Sites stay live and content stays where it is. To keep editing, use a CMS, point Claude or Codex at netlify.ai, or use Agent Runners. Agent Runners runs on credits, so a credit-based plan or an Enterprise plan that uses credits is needed.",
+      "what_ends": "Netlify Visual Editor",
+      "previous_state": "Netlify Visual Editor, previously called Netlify Create, let content editors work with structured content in a visual way. Teams could enable it on their projects with no announced end.",
+      "current_state": "\"Netlify Visual Editor is deprecated as of November 10, 2026, and will reach end of life on February 8, 2027. After that date, Visual Editor will no longer be available or supported.\" \"No new teams or projects can enable Visual Editor.\" (netlify.com/changelog, read 2026-11-14)",
+      "impact": "medium",
+      "source_url": "https://www.netlify.com/changelog/2026-11-10-visual-editor-deprecation/",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-14",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "announced_on": "2026-11-10"
     }
   ]
 }
