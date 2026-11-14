@@ -26943,6 +26943,7 @@ function buildShutdownTrackerPage(): string {
     migrationLink?: string;
     covers?: RecordACardCovers[];
     statedDeadline?: StatedDeadline;
+    groupedDeadlines?: StatedDeadline[];
     status: "active" | "imminent" | "completed";
   }
 
@@ -27179,7 +27180,15 @@ function buildShutdownTrackerPage(): string {
       statedDeadline: deadline,
       status: "active",
     }));
-  const shutdowns: ShutdownEntry[] = [...covered, ...statedOnly];
+  const nimCompleted = statedOnly.filter(card => card.vendorSlug === "nvidia-nim" && card.deadline < utcToday());
+  const nimSentences = [...new Map(nimCompleted.map(card => [card.what, card.statedDeadline!])).values()];
+  const nimGroup: ShutdownEntry[] = nimCompleted.length === 0 ? [] : [{
+    ...nimCompleted.reduce((latest, card) => card.deadline > latest.deadline ? card : latest),
+    what: nimSentences.map(deadline => statedSentenceWithAnyConditions(deadline)).join(" "),
+    statedDeadline: undefined,
+    groupedDeadlines: nimSentences,
+  }];
+  const shutdowns: ShutdownEntry[] = [...covered, ...statedOnly.filter(card => !nimCompleted.includes(card)), ...nimGroup];
 
   shutdowns.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
 
@@ -27266,7 +27275,7 @@ function buildShutdownTrackerPage(): string {
         </div>
         <div class="stability-badge" style="color:${stabColor}">${escHtmlServer(stability.toUpperCase())}</div>
       </div>
-      <p class="shutdown-what">${escHtmlServer(s.what)}</p>${s.statedDeadline ? conditionsAfterAWholeDescriptionHtml(s.statedDeadline) : ""}
+      ${s.groupedDeadlines ? `<ul class="shutdown-what">${s.groupedDeadlines.map(deadline => `<li>${escHtmlServer(deadline.sentence)}${deadline.sourceUrl ? " " + listingSourceLinkHtml(deadline.sourceUrl, escHtmlServer) : ""}${conditionsAfterAWholeDescriptionHtml(deadline)}</li>`).join("\n")}</ul>` : `<p class="shutdown-what">${escHtmlServer(s.what)}</p>${s.statedDeadline ? conditionsAfterAWholeDescriptionHtml(s.statedDeadline) : ""}`}
       ${details.length === 0 ? "" : `<div class="shutdown-details">
         ${details.map(([label, value]) => `<div class="detail-row"><span class="detail-label">${label}:</span> <span>${escHtmlServer(value)}</span></div>`).join("\n        ")}
       </div>`}
