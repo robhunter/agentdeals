@@ -205,6 +205,11 @@ export type ChangeDateSource = "vendor_page" | "hand_written" | "discovered";
 
 export type TierDirection = "narrowed" | "unchanged" | "widened";
 
+export interface ShutdownStage {
+  date: string;
+  label: string;
+}
+
 export interface DealChange {
   vendor: string;
   change_type: "free_tier_removed" | "limits_reduced" | "restriction" | "limits_increased" | "new_free_tier" | "new_tier" | "pricing_restructured" | "open_source_killed" | "pricing_model_change" | "startup_program_expanded" | "pricing_postponed" | "product_deprecated" | "rebranded" | "record_corrected";
@@ -227,6 +232,7 @@ export interface DealChange {
   source_check?: ChangeSourceCheck | null;
   discontinued_date?: string | null;
   what_ends?: string | null;
+  shutdown_stages?: ShutdownStage[];
   listing_effect?: import("./product-deprecation.js").DeprecationCall | null;
   archive_check?: ArchiveCheck | null;
 }

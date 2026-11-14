@@ -192,6 +192,7 @@ describe("the label an entry carries beside its date", () => {
 });
 
 const NOT_A_CHANGE_RECORD: Array<{ expr: string; why: string }> = [
+  { expr: "date: stage.date", why: "the vendor-stated interruption date of a shutdown stage; its source record travels with it" },
   { expr: "escHtmlServer(tie.date)", why: "the UTC day the ranking permutation is seeded on" },
   { expr: "escHtmlServer(p.date)", why: "the day a press mention was published" },
   { expr: "escHtmlServer(e.date)", why: "a hand-written editorial timeline, which carries no record" },
