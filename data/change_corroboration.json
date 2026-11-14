@@ -1,6 +1,28 @@
 {
   "held": [
     {
+      "vendor": "Currencyapi",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "The free tier still exists with 300 requests/month. The page also no longer mentions the 'private use only' restriction or that the convert endpoint is excluded from the free plan, and it now advertises conversion endpoints generally.",
+      "previous_state": "300 requests a month for $0 on the Free plan, up to 10 requests a minute. The Free plan is for private use only. Currencyapi is a currency exchange rate API. The free plan has daily updates and historical rates back to 1999. Commercial use needs a paid plan. Paid plans start at $12.99 a month. The convert endpoint is not on the free plan.",
+      "current_state": "Free plan offers 300 free requests every month with daily rate updates and historical rates back to 1999; paid plans add commercial use, more requests and faster updates, starting at $10.83/month billed yearly ($129.90) or $12.99 monthly.",
+      "source_url": "https://currencyapi.com",
+      "category": "Payments",
+      "first_read_date": "2026-11-14"
+    },
+    {
+      "vendor": "Doppler",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Developer (free) plan now lists 25 users instead of the stored 'free for 3 users' with $8/mo per additional user; the page also shows different limits (e.g., 50 service tokens, 10 configs per environment, 5 webhook limits, 5 CLI tokens per user) and no longer states the $8/mo per additional user pricing.",
+      "previous_state": "Secrets management — free for 3 users, $8 a month per additional user (Doppler: \"AI agents and non-human identities ride free\"). 10 projects, 4 environments per project, 3 days of activity logs. CLI, SDKs, and integrations included",
+      "current_state": "Developer plan: Free for 3 users, $8/mo per additional user; includes Doppler CLI for local development, service tokens, email alerts and recurring reminders, 3 days of activity logs, secrets referencing, secret value types, API and webhooks access, config syncs (5). Detailed comparison lists Developer with 25 users, 50 service tokens, 10 projects, 4 environments, 10 configs per environment, 5 config sync limits, 5 webhook limits, 5 CLI tokens per user.",
+      "source_url": "https://www.doppler.com/pricing",
+      "category": "Secrets Management",
+      "first_read_date": "2026-11-14"
+    },
+    {
       "vendor": "Harness CI",
       "change_type": "pricing_restructured",
       "impact": "high",
@@ -12,37 +34,15 @@
       "first_read_date": "2026-11-01"
     },
     {
-      "vendor": "ReportGPT",
-      "change_type": "limits_reduced",
-      "impact": "high",
-      "summary": "The current pricing page now shows a free demo limited to 1 document and paid one-time plans ($5, $10, $25) for additional reports.",
-      "previous_state": "AI Powered Writing Assistant. The entire platform is free as long as you bring your own API key.",
-      "current_state": "1 Free Demo Document at $0/one-time, allowing users to generate document structures, generate chapters, and run AI-plagiarism checks; paid one-time plans offer 1 AI-Report for $5, 3 AI-Reports for $10, and 10 AI-Reports for $25, each with access to GPT-5, unlimited document structures, unlimited generated chapters, and unlimited AI-plagiarism checks.",
-      "source_url": "https://ReportGPT.app",
-      "category": "AI / ML",
-      "first_read_date": "2026-11-13"
-    },
-    {
-      "vendor": "Steel",
+      "vendor": "LangWatch",
       "change_type": "pricing_restructured",
-      "impact": "low",
-      "summary": "Launch plan still exists with $30 one-time credits valid 90 days. Browser hour rate is now $0.10/hour on Launch (page headline says 'from $0.08/hour' which applies to Scale), and CAPTCHA solves on Launch are $3/1k vs Scale's $1/1k.",
-      "previous_state": "Cloud browser API for AI agents. The Launch plan is $0 a month plus usage and comes with a one-time $30 credit, valid for 90 days, which Steel puts at about 300 browser hours at $0.10 an hour. Launch allows 10 concurrent sessions, 15-minute sessions, 60 requests a minute and 7-day data retention; CAPTCHA solving and Steel's proxies need a $10 deposit first. Scale is $250 a month plus usage, with $100 of credit each month.",
-      "current_state": "Launch is $0 + usage with $30 one-time free usage credits valid for 90 days, 10 concurrent sessions, 15-minute max session time, 60 requests per minute, 7-day data retention, up to 3 seats, browser hours at $0.10/hour, proxy bandwidth at $10/GB, CAPTCHA solves at $3/1k, Browser Tools at $5/1k. CAPTCHA solving and Steel-provided proxies on Launch require a $10 paid deposit (free credits do not count).",
-      "source_url": "https://docs.steel.dev/overview/pricinglimits",
-      "category": "Browser Automation",
-      "first_read_date": "2026-11-13"
-    },
-    {
-      "vendor": "Zenable",
-      "change_type": "pricing_model_change",
       "impact": "medium",
-      "summary": "The stored free-tier description (15 PR reviews/week and 100 agentic reviews/day) is no longer how the page describes the Free plan. The page now states Free accounts get 5,000 Zenable Credits/seat/week, with credits covering PR/MR bot reviews, agentic code reviews, and chat tools.",
-      "previous_state": "Free accounts get 15 PR reviews/week and 100 agentic reviews/day.",
-      "current_state": "Free accounts get 5,000 credits/seat/week, covering PR/MR bot reviews, agentic code reviews (CLI, MCP server, or API), and chat tools; deterministic verifier rules are free.",
-      "source_url": "https://zenable.io",
+      "summary": "The free tier has been renamed and its limits changed: the stored 'Free' plan (1k traces/month, 1 workflow DSPy optimizer) is now the 'Developer' plan at €0 free forever with 50k events/month, 14-day data access, 2 users, and 3 scenarios/simulations/custom evals.",
+      "previous_state": "A LLMOps platform helping AI teams measure, monitor, and optimize LLM applications for reliability, cost-efficiency, and performance. With a powerful DSPy component, we enable seamless collaboration between engineers and non-technical teams to fine-tune and productionize GenAI products. Free plan includes all platform features, 1k traces/month and 1 workflow DSPy optimizers. [#opensource](https://github.com/langwatch/langwatch)",
+      "current_state": "Developer plan: €0 free forever, 50k events/month, 14-day data access, 2 users, 3 scenarios, 3 simulations, 3 custom evals, community support (GitHub & Discord). Paid Growth plan is €29/core-seat/month with 200k events included, then €5/100k, 30-day retention, unlimited lite-users, unlimited simulations/evals/prompts.",
+      "source_url": "https://langwatch.ai/pricing",
       "category": "AI / ML",
-      "first_read_date": "2026-11-13"
+      "first_read_date": "2026-11-14"
     }
   ],
   "resolved": [
@@ -3651,6 +3651,42 @@
       "outcome": "contradicted",
       "detail": "a reading on 2026-11-13 read the page as unchanged",
       "resolved_date": "2026-11-13"
+    },
+    {
+      "vendor": "ReportGPT",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The current pricing page now shows a free demo limited to 1 document and paid one-time plans ($5, $10, $25) for additional reports.",
+      "previous_state": "AI Powered Writing Assistant. The entire platform is free as long as you bring your own API key.",
+      "source_url": "https://ReportGPT.app",
+      "first_read_date": "2026-11-13",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-14 read a change the gate refused as states_no_terms",
+      "resolved_date": "2026-11-14"
+    },
+    {
+      "vendor": "Steel",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "Launch plan still exists with $30 one-time credits valid 90 days. Browser hour rate is now $0.10/hour on Launch (page headline says 'from $0.08/hour' which applies to Scale), and CAPTCHA solves on Launch are $3/1k vs Scale's $1/1k.",
+      "previous_state": "Cloud browser API for AI agents. The Launch plan is $0 a month plus usage and comes with a one-time $30 credit, valid for 90 days, which Steel puts at about 300 browser hours at $0.10 an hour. Launch allows 10 concurrent sessions, 15-minute sessions, 60 requests a minute and 7-day data retention; CAPTCHA solving and Steel's proxies need a $10 deposit first. Scale is $250 a month plus usage, with $100 of credit each month.",
+      "source_url": "https://docs.steel.dev/overview/pricinglimits",
+      "first_read_date": "2026-11-13",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-14 read it as record_corrected",
+      "resolved_date": "2026-11-14"
+    },
+    {
+      "vendor": "Zenable",
+      "change_type": "pricing_model_change",
+      "impact": "medium",
+      "summary": "The stored free-tier description (15 PR reviews/week and 100 agentic reviews/day) is no longer how the page describes the Free plan. The page now states Free accounts get 5,000 Zenable Credits/seat/week, with credits covering PR/MR bot reviews, agentic code reviews, and chat tools.",
+      "previous_state": "Free accounts get 15 PR reviews/week and 100 agentic reviews/day.",
+      "source_url": "https://zenable.io",
+      "first_read_date": "2026-11-13",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-14 read a change the gate refused as repeats_a_refused_claim",
+      "resolved_date": "2026-11-14"
     }
   ]
 }

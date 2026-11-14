@@ -110,6 +110,18 @@
     },
     {
       "vendor": "Activepieces",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 5,000 task/mo against 5,000 task/mo",
+      "summary": "The stored free-tier description says 'Free up to 5,000 tasks per month,' but the current page no longer states any 5,000-task free limit; it advertises a 'Free plan, no credit card required' and says 'Unlimited flows on every plan' with billing based on run volume, without publishing a specific free monthly task allowance.",
+      "previous_state": "Build automation flows to connect several apps together in your app's backend. For example, send a Slack message or add a Google Sheet row when an event fires in your app. Free up to 5,000 tasks per month.",
+      "current_state": "The page states 'Free plan, no credit card required' and 'Start building' / 'Free to start No credit card'; it says flows are unlimited on every plan and that 'You pay for how often flows actually run,' but does not state any free monthly task limit such as 5,000 tasks per month.",
+      "source_url": "https://www.activepieces.com",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-11-14"
+    },
+    {
+      "vendor": "Activepieces",
       "change_type": "free_tier_removed",
       "reason": "removal_read_from_root",
       "detail": "a free tier was recorded as removed from https://www.activepieces.com, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
@@ -1578,6 +1590,18 @@
     },
     {
       "vendor": "CatchJS.com",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://catchjs.com/, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The stored deal describes a free tier with 1,000 logged errors/month, 1,000 log API calls/month, performance metrics for 100 URLs, time on page for 100 URLs, pageviews for 10,000 URLs, email notifications, screenshots, click trails, and one domain. The current page presents these same limits and features as a 14-day free trial of the Development plan, not an ongoing free tier.",
+      "previous_state": "JavaScript error tracking with screenshots and click trails — There is a free tier with limits of 1,000 logged errors per month, 1,000 log API calls per month, performance metrics for 100 URLs, time on page for 100 URLs, and pageviews for 10,000 URLs. It includes email notifications, screenshots, click trails, and support for one domain and its subdomains.",
+      "current_state": "Development is $44/month billed annually or $49/month billed monthly, with a free 14-day trial. It includes 1,000 logged errors per month, 1,000 log API calls per month, performance metrics for 100 URLs, time on page for 100 URLs, pageviews for 10,000 URLs, 1 domain per account (with unlimited subdomains), email notifications, screenshots, click trails, and priority support.",
+      "source_url": "https://catchjs.com/",
+      "category": "Error Tracking",
+      "refused_date": "2026-11-14"
+    },
+    {
+      "vendor": "CatchJS.com",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as CatchJS.com|limits_reduced|2026-09-01|https://catchjs.com/",
@@ -2893,6 +2917,18 @@
       "source_url": "https://currencylayer.com/",
       "category": "Payments",
       "refused_date": "2026-10-24"
+    },
+    {
+      "vendor": "currencylayer",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-24 (repeats_a_refused_claim) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free plan's request limit has been reduced from 100 API requests/month to 100 API Calls Daily, and the free plan now explicitly states 'No Support' and 'Non-Commercial Use' restrictions.",
+      "previous_state": "Reliable Exchange Rates and Currency Conversion for your Business, 100 API requests/month free.",
+      "current_state": "Free $0.00 with 100 API Calls Daily, Updates, Historical Rates, HTTPS Encryption, No Support, Non-Commercial Use.",
+      "source_url": "https://currencylayer.com/",
+      "category": "Payments",
+      "refused_date": "2026-11-14"
     },
     {
       "vendor": "CurrencyScoop",
@@ -7106,6 +7142,18 @@
       "collided_with": "logflare.app|pricing_restructured|2026-09-01|https://logflare.app/"
     },
     {
+      "vendor": "LoginLlama",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1,000 login)",
+      "summary": "The stored deal info says LoginLlama is free for 1,000 logins per month, but the current pricing page says users start with 100 free checks, then paid plans from $9/mo.",
+      "previous_state": "A login security API to detect fraudulent and suspicious logins and notify your customers. Free for 1,000 logins per month.",
+      "current_state": "The page says users can start with 100 free checks, no card required, then paid plans start from $9/month. It lists Starter at $9/month, Professional at $49/month, and Enterprise at $199/month.",
+      "source_url": "https://loginllama.app",
+      "category": "Security",
+      "refused_date": "2026-11-14"
+    },
+    {
       "vendor": "Logo.dev",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -7129,6 +7177,18 @@
       "category": "Error Tracking",
       "refused_date": "2026-09-26",
       "collided_with": "LogRocket|free_tier_removed|2026-08-28|https://logrocket.com/pricing"
+    },
+    {
+      "vendor": "LogSpot",
+      "change_type": "rebranded",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names LogSpot and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The stored vendor 'LogSpot' does not appear on the page; the page is for 'Leapio', an AI-native GTM analytics product. No free plan with 10,000 events/month or embeddable analytics widgets/robots is described.",
+      "previous_state": "Full unified web and product analytics platform, including embeddable analytics widgets and automated robots (slack, telegram, and webhooks). Free plan includes 10,000 events per month.",
+      "current_state": "The page describes Leapio as 'Free to Start, No Card' and 'Free to start, no credit card,' but does not state a free plan's event limits or features.",
+      "source_url": "https://logspot.io",
+      "category": "Analytics",
+      "refused_date": "2026-11-14"
     },
     {
       "vendor": "Logto",
@@ -7546,13 +7606,13 @@
       "vendor": "MantleDB",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-10-01 (measures_the_opposite) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
-      "summary": "The free tier now has a 64KB per entry limit and a 10,000 requests/24h rate limit. Unclaimed namespaces are purged after 30 days of inactivity, while claimed namespaces are purged after 90 days of inactivity. The free tier previously had a 1MB limit and a 72h inactivity scavenger policy.",
+      "detail": "the reading of this vendor refused on 2026-10-24 (repeats_a_refused_claim) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "Stored info describes a 1MB free bucket with 72h inactivity scavenging; the page now describes free-tier namespaces with up to 100 entries at 64 KB per entry, 10,000 requests/24h rate limit, and 30-day (unclaimed) or 90-day (claimed) inactivity purge.",
       "previous_state": "Anonymous JSON storage for scripts and tiny apps. No signup required; uses Master AID for updates and Read-Only RID for public fetching. Free tier includes 1 bucket (1MB limit) with a 72h inactivity scavenger policy.",
-      "current_state": "Unclaimed namespaces have a limit of 100 entries, 64 KB per entry, and are rate-limited above 10,000 requests/24h, purged after 30 days of inactivity. Claimed namespaces have the same entry and rate limits, but are purged after 90 days of inactivity.",
+      "current_state": "Free tier: unclaimed namespaces allow anyone to read/write, up to 100 entries, 64 KB per entry, rate-limited above 10,000 requests/24h, purged after 30 days of no writes. Claimed namespaces require X-Mantle-Key for writes, reads private unless marked public_read, up to 100 entries, 64 KB per entry, rate-limited above 10,000 requests/24h, purged after 90 days of inactivity. Claimed + Credits unlocks unlimited entries, 1 MB per entry, export, TTL, version history, webhooks, no rate limit, and paused inactivity clock.",
       "source_url": "https://mantledb.sh",
       "category": "Storage",
-      "refused_date": "2026-10-24"
+      "refused_date": "2026-11-14"
     },
     {
       "vendor": "Mapbox",
@@ -8708,6 +8768,18 @@
     {
       "vendor": "OnlineOrNot",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-24 (repeats_a_refused_reading) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "Free plan now limited to 2 users (was 3 team members) and 1,000 browser check runs/mo; status page is now 'Limited status page' rather than a full status page, and multi-location checks/SSL monitoring are no longer listed.",
+      "previous_state": "Uptime and status page monitoring — free plan: 3 monitors (uptime, keyword, heartbeat), 3-minute check interval, 2 team members, 1 status page, SSL monitoring, multi-location checks, email/Slack/Discord alerts",
+      "current_state": "Hobby plan is Free with up to 2 users, 3 minute check interval, 3 uptime monitors, 1,000 browser check runs/mo, 1 included status page (limited status page), basic alerting, email alerts, Slack/Discord/Telegram, authenticated API and MCP access, 14 days data retention, custom logo and favicon, 100 email subscribers, community and email support.",
+      "source_url": "https://onlineornot.com/pricing",
+      "category": "Monitoring",
+      "refused_date": "2026-11-14"
+    },
+    {
+      "vendor": "OnlineOrNot",
+      "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-10-01 (same_transition_graded_differently) stated the same 2 figures, so the page showed these terms before the date this record gives",
       "summary": "The free tier now only includes 2 users instead of 3, and does not include SMS alerts, webhooks, or on-call integrations. It also has a limited status page instead of a full status page.",
@@ -9259,6 +9331,18 @@
       "source_url": "https://pipedream.com/pricing",
       "category": "Workflow Automation",
       "refused_date": "2026-10-24"
+    },
+    {
+      "vendor": "Pipedream",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-24 (confirmed_unchanged) claimed the same change, product_deprecated, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored info describes Pipedream Workflows (Legacy Free) and its shutdown timeline, but the current pricing page no longer mentions Workflows at all — it only documents Pipedream Connect plans (Free, Startup, Business). The Free plan is now described as development-only with no production environment, and production requires the Startup plan at $99/month billed annually or $150/month billed monthly, with 100 users and 10,000 usage credits included.",
+      "previous_state": "Pipedream Workflows stopped taking new signups and subscriptions on 2026-09-30 and shuts down on 2027-03-31; Workflows data is deleted by 2027-04-30. Workspaces that already exist keep running workflows until then, the free ones within a daily credit limit and limits on active workflows and connected accounts. Pipedream Connect, its API for adding integrations and MCP tools to apps and AI agents, is not affected: its Free plan is $0 with no credit card for development only, and production needs the Startup plan at $99 a month billed annually or $150 billed monthly, with 100 users and 10,000 usage credits included.",
+      "current_state": "The page documents only Pipedream Connect plans: Free ($0, no credit card, development only, every feature in development, 3,000+ connectors, 10,000+ prebuilt tools and triggers, unlimited team members, community support); Startup ($99/month billed annually or $150/month billed monthly, includes production environment, 100 users included then $2 per user, 10,000 usage credits included, email support); and Business (custom annual billing with volume pricing, enterprise security, SLAs, dedicated support, SSO, SCIM, HIPAA, dedicated static egress IPs). No Workflows product or Legacy Free tier is mentioned.",
+      "source_url": "https://pipedream.com/pricing",
+      "category": "Workflow Automation",
+      "refused_date": "2026-11-14"
     },
     {
       "vendor": "Pixela",
@@ -10073,6 +10157,18 @@
     },
     {
       "vendor": "Replicate",
+      "change_type": "pricing_model_change",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page still describes free trial plus paid usage; the stored description's 'limited number of runs' was already noted as unstated by Replicate, so its absence is not a changed term.",
+      "summary": "The general structure of free access vs. paid usage remains. The specific 'limited number of runs' detail is missing.",
+      "previous_state": "ML model hosting and inference. A new account can run the models in Replicate's Try for Free collection without buying credit, for a limited number of runs that Replicate does not state; after that you add billing and buy credit. Replicate says these models are not free forever. Most models bill by the second for the hardware they run on, such as $0.000025/sec on CPU Small and $0.001525/sec on one H100. Official models bill per output instead, such as FLUX 1.1 Pro at $0.04 per image; per million input/output tokens: DeepSeek-R1 $3.75/$10.",
+      "current_state": "Users can try for free, and pricing is listed for various models based on usage (per output, per second, etc.).",
+      "source_url": "https://replicate.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-11-14"
+    },
+    {
+      "vendor": "Replicate",
       "change_type": "free_tier_removed",
       "reason": "free_tier_still_offered",
       "detail": "a free tier was recorded as removed by a summary that reports the page still offering one",
@@ -10215,6 +10311,18 @@
       "source_url": "https://ReportGPT.app",
       "category": "AI / ML",
       "refused_date": "2026-10-23"
+    },
+    {
+      "vendor": "ReportGPT",
+      "change_type": "limits_reduced",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored deal info says the entire platform is free as long as you bring your own API key, but the pricing page now shows a free tier limited to 1 Free Demo Document and paid one-time plans ($5, $10, $25) for AI reports, with no mention of bringing your own API key for free use.",
+      "previous_state": "AI Powered Writing Assistant. The entire platform is free as long as you bring your own API key.",
+      "current_state": "The page offers a free tier called '1 Free Demo Document' at $0/one-time, which allows generating document structures, generating chapters, and running AI-plagiarism checks. Paid one-time plans are also listed: 1 AI-Report for $5, 3 AI-Reports for $10, and 10 AI-Reports for $25, each with access to GPT-5, unlimited document structures, unlimited generated chapters, and unlimited AI-plagiarism checks. The FAQ mentions a free trial period and that if you have your own OpenAI API key, you can use it on the platform without additional cost.",
+      "source_url": "https://ReportGPT.app",
+      "category": "AI / ML",
+      "refused_date": "2026-11-14"
     },
     {
       "vendor": "repsy.io",
@@ -11097,15 +11205,15 @@
     },
     {
       "vendor": "smartmockups.com",
-      "change_type": "rebranded",
+      "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-30 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The stored deal is for smartmockups.com, but the pricing page is now Canva Mockups (Canva appears to have absorbed/rebranded smartmockups). The free tier now allows up to 2,500 mockups for free, not 200.",
+      "detail": "the reading of this page refused on 2026-11-07 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal is for smartmockups.com, but the pricing page is now Canva Mockups. The free tier still exists but the free usage limit is now 2,500 mockups, not 200.",
       "previous_state": "Create product mockups, 200 free mockups.",
       "current_state": "As a Canva Free user, you can create and use up to 2,500 mockups for free. If you exceed this total number of uses, you will need a Canva Pro account to create and use more mockups.",
       "source_url": "https://smartmockups.com/",
       "category": "Design",
-      "refused_date": "2026-11-07"
+      "refused_date": "2026-11-14"
     },
     {
       "vendor": "SmartParse",
@@ -11169,6 +11277,18 @@
     },
     {
       "vendor": "Snyk",
+      "change_type": "record_corrected",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping or narration or restatement rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored description says the Free plan includes 200 Snyk Open Source (SCA) tests per month, but the pricing page's FAQ now states the Free plan limit is 200 Open Source tests — matching the stored description's primary figure. However, the stored description also notes Snyk's usage docs say 400 Open Source tests; the page now consistently states 200. Additionally, the stored description's Team plan details (100 projects, 1,000 Snyk Code tests) match the page. The main discrepancy is the Open Source test count: stored info flags ambiguity between 200 and 400, while the page clearly states 200.",
+      "previous_state": "Developer security scanning. Free: up to 5 projects, with 200 Snyk Open Source (SCA) tests, 100 Snyk Code (SAST) tests, 300 IaC tests and 100 Container tests a month (Snyk's usage docs say 400 Open Source tests). Team is $25/month for teams of up to 10 developers, with 100 projects and 1,000 Snyk Code tests a month. Snyk Evo (AI pentesting, coding-agent security) needs an Enterprise subscription.",
+      "current_state": "Free plan: 5 projects, 100 Snyk Code (SAST) tests/month, 200 Snyk Open Source (SCA) tests/month, 300 IaC tests/month, 100 Container tests/month. Team plan: $25/month, 100 projects, 1,000 Snyk Code tests/month. Evo capabilities require Enterprise Platform Subscription.",
+      "source_url": "https://snyk.io/plans/",
+      "category": "Security",
+      "refused_date": "2026-11-14"
+    },
+    {
+      "vendor": "Snyk",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (200 open, 100 sast, 100 container, 300 iac)",
@@ -11226,6 +11346,18 @@
       "source_url": "https://spacelift.io/pricing",
       "category": "Infrastructure",
       "refused_date": "2026-10-01"
+    },
+    {
+      "vendor": "Spacelift",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 1 public against 2 public",
+      "summary": "The Free plan no longer lists '1 public worker' as included; public workers now appear starting with the Starter plan (2 public workers), while the Free plan lists 'Spaces' and other features instead.",
+      "previous_state": "IaC orchestration platform — 2 users, 1 API key, 1 public worker, OIDC integration, credential-less cloud provider integration, cost estimation",
+      "current_state": "Free plan includes: 2 users, 1 API key, Spaces, IaC support, Workflow customization, Credential-less integration with major cloud providers, VCS integration, SSO integration with OIDC, Cloud cost estimation, Spacelift Terraform provider, Resource visualization, Dependencies, Cloud integrations, Day 2 automation. Public workers are not listed as included in Free; Starter includes 2 public workers.",
+      "source_url": "https://spacelift.io/pricing",
+      "category": "Infrastructure",
+      "refused_date": "2026-11-14"
     },
     {
       "vendor": "Spacelift",
@@ -11522,15 +11654,15 @@
     },
     {
       "vendor": "Stripe Atlas",
-      "change_type": "limits_increased",
+      "change_type": "record_corrected",
       "reason": "confirmed_unchanged",
-      "detail": "Reported changes are either restatements of existing terms or details not previously claimed (increased discount amount).",
-      "summary": "The deal now includes a refund of the $500 Atlas fee when you fund a Stripe Treasury bank account with $5,000 within 90 days. The partner discounts have increased to over $200,000.",
-      "previous_state": "$500 one-time incorporation (Delaware filing and fees, tax ID, founder equity issuance, 83(b) filing, document templates, first year of registered agent), $100/year after. Includes $2,500 in Stripe product credits and access to over $50,000 in partner discounts.",
-      "current_state": "Incorporates for $500 and get over $50,000 in discounts. Includes company incorporation in Delaware, including next-day expedited processing and state filing fees, company tax ID, founder equity issuance and share purchase, 83(b) election filing, document templates, $2,500 in Stripe product credits, access to over $50,000 in partner discounts, $500 one-time setup fee, and $100 annually after the first year.",
+      "detail": "The current page still offers the $500 Stripe Treasury bonus within 7 days of incorporating; the stored description's extra details (start date, cash/stablecoin form) are not contradicted, and the report merely restates the stored description.",
+      "summary": "Previously info says new Atlas users who open a Stripe Treasury bank account on or after 2026-11-01, within 7 days of incorporating, get $500 in cash or USD-backed stablecoins.",
+      "previous_state": "$500 one-time incorporation (Delaware filing and fees, tax ID, founder equity issuance, 83(b) filing, document templates, first year of registered agent), $100/year after. Includes $2,500 in Stripe credits and over $200,000 in offers from partners such as AWS, Google and Xero. New Atlas users who open a Stripe Treasury bank account on or after 2026-11-01, within 7 days of incorporating, get $500 in cash or USD-backed stablecoins.",
+      "current_state": "Atlas costs $500, including Delaware filing fees and first year of registered agent service; registered agent service costs $100 per year after the first year. It includes $2.5K in Stripe product credits and more than $200K in partner offers. Users get $500 when they incorporate and open a Stripe Treasury bank account within 7 days.",
       "source_url": "https://stripe.com/atlas",
       "category": "Startup Perks",
-      "refused_date": "2026-10-24"
+      "refused_date": "2026-11-14"
     },
     {
       "vendor": "Sublime Text",
@@ -11653,6 +11785,18 @@
       "source_url": "https://www.surveymonkey.com",
       "category": "Dev Utilities",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Survicate",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-24 (repeats_a_refused_reading) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The pricing page no longer shows a Free plan. The lowest listed plan is Growth at $56/mo (billed annually), and the page only offers a 10-day free trial with up to 25 survey responses and 100 Research Hub data points. The stored Free tier (25 responses/month, 1,000 stored responses, 3 collaborators, no export/premium integrations) is not present on the current page.",
+      "previous_state": "Email, website, in-product, and mobile surveys with AI survey creator. Free plan: 25 responses/month, up to 1,000 stored responses across all active surveys (300/survey cap), up to 3 collaborators. After the initial 10-day trial, surveys created during trial are disabled. No data export and no premium integrations on Free.",
+      "current_state": "The page lists Growth starting at $56/mo billed annually, Pro starting at $349/mo, and Enterprise starting at $569/mo. It offers a 10-day free trial with up to 25 survey responses, Research Hub with 100 data points, 25+ integrations, and full access to pro-level features. No ongoing Free plan is described.",
+      "source_url": "https://survicate.com/pricing/",
+      "category": "Forms",
+      "refused_date": "2026-11-14"
     },
     {
       "vendor": "Survicate",
@@ -13318,6 +13462,18 @@
       "source_url": "https://zapier.com/pricing",
       "category": "Workflow Automation",
       "refused_date": "2026-09-25"
+    },
+    {
+      "vendor": "Zenable",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-23 (repeats_a_refused_reading) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored free-tier description says free accounts get 15 PR reviews/week and 100 agentic reviews/day, but the current pricing page describes the Free tier as 5,000 Zenable Credits/seat/week and does not mention the 15 PR reviews/week or 100 agentic reviews/day limits.",
+      "previous_state": "Free accounts get 15 PR reviews/week and 100 agentic reviews/day.",
+      "current_state": "Free accounts get 5,000 credits/seat/week, covering PR/MR bot reviews, agentic code reviews (CLI, MCP server, or API), and chat tools; deterministic verifier rules are free.",
+      "source_url": "https://zenable.io",
+      "category": "AI / ML",
+      "refused_date": "2026-11-14"
     },
     {
       "vendor": "Zenable",
