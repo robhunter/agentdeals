@@ -6,6 +6,9 @@ import { fileURLToPath } from "node:url";
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), "agentdeals-identity-"));
 const dataDirectory = fileURLToPath(new URL("../data/", import.meta.url));
 const stores = {
+  refusals: ["change_refusals.json", "AGENTDEALS_REFUSALS_PATH"],
+  corroboration: ["change_corroboration.json", "AGENTDEALS_CORROBORATION_PATH"],
+  platformCodes: ["platform_codes.json", "AGENTDEALS_PLATFORM_CODES_PATH"],
   agents: ["agents.json", "AGENTDEALS_AGENTS_PATH"],
   codes: ["referral_codes.json", "AGENTDEALS_REFERRAL_CODES_PATH"],
   ledger: ["ledger_entries.json", "AGENTDEALS_LEDGER_PATH"],

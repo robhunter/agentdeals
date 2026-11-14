@@ -1,3 +1,4 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import fs from "node:fs";
@@ -14,7 +15,7 @@ const { getAllPlatformCodes, resetPlatformCodesCache } = await import("../dist/p
 const offers = loadOffers();
 const offerFor = (vendor: string) => offers.find((o: any) => o.vendor === vendor);
 
-const PLATFORM_CODES_PATH = path.join(__dirname, "..", "data", "platform_codes.json");
+const PLATFORM_CODES_PATH = identityPaths.platformCodes;
 
 function startServer(): Promise<{ proc: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {

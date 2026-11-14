@@ -1,3 +1,4 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import fs from "node:fs";
@@ -6,7 +7,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PLATFORM_CODES_PATH = path.join(__dirname, "..", "data", "platform_codes.json");
+const PLATFORM_CODES_PATH = identityPaths.platformCodes;
 
 const { referrerDisclosureSentence, ourReferralLinkFor } = await import("../dist/referral-surfaces.js");
 const { getBestReferralCode, listAllReferralCodes, referrerCompensationOf, restrictionsOf, resetPlatformCodesCache } = await import("../dist/platform-codes.js");

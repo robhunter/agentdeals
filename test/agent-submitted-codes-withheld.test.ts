@@ -1,3 +1,4 @@
+import { identityPaths } from "./identity-fixture.ts";
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -6,7 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const CODES_PATH = path.join(__dirname, "..", "data", "referral_codes.json");
+const CODES_PATH = identityPaths.codes;
 const RETIRED_PATH = path.join(__dirname, "..", "data", "retired_agent_submissions.json");
 
 const WITNESS = {

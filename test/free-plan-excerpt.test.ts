@@ -1,3 +1,4 @@
+import "./identity-fixture.ts";
 import { describe, it } from "node:test";
 import assert from "node:assert";
 import { readFileSync, readdirSync } from "node:fs";
