@@ -37,9 +37,27 @@ describe("population floor authoring", () => {
     assert.equal(unchanged(base.replace("badges: 73", "badges: 97"), base), false);
   });
 
+  it("recognizes destructured declarations without treating type names as values", () => {
+    const code = source("limit", "const { limit }: { limit: number } = { limit: 73 };");
+    assert.equal(unchanged(code, code), true);
+    assert.equal(unchanged(code.replace("limit: 73", "limit: 98"), code), false);
+  });
+
+  it("recognizes a computed floor over a typed local filter", () => {
+    const code = source("Math.floor(population.length / 2)",
+      "interface Row { valid: boolean }\nconst rows: Row[] = [{ valid: true }];\nconst population = rows.filter((row: Row) => row.valid);");
+    assert.equal(unchanged(code, code), true);
+  });
+
   it("does not accept imported or unresolved floor values as unchanged", () => {
     const code = source("IMPORTED");
     assert.equal(unchanged(code, code), false);
+  });
+
+  it("recognizes local floor parameters and checks changes to their callers", () => {
+    const code = `function checks(floors: { badges: number }) { ${source("floors.badges")} }\nchecks({ badges: 73 });`;
+    assert.equal(unchanged(code, code), true);
+    assert.equal(unchanged(code.replace("badges: 73", "badges: 98"), code), false);
   });
 
   it("rechecks a new call in a different test and an extra copy in the same test", () => {
@@ -121,6 +139,29 @@ describe("a floor against its actual Git base", () => {
     assert.notEqual(result.status, 0);
     assert.match(result.stdout, /a floor of 98 leaves under 25% headroom/);
     assert.match(result.stdout, /test\/read.test.ts:4/);
+  }));
+
+  it("lets an unchanged parameter floor reach its minimum and rejects a changed caller", () => fixture((root) => {
+    const file = path.join(root, "test", "read.test.ts");
+    writeFileSync(file, readFileSync(file, "utf8").replace(
+      'it("reads badges", () => {', 'function check(floors: { badges: number }) { it("reads badges", () => {',
+    ).replace(', 73,', ', floors.badges,') + '\n}\ncheck({ badges: 73 });\n');
+    const git = (...args: string[]) => {
+      const result = spawnSync("git", args, { cwd: root, encoding: "utf8" });
+      assert.equal(result.status, 0, result.stderr);
+      return result.stdout.trim();
+    };
+    git("add", "test/read.test.ts");
+    git("commit", "-m", "Pass the floor through a parameter");
+    const base = git("rev-parse", "HEAD");
+    writeFileSync(path.join(root, "count"), "73");
+    const result = testFixture(root, base);
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    writeFileSync(file, readFileSync(file, "utf8").replace('badges: 73', 'badges: 98'));
+    writeFileSync(path.join(root, "count"), "98");
+    const changed = testFixture(root, base);
+    assert.notEqual(changed.status, 0);
+    assert.match(changed.stdout, /a floor of 98 leaves under 25% headroom/);
   }));
 
   it("uses the explicit pre-push base even when origin/main includes the new floor", () => fixture((root, base) => {

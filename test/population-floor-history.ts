@@ -13,10 +13,13 @@ export function floorCallsIn(source: string): Array<{ line: number; end: number;
   const file = ts.createSourceFile("test.ts", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
   const print = ts.createPrinter({ removeComments: true });
   const text = (node: Node) => print.printNode(ts.EmitHint.Unspecified, node, file);
-  const declarations = new Map<string, Array<import("typescript").VariableDeclaration>>();
+  const names = (name: import("typescript").BindingName): string[] => ts.isIdentifier(name)
+    ? [name.text]
+    : name.elements.flatMap(element => ts.isBindingElement(element) ? names(element.name) : []);
+  const declarations = new Map<string, Array<import("typescript").VariableDeclaration | import("typescript").ParameterDeclaration>>();
   const collect = (node: Node) => {
-    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
-      declarations.set(node.name.text, [...(declarations.get(node.name.text) ?? []), node]);
+    if (ts.isVariableDeclaration(node) || ts.isParameter(node)) {
+      for (const name of names(node.name)) declarations.set(name, [...(declarations.get(name) ?? []), node]);
     }
     ts.forEachChild(node, collect);
   };
@@ -24,6 +27,7 @@ export function floorCallsIn(source: string): Array<{ line: number; end: number;
   const dependency = (node: Node, seen = new Set<string>()): string[] => {
     const found: string[] = [];
     const visit = (part: Node) => {
+      if (ts.isTypeNode(part)) return;
       if (ts.isIdentifier(part)
           && !(ts.isPropertyAccessExpression(part.parent) && part.parent.name === part)
           && !(ts.isPropertyAssignment(part.parent) && part.parent.name === part)) {
@@ -33,6 +37,7 @@ export function floorCallsIn(source: string): Array<{ line: number; end: number;
           const bindings = declarations.get(name) ?? [];
           if (bindings.length) {
             found.push(...bindings.map(text));
+            if (bindings.some(binding => ts.isParameter(binding))) found.push(text(file));
             for (const binding of bindings) if (binding.initializer) found.push(...dependency(binding.initializer, seen));
           } else if (name !== "Math") {
             found.push(`unresolved:${name}`);
