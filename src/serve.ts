@@ -106,7 +106,7 @@ import { AN_UNCONFIRMED_CHANGE_SETS_NO_LABEL, OURS_ARCHIVE_OUTCOME } from "./cha
 import { clauseNaming } from "./quoted-figures.js";
 import { figureProvenanceAgainst, statementsWeHold } from "./figure-provenance.js";
 import { statesNoFreeTier } from "./retired-terms.js";
-import { countsDownTo, shutdownDeadlineHtml } from "./shutdown-deadline.js";
+import { countsDownTo, shutdownDeadlineHtml, shutdownDates, nextShutdownDate } from "./shutdown-deadline.js";
 import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
 import { deadlineTextsOf, quotesTheWholeDescription, statedDeadlines, statedShutdowns, type StatedDeadline } from "./stated-deadlines.js";
 import { COMING_UP_HEADING, lastDayComingUp } from "./coming-up.js";
@@ -26944,10 +26944,12 @@ function buildShutdownTrackerPage(): string {
     covers?: RecordACardCovers[];
     statedDeadline?: StatedDeadline;
     groupedDeadlines?: StatedDeadline[];
+    stages?: DealChange["shutdown_stages"];
     status: "active" | "imminent" | "completed";
   }
 
   const today = new Date();
+  const todayDay = today.toISOString().slice(0, 10);
 
   const handTyped: ShutdownEntry[] = [
     {
@@ -27163,13 +27165,14 @@ function buildShutdownTrackerPage(): string {
     what: record.summary,
     deadline,
     dateSource: record.source_url,
+    stages: record.shutdown_stages,
     status: "active",
   }));
 
   const covered = [...handTyped, ...recordedOnly];
-  const statedOnly: ShutdownEntry[] = statedShutdowns(deadlineTextsOf(offers, []), utcToday())
+  const statedOnly: ShutdownEntry[] = statedShutdowns(deadlineTextsOf(offers, []), todayDay)
     .filter(deadline => !covered.some(card =>
-      (card.deadline === deadline.date && (servedVendorSlug(card.vendorSlug) ?? card.vendorSlug) === (servedVendorSlugForName(deadline.vendor) ?? toSlug(deadline.vendor)))
+      (shutdownDates(card).some(stage => stage.date === deadline.date) && (servedVendorSlug(card.vendorSlug) ?? card.vendorSlug) === (servedVendorSlugForName(deadline.vendor) ?? toSlug(deadline.vendor)))
       || (card.covers ?? []).some(covered => covered.vendor === deadline.vendor && covered.deadline === deadline.date)))
     .map(deadline => ({
       service: deadline.vendor,
@@ -27180,7 +27183,7 @@ function buildShutdownTrackerPage(): string {
       statedDeadline: deadline,
       status: "active",
     }));
-  const nimCompleted = statedOnly.filter(card => card.vendorSlug === "nvidia-nim" && card.deadline < utcToday());
+  const nimCompleted = statedOnly.filter(card => card.vendorSlug === "nvidia-nim" && card.deadline < todayDay);
   const nimSentences = [...new Map(nimCompleted.map(card => [card.what, card.statedDeadline!])).values()];
   const nimGroup: ShutdownEntry[] = nimCompleted.length === 0 ? [] : [{
     ...nimCompleted.reduce((latest, card) => card.deadline > latest.deadline ? card : latest),
@@ -27190,7 +27193,7 @@ function buildShutdownTrackerPage(): string {
   }];
   const shutdowns: ShutdownEntry[] = [...covered, ...statedOnly.filter(card => !nimCompleted.includes(card)), ...nimGroup];
 
-  shutdowns.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
+  shutdowns.sort((a, b) => nextShutdownDate(a, todayDay).localeCompare(nextShutdownDate(b, todayDay)));
 
   const imminent: ShutdownEntry[] = [];
   const upcoming: ShutdownEntry[] = [];
@@ -27198,7 +27201,7 @@ function buildShutdownTrackerPage(): string {
   const completed: ShutdownEntry[] = [];
 
   for (const s of shutdowns) {
-    const deadlineDate = new Date(s.deadline);
+    const deadlineDate = new Date(nextShutdownDate(s, todayDay));
     const daysLeft = Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
     if (daysLeft < 0) {
       completed.push(s);
@@ -27214,8 +27217,12 @@ function buildShutdownTrackerPage(): string {
   completed.sort((a, b) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
 
   const activeCount = imminent.length + upcoming.length + later.length;
-  const shutdownMonths = new Map<string, ShutdownEntry[]>();
-  for (const entry of [...imminent, ...upcoming, ...later]) {
+  const shutdownMonths = new Map<string, { service: string; deadline: string; label: string }[]>();
+  const monthEntries = [...imminent, ...upcoming, ...later].flatMap(entry => shutdownDates(entry)
+    .filter(stage => stage.date >= todayDay)
+    .map(stage => ({ service: entry.service, deadline: stage.date, label: stage.label })))
+    .sort((a, b) => a.deadline.localeCompare(b.deadline));
+  for (const entry of monthEntries) {
     const month = entry.deadline.slice(0, 7);
     const entries = shutdownMonths.get(month) ?? [];
     entries.push(entry);
@@ -27228,13 +27235,13 @@ function buildShutdownTrackerPage(): string {
         const label = new Date(`${month}-01`).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
         return `<li data-month="${month}"><strong>${escHtmlServer(label)}:</strong> ${entries.map(entry => {
           const day = new Date(entry.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
-          return `<span class="shutdown-month-entry">${escHtmlServer(entry.service)} (${escHtmlServer(day)})</span>`;
+          return `<span class="shutdown-month-entry">${escHtmlServer(entry.service)}${entry.label ? `: ${escHtmlServer(entry.label)}` : ""} (${escHtmlServer(day)})</span>`;
         }).join("; ")}.</li>`;
       }).join("\n      ")}
     </ul>
   </section>`;
-  const nextDeadline = shutdowns.find(s => countsDownTo(s) && new Date(s.deadline) > today);
-  const nextDaysLeft = nextDeadline ? Math.max(0, Math.ceil((new Date(nextDeadline.deadline).getTime() - today.getTime()) / (1000 * 60 * 60 * 24))) : 0;
+  const nextDeadline = shutdowns.find(s => countsDownTo(s) && nextShutdownDate(s, todayDay) >= todayDay);
+  const nextDaysLeft = nextDeadline ? Math.max(0, Math.ceil((new Date(nextShutdownDate(nextDeadline, todayDay)).getTime() - today.getTime()) / (1000 * 60 * 60 * 24))) : 0;
 
   function urgencyColor(deadline: string): string {
     const dl = new Date(deadline);
@@ -27255,10 +27262,20 @@ function buildShutdownTrackerPage(): string {
   }
 
   function buildShutdownCard(s: ShutdownEntry): string {
-    const dateStr = new Date(s.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+    const deadline = nextShutdownDate(s, todayDay);
+    const stages = shutdownDates(s);
+    const pendingStages = stages.filter(stage => stage.date >= todayDay);
+    const passedStages = stages.filter(stage => stage.date < todayDay);
+    const headerStages = [...pendingStages, ...passedStages];
+    const deadlineHtml = headerStages.map((stage, index) => shutdownDeadlineHtml(s, {
+      date: new Date(stage.date + "T00:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }),
+      color: urgencyColor(stage.date),
+      label: stage.label,
+      countdown: stage.date < todayDay ? "Completed" : index === 0 ? daysLabel(deadline) : undefined,
+    }, escHtmlServer, s.statedDeadline ? (url, esc) => " " + listingSourceLinkHtml(url, esc) : undefined)).join("\n");
     const stability = stabilityMap.of(s.vendorSlug);
     const stabColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)";
-    const color = urgencyColor(s.deadline);
+    const color = urgencyColor(deadline);
     const vendorOffer = offers.find(o => toSlug(o.vendor) === s.vendorSlug);
     const editorialLink = ALTERNATIVES_GUIDES.find(p =>
       p.primaryVendor.toLowerCase() === (vendorOffer?.vendor ?? "").toLowerCase() ||
@@ -27271,7 +27288,7 @@ function buildShutdownTrackerPage(): string {
       <div class="shutdown-header">
         <div>
           <h3 style="margin:0">${handwrittenVendorLinkHtml(s.vendorSlug, s.service, ' style="color:var(--text)"')}</h3>
-          ${shutdownDeadlineHtml(s, { date: dateStr, color, countdown: daysLabel(s.deadline) }, escHtmlServer, s.statedDeadline ? (url, esc) => " " + listingSourceLinkHtml(url, esc) : undefined)}
+          ${deadlineHtml}
         </div>
         <div class="stability-badge" style="color:${stabColor}">${escHtmlServer(stability.toUpperCase())}</div>
       </div>
@@ -27298,12 +27315,12 @@ function buildShutdownTrackerPage(): string {
   const shutdownVendorSlugs = [...new Set(handTyped.map(s => s.vendorSlug))];
   const shutdownVendorChangesByDayServed = splitAtTheDayServed(changesTheVendorMade(dealChanges).filter(c =>
     shutdownVendorSlugs.some(slug => toSlug(c.vendor) === slug)
-  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()), utcToday());
+  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()), todayDay);
   const relevantChanges = shutdownVendorChangesByDayServed.inEffect.slice(0, 10);
   const upcomingRelevantChanges = splitAtTheDayServed(changesTheVendorMade(dealChanges).filter(c =>
     shutdownVendorSlugs.includes(toSlug(c.vendor))
-      || (upcomingDateOf(c, utcToday()) !== c.date && shutdowns.some(shutdown => shutdown.vendorSlug === toSlug(c.vendor)))
-  ), utcToday()).upcoming;
+      || (upcomingDateOf(c, todayDay) !== c.date && shutdowns.some(shutdown => shutdown.vendorSlug === toSlug(c.vendor)))
+  ), todayDay).upcoming;
   const relatedChangesTable = (changes: typeof relevantChanges) => `<table class="pricing-table">
     <thead><tr><th>Date</th><th>Vendor</th><th>Change</th><th>Impact</th></tr></thead>
     <tbody>
@@ -27395,7 +27412,7 @@ h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .
 .shutdown-card{background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:8px;padding:1.25rem;margin-bottom:1rem;transition:border-color .15s}
 .shutdown-card:hover{border-color:var(--border-hover)}
 .shutdown-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.75rem}
-.shutdown-deadline{display:flex;align-items:center;gap:.5rem;font-size:.85rem;margin-top:.35rem;font-family:var(--mono)}
+.shutdown-deadline{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;font-size:.85rem;margin-top:.35rem;font-family:var(--mono)}
 .deadline-icon{font-size:.9rem}
 .days-badge{font-size:.75rem;font-weight:600;padding:.15rem .5rem;border-radius:4px}
 .stability-badge{font-size:.7rem;font-weight:700;letter-spacing:.05em;white-space:nowrap}
@@ -27457,9 +27474,10 @@ ${buildGlobalNav("guides")}
   </div>
 
   <div class="timeline-bar">
-    ${shutdowns.filter(s => new Date(s.deadline) >= today).map(s => {
-      const color = urgencyColor(s.deadline);
-      return `<div class="timeline-segment" style="background:${color};flex:1" title="${escHtmlServer(s.service)} \u2014 ${escHtmlServer(daysLabel(s.deadline))}"></div>`;
+    ${shutdowns.filter(s => nextShutdownDate(s, todayDay) >= todayDay).map(s => {
+      const deadline = nextShutdownDate(s, todayDay);
+      const color = urgencyColor(deadline);
+      return `<div class="timeline-segment" style="background:${color};flex:1" title="${escHtmlServer(s.service)} \u2014 ${escHtmlServer(daysLabel(deadline))}"></div>`;
     }).join("\n    ")}
   </div>
 
@@ -50378,7 +50396,14 @@ ${freshestRows}
 
 function deadlinesOurTextStates(changes: readonly DealChange[], listed: readonly DealChange[], today: string): StatedDeadline[] {
   const recordsBeforeToday = changesTheVendorMade(recordsStillInForce(changes)).filter(c => c.date <= today);
-  return statedDeadlines(deadlineTextsOf(offers, recordsBeforeToday), listed, today);
+  const stated = statedDeadlines(deadlineTextsOf(offers, recordsBeforeToday), listed, today);
+  const stages = forecastShutdownsWithoutACard(changes, []).flatMap(({ record, deadline }) =>
+    shutdownDates({ deadline, stages: record.shutdown_stages }).filter(stage => stage.label && stage.date > today && stage.date < deadline)
+      .map(stage => ({ vendor: record.vendor, category: record.category, date: stage.date,
+        sentence: record.summary, sourceUrl: record.source_url, statedIn: "record" as const, record })));
+  const added = stages.filter(stage => ![...stated, ...listed].some(other => other.vendor === stage.vendor && other.date === stage.date));
+  return [...stated, ...added.filter((stage, index) => added.findIndex(other => other.vendor === stage.vendor && other.date === stage.date) === index)]
+    .sort((a, b) => a.date.localeCompare(b.date) || a.vendor.localeCompare(b.vendor));
 }
 
 function vendorRecordsDatedAfter(changes: readonly DealChange[], today: string): DealChange[] {

@@ -109,6 +109,14 @@ describe("the home page includes stated deadlines in its soonest five", () => {
       records,
       TODAY,
     );
+    for (const record of changes.filter((record: { shutdown_stages?: unknown }) => record.shutdown_stages)) {
+      for (const stage of record.shutdown_stages) {
+        if (stage.date <= TODAY || stage.date >= (record.discontinued_date ?? record.date)) continue;
+        if ([...records, ...stated].some(value => value.vendor === record.vendor && value.date === stage.date)) continue;
+        stated.push({ vendor: record.vendor, category: record.category, date: stage.date,
+          sentence: record.summary, sourceUrl: record.source_url, statedIn: "record", record });
+      }
+    }
     await withPages(null, null, (home, deadlines) => {
       const expected = qualifyingDeadlineRows(deadlines, records, stated).slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE);
       const actual = entries(section(home), "cs");

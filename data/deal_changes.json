@@ -19169,7 +19169,17 @@
       "source_url": "https://blog.val.town/winding-down",
       "category": "Cloud Hosting",
       "alternatives": [],
-      "recorded_date": "2026-11-11"
+      "recorded_date": "2026-11-11",
+      "shutdown_stages": [
+        {
+          "date": "2026-12-10",
+          "label": "read-only except SQLite and blob storage"
+        },
+        {
+          "date": "2027-01-10",
+          "label": "all other services end"
+        }
+      ]
     },
     {
       "vendor": "Google Gemini API",
@@ -19379,7 +19389,17 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "what_ends": "Zeabur",
-      "announced_on": "2026-10-17"
+      "announced_on": "2026-10-17",
+      "shutdown_stages": [
+        {
+          "date": "2026-12-01",
+          "label": "shared-cluster services paused"
+        },
+        {
+          "date": "2026-12-31",
+          "label": "everything stops"
+        }
+      ]
     },
     {
       "vendor": "Conductor",
@@ -19446,7 +19466,17 @@
       "category": "Databases",
       "alternatives": [],
       "recorded_date": "2026-11-12",
-      "announced_on": "2026-10-23"
+      "announced_on": "2026-10-23",
+      "shutdown_stages": [
+        {
+          "date": "2026-12-07",
+          "label": "read-only"
+        },
+        {
+          "date": "2026-12-22",
+          "label": "stops serving reads"
+        }
+      ]
     },
     {
       "vendor": "remove.bg",
