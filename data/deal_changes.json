@@ -20322,6 +20322,39 @@
       "listing_effect": "none",
       "tier": "Azure Database for MySQL Extended Support",
       "tier_direction": "unchanged"
+    },
+    {
+      "vendor": "AWS",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-07",
+      "summary": "Amazon OpenSearch Service charges an Extended Support surcharge equal to the instance price on every domain still running Elasticsearch 1.5, 2.3, 5.1, 5.3, 5.5, 6.0, 6.2, 6.3, 6.4, 6.5, 6.7, 7.1, 7.4, 7.7 or 7.8, or OpenSearch 1.0, 1.1, 1.2, 2.3, 2.5, 2.7 or 2.9 from November 7, 2026. The surcharge doubles the instance cost. Storage costs are not affected. Before November 7, 2026 these OpenSearch Service domains paid $0.0065 per Normalized Instance Hour (NIH) in US East (N. Virginia). Amazon OpenSearch Service's example: an m7g.medium.search instance at $0.068 an hour on demand costs $1.632 a day. The surcharge adds another $1.632 a day. The surcharge applies automatically and stops when the domain is upgraded to a supported version. This rate applies until November 7, 2027. Elasticsearch 5.6 domains still pay $0.0065 per NIH. Elasticsearch 6.8, 7.9, 7.10 and OpenSearch 1.3, 2.11, 2.13, 2.15, 2.17 and 2.19 pay no surcharge before November 7, 2027.",
+      "previous_state": "Amazon OpenSearch Service domains on these versions paid an Extended Support charge of $0.0065 per NIH in US East (N. Virginia) on top of the instance price.",
+      "current_state": "AWS, Amazon OpenSearch Service pricing (read 2026-11-15), Extended support costs: \"Extended Support for Elasticsearch versions 1.5, 2.3, 5.1–5.5, 6.0–6.7, 7.1–7.8, OpenSearch versions 1.0–1.2, and OpenSearch versions 2.3–2.9 (From November 7, 2026 through November 7, 2027): For these versions, the Extended Support charges are equal to your instance pricing for the extension period. Storage costs are not affected.\" \"The Extended Support surcharge for the extension period will be equal to your instance cost ($1.632/day), effectively doubling your instance pricing to ~$3.264/day.\" \"For Elasticsearch version 5.6 (till November 7, 2028) you will be charged the standard Extended Support rate of $0.0065 per Normalized Instance Hour (NIH) in US East (N. Virginia).\" AWS What's New, posted Aug 7, 2026: \"From November 7, 2026, the Extended Support surcharge will be equal to your instance pricing for these versions.\" AWS, OpenSearch Service FAQ: \"Once you upgrade your domain to a newer version under Standard Support, you will stop being billed for Extended Support.\"",
+      "impact": "medium",
+      "source_url": "https://aws.amazon.com/opensearch-service/pricing/",
+      "category": "Search",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "tier": "OpenSearch Service Extended Support",
+      "tier_direction": "unchanged"
+    },
+    {
+      "vendor": "AWS",
+      "change_type": "product_deprecated",
+      "date": "2027-11-07",
+      "summary": "After November 7, 2027, Amazon OpenSearch Service isolates every domain still running Elasticsearch 1.5, 2.3, 5.1, 5.3, 5.5, 6.0, 6.2, 6.3, 6.4, 6.5, 6.7, 7.1, 7.4, 7.7 or 7.8, or OpenSearch 1.0, 1.1, 1.2, 2.3, 2.5, 2.7 or 2.9. Isolated domains can no longer be accessed. AWS keeps their data for at least 30 days. Data must be restored into a new domain on a supported version. New domains cannot be created on these versions after that date. Since November 7, 2026, these domains have paid an Extended Support surcharge equal to their instance price, doubling the cost. Elasticsearch 1.5 and 2.3 domains cannot be upgraded in place. Upgrading before November 7, 2027 stops the surcharge and avoids isolation.",
+      "what_ends": "Amazon OpenSearch Service domains on Elasticsearch 1.5, 2.3, 5.1, 5.3, 5.5, 6.0, 6.2, 6.3, 6.4, 6.5, 6.7, 7.1, 7.4, 7.7 and 7.8, and OpenSearch 1.0, 1.1, 1.2, 2.3, 2.5, 2.7 and 2.9",
+      "previous_state": "Amazon OpenSearch Service domains on these versions run normally under paid Extended Support and receive critical security patches.",
+      "current_state": "AWS, OpenSearch Service FAQ (read 2026-11-15), Extended Support: \"After November 7, 2027, domains on these versions will be isolated.\" \"Domains running unsupported versions will be isolated and data preserved for at least 30 days. Isolated domains can no longer be accessed, and you will have to restore data into a new domain running a supported version.\" \"new domain creation will no longer be available after Extended Support ends for a version.\" \"When you are moving from legacy versions like ES 1.5 or ES 2.3, we do not support in-place upgrades.\" AWS, What is Amazon OpenSearch Service?, Standard and extended support: \"Updated End of Extended Support\" November 7, 2027 for Elasticsearch versions 1.5 and 2.3, 5.1 to 5.5, 6.0 to 6.7 and 7.1 to 7.8, and OpenSearch versions 1.0 to 1.2 and 2.3 to 2.9.",
+      "impact": "medium",
+      "source_url": "https://aws.amazon.com/opensearch-service/faqs/",
+      "category": "Search",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
     }
   ]
 }
