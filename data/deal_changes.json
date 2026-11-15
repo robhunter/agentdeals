@@ -20387,6 +20387,22 @@
       "recorded_date": "2026-11-15",
       "date_source": "vendor_page",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "Google App Engine",
+      "change_type": "product_deprecated",
+      "date": "2027-01-31",
+      "summary": "Google decommissions the first-generation runtimes of the App Engine standard environment, Python 2.7, Java 8, PHP 5.5 and Go 1.11, on January 31, 2027. After that date, Google says apps still on a decommissioned runtime may be disabled without further notice. Apps on these four runtimes have not been deployable since January 31, 2026: they cannot be deployed or redeployed, even in organizations that had re-enabled deployments with an organization policy, and their project configuration cannot be updated. Until January 31, 2027, apps already deployed keep running and receiving traffic. To keep an app running, migrate it to a second-generation App Engine runtime or to Cloud Run. App Engine's second-generation runtimes are not affected by this date.",
+      "what_ends": "Python 2.7, Java 8, PHP 5.5 and Go 1.11 apps on Google App Engine standard (first-generation runtimes)",
+      "previous_state": "Apps on App Engine standard's first-generation runtimes (Python 2.7, Java 8, PHP 5.5 and Go 1.11) keep running and receiving traffic, but cannot be deployed or redeployed.",
+      "current_state": "Google Cloud, App Engine \"Runtime support schedule\" (last updated 2026-11-10, read 2026-11-15): Python 2.7 (python27) and Java 8 (java8): end of support 2024-01-31, deprecated 2026-01-31, decommissioned 2027-01-31. PHP 5.5 (php55) and Go 1.11 (go111): end of support 2024-01-30, deprecated 2026-01-31, decommissioned 2027-01-31. App Engine \"Runtime lifecycle\" (last updated 2026-11-10): \"Applications that continue to use a decommissioned runtime may be disabled without further notice. You must choose a more up-to-date runtime to deploy your application.\" Running existing workloads: Deprecated \"Yes\", Decommissioned \"May be disabled\". App Engine long-term support overview (last updated 2026-11-11): \"The App Engine first-generation legacy runtimes, such as Python 2.7, Java 8, Go 1.11, and PHP 5.5 runtimes have been deprecated on January 31, 2026. You won't be able to deploy these runtimes, even if your organization previously used an organization policy to re-enable deployments of legacy runtimes. Your existing applications will continue to run and receive traffic after their deprecation date.\"",
+      "impact": "high",
+      "source_url": "https://cloud.google.com/appengine/docs/standard/lifecycle/support-schedule",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
     }
   ]
 }
