@@ -7,6 +7,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawn, type ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { retryLocalGets } from "./retry-local-get.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -42,10 +43,11 @@ function startServer(env: Record<string, string> = {}): Promise<{ proc: ChildPro
 const stripHost = (u: string) => u.replace(/^https?:\/\/[^/]+/, "");
 
 async function everyPublishedPath(base: string): Promise<string[]> {
-  const index = await (await fetch(`${base}/sitemap.xml`)).text();
+  const request = retryLocalGets(base);
+  const index = await (await request(`${base}/sitemap.xml`)).text();
   const paths: string[] = [];
   for (const m of index.matchAll(/<loc>([^<]+)<\/loc>/g)) {
-    const xml = await (await fetch(`${base}${stripHost(m[1])}`)).text();
+    const xml = await (await request(`${base}${stripHost(m[1])}`)).text();
     for (const loc of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) paths.push(stripHost(loc[1]));
   }
   for (const extra of ["/", "/hosting-pricing", "/disclosure", "/referral-programs"]) {
@@ -59,12 +61,13 @@ async function everyPublishedPath(base: string): Promise<string[]> {
 }
 
 async function fetchAll(base: string, paths: string[], concurrency = 12): Promise<Map<string, string>> {
+  const request = retryLocalGets(base);
   const bodies = new Map<string, string>();
   let cursor = 0;
   const worker = async () => {
     while (cursor < paths.length) {
       const p = paths[cursor++];
-      bodies.set(p, await (await fetch(`${base}${p}`)).text());
+      bodies.set(p, await (await request(`${base}${p}`)).text());
     }
   };
   await Promise.all(Array.from({ length: concurrency }, worker));
