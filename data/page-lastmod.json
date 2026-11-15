@@ -840,7 +840,7 @@
       "changed": "2026-11-15"
     },
     "/azure-free-tier-2026": {
-      "hash": "0fb26bc8706f1de7",
+      "hash": "31d3e27c72f62f37",
       "changed": "2026-11-15"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -1366,7 +1366,7 @@
       "changed": "2026-11-15"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "73f2cae6bcf5894e",
+      "hash": "9baa1c7953591d3c",
       "changed": "2026-11-15"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -2717,7 +2717,7 @@
       "changed": "2026-11-15"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "eae3b37d77e09ec2",
+      "hash": "dfccfcda413ee841",
       "changed": "2026-11-15"
     },
     "/database-pricing": {
@@ -3353,7 +3353,7 @@
       "changed": "2026-11-13"
     },
     "/gcp-free-tier-2026": {
-      "hash": "e9f1bc049d9714b9",
+      "hash": "1755c4f43b4fff53",
       "changed": "2026-11-15"
     },
     "/gemini-api-pricing-2026": {
@@ -3715,7 +3715,7 @@
       "changed": "2026-11-14"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "03fa785e9ff6f0ab",
+      "hash": "65af876403633601",
       "changed": "2026-11-15"
     },
     "/setup": {
@@ -4483,7 +4483,7 @@
       "changed": "2026-11-15"
     },
     "/vendor/bismuth-cloud": {
-      "hash": "69f173dd9cf1fece",
+      "hash": "01cc84db5ec948b8",
       "changed": "2026-11-15"
     },
     "/vendor/bitbucket-pipelines": {
@@ -4822,7 +4822,7 @@
       "daily": true
     },
     "/vendor/claw-cloud": {
-      "hash": "d5e0411975f246e7",
+      "hash": "5652dbd1839cca2b",
       "changed": "2026-11-15"
     },
     "/vendor/clerk": {
@@ -5218,7 +5218,7 @@
       "changed": "2026-11-15"
     },
     "/vendor/cstate": {
-      "hash": "dba0b0fb21f0c021",
+      "hash": "8f8b3855a4b04444",
       "changed": "2026-11-15"
     },
     "/vendor/cube": {
@@ -5624,7 +5624,7 @@
       "changed": "2026-11-15"
     },
     "/vendor/engagespot-co": {
-      "hash": "7d500a4cfca348f9",
+      "hash": "97851c25a26d9876",
       "changed": "2026-11-15"
     },
     "/vendor/ente": {
@@ -5640,11 +5640,11 @@
       "changed": "2026-11-15"
     },
     "/vendor/etlr": {
-      "hash": "1b16ffa988526361",
+      "hash": "0926295e64f84d02",
       "changed": "2026-11-15"
     },
     "/vendor/evernote": {
-      "hash": "49248e930c4b54d1",
+      "hash": "856814497e25f50a",
       "changed": "2026-11-15"
     },
     "/vendor/everystep-automation-com": {
@@ -6189,7 +6189,7 @@
       "daily": true
     },
     "/vendor/google-vertex-ai-agent-engine": {
-      "hash": "17633f477c699800",
+      "hash": "bb9ebab2a4e66779",
       "changed": "2026-11-15"
     },
     "/vendor/goreportcard-com": {
@@ -6378,7 +6378,7 @@
       "changed": "2026-11-15"
     },
     "/vendor/hosting-checker": {
-      "hash": "73fc374114a5925d",
+      "hash": "b3fc94f8bdffce8a",
       "changed": "2026-11-15"
     },
     "/vendor/hotjar": {
@@ -6815,7 +6815,7 @@
       "daily": true
     },
     "/vendor/langtrace": {
-      "hash": "cc5fb057625a296a",
+      "hash": "35fefa1ae1e638ea",
       "changed": "2026-11-15"
     },
     "/vendor/langwatch": {
@@ -7333,7 +7333,7 @@
       "daily": true
     },
     "/vendor/moss-sh": {
-      "hash": "8a358ae819d1e6f7",
+      "hash": "7b5b0bf4f09fbc5e",
       "changed": "2026-11-15"
     },
     "/vendor/mossaik": {
@@ -7956,7 +7956,7 @@
       "changed": "2026-11-15"
     },
     "/vendor/proxysentry": {
-      "hash": "0085b4b0c9f9ee9a",
+      "hash": "9cf4c6f4f6b4c999",
       "changed": "2026-11-15"
     },
     "/vendor/public-cloud-threat-intelligence": {
@@ -8581,7 +8581,7 @@
       "daily": true
     },
     "/vendor/soos": {
-      "hash": "b331fe193b079677",
+      "hash": "455feb1f5ece4bbc",
       "changed": "2026-11-15"
     },
     "/vendor/sourceforge": {
@@ -8880,7 +8880,7 @@
       "changed": "2026-11-15"
     },
     "/vendor/teaminal": {
-      "hash": "350fbcc6dae85073",
+      "hash": "0cd606bbe2559b6a",
       "changed": "2026-11-15"
     },
     "/vendor/teamplify": {
@@ -9363,7 +9363,7 @@
       "changed": "2026-11-15"
     },
     "/vendor/volaryddns": {
-      "hash": "764615abfd237307",
+      "hash": "3d4e575a89c82c60",
       "changed": "2026-11-15"
     },
     "/vendor/volume": {
@@ -9406,7 +9406,7 @@
       "changed": "2026-11-15"
     },
     "/vendor/wdrfree-svg": {
-      "hash": "fa6ecb6ca514b109",
+      "hash": "455b5c338f45b106",
       "changed": "2026-11-15"
     },
     "/vendor/we-team": {
@@ -9496,7 +9496,7 @@
       "changed": "2026-11-15"
     },
     "/vendor/whitespace": {
-      "hash": "2ab35b4d6212a69e",
+      "hash": "94e75941fc21f342",
       "changed": "2026-11-15"
     },
     "/vendor/windmill-dev": {
