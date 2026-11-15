@@ -81,7 +81,7 @@ function queuedRequests() {
     String(entry.id) !== process.env.GITHUB_RUN_ID && entry.event === "workflow_dispatch" &&
     entry.head_branch === "main" && entry.path === ".github/workflows/merge-reviewed.yml" &&
     ["queued", "pending", "waiting", "requested", "in_progress"].includes(entry.status) &&
-    Number.isFinite(Date.parse(entry.created_at)))
+    Number.isFinite(Date.parse(entry.created_at)) && Number.isInteger(entry.run_attempt) && entry.run_attempt > 0)
     .sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at) || a.id - b.id);
   const seen = new Set([number]);
   const requests = [];
@@ -94,13 +94,31 @@ function queuedRequests() {
     }
     try {
       const pr = reviewedPullRequest(request);
-      requests.push({ ...request, pr, runId: entry.id });
+      requests.push({ ...request, pr, runId: entry.id, runAttempt: entry.run_attempt });
       seen.add(request.number);
     } catch (error) {
       console.error(`Leaving queued pull request ${request.number} for its own turn: ${error.message}`);
     }
   }
   return requests;
+}
+
+function validateQueuedRequest(request) {
+  if (!request.runId) return;
+  const entry = api(`actions/runs/${request.runId}`);
+  const input = requestFromTitle(entry.display_title);
+  if (entry.id !== request.runId || entry.run_attempt !== request.runAttempt || entry.event !== "workflow_dispatch" ||
+      entry.head_branch !== "main" || entry.path !== ".github/workflows/merge-reviewed.yml" ||
+      !["queued", "pending", "waiting", "requested", "in_progress"].includes(entry.status) ||
+      input?.number !== request.number || input?.expectedHead !== request.expectedHead || input?.reviewedAt !== request.reviewedAt) {
+    throw new Error(`Queued publication ${request.runId} was withdrawn or changed.`);
+  }
+  if (entry.status === "in_progress") {
+    const jobs = api(`actions/runs/${entry.id}/jobs?filter=latest&per_page=100`, true).flatMap((page) => page.jobs);
+    if (!jobs.some((job) => job.name === "publish" && ["queued", "pending", "waiting", "requested"].includes(job.status))) {
+      throw new Error(`Queued publication ${request.runId} no longer has a waiting publication job.`);
+    }
+  }
 }
 
 function record(message) {
@@ -130,6 +148,7 @@ run("git", ["config", "user.email", "41898282+github-actions[bot]@users.noreply.
 function testCandidate(requests) {
   let candidate = base;
   for (const request of requests) {
+    validateQueuedRequest(request);
     reviewedPullRequest(request);
     run("git", ["fetch", "origin", request.expectedHead]);
     const tree = run("git", ["merge-tree", "--write-tree", candidate, request.expectedHead]);
@@ -151,7 +170,10 @@ function testCandidate(requests) {
     run("node", ["scripts/test-marked-conditions.mjs"], { cwd, stdio: "inherit", env: suiteEnv });
     if (run("git", ["rev-parse", "HEAD"], { cwd }) !== candidate) throw new Error("The suite changed its publication commit.");
     run("git", ["diff", "--exit-code", "HEAD", "--"], { cwd });
-    for (const request of requests) reviewedPullRequest(request);
+    for (const request of requests) {
+      reviewedPullRequest(request);
+      validateQueuedRequest(request);
+    }
     return { candidate, tree, requests };
   } catch (error) {
     record(`Publication candidate ${candidate}, tree ${tree}, refused: ${error.message}`);
@@ -173,7 +195,7 @@ if (additional.length) {
 if (!tested) tested = testCandidate([primary]);
 run("bash", [fileURLToPath(new URL("./push-tested-tree.sh", import.meta.url)), tested.candidate, tested.tree], { stdio: "inherit" });
 for (const request of tested.requests) {
-  record(`Published https://github.com/${repository}/pull/${request.number} as ${tested.candidate}; complete regular and marked-condition suites read tree ${tested.tree}. Reviewed head ${request.expectedHead}; original workflow run ${request.runId ?? process.env.GITHUB_RUN_ID ?? "local"}.`);
+  record(`Published https://github.com/${repository}/pull/${request.number} as ${tested.candidate}; complete regular and marked-condition suites read tree ${tested.tree}. Reviewed head ${request.expectedHead}; original workflow run ${request.runId ?? process.env.GITHUB_RUN_ID ?? "local"}, attempt ${request.runAttempt ?? process.env.GITHUB_RUN_ATTEMPT ?? "local"}.`);
 }
 let dispatchFailed = false;
 for (const workflow of ["tests.yml", "page-lastmod.yml", "llm-api-readme.yml"]) {

@@ -90,7 +90,9 @@ publishes that exact commit using a normal fast-forward push. A conflicting merg
 unexpected push refuses publication; it never substitutes a different merge tree.
 Each publication turn also reads waiting reviewed requests from their workflow run names.
 It checks every head and review boundary independently, merges eligible heads in arrival
-order and runs both complete suites on the final combined tree. One fast-forward push
+order and runs both complete suites on the final combined tree. Queued run inputs,
+attempt numbers and waiting states are checked again before merging and after testing;
+withdrawn requests are excluded. One fast-forward push
 publishes that tested tree with each reviewed head retained in its merge ancestry.
 If the combined candidate conflicts, fails its suites or no longer passes review checks,
 a separate clean worktree tests only the original request before publication. Failed

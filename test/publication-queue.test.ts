@@ -270,7 +270,7 @@ function batchFixture() {
     const reviewedAt = new Date(Date.parse(f.reviewedAt) - (37 - number) * 1000).toISOString();
     heads.push(head);
     prs[String(number)] = { ...f.pr, head: { ...f.pr.head, sha: head }, title: `Change ${number}` };
-    runs.push({ id: number, event: "workflow_dispatch", head_branch: "main", path: ".github/workflows/merge-reviewed.yml",
+    runs.push({ id: number, run_attempt: 1, event: "workflow_dispatch", head_branch: "main", path: ".github/workflows/merge-reviewed.yml",
       status: "pending", created_at: new Date(Date.parse(f.reviewedAt) + number * 10).toISOString(),
       display_title: `reviewed-pr:${number}:${head}:${reviewedAt}` });
   }
@@ -291,7 +291,8 @@ if (args[0] === "api" && path.includes("actions/workflows/")) {
   const status = new URL("https://api.example/" + path).searchParams.get("status");
   const runs = state.runs.filter(run => run.status === status);
   response = [{ workflow_runs: runs.slice(0, 1) }, { workflow_runs: runs.slice(1) }];
-} else if (args[0] === "api" && path.includes("/jobs?")) response = [{ jobs: state.jobs }];
+} else if (args[0] === "api" && /\\/actions\\/runs\\/[0-9]+$/.test(path)) response = state.runs.find(run => String(run.id) === path.split("/").at(-1));
+else if (args[0] === "api" && path.includes("/jobs?")) response = [{ jobs: state.jobs }];
 else if (args[0] === "api" && /\\/pulls\\/(35|36)$/.test(path)) response = state.prs[path.split("/").at(-1)];
 else if (args[0] === "api" && /\\/pulls\\/(35|36)\\/(comments|reviews)\\?/.test(path)) {
   const number = path.match(/pulls\\/(35|36)/)[1];
@@ -327,6 +328,15 @@ if (args[0] === "test" && existsSync("35.txt")) {
     const state = JSON.parse(readFileSync(${JSON.stringify(metadata)}, "utf8"));
     if (mode === "extra-head-changed") state.prs["35"].head.sha = "a".repeat(40);
     else state.prs["35"].updated_at = new Date().toISOString();
+    writeFileSync(${JSON.stringify(metadata)}, JSON.stringify(state));
+  }
+  if (["extra-canceled", "extra-dispatch-changed", "extra-rerun", "extra-job-started"].includes(mode)) {
+    const state = JSON.parse(readFileSync(${JSON.stringify(metadata)}, "utf8"));
+    const run = state.runs.find(run => run.id === 35);
+    if (mode === "extra-canceled") { run.status = "completed"; run.conclusion = "cancelled"; }
+    if (mode === "extra-dispatch-changed") run.display_title += "-changed";
+    if (mode === "extra-rerun") run.run_attempt = 2;
+    if (mode === "extra-job-started") { run.status = "in_progress"; state.jobs[0].status = "in_progress"; }
     writeFileSync(${JSON.stringify(metadata)}, JSON.stringify(state));
   }
   if (mode === "dirty-batch") writeFileSync("35.txt", "unreviewed\\n");
@@ -388,7 +398,7 @@ describe("reviewed publications share one tested merge tree", () => {
     } finally { rmSync(f.root, { recursive: true, force: true }); }
   });
 
-  for (const mode of ["batch-red", "batch-residue", "marked-batch-red", "dirty-batch", "batch-head-moved", "extra-head-changed", "extra-edited", "discovery-red"]) {
+  for (const mode of ["batch-red", "batch-residue", "marked-batch-red", "dirty-batch", "batch-head-moved", "extra-head-changed", "extra-edited", "extra-canceled", "extra-dispatch-changed", "extra-rerun", "extra-job-started", "discovery-red"]) {
     it(`publishes only the original request after ${mode}`, () => {
       const f = batchFixture();
       try {
