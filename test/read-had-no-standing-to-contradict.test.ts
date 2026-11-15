@@ -308,7 +308,7 @@ describe("the pages that describe a read our own refusal voided", () => {
     assertPopulationFloor(voidedByItsOwnRefusal.length, 17, "records whose last read its own refusal voided");
     assertPopulationFloor(
       stillContradicted.length,
-      CONTRADICTED_RECORDS_WHOSE_PAGES_ARE_READ,
+      1,
       "records whose last read still contradicts the terms",
     );
   });
