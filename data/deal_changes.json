@@ -20112,6 +20112,33 @@
       "recorded_date": "2026-11-15",
       "date_source": "vendor_page",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "GitHub Actions",
+      "change_type": "product_deprecated",
+      "date": "2027-04-17",
+      "summary": "GitHub Actions retires its Ubuntu 22.04 runner images, the ubuntu-22.04 and ubuntu-22.04-arm labels, on April 17, 2027, when workflow jobs that use them are terminated with an error. Before that, jobs on these labels fail during brownouts on March 23, March 30, April 6 and April 13, 2027, each from 14:00 UTC to the end of the day UTC. The deprecation began on September 17, 2026, and queue times can be longer at peak hours. Workflows should update to ubuntu-24.04, ubuntu-26.04 or ubuntu-latest, and ubuntu-24.04-arm or ubuntu-26.04-arm for Arm.",
+      "what_ends": "GitHub Actions' Ubuntu 22.04 runner images (ubuntu-22.04, ubuntu-22.04-arm)",
+      "previous_state": "GitHub Actions workflows could run jobs on the ubuntu-22.04 and ubuntu-22.04-arm runner labels.",
+      "current_state": "GitHub's runner-images announcement (issue 14254, posted 2026-06-16, read 2026-11-15): \"Deprecation will begin on September 17th, 2026 and the images will be fully unsupported by April 17th,, 2027 for GitHub Actions and Azure DevOps.\" \"To raise awareness of the upcoming removal, we will temporarily fail jobs using Ubuntu 22.04 and Ubuntu 22.04 arm64.\" Brownouts: \"March 23, 14:00 UTC\", \"March 30, 14:00 UTC\", \"April 6, 14:00 UTC\", \"April 13, 14:00 UTC\", each to 00:00 UTC. \"Workflows using the ubuntu-22.04, ubuntu-22.04-arm image labels will be terminated with an error.\"",
+      "impact": "medium",
+      "source_url": "https://github.com/actions/runner-images/issues/14254",
+      "category": "CI/CD",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "announced_on": "2026-06-16",
+      "shutdown_stages": [
+        {
+          "date": "2027-03-23",
+          "label": "first brownout: jobs on these labels fail from 14:00 UTC"
+        },
+        {
+          "date": "2027-04-17",
+          "label": "jobs on these labels are terminated with an error"
+        }
+      ]
     }
   ]
 }
