@@ -164,7 +164,7 @@ function testCandidate(requests) {
     run("git", ["worktree", "add", "--detach", cwd, candidate]);
     run("npm", ["ci"], { cwd, stdio: "inherit" });
     run("npm", ["run", "build"], { cwd, stdio: "inherit" });
-    const suiteEnv = { ...process.env, TZ: "UTC" };
+    const suiteEnv = { ...process.env, TZ: "UTC", POPULATION_FLOOR_BASE: base };
     delete suiteEnv.TEST_SHARD;
     run("npm", ["test"], { cwd, stdio: "inherit", env: suiteEnv });
     run("node", ["scripts/test-marked-conditions.mjs"], { cwd, stdio: "inherit", env: suiteEnv });

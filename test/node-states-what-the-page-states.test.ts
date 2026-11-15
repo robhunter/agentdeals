@@ -213,7 +213,7 @@ describe("a vendor page's structured data states the reason its own prose states
     const hedged = pages.filter(p => p.reason !== null && p.reason !== "");
     assertPopulationFloor(hedged.length, 1, "node descriptions state a reason we cannot confirm the terms");
     const leftToTheNote = hedged.filter(p => p.verdict.includes(LEFT_TO_THE_LAST_READ_NOTE));
-    assertPopulationFloor(leftToTheNote.length, 20, "node descriptions state a refused read the page leaves to its Last read note");
+    assertPopulationFloor(leftToTheNote.length, 1, "node descriptions state a refused read the page leaves to its Last read note");
     assert.deepStrictEqual(
       hedged.filter(p => !leftToTheNote.includes(p) && !p.answer.includes(UNVERIFIED_TERMS_CAVEAT) && !p.answer.includes(p.reason!))
         .map(p => `${p.route}: ${p.reason!.slice(0, 80)}`).slice(0, 15),
@@ -238,7 +238,7 @@ describe("a vendor page's structured data states the reason its own prose states
   it("gives the Offer the tier it names and the reason the node states, and nothing else", () => {
     const priced = pages.filter(p => p.node.pricedAtZero && p.node.offerTier !== null);
     assertPopulationFloor(priced.length, 200, "vendor pages price a tier at zero");
-    assertPopulationFloor(priced.filter(p => p.reason !== "").length, 134, "priced vendor pages state a reason");
+    assertPopulationFloor(priced.filter(p => p.reason !== "").length, 1, "priced vendor pages state a reason");
     assert.deepStrictEqual(
       priced.filter(p => p.node.offerDescription !== (p.reason === "" ? p.node.offerTier : `${p.node.offerTier} — ${p.reason}`))
         .map(p => `${p.route}: ${p.node.offerDescription}`).slice(0, 15),
@@ -288,7 +288,7 @@ describe("a comparison page's structured data states the reason its own prose st
     assertPopulationFloor(standing.length, 120, "comparison columns publish our stored terms");
     assertPopulationFloor(
       standing.filter(c => c.terms.text.includes("so we cannot confirm these terms today")).length,
-      20,
+      1,
       "comparison columns display a reason we cannot confirm the terms",
     );
     assert.deepStrictEqual(

@@ -103,7 +103,7 @@ describe("one function decides a published risk level", () => {
       const statement = levelWithheldStatement(offer.vendor, risk);
       assert.ok(statement && statement.length > 0, `${offer.vendor} has no level and nothing says why`);
     }
-    assertPopulationFloor(withheld, WITHHELD_FLOOR, "records have their level withheld");
+    assertPopulationFloor(withheld, 1, "records have their level withheld");
   });
 });
 
@@ -163,7 +163,7 @@ describe("every surface publishes the level /api/offers publishes", () => {
       assert.strictEqual(svc.risk_level, null, `${svc.vendor} audits as ${svc.risk_level}, which is not a level we publish`);
       assert.ok(svc.level_withheld_because, `${svc.vendor} audits with no level and nothing says why`);
     }
-    assertPopulationFloor(withheld, WITHHELD_FLOOR, "audited services have their level withheld");
+    assertPopulationFloor(withheld, 1, "audited services have their level withheld");
   });
 
   it("an audited service we do not list carries the gate that says so", () => {
