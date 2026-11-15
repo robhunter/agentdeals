@@ -2,8 +2,10 @@ import { appendFileSync, existsSync, readFileSync } from "node:fs";
 
 const HELP = `Print how close every population floor in the suite is to going red.
 
-A floor is refused when it sits inside the quarter below the population it measures, so the
-margin is the number of records that can leave before the floor stops clearing its headroom.
+A floor is refused when its population falls below its stated minimum, so the
+margin is the number of records that can leave before that happens.
+New or changed floors must also leave 25% authoring headroom against their Git base.
+Share guards retain their runtime headroom check.
 A floor with a margin of zero goes red on the day the data it guards shrinks by one, which is
 the day a scheduled run does its job.
 
@@ -71,7 +73,7 @@ for (const r of records) {
       subject: r.subject,
       states: `a floor of ${r.floor}`,
       measured: `${r.observed}`,
-      margin: r.floor <= 1 ? Infinity : r.observed - Math.ceil((r.floor * 4) / 3),
+      margin: r.floor <= 1 ? Infinity : r.observed - r.floor,
       clearsAt: `${Math.floor((r.observed * 3) / 4)}`,
     });
   } else if (typeof r.share === "number") {
@@ -92,7 +94,7 @@ const byMargin = [...guards].sort((a, b) => a.margin - b.margin || a.site.locale
 const narrow = byMargin.filter((g) => g.margin <= WITHIN);
 
 const table = [
-  "| margin | assertion | states | measured | clears at | subject |",
+  "| margin | assertion | states | measured | authoring ceiling | subject |",
   "|---:|---|---|---|---|---|",
   ...narrow.map(
     (g) => `| ${g.margin} | \`${g.site}\` | ${g.states} | ${g.measured} | ${g.clearsAt} | ${g.subject} |`,

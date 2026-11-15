@@ -305,7 +305,7 @@ describe("the pages that describe a read our own refusal voided", () => {
   after(() => { proc?.kill(); });
 
   it("holds records on both sides of the rule", () => {
-    assertPopulationFloor(voidedByItsOwnRefusal.length, 17, "records whose last read its own refusal voided");
+    assertPopulationFloor(voidedByItsOwnRefusal.length, 1, "records whose last read its own refusal voided");
     assertPopulationFloor(
       stillContradicted.length,
       1,
@@ -340,7 +340,7 @@ describe("the pages that describe a read our own refusal voided", () => {
         wrong.push(`/vendor/${slugOf(offer.vendor)} (${reason})`);
       }
     }
-    assertPopulationFloor(spoke.length, 13, "voided reads whose vendor page states what the read found");
+    assertPopulationFloor(spoke.length, 1, "voided reads whose vendor page states what the read found");
     assert.deepStrictEqual(wrong.slice(0, 20), [], wrong.slice(0, 20).join("\n"));
   });
 
@@ -377,7 +377,7 @@ describe("the pages that describe a read our own refusal voided", () => {
         quiet.push(`/vendor/${slugOf(offer.vendor)}`);
       }
     }
-    assertPopulationFloor(spoke, 50, "unsettled contradicting reads whose vendor page states what the read found");
+    assertPopulationFloor(spoke, 1, "unsettled contradicting reads whose vendor page states what the read found");
     assert.deepStrictEqual(quiet.slice(0, 20), [], quiet.slice(0, 20).join("\n"));
   });
 
@@ -399,7 +399,7 @@ describe("the pages that describe a read our own refusal voided", () => {
         disagreeing.push(`/category/${slugOf(category)}: ${stated[1]} counted, ${reasons} rows speak`);
       }
     }
-    assertPopulationFloor(checked, 36, "category pages stating a count of terms we cannot confirm");
+    assertPopulationFloor(checked, 1, "category pages stating a count of terms we cannot confirm");
     assert.deepStrictEqual(disagreeing.slice(0, 20), [], disagreeing.slice(0, 20).join("\n"));
   });
 

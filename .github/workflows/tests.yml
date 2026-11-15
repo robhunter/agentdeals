@@ -25,6 +25,8 @@ jobs:
         shard: [1, 2, 3]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -42,6 +44,7 @@ jobs:
           POPULATION_FLOOR_LOG: /tmp/population-floors.jsonl
           SUITE_TIME_LIMIT_MINUTES: 45
           TEST_SHARD: ${{ matrix.shard }}/3
+          POPULATION_FLOOR_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
         run: |
           set +e
           timeout --kill-after=1m "${SUITE_TIME_LIMIT_MINUTES}m" npm test
@@ -67,6 +70,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: "24.22.3"
@@ -74,6 +79,8 @@ jobs:
       - run: npm ci
       - run: npm run build
       - name: Check mixed conditions on a temporary catalogue
+        env:
+          POPULATION_FLOOR_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
         run: node scripts/test-marked-conditions.mjs
 
   test:

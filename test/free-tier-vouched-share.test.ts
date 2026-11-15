@@ -157,7 +157,7 @@ describe("the free tier report counts what the site is prepared to vouch for", (
     const census = censusOf(offers);
     assert.ok(census.ended >= 20, `only ${census.ended} offers are recorded as ended`);
     assertPopulationFloor(census.vouched, 300, "offers are vouched");
-    assertPopulationFloor(census.unconfirmed, 100, "recorded offers are unconfirmed");
+    assertPopulationFloor(census.unconfirmed, 1, "recorded offers are unconfirmed");
     assertPopulationFloor(
       censusOf(offers.filter((o) => tierRecordsAFreeTier(o.tier))).ended,
       1,

@@ -41,21 +41,21 @@ const floor = (site: string, floorValue: number, observed: number) => ({
 });
 
 describe("#1580 how close a floor is to going red is readable where its author is", () => {
-  it("counts the records that can leave before a floor stops clearing its headroom", () => {
-    const run = report([floor("test/a.test.ts:10", 80, 111)]);
+  it("counts the records that can leave before a population falls below its floor", () => {
+    const run = report([floor("test/a.test.ts:10", 80, 111)], "--within", "40");
     assert.strictEqual(run.status, 0);
-    assert.match(run.stdout, /\| 4 \| `test\/a\.test\.ts:10` \| a floor of 80 \| 111 \| 83 \|/);
+    assert.match(run.stdout, /\| 31 \| `test\/a\.test\.ts:10` \| a floor of 80 \| 111 \| 83 \|/);
   });
 
   it("puts a floor that goes red on the next record that leaves at a margin of zero", () => {
-    const run = report([floor("test/a.test.ts:10", 45, 60)]);
+    const run = report([floor("test/a.test.ts:10", 45, 45)]);
     assert.match(run.stdout, /1 floors are within 10 records of going red, 1 of them on the next record that leaves/);
     assert.match(run.stdout, /\| 0 \| `test\/a\.test\.ts:10` \|/);
   });
 
-  it("reads a floor already inside its headroom as a negative margin rather than as clear", () => {
-    const run = report([floor("test/a.test.ts:10", 80, 102)]);
-    assert.match(run.stdout, /\| -5 \| `test\/a\.test\.ts:10` \| a floor of 80 \| 102 \| 76 \|/);
+  it("reads a population below its floor as a negative margin rather than as clear", () => {
+    const run = report([floor("test/a.test.ts:10", 80, 75)]);
+    assert.match(run.stdout, /\| -5 \| `test\/a\.test\.ts:10` \| a floor of 80 \| 75 \| 56 \|/);
   });
 
   it("leaves a floor of one out of the ranking, because it says the population is not empty", () => {
@@ -80,13 +80,13 @@ describe("#1580 how close a floor is to going red is readable where its author i
   });
 
   it("names only the floors inside the window it was given", () => {
-    const run = report([floor("test/near.test.ts:1", 45, 60), floor("test/far.test.ts:2", 10, 1572)], "--within", "3");
+    const run = report([floor("test/near.test.ts:1", 45, 47), floor("test/far.test.ts:2", 10, 1572)], "--within", "3");
     assert.match(run.stdout, /test\/near\.test\.ts:1/);
     assert.doesNotMatch(run.stdout, /test\/far\.test\.ts:2/);
   });
 
   it("writes the same table where a run summary will show it", () => {
-    const run = report([floor("test/a.test.ts:10", 45, 60)]);
+    const run = report([floor("test/a.test.ts:10", 45, 45)]);
     assert.match(run.summary, /## Population floors/);
     assert.match(run.summary, /\| 0 \| `test\/a\.test\.ts:10` \|/);
   });
