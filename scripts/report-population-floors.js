@@ -94,7 +94,7 @@ const byMargin = [...guards].sort((a, b) => a.margin - b.margin || a.site.locale
 const narrow = byMargin.filter((g) => g.margin <= WITHIN);
 
 const table = [
-  "| margin | assertion | states | measured | clears at | subject |",
+  "| margin | assertion | states | measured | authoring ceiling | subject |",
   "|---:|---|---|---|---|---|",
   ...narrow.map(
     (g) => `| ${g.margin} | \`${g.site}\` | ${g.states} | ${g.measured} | ${g.clearsAt} | ${g.subject} |`,

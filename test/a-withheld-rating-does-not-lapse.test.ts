@@ -468,7 +468,7 @@ describe("the vendor pages", () => {
   it("state on every page that withholds a rating that the withholding runs on no clock", async () => {
     assertPopulationFloor(
       statingAWithholding.length,
-      1,
+      PAGES_STATING_A_WITHHELD_RATING_FLOOR,
       "vendor pages the renderer states a withheld rating on",
     );
     const quiet: string[] = [];

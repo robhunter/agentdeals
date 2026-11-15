@@ -31,7 +31,7 @@ const COVERAGE = "assertCoversPopulation";
 
 const SHARE = "assertSharesPopulation";
 
-describe("a floor over a live population states headroom it has measured", () => {
+describe("a newly authored floor over a live population states headroom it has measured", () => {
   it("passes a floor the population clears by more than a quarter", () => {
     assertPopulationFloor(1572, 300, "vendors publish a badge verdict");
   });

@@ -231,7 +231,7 @@ export function assertPopulationFloor(
       measured: `${observed}`,
       clearsAt: `${Math.floor((observed * 3) / 4)}`,
     },
-    `a floor of ${floor} leaves under ${Math.round(HEADROOM * 100)}% headroom over the ${observed} it measured — ${subject}. It goes red when this data shrinks and stays green when this data is wrong. Lower it, or state the property relative to the population it reads with assertCoversPopulation.`,
+    `a floor of ${floor} leaves under ${Math.round(HEADROOM * 100)}% headroom over the ${observed} it measured — ${subject}. New or changed floors need this margin when authored. Lower it, or state the property relative to the population it reads with assertCoversPopulation.`,
   );
 }
 
