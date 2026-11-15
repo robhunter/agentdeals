@@ -1,4 +1,5 @@
 name: Publish a reviewed pull request
+run-name: "${{ inputs.verify_queue && 'publication-queue-probe' || format('reviewed-pr:{0}:{1}:{2}', inputs.pull_request, inputs.expected_head, inputs.reviewed_at) }}"
 
 on:
   workflow_dispatch:
