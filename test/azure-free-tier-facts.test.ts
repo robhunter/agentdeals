@@ -2,11 +2,24 @@ import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
+import { readFileSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { createDocument } from "@mixmark-io/domino";
 import { fileURLToPath } from "node:url";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const { FIGURE_SOURCE_CLASS } = await import("../dist/source-citation.js");
 const { SOURCE_MARKER_IN_A_CELL } = await import("../dist/page-reviews.js");
+
+const { loadDealChanges } = await import("../dist/data.js");
+const { changeSummaryHtml } = await import("../dist/change-citation.js");
+const { changeEntryLongDateLabel } = await import("../dist/change-dates.js");
+const { changeImpactLabel } = await import("../dist/change-impact.js");
+
+const RETIREMENTS = JSON.parse(readFileSync(path.join(REPO, "test/fixtures/azure-redis-retirements.json"), "utf8"));
+const RECORD_PRODUCT_NAMES = new Set([
+  "Azure Cache for Redis", "Phi-3", "GPT-4o mini", "Founders Hub", "Cognitive Search", "Azure AI Studio",
+]);
 
 const PAGE = "/azure-free-tier-2026";
 
@@ -41,6 +54,59 @@ const WITHDRAWN: Record<string, RegExp> = {
   "a heading that calls the guide complete": /Azure Free Tier Complete Guide/,
   "a description that claims every Azure free tier service": /guide to every Azure free tier service/,
 };
+
+function escapeHtml(value: string): string {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function canonicalHtml(markup: string): string {
+  return createDocument(`<div>${markup}</div>`).querySelector("div")!.innerHTML;
+}
+
+function normalizeSpace(value: string): string {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function withoutRecordedChangeCells(markup: string, records: any[]): string {
+  const document = createDocument(markup);
+  const expected = new Set(records.map(record => JSON.stringify([
+    normalizeSpace(changeEntryLongDateLabel(record)),
+    canonicalHtml(escapeHtml(record.vendor)),
+    canonicalHtml(changeSummaryHtml(record, escapeHtml)),
+    changeImpactLabel(record.impact),
+  ])));
+  for (const id of ["changes", "upcoming-changes"]) {
+    const heading = document.getElementById(id);
+    if (heading?.tagName !== "H2") continue;
+    for (let sibling = heading.nextElementSibling; sibling && sibling.tagName !== "H2"; sibling = sibling.nextElementSibling) {
+      const tables = sibling.tagName === "TABLE" ? [sibling] : Array.from(sibling.querySelectorAll("table"));
+      for (const table of tables) {
+        const headers = Array.from(table.querySelectorAll("thead th")).map(cell => cell.textContent);
+        if (JSON.stringify(headers) !== JSON.stringify(["Date", "Service", "Change", "Impact"])) continue;
+        for (const row of Array.from(table.querySelectorAll("tbody > tr"))) {
+          const cells = Array.from(row.children);
+          if (cells.length !== 4 || cells.some(cell => cell.tagName !== "TD")) continue;
+          const key = JSON.stringify([
+            normalizeSpace(cells[0].textContent), cells[1].innerHTML,
+            cells[2].innerHTML, normalizeSpace(cells[3].textContent),
+          ]);
+          if (!expected.has(key)) continue;
+          cells[1].textContent = "";
+          cells[2].textContent = "";
+        }
+      }
+    }
+  }
+  return document.documentElement.outerHTML;
+}
+
+function withdrawnClaims(markup: string, records = loadDealChanges()): string[] {
+  const editorial = withoutRecordedChangeCells(markup, records);
+  return Object.entries(WITHDRAWN).flatMap(([claim, pattern]) => {
+    const match = (RECORD_PRODUCT_NAMES.has(pattern.source) ? editorial : markup).match(pattern);
+    return match ? [`${claim} ("${match[0]}")`] : [];
+  });
+}
 
 const CONSUMPTION_PLAN_PAGE = "https://learn.microsoft.com/en-us/azure/azure-functions/consumption-plan";
 const CONSUMPTION_PLAN_PAGE_LABEL = "learn.microsoft.com/en-us/azure/azure-functions/consumption-plan";
@@ -182,10 +248,7 @@ describe("the Azure free tier guide states Microsoft's terms as Microsoft's own 
   });
 
   it("serves none of the withdrawn claims in the guide's body, meta or structured data", () => {
-    const found = Object.entries(WITHDRAWN)
-      .filter(([, pattern]) => pattern.test(html))
-      .map(([claim, pattern]) => `${claim} ("${html.match(pattern)![0]}")`);
-    assert.deepStrictEqual(found, []);
+    assert.deepStrictEqual(withdrawnClaims(html), []);
   });
 
   it("limits the old startup amounts to the dated FAQ history", () => {
@@ -310,5 +373,105 @@ describe("the Azure free tier guide states Microsoft's terms as Microsoft's own 
 
   it("keeps the Cosmos DB and App Service rows", () => {
     assert.deepStrictEqual(rowsDifferingFrom(CONTROL_ROWS, tableAfter('id="always-free"'), "Always Free"), []);
+  });
+});
+
+
+describe("the withdrawn-claim guard distinguishes recorded changes from service claims", () => {
+  function recordTable(record: any): string {
+    return `<div><table><thead><tr><th>Date</th><th>Service</th><th>Change</th><th>Impact</th></tr></thead><tbody><tr><td>${escapeHtml(changeEntryLongDateLabel(record))}</td><td>${escapeHtml(record.vendor)}</td><td>${changeSummaryHtml(record, escapeHtml)}</td><td>${changeImpactLabel(record.impact)}</td></tr></tbody></table></div>`;
+  }
+
+  for (const name of ["Azure Cache for Redis", "Phi-3", "GPT-4o mini", "Founders Hub", "Cognitive Search", "Azure AI Studio"]) {
+    const record = { ...RETIREMENTS[0], vendor: name, summary: RETIREMENTS[0].summary.replaceAll("Azure Cache for Redis", name) };
+    for (const id of ["changes", "upcoming-changes"]) {
+      it(`allows a stored ${name} record under ${id}`, () => {
+        assert.deepStrictEqual(withdrawnClaims(`<h2 id="${id}"></h2>${recordTable(record)}`, [record]), []);
+      });
+    }
+    for (const [surface, markup] of [
+      ["body", `<p>${name}</p>`],
+      ["meta", `<meta name="description" content="${name}">`],
+      ["structured data", `<script type="application/ld+json">${JSON.stringify({ description: name })}</script>`],
+    ]) {
+      it(`rejects an editorial ${name} mention in ${surface}`, () => {
+        const page = `<h2 id="changes"></h2>${recordTable(record)}<h2></h2>${markup}`;
+        assert.strictEqual(withdrawnClaims(page, [record]).length, 1);
+      });
+    }
+  }
+
+  for (const [surface, markup] of [
+    ["body", "<p>Azure Cache for Redis is a free service.</p>"],
+    ["meta", '<meta name="description" content="Azure Cache for Redis is a free service.">'],
+    ["structured data", '<script type="application/ld+json">{"description":"Azure Cache for Redis is a free service."}</script>'],
+  ]) {
+    it(`rejects a free Redis service claim in ${surface}`, () => {
+      assert.strictEqual(withdrawnClaims(markup, RETIREMENTS).length, 1);
+    });
+  }
+
+  for (const [label, transform] of [
+    ["unknown record", (table: string) => table.replace("Microsoft retires", "Microsoft now retires")],
+    ["wrong date", (table: string) => table.replace("2027", "2029")],
+    ["wrong vendor", (table: string) => table.replace("<td>Azure</td>", "<td>Microsoft</td>")],
+    ["wrong source", (table: string) => table.replace("retirement-faq", "other-page")],
+    ["missing date", (table: string) => table.replace(/<td>[^<]+<\/td>/, "<td></td>")],
+    ["wrong headers", (table: string) => table.replace("<th>Date</th>", "<th>Service</th>")],
+    ["added claim", (table: string) => table.replace("</td></tr>", "Azure Cache for Redis is a free service.</td></tr>")],
+  ] as const) {
+    it(`retains a product-name failure for a ${label}`, () => {
+      assert.strictEqual(withdrawnClaims(`<h2 id="changes"></h2>${transform(recordTable(RETIREMENTS[0]))}`, RETIREMENTS).length, 1);
+    });
+  }
+
+  it("does not exempt a matching record outside either change table section", () => {
+    assert.strictEqual(withdrawnClaims(`<h2 id="always-free"></h2>${recordTable(RETIREMENTS[0])}`, RETIREMENTS).length, 1);
+  });
+
+  it("does not exempt another withdrawn figure inside an otherwise matching record", () => {
+    const record = { ...RETIREMENTS[0], summary: `${RETIREMENTS[0].summary} 250K` };
+    assert.strictEqual(withdrawnClaims(`<h2 id="changes"></h2>${recordTable(record)}`, [record]).length, 1);
+  });
+
+  it("serves both original retirement records and passes the same claim guard", async () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), "azure-retirements-"));
+    const file = path.join(scratch, "changes.json");
+    const records = [...loadDealChanges().filter(record => !RETIREMENTS.some((retirement: any) => retirement.vendor === record.vendor && retirement.date === record.date && retirement.summary === record.summary)), ...RETIREMENTS];
+    writeFileSync(file, JSON.stringify({ changes: records }));
+    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+      stdio: ["ignore", "ignore", "pipe"],
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: file },
+    });
+    try {
+      const address = await new Promise<string>((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error("Server startup timeout")), 30000);
+        child.stderr!.on("data", (data: Buffer) => {
+          const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+          if (match) { clearTimeout(timer); resolve(`http://localhost:${match[1]}`); }
+        });
+        child.on("error", error => { clearTimeout(timer); reject(error); });
+        child.on("exit", code => { clearTimeout(timer); reject(new Error(`Server exited with ${code}`)); });
+      });
+      const response = await fetch(`${address}${PAGE}`);
+      assert.strictEqual(response.status, 200);
+      const served = await response.text();
+      const document = createDocument(served);
+      for (const record of RETIREMENTS) {
+        const rows = Array.from(document.querySelectorAll("tbody > tr"));
+        assert.ok(rows.some(row => row.children.length === 4 && row.children[2].innerHTML === canonicalHtml(changeSummaryHtml(record, escapeHtml)) && normalizeSpace(row.children[0].textContent) === normalizeSpace(changeEntryLongDateLabel(record))));
+      }
+      assert.deepStrictEqual(withdrawnClaims(served, records), []);
+      for (const injected of [
+        served.replace("</body>", "<p>Azure Cache for Redis is a free service.</p></body>"),
+        served.replace("</head>", '<meta name="description" content="Azure Cache for Redis is a free service."></head>'),
+        served.replace("</head>", '<script type="application/ld+json">{"description":"Azure Cache for Redis is a free service."}</script></head>'),
+      ]) assert.strictEqual(withdrawnClaims(injected, records).length, 1);
+    } finally {
+      if (child.exitCode === null && child.signalCode === null) {
+        await new Promise<void>(resolve => { child.once("exit", () => resolve()); child.kill(); });
+      }
+      rmSync(scratch, { recursive: true, force: true });
+    }
   });
 });
