@@ -7,6 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
 import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
+import { retryLocalGets } from "./retry-local-get.ts";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const RETIRED_ROUTES = ["/hcp-terraform-migration", "/terraform-cloud-free-tier-removed"];
@@ -222,12 +223,12 @@ describe("LocalStack's and HCP Terraform's March 2026 changes are told as past a
 
   before(async () => {
     ({ proc: server, base } = await startServer());
-    routes = await everyRouteTheSitemapPublishes(base);
+    const request = retryLocalGets(base);
+    routes = await everyRouteTheSitemapPublishes(base, request);
     const queue = [...routes];
     const worker = async () => {
       for (let route = queue.pop(); route !== undefined; route = queue.pop()) {
-        const response = await fetch(`${base}${route}`);
-        if (!response.ok) continue;
+        const response = await request(`${base}${route}`);
         const html = await response.text();
         served.set(route, html);
         for (const sentence of [...bodyLines(html), ...structuredStrings(html)].flatMap(sentencesOf)) {
