@@ -99,7 +99,9 @@ describe("the change timelines separate announced changes from their history", (
       assert.ok(announced.length > 0);
       assert.deepEqual(announced, [...announced].sort());
       assert.ok(announced.every(date => date > today));
-      assert.ok(dates(timeline(html)).every(date => date <= today));
+      const laterDates = dates(timeline(html)).filter(date => date > today);
+      if (laterDates.length > 0) assert.match(upcoming(html), /upcoming-overflow/);
+      if (name === "fixtures") assert.deepEqual(laterDates, []);
       assert.match(upcoming(html), /class="(?:pc|chg)-upcoming-badge"/);
       assert.doesNotMatch(upcoming(html), /Undated Service/);
       for (const vendor of ["Sooner Future", "Later Future"]) if (name === "fixtures") {

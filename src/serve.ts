@@ -1,3 +1,4 @@
+import { renderUpcomingTimeline, UPCOMING_TIMELINE_END } from "./upcoming-timeline-budget.js";
 import { measuredValue, quantifiedAttributes } from "./quantity-reading.js";
 import { announcementsInWeek, weeklyAnnouncementNote, weeklyAnnouncementHeading, announcementDateLabel, WEEKLY_ANNOUNCEMENTS_INTRO } from "./weekly-announcements.js";
 import { createServer as createHttpServer, ServerResponse, type IncomingMessage } from "node:http";
@@ -49195,16 +49196,17 @@ function retirementTimelineEntries(changes: DealChange[]): ChangeTimelineEntry[]
   });
 }
 
-function buildPricingChangesPage(): string {
-  const allChanges = loadDealChanges();
+function servedPageHtml(html: string, pathname: string): string {
+  return withLedeBeforeNav(withPageGenerosityAnswer(withPageFreshness(withReviewByline(html, pathname), pathname)));
+}
+
+function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealChanges(), overflowHtml = "", indexAfterUpcoming = false): string {
   const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
   const today = new Date().toISOString().slice(0, 10);
   const currentYear = new Date().getFullYear();
 
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
-  const indexSections = changeLogSections(allChanges, today);
   const retirementEntries = retirementTimelineEntries(allChanges);
-  const sections = changeLogSections<ChangeTimelineEntry>([...allChanges, ...retirementEntries].filter(c => !isEventDated(c) || c.date <= today || isOurOwnBookkeeping(c)), today);
 
   const filterCategory: Record<string, string> = CHANGE_DIRECTION;
 
@@ -49272,6 +49274,11 @@ ${altHtml}
 
   const latest = changesTheVendorMade(trackedChanges<ChangeTimelineEntry>([...sorted, ...retirementEntries])).filter(c => c.date <= today).sort((a, b) => b.date.localeCompare(a.date)).slice(0, LATEST_PRICING_CHANGES_SHOWN);
   const upcomingChanges = countable.map(c => ({ original: c, shown: atUpcomingDate(c, today) })).filter(c => c.shown.date > today).sort((a, b) => a.shown.date.localeCompare(b.shown.date));
+  if (upcomingLimit === undefined) return renderUpcomingTimeline(upcomingChanges.map(c => c.shown), (limit, overflow, afterUpcoming) => buildPricingChangesPage(limit, allChanges, overflow, afterUpcoming), page => servedPageHtml(page, "/pricing-changes"));
+  const shownUpcoming = upcomingChanges.slice(0, upcomingLimit);
+  const omitted = new Set(upcomingChanges.slice(shownUpcoming.length).map(c => c.original));
+  const sections = changeLogSections<ChangeTimelineEntry>([...allChanges, ...retirementEntries].filter((c: ChangeTimelineEntry) => !isEventDated(c) || c.date <= today || isOurOwnBookkeeping(c) || omitted.has(c.originalRecord ?? c)), today);
+  const indexSections = changeLogSections(allChanges, today);
 
   const vendorCategories = [...new Set(sorted.map(c => c.category || "").filter(Boolean))].sort();
   const years = [...new Set(sorted.map(c => c.date.slice(0, 4)))].sort().reverse();
@@ -49563,7 +49570,7 @@ ${undatedTileHtml(undatedCounted)}
     </div>
     <div class="trend-net" style="color:${ytdNetColor}">Net: <strong>${ytdNet > 0 ? "+" : ""}${ytdNet}</strong> (${ytdNetLabel}) &mdash; ${ytdChanges.length} changes tracked in ${currentYear}</div>
   </div>
-${changeVendorIndexHtml(indexSections, today)}
+${indexAfterUpcoming ? "" : changeVendorIndexHtml(indexSections, today)}
   <section class="latest-section" id="latest">
     <h2 class="month-heading">${LATEST_PRICING_CHANGES_HEADING}</h2>
     ${datedSectionNoticeHtml(
@@ -49586,9 +49593,9 @@ ${upcomingChanges.length > 0 ? `
       escHtmlServer,
       ' class="upcoming-intro dated-rule"',
     )}
-${upcomingChanges.map(c => buildChangeEntry(c.shown, c.original.date)).join("\n")}
+${shownUpcoming.map(c => buildChangeEntry(c.shown, c.original.date)).join("\n")}${overflowHtml ? "\n" + overflowHtml : ""}${UPCOMING_TIMELINE_END}
   </div>
-` : ""}
+` : ""}${indexAfterUpcoming ? "\n" + changeVendorIndexHtml(indexSections, today) : ""}
 ${filterButtonsHtml}
 
 ${changeLogSectionsHtml(sections, allChanges.length, buildChangeEntry, escHtmlServer)}
@@ -49670,8 +49677,7 @@ ${entries}
 </feed>`;
 }
 
-function buildChangesPage(): string {
-  const allChanges = loadDealChanges();
+function buildChangesPage(upcomingLimit?: number, allChanges = loadDealChanges(), overflowHtml = "", indexAfterUpcoming = false): string {
   const counted = trackedChanges(allChanges);
   const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
   const today = new Date().toISOString().slice(0, 10);
@@ -49680,14 +49686,17 @@ function buildChangesPage(): string {
   const undatedCounted = trackedChanges(undatedChanges).length;
 
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
-  const indexSections = changeLogSections(allChanges, today);
   const retirementEntries = retirementTimelineEntries(allChanges);
-  const sections = changeLogSections<ChangeTimelineEntry>([...allChanges, ...retirementEntries].filter(c => !isEventDated(c) || c.date <= today || isOurOwnBookkeeping(c)), today);
   const countable = changesTheVendorMade(trackedChanges(sorted));
   const latest = changesTheVendorMade(trackedChanges<ChangeTimelineEntry>([...sorted, ...retirementEntries])).filter(c => c.date <= today).sort((a, b) => b.date.localeCompare(a.date)).slice(0, LATEST_PRICING_CHANGES_SHOWN);
   const upcomingOriginals = changesTheVendorMade(sorted).filter(c => c.date > today).sort((a, b) => upcomingDateOf(a, today).localeCompare(upcomingDateOf(b, today)));
   const upcomingChanges = changesTheVendorMade(sorted).map(c => ({ original: c, shown: atUpcomingDate(c, today) })).filter(c => c.shown.date > today).sort((a, b) => a.shown.date.localeCompare(b.shown.date));
-  const inPageOrder = [...upcomingOriginals, ...changeLogInPageOrder(sections).filter(c => !c.originalRecord)];
+  if (upcomingLimit === undefined) return renderUpcomingTimeline(upcomingChanges.map(c => c.shown), (limit, overflow, afterUpcoming) => buildChangesPage(limit, allChanges, overflow, afterUpcoming), page => servedPageHtml(page, "/changes"));
+  const shownUpcoming = upcomingChanges.slice(0, upcomingLimit);
+  const omitted = new Set(upcomingChanges.slice(shownUpcoming.length).map(c => c.original));
+  const sections = changeLogSections<ChangeTimelineEntry>([...allChanges, ...retirementEntries].filter((c: ChangeTimelineEntry) => !isEventDated(c) || c.date <= today || isOurOwnBookkeeping(c) || omitted.has(c.originalRecord ?? c)), today);
+  const indexSections = changeLogSections(allChanges, today);
+  const inPageOrder = [...upcomingOriginals.filter(c => !omitted.has(c)), ...changeLogInPageOrder(sections).filter(c => !c.originalRecord)];
 
   const byMonth = new Map<string, typeof sorted>();
   for (const c of sorted) {
@@ -49875,7 +49884,7 @@ ${undatedTileHtml(undatedCounted)}
 
 ${changeLogFreshnessNote()}
 ${whatCountsAsAChangeHtml(dealChanges, entriesListed)}
-${changeVendorIndexHtml(indexSections, today)}
+${indexAfterUpcoming ? "" : changeVendorIndexHtml(indexSections, today)}
   <section class="latest-section" id="latest">
     <h2 class="month-heading">${LATEST_PRICING_CHANGES_HEADING}</h2>
     ${datedSectionNoticeHtml(
@@ -49896,9 +49905,9 @@ ${upcomingChanges.length > 0 ? `
       escHtmlServer,
       ' class="month-note dated-rule"',
     )}
-${upcomingChanges.map(c => buildChangeEntry(c.shown, c.original !== c.shown && c.original.date <= today, c.original)).join("\n")}
+${shownUpcoming.map(c => buildChangeEntry(c.shown, c.original !== c.shown && c.original.date <= today, c.original)).join("\n")}${overflowHtml ? "\n" + overflowHtml : ""}${UPCOMING_TIMELINE_END}
   </section>
-` : ""}
+` : ""}${indexAfterUpcoming ? "\n" + changeVendorIndexHtml(indexSections, today) : ""}
 ${changeLogSectionsHtml(sections, allChanges.length, buildChangeEntry, escHtmlServer)}
 
   <div class="mcp-cta">
@@ -53395,9 +53404,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
   res.end = ((...args: unknown[]) => {
     if (answeredNotModified) return rawEnd();
     if (typeof args[0] === "string" && /^text\/html/.test(servedContentType)) {
-      args[0] = withLedeBeforeNav(
-        withPageGenerosityAnswer(withPageFreshness(withReviewByline(args[0], url.pathname), url.pathname)),
-      );
+      args[0] = servedPageHtml(args[0], url.pathname);
     }
     if (headOfServedBody) {
       const head = headOfServedBody;
