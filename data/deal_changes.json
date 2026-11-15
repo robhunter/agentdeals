@@ -20419,6 +20419,22 @@
       "recorded_date": "2026-11-15",
       "date_source": "vendor_page",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "Supabase",
+      "change_type": "product_deprecated",
+      "date": "2026-12-31",
+      "summary": "Supabase says it is deprecating its legacy anon and service_role API keys by the end of 2026 and gives no day they stop working. Legacy keys keep working alongside the new keys until then. Replace the anon key with a publishable key (`sb_publishable_...`) and the service_role key with a secret key (`sb_secret_...`). Supabase's announcement says legacy keys will be deleted in late 2026, a date still to be confirmed. Apps that have not migrated will break then. Send the new keys on the apikey header only. The platform rejects them on the Authorization: Bearer header with Invalid JWT.",
+      "what_ends": "Supabase legacy API keys",
+      "previous_state": "Supabase projects authenticate with the anon and service_role keys alongside the newer publishable and secret keys.",
+      "current_state": "Supabase docs, \"API keys\" (read 2026-11-15): \"Supabase is deprecating the `anon` and `service_role` keys by the end of 2026. Use the publishable (`sb_publishable_xxx`) and secret (`sb_secret_xxx`) keys instead.\" \"Creating publishable and secret keys doesn't revoke your legacy keys. Both key systems work at the same time.\" Supabase's announcement \"Upcoming changes to Supabase API Keys\" (github.com/orgs/supabase/discussions/29260, read 2026-11-15), timeline row \"Late 2026, TBC\": \"Legacy API keys will be deleted and removed from the Docs / Dashboard.\" \"You have to migrate to use the new API keys by this point or your app will break.\"",
+      "impact": "medium",
+      "source_url": "https://supabase.com/docs/guides/api/api-keys",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
     }
   ]
 }
