@@ -20008,6 +20008,40 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "announced_on": "2026-11-10"
+    },
+    {
+      "vendor": "Cloudflare DNS",
+      "change_type": "product_deprecated",
+      "date": "2026-12-01",
+      "summary": "Cloudflare DNS keeps running. On December 1, 2026, Cloudflare retires the DNS Analytics API and the DNS Firewall Analytics API, its REST APIs for DNS query analytics. Their endpoints are GET /zones/{zone_id}/dns_analytics/ and GET /accounts/{account_id}/dns_firewall/{dns_firewall_id}/dns_analytics/report. Cloudflare tells integrations to move to its GraphQL Analytics API before then to keep working.",
+      "what_ends": "Cloudflare's DNS Analytics and DNS Firewall Analytics REST APIs",
+      "previous_state": "Cloudflare's DNS Analytics and DNS Firewall Analytics REST APIs returned DNS query analytics, alongside the GraphQL Analytics API.",
+      "current_state": "Cloudflare's API deprecations page, Authoritative DNS and DNS Firewall Legacy Analytics (read 2026-11-14): \"End of life date: December 1, 2026\". \"The following REST APIs are deprecated and will reach their end of life on December 1, 2026.\" \"Integrations using the REST API need to be migrated to the new GraphQL API before December 1, 2026 in order to ensure uninterrupted service.\"",
+      "impact": "medium",
+      "source_url": "https://developers.cloudflare.com/fundamentals/api/reference/deprecations/",
+      "category": "DNS & Domain Management",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "announced_on": "2025-12-09"
+    },
+    {
+      "vendor": "Cloudflare DNS",
+      "change_type": "product_deprecated",
+      "date": "2027-03-31",
+      "summary": "Cloudflare keeps running. On March 31, 2027, Cloudflare removes the Zone Settings Batch API, the endpoints GET /zones/{zone_id}/settings and PATCH /zones/{zone_id}/settings that read and edit several zone settings in one request. The batch endpoints are no longer available after that date. Integrations must use the per-setting endpoints, GET and PATCH /zones/{zone_id}/settings/{setting_id}, instead. Cloudflare moved the end date once, from a date in 2026.",
+      "what_ends": "Cloudflare's Zone Settings Batch API",
+      "previous_state": "Cloudflare's Zone Settings Batch API read and edited several zone settings in one request, alongside the per-setting endpoints.",
+      "current_state": "Cloudflare's API deprecations page, Zone Settings Batch API (read 2026-11-14): \"End of life date: March 31, 2027\". \"The Zone Settings Batch API endpoints, which read and edit multiple zone settings in a single request, are deprecated and will reach their end of life on March 31, 2027.\" \"After this date, the batch endpoints will no longer be available.\"",
+      "impact": "medium",
+      "source_url": "https://developers.cloudflare.com/fundamentals/api/reference/deprecations/",
+      "category": "DNS & Domain Management",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "announced_on": "2025-04-23"
     }
   ]
 }
