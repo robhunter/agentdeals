@@ -20355,38 +20355,6 @@
       "recorded_date": "2026-11-15",
       "date_source": "vendor_page",
       "listing_effect": "none"
-    },
-    {
-      "vendor": "Azure",
-      "change_type": "product_deprecated",
-      "date": "2027-03-31",
-      "summary": "Microsoft retires the Enterprise and Enterprise Flash tiers of Azure Cache for Redis on March 31, 2027. From April 1, 2027 every remaining Enterprise or Enterprise Flash cache is disabled. Creating new Enterprise and Enterprise Flash caches has been blocked since April 1, 2026. Reservations for these tiers are supported until March 30, 2027. Microsoft's replacement is Azure Managed Redis. Applications must switch to the new cache's hostname and access credentials. Azure Managed Redis is clustered by default, so applications should check that their client library works with a clustered cache. Basic, Standard and Premium caches are not retired on this date.",
-      "what_ends": "Azure Cache for Redis Enterprise and Enterprise Flash tiers",
-      "previous_state": "Azure Cache for Redis Enterprise and Enterprise Flash caches run normally until the retirement date.",
-      "current_state": "Microsoft Learn's \"Azure Cache for Redis retirement FAQ\" (last updated 2026-08-18, read 2026-11-15): \"All instances of Azure Cache for Redis Enterprise and Enterprise Flash tiers will be retired on March 31, 2027.\" \"All existing Redis Enterprise instances remain available until March 31, 2027.\" \"All Azure Cache for Redis Enterprise instances are disabled starting April 1, 2027.\" \"Your existing reservations will be supported until March 30, 2027.\" \"Applications must update the Redis hostname and access credentials from the existing Azure Cache for Redis Enterprise instance to the corresponding Azure Managed Redis instance.\" Microsoft Learn's \"What's New in Azure Cache for Redis\" (read 2026-11-15), October 2025, April 1, 2026: \"Creating new caches in Enterprise or Enterprise Flash tiers is blocked.\" July 2026: \"Enterprise and Enterprise Flash timelines are unchanged.\"",
-      "impact": "medium",
-      "source_url": "https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/retirement-faq",
-      "category": "Databases",
-      "alternatives": [],
-      "recorded_date": "2026-11-15",
-      "date_source": "vendor_page",
-      "listing_effect": "none"
-    },
-    {
-      "vendor": "Azure",
-      "change_type": "product_deprecated",
-      "date": "2028-09-30",
-      "summary": "Microsoft retires the Basic, Standard and Premium tiers of Azure Cache for Redis on September 30, 2028. From October 1, 2028 every remaining Basic, Standard or Premium cache is disabled. Since April 1, 2026 new customers in Azure's public cloud cannot create caches in these tiers. A tenant that had any Azure Cache for Redis instance before April 1, 2026 can keep creating them until the retirement. Reservations are supported until September 30, 2028. Microsoft's replacement is Azure Managed Redis. Applications must switch to the new cache's hostname and access key. Azure Managed Redis is clustered by default, so the client library must be set up for a clustered cache.",
-      "what_ends": "Azure Cache for Redis Basic, Standard and Premium tiers",
-      "previous_state": "Azure Cache for Redis Basic, Standard and Premium caches run normally, and existing customers can still create them.",
-      "current_state": "Microsoft Learn's \"Azure Cache for Redis retirement FAQ\" (last updated 2026-08-18, read 2026-11-15): \"All instances of Azure Cache for Redis tiers (Basic, Standard, and Premium) will be retired on September 30, 2028.\" \"All remaining Azure Cache for Redis Basic, Standard, and Premium instances are disabled starting October 1, 2028.\" \"Your existing reservations will be supported until September 30, 2028.\" \"All client applications need to update the Redis hostname and access key from existing Azure Cache for Redis instance to the corresponding Azure Managed Redis instance.\" \"Azure Managed Redis instances are clustered by default, so your application must configure your client library to work with a clustered Redis instance.\" Microsoft Learn's \"What's New in Azure Cache for Redis\" (read 2026-11-15), July 2026: \"Your tenant qualifies as an existing customer if any subscription in the tenant had an Azure Cache for Redis instance before April 1, 2026.\" Azure public cloud, April 1, 2026: \"Creating new caches is blocked for new customers. Existing customers can continue creating caches until retirement.\"",
-      "impact": "medium",
-      "source_url": "https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/retirement-faq",
-      "category": "Databases",
-      "alternatives": [],
-      "recorded_date": "2026-11-15",
-      "date_source": "vendor_page",
-      "listing_effect": "none"
     }
   ]
 }
