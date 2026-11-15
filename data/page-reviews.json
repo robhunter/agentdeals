@@ -421,8 +421,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 98,
-      "table_figures_from_records": 60,
+      "table_figures": 100,
+      "table_figures_from_records": 62,
       "tables": [
         {
           "label": "Deprecation Timeline",
@@ -446,8 +446,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 9,
-          "from_records": 9
+          "figures": 11,
+          "from_records": 11
         }
       ],
       "reads_changes": true,
@@ -490,8 +490,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 103,
-      "table_figures_from_records": 74,
+      "table_figures": 105,
+      "table_figures_from_records": 76,
       "tables": [
         {
           "label": "Always Free Services",
@@ -515,8 +515,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 9,
-          "from_records": 9
+          "figures": 11,
+          "from_records": 11
         }
       ],
       "reads_changes": true,
@@ -803,8 +803,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 91,
-      "table_figures_from_records": 37,
+      "table_figures": 93,
+      "table_figures_from_records": 39,
       "tables": [
         {
           "label": "Free Trial Credits",
@@ -843,8 +843,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 17,
-          "from_records": 17
+          "figures": 19,
+          "from_records": 19
         }
       ],
       "reads_changes": true,
@@ -2916,8 +2916,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 104,
-      "table_figures_from_records": 69,
+      "table_figures": 106,
+      "table_figures_from_records": 71,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2951,8 +2951,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 17,
-          "from_records": 17
+          "figures": 19,
+          "from_records": 19
         }
       ],
       "reads_changes": true,
@@ -2974,8 +2974,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 45,
-      "table_figures_from_records": 45,
+      "table_figures": 47,
+      "table_figures_from_records": 47,
       "tables": [
         {
           "label": "Related Pricing Changes",
@@ -2984,8 +2984,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 41,
-          "from_records": 41
+          "figures": 43,
+          "from_records": 43
         }
       ],
       "reads_changes": true,
