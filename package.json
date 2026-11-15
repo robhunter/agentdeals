@@ -86,17 +86,18 @@
     "mutate:1110": "node scripts/mutate-1110.mjs"
   },
   "dependencies": {
+    "@mixmark-io/domino": "2.2.0",
     "@modelcontextprotocol/ext-apps": "^1.5.0",
     "@modelcontextprotocol/sdk": "^1.32.1",
     "swagger-ui-dist": "^5.32.0",
+    "turndown": "7.2.0",
     "zod": "^3.25.0"
   },
   "devDependencies": {
     "@anthropic-ai/mcpb": "^2.1.2",
-    "@mixmark-io/domino": "2.2.0",
     "@types/node": "^22.0.0",
+    "@types/turndown": "^5.0.6",
     "ts-node": "^10.9.0",
-    "turndown": "7.2.0",
     "typescript": "^5.7.0"
   },
   "overrides": {
