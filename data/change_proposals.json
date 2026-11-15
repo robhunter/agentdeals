@@ -98,6 +98,126 @@
           "description": "Free plan: $0, up to 10 emails per second, unlimited contacts stored, 4,000 total marketing and transactional sends per rolling 30 days to your first 1,000 contacts, Loops branding included."
         }
       ]
+    },
+    {
+      "proposal_id": "2026-11-15/deployhq-com/limits_increased",
+      "proposed_on": "2026-11-15",
+      "vendor": "deployhq.com",
+      "change_type": "limits_increased",
+      "date": "2026-11-15",
+      "date_source": "discovered",
+      "summary": "The stored free-tier description (1 project, 3 deployments/day, 5 servers, 1 concurrent deployment, 30 build minutes, 1 user) is not reflected on the current page. The page now advertises a free plan with 3 projects and unlimited deployments, and paid plans starting at $9/month for unlimited deployments.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Automated deployment platform — free plan: 1 project, 3 deployments per day, 5 servers, 1 concurrent deployment, 30 build minutes, 1 user. Unlimited deployments and 3 projects start at $9/mo (Solo). Open-source projects can ask for a free account with unlimited deployments. Git-based workflow with support for FTP/SFTP/SSH deployment targets",
+      "current_state": "The page states 'Start free with 3 projects and unlimited deployments' and 'Unlimited deployments from $9/month'. It does not mention the previously described free-tier limits of 1 project, 3 deployments per day, 5 servers, 1 concurrent deployment, 30 build minutes, or 1 user.",
+      "impact": "medium",
+      "source_url": "https://www.deployhq.com/",
+      "category": "CI/CD",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-15",
+      "restatement": [
+        {
+          "url": "https://www.deployhq.com/",
+          "refused": "reading_describes_the_page_not_the_terms"
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-15/cerebras/limits_increased",
+      "proposed_on": "2026-11-15",
+      "vendor": "Cerebras",
+      "change_type": "limits_increased",
+      "date": "2026-11-15",
+      "date_source": "discovered",
+      "summary": "Free Trial rate limits for gpt-oss-120b and qwen-3.8-27b differ from previously: the page lists gpt-oss-120b at 5 RPM / 30K uncached TPM / 90K total TPM / 1M TPH / 1M TPD, and qwen-3.8-27b at 300 RPM / 150K uncached TPM / 750K total TPM with no hourly or daily caps. Rather than the stored '5 requests/min and 1M tokens/day' for both models.",
+      "tier": "Free Trial",
+      "tier_direction": "widened",
+      "previous_state": "Ultra-fast LLM inference API — no permanent free tier. New accounts get $5 in free credits after adding a verified payment method, expiring 30 days after they are granted. Free Trial limits on gpt-oss-120b and qwen-3.8-27b: 5 requests/min and 1M tokens/day. Pay as you go after: GPT OSS 120B $0.35/$0.75 per M tokens, Qwen 3.8 27B $0.99/$1.49 per M tokens. Cerebras's public API now serves only gpt-oss-120b and qwen-3.8-27b, and a request to a model ID it has deprecated fails with 404 model not found. Model IDs Cerebras deprecated in 2026: zai-glm-4.6 on 2026-01-20; llama-3.3-70b on 2026-02-16, replaced by gpt-oss-120b; qwen-3-32b on 2026-02-16, replaced by gpt-oss-120b; llama3.1-8b on 2026-05-27, replaced by gpt-oss-120b; qwen-3-235b-a22b-instruct-2507 on 2026-05-27, replaced by gpt-oss-120b; zai-glm-4.7 on 2026-08-17, with no replacement named; gemma-4-31b on 2026-09-03, replaced by qwen-3.8-27b (Gemma 4 31B stays available on Dedicated Inference). Multi-thousand tokens/sec inference speed.",
+      "current_state": "Free Trial limits apply while using the $5 in Free Trial credits. gpt-oss-120b: 5 RPM, 30K uncached TPM, 90K total TPM, 1M TPH, 1M TPD. qwen-3.8-27b: 300 RPM, 150K uncached TPM, 750K total TPM (temporarily increased from 450K), with no hourly or daily token caps on either tier. New accounts receive $5 in free credits after adding a verified payment method, expiring 30 days after they're granted; there is no permanently free tier.",
+      "impact": "medium",
+      "source_url": "https://inference-docs.cerebras.ai/support/rate-limits",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-15",
+      "restatement": []
+    },
+    {
+      "proposal_id": "2026-11-15/middleware-io/limits_increased",
+      "proposed_on": "2026-11-15",
+      "vendor": "Middleware.io",
+      "change_type": "limits_increased",
+      "date": "2026-11-15",
+      "date_source": "discovered",
+      "summary": "The free tier still exists as 'Free Forever' at $0. Previously omits several limits now shown on the page: 10 Browser Test Runs and 2 million OpsAI Tokens per month. The page also lists 'Community Based Support' and 14-day retention, consistent with previously. The core data/RUM/synthetic limits match (100GB, 1k RUM sessions, 20k synthetic checks, unlimited users).",
+      "tier": "Free Forever",
+      "tier_direction": "widened",
+      "previous_state": "Full-stack observability platform — free forever plan: 100 GB/month data (APM, logs, infrastructure, traces, RUM, synthetics, database, serverless), 1,000 RUM sessions/month, 20,000 synthetic checks/month, 14-day data retention, unlimited users",
+      "current_state": "Free Forever $0: up to 100GB data, up to 1k RUM sessions, up to 20k synthetic checks, 10 browser test runs, 2 million OpsAI tokens, unlimited users, community based support, 14 day retention.",
+      "impact": "low",
+      "source_url": "https://middleware.io/pricing/",
+      "category": "Monitoring",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-15",
+      "restatement": [
+        {
+          "url": "https://middleware.io/pricing/",
+          "description": "Full-stack observability platform — Free Forever $0: up to 100GB data, up to 1k RUM sessions, up to 20k synthetic checks, 10 browser test runs, 2 million OpsAI tokens, unlimited users, community based support, 14 day retention."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-15/currencyapi/pricing_restructured",
+      "proposed_on": "2026-11-15",
+      "vendor": "Currencyapi",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-15",
+      "date_source": "discovered",
+      "summary": "The page no longer mentions the 10 requests per minute limit, private-use-only restriction, or that the convert endpoint is excluded from the free plan. Paid plans now start at $10.83/month billed yearly ($129.90) or $12.99 monthly, with 15,000 requests/month, commercial use, historical rates since 1999, and hourly updates.",
+      "tier": "Free",
+      "tier_direction": "unchanged",
+      "previous_state": "300 requests a month for $0 on the Free plan, up to 10 requests a minute. The Free plan is for private use only. Currencyapi is a currency exchange rate API. The free plan has daily updates and historical rates back to 1999. Commercial use needs a paid plan. Paid plans start at $12.99 a month. The convert endpoint is not on the free plan.",
+      "current_state": "Free plan offers 300 free requests every month with daily rate updates; paid plans start at $10.83/month billed yearly ($129.90) or $12.99 monthly and include 15,000 requests a month, commercial use, historical rates since 1999, and hourly rate updates.",
+      "impact": "low",
+      "source_url": "https://currencyapi.com",
+      "category": "Payments",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-15",
+      "restatement": [
+        {
+          "url": "https://currencyapi.com",
+          "description": "Free plan offers 300 free requests every month with daily rate updates; paid plans start at $10.83/month billed yearly ($129.90) or $12.99 monthly and include 15,000 requests a month, commercial use, historical rates since 1999, and hourly rate updates."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-15/doppler/pricing_restructured",
+      "proposed_on": "2026-11-15",
+      "vendor": "Doppler",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-15",
+      "date_source": "discovered",
+      "summary": "The Developer (free) plan now lists 25 users instead of the stored 'free for 3 users' with $8/mo per additional user; the page no longer states a per-additional-user price for the free tier.",
+      "tier": "Developer",
+      "tier_direction": "widened",
+      "previous_state": "Secrets management — free for 3 users, $8 a month per additional user (Doppler: \"AI agents and non-human identities ride free\"). 10 projects, 4 environments per project, 3 days of activity logs. CLI, SDKs, and integrations included",
+      "current_state": "Developer plan: Free for 3 users, $8/mo per additional user; includes Doppler CLI for local development, service tokens, email alerts and recurring reminders, 3 days of activity logs, secrets referencing, secret value types, API and webhooks access, config syncs (5), 10 projects, 4 environments, 10 configs per environment, 5 webhook limits, 5 CLI tokens per user, and 25 users.",
+      "impact": "medium",
+      "source_url": "https://www.doppler.com/pricing",
+      "category": "Secrets Management",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-15",
+      "restatement": [
+        {
+          "url": "https://www.doppler.com/pricing",
+          "description": "Secrets management — Developer plan: Free for 3 users, $8/mo per additional user; includes Doppler CLI for local development, service tokens, email alerts and recurring reminders, 3 days of activity logs, secrets referencing, secret value types, API and webhooks access, config syncs (5), 10 projects, 4 environments, 10 configs per environment, 5 webhook limits, 5 CLI tokens per user, and 25 users."
+        }
+      ]
     }
   ],
   "dropped": [

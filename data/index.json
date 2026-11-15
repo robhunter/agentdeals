@@ -1950,7 +1950,7 @@
       ],
       "verifiedDate": "2026-10-03",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Firebase as \"firebase\" and states \"10 GiB/month\" and \"20K writes/day\" and \"50K reads/day\" and \"20K deletes/day\""
       },
@@ -1973,7 +1973,7 @@
       "free_plan_excerpt": {
         "text": "No-cost (Spark plan) Generous no-cost usage limits No payment method needed",
         "url": "https://firebase.google.com/pricing",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       },
       "conditions": [
         {
@@ -2367,7 +2367,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-10-26",
+      "verifiedDate": "2026-11-15",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2377,7 +2377,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Cloudflare D1 as \"cloudflare d1\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -3446,7 +3446,7 @@
         "cdn",
         "free tier"
       ],
-      "verifiedDate": "2026-10-26",
+      "verifiedDate": "2026-11-15",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -3456,7 +3456,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Cloudflare R2 as \"cloudflare r2\" and states \"$0.015\" and \"$0.01\" and \"$4.50\" and \"$9.00\""
       },
@@ -3532,7 +3532,12 @@
           "read_on": "2026-11-05",
           "operating_detail": true
         }
-      ]
+      ],
+      "free_plan_excerpt": {
+        "text": "Free Storage 10 GB-month / month Class A Operations 1 million requests / month Class B Operations 10 million requests / month Egress (data transfer to Internet) Free 1",
+        "url": "https://developers.cloudflare.com/r2/pricing/",
+        "read_on": "2026-11-15"
+      }
     },
     {
       "vendor": "Backblaze B2",
@@ -4749,7 +4754,7 @@
       ],
       "verifiedDate": "2026-07-25",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -4887,9 +4892,9 @@
         "fast",
         "free tier"
       ],
-      "verifiedDate": "2026-10-03",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Groq as \"groq\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -5618,14 +5623,14 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-11-14",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Doppler as \"doppler\" and states \"$8\""
       },
       "free_plan_excerpt": {
-        "text": "Free for 3 users $8/mo per additional user Integrations Doppler CLI for local development Service tokens Email alerts and recurring reminders 3 days of activity logs Secrets referencing Secret value types API and webhooks access Config syncs (5) Start for Free",
+        "text": "Free for 3 users $8/mo per additional user Integrations Doppler CLI for local development Service tokens Email alerts and recurring reminders 3 days of activity logs Secrets referencing Secret value types API and webhooks access Config syncs (5)",
         "url": "https://www.doppler.com/pricing",
-        "read_on": "2026-11-14"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -6339,7 +6344,7 @@
         "notes": "Technology and SI partner programs. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       },
@@ -7263,7 +7268,7 @@
       ],
       "verifiedDate": "2026-04-19",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -7322,7 +7327,7 @@
       ],
       "verifiedDate": "2026-07-23",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
         "rendered": true
@@ -8389,9 +8394,9 @@
         "deployment",
         "ota updates"
       ],
-      "verifiedDate": "2026-10-26",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Expo as \"expo\" and states \"$ 0\" and \"$0\""
       },
@@ -8467,7 +8472,7 @@
       "free_plan_excerpt": {
         "text": "Free For solo developers working on a passion project. $ 0 /MONTH Start for free Includes: 15 Android and 15 iOS builds Low-priority queue 60 min. on CI/CD Workflows Submit to app stores Send updates to 1K MAUs Access to Launch Access to Observe",
         "url": "https://expo.dev/pricing",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -8778,7 +8783,7 @@
       ],
       "verifiedDate": "2026-05-02",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       },
@@ -9473,7 +9478,7 @@
       ],
       "verifiedDate": "2026-10-03",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Cerebras as \"cerebras\" and states \"$5\""
       },
@@ -9489,9 +9494,9 @@
         "reviewed": "2026-09-01"
       },
       "free_plan_excerpt": {
-        "text": "New accounts receive $5 in free credits after adding a verified payment method. These credits expire 30 days after they’re granted and can be used across all public models. There is no charge until you choose to purchase additional credits.",
+        "text": "New accounts receive $5 in free credits after adding a verified payment method. These credits expire 30 days after they’re granted and can be used across all public models.",
         "url": "https://inference-docs.cerebras.ai/support/rate-limits",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       },
       "conditions": [
         {
@@ -9550,7 +9555,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Cohere as \"cohere\" and states \"$0.60\""
       },
@@ -9583,7 +9588,7 @@
       "free_plan_excerpt": {
         "text": "API calls made from a Trial API key are free. However, trial keys are rate limited and are not permitted to be used for production or commercial purposes.",
         "url": "https://cohere.com/pricing",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       },
       "conditions": [
         {
@@ -10328,7 +10333,7 @@
         "llm",
         "deal-change"
       ],
-      "verifiedDate": "2026-10-03",
+      "verifiedDate": "2026-11-15",
       "product_subtypes": {
         "taxonomy": "AI / ML",
         "labels": [
@@ -10341,14 +10346,14 @@
         "reviewed": "2026-10-19"
       },
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Brave Search API as \"brave search api\" and states \"$20\" and \"$5\" and \"$4\" and \"50 queries per second\""
       },
       "free_plan_excerpt": {
-        "text": "Up to $20 in free calls every month · Prepaid credits, no subscription",
+        "text": "Includes $5 in free credits every month Credits are automatically applied to your account",
         "url": "https://brave.com/search/api/",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       },
       "conditions": [
         {
@@ -10795,7 +10800,7 @@
       ],
       "verifiedDate": "2026-10-03",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names ngrok as \"ngrok\" and states \"$5\"",
         "unrendered_prices": [
@@ -10851,7 +10856,12 @@
           "url": "https://ngrok.com/docs/pricing-limits/free-plan-limits",
           "read_on": "2026-10-29"
         }
-      ]
+      ],
+      "free_plan_excerpt": {
+        "text": "Free Get it online fast and free $5 of one-time included usage No additional usage beyond credit Up to 3 online endpoints Up to 1GB data transfer Up to 20k HTTP/S requests Interstitial page on HTTP/S endpoints Assigned dev domain for public endpoints 1 team member $0",
+        "url": "https://ngrok.com/pricing",
+        "read_on": "2026-11-15"
+      }
     },
     {
       "vendor": "Tailscale",
@@ -11164,9 +11174,9 @@
         "tax",
         "free tier"
       ],
-      "verifiedDate": "2026-10-26",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Lemon Squeezy as \"lemon squeezy\" and states \"$0\""
       }
@@ -11184,11 +11194,19 @@
         "ai",
         "nlp"
       ],
-      "verifiedDate": "2026-10-26",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
-        "detail": "the page names Deepgram as \"deepgram\" and states \"$200\""
+        "detail": "the page names Deepgram as \"deepgram\" and states \"$200\"",
+        "unrendered_prices": [
+          "Speech-to-text: Nova-3 Multilingual (Streaming) — Growth USD 0.005",
+          "Speech-to-text: Nova-3 Monolingual (Pre-recorded) — Pay as you go USD 0.0043",
+          "Speech-to-text: Nova-3 Monolingual (Pre-recorded) — Growth USD 0.0036",
+          "Speech-to-text: Nova-3 Multilingual (Pre-recorded) — Pay as you go USD 0.0052",
+          "Speech-to-text: Nova-3 Multilingual (Pre-recorded) — Growth USD 0.0043",
+          "Speech-to-text: Redaction (Streaming) — Pay as you go USD 0.002"
+        ]
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -11202,9 +11220,9 @@
         "reviewed": "2026-09-01"
       },
       "free_plan_excerpt": {
-        "text": "Price Free $200 Credit then pay-as-you-go",
+        "text": "Free $200 credit then pay-as-you-go Sign up free",
         "url": "https://deepgram.com/pricing",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       },
       "conditions": [
         {
@@ -11313,9 +11331,9 @@
         "static-analysis",
         "code-scanning"
       ],
-      "verifiedDate": "2026-10-03",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Semgrep as \"semgrep\" and states \"$0\""
       },
@@ -12026,9 +12044,9 @@
         "embeddings",
         "open-source"
       ],
-      "verifiedDate": "2026-10-26",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Weaviate as \"weaviate\" and states \"$45\" and \"$ 45\" and \"1,000 requests / month\""
       },
@@ -12048,9 +12066,9 @@
         "plan"
       ],
       "free_plan_excerpt": {
-        "text": "Database Engram ✦ Always free Free Forever $0 /mo No credit card required A fully managed AI Database to explore Weaviate features. Easiest way to get started, always free. Start free ✓ Always free — 1 cluster per user, upgrade to paid anytime. ✓ 100,000 objects · 1 GB memory · 10 GB disk. ✓ 1 collection, up to 3 tenants. ✓ Embeddings (2,000 req/day) + Query Agent (1,000 req/mo). ✓ Basic Support",
+        "text": "Free Forever $0 /mo No credit card required A fully managed AI Database to explore Weaviate features. Easiest way to get started, always free. Start free ✓ Always free — 1 cluster per user, upgrade to paid anytime. ✓ 100,000 objects · 1 GB memory · 10 GB disk. ✓ 1 collection, up to 3 tenants. ✓ Embeddings (2,000 req/day) + Query Agent (1,000 req/mo). ✓ Basic Support",
         "url": "https://weaviate.io/pricing",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       },
       "conditions": [
         {
@@ -13058,7 +13076,7 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Hyperping as \"hyperping\" and states \"$0\""
       },
@@ -13082,6 +13100,11 @@
           }
         ],
         "reviewed": "2026-09-01"
+      },
+      "free_plan_excerpt": {
+        "text": "Free For personal projects and trying out Hyperping. Get started ↗ 20 monitors 5-minute checks 1 server monitoring agent 1 basic status page HTTP, port, ping & keyword checks 1 seat included",
+        "url": "https://hyperping.com/pricing",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -13192,7 +13215,7 @@
       ],
       "verifiedDate": "2026-10-26",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Middleware.io as \"middleware\" and states \"$0\""
       },
@@ -13225,7 +13248,7 @@
       "free_plan_excerpt": {
         "text": "Free Forever $0 Free access to all features with monthly limits. Sign Up Now Up to 100GB Data Up to 1k RUM Sessions Up to 20k Synthetic Checks 10 Browser Test Runs 2 million OpsAI Tokens Unlimited Users Community Based Support 14 day retention",
         "url": "https://middleware.io/pricing/",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -13242,9 +13265,9 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-10-26",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names 360 Monitoring as \"360 monitoring\" and states \"$ 0\""
       },
@@ -13265,9 +13288,9 @@
         "reviewed": "2026-09-01"
       },
       "free_plan_excerpt": {
-        "text": "Lite Perfect for single server or site owners. Free forever. $ 0 /mo",
+        "text": "Lite Perfect for single server or site owners. Free forever. $ 0 /mo Start Now",
         "url": "https://360monitoring.com/pricing/",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -13944,7 +13967,7 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Zoho Survey, renders \"free version\" and no amount, and its markup states 1 typed price (INR 0)",
         "read": "markup"
@@ -14005,9 +14028,9 @@
         "free-for-dev",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-08-01",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Brainboard, renders \"free tier\" and no amount, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -14051,7 +14074,7 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-10-07",
+        "checked": "2026-11-15",
         "outcome": "states_no_terms",
         "detail": "the page names deployment.io but states no amount, tier or rate we can read, and the 3 structured-data blocks in its markup state no price"
       }
@@ -14169,7 +14192,7 @@
       ],
       "verifiedDate": "2026-06-12",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -14402,16 +14425,16 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-26",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Calendarific as \"calendarific\" and states \"500 Calls/month\""
       },
       "free_plan_excerpt": {
-        "text": "Free $0.00 /Month Save $0.00 on yearly plan 500 Calls/month Attribution Required Community Support Single Language Limited Historical Data Limited Upcoming Data Dataset updated quarterly Premium API Parameters CSV/XLS Data Export Ecommerce Ready Multiple API Keys SLA Dedicated account manager Get Started",
+        "text": "Free $0.00 /Year Save $0.00 on yearly plan 500 Calls/month Attribution Required Community Support Single Language Limited Historical Data Limited Upcoming Data Dataset updated quarterly",
         "url": "https://calendarific.com",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -14448,14 +14471,14 @@
       ],
       "verifiedDate": "2026-10-26",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names CarAPI.dev as \"carapi dev\" and states \"100 requests/month\""
       },
       "free_plan_excerpt": {
-        "text": "Free Perfect for testing and small projects 100 requests/month All API endpoints Basic support",
+        "text": "Free Free Perfect for testing and small projects 100 requests/month All API endpoints Basic support Sign In to Get Started",
         "url": "https://carapi.dev",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -14547,14 +14570,14 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Conversion Tools as \"conversion tools\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_plan_excerpt": {
         "text": "100 free API calls/month + 100 AI credits/month",
         "url": "https://conversiontools.io/",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -14816,9 +14839,9 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-10-26",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+        "checked": "2026-11-15",
+        "outcome": "states_no_terms",
+        "detail": "the page names DeepAR but states no amount, tier or rate we can read, and its markup carries no structured data",
         "rendered": true
       },
       "product_subtypes": {
@@ -14905,16 +14928,16 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-26",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Doczilla as \"doczilla\" and states \"€0\" and \"250 requests/month\" and \"30 requests per minute\" and \"2,000 requests/month\""
       },
       "free_plan_excerpt": {
         "text": "Hobby €0/mo Ideal for developers exploring the platform. 250 requests/month No credit card needed 30 requests per minute",
         "url": "https://www.doczilla.app/pricing",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -15086,9 +15109,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names FreeIPAPI as \"freeipapi\" and states \"60 requests per minute\""
       },
@@ -15098,6 +15121,11 @@
         "record_date": "2026-08-28",
         "change_type": "limits_reduced",
         "restated_on": "2026-09-20"
+      },
+      "free_plan_excerpt": {
+        "text": "Free €0 / Month Included: 60 Requests per minute About rate limits (opens in a new tab) 10 requests per 10 seconds Included: IPv4 and IPv6 Included: Regularly updated database Included: Commercial use allowed Included: TLS/SSL support Included: Servers in Europe only",
+        "url": "https://freeipapi.com",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -15144,11 +15172,16 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-26",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Hook0 as \"hook0\" and states \"100 events/day\" and \"100 webhook events per day\""
+      },
+      "free_plan_excerpt": {
+        "text": "FREE Forever Sign Up What's included Fully managed, no infra. to own 1 developer 1 application 10 event types 10 subscriptions Up to 100 events/day Extra events are blocked 7 days data retention Community support No credit card required",
+        "url": "https://www.hook0.com/",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -15572,16 +15605,16 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-08",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-26",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Market Data API as \"market data api\" and states \"$0\""
       },
       "free_plan_excerpt": {
         "text": "Free Forever Best option for students or small side projects. $0 Forever 100 Sheets Formulas 100 Daily API Credits Standard API Endpoints 1 Year Historical Data 24h Delayed Stock Data 24h Delayed Options Data",
         "url": "https://www.marketdata.app",
-        "read_on": "2026-10-26"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -16050,7 +16083,7 @@
       ],
       "verifiedDate": "2026-09-08",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -17210,9 +17243,9 @@
       ],
       "verifiedDate": "2026-07-06",
       "source_check": {
-        "checked": "2026-10-26",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+        "checked": "2026-11-15",
+        "outcome": "states_no_terms",
+        "detail": "the page names gokanban.io but states no amount, tier or rate we can read, and its markup carries no structured data",
         "rendered": true
       }
     },
@@ -17982,14 +18015,14 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names windmill.dev as \"windmill\" and states \"$ 0\" and \"$ 10\""
       },
       "free_plan_excerpt": {
-        "text": "Free and Open-source from $ 0 /mo Unlimited executions. Self-host in minutes Easy deployment on Fargate / Docker / Kubernetes Community support on Discord Max 10 users with SSO 100 free app guests per 30 days: they sign in through your identity provider, hold no account and take no seat",
+        "text": "Free and Open-source from $ 0 /mo Unlimited executions. Self-host in minutes Easy deployment on Fargate / Docker / Kubernetes Community support on Discord Max 10 users with SSO 100 free app guests per 30 days",
         "url": "https://www.windmill.dev/pricing",
-        "read_on": "2026-10-25"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -18169,7 +18202,7 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names DatoCMS as \"datocms\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -18208,7 +18241,7 @@
       ],
       "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-10-06",
+        "checked": "2026-11-15",
         "outcome": "states_no_terms",
         "detail": "the page names Solo but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
@@ -18358,7 +18391,7 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 3 characters",
         "rendered": true
@@ -18913,7 +18946,7 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names bytebase.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -18976,7 +19009,7 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names deployhq.com as \"deployhq com\" and states \"$9\"",
         "unrendered_prices": [
@@ -18987,6 +19020,11 @@
           "EUR 43",
           "GBP 43"
         ]
+      },
+      "free_plan_excerpt": {
+        "text": "Start free with 3 projects and unlimited deployments.",
+        "url": "https://www.deployhq.com/",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -19040,11 +19078,16 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Nx Cloud as \"nx cloud\" and states \"50,000 credits per month\""
+      },
+      "free_plan_excerpt": {
+        "text": "Yes. Nx Cloud starts on the free Hobby plan, which includes 50,000 credits per month, 5 contributors, and 10 concurrent CI connections, with no credit card.",
+        "url": "https://nx.dev/ci",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -19080,7 +19123,7 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Shipfox, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -19138,15 +19181,20 @@
         "free-for-dev",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Stategraph as \"stategraph\" and states \"50 runs a month\" and \"3 active users a month\""
       },
       "restatement_reverted": {
         "record_date": "2026-08-28",
         "reverted_on": "2026-10-01"
+      },
+      "free_plan_excerpt": {
+        "text": "Free $0 forever For small teams. Every Orchestration feature SSO, RBAC, CODEOWNERS, Gatekeeper, and centralized config Drift detection, cost estimation, and OPA, Conftest, and Checkov policies GitHub and GitLab, with Terraform, OpenTofu, Terragrunt, Pulumi, CDKTF, or any CLI 3 users, 50 runs a month, 1 concurrent worker 30-day audit retention Community support",
+        "url": "https://stategraph.com/pricing",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -19401,7 +19449,7 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names loadmill.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -20322,12 +20370,17 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-07",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Cloud-IAM, renders no terms we can read, and its markup states 1 typed price (EUR 0)",
         "read": "markup"
+      },
+      "free_plan_excerpt": {
+        "text": "The Freemium plan is free for up to 100 users.",
+        "url": "https://www.cloud-iam.com/",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -21065,9 +21118,9 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Pocket Alert as \"pocket alert\" and states amounts, none of which we matched to the terms we publish",
         "unrendered_prices": [
@@ -21078,7 +21131,7 @@
       "free_plan_excerpt": {
         "text": "Yes — the free plan gives you 50 push notifications a day with one device, one application, and one webhook, free forever and with no credit card required.",
         "url": "https://pocketalert.app",
-        "read_on": "2026-10-25"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -21821,14 +21874,14 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
-        "detail": "the page names fivenines.io as \"fivenines io\" and states \"€19\"",
+        "detail": "the page names fivenines.io as \"fivenines io\" and states amounts, none of which we matched to the terms we publish",
         "unrendered_prices": [
-          "Pro EUR 49",
-          "Business EUR 99"
+          "Starter (monthly) EUR 19",
+          "Pro (monthly) EUR 49"
         ]
       },
       "product_subtypes": {
@@ -21843,9 +21896,9 @@
         "reviewed": "2026-09-01"
       },
       "free_plan_excerpt": {
-        "text": "No credit card · 14-day free trial · Live in 2 minutes",
+        "text": "Every plan starts with a 14-day free trial. No credit card required.",
         "url": "https://fivenines.io/",
-        "read_on": "2026-10-25"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -22086,9 +22139,9 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names pagecrawl.io as \"pagecrawl io\" and states \"$ 0\"",
         "unrendered_prices": [
@@ -22114,9 +22167,9 @@
         "restated_on": "2026-09-20"
       },
       "free_plan_excerpt": {
-        "text": "Free Forever $ 0 / month $0 billed annually Track 6 pages Get started for free Pages : Up to 6 Checks : Up to 220 Frequency : Up to 60 min",
+        "text": "Free Forever $ 0 / month $ 0 Track 6 pages Get started for free Pages : Up to 6 Checks : Up to 220 Frequency : Up to 60 min",
         "url": "https://pagecrawl.io/",
-        "read_on": "2026-10-25"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -22640,7 +22693,7 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-11-08",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Wachete, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -24430,9 +24483,9 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Formware.io as \"formware io\" and states amounts, none of which we matched to the terms we publish",
         "rendered": true
@@ -24440,7 +24493,7 @@
       "free_plan_excerpt": {
         "text": "Unlimited forms, questions, and responses — for free, forever. Upgrade only if you need custom branding, your own domain, or team collaboration.",
         "url": "https://formware.io/",
-        "read_on": "2026-10-25"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -25041,7 +25094,7 @@
       ],
       "verifiedDate": "2026-08-10",
       "source_check": {
-        "checked": "2026-11-14",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names LangWatch as \"langwatch\" and states \"€0\""
       },
@@ -25064,7 +25117,7 @@
       "free_plan_excerpt": {
         "text": "€0 free forever Everything you need to start building and testing agents. Get Started No credit card required 50k events / month 14-day data access 2 users 3 scenarios, 3 simulations, 3 custom evals Community support (GitHub & Discord)",
         "url": "https://langwatch.ai/pricing",
-        "read_on": "2026-11-14"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -26166,7 +26219,7 @@
       ],
       "verifiedDate": "2026-10-25",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Back4App as \"back4app\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -26182,9 +26235,9 @@
         "reviewed": "2026-08-31"
       },
       "free_plan_excerpt": {
-        "text": "Start for Free — Perfect for developing, learning and prototyping 25K Requests 250MB Database 1GB Transfer 1GB Files",
+        "text": "Start for Free — Perfect for developing, learning and prototyping 25K Requests 250MB Database 1GB Transfer 1GB Files Get Started No credit card required",
         "url": "https://www.back4app.com/pricing/backend-as-a-service",
-        "read_on": "2026-10-25"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -26867,9 +26920,9 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-11-14",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-11-14",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Neocities as \"neocities\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -27537,7 +27590,7 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-11-14",
+        "checked": "2026-11-15",
         "outcome": "states_no_terms",
         "detail": "the page names DigitalPlat but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
@@ -28363,9 +28416,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Clockify as \"clockify\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -29025,9 +29078,14 @@
       ],
       "verifiedDate": "2026-08-28",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Toggl as \"toggl\" and states amounts, none of which we matched to the terms we publish"
+      },
+      "free_plan_excerpt": {
+        "text": "No credit card required Free 30-day trial for all features Cancel anytime",
+        "url": "https://toggl.com/",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -29226,9 +29284,9 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Ente as \"ente\" and states amounts, none of which we matched to the terms we publish",
         "unrendered_prices": [
@@ -29237,6 +29295,11 @@
           "EUR 9.99",
           "EUR 19.99"
         ]
+      },
+      "free_plan_excerpt": {
+        "text": "free forever 10 GB End-to-end encryption Automatic backups On-device AI Album sharing Public links Curated memories Community support 1 replica 100 items on Locker",
+        "url": "https://ente.com/",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -32077,11 +32140,16 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page writes \"stadiamaps\", the domain we cite stadiamaps.com from, and states \"$20\" and \"200,000 credits/month\""
+      },
+      "free_plan_excerpt": {
+        "text": "Free $0 /month 200,000 credits/month No additional usage Standard basemaps Basic APIs only Commercial use not allowed",
+        "url": "https://stadiamaps.com/pricing/",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -33005,11 +33073,16 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-15",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Expensify as \"expensify\" and states amounts, none of which we matched to the terms we publish"
+      },
+      "free_plan_excerpt": {
+        "text": "Expensify is completely free to use as an individual. For companies, plans start at $5 per member",
+        "url": "https://www.expensify.com/",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -33725,14 +33798,14 @@
       ],
       "verifiedDate": "2026-10-24",
       "source_check": {
-        "checked": "2026-11-14",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Currencyapi as \"currencyapi\" and states \"$12.99\" and \"300 free requests a month\""
       },
       "free_plan_excerpt": {
         "text": "300 free requests every month",
         "url": "https://currencyapi.com",
-        "read_on": "2026-11-14"
+        "read_on": "2026-11-15"
       },
       "restatement_reverted": {
         "record_date": "2026-09-02",
@@ -33852,9 +33925,9 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Qonversion as \"qonversion\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -33866,9 +33939,9 @@
         "restated_on": "2026-09-20"
       },
       "free_plan_excerpt": {
-        "text": "Free up to $7K MTR No credit card required",
+        "text": "Free up to $7K MTR No credit card required Setup in minutes",
         "url": "http://qonversion.io/",
-        "read_on": "2026-10-25"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -34101,11 +34174,16 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-02",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names screenshotbase.com as \"screenshotbase com\" and states \"300 screenshots a month\" and \"300 free screenshots a month\""
+      },
+      "free_plan_excerpt": {
+        "text": "300 screenshots a month, 10 requests per minute, 2 renders at the same time, 1 API key, no credit card. The free plan includes 5 screenshots from other countries in any 5 days",
+        "url": "https://screenshotbase.com",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -34856,9 +34934,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Sunrise and Sunset as \"sunrise sunset\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -35161,7 +35239,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -35172,9 +35250,14 @@
         "program": "Scaleway Startup Program"
       },
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Scaleway Startup Program as \"scaleway startup program\" and states \"€36,000\" and \"€1,000\" and \"€9,000\""
+      },
+      "free_plan_excerpt": {
+        "text": "Participants will have up to €1,000 cloud credits to use over one year on our multi-cloud products.",
+        "url": "https://www.scaleway.com/en/startup-program/",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -35314,7 +35397,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-09-02",
+      "verifiedDate": "2026-11-15",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -35326,9 +35409,14 @@
         "program": "Zendesk for Startups Startup Program"
       },
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Zendesk for Startups as \"zendesk for startups\" and states amounts, none of which we matched to the terms we publish"
+      },
+      "free_plan_excerpt": {
+        "text": "This offer is available only to new Zendesk customers who have received outside funding (Angel, Pre-seed, Seed, Series A, or Series B rounds) and who have (i) 250 or fewer employees if referred by one of our partners, or (ii) 50 or fewer employees if not referred by our partners.",
+        "url": "https://www.zendesk.com/business/startups/",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -35342,7 +35430,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -35353,9 +35441,14 @@
         "program": "Help Scout for Startups Startup Program"
       },
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Help Scout for Startups as \"help scout for startups\" and states amounts, none of which we matched to the terms we publish"
+      },
+      "free_plan_excerpt": {
+        "text": "Get started with 6 months free on the support platform that takes startups from just-keeping-up to service that drives growth.",
+        "url": "https://www.helpscout.com/startups/",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -35536,7 +35629,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-09-02",
+      "verifiedDate": "2026-11-15",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -35545,7 +35638,7 @@
         "program": "Remote for Startups Startup Program"
       },
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Remote for Startups as \"remote for startups\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -35697,7 +35790,7 @@
         "program": "Open Sauce"
       },
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Sauce Labs as \"sauce labs\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -35847,9 +35940,9 @@
         "performance",
         "api-testing"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names BlazeMeter as \"blazemeter\" and states \"10 tests per month\""
       }
@@ -36186,11 +36279,16 @@
         "traffic-management",
         "api"
       ],
-      "verifiedDate": "2026-08-15",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names NS1 Connect as \"ns1 connect\" and states \"5 million DNS Queries per month\""
+      },
+      "free_plan_excerpt": {
+        "text": "Free Edition Account includes : 5 million DNS Queries per month 500 DNS Records 1 Filter Chain 2 Monitors 1 HTTPS Redirect",
+        "url": "https://community.ibm.com/community/user/blogs/claire-odonovan/2025/11/07/ibm-ns1connect-trial-free-30days",
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -37492,9 +37590,9 @@
         "observability",
         "google cloud"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Google Cloud Logging as \"logging\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -37511,7 +37609,12 @@
           "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
           "read_on": "2026-10-07"
         }
-      ]
+      ],
+      "free_plan_excerpt": {
+        "text": "First 50 GiB/project/month",
+        "url": "https://cloud.google.com/logging/pricing",
+        "read_on": "2026-11-15"
+      }
     },
     {
       "vendor": "Google Secret Manager",
@@ -37578,7 +37681,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Google Cloud Monitoring as \"monitoring\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -37633,14 +37736,14 @@
       ],
       "verifiedDate": "2026-10-02",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names ClickUp as \"clickup\" and states \"$ 0\""
       },
       "free_plan_excerpt": {
-        "text": "free forever monthly price: Free Per user/month, billed monthly Get Started Key Features: 60MB Storage Unlimited Tasks Unlimited Free Plan Members Two-Factor Authentication Collaborative Docs Kanban Boards Sprint Management Calendar View Basic Custom Field Manager In-App Video Recording 24/7 Support 1 Form unlimited unlimited",
+        "text": "Free Forever $ 0 No credit card required",
         "url": "https://clickup.com/pricing",
-        "read_on": "2026-10-25"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -38303,16 +38406,16 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-10-25",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Obsidian as \"obsidian\" and states \"$4\" and \"$8\" and \"$50\""
       },
       "free_plan_excerpt": {
         "text": "Free without limits. No sign-up required. No strings attached.",
         "url": "https://obsidian.md/pricing",
-        "read_on": "2026-10-25"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -38409,16 +38512,16 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-10-02",
+      "verifiedDate": "2026-11-15",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Standard Notes as \"standard notes\" and states \"$ 0\""
       },
       "free_plan_excerpt": {
         "text": "Standard Free You’ll have End-to-end encryption Unlimited device sync on web, desktop, and mobile Plain text notes Offline access Organize your notes into tags Password protect individual notes Full data export in encrypted or plaintext format Two-factor authentication Daily encrypted email backups Community support",
         "url": "https://standardnotes.com/plans",
-        "read_on": "2026-10-25"
+        "read_on": "2026-11-15"
       }
     },
     {
@@ -38627,14 +38730,14 @@
       ],
       "verifiedDate": "2026-10-25",
       "source_check": {
-        "checked": "2026-10-25",
+        "checked": "2026-11-15",
         "outcome": "ok",
         "detail": "the page names Dropbox as \"dropbox\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_plan_excerpt": {
         "text": "Basic Free 2 GB to store and share your files",
         "url": "https://www.dropbox.com/plans",
-        "read_on": "2026-10-25"
+        "read_on": "2026-11-15"
       }
     },
     {

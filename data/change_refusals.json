@@ -897,6 +897,18 @@
       "refused_date": "2026-09-30"
     },
     {
+      "vendor": "Back4App",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists with the same core limits (25K requests, 250MB database, 1GB transfer, 1GB files), but the stored description says 'up to 5 apps' while the pricing page's feature table lists 'Apps per subscription: 1' for the Free plan. The FAQ separately states 'You can have up to five projects on the free tier,' creating an internal inconsistency on the page.",
+      "previous_state": "Parse-based backend platform — free tier: 25K API requests/month, 250 MB database, 1 GB file storage, 1 GB transfer, up to 5 apps. REST + GraphQL APIs",
+      "current_state": "Free plan: 25K Requests, 250MB Data Storage, 1GB Data Transfer, 1GB File Storage, Apps per subscription: 1 (FAQ states up to five projects on the free tier)",
+      "source_url": "https://www.back4app.com/pricing/backend-as-a-service",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-11-15"
+    },
+    {
       "vendor": "BackgroundStyler.com",
       "change_type": "product_deprecated",
       "reason": "page_does_not_name_vendor",
@@ -1577,6 +1589,18 @@
       "refused_date": "2026-10-31"
     },
     {
+      "vendor": "CarAPI.dev",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page does not mention 16 endpoints; the report's endpoint count is unsupported, and the stated free-tier terms (100 requests/month, all endpoints) match the stored description.",
+      "summary": "The free tier still exists with 100 requests/month. The API now advertises 16 endpoints instead of the 9 endpoints stated in previously info.",
+      "previous_state": "Comprehensive automotive data API with VIN decoding, stolen vehicle checks, vehicle valuation, inspection data, and more. Free tier includes 100 requests/month across all 9 endpoints.",
+      "current_state": "Free plan: 100 requests/month, All API endpoints, Basic support",
+      "source_url": "https://carapi.dev",
+      "category": "Dev Utilities",
+      "refused_date": "2026-11-15"
+    },
+    {
       "vendor": "Carbon.now.sh",
       "change_type": "limits_reduced",
       "reason": "no_price_signal",
@@ -1956,13 +1980,13 @@
       "vendor": "ClickUp",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-09-20 (states_no_difference) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
-      "summary": "The Free Forever plan now has more specific limits than previously stated. The page details limits for Spaces, Folders, Custom Views, Whiteboards, and more that were not mentioned in the stored deal info.",
+      "detail": "the reading of this vendor refused on 2026-10-25 (repeats_a_refused_claim) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The Free Forever plan no longer includes unlimited members or unlimited storage; it now lists 60 MB storage, 5 Spaces, 100 folders/space, 40 lists/space, 100 automation actions/workspace/month, 5 active automation rules, 2 teams, 3 whiteboards, 1 doc wiki, 90-day chat history, and 1-day activity/pulse, while the stored description claimed unlimited members and did not mention these caps.",
       "previous_state": "Free Forever plan — unlimited tasks, unlimited members, collaborative docs, kanban boards, sprint management, calendar view, in-app video recording, 24/7 support. 60MB storage, 1 form.",
-      "current_state": "The Free Forever plan includes 60MB Storage, Unlimited Tasks, Unlimited Free Plan Members, Two-Factor Authentication, Collaborative Docs, Kanban Boards, Sprint Management, Calendar View, In-App Video Recording, 24/7 Support, 1 Form, 5 Spaces, 100 Folders/Space, Unlimited Custom Views, 3 Whiteboards, 1 Wiki, and Trial access to various features.",
+      "current_state": "Free Forever is $0 with 60 MB storage, unlimited tasks & subtasks, unlimited free members, collaborative docs, kanban boards, calendar view, sprint management, time tracking, SyncUps, video calls, two-factor authentication, 24/7 support, and 1 form; the comparison table also lists 5 Spaces, 100 folders/space, 40 lists/space, 100 API calls/minute, 100 automation actions/workspace/month, 5 active automation rules, 2 teams, 3 whiteboards, 1 doc wiki, 90-day chat history, and 1-day activity and pulse.",
       "source_url": "https://clickup.com/pricing",
       "category": "Project Management",
-      "refused_date": "2026-10-25"
+      "refused_date": "2026-11-15"
     },
     {
       "vendor": "ClickUp",
@@ -2531,6 +2555,18 @@
       "source_url": "https://configcat.com",
       "category": "Feature Flags",
       "refused_date": "2026-09-09"
+    },
+    {
+      "vendor": "Conversion Tools",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "limits_reduced claimed, and every figure the summary carried sat in a clause about our own record rather than about the vendor's terms",
+      "summary": "The free tier limits have changed. Stored info says 10 conversions a day (100 a month) and 20 MB file size limit. Page says free users can convert files up to 10 MB and does not specify a daily conversion limit for free users, only mentioning '100 free API calls/month' for the API section.",
+      "previous_state": "Online File Converter for documents, images, video, audio, and eBooks. REST API is available. Libraries for Node.js, PHP, Python. Support files up to 50 GB (for paid plans). Registered free users get 10 conversions a day (100 a month) and a 20 MB file size limit.",
+      "current_state": "Free users can convert files up to 10 MB. The API section mentions 100 free API calls/month.",
+      "source_url": "https://conversiontools.io/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-11-15"
     },
     {
       "vendor": "Conversion Tools",
@@ -3261,13 +3297,13 @@
       "vendor": "deployment.io",
       "change_type": "free_tier_removed",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-09-19 (no_price_signal) claimed the same change, free_tier_removed, against the same stored description",
-      "summary": "The pricing page does not mention a free tier with unlimited static sites, web services, and environments, or 10 free job executions per month. It focuses on outcome-based pricing and using AI agents for software delivery, requiring approval for production deployments.",
+      "detail": "the reading of this vendor refused on 2026-10-07 (repeats_a_refused_claim) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The pricing page no longer describes a self-serve free tier with unlimited static sites, web services, environments, and 10 free job executions per month. It now presents Deployment.io as an outcome-based managed delivery service with senior engineers and AI agents, priced per engagement, and no free plan is mentioned.",
       "previous_state": "Deployment.io helps developers automate deployments on AWS. On our free tier, a developer (single user) can deploy unlimited static sites, web services, and environments. We provide 10 job executions free per month with previews and auto-deploys included in the free tier.",
-      "current_state": "Production deployment with Deployment.io requires your approval. The platform delivers software running in production based on an agreed scope and specification.",
+      "current_state": "The page describes outcome-based pricing for managed delivery engagements, with no free tier, no self-serve plan, and no mention of unlimited static sites, web services, environments, or 10 free job executions per month.",
       "source_url": "https://deployment.io",
       "category": "Infrastructure",
-      "refused_date": "2026-10-07"
+      "refused_date": "2026-11-15"
     },
     {
       "vendor": "deSEC",
@@ -3560,6 +3596,18 @@
       "source_url": "https://www.dropbox.com/plans",
       "category": "Cloud Storage",
       "refused_date": "2026-09-20"
+    },
+    {
+      "vendor": "Dropbox",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-20 (confirmed_unchanged) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free Basic plan is still listed, but the page no longer states the 3-device limit, 100 MB max file size via web, or Dropbox Transfer up to 100 MB; it only says '2 GB to store and share your files.'",
+      "previous_state": "2 GB storage. Up to 3 devices linked. File sharing. 30-day version history. Dropbox Paper access. 100 MB max file size via web (larger via desktop app). Dropbox Transfer up to 100 MB.",
+      "current_state": "Basic Free: 2 GB to store and share your files.",
+      "source_url": "https://www.dropbox.com/plans",
+      "category": "Cloud Storage",
+      "refused_date": "2026-11-15"
     },
     {
       "vendor": "Dub.co",
@@ -5007,6 +5055,18 @@
     },
     {
       "vendor": "Google Cloud Monitoring",
+      "change_type": "pricing_restructured",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The stored deal info describes the Always Free tier as including 'first 1M monitoring API calls/month' and 'Dashboards, alerting, and uptime checks for GCP resources.' The current pricing page shows the free allotment for Monitoring API read calls is now 'First 1 million time series returned per billing account' (effective October 2, 2025), not 1 million API calls. Additionally, alerting is no longer free: starting no sooner than September 1, 2027, Cloud Monitoring will charge $0.35 per month per metric reference in an alerting policy and $0.50 per 1,000,000 points returned by metric alerting policy queries. Uptime checks still have a free allotment of 1 million executions per Google Cloud project.",
+      "previous_state": "Always Free: all non-chargeable Google Cloud metrics, first 1M monitoring API calls/month. Dashboards, alerting, and uptime checks for GCP resources",
+      "current_state": "Monitoring API read calls: First 1 million time series returned per billing account free (effective October 2, 2025). Alerting policies: no free allotment; starting no sooner than September 1, 2027, $0.35 per month per metric reference and $0.50 per 1,000,000 points returned by metric alerting policy queries. Uptime checks: 1 million executions per Google Cloud project free. All non-chargeable Google Cloud metrics remain free.",
+      "source_url": "https://cloud.google.com/monitoring/pricing",
+      "category": "Monitoring",
+      "refused_date": "2026-11-15"
+    },
+    {
+      "vendor": "Google Cloud Monitoring",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-10-02 (unquantified_limit) stated the same 2 figures, so the page showed these terms before the date this record gives",
@@ -5940,6 +6000,18 @@
       "refused_date": "2026-10-26"
     },
     {
+      "vendor": "Hyperping",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-03 (confirmed_unchanged) stated the same 5 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free plan now lists 20 monitors, 5-minute checks, 1 server monitoring agent, 1 basic status page, HTTP/port/ping/keyword checks, and 1 seat, but the stored description's status page features (real-time updates and subscriber notifications) and email/webhook alerts are not stated on the page; the page also says AI is not available on the Free plan.",
+      "previous_state": "Uptime and status page monitoring — free plan: 20 monitors (HTTP, port, ping, keyword), 5-minute check interval, 1 basic status page with real-time updates and subscriber notifications, 1 seat, 1 server monitoring agent, email and webhook alerts",
+      "current_state": "Free plan: 20 monitors, 5-minute checks, 1 server monitoring agent, 1 basic status page, HTTP, port, ping & keyword checks, 1 seat included. AI is not available on the Free plan.",
+      "source_url": "https://hyperping.com/pricing",
+      "category": "Monitoring",
+      "refused_date": "2026-11-15"
+    },
+    {
       "vendor": "Hypertune",
       "change_type": "product_deprecated",
       "reason": "confirmed_unchanged",
@@ -6679,6 +6751,18 @@
       "category": "AI / ML",
       "refused_date": "2026-09-13",
       "collided_with": "LangSmith|pricing_model_change|2026-09-01|https://www.langchain.com/pricing"
+    },
+    {
+      "vendor": "LangWatch",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-24 (unquantified_limit) claimed the same change, limits_increased, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free plan is now called 'Developer' and its limits changed: it offers 50k events/month (not 1k traces/month), 14-day data access, 2 users, and 3 scenarios/simulations/custom evals. The stored description's '1k traces/month' and '1 workflow DSPy optimizers' are not reflected on the page.",
+      "previous_state": "A LLMOps platform helping AI teams measure, monitor, and optimize LLM applications for reliability, cost-efficiency, and performance. With a powerful DSPy component, we enable seamless collaboration between engineers and non-technical teams to fine-tune and productionize GenAI products. Free plan includes all platform features, 1k traces/month and 1 workflow DSPy optimizers. [#opensource](https://github.com/langwatch/langwatch)",
+      "current_state": "Developer plan is €0 free forever with 50k events/month, 14-day data access, 2 users, 3 scenarios, 3 simulations, 3 custom evals, and community support (GitHub & Discord).",
+      "source_url": "https://langwatch.ai/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-11-15"
     },
     {
       "vendor": "LangWatch",
@@ -10631,13 +10715,13 @@
       "vendor": "Sauce Labs",
       "change_type": "free_tier_removed",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-10-02 (free_tier_still_offered) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
-      "summary": "The free open-source tier is no longer available. The lowest-priced tier is now 'Live Testing' at $39/month, offering 1 parallel test.",
+      "detail": "the reading of this vendor refused on 2026-10-25 (repeats_a_refused_claim) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored 'Open Source' free tier (unlimited testing minutes on 3 parallel sessions across 96+ OS/browser combinations, publicly accessible results) is not present on the current pricing page. The page now lists only paid plans: Live Testing ($39/mo annual, $49 month-to-month), Virtual Device Cloud ($149/mo annual, $199 month-to-month), Real Device Cloud ($199/mo annual, $249 month-to-month), plus Enterprise Level and add-on services. No free open-source plan or free-tier terms are described.",
       "previous_state": "Free for open source: unlimited testing minutes on 3 parallel sessions across 96+ OS/browser combinations. Test results are publicly accessible.",
-      "current_state": "Live Testing $39 Per month, billed annually or $49 month to month Parallel tests - 1",
+      "current_state": "The pricing page lists Live Testing at $39/month billed annually or $49 month to month with 1 parallel test and unlimited live testing minutes; Virtual Device Cloud at $149/month billed annually or $199 month to month with 1 parallel test, unlimited live and automated testing minutes, and 1 to 5 concurrent sessions based on plan selection; Real Device Cloud at $199/month billed annually or $249 month to month with 1 parallel test, unlimited live and automated testing minutes, and 1 to 5 concurrent sessions based on plan selection; Enterprise Level with premium support, Sauce AI agents, SSO, private device cloud, and other enterprise features; and additional paid offerings (Sauce Mobile App Distribution at $249/month, Sauce Error Reporting, Sauce Visual). No free open-source tier is described.",
       "source_url": "https://saucelabs.com/pricing",
       "category": "Testing",
-      "refused_date": "2026-10-25"
+      "refused_date": "2026-11-15"
     },
     {
       "vendor": "Scale AI",
@@ -11304,12 +11388,12 @@
       "change_type": "product_deprecated",
       "reason": "no_price_signal",
       "detail": "the page read carries no price signal — no amount, named tier or metered rate in 967 characters, so it states no terms to have changed",
-      "summary": "Solo is shutting down on November 30, 2026, and registrations are closed.",
-      "previous_state": "Free AI website creator from Mozilla, create a beautiful website for your business from a few simple inputs. Free custom domain, no credit card needed.",
-      "current_state": "Registrations are closed. Solo will cease operations on Nov 30, 2026.",
+      "summary": "Solo is shutting down; registrations are closed and websites/data will be deleted on Nov 30, 2026, so the free AI website creator is no longer available to new users.",
+      "previous_state": "Free AI website creator from Mozilla, shutting down: all Solo websites and data are deleted on November 30, 2026. Free custom domain, no credit card needed.",
+      "current_state": "Solo is shutting down and will cease operations on Nov 30, 2026. Registrations are closed. Current customers must download their websites before Nov 30, 2026.",
       "source_url": "https://soloist.ai",
       "category": "Headless CMS",
-      "refused_date": "2026-10-06"
+      "refused_date": "2026-11-15"
     },
     {
       "vendor": "SonarQube Cloud",
