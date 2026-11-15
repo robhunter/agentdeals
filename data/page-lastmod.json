@@ -3146,7 +3146,7 @@
       "changed": "2026-11-12"
     },
     "/digest/2027-w04": {
-      "hash": "5f87bb0dbce4004a",
+      "hash": "db688be273483d46",
       "changed": "2026-11-15"
     },
     "/digest/2027-w05": {
@@ -3274,11 +3274,11 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "hash": "8978268901f3cb98",
+      "hash": "072e5972f2fbd15a",
       "changed": "2026-11-15"
     },
     "/events/google-io-2026": {
-      "hash": "aace31ad628af98c",
+      "hash": "07ad0189b4169946",
       "changed": "2026-11-15"
     },
     "/events/microsoft-build-2026": {
@@ -3357,7 +3357,7 @@
       "changed": "2026-11-13"
     },
     "/gcp-free-tier-2026": {
-      "hash": "f5dafa6a27620aae",
+      "hash": "c257360ff62c35ec",
       "changed": "2026-11-15"
     },
     "/gemini-api-pricing-2026": {
@@ -3421,7 +3421,7 @@
       "changed": "2026-11-15"
     },
     "/hosting-free-tier-comparison-2026": {
-      "hash": "df4a3dd0755fe7f8",
+      "hash": "1342d1ee87a19a3e",
       "changed": "2026-11-15"
     },
     "/hosting-pricing": {
@@ -3663,7 +3663,7 @@
       "changed": "2026-11-15"
     },
     "/reports/2027-01": {
-      "hash": "f9663f15583a01c2",
+      "hash": "8500f94056179ef0",
       "changed": "2026-11-15"
     },
     "/reports/2027-02": {
