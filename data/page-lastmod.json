@@ -840,7 +840,7 @@
       "changed": "2026-11-15"
     },
     "/azure-free-tier-2026": {
-      "hash": "17a7e84dd470c92a",
+      "hash": "3a792554426b961a",
       "changed": "2026-11-15"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -1366,7 +1366,7 @@
       "changed": "2026-11-15"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "9d36ded386cf68a8",
+      "hash": "fd198e4b8cfcf50c",
       "changed": "2026-11-15"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -2717,7 +2717,7 @@
       "changed": "2026-11-15"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "024a87d163c455de",
+      "hash": "b801696220a8809e",
       "changed": "2026-11-15"
     },
     "/database-pricing": {
@@ -3170,7 +3170,7 @@
       "changed": "2026-11-15"
     },
     "/digest/2027-w13": {
-      "hash": "247c6ebbce0bc5f7",
+      "hash": "4606aca74446c5d4",
       "changed": "2026-11-15"
     },
     "/digest/2027-w14": {
@@ -3282,7 +3282,7 @@
       "changed": "2026-11-15"
     },
     "/events/microsoft-build-2026": {
-      "hash": "cc8b52d7151eba2a",
+      "hash": "0518a2da7778522d",
       "changed": "2026-11-15"
     },
     "/expiring": {
@@ -3671,7 +3671,7 @@
       "changed": "2026-11-15"
     },
     "/reports/2027-03": {
-      "hash": "e05ba56335199074",
+      "hash": "f7988e2558ae0592",
       "changed": "2026-11-15"
     },
     "/reports/2027-04": {
@@ -3723,7 +3723,7 @@
       "changed": "2026-11-15"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "10a69c3d308d43bf",
+      "hash": "7eb3d7c5feb16e84",
       "changed": "2026-11-15"
     },
     "/setup": {
@@ -3738,7 +3738,7 @@
       "changed": "2026-11-15"
     },
     "/stack-check": {
-      "hash": "89fbf8cbe513fd88",
+      "hash": "e2913a8aa17870a0",
       "changed": "2026-11-15"
     },
     "/stacks": {
@@ -4406,7 +4406,7 @@
       "daily": true
     },
     "/vendor/azure": {
-      "hash": "9cf1657d9de42c83",
+      "hash": "47a51182c0c9ddb3",
       "changed": "2026-11-15"
     },
     "/vendor/back4app": {
