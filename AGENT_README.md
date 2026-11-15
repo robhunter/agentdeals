@@ -88,8 +88,18 @@ new or edited comments and new reviews. It builds the current merge commit, runs
 complete regular and marked-condition suites, checks the head and comments again, and
 publishes that exact commit using a normal fast-forward push. A conflicting merge or
 unexpected push refuses publication; it never substitutes a different merge tree.
-The merge commit retains the reviewed branch as a parent so GitHub records the pull
-request as merged. Delete the merged branch after verifying publication.
+Each publication turn also reads waiting reviewed requests from their workflow run names.
+It checks every head and review boundary independently, merges eligible heads in arrival
+order and runs both complete suites on the final combined tree. One fast-forward push
+publishes that tested tree with each reviewed head retained in its merge ancestry.
+If the combined candidate conflicts, fails its suites or no longer passes review checks,
+a separate clean worktree tests only the original request before publication. Failed
+candidate logs remain separate from the successful tree's evidence.
+
+Original waiting jobs are retained. Once their exact reviewed heads are ancestors of
+main, they report that the heads are already published without another suite or push.
+Legacy workflow run names and unavailable queue metadata keep single-request behavior.
+Delete merged branches after verifying publication.
 
 Edit timestamps have second precision. An edit in the review timestamp's second
 is refused as ambiguous; read the latest state and use a fresh timestamp after
