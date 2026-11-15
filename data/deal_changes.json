@@ -20190,6 +20190,40 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "announced_on": "2026-11-03"
+    },
+    {
+      "vendor": "AWS",
+      "change_type": "product_deprecated",
+      "date": "2027-08-31",
+      "summary": "AWS Lambda blocks creating new functions on its deprecated runtimes from July 29, 2027. It blocks updating the code and configuration of existing functions from August 31, 2027. AWS is delaying these blocks beyond its usual 30 and 60 days after deprecation. Functions on .NET 8, Python 3.10 and the other deprecated runtimes can still be created and updated until those dates through the AWS CLI, AWS SAM or CloudFormation, not the Lambda console. After both dates, existing functions can still be invoked and can still be switched to a supported runtime. Deprecated runtimes include Node.js 16, 18 and 20; Python 3.8, 3.9 and 3.10; Ruby 3.2; .NET 6 and 8; and provided.al2. Python 3.10 was deprecated on October 31, 2026 and .NET 8 on November 10, 2026. These runtimes are deprecated next and get the same two dates: Ruby 3.3 on March 31, 2027, Node.js 22 on May 30, 2027, and Python 3.11 and Java 8, 11 and 17 on Amazon Linux 2 on June 30, 2027. Older runtimes are the exception: functions on Node.js 14, Python 3.7, Ruby 2.7, Go 1.x, Java 8 on Amazon Linux and provided can no longer be created since 2024 and can no longer be updated from August 31, 2027.",
+      "what_ends": "AWS Lambda's deprecated runtimes: Python 3.8, 3.9 and 3.10, Node.js 16, 18 and 20, .NET 6 and 8, Ruby 3.2 and provided.al2",
+      "previous_state": "Before AWS set block dates, functions on these runtimes could be created and updated through the AWS CLI, AWS SAM or CloudFormation after deprecation.",
+      "current_state": "AWS's Lambda runtimes page (read 2026-11-15), deprecated runtimes table: .NET 8 \"Nov 10, 2026\", Python 3.10 \"Oct 31, 2026\", provided.al2 \"Jul 31, 2026\", Node.js 20 \"Apr 30, 2026\", Ruby 3.2 \"Mar 31, 2026\", Python 3.9 \"Dec 15, 2025\", Node.js 18 \"Sep 1, 2025\", .NET 6, Python 3.8 and Node.js 16 in 2024, each with block function create \"Jul 29, 2027\" and block function update \"Aug 31, 2027\"; Java 8, Go 1.x, provided, Ruby 2.7, Node.js 14 and Python 3.7 block function update \"Aug 31, 2027\". Supported runtimes table: Ruby 3.3 deprecation \"Mar 31, 2027\", Node.js 22 \"May 30, 2027\", Python 3.11 and Java 8, 11 and 17 (Amazon Linux 2) \"Jun 30, 2027\", each blocked from \"Jul 29, 2027\" and \"Aug 31, 2027\". \"Block function update: Lambda begins blocking the update of code and configuration for existing functions. You can still upgrade the function configuration to a supported runtime.\" \"You can continue to invoke your functions indefinitely.\"",
+      "impact": "medium",
+      "source_url": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html",
+      "category": "Serverless",
+      "alternatives": [
+        "Node.js 24 Lambda runtime",
+        "Python 3.13 Lambda runtime",
+        "Python 3.14 Lambda runtime",
+        "Ruby 3.4 Lambda runtime",
+        ".NET 10 Lambda runtime",
+        "Java 21 Lambda runtime",
+        "provided.al2023 Lambda runtime"
+      ],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "shutdown_stages": [
+        {
+          "date": "2027-07-29",
+          "label": "no new functions on these runtimes"
+        },
+        {
+          "date": "2027-08-31",
+          "label": "no more code or configuration updates"
+        }
+      ]
     }
   ]
 }
