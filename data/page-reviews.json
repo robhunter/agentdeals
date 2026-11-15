@@ -421,8 +421,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 85,
-      "table_figures_from_records": 47,
+      "table_figures": 92,
+      "table_figures_from_records": 54,
       "tables": [
         {
           "label": "Deprecation Timeline",
@@ -443,6 +443,11 @@
           "label": "AWS Change Timeline",
           "figures": 4,
           "from_records": 4
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 7,
+          "from_records": 7
         }
       ],
       "reads_changes": true,
@@ -485,8 +490,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 90,
-      "table_figures_from_records": 61,
+      "table_figures": 97,
+      "table_figures_from_records": 68,
       "tables": [
         {
           "label": "Always Free Services",
@@ -510,8 +515,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 0,
-          "from_records": 0
+          "figures": 7,
+          "from_records": 7
         }
       ],
       "reads_changes": true,
@@ -798,8 +803,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 74,
-      "table_figures_from_records": 20,
+      "table_figures": 81,
+      "table_figures_from_records": 27,
       "tables": [
         {
           "label": "Free Trial Credits",
@@ -838,8 +843,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 0,
-          "from_records": 0
+          "figures": 7,
+          "from_records": 7
         }
       ],
       "reads_changes": true,
@@ -910,8 +915,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 133,
-      "table_figures_from_records": 101,
+      "table_figures": 139,
+      "table_figures_from_records": 107,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -950,8 +955,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 1,
-          "from_records": 1
+          "figures": 7,
+          "from_records": 7
         }
       ],
       "reads_changes": true,
@@ -2911,8 +2916,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 85,
-      "table_figures_from_records": 50,
+      "table_figures": 92,
+      "table_figures_from_records": 57,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2946,8 +2951,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 0,
-          "from_records": 0
+          "figures": 7,
+          "from_records": 7
         }
       ],
       "reads_changes": true,
@@ -2969,8 +2974,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 35,
-      "table_figures_from_records": 35,
+      "table_figures": 42,
+      "table_figures_from_records": 42,
       "tables": [
         {
           "label": "Related Pricing Changes",
@@ -2979,8 +2984,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 32,
-          "from_records": 32
+          "figures": 39,
+          "from_records": 39
         }
       ],
       "reads_changes": true,

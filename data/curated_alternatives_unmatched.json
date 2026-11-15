@@ -1,6 +1,12 @@
 {
   "unmatched": [
     {
+      "name": ".NET 10 Lambda runtime",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
       "name": "Amazon ECS Express Mode",
       "named_by": [
         "AWS"
@@ -394,6 +400,12 @@
       ]
     },
     {
+      "name": "Java 21 Lambda runtime",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
       "name": "JetBrains AI",
       "named_by": [
         "Google"
@@ -573,6 +585,24 @@
       ]
     },
     {
+      "name": "provided.al2023 Lambda runtime",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Python 3.13 Lambda runtime",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Python 3.14 Lambda runtime",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
       "name": "QuickBooks API",
       "named_by": [
         "Xero Developer API"
@@ -594,6 +624,12 @@
       "name": "Reddit API",
       "named_by": [
         "X (Twitter)"
+      ]
+    },
+    {
+      "name": "Ruby 3.4 Lambda runtime",
+      "named_by": [
+        "AWS"
       ]
     },
     {
