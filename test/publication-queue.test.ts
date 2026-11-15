@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,7 +16,7 @@ function git(cwd: string, ...args: string[]): string {
   return result.stdout.trim();
 }
 
-function fixture() {
+function fixture(withLedger = false) {
   const root = mkdtempSync(join(tmpdir(), "publication-queue-"));
   const origin = join(root, "origin.git");
   const work = join(root, "work");
@@ -33,6 +33,26 @@ import { execFileSync } from "node:child_process";
 if (process.env.TEST_SHARD) process.exit(3);
 appendFileSync(process.env.QUEUE_LOG, JSON.stringify(["marked-tree", execFileSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }).trim()]) + "\\n");
 process.exit(process.env.QUEUE_MODE === "marked-red" ? 1 : 0);\n`);
+  if (withLedger) {
+    mkdirSync(join(work, "data"));
+    writeFileSync(join(work, "data/page-lastmod.json"), JSON.stringify({ seed: "base" }) + "\n");
+    writeFileSync(join(work, "scripts/update-page-lastmod.js"), `import { appendFileSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+if (process.env.TZ !== "UTC" || process.env.TEST_SHARD) process.exit(3);
+const check = process.argv.includes("--check");
+const path = "data/page-lastmod.json";
+const mode = process.env.QUEUE_MODE;
+appendFileSync(process.env.QUEUE_LOG, JSON.stringify([check ? "ledger-check" : "ledger-write", readFileSync(path, "utf8")]) + "\\n");
+if (existsSync("ledger-residue")) process.exit(6);
+if (existsSync("35.txt") && mode === "ledger-batch-red") { writeFileSync("ledger-residue", "failed regeneration"); process.exit(4); }
+if (mode === "ledger-red" || (check && mode === "ledger-check-red")) process.exit(4);
+const wanted = JSON.stringify({ regenerated: ["app.txt", "35.txt", "36.txt"].filter(existsSync).map(path => readFileSync(path, "utf8")) }) + "\\n";
+if (check) process.exit(readFileSync(path, "utf8") === wanted ? 0 : 5);
+if (mode === "ledger-dirty") writeFileSync("app.txt", "unreviewed\\n");
+writeFileSync(path, wanted);
+if (mode === "ledger-commit") { execFileSync("git", ["add", "."]); execFileSync("git", ["commit", "-m", "unexpected"]); }
+`);
+  }
   writeFileSync(join(work, "app.txt"), "base\n");
   git(work, "add", ".");
   git(work, "commit", "-m", "base");
@@ -43,6 +63,7 @@ process.exit(process.env.QUEUE_MODE === "marked-red" ? 1 : 0);\n`);
   git(sibling, "config", "user.email", "fixture@example.com");
   git(work, "checkout", "-b", "feature");
   writeFileSync(join(work, "app.txt"), "reviewed\n");
+  if (withLedger) writeFileSync(join(work, "data/page-lastmod.json"), JSON.stringify({ seed: "reviewed" }) + "\n");
   git(work, "add", ".");
   git(work, "commit", "-m", "feature");
   git(work, "push", "origin", "HEAD:feature");
@@ -253,8 +274,8 @@ describe("reviewed merge publication uses the exact tested tree", () => {
 });
 
 
-function batchFixture() {
-  const f = fixture();
+function batchFixture(withLedger = false) {
+  const f = fixture(withLedger);
   const bin = join(f.root, "bin");
   const metadata = join(f.root, "batch.json");
   const prs: Record<string, typeof f.pr> = { "34": f.pr };
@@ -263,6 +284,7 @@ function batchFixture() {
   for (const number of [35, 36]) {
     git(f.sibling, "checkout", "-B", `feature-${number}`, f.base);
     writeFileSync(join(f.sibling, `${number}.txt`), `change ${number}\n`);
+    if (withLedger) writeFileSync(join(f.sibling, "data/page-lastmod.json"), JSON.stringify({ seed: `queued ${number}` }) + "\n");
     git(f.sibling, "add", ".");
     git(f.sibling, "commit", "-m", `change ${number}`);
     git(f.sibling, "push", "origin", `HEAD:feature-${number}`);
@@ -516,4 +538,123 @@ describe("each queued head keeps its own review boundary", () => {
       } finally { rmSync(f.root, { recursive: true, force: true }); }
     });
   }
+});
+
+
+function advanceLedger(f: ReturnType<typeof fixture>) {
+  writeFileSync(join(f.sibling, "data/page-lastmod.json"), JSON.stringify({ seed: "current main" }) + "\n");
+  writeFileSync(join(f.sibling, "new.txt"), "new main\n");
+  git(f.sibling, "add", ".");
+  git(f.sibling, "commit", "-m", "advance page dates");
+  git(f.sibling, "push", "origin", "HEAD:main");
+  return git(f.origin, "rev-parse", "main");
+}
+
+describe("reviewed publications regenerate only conflicting page dates", () => {
+  it("preserves an uncontested reviewed ledger without running regeneration", () => {
+    const f = fixture(true);
+    try {
+      const result = f.invoke("ledger-red");
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+      assert.deepEqual(JSON.parse(git(f.origin, "show", "main:data/page-lastmod.json")), { seed: "reviewed" });
+      assert.doesNotMatch(readFileSync(f.log, "utf8"), /ledger-write|ledger-check/);
+    } finally { rmSync(f.root, { recursive: true, force: true }); }
+  });
+
+  it("restarts ledger regeneration from main in a clean fallback worktree", () => {
+    const f = batchFixture(true);
+    try {
+      advanceLedger(f);
+      const result = f.invoke("ledger-batch-red");
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+      assert.match(result.stdout, /Combined publication refused/);
+      assert.equal(git(f.origin, "ls-tree", "--name-only", "main", "35.txt", "36.txt", "ledger-residue"), "");
+      assert.deepEqual(JSON.parse(git(f.origin, "show", "main:data/page-lastmod.json")), { regenerated: ["reviewed\n"] });
+      const seeds = f.calls().filter(call => call[0] === "ledger-write").map(call => JSON.parse(call[1]));
+      assert.deepEqual(seeds, [{ seed: "current main" }, { seed: "current main" }]);
+    } finally { rmSync(f.root, { recursive: true, force: true }); }
+  });
+
+  it("refuses replacing the conflicted ledger with a symbolic link", () => {
+    const f = fixture(true);
+    try {
+      rmSync(join(f.sibling, "data/page-lastmod.json"));
+      symlinkSync("../app.txt", join(f.sibling, "data/page-lastmod.json"));
+      git(f.sibling, "add", ".");
+      git(f.sibling, "commit", "-m", "replace page ledger");
+      git(f.sibling, "push", "origin", "HEAD:main");
+      const main = git(f.origin, "rev-parse", "main");
+      const result = f.invoke();
+      assert.notEqual(result.status, 0, result.stdout + result.stderr);
+      assert.equal(git(f.origin, "rev-parse", "main"), main);
+      assert.doesNotMatch(readFileSync(f.log, "utf8"), /ledger-write|tested-tree/);
+    } finally { rmSync(f.root, { recursive: true, force: true }); }
+  });
+  for (const batch of [false, true]) {
+    it(`regenerates the complete ${batch ? "batched" : "single"} merge before both suites`, () => {
+      const f = batch ? batchFixture(true) : fixture(true);
+      try {
+        const main = advanceLedger(f);
+        const result = f.invoke();
+        assert.equal(result.status, 0, result.stdout + result.stderr);
+        const calls = readFileSync(f.log, "utf8").trim().split("\n").map(line => JSON.parse(line));
+        const published = git(f.origin, "rev-parse", "main");
+        const tree = git(f.origin, "rev-parse", "main^{tree}");
+        assert.deepEqual(calls.filter(call => call[0] === "tested-tree" || call[0] === "marked-tree"), [["tested-tree", tree], ["marked-tree", tree]]);
+        assert.equal(calls.filter(call => call[0] === "ledger-write").length, 1);
+        assert.deepEqual(JSON.parse(calls.find(call => call[0] === "ledger-write")[1]), { seed: "current main" });
+        assert.equal(calls.filter(call => call[0] === "ledger-check").length, 1);
+        assert.ok(calls.findIndex(call => call[0] === "ledger-check") < calls.findIndex(call => call[0] === "tested-tree"));
+        const expected = batch ? ["reviewed\n", "change 35\n", "change 36\n"] : ["reviewed\n"];
+        assert.deepEqual(JSON.parse(git(f.origin, "show", "main:data/page-lastmod.json")), { regenerated: expected });
+        assert.equal(git(f.origin, "show", "main:new.txt"), "new main");
+        git(f.origin, "merge-base", "--is-ancestor", main, published);
+        git(f.origin, "merge-base", "--is-ancestor", f.head, published);
+        if ("heads" in f) for (const head of f.heads) git(f.origin, "merge-base", "--is-ancestor", head, published);
+        assert.equal(git(f.work, "status", "--porcelain"), "");
+        assert.equal(git(f.work, "worktree", "list", "--porcelain").match(/^worktree /gm)?.length, 1);
+      } finally { rmSync(f.root, { recursive: true, force: true }); }
+    });
+  }
+
+  for (const mode of ["ledger-red", "ledger-check-red", "ledger-dirty", "ledger-commit", "red", "marked-red", "head-changed", "comment-added", "main-moved"]) {
+    it(`refuses a regenerated candidate after ${mode}`, () => {
+      const f = fixture(true);
+      try {
+        const main = advanceLedger(f);
+        const result = f.invoke(mode);
+        assert.notEqual(result.status, 0, result.stdout + result.stderr);
+        if (mode !== "main-moved") assert.equal(git(f.origin, "rev-parse", "main"), main);
+        assert.equal(git(f.origin, "show", "main:app.txt"), "base");
+        assert.equal(git(f.work, "worktree", "list", "--porcelain").match(/^worktree /gm)?.length, 1);
+      } finally { rmSync(f.root, { recursive: true, force: true }); }
+    });
+  }
+
+  it("refuses source conflicts even when the page ledger also conflicts", () => {
+    const f = fixture(true);
+    try {
+      writeFileSync(join(f.sibling, "app.txt"), "incompatible\n");
+      const main = advanceLedger(f);
+      const result = f.invoke();
+      assert.notEqual(result.status, 0, result.stdout + result.stderr);
+      assert.equal(git(f.origin, "rev-parse", "main"), main);
+      assert.doesNotMatch(readFileSync(f.log, "utf8"), /ledger-write|tested-tree/);
+    } finally { rmSync(f.root, { recursive: true, force: true }); }
+  });
+
+  it("refuses deletion of the conflicted ledger", () => {
+    const f = fixture(true);
+    try {
+      rmSync(join(f.sibling, "data/page-lastmod.json"));
+      git(f.sibling, "add", ".");
+      git(f.sibling, "commit", "-m", "remove page ledger");
+      git(f.sibling, "push", "origin", "HEAD:main");
+      const main = git(f.origin, "rev-parse", "main");
+      const result = f.invoke();
+      assert.notEqual(result.status, 0, result.stdout + result.stderr);
+      assert.equal(git(f.origin, "rev-parse", "main"), main);
+      assert.doesNotMatch(readFileSync(f.log, "utf8"), /ledger-write|tested-tree/);
+    } finally { rmSync(f.root, { recursive: true, force: true }); }
+  });
 });
