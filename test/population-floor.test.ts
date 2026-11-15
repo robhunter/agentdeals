@@ -38,13 +38,13 @@ describe("a floor over a live population states headroom it has measured", () =>
 
   it("refuses a floor sitting inside the quarter below the population it measured", () => {
     assert.throws(
-      () => assertPopulationFloor(604, 601, "records passed their source check"),
+      () => assertPopulationFloor(604, 601, "records passed their source check", null),
       /a floor of 601 leaves under 25% headroom over the 604 it measured — records passed their source check/,
     );
   });
 
   it("refuses a floor set to exactly what the population measured today", () => {
-    assert.throws(() => assertPopulationFloor(27, 27, "records are dated that day"), /headroom/);
+    assert.throws(() => assertPopulationFloor(27, 27, "records are dated that day", null), /headroom/);
   });
 
   it("still fails when the population is under the floor", () => {
@@ -80,7 +80,7 @@ const threw = (run: () => void): unknown => {
 
 describe("a guard that has drifted says so in a form the data push gate can act on", () => {
   it("marks the headroom refusal as a statement about the guard, not about the data", () => {
-    const guard = driftedGuardOf(threw(() => assertPopulationFloor(102, 80, "vendors withhold on a refused read")));
+    const guard = driftedGuardOf(threw(() => assertPopulationFloor(102, 80, "vendors withhold on a refused read", null)));
     assert.ok(guard, "a drifted floor throws nothing the gate can recognise");
     assert.strictEqual(guard.stated, "a floor of 80");
     assert.strictEqual(guard.measured, "102");
@@ -121,7 +121,7 @@ describe("a guard that has drifted says so in a form the data push gate can act 
         [
           'import { it } from "node:test";',
           `import { assertPopulationFloor } from ${JSON.stringify(path.join(TEST_DIR, "population-floor.ts"))};`,
-          'it("drifts", () => { assertPopulationFloor(102, 80, "vendors withhold on a refused read"); });',
+          'it("drifts", () => { assertPopulationFloor(102, 80, "vendors withhold on a refused read", null); });',
           'it("falls under its floor", () => { assertPopulationFloor(70, 80, "vendors withhold on a refused read"); });',
           'it("passes", () => { assertPopulationFloor(1572, 300, "vendors publish a badge verdict"); });',
           "",
@@ -380,7 +380,7 @@ describe("no test in the suite floors a live population on a bare literal", () =
     assert.deepStrictEqual(
       bare,
       [],
-      `a floor of ${REGISTERED_FROM} or more over a collection has to go through assertPopulationFloor, which measures its headroom against the population as it stands on the day it runs`,
+      `a floor of ${REGISTERED_FROM} or more over a collection has to go through assertPopulationFloor, which checks headroom when the floor is authored`,
     );
   });
 });

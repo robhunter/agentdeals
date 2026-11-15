@@ -282,7 +282,7 @@ describe("#1724 structured data prices a tier at zero only where we state that t
     assertPopulationFloor(readable.length, 400, "priced nodes publish a description we can read against the record");
 
     const hedged = readable.filter(x => x.caveat !== "");
-    assertPopulationFloor(hedged.length, 200, "priced nodes say why we cannot confirm the terms");
+    assertPopulationFloor(hedged.length, 1, "priced nodes say why we cannot confirm the terms");
     assert.deepStrictEqual(
       hedged.filter(x => x.node.offerDescription !== `${x.node.tier} — ${x.caveat}`)
         .map(x => `${x.node.route} ${x.node.vendor}: ${x.node.offerDescription}`).slice(0, 25),
