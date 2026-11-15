@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-14",
+  "generated": "2026-11-15",
   "pages": {
     "/": {
       "daily": true
@@ -3111,8 +3111,7 @@
       "daily": true
     },
     "/digest/2026-w47": {
-      "hash": "59a8a67043d637b8",
-      "changed": "2026-11-14"
+      "daily": true
     },
     "/digest/2026-w49": {
       "hash": "0189e52a5761c7c8",
@@ -3328,7 +3327,8 @@
       "changed": "2026-11-12"
     },
     "/free-tier-risk": {
-      "daily": true
+      "hash": "2e71729dce6d2dca",
+      "changed": "2026-11-15"
     },
     "/free-tier-tracker": {
       "daily": true
@@ -3508,7 +3508,8 @@
       "changed": "2026-11-12"
     },
     "/reports": {
-      "daily": true
+      "hash": "a8d6cfab6f7a3dcd",
+      "changed": "2026-11-15"
     },
     "/reports/2022-11": {
       "hash": "d0778aa8cced1e23",
@@ -3709,7 +3710,8 @@
       "daily": true
     },
     "/stability": {
-      "daily": true
+      "hash": "1a6eed4d29eb55b5",
+      "changed": "2026-11-15"
     },
     "/stack-check": {
       "hash": "95a73986f5c661ba",
@@ -3744,7 +3746,8 @@
       "changed": "2026-11-14"
     },
     "/state-of-free-tiers": {
-      "daily": true
+      "hash": "e239bca8ba2df242",
+      "changed": "2026-11-15"
     },
     "/storage-alternatives": {
       "hash": "49d7eeb080c56fa1",
@@ -3825,7 +3828,8 @@
       "daily": true
     },
     "/trends/cloud-iaas": {
-      "daily": true
+      "hash": "6c8b9c72e32e324a",
+      "changed": "2026-11-15"
     },
     "/trends/cloud-storage": {
       "hash": "5e83940314eba241",
