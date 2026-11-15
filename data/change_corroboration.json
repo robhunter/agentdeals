@@ -1,26 +1,15 @@
 {
   "held": [
     {
-      "vendor": "Currencyapi",
-      "change_type": "pricing_restructured",
+      "vendor": "Firebase",
+      "change_type": "limits_reduced",
       "impact": "low",
-      "summary": "The free tier still exists with 300 requests/month. The page also no longer mentions the 'private use only' restriction or that the convert endpoint is excluded from the free plan, and it now advertises conversion endpoints generally.",
-      "previous_state": "300 requests a month for $0 on the Free plan, up to 10 requests a minute. The Free plan is for private use only. Currencyapi is a currency exchange rate API. The free plan has daily updates and historical rates back to 1999. Commercial use needs a paid plan. Paid plans start at $12.99 a month. The convert endpoint is not on the free plan.",
-      "current_state": "Free plan offers 300 free requests every month with daily rate updates and historical rates back to 1999; paid plans add commercial use, more requests and faster updates, starting at $10.83/month billed yearly ($129.90) or $12.99 monthly.",
-      "source_url": "https://currencyapi.com",
-      "category": "Payments",
-      "first_read_date": "2026-11-14"
-    },
-    {
-      "vendor": "Doppler",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The Developer (free) plan now lists 25 users instead of the stored 'free for 3 users' with $8/mo per additional user; the page also shows different limits (e.g., 50 service tokens, 10 configs per environment, 5 webhook limits, 5 CLI tokens per user) and no longer states the $8/mo per additional user pricing.",
-      "previous_state": "Secrets management — free for 3 users, $8 a month per additional user (Doppler: \"AI agents and non-human identities ride free\"). 10 projects, 4 environments per project, 3 days of activity logs. CLI, SDKs, and integrations included",
-      "current_state": "Developer plan: Free for 3 users, $8/mo per additional user; includes Doppler CLI for local development, service tokens, email alerts and recurring reminders, 3 days of activity logs, secrets referencing, secret value types, API and webhooks access, config syncs (5). Detailed comparison lists Developer with 25 users, 50 service tokens, 10 projects, 4 environments, 10 configs per environment, 5 config sync limits, 5 webhook limits, 5 CLI tokens per user.",
-      "source_url": "https://www.doppler.com/pricing",
-      "category": "Secrets Management",
-      "first_read_date": "2026-11-14"
+      "summary": "Realtime Database Spark plan download limit is now stated as 360 MB/day (equivalent to ~10 GB/month). Previously 10 GB/month downloaded. The page also adds a Remote Config fetch-request pricing change effective September 1, 2026.",
+      "previous_state": "Spark plan, no payment method needed: Auth (50K MAU), Firestore Standard edition (1 GiB stored, 50K reads/day, 20K writes/day, 20K deletes/day), Realtime Database (100 simultaneous connections, 1 GB stored, 10 GB/month downloaded), Hosting (10 GB storage, 360 MB/day transfer), and no-cost Analytics, Crashlytics and Cloud Messaging. Firestore Enterprise on Spark includes 1 GiB stored, 10 GiB/month network egress, 40K write units/day, 50K read units/day, 50K real-time update units/day. Cloud Functions and Cloud Storage need the Blaze plan.",
+      "current_state": "Realtime Database on the no-cost Spark plan: 100 simultaneous connections, 1 GB stored, and 10 GB/month downloaded, with the page noting GB downloaded is no-cost up to 360 MB/day (equivalent to ~10 GB/month).",
+      "source_url": "https://firebase.google.com/pricing",
+      "category": "Databases",
+      "first_read_date": "2026-11-15"
     },
     {
       "vendor": "Harness CI",
@@ -34,15 +23,26 @@
       "first_read_date": "2026-11-01"
     },
     {
-      "vendor": "LangWatch",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The free tier has been renamed and its limits changed: the stored 'Free' plan (1k traces/month, 1 workflow DSPy optimizer) is now the 'Developer' plan at €0 free forever with 50k events/month, 14-day data access, 2 users, and 3 scenarios/simulations/custom evals.",
-      "previous_state": "A LLMOps platform helping AI teams measure, monitor, and optimize LLM applications for reliability, cost-efficiency, and performance. With a powerful DSPy component, we enable seamless collaboration between engineers and non-technical teams to fine-tune and productionize GenAI products. Free plan includes all platform features, 1k traces/month and 1 workflow DSPy optimizers. [#opensource](https://github.com/langwatch/langwatch)",
-      "current_state": "Developer plan: €0 free forever, 50k events/month, 14-day data access, 2 users, 3 scenarios, 3 simulations, 3 custom evals, community support (GitHub & Discord). Paid Growth plan is €29/core-seat/month with 200k events included, then €5/100k, 30-day retention, unlimited lite-users, unlimited simulations/evals/prompts.",
-      "source_url": "https://langwatch.ai/pricing",
-      "category": "AI / ML",
-      "first_read_date": "2026-11-14"
+      "vendor": "ngrok",
+      "change_type": "restriction",
+      "impact": "low",
+      "summary": "The page no longer lists a 5K TCP connections figure for Free in the same way—actually the Free plan now shows 5k TCP connections, consistent. The Free plan now explicitly requires credit card verification for TCP endpoints, and the $5 one-time usage credit is described as lasting one year and cannot be used on data transfer out. The core limits (3 online endpoints, 1 GB bandwidth, 20K HTTP/S requests, 1 dev domain, 5K TCP connections) remain the same. The main discrepancy is the added restriction on the usage credit (cannot be used on data transfer out, lasts one year) and the credit card requirement for TCP endpoints.",
+      "previous_state": "Tunneling and ingress platform — 3 online endpoints, 1 GB bandwidth, 20K HTTP/S requests/month, 1 dev domain, 5K TCP connections. Includes $5 one-time usage credit.",
+      "current_state": "Free plan: $5 one-time included usage credit (lasts one year, cannot be used on data transfer out), up to 3 online endpoints, up to 1GB data transfer, up to 20k HTTP/S requests, interstitial page on HTTP/S endpoints, assigned dev domain, 1 team member, TCP endpoints require credit card verification.",
+      "source_url": "https://ngrok.com/pricing",
+      "category": "Infrastructure",
+      "first_read_date": "2026-11-15"
+    },
+    {
+      "vendor": "windmill.dev",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "Previously Windmill Cloud's Free plan (1,000 executions/month, unlimited scripts/flows/apps, max 3 non-premium workspaces, Team plan $10/dev/month with 10,000 executions/seat and max 10 seats). The current pricing page no longer shows any cloud Free or Team plan with those execution limits. The page now presents a 'Free and Open-source' self-hosted edition (unlimited executions, max 10 users with SSO, 3 workspaces, 50 max users, 100 free app guests per 30 days) and an Enterprise plan starting at $120/mo (or $170/mo per builder with $20/mo/builder and $10/mo/non-builder pricing). The cloud Free plan with 1,000 executions/month and the $10/month Team plan are not present on the page.",
+      "previous_state": "Windmill is an open-source developer platform for building multi-step automations and internal apps from Python and TypeScript scripts. Windmill Cloud's Free plan is $0 with no credit card: 1,000 executions a month, unlimited scripts, flows, apps, variables and resources, Google, GitHub and GitLab sign-in, and community support on Discord. A free user can create and be a member of at most three non-premium workspaces. Cloud's Team plan is $10 a month per developer, with 10,000 executions a month per seat and at most 10 seats. The self-hosted open-source edition is free with unlimited executions and at most 10 users with SSO.",
+      "current_state": "The page shows a 'Free and Open-source' self-hosted edition with unlimited executions, max 10 users with SSO, 3 workspaces, 50 maximum users, 100 free app guests per 30 days, and community support on Discord. It also shows an Enterprise plan from $120/mo (Pro/Nonprofit/Enterprise) with pricing of $170/mo for 1 builder, $20/mo/builder, and $10/mo/non-builder. No cloud Free plan with 1,000 executions/month or $10/month Team plan is listed.",
+      "source_url": "https://www.windmill.dev/pricing",
+      "category": "Low-Code Platforms",
+      "first_read_date": "2026-11-15"
     }
   ],
   "resolved": [
@@ -3687,6 +3687,42 @@
       "outcome": "contradicted",
       "detail": "a reading on 2026-11-14 read a change the gate refused as repeats_a_refused_claim",
       "resolved_date": "2026-11-14"
+    },
+    {
+      "vendor": "Currencyapi",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "The free tier still exists with 300 requests/month. The page also no longer mentions the 'private use only' restriction or that the convert endpoint is excluded from the free plan, and it now advertises conversion endpoints generally.",
+      "previous_state": "300 requests a month for $0 on the Free plan, up to 10 requests a minute. The Free plan is for private use only. Currencyapi is a currency exchange rate API. The free plan has daily updates and historical rates back to 1999. Commercial use needs a paid plan. Paid plans start at $12.99 a month. The convert endpoint is not on the free plan.",
+      "source_url": "https://currencyapi.com",
+      "first_read_date": "2026-11-14",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-15 read it as pricing_restructured too",
+      "resolved_date": "2026-11-15"
+    },
+    {
+      "vendor": "Doppler",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Developer (free) plan now lists 25 users instead of the stored 'free for 3 users' with $8/mo per additional user; the page also shows different limits (e.g., 50 service tokens, 10 configs per environment, 5 webhook limits, 5 CLI tokens per user) and no longer states the $8/mo per additional user pricing.",
+      "previous_state": "Secrets management — free for 3 users, $8 a month per additional user (Doppler: \"AI agents and non-human identities ride free\"). 10 projects, 4 environments per project, 3 days of activity logs. CLI, SDKs, and integrations included",
+      "source_url": "https://www.doppler.com/pricing",
+      "first_read_date": "2026-11-14",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-15 read it as pricing_restructured too",
+      "resolved_date": "2026-11-15"
+    },
+    {
+      "vendor": "LangWatch",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The free tier has been renamed and its limits changed: the stored 'Free' plan (1k traces/month, 1 workflow DSPy optimizer) is now the 'Developer' plan at €0 free forever with 50k events/month, 14-day data access, 2 users, and 3 scenarios/simulations/custom evals.",
+      "previous_state": "A LLMOps platform helping AI teams measure, monitor, and optimize LLM applications for reliability, cost-efficiency, and performance. With a powerful DSPy component, we enable seamless collaboration between engineers and non-technical teams to fine-tune and productionize GenAI products. Free plan includes all platform features, 1k traces/month and 1 workflow DSPy optimizers. [#opensource](https://github.com/langwatch/langwatch)",
+      "source_url": "https://langwatch.ai/pricing",
+      "first_read_date": "2026-11-14",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-15 read a change the gate refused as repeats_a_refused_claim",
+      "resolved_date": "2026-11-15"
     }
   ]
 }
