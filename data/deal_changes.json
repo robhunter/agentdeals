@@ -20139,6 +20139,23 @@
           "label": "jobs on these labels are terminated with an error"
         }
       ]
+    },
+    {
+      "vendor": "Heroku",
+      "change_type": "product_deprecated",
+      "date": "2027-01-06",
+      "summary": "Heroku removes Python 3.10 from its Python buildpacks on January 6, 2027. After that date, apps using Python 3.10 can no longer build or deploy until upgraded to a newer Python version. Existing Python 3.10 apps keep running. This applies on every stack. Python 3.10 reached upstream end of life on October 1, 2026 and gets no security fixes. Heroku deprecated Python 3.10 on November 21, 2025, showing a warning in the build log. Move to Python 3.12, 3.13, 3.14 or 3.15, set in .python-version.",
+      "what_ends": "Python 3.10 on Heroku",
+      "previous_state": "Heroku apps could build and deploy on Python 3.10.",
+      "current_state": "Heroku's changelog, \"Python 3.10 has reached its upstream end-of-life\" (changelog item 3856, effective 2026-10-26, read 2026-11-15): \"Apps using Python 3.10 will continue to build until 6th January 2027, when support for Python 3.10 will be removed from the Python buildpacks. After that, existing Python 3.10 apps will continue to run, however, you will need to upgrade them to a newer version of Python before you can perform any further builds/code deployments.\"",
+      "impact": "medium",
+      "source_url": "https://devcenter.heroku.com/changelog-items/3856",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "announced_on": "2025-11-21"
     }
   ]
 }
