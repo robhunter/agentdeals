@@ -20042,6 +20042,60 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "announced_on": "2025-04-23"
+    },
+    {
+      "vendor": "Heroku",
+      "change_type": "product_deprecated",
+      "date": "2027-02-28",
+      "summary": "Heroku is retiring Postgres 15 on Heroku Postgres. Databases still on Postgres 15 face forced upgrades from January 28, 2027, and after February 28, 2027, Heroku starts restricting access to them and deleting them, including followers. New Postgres 15 databases cannot be created since November 11, 2026, though forks and followers of existing ones can. Heroku asks users to upgrade to a newer Postgres version as soon as possible. Postgres 16, 17 and 18 remain available on Heroku Postgres.",
+      "what_ends": "Heroku Postgres 15",
+      "previous_state": "Heroku Postgres users could create and run databases on Postgres 15.",
+      "current_state": "Heroku's changelog, Heroku Postgres 15 deprecation (read 2026-11-15): \"The end-of-life date is February 28, 2027.\" \"November 11, 2026: You can't create Postgres 15 databases after this date. You can still create forks and followers of existing databases.\" \"January 28, 2027: Forced upgrades on deprecated Postgres 15 databases start.\" \"February 28, 2027: We start restricting database access and deleting databases for Postgres 15 databases after this end-of-life date.\"",
+      "impact": "medium",
+      "source_url": "https://devcenter.heroku.com/changelog-items/3750",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "announced_on": "2026-08-04",
+      "shutdown_stages": [
+        {
+          "date": "2026-11-11",
+          "label": "no new Postgres 15 databases"
+        },
+        {
+          "date": "2027-01-28",
+          "label": "forced upgrades start"
+        },
+        {
+          "date": "2027-02-28",
+          "label": "access restrictions and deletions start"
+        }
+      ]
+    },
+    {
+      "vendor": "Heroku",
+      "change_type": "product_deprecated",
+      "date": "2027-05-01",
+      "summary": "Heroku keeps running. Heroku-22, based on Ubuntu 22.04, reaches end of life on April 30, 2027. After that date, Heroku-22 apps receive no security updates. From May 1, 2027, Heroku-22 apps can no longer be built or deployed, including Review Apps and Heroku CI, and no new Heroku-22 apps can be created, but existing apps keep running. Since November 1, 2026, the first build of each Heroku-22 app in a 30-day period fails with a deprecation error; retrying it deploys as normal. This changes to the first build in each 7-day period from February 1, 2027 and in each 24-hour period from April 1, 2027. Newer stacks are Heroku-24 and Heroku-26.",
+      "what_ends": "Heroku's Heroku-22 stack",
+      "previous_state": "Heroku apps could be built and deployed on the Heroku-22 stack.",
+      "current_state": "Heroku's Heroku-22 End-of-Life FAQ (read 2026-11-15): \"Heroku-22, our stack based on Ubuntu 22.04 Long Term Support, will reach end-of-life on April 30th, 2027.\" \"November 1, 2026: The first build (new code deployment) of each Heroku-22 app within a 30-day period will now fail with a deprecation error at the start of the build.\" \"May 1, 2027: No further builds (code deployments) will be allowed for any Heroku-22 apps, including those used by Review Apps and Heroku CI. All other non-build functionality will continue to work, and existing apps will continue to run.\"",
+      "impact": "medium",
+      "source_url": "https://help.heroku.com/NQNCQTEJ/heroku-22-end-of-life-faq",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "announced_on": "2026-05-20",
+      "shutdown_stages": [
+        {
+          "date": "2027-05-01",
+          "label": "no more builds or deploys"
+        }
+      ]
     }
   ]
 }
