@@ -20224,6 +20224,40 @@
           "label": "no more code or configuration updates"
         }
       ]
+    },
+    {
+      "vendor": "AWS",
+      "change_type": "pricing_restructured",
+      "date": "2027-02-01",
+      "summary": "From February 1, 2027, Amazon ElastiCache charges an Extended Support premium on every cache still running Redis OSS 6. Standard support ends January 31, 2027. Caches move to Extended Support automatically. The premium is 80% of the on-demand node price in years 1 and 2 and 160% in year 3. Reserved node discounts do not apply to it. AWS's example: a cache.m5.large node in US East (Ohio) costs $0.156 an hour plus $0.1248 an hour. The premium stops when the cache is upgraded to Valkey or Redis OSS 7 or later, or deleted.",
+      "previous_state": "ElastiCache caches on Redis OSS 6 ran under standard support at the on-demand node price, with no premium.",
+      "current_state": "AWS's ElastiCache engine versions page (read 2026-11-15), Extended Support and End of Life schedule: \"Redis OSS v6\", \"End of Standard Support\" \"1/31/2027\", \"Start of Extended Support Y1 Premium\" \"2/1/2027\". AWS, ElastiCache Extended Support: \"If you don't upgrade after the end of standard support date, you will be charged.\" ElastiCache pricing: \"80% premium for Year 1 and Year 2\", \"160% premium for Year 3\". AWS, ElastiCache Extended Support charges: \"if you are running a cache.m5.large node on ElastiCache version 5 for Redis OSS in the US East (Ohio) Region, the on-demand price is $0.156/hr and the Extended Support premium for Year 1 is 80%\"; \"The RI discount does not apply to Extended Support charges.\"",
+      "impact": "medium",
+      "source_url": "https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/engine-versions.html",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "tier": "ElastiCache Extended Support",
+      "tier_direction": "unchanged"
+    },
+    {
+      "vendor": "AWS",
+      "change_type": "pricing_restructured",
+      "date": "2027-03-01",
+      "summary": "From March 1, 2027, AWS charges for RDS Extended Support on Amazon RDS for PostgreSQL 14 and Aurora PostgreSQL 14 databases that are enrolled and still on version 14. Standard support ends February 28, 2027. Each database's RDS Extended Support setting decides what happens. The RDS Extended Support column in the console and the EngineLifecycleSupport value in the AWS CLI or RDS API show the setting. An enrolled database is charged. A database with it disabled is upgraded to a supported version on or shortly after February 28, 2027. The AWS CLI, the RDS API and CloudFormation enable it by default. The console does not select it for new databases. The charge stops when the database is upgraded to a version under standard support or deleted. For earlier versions AWS charges $0.10 per vCPU-hour in years 1 and 2 in US East (Ohio). Aurora Serverless v2 on PostgreSQL 14 is $0.085 per ACU-hour in years 1 and 2. On the same date RDS for PostgreSQL 12 moves from $0.100 to $0.200 per vCPU-hour in US East (Ohio).",
+      "previous_state": "RDS for PostgreSQL 14 and Aurora PostgreSQL 14 databases ran under standard support with no Extended Support charge.",
+      "current_state": "AWS's release calendar for Amazon RDS for PostgreSQL (read 2026-11-15): PostgreSQL 14 \"RDS end of standard support date\" \"28 February 2027\" and \"RDS start of Extended Support year 1 pricing\" \"1 March 2027\"; PostgreSQL 12 \"RDS start of Extended Support year 3 pricing\" \"1 March 2027\". Aurora PostgreSQL's release calendar gives PostgreSQL 14 the same two dates. AWS, creating a DB instance with RDS Extended Support: \"If you use the AWS CLI or the RDS API and don't specify the RDS Extended Support setting, Amazon RDS defaults to enabling RDS Extended Support.\" \"If you use the console, you must select Enable RDS Extended Support. The setting isn't selected by default.\" With it disabled: \"Amazon RDS upgrades your DB instance or Multi-AZ DB cluster to a supported engine version. This upgrade takes place on or shortly after the RDS end of standard support date.\" RDS for PostgreSQL pricing (PostgreSQL 12, US East (Ohio)): \"Starting March 1, 2027, you will be charged $0.200 per vCPU-hr.\" AWS price list, US East (Ohio): \"USD 0.10 per hour per vCPU running RDS Extended Support for PostgreSQL 13 in Year 1, Year 2\"; \"USD 0.085 per ACU-hour running Extended Support on Aurora Serverless v2 with PostgreSQL 14 in Year 1, Year 2\".",
+      "impact": "medium",
+      "source_url": "https://docs.aws.amazon.com/AmazonRDS/latest/PostgreSQLReleaseNotes/postgresql-release-calendar.html",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "tier": "RDS Extended Support",
+      "tier_direction": "unchanged"
     }
   ]
 }
