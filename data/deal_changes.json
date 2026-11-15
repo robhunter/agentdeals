@@ -20096,6 +20096,22 @@
           "label": "no more builds or deploys"
         }
       ]
+    },
+    {
+      "vendor": "Railway",
+      "change_type": "product_deprecated",
+      "date": "2026-12-01",
+      "summary": "Railway keeps running. Config as Code, the railway.json and railway.toml files that configure a service, stops working on December 1, 2026, a hard cutoff, and new services cannot opt into it. Infrastructure as Code in a .railway/railway.ts file is the replacement. The command \"railway config migrate --apply\" writes the .railway/railway.ts file from existing railway.json or railway.toml files.",
+      "what_ends": "Railway's Config as Code (railway.json and railway.toml)",
+      "previous_state": "Railway services could be configured with a railway.json or railway.toml file in the repository.",
+      "current_state": "Railway's docs, Using Config as Code (read 2026-11-15): \"Config as Code is deprecated. Prefer Infrastructure as Code (.railway/railway.ts) for project configuration. Existing railway.json / railway.toml files continue to work for services that already use them until 2026-12-01 (hard cutoff). New services cannot opt into Config as Code.\" Railway's changelog #0304: \"Config as Code is going away in favor of our new IaC SDK.\"",
+      "impact": "medium",
+      "source_url": "https://docs.railway.com/config-as-code",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
     }
   ]
 }
