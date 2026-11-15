@@ -3114,7 +3114,7 @@
       "daily": true
     },
     "/digest/2026-w49": {
-      "hash": "d75cd57832b0fe83",
+      "hash": "dd60f6036295df59",
       "changed": "2026-11-15"
     },
     "/digest/2026-w50": {
@@ -3150,7 +3150,7 @@
       "changed": "2026-11-14"
     },
     "/digest/2027-w05": {
-      "hash": "f33ff3fa3cb5bc74",
+      "hash": "93dfa7dde88a5ba9",
       "changed": "2026-11-15"
     },
     "/digest/2027-w06": {
@@ -3331,7 +3331,7 @@
       "changed": "2026-11-12"
     },
     "/free-tier-risk": {
-      "hash": "03aab7e938d4f6b0",
+      "hash": "490eba51dea22567",
       "changed": "2026-11-15"
     },
     "/free-tier-tracker": {
@@ -3714,7 +3714,7 @@
       "daily": true
     },
     "/stability": {
-      "hash": "a89a7b9e656b202a",
+      "hash": "342bd215702ea61e",
       "changed": "2026-11-15"
     },
     "/stack-check": {
@@ -3789,7 +3789,7 @@
       "daily": true
     },
     "/trends": {
-      "hash": "007506df3cfdea43",
+      "hash": "5fa424cee504c345",
       "changed": "2026-11-15"
     },
     "/trends/ai-coding": {
