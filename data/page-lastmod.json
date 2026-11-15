@@ -832,11 +832,11 @@
       "changed": "2026-11-14"
     },
     "/aws-app-runner-migration": {
-      "hash": "4d6be97881622ce4",
+      "hash": "f6b4d67a78771c33",
       "changed": "2026-11-15"
     },
     "/aws-free-tier-2026": {
-      "hash": "53fa6fcdd110d8d5",
+      "hash": "07ceac657ec966bd",
       "changed": "2026-11-15"
     },
     "/azure-free-tier-2026": {
@@ -1366,7 +1366,7 @@
       "changed": "2026-11-15"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "56df31e9dc95b113",
+      "hash": "3321cf39216d81d3",
       "changed": "2026-11-15"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -3130,7 +3130,7 @@
       "changed": "2026-11-14"
     },
     "/digest/2026-w53": {
-      "hash": "15d4dddf9e025107",
+      "hash": "7017ebec2bba4cc9",
       "changed": "2026-11-15"
     },
     "/digest/2027-w01": {
@@ -3663,7 +3663,7 @@
       "changed": "2026-11-15"
     },
     "/reports/2027-01": {
-      "hash": "9a8437ca162db979",
+      "hash": "fa49a1f7c7c5a1c1",
       "changed": "2026-11-15"
     },
     "/reports/2027-02": {
@@ -3723,7 +3723,7 @@
       "changed": "2026-11-15"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "f7fa13dcf1cb1d71",
+      "hash": "45e2b0b46c6f9f9c",
       "changed": "2026-11-15"
     },
     "/setup": {
