@@ -832,11 +832,11 @@
       "changed": "2026-11-14"
     },
     "/aws-app-runner-migration": {
-      "hash": "5c4c56627e8195ab",
+      "hash": "c6a562f8dd3fc8d6",
       "changed": "2026-11-15"
     },
     "/aws-free-tier-2026": {
-      "hash": "e404fd28adb94e69",
+      "hash": "1637475e602a7cfe",
       "changed": "2026-11-15"
     },
     "/azure-free-tier-2026": {
@@ -1366,7 +1366,7 @@
       "changed": "2026-11-15"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "6e36365275b6f3c6",
+      "hash": "bcf97c9d979c4611",
       "changed": "2026-11-15"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -2717,7 +2717,7 @@
       "changed": "2026-11-15"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "e2f34331c924c7c6",
+      "hash": "cb86ac019aaecc32",
       "changed": "2026-11-15"
     },
     "/database-pricing": {
@@ -3150,7 +3150,7 @@
       "changed": "2026-11-14"
     },
     "/digest/2027-w05": {
-      "hash": "8f096f3a481ca6f8",
+      "hash": "7b316709971f2643",
       "changed": "2026-11-15"
     },
     "/digest/2027-w06": {
@@ -3162,7 +3162,7 @@
       "changed": "2026-11-15"
     },
     "/digest/2027-w09": {
-      "hash": "eae58fa3ffa74057",
+      "hash": "72962a327f525039",
       "changed": "2026-11-15"
     },
     "/digest/2027-w11": {
@@ -3663,11 +3663,11 @@
       "changed": "2026-11-15"
     },
     "/reports/2027-02": {
-      "hash": "6d9c2abab408dbf3",
+      "hash": "4d34626db3db314b",
       "changed": "2026-11-15"
     },
     "/reports/2027-03": {
-      "hash": "d410599d51eaa86c",
+      "hash": "6d121461dec97fe0",
       "changed": "2026-11-15"
     },
     "/reports/2027-04": {
@@ -3715,7 +3715,7 @@
       "changed": "2026-11-14"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "d0283d977e2f9b7a",
+      "hash": "20de5df1b70c58cf",
       "changed": "2026-11-15"
     },
     "/setup": {
@@ -3730,7 +3730,7 @@
       "changed": "2026-11-15"
     },
     "/stack-check": {
-      "hash": "c972fe4552069c04",
+      "hash": "293861d18f9aec64",
       "changed": "2026-11-15"
     },
     "/stacks": {
@@ -3762,7 +3762,7 @@
       "changed": "2026-11-15"
     },
     "/state-of-free-tiers": {
-      "hash": "e7bebe1ac894a557",
+      "hash": "4fc9fe5d03559aaa",
       "changed": "2026-11-15"
     },
     "/storage-alternatives": {
