@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { changesTheVendorMade } from "../dist/data.js";
+import { changesTheVendorMade, dealChangesAsPublished } from "../dist/data.js";
 import { recordsStillInForce } from "../dist/change-resolution.js";
 import { statedShutdownMonthOf } from "../dist/shutdown-date.js";
 import { deadlineTextsOf, sameDayDeadlineSuppressions } from "../dist/stated-deadlines.js";
@@ -16,7 +16,8 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(today) || !Number.isFinite(Date.parse(today)) ||
   throw new Error("Expected --today YYYY-MM-DD with a valid calendar date");
 }
 const offers = JSON.parse(readFileSync(values.index, "utf8")).offers;
-const changes = JSON.parse(readFileSync(values.changes, "utf8")).changes;
+const changes = dealChangesAsPublished(JSON.parse(readFileSync(values.changes, "utf8")).changes,
+  new Set(offers.map(offer => offer.vendor.trim().toLowerCase())));
 const listed = changesTheVendorMade(changes)
   .filter(record => record.date > today)
   .filter(record => record.change_type !== "product_deprecated" || statedShutdownMonthOf(record) === null);

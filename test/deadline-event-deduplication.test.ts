@@ -126,7 +126,9 @@ describe("same-day suppression reports", () => {
     try {
       const offers = [{ vendor: "AWS", category: "Cloud IaaS", url: SOURCE,
         description: "Support ends on 2027-03-31.",
-        conditions: [{ text: "The legacy API retires on 2027-03-31.", url: SOURCE }] }];
+        conditions: [{ text: "The legacy API retires on 2027-03-31.", url: SOURCE }] },
+        { vendor: "Ona", category: "Cloud Hosting", url: "https://example.com/ona",
+          description: "The legacy API retires on 2027-04-05.", conditions: [] }];
       const sameDay = { ...bedrock, date: "2027-03-31" };
       const other = { ...sameDay, source_url: "https://example.com/second" };
       const changes = [thinClient, bedrock, sameDay, other,
@@ -136,7 +138,8 @@ describe("same-day suppression reports", () => {
         { ...thinClient, vendor: "Past", summary: "The legacy API retires on 2027-04-01." },
         { ...sameDay, vendor: "Past", date: "2027-04-01" },
         { ...thinClient, vendor: "Reversed", resolution: { state: "reversed", date: TODAY } },
-        { ...sameDay, vendor: "Reversed" }];
+        { ...sameDay, vendor: "Reversed" },
+        { ...sameDay, vendor: "Gitpod", date: "2027-04-05" }];
       const indexPath = path.join(scratch, "index file.json");
       const changesPath = path.join(scratch, "changes file.json");
       const before = [JSON.stringify({ offers }), JSON.stringify({ changes })];
@@ -148,14 +151,15 @@ describe("same-day suppression reports", () => {
       assert.equal(result.status, 0, result.stderr);
       const report = JSON.parse(result.stdout);
       assert.equal(report.today, TODAY);
-      assert.equal(report.count, 2);
-      assert.deepEqual(report.suppressions.map((entry: { vendor: string }) => entry.vendor), ["AWS", "Past"]);
+      assert.equal(report.count, 3);
+      assert.deepEqual(report.suppressions.map((entry: { vendor: string }) => entry.vendor), ["AWS", "Past", "Ona"]);
       assert.equal(report.suppressions[0].stated_in, "condition");
       assert.equal(report.suppressions[0].sentence, offers[0].conditions[0].text);
       assert.equal(report.suppressions[0].source_url, SOURCE);
       assert.deepEqual(report.suppressions[0].suppressing_records, [sameDay, other]);
       assert.equal(report.suppressions[1].stated_in, "record");
       assert.equal(report.suppressions[1].record_date, thinClient.date);
+      assert.equal(report.suppressions[2].suppressing_records[0].vendor, "Ona");
       assert.equal(readFileSync(indexPath, "utf8"), before[0]);
       assert.equal(readFileSync(changesPath, "utf8"), before[1]);
       const invalid = spawnSync(process.execPath, [...args.slice(0, -1), "2027-02-30"], { cwd: scratch, encoding: "utf8", timeout: 30_000 });
