@@ -51,7 +51,7 @@ describe("local test fetch connection lifetime", () => {
   }
 
   it("retains Request headers and does not mutate supplied inputs", async () => {
-    const input = new Request("https://localhost/route", { headers: { "x-request": "present", connection: "keep-alive" } });
+    const input = new Request("https://localhost/route", { headers: { "x-request": "present" } });
     const request: typeof fetch = async (actual, init) => {
       assert.equal(actual, input);
       assert.equal(new Headers(init?.headers).get("x-request"), "present");
@@ -59,14 +59,36 @@ describe("local test fetch connection lifetime", () => {
       return new Response();
     };
     await withoutLocalConnectionReuse(request)(input);
-    assert.equal(input.headers.get("connection"), "keep-alive");
-    const headers = new Headers({ "x-override": "present", connection: "keep-alive" });
+    assert.equal(input.headers.get("connection"), null);
+    const headers = new Headers({ "x-override": "present" });
     await withoutLocalConnectionReuse(async (_input, init) => {
       assert.equal(new Headers(init?.headers).get("x-request"), null);
       assert.equal(new Headers(init?.headers).get("x-override"), "present");
+      assert.equal(new Headers(init?.headers).get("connection"), "close");
       return new Response();
     })(input, { headers });
-    assert.equal(headers.get("connection"), "keep-alive");
+    assert.equal(headers.get("connection"), null);
+  });
+
+  for (const connection of ["close", "keep-alive"]) {
+    it(`preserves an explicit ${connection} connection policy`, async () => {
+      const request: typeof fetch = async (_input, init) => {
+        assert.equal(new Headers(init?.headers).get("connection"), connection);
+        return new Response();
+      };
+      await withoutLocalConnectionReuse(request)("http://localhost/route", { headers: { connection } });
+    });
+  }
+
+  it("rejects invalid local headers through the fetch promise", async () => {
+    let calls = 0;
+    const request: typeof fetch = async () => { calls++; return new Response(); };
+    let result: Promise<Response>;
+    assert.doesNotThrow(() => {
+      result = withoutLocalConnectionReuse(request)("http://localhost/route", { headers: { "x-fixture": "before\nafter" } });
+    });
+    await assert.rejects(result!, TypeError);
+    assert.equal(calls, 0);
   });
 
   it("preserves methods, bodies, signals, redirects and streaming responses", async () => {
