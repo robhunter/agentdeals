@@ -134,13 +134,15 @@ import { spawnSync } from "node:child_process";
 import { createServer } from "node:http";
 it("uses plain fetch", async () => {
   const server = createServer((req, res) => {
-    assert.equal(req.headers.connection, "close");
+    res.setHeader("x-connection", req.headers.connection || "");
     res.end("complete");
   });
   await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
   const url = "http://127.0.0.1:" + server.address().port + "/plain";
   try {
-    assert.equal(await (await fetch(url)).text(), "complete");
+    const response = await fetch(url);
+    assert.equal(await response.text(), "complete");
+    assert.equal(response.headers.get("x-connection"), "close");
     const child = spawnSync(process.execPath, ["--input-type=module", "-e", ${JSON.stringify(`import { createServer } from "node:http";
 const server = createServer((req, res) => res.end(req.headers.connection));
 await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
