@@ -1633,9 +1633,9 @@
             {
               "kind": "remote",
               "target": "https://mcp.neon.tech/sse",
-              "notice": "deprecated and will stop working on or after October 1, 2026.",
+              "notice": "retired and return 410 Gone. If your client still points at /sse, change the URL to https://mcp.neon.tech/mcp.",
               "url": "https://neon.com/docs/ai/neon-mcp-server",
-              "read_on": "2026-10-20"
+              "read_on": "2026-11-15"
             }
           ]
         }
