@@ -131,7 +131,7 @@ describe("the home page includes stated deadlines in its soonest five", () => {
       assert.deepEqual(actual.map(pair), expected.map(pair));
       assertCountdowns(actual);
       if (TODAY < "2026-11-25") assert.ok(actual.some(entry => entry.vendor === "Mem0" && entry.date === "2026-11-25"));
-      if (TODAY < "2026-12-01") assert.ok(entries(deadlines, "dl").some(entry => entry.vendor === "Cloudflare AI Search" && entry.date === "2026-12-01"));
+      if (TODAY < "2026-12-01") assert.ok(actual.some(entry => entry.vendor === "Cloudflare AI Search" && entry.date === "2026-12-01"));
     });
   });
 
@@ -166,7 +166,7 @@ describe("the home page includes stated deadlines in its soonest five", () => {
     const excerpt = `The legacy runtime retires on ${dateIn(6)}.`;
     const offers = [
       offer("Condition", "The free plan includes hosting.", [condition(`Free usage ends on ${dateIn(1)}.`)]),
-      { ...offer("Recorded", `The legacy API retires on ${dateIn(3)}.`), url: "https://deadline-fixture.example/Recorded/change" },
+      offer("Recorded", `The legacy API retires on ${dateIn(3)}.`),
       offer("Whole", full, [condition("Free projects hold 1,000 rows.")]),
       offer("Excerpt", `The plan includes queues. ${excerpt}`, [condition("Queues require a payment card.")]),
       offer("Late", `The free allowance ends on ${dateIn(9)}.`),
