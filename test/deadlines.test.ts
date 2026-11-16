@@ -89,6 +89,11 @@ describe("deadlines REST endpoint", () => {
     const body = await response.json() as any;
     const today = new Date().toISOString().slice(0, 10);
     for (const d of body.deadlines) {
+      if (/^\d{4}-(?:0[1-9]|1[0-2])$/.test(d.date)) {
+        assert.ok(d.date >= today.slice(0, 7));
+        assert.strictEqual(d.countdown_days, null);
+        continue;
+      }
       assert.ok(d.date > today, `Deadline ${d.vendor} date ${d.date} should be after today (${today})`);
     }
   });
@@ -98,6 +103,10 @@ describe("deadlines REST endpoint", () => {
     const response = await fetch(`http://localhost:${serverPort}/api/deadlines`);
     const body = await response.json() as any;
     for (const d of body.deadlines) {
+      if (/^\d{4}-(?:0[1-9]|1[0-2])$/.test(d.date)) {
+        assert.strictEqual(d.countdown_days, null);
+        continue;
+      }
       assert.ok(d.countdown_days >= 1, `countdown_days for ${d.vendor} should be at least 1`);
     }
   });

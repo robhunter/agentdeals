@@ -280,7 +280,7 @@ describe("/shutdowns prints a card for each shutdown a record forecast and no ca
     assert.deepStrictEqual(pair.map(card => card.what).sort(), [RECORDED_AGAIN.summary, DISTINCT_ON_SAME_DAY.summary].sort());
     const month = page.match(new RegExp(`<li data-month="${RECORDED_FIRST.date.slice(0, 7)}">([\\s\\S]*?)<\\/li>`))![1];
     const entries = [...month.matchAll(/<span class="shutdown-month-entry">([\s\S]*?)<\/span>/g)].map(match => textOf(match[1]));
-    const day = shownDate(RECORDED_FIRST.date).replace(/, \d{4}$/, "");
+    const day = String(new Date(RECORDED_FIRST.date).getUTCDate());
     assert.strictEqual(entries.filter(entry => entry === `OpenAI Codex (${day})`).length, 1);
     assert.strictEqual(entries.filter(entry => entry === `Another fixture product (${day})`).length, 1);
     const listed = JSON.parse(page.match(/<script type="application\/ld\+json">(\{"@context":"https:\/\/schema.org","@type":"ItemList"[\s\S]*?)<\/script>/)![1]);

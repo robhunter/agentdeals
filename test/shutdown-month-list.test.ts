@@ -103,7 +103,7 @@ describe("shutdowns by calendar month", () => {
   it("keeps month-end and next-month dates on their own UTC month lines", () => {
     const lines = monthLines(page);
     for (const fixture of fixtures.filter(entry => entry.date >= "2026-11-09")) {
-      const label = new Date(fixture.date).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
+      const label = new Date(fixture.date).toLocaleDateString("en-US", { day: "numeric", timeZone: "UTC" });
       const value = `${fixture.vendor} (${label})`;
       const found = lines.filter(line => line.entries.includes(value));
       assert.equal(found.length, 1, value);
@@ -119,7 +119,7 @@ describe("shutdowns by calendar month", () => {
       assert.ok(line.entries.length > 0, line.month);
       const label = new Date(`${line.month}-01`).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
       assert.ok(line.text.startsWith(`${label}:`), line.text);
-      const days = line.entries.map(entry => Number(entry.match(/\((?:\w+) (\d+)\)$/)?.[1]));
+      const days = line.entries.map(entry => Number(entry.match(/\((\d+)\)$/)?.[1]));
       assert.ok(days.every(Number.isFinite), line.text);
       assert.deepEqual(days, [...days].sort((a, b) => a - b), line.text);
     }
@@ -133,7 +133,7 @@ describe("shutdowns by calendar month", () => {
       if (!piece.startsWith('<div class="shutdown-card"') || section === "completed") continue;
       const title = textOf(piece.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? "");
       const date = piece.match(/<span class="deadline-icon">[^<]*<\/span>\s*<span>([^<]+)<\/span>/)?.[1] ?? "";
-      cards.push(`${title} (${date.replace(/, \d{4}$/, "")})`);
+      cards.push(`${title} (${String(new Date(date).getUTCDate())})`);
     }
     const entries = monthLines(page).flatMap(line => line.entries);
     assert.ok(cards.length > fixtures.length);
@@ -145,7 +145,7 @@ describe("shutdowns by calendar month", () => {
 
   it("keeps different records on one vendor page and date as separate month entries", () => {
     const december = monthLines(page).find(line => line.month === "2026-12")!;
-    assert.equal(december.entries.filter(entry => entry === "Calendar fixture shared vendor (December 11)").length, 2);
+    assert.equal(december.entries.filter(entry => entry === "Calendar fixture shared vendor (11)").length, 2);
   });
 
   it("escapes service titles as text", () => {

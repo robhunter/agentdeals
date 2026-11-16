@@ -11,6 +11,8 @@ const { UPCOMING_DEADLINES_ON_THE_HOME_PAGE, NOTHING_CHANGING_SOON_HTML } = awai
 const { changeTouchesTheListing } = await import("../dist/product-deprecation.js");
 const { changesTheVendorMade } = await import("../dist/data.js");
 const { deadlineTextsOf, statedDeadlines } = await import("../dist/stated-deadlines.js");
+const { forecastShutdownsWithoutACard } = await import("../dist/forecast-shutdowns.js");
+const { isShutdownMonth, shutdownDateEnd } = await import("../dist/shutdown-date.js");
 const { recordsStillInForce } = await import("../dist/change-resolution.js");
 const TODAY = new Date().toISOString().slice(0, 10);
 const DAY = 86400000;
@@ -30,7 +32,7 @@ function entries(html: string, prefix: "cs" | "dl") {
   return html.split(new RegExp(`<div class="${prefix === "cs" ? "cs-entry" : "dl-card"}[^\"]*">`)).slice(1).map(body => ({
     body,
     vendor: text(body.match(new RegExp(`<[^>]*class="${prefix}-vendor"[^>]*>(.*?)<\\/[^>]+>`))?.[1] ?? ""),
-    date: text(body.match(prefix === "cs" ? /<span class="cs-rel">([^<]*)<\/span>/ : /<div class="dl-date">([^<]*)<\/div>/)?.[1] ?? "").match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? "",
+    date: body.match(new RegExp(`class="${prefix === "cs" ? "cs-rel" : "dl-date"}" data-date="([^\\"]+)"`))?.[1] ?? text(body.match(prefix === "cs" ? /<span class="cs-rel">([^<]*)<\/span>/ : /<div class="dl-date">([^<]*)<\/div>/)?.[1] ?? "").match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? "",
   }));
 }
 
@@ -77,6 +79,7 @@ const condition = (value: string) => ({ text: value, quote: value, url: "https:/
 
 function assertCountdowns(rows: ReturnType<typeof entries>) {
   for (const row of rows) {
+    if (row.date.length === 7) { assert.ok(!row.body.includes('class="cs-countdown')); continue; }
     const days = Math.round((Date.parse(row.date) - Date.parse(TODAY)) / DAY);
     assert.match(row.body, new RegExp(`class="cs-countdown${days <= 14 ? " cs-urgent" : ""}">${days}<span class="cs-unit">${days === 1 ? "day" : "days"}</span>`), pair(row));
     assert.ok(row.body.includes(days === 1 ? "tomorrow" : `in ${days} days`), pair(row));
@@ -116,6 +119,11 @@ describe("the home page includes stated deadlines in its soonest five", () => {
         stated.push({ vendor: record.vendor, category: record.category, date: stage.date,
           sentence: record.summary, sourceUrl: record.source_url, statedIn: "record", record });
       }
+    }
+    for (const { record, deadline } of forecastShutdownsWithoutACard(changes, [])) {
+      if (!isShutdownMonth(deadline) || shutdownDateEnd(deadline) < TODAY) continue;
+      stated.push({ vendor: record.vendor, category: record.category, date: deadline,
+        sentence: record.summary, sourceUrl: record.source_url, statedIn: "record", record });
     }
     await withPages(null, null, (home, deadlines) => {
       const expected = qualifyingDeadlineRows(deadlines, records, stated).slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE);

@@ -108,6 +108,7 @@ import { clauseNaming } from "./quoted-figures.js";
 import { figureProvenanceAgainst, statementsWeHold } from "./figure-provenance.js";
 import { statesNoFreeTier } from "./retired-terms.js";
 import { countsDownTo, shutdownDeadlineHtml, shutdownDates, nextShutdownDate } from "./shutdown-deadline.js";
+import { isShutdownMonth, statedShutdownMonthOf, shutdownDateStart, shutdownDateEnd, shutdownMonthLabel, shutdownMonthDateLabel } from "./shutdown-date.js";
 import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
 import { deadlineTextsOf, quotesTheWholeDescription, statedDeadlines, statedShutdowns, type StatedDeadline } from "./stated-deadlines.js";
 import { COMING_UP_HEADING, lastDayComingUp } from "./coming-up.js";
@@ -1295,17 +1296,17 @@ function buildChangingSoonSection(): string {
     const badge = c.citedRecord
       ? changeTypeBadge[c.citedRecord.change_type] ?? { label: c.citedRecord.change_type, color: "#8b949e" }
       : null;
-    const deadlineDate = new Date(c.date + "T00:00:00Z");
+    const deadlineDate = new Date(shutdownDateStart(c.date) + "T00:00:00Z");
     const todayDate = new Date(today + "T00:00:00Z");
     const daysLeft = Math.ceil((deadlineDate.getTime() - todayDate.getTime()) / 86400000);
     const relTime = daysLeft === 0 ? "today" : daysLeft === 1 ? "tomorrow" : `in ${daysLeft} days`;
     return `      <div class="cs-entry">
-        <div class="cs-countdown${daysLeft <= 14 ? " cs-urgent" : ""}">${daysLeft}<span class="cs-unit">${daysLeft === 1 ? "day" : "days"}</span></div>
+        ${isShutdownMonth(c.date) ? "" : `<div class="cs-countdown${daysLeft <= 14 ? " cs-urgent" : ""}">${daysLeft}<span class="cs-unit">${daysLeft === 1 ? "day" : "days"}</span></div>`}
         <div class="cs-detail">
           <div class="cs-head">
             ${badge ? `<span class="change-badge" style="background:${badge.color}">${badge.label}</span>` : ""}
             ${changeVendorLinkHtml(c.vendor, ' class="cs-vendor"')}
-            <span class="cs-rel">${escHtmlServer(c.dateLabel)} · ${relTime}</span>
+            <span class="cs-rel"${isShutdownMonth(c.date) ? ` data-date="${c.date}"` : ""}>${escHtmlServer(c.dateLabel)}${isShutdownMonth(c.date) ? "" : ` · ${relTime}`}</span>
           </div>
           <div class="cs-summary">${c.summaryHtml}</div>
         </div>
@@ -27207,9 +27208,10 @@ function buildShutdownTrackerPage(): string {
   const completed: ShutdownEntry[] = [];
 
   for (const s of shutdowns) {
-    const deadlineDate = new Date(nextShutdownDate(s, todayDay));
+    const nextDate = nextShutdownDate(s, todayDay);
+    const deadlineDate = new Date(shutdownDateStart(nextDate));
     const daysLeft = Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-    if (daysLeft < 0) {
+    if (shutdownDateEnd(nextDate) < todayDay) {
       completed.push(s);
     } else if (daysLeft <= 30) {
       imminent.push(s);
@@ -27220,12 +27222,12 @@ function buildShutdownTrackerPage(): string {
     }
   }
 
-  completed.sort((a, b) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
+  completed.sort((a, b) => new Date(shutdownDateEnd(b.deadline)).getTime() - new Date(shutdownDateEnd(a.deadline)).getTime());
 
   const activeCount = imminent.length + upcoming.length + later.length;
   const shutdownMonths = new Map<string, { service: string; deadline: string; label: string }[]>();
   const monthEntries = [...imminent, ...upcoming, ...later].flatMap(entry => shutdownDates(entry)
-    .filter(stage => stage.date >= todayDay)
+    .filter(stage => shutdownDateEnd(stage.date) >= todayDay)
     .map(stage => ({ service: entry.service, deadline: stage.date, label: stage.label })))
     .sort((a, b) => a.deadline.localeCompare(b.deadline));
   for (const entry of monthEntries) {
@@ -27240,25 +27242,26 @@ function buildShutdownTrackerPage(): string {
       ${[...shutdownMonths].map(([month, entries]) => {
         const label = new Date(`${month}-01`).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
         return `<li data-month="${month}"><strong>${escHtmlServer(label)}:</strong> ${entries.map(entry => {
-          const day = new Date(entry.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
+          const day = isShutdownMonth(entry.deadline) ? shutdownMonthLabel(entry.deadline) : new Date(entry.deadline).toLocaleDateString("en-US", { day: "numeric", timeZone: "UTC" });
           return `<span class="shutdown-month-entry">${escHtmlServer(entry.service)}${entry.label ? `: ${escHtmlServer(entry.label)}` : ""} (${escHtmlServer(day)})</span>`;
         }).join("; ")}.</li>`;
       }).join("\n      ")}
     </ul>
   </section>`;
-  const nextDeadline = shutdowns.find(s => countsDownTo(s) && nextShutdownDate(s, todayDay) >= todayDay);
+  const nextDeadline = shutdowns.find(s => countsDownTo(s) && shutdownDateEnd(nextShutdownDate(s, todayDay)) >= todayDay);
   const nextDaysLeft = nextDeadline ? Math.max(0, Math.ceil((new Date(nextShutdownDate(nextDeadline, todayDay)).getTime() - today.getTime()) / (1000 * 60 * 60 * 24))) : 0;
 
   function urgencyColor(deadline: string): string {
-    const dl = new Date(deadline);
+    if (shutdownDateEnd(deadline) < todayDay) return "#6b7280";
+    const dl = new Date(shutdownDateStart(deadline));
     const days = Math.ceil((dl.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-    if (days < 0) return "#6b7280";
     if (days <= 30) return "#f85149";
     if (days <= 90) return "#d29922";
     return "#3fb950";
   }
 
   function daysLabel(deadline: string): string {
+    if (isShutdownMonth(deadline)) return shutdownMonthLabel(deadline);
     const dl = new Date(deadline);
     const days = Math.ceil((dl.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
     if (days < 0) return "Completed";
@@ -27270,14 +27273,14 @@ function buildShutdownTrackerPage(): string {
   function buildShutdownCard(s: ShutdownEntry): string {
     const deadline = nextShutdownDate(s, todayDay);
     const stages = shutdownDates(s);
-    const pendingStages = stages.filter(stage => stage.date >= todayDay);
-    const passedStages = stages.filter(stage => stage.date < todayDay);
+    const pendingStages = stages.filter(stage => shutdownDateEnd(stage.date) >= todayDay);
+    const passedStages = stages.filter(stage => shutdownDateEnd(stage.date) < todayDay);
     const headerStages = [...pendingStages, ...passedStages];
     const deadlineHtml = headerStages.map((stage, index) => shutdownDeadlineHtml(s, {
-      date: new Date(stage.date + "T00:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }),
+      date: isShutdownMonth(stage.date) ? shutdownMonthDateLabel(stage.date) : new Date(stage.date + "T00:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }),
       color: urgencyColor(stage.date),
       label: stage.label,
-      countdown: stage.date < todayDay ? "Completed" : index === 0 ? daysLabel(deadline) : undefined,
+      countdown: isShutdownMonth(stage.date) ? undefined : stage.date < todayDay ? "Completed" : index === 0 ? daysLabel(deadline) : undefined,
     }, escHtmlServer, s.statedDeadline ? (url, esc) => " " + listingSourceLinkHtml(url, esc) : undefined)).join("\n");
     const stability = stabilityMap.of(s.vendorSlug);
     const stabColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)";
@@ -27288,7 +27291,7 @@ function buildShutdownTrackerPage(): string {
       p.slug.includes(s.vendorSlug)
     );
     const details = ([["Who\u2019s affected", s.whoAffected], ["Impact", s.impact], ["Migration path", s.migrationPath]] as [string, string | undefined][])
-      .flatMap(([label, value]) => value === undefined || (s.deadline < fullShutdownDetailsSince && label !== "Migration path") ? [] : [[label, value] as const]);
+      .flatMap(([label, value]) => value === undefined || (shutdownDateEnd(s.deadline) < fullShutdownDetailsSince && label !== "Migration path") ? [] : [[label, value] as const]);
 
     return `<div class="shutdown-card" style="border-left-color:${color}">
       <div class="shutdown-header">
@@ -27469,7 +27472,7 @@ ${buildGlobalNav("guides")}
     escHtmlServer,
     ' class="subtitle dated-rule"',
   )}
-  <div class="pub-date">Published ${pubDate} &middot; ${activeCount} active shutdowns${nextDeadline ? ` &middot; Next deadline in ${countedNoun(nextDaysLeft, "day")}` : ""} &middot; ${pageDataProvenance("/shutdowns", offers.length)}</div>
+  <div class="pub-date">Published ${pubDate} &middot; ${activeCount} active shutdowns${nextDeadline && !isShutdownMonth(nextShutdownDate(nextDeadline, todayDay)) ? ` &middot; Next deadline in ${countedNoun(nextDaysLeft, "day")}` : ""} &middot; ${pageDataProvenance("/shutdowns", offers.length)}</div>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${activeCount}</div><div class="stat-label">Active Shutdowns</div></div>
@@ -27479,7 +27482,7 @@ ${buildGlobalNav("guides")}
   </div>
 
   <div class="timeline-bar">
-    ${shutdowns.filter(s => nextShutdownDate(s, todayDay) >= todayDay).map(s => {
+    ${shutdowns.filter(s => shutdownDateEnd(nextShutdownDate(s, todayDay)) >= todayDay).map(s => {
       const deadline = nextShutdownDate(s, todayDay);
       const color = urgencyColor(deadline);
       return `<div class="timeline-segment" style="background:${color};flex:1" title="${escHtmlServer(s.service)} \u2014 ${escHtmlServer(daysLabel(deadline))}"></div>`;
@@ -49979,12 +49982,12 @@ function buildExpiringPage(): string {
     const c = line.citedRecord;
     const badge = c ? changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" } : null;
     const dated = line.datedRecord ? isEventDated(line.datedRecord) : true;
-    const countdown = showCountdown ? countdownLabel(line.date) : null;
+    const countdown = showCountdown && !isShutdownMonth(line.date) ? countdownLabel(line.date) : null;
     const urgentClass = countdown?.urgent ? " entry-urgent" : "";
     return `      <div class="exp-entry${urgentClass}${dated ? "" : " exp-undated"}">
         <div class="exp-left">
           ${countdown ? `<div class="exp-countdown${countdown.urgent ? " exp-countdown-urgent" : ""}">${countdown.text}</div>` : ""}
-          <div class="exp-date${dated ? "" : " exp-date-unknown"}">${escHtmlServer(line.dateLabel)}</div>
+          <div class="exp-date${dated ? "" : " exp-date-unknown"}"${isShutdownMonth(line.date) ? ` data-date="${line.date}"` : ""}>${escHtmlServer(line.dateLabel)}</div>
         </div>
         <div class="exp-right">
           <div class="exp-head">
@@ -50006,7 +50009,7 @@ ${entriesHtml}
   }).join("\n");
 
   const totalUpcoming = upcoming.length;
-  const urgentCount = upcoming.filter(c => {
+  const urgentCount = upcoming.filter(c => !isShutdownMonth(c.date)).filter(c => {
     const diff = Math.ceil((new Date(c.date + "T00:00:00Z").getTime() - todayMs) / 86400000);
     return diff <= 14;
   }).length;
@@ -50414,9 +50417,16 @@ ${freshestRows}
 </html>`;
 }
 
+function monthShutdownDeadlines(changes: readonly DealChange[], today: string): StatedDeadline[] {
+  return forecastShutdownsWithoutACard(changes, [])
+    .filter(({ deadline }) => isShutdownMonth(deadline) && shutdownDateEnd(deadline) >= today)
+    .map(({ record, deadline }) => ({ vendor: record.vendor, category: record.category, date: deadline,
+      sentence: record.summary, sourceUrl: record.source_url, statedIn: "record", record }));
+}
+
 function deadlinesOurTextStates(changes: readonly DealChange[], listed: readonly DealChange[], today: string): StatedDeadline[] {
   const recordsBeforeToday = changesTheVendorMade(recordsStillInForce(changes)).filter(c => c.date <= today);
-  const stated = statedDeadlines(deadlineTextsOf(offers, recordsBeforeToday), listed, today);
+  const stated = [...statedDeadlines(deadlineTextsOf(offers, recordsBeforeToday), listed, today), ...monthShutdownDeadlines(changes, today)];
   const stages = forecastShutdownsWithoutACard(changes, []).flatMap(({ record, deadline }) =>
     shutdownDates({ deadline, stages: record.shutdown_stages }).filter(stage => stage.label && stage.date > today && stage.date < deadline)
       .map(stage => ({ vendor: record.vendor, category: record.category, date: stage.date,
@@ -50429,6 +50439,7 @@ function deadlinesOurTextStates(changes: readonly DealChange[], listed: readonly
 function vendorRecordsDatedAfter(changes: readonly DealChange[], today: string): DealChange[] {
   return changesTheVendorMade(changes)
     .filter(c => c.date > today)
+    .filter(record => record.change_type !== "product_deprecated" || statedShutdownMonthOf(record) === null)
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
@@ -50460,7 +50471,7 @@ function statedDeadlineLine(s: StatedDeadline): DeadlineLine {
     date: s.date,
     vendor: s.vendor,
     category: s.category,
-    dateLabel: s.date,
+    dateLabel: isShutdownMonth(s.date) ? shutdownMonthDateLabel(s.date) : s.date,
     sentence: s.sentence,
     summaryHtml: s.record
       ? changeSummaryHtml({ ...s.record, summary: s.sentence }, escHtmlServer)
@@ -50556,7 +50567,7 @@ function buildDeadlinesPage(): string {
   }
 
   function urgencyBadge(dateStr: string): { label: string; color: string; cssClass: string } {
-    const d = new Date(dateStr + "T00:00:00Z").getTime();
+    const d = new Date(shutdownDateStart(dateStr) + "T00:00:00Z").getTime();
     const diff = Math.ceil((d - todayMs) / 86400000);
     if (diff <= 14) return { label: "Critical", color: "#f85149", cssClass: "urgency-critical" };
     if (diff <= 30) return { label: "Warning", color: "#d29922", cssClass: "urgency-warning" };
@@ -50564,7 +50575,8 @@ function buildDeadlinesPage(): string {
   }
 
   function countdownText(dateStr: string): string {
-    const d = new Date(dateStr + "T00:00:00Z").getTime();
+    if (isShutdownMonth(dateStr)) return "";
+    const d = new Date(shutdownDateStart(dateStr) + "T00:00:00Z").getTime();
     const diff = Math.ceil((d - todayMs) / 86400000);
     if (diff === 0) return "today";
     if (diff === 1) return "tomorrow";
@@ -50580,11 +50592,11 @@ function buildDeadlinesPage(): string {
   }
 
   const criticalCount = [...deadlines, ...stated].filter(c => {
-    const d = new Date(c.date + "T00:00:00Z").getTime();
+    const d = new Date(shutdownDateStart(c.date) + "T00:00:00Z").getTime();
     return Math.ceil((d - todayMs) / 86400000) <= 14;
   }).length;
   const warningCount = [...deadlines, ...stated].filter(c => {
-    const d = new Date(c.date + "T00:00:00Z").getTime();
+    const d = new Date(shutdownDateStart(c.date) + "T00:00:00Z").getTime();
     const diff = Math.ceil((d - todayMs) / 86400000);
     return diff > 14 && diff <= 30;
   }).length;
@@ -50619,14 +50631,14 @@ function buildDeadlinesPage(): string {
     return `      <div class="dl-card ${urgency.cssClass}">
         <div class="dl-header">
           <div class="dl-urgency" style="background:${urgency.color}">${urgency.label}</div>
-          <div class="dl-countdown">${countdown}</div>
+          ${countdown ? `<div class="dl-countdown">${countdown}</div>` : ""}
         </div>
         <div class="dl-body">
           <div class="dl-meta">${badgeHtml}
             ${changeVendorLinkHtml(card.vendor, ' class="dl-vendor"')}
             <span class="dl-category">${escHtmlServer(card.category)}</span>
           </div>
-          <div class="dl-date">${escHtmlServer(card.dateLabel)}</div>
+          <div class="dl-date"${isShutdownMonth(due) ? ` data-date="${due}"` : ""}>${escHtmlServer(card.dateLabel)}</div>
           <div class="dl-summary">${card.summaryHtml}</div>
 ${altHtml}${guideHtml}
         </div>
@@ -50638,7 +50650,7 @@ ${altHtml}${guideHtml}
       badge: line.citedRecord ? badgeOf(line.citedRecord) : null,
       vendor: line.vendor,
       category: line.category,
-      dateLabel: line.dateLabel,
+      dateLabel: isShutdownMonth(line.date) ? shutdownMonthDateLabel(line.date) : line.dateLabel,
       summaryHtml: line.summaryHtml,
       alternatives: line.citedRecord?.alternatives ?? [],
       guideText: line.sentence,
@@ -54295,7 +54307,8 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     const today = new Date().toISOString().slice(0, 10);
     const todayMs = new Date(today + "T00:00:00Z").getTime();
     const typeFilter = url.searchParams.get("type") || undefined;
-    const listed = allChanges.filter(c => c.date > today);
+    const listed = allChanges.filter(c => c.date > today)
+      .filter(record => record.change_type !== "product_deprecated" || statedShutdownMonthOf(record) === null);
     const countdownDays = (date: string) => Math.ceil((new Date(date + "T00:00:00Z").getTime() - todayMs) / 86400000);
     const recordDeadlines = listed
       .filter(c => !typeFilter || c.change_type === typeFilter)
@@ -54313,7 +54326,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         source_url: s.sourceUrl,
         stated_in: s.record ? "record" : "listing",
         ...(s.record ? { change_type: s.record.change_type, record_date: s.record.date } : {}),
-        countdown_days: countdownDays(s.date),
+        countdown_days: isShutdownMonth(s.date) ? null : countdownDays(s.date),
       }));
     const deadlines = [...recordDeadlines, ...statedDeadlineEntries]
       .sort((a, b) => a.date.localeCompare(b.date));

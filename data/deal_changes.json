@@ -17415,16 +17415,17 @@
       "change_type": "product_deprecated",
       "date": "2026-10-09",
       "date_source": "vendor_page",
-      "summary": "Deno Deploy keeps running for now. Deno announced on 2026-10-09 that it is joining Cloudflare and that Deno Deploy will keep running for six months and then shut down; Deno gave no exact date. Deno will help paying customers move to Cloudflare Workers.",
+      "summary": "Deno says Deno Deploy will be sunset in April 2027 and gives no day. Existing applications keep running until then. Deno announced on October 9, 2026 that its team is joining Cloudflare. Deno will help paying customers move to Cloudflare Workers.",
       "what_ends": "Deno Deploy",
       "listing_effect": "none",
       "previous_state": "Deno Deploy was offered as an ongoing hosting service, with a Free plan and paid plans and no announced end.",
       "current_state": "\"Deno Deploy will continue operating for six months before shutting down. We will provide migration support for paying customers moving to Cloudflare Workers.\"",
       "impact": "high",
-      "source_url": "https://deno.com/blog/cloudflare",
+      "source_url": "https://docs.deno.com/deploy/",
       "category": "Cloud Hosting",
       "alternatives": [],
-      "recorded_date": "2026-10-12"
+      "recorded_date": "2026-10-12",
+      "discontinued_date": "2027-04"
     },
     {
       "vendor": "Prisma Accelerate",
