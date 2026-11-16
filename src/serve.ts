@@ -5859,7 +5859,7 @@ function buildVendorPage(slug: string): string | null {
 
   const enrichedAlts = enrichOffers(alternatives);
 
-  const changesHtml = vendorChanges.length > 0 ? vendorChanges.map(c => {
+  const renderHistoryChange = (c: DealChange) => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const anchor = `${toSlug(c.vendor)}-${c.date}`;
     const uncited = changeIsUncited(c);
@@ -5873,7 +5873,13 @@ function buildVendorPage(slug: string): string | null {
         <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
         ${printsBeforeAndAfter(c) ? `<div class="change-detail"><span class="state-label">Before:</span> ${escHtmlServer(c.previous_state)}</div><div class="change-detail"><span class="state-label">After:</span> ${escHtmlServer(c.current_state)}</div>` : ""}
       </div>`;
-  }).join("\n") : offerHasEnded
+  };
+  const upcomingHistory = vendorChanges.filter(c => c.date > servedOn).sort((a, b) => a.date.localeCompare(b.date));
+  const pastHistory = vendorChanges.filter(c => c.date <= servedOn).sort((a, b) => b.date.localeCompare(a.date));
+  const changesHtml = vendorChanges.length > 0 ? [
+    upcomingHistory.length > 0 ? `<h3>Upcoming, soonest first</h3>${upcomingHistory.map(renderHistoryChange).join("\n")}` : "",
+    pastHistory.length > 0 ? `<h3>Past, latest first</h3>${pastHistory.map(renderHistoryChange).join("\n")}` : "",
+  ].join("\n") : offerHasEnded
     ? `<p class="no-changes">${escHtmlServer(endedHistorySentence(vendorName))}</p>`
     : theRefusalIsStatedOnce
     ? `<p class="no-changes">${escHtmlServer(emptyHistoryBesideARefusalSentence(vendorName))}</p>`
@@ -5883,7 +5889,10 @@ function buildVendorPage(slug: string): string | null {
     ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}.</p>`
     : `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}. This is a good sign — stable pricing.</p>`;
 
-  const latestChange = citedChanges(changesTheVendorMade(vendorChanges))[0];
+  const noticeCandidates = citedChanges(changesTheVendorMade(vendorChanges));
+  const latestChange = noticeCandidates
+    .filter(c => c.date > servedOn && NEGATIVE_CHANGE_TYPES.has(c.change_type) && !isNoLongerInForce(c))
+    .sort((a, b) => a.date.localeCompare(b.date))[0] ?? noticeCandidates[0];
   const causeAlreadyShown = riskCause !== null && latestChange !== undefined && latestChange !== null
     && latestChange.date === riskCause.date && latestChange.change_type === riskCause.change_type;
   const changeNoticeHtml = latestChange && !causeAlreadyShown && !isNoLongerInForce(latestChange) && NEGATIVE_CHANGE_TYPES.has(latestChange.change_type) ? (() => {
@@ -24219,7 +24228,9 @@ function buildStabilityDashboardPage(): string {
 
   const buildVendorCard = (entry: { vendor: string; changes: typeof allChanges }, color: string) => {
     const category = getCategory(entry.vendor);
-    const latestChange = entry.changes.reduce((latest, c) => c.date > (latest?.date ?? "") ? c : latest, entry.changes[0]);
+    const servedOn = new Date().toISOString().slice(0, 10);
+    const latestChange = entry.changes.filter(c => c.date > servedOn).sort((a, b) => a.date.localeCompare(b.date))[0]
+      ?? entry.changes.reduce((latest, c) => c.date > (latest?.date ?? "") ? c : latest, entry.changes[0]);
     const changeTypeLabel = latestChange?.change_type.replace(/_/g, " ") ?? "";
 
     const editorialLink = ALTERNATIVES_GUIDES.find(p =>
