@@ -28,7 +28,8 @@ const extra = [
   previous_state: "Earlier API version", current_state: "Current API version",
   source_url: `https://example.com/retirement/${i}`, alternatives: [],
 }));
-const records = [...stored.changes, ...extra];
+const past = { ...extra[0], vendor: "Continuing Past", date: today, discontinued_date: today };
+const records = [...stored.changes, ...extra, past];
 const scratch = mkdtempSync(path.join(tmpdir(), "upcoming-continuing-"));
 const pages = new Map<string, string>();
 
@@ -105,6 +106,15 @@ describe("upcoming continuing-service summaries", () => {
       assert.ok(text.startsWith(first), `${record.vendor} ${record.date}`);
       const remainder = record.summary.slice(first.length).trim();
       if (remainder) assert.ok(!text.includes(remainder), `${record.vendor} ${record.date}`);
+    }
+  });
+
+  it("keeps full summaries in historical pricing cards and Latest", () => {
+    const document = createDocument(pages.get("/pricing-changes")!);
+    for (const selector of [".pc-entry:not(.pc-upcoming)", ".latest-section .pc-preview"]) {
+      const card = [...document.querySelectorAll(selector)].find(node => node.querySelector(".pc-vendor")!.textContent === past.vendor);
+      assert.ok(card, selector);
+      assert.ok(card.querySelector(".pc-summary")!.textContent!.startsWith(past.summary), selector);
     }
   });
 
