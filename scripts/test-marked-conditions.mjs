@@ -18,6 +18,7 @@ if (supplied < 0) {
 const mixed = index.offers.filter(offer => offer.conditions?.some(c => c.operating_detail === true) && offer.conditions.some(c => c.operating_detail !== true));
 assert.ok(mixed.length >= 3, "the fixture has mixed conditions on several vendors");
 const env = { ...process.env, TZ: "UTC", AGENTDEALS_INDEX_PATH: indexPath, AGENTDEALS_PAGE_REVIEWS_PATH: reviewsPath, AGENTDEALS_API_URL: "http://tests-start-their-own-api.invalid", AGENTDEALS_REFERRAL_HEALTH: "off" };
+env.NODE_OPTIONS = `${process.env.NODE_OPTIONS || ""} --import=${new URL("./local-test-fetch.js", import.meta.url).href}`;
 delete env.TEST_SHARD;
 const files = readdirSync(join(root, "test")).filter(name => name.endsWith(".test.ts")).filter(name => {
   const source = readFileSync(join(root, "test", name), "utf8");
@@ -32,7 +33,7 @@ try {
   writeFileSync(indexPath, JSON.stringify(index, null, 2) + "\n");
   console.log(`Marked-condition fixture: ${mixed.length} mixed listings; ${files.length} test files.`);
   run(["scripts/sync-page-reviews.js"]);
-  run(["--import", "./scripts/local-test-fetch.js", "--test", "--test-concurrency=1", ...files.map(name => `test/${name}`)]);
+  run(["--test", "--test-concurrency=1", ...files.map(name => `test/${name}`)]);
 } finally {
   for (const [path, bytes] of originals) writeFileSync(path, bytes);
 }

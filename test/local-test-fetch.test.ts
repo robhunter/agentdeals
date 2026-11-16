@@ -111,14 +111,23 @@ describe("local test fetch connection lifetime", () => {
     });
   }
 
-  for (const command of ["test", "test:gated"]) {
+  for (const command of ["test", "test:gated", "marked"]) {
     it(`${command} protects a newly written bare-fetch test and its child`, { timeout: 30000 }, async () => {
       const work = mkdtempSync(join(tmpdir(), "local-test-fetch-"));
       try {
         mkdirSync(join(work, "test/workers"), { recursive: true });
-        symlinkSync(join(root, "scripts"), join(work, "scripts"), "dir");
+        if (command === "marked") {
+          mkdirSync(join(work, "scripts"));
+          mkdirSync(join(work, "data"));
+          for (const file of ["test-marked-conditions.mjs", "local-test-fetch.js"]) {
+            writeFileSync(join(work, "scripts", file), readFileSync(join(root, "scripts", file)));
+          }
+          writeFileSync(join(work, "scripts/sync-page-reviews.js"), "");
+          writeFileSync(join(work, "data/index.json"), JSON.stringify({ offers: Array.from({ length: 3 }, () => ({ conditions: [{ operating_detail: true }, {}] })) }));
+          writeFileSync(join(work, "data/page-reviews.json"), "{}");
+        } else symlinkSync(join(root, "scripts"), join(work, "scripts"), "dir");
         writeFileSync(join(work, "package.json"), JSON.stringify({ type: "module", scripts: { [command]: scripts[command] } }));
-        writeFileSync(join(work, "test/workers/plain.test.ts"), `
+        writeFileSync(join(work, command === "marked" ? "test/conditions-plain.test.ts" : "test/workers/plain.test.ts"), `
 import { it } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -148,7 +157,7 @@ for (const args of [["init", "-q"], ["add", "package.json"]]) {
  const result = spawnSync("git", args, { cwd: ${JSON.stringify(work)}, encoding: "utf8" });
  if (result.status !== 0) throw new Error(result.stderr);
 }
-const result = spawnSync("npm", ["run", ${JSON.stringify(command)}], { cwd: ${JSON.stringify(work)}, env: process.env, encoding: "utf8", timeout: 20000 });
+const result = spawnSync(${JSON.stringify(command === "marked" ? process.execPath : "npm")}, ${JSON.stringify(command === "marked" ? ["scripts/test-marked-conditions.mjs"] : ["run", command])}, { cwd: ${JSON.stringify(work)}, env: process.env, encoding: "utf8", timeout: 20000 });
 process.stdout.write(result.stdout + result.stderr);
 process.exit(result.status ?? 1);`, env);
         assert.equal(result.status, 0, result.output);
