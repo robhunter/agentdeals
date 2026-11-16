@@ -18,9 +18,11 @@ interface Card {
   "Migration path": string;
 }
 
+const omittedFacts = (deadline: string, text: string) => Date.parse(new Date().toISOString().slice(0, 10)) > Date.parse(deadline) + 90 * 86_400_000 ? text : "";
+
 const NEW_CARD: [string, Card] = ["OpenAI legacy GPT models (September 2026)", {
   date: "September 28, 2026",
-  what: "gpt-3.5-turbo-instruct, babbage-002, davinci-002 and gpt-3.5-turbo-1106 shut down in the OpenAI API on September 28, 2026. Fine-tuned babbage-002 and davinci-002 models (ft-babbage-002, ft-davinci-002) are listed separately, for October 23, 2026.",
+  what: "gpt-3.5-turbo-instruct, babbage-002, davinci-002 and gpt-3.5-turbo-1106 shut down in the OpenAI API on September 28, 2026. Fine-tuned babbage-002 and davinci-002 models (ft-babbage-002, ft-davinci-002) are listed separately, for October 23, 2026." + omittedFacts("2026-09-28", " gpt-3.5-turbo-instruct, babbage-002 and davinci-002 run on the legacy Completions endpoint (/v1/completions)."),
   "Who’s affected": "Developers calling these model IDs. gpt-3.5-turbo-instruct, babbage-002 and davinci-002 run on the legacy Completions endpoint (/v1/completions).",
   Impact: "Calls to these model IDs stop working.",
   "Migration path": "OpenAI names gpt-5.6-terra as the replacement for all four. gpt-5.6-terra does not support /v1/completions, so calls on that endpoint must move to the Chat Completions or Responses API.",
@@ -32,7 +34,7 @@ const FIELDS: Record<string, Partial<Card>> = {
     "Migration path": "OpenAI's substitutes: gpt-5.6-terra for gpt-3.5-turbo and o4-mini; gpt-5.6-sol for gpt-4, gpt-4-turbo, gpt-4-1106-preview, gpt-4o-2024-05-13, o1 and o3-mini; gpt-5.6-sol with reasoning.mode: pro for o1-pro; gpt-5.6-luna for gpt-4.1-nano; gpt-image-2.5-sunburst or gpt-image-2.5-flare for gpt-image-1. Replacement base models for fine-tunes: gpt-5.6-terra for gpt-3.5-turbo, o4-mini, babbage-002 and davinci-002; gpt-5.6-sol for gpt-4; gpt-5.6-luna for gpt-4.1-nano. The gpt-5.6 models do not support fine-tuning or the legacy /v1/completions endpoint.",
   },
   "OpenAI Realtime API Beta": {
-    what: "The Realtime API Beta (requests with the OpenAI-Beta: realtime=v1 header) was removed from the API on May 12, 2026.",
+    what: "The Realtime API Beta (requests with the OpenAI-Beta: realtime=v1 header) was removed from the API on May 12, 2026." + omittedFacts("2026-05-12", " The GA Realtime API was not affected."),
     "Who’s affected": "Integrations still on the beta interface. The GA Realtime API was not affected.",
     Impact: "Calls to the beta interface no longer work.",
     "Migration path": "Move to the GA Realtime API: remove the OpenAI-Beta: realtime=v1 header, create ephemeral credentials for browser or mobile clients with POST /v1/realtime/client_secrets, use /v1/realtime/calls for WebRTC sessions, set session.type, move output audio settings under session.audio.output, and use the GA response event names, such as response.output_text.delta, response.output_audio.delta and response.output_audio_transcript.delta.",
@@ -53,7 +55,7 @@ const FIELDS: Record<string, Partial<Card>> = {
     "Migration path": "Google recommends Antigravity or Google AI Studio. Code can also be downloaded as a zip or pushed to GitHub. Apps already deployed to Firebase keep running.",
   },
   "Firebase Studio (New Workspaces)": {
-    what: "New workspace creation and user signup for Firebase Studio are disabled.",
+    what: "New workspace creation and user signup for Firebase Studio are disabled." + omittedFacts("2026-06-22", " Existing workspaces keep working until March 22, 2027."),
     "Who’s affected": "New users and developers creating new Firebase Studio workspaces. Existing workspaces keep working until March 22, 2027.",
     "Migration path": "Google recommends migrating existing workspaces to Google AI Studio or Google Antigravity. GitHub Codespaces (120 free core hours a month on a GitHub Free personal account) and Replit's free Starter plan are other options.",
   },
