@@ -268,16 +268,16 @@ describe("every change we publish reaches the page it was read from", () => {
     assert.deepStrictEqual(offenders, []);
   });
 
-  it("names the page in the citation's title so the reader sees where it goes", () => {
+  it("keeps citation destinations without repeating them in titles", () => {
     for (const route of Object.keys(ENTRY_CLASS)) {
       const tags = citationTags(pages.get(route)!);
       assert.ok(tags.length > 50, `${route} carries only ${tags.length} citations`);
       const wrong = tags.filter((tag) => {
         const href = decodeEntities(tag.match(/href="([^"]*)"/)![1]);
         const title = decodeEntities(tag.match(/title="([^"]*)"/)?.[1] ?? "");
-        return title !== citationLabel(href);
+        return !href || title !== "";
       });
-      assert.deepStrictEqual(wrong.slice(0, 3), [], `${route} carries ${wrong.length} citations whose title is not the page`);
+      assert.deepStrictEqual(wrong.slice(0, 3), [], `${route} carries ${wrong.length} empty destinations or redundant titles`);
     }
   });
 
@@ -382,7 +382,7 @@ describe("a record with no source says so where a record with one is cited", () 
       assert.ok(tag.includes('target="_blank"'), tag);
       assert.match(tag, /rel="[^"]*\bnoopener\b[^"]*"/, tag);
       assert.match(tag, /rel="[^"]*\bnofollow\b[^"]*"/, `citing a vendor is not endorsing one: ${tag}`);
-      assert.ok(tag.includes(`title="${citationLabel(SOURCE)}"`), tag);
+      assert.ok(!tag.includes(' title='), tag);
     });
 
     for (const vendor of [UNCITED, BLANK]) {
