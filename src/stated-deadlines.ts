@@ -42,6 +42,8 @@ const PREFERENCE: Record<DeadlineStatedIn, number> = { condition: 0, description
 
 const A_DAY_IN_MS = 86400000;
 
+type ListedDeadlineRecord = Pick<DealChange, "vendor" | "date"> & Partial<Pick<DealChange, "source_url">>;
+
 function isoOf(year: number, month: number, day: number): string | null {
   if (!year || month < 1 || month > 12 || day < 1 || day > 31) return null;
   const iso = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -139,9 +141,8 @@ export function deadlineTextsOf(offers: readonly Offer[], recordsBeforeToday: re
 const SHUTDOWN_WORDS = /\b(?:shut(?:s|ting)?[\s-]?down|retir(?:e|es|ed|ing|ement)|discontinu(?:e|es|ed|ing|ation)|end[\s-]of[\s-]life|ends?\s+support|end[\s-]of[\s-]support)\b/i;
 const SHUTDOWN_CONJUNCTION = new RegExp(`\\band\\s+(?=(?:then\\s+)?${SHUTDOWN_WORDS.source})`, "i");
 
-function deadlinesInTexts(
+function deadlineCandidatesInTexts(
   texts: readonly DeadlineText[],
-  listedRecords: readonly Pick<DealChange, "vendor" | "date">[],
   today: string,
   shutdownsOnly: boolean,
 ): StatedDeadline[] {
@@ -174,17 +175,28 @@ function deadlinesInTexts(
       }
     }
   }
-  const unlisted = [...byVendorAndDay.values()].filter((deadline) =>
-    !listedRecords.some((record) => record.vendor === deadline.vendor && daysBetween(record.date, deadline.date) <= 1));
-  const unlistedDays = new Set(unlisted.map((deadline) => `${deadline.vendor}\u0000${deadline.date}`));
-  return unlisted
-    .filter((deadline) => shutdownsOnly || !unlistedDays.has(`${deadline.vendor}\u0000${dayAfter(deadline.date)}`))
+  return [...byVendorAndDay.values()];
+}
+
+function deadlinesInTexts(
+  texts: readonly DeadlineText[],
+  listedRecords: readonly ListedDeadlineRecord[],
+  today: string,
+  shutdownsOnly: boolean,
+): StatedDeadline[] {
+  const candidates = deadlineCandidatesInTexts(texts, today, shutdownsOnly);
+  const statedDays = new Set(candidates.map((deadline) => `${deadline.vendor}\u0000${deadline.date}`));
+  const preferred = candidates.filter((deadline) => shutdownsOnly || !statedDays.has(`${deadline.vendor}\u0000${dayAfter(deadline.date)}`));
+  return preferred.filter((deadline) =>
+    !listedRecords.some((record) => record.vendor === deadline.vendor
+      && (record.date === deadline.date || (daysBetween(record.date, deadline.date) === 1
+        && (record === deadline.record || Boolean(deadline.sourceUrl && record.source_url === deadline.sourceUrl))))))
     .sort((a, b) => a.date.localeCompare(b.date) || a.vendor.localeCompare(b.vendor));
 }
 
 export function statedDeadlines(
   texts: readonly DeadlineText[],
-  listedRecords: readonly Pick<DealChange, "vendor" | "date">[],
+  listedRecords: readonly ListedDeadlineRecord[],
   today: string,
 ): StatedDeadline[] {
   return deadlinesInTexts(texts, listedRecords, today, false);
@@ -195,4 +207,15 @@ export function statedShutdowns(
   today: string,
 ): StatedDeadline[] {
   return deadlinesInTexts(texts, [], today, true);
+}
+
+export function sameDayDeadlineSuppressions(
+  texts: readonly DeadlineText[],
+  listedRecords: readonly ListedDeadlineRecord[],
+  today: string,
+): Array<{ deadline: StatedDeadline; records: ListedDeadlineRecord[] }> {
+  return deadlineCandidatesInTexts(texts, today, false)
+    .map(deadline => ({ deadline, records: listedRecords.filter(record => record.vendor === deadline.vendor && record.date === deadline.date) }))
+    .filter(entry => entry.records.length > 0)
+    .sort((a, b) => a.deadline.date.localeCompare(b.deadline.date) || a.deadline.vendor.localeCompare(b.deadline.vendor));
 }
