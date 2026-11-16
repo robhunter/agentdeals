@@ -20547,6 +20547,38 @@
       "recorded_date": "2026-11-16",
       "date_source": "vendor_page",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "Azure",
+      "change_type": "product_deprecated",
+      "date": "2027-01-14",
+      "summary": "Azure OpenAI retires gpt-4o version 2024-05-13 on January 14, 2027. gpt-4o versions 2024-08-06 and 2024-11-20 retire later on Azure OpenAI, in April 2027, and are not covered by this date. This applies to Global Standard, Data Zone Standard, Regional Provisioned, Global Provisioned, Data Zone Provisioned and Global Batch deployments in Azure public cloud. Its Regional Standard deployments already retired in March 2026. Microsoft upgrades Global Standard and Data Zone Standard deployments to gpt-5.1 version 2025-11-13 that day. Provisioned deployments are not upgraded. Create a gpt-5.1 deployment and move traffic before January 14, 2027. Microsoft does not promise automatic upgrades for Global Batch. After that date, requests to version 2024-05-13 return HTTP 410 Gone.",
+      "what_ends": "Azure OpenAI gpt-4o 2024-05-13 retirement",
+      "previous_state": "gpt-4o version 2024-05-13 runs on Azure OpenAI in Global Standard, Data Zone Standard, Provisioned and Global Batch deployments.",
+      "current_state": "Microsoft Learn, \"Model retirement schedule - Microsoft Foundry\" (updated 2026-09-23, read 2026-11-16): \"All active customer-facing base-model inference offers for gpt-4o version 2024-05-13 in Azure public cloud retire on January 14, 2027, in all applicable regions. These offers include Global Standard, Data Zone Standard, Regional Provisioned, Global Provisioned, Data Zone Provisioned, and Global Batch.\" \"Global Standard and Data Zone Standard deployments of gpt-4o version 2024-05-13 automatically upgrade to gpt-5.1 version 2025-11-13 at retirement. Provisioned deployments aren't automatically upgraded; create replacement deployments and move your traffic before retirement.\" \"The shared retirement date doesn't imply automatic upgrades for Global Batch offers.\" \"Foundry Models lifecycle and support policy\": \"Retired: Removed from service. All inference requests return 410 Gone.\"",
+      "impact": "medium",
+      "source_url": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-16",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
+    },
+    {
+      "vendor": "Azure",
+      "change_type": "product_deprecated",
+      "date": "2027-04-14",
+      "summary": "Azure OpenAI retires gpt-4o versions 2024-08-06 and 2024-11-20, gpt-4o-mini version 2024-07-18, and gpt-4.1, gpt-4.1-mini and gpt-4.1-nano versions 2025-04-14 on April 14, 2027. Regional Standard deployments that already retired stay retired. Microsoft names gpt-5.1 as the replacement for gpt-4o. No replacement is named for the others. Fine-tuned deployments of these models have later dates on a separate Microsoft schedule. OpenAI's own API shuts down gpt-4o, gpt-4o-mini, gpt-4.1 and gpt-4.1-mini earlier, in January 2027. That is OpenAI's date, not Azure's.",
+      "what_ends": "Azure OpenAI gpt-4o, gpt-4o-mini and gpt-4.1 version retirement",
+      "previous_state": "gpt-4o 2024-08-06 and 2024-11-20, gpt-4o-mini 2024-07-18, and gpt-4.1, gpt-4.1-mini and gpt-4.1-nano 2025-04-14 can be called on Azure OpenAI.",
+      "current_state": "Microsoft Learn, \"Model retirement schedule - Microsoft Foundry\" (updated 2026-09-23, read 2026-11-16): \"April 14, 2027 applies to all active customer-facing base-model inference offers in all applicable regions in Azure public cloud for gpt-4o versions 2024-08-06 and 2024-11-20, gpt-4o-mini version 2024-07-18, and gpt-4.1-mini version 2025-04-14. Already-retired Regional Standard deployments remain retired.\" Table \"Azure OpenAI\": gpt-4.1 and gpt-4.1-nano (version 2025-04-14) have retirement date 2027-04-14. Replacement gpt-5.1 for gpt-4o 2024-08-06 and 2024-11-20, none for the others. \"Foundry Models lifecycle and support policy\": \"Retired: Removed from service. All inference requests return 410 Gone.\"",
+      "impact": "medium",
+      "source_url": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-16",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
     }
   ]
 }
