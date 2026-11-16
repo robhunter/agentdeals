@@ -46,6 +46,14 @@ npm start            # Run compiled server (stdio transport)
 npm run serve        # Run HTTP server (streamable-http transport)
 ```
 
+To inspect stated deadline candidates suppressed by same-vendor, same-day records,
+run `node scripts/suppressed-stated-deadlines.mjs`. Its JSON output includes each
+selected sentence, its source and every record that suppresses it. Selection keeps
+the existing condition, description, then record preference for each vendor/date.
+The command reads the same catalogue inputs as `/deadlines` and changes no files.
+Use `--today YYYY-MM-DD` for a fixed observation date, or `--index PATH --changes PATH`
+for separate input files. Run `npm run build` first.
+
 The weekly archive settlement reads standing first-pass change records with missing or
 unsettled archive checks, one at a time. Run
 `node scripts/run-archive-settlement.js --out <report.json>` to produce a report without
