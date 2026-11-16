@@ -18,7 +18,7 @@ const {
   readClauseHtml,
 } = await import("../dist/source-citation.js");
 const { RECORD_SOURCE_CLASS } = await import("../dist/change-citation.js");
-const { whereOurTermsCameFrom } = await import("../dist/read-date.js");
+const { lastReadOutcome, whereOurTermsCameFrom } = await import("../dist/read-date.js");
 const { NAMING_TOKENS_RECORDED_INSTEAD_OF_EVIDENCE, checkFinding } = await import("../dist/source-check.js");
 const { toSlug } = await import("../dist/vendor-slug.js");
 
@@ -235,6 +235,11 @@ describe("nothing we serve attributes our own sentence to the page it cites", ()
     for (const offer of recordsWithAFinding) {
       const page = swept.get(`/vendor/${toSlug(offer.vendor)}`);
       if (!page || page.sourceLine === "") continue;
+      if (lastReadOutcome(offer) === "confirmed"
+          && checkFinding(offer)!.endsWith(" and states amounts, none of which we matched to the terms we publish")) {
+        assert.ok(!page.sourceLine.includes(`${CHECK_FINDING_LEAD}: `), offer.vendor);
+        continue;
+      }
       if (page.sourceLine.includes(`${CHECK_FINDING_LEAD}: `)) attributed++;
       else silent.push(offer.vendor);
     }
