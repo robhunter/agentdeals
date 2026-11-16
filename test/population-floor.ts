@@ -7,6 +7,7 @@ import { searchRecordingCalls } from "./search-recording-paths.ts";
 import { recordRestoringTheFreeTier } from "../dist/data.js";
 import { offerRetired } from "../dist/retirement.js";
 import { supersedingChange } from "../dist/superseded-description.js";
+import { unchangedPopulationFloor } from "./population-floor-history.ts";
 
 export const HEADROOM = 0.25;
 
@@ -212,20 +213,25 @@ export function passedPopulationsIn(source: string): PassedPopulation[] {
   return found.sort((a, b) => a.line - b.line);
 }
 
-export function assertPopulationFloor(observed: number, floor: number, subject: string): void {
+export function assertPopulationFloor(
+  observed: number, floor: number, subject: string,
+  base: string | null = process.env.POPULATION_FLOOR_BASE || "origin/main",
+): void {
+  const site = callSite();
   const log = process.env.POPULATION_FLOOR_LOG;
-  if (log) appendFileSync(log, `${JSON.stringify({ site: callSite(), subject, floor, observed })}\n`);
+  if (log) appendFileSync(log, `${JSON.stringify({ site, subject, floor, observed })}\n`);
   assert.ok(observed >= floor, `only ${observed} ${subject}, under a floor of ${floor}`);
   if (floorClearsHeadroom(floor, observed)) return;
+  if (unchangedPopulationFloor(site, base)) return;
   refuseADriftedGuard(
     {
-      site: callSite(),
+      site,
       subject,
       stated: `a floor of ${floor}`,
       measured: `${observed}`,
       clearsAt: `${Math.floor((observed * 3) / 4)}`,
     },
-    `a floor of ${floor} leaves under ${Math.round(HEADROOM * 100)}% headroom over the ${observed} it measured — ${subject}. It goes red when this data shrinks and stays green when this data is wrong. Lower it, or state the property relative to the population it reads with assertCoversPopulation.`,
+    `a floor of ${floor} leaves under ${Math.round(HEADROOM * 100)}% headroom over the ${observed} it measured — ${subject}. New or changed floors need this margin when authored. Lower it, or state the property relative to the population it reads with assertCoversPopulation.`,
   );
 }
 

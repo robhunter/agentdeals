@@ -5,6 +5,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { retryLocalGets } from "./retry-local-get.ts";
 import {
   badgeLinksOnBadgesPage,
   badgeVerdictsFromBadgesPage,
@@ -97,13 +98,14 @@ function startServer(): Promise<ChildProcess> {
 }
 
 async function fetchEveryPublishedPage(): Promise<number> {
-  const sitemap = await (await fetch(`${base}/sitemap-pages.xml`)).text();
+  const request = retryLocalGets(base);
+  const sitemap = await (await request(`${base}/sitemap-pages.xml`)).text();
   const paths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => new URL(m[1]).pathname);
   const queue = [...paths];
   await Promise.all(Array.from({ length: 8 }, async () => {
     for (let next = queue.pop(); next; next = queue.pop()) {
-      const res = await fetch(`${base}${next}`);
-      if (res.ok) pages.set(next, await res.text());
+      const res = await request(`${base}${next}`);
+      pages.set(next, await res.text());
     }
   }));
   return paths.length;
@@ -133,7 +135,7 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
   before(async () => {
     proc = await startServer();
     published = await fetchEveryPublishedPage();
-    badges = await (await fetch(`${base}/badges`)).text();
+    badges = await (await retryLocalGets(base)(`${base}/badges`)).text();
     verdicts = badgeVerdictsFromBadgesPage(badges);
   });
 

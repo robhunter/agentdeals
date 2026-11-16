@@ -24,11 +24,11 @@ function text(html: string): string {
   return html.replace(/<[^>]*>/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/\s+/g, " ").trim();
 }
 
-function card(page: string, title: string): { html: string; section: string } {
+function card(page: string, title: string, sourceUrl?: string): { html: string; section: string } {
   let section = "";
   for (const part of page.split(/(?=<h2 id=")|(?=<div class="shutdown-card")/)) {
     section = part.match(/^<h2 id="([^"]+)"/)?.[1] ?? section;
-    if (part.startsWith('<div class="shutdown-card"') && text(part.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? "") === title) {
+    if ((sourceUrl === undefined || part.includes(`href="${sourceUrl}"`)) && part.startsWith('<div class="shutdown-card"') && text(part.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? "") === title) {
       return { html: part.split('<div class="shutdown-links">')[0], section };
     }
   }
@@ -183,12 +183,12 @@ describe("staged shutdown cards and deadline lists", () => {
     const live = await pages("2026-11-14", "UTC");
     const records = JSON.parse(readFileSync(path.join(REPO, "data/deal_changes.json"), "utf8")).changes;
     for (const [vendor, service, first, last] of [["Zeabur", "Zeabur", "December 1, 2026", "December 31, 2026"], ["Chroma", "Chroma Cloud", "December 7, 2026", "December 22, 2026"], ["Val Town", "Val Town", "December 10, 2026", "January 10, 2027"]]) {
-      const found = card(live["/shutdowns"], service);
+      const record = records.find((value: { vendor: string; shutdown_stages?: unknown }) => value.vendor === vendor && value.shutdown_stages);
+      assert.ok(record);
+      const found = card(live["/shutdowns"], service, record.source_url);
       assert.equal(found.section, "imminent");
       const header = text(found.html.split('<p class="shutdown-what">')[0]);
       assert.ok(header.includes(first) && header.includes(last), header);
-      const record = records.find((value: { vendor: string; shutdown_stages?: unknown }) => value.vendor === vendor && value.shutdown_stages);
-      assert.ok(record);
       assert.equal(text(found.html.match(/<p class="shutdown-what">([\s\S]*?)<\/p>/)![1]), record.summary);
     }
     assert.match(live["/deadlines"], /2026-12-01/);

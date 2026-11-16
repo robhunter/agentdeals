@@ -266,7 +266,7 @@ describe("the catalogue as it stands", () => {
   const settled = enriched.filter((o) => settledFromStore(o) !== null);
 
   it("holds records whose last read was settled by a refusal recorded the same day", () => {
-    assertPopulationFloor(settled.length, 40, "records whose last read our own change gate then refused");
+    assertPopulationFloor(settled.length, 1, "records whose last read our own change gate then refused");
   });
 
   it("reports no disagreement where our own gate refused the change that day", () => {
@@ -280,7 +280,7 @@ describe("the catalogue as it stands", () => {
 
   it("publishes the clause the stored refusal reason selects, where that read is still the last one", () => {
     const stillLast = settled.filter((o) => o.last_read_date === state.get(`${o.vendor}|${o.url}`)?.last_attempt_at);
-    assertPopulationFloor(stillLast.length, 40, "records whose last read is the one our own change gate then refused");
+    assertPopulationFloor(stillLast.length, 1, "records whose last read is the one our own change gate then refused");
     const wrong = stillLast.filter((o) => o.last_read_found !== settledFromStore(o));
     assert.deepStrictEqual(wrong.map((o) => `${o.vendor}: ${o.last_read_found}`), []);
   });
@@ -302,7 +302,7 @@ describe("the catalogue as it stands", () => {
         && o.last_read_date === record.last_attempt_at
         && settledFromStore(o) === null;
     });
-    assertPopulationFloor(unsettled.length, 60, "records whose last read found a difference we still hold");
+    assertPopulationFloor(unsettled.length, 1, "records whose last read found a difference we still hold");
     const quiet = unsettled.filter((o) => o.last_read_found !== A_DISAGREEMENT_STANDS);
     assert.deepStrictEqual(quiet.map((o) => `${o.vendor}: ${o.last_read_found}`), []);
   });

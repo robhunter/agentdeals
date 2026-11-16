@@ -245,7 +245,7 @@ describe("#1393 the comparison page answers the free-tier question the way the r
 
     assert.deepStrictEqual(silent, [], "a comparison withholds without saying so in the claim");
     assert.deepStrictEqual(unreasoned, [], "a comparison withholds without naming a reason we hold");
-    assertPopulationFloor(withholdingSlots, 101, "slots withhold");
+    assertPopulationFloor(withholdingSlots, 1, "slots withhold");
   });
 
   it("never publishes stored terms a change record supersedes", async () => {

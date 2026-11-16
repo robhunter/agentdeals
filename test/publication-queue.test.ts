@@ -31,6 +31,7 @@ function fixture(withLedger = false) {
   writeFileSync(join(work, "scripts/test-marked-conditions.mjs"), `import { appendFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 if (process.env.TEST_SHARD) process.exit(3);
+appendFileSync(process.env.QUEUE_LOG, JSON.stringify(["floor-base", "marked", process.env.POPULATION_FLOOR_BASE]) + "\\n");
 appendFileSync(process.env.QUEUE_LOG, JSON.stringify(["marked-tree", execFileSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }).trim()]) + "\\n");
 process.exit(process.env.QUEUE_MODE === "marked-red" ? 1 : 0);\n`);
   if (withLedger) {
@@ -106,6 +107,7 @@ const args = process.argv.slice(2);
 appendFileSync(process.env.QUEUE_LOG, JSON.stringify(["npm", ...args]) + "\\n");
 if (args[0] === "test") {
   if (process.env.TEST_SHARD) process.exit(3);
+  appendFileSync(process.env.QUEUE_LOG, JSON.stringify(["floor-base", "regular", process.env.POPULATION_FLOOR_BASE]) + "\\n");
   appendFileSync(process.env.QUEUE_LOG, JSON.stringify(["tested-tree", execFileSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }).trim()]) + "\\n");
   const mode = process.env.QUEUE_MODE;
   if (mode === "red") process.exit(1);
@@ -173,6 +175,25 @@ describe("reviewed merge publication uses the exact tested tree", () => {
       assert.equal(calls.find((call) => call[0] === "tested-tree")[1], git(f.origin, "rev-parse", `${published}^{tree}`));
       assert.deepEqual(calls.filter((call) => call[0] === "npm"), [["npm", "ci"], ["npm", "run", "build"], ["npm", "test"]]);
       assert.deepEqual(calls.filter((call) => call[0] === "workflow").map((call) => call[2]), ["tests.yml", "page-lastmod.yml", "llm-api-readme.yml"]);
+    } finally { rmSync(f.root, { recursive: true, force: true }); }
+  });
+
+  it("pins both floor checks to main before constructing the merge", () => {
+    const f = fixture();
+    try {
+      writeFileSync(join(f.sibling, "new.txt"), "new main\n");
+      git(f.sibling, "add", ".");
+      git(f.sibling, "commit", "-m", "new main");
+      git(f.sibling, "push", "origin", "HEAD:main");
+      const base = git(f.origin, "rev-parse", "main");
+      const result = f.invoke();
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+      const calls = readFileSync(f.log, "utf8").trim().split("\n").map(line => JSON.parse(line));
+      assert.deepEqual(calls.filter(call => call[0] === "floor-base"), [
+        ["floor-base", "regular", base], ["floor-base", "marked", base],
+      ]);
+      assert.notEqual(base, f.base);
+      assert.notEqual(base, f.head);
     } finally { rmSync(f.root, { recursive: true, force: true }); }
   });
 

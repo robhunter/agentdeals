@@ -196,7 +196,7 @@ function testCandidate(requests) {
     addedWorktree = true;
     run("npm", ["ci"], { cwd, stdio: "inherit" });
     run("npm", ["run", "build"], { cwd, stdio: "inherit" });
-    const suiteEnv = { ...process.env, TZ: "UTC" };
+    const suiteEnv = { ...process.env, TZ: "UTC", POPULATION_FLOOR_BASE: base };
     delete suiteEnv.TEST_SHARD;
     if (ledgerConflict) {
       run("git", ["diff", "--exit-code", "HEAD", "--"], { cwd });

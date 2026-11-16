@@ -5,6 +5,7 @@ import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { retryLocalGets } from "./retry-local-get.ts";
 
 const { getGuideList } = await import("../dist/guides.js");
 const { latestPricingChangesText } = await import("../dist/upcoming-changes.js");
@@ -53,9 +54,9 @@ function startApi(): Promise<{ proc: ChildProcess; base: string }> {
 }
 
 function askTheStdioPackage(base: string, requests: Array<{ method: string; params: unknown }>): Promise<unknown[]> {
-  const child = spawn("node", [path.join(REPO, "dist", "index.js")], {
+  const child = spawn("node", ["--import", path.join(REPO, "test", "retry-local-get.ts"), path.join(REPO, "dist", "index.js")], {
     stdio: ["pipe", "pipe", "pipe"],
-    env: { ...process.env, AGENTDEALS_API_URL: base },
+    env: { ...process.env, AGENTDEALS_API_URL: base, AGENTDEALS_TEST_HTTP_ORIGIN: base },
   });
   const answers = new Map<number, unknown>();
   return new Promise((resolve, reject) => {
@@ -99,8 +100,9 @@ async function readThroughTheStdioPackage(base: string, uris: string[]): Promise
 }
 
 async function everyRecordTheApiServes(base: string, query: string): Promise<{ changes: Change[]; index_housekeeping_excluded: number }> {
-  const { total } = await (await fetch(`${base}/api/changes?since=${WHOLE_LOG}&limit=0${query}`)).json() as { total: number };
-  return await (await fetch(`${base}/api/changes?since=${WHOLE_LOG}&limit=${total}${query}`)).json() as { changes: Change[]; index_housekeeping_excluded: number };
+  const request = retryLocalGets(base);
+  const { total } = await (await request(`${base}/api/changes?since=${WHOLE_LOG}&limit=0${query}`)).json() as { total: number };
+  return await (await request(`${base}/api/changes?since=${WHOLE_LOG}&limit=${total}${query}`)).json() as { changes: Change[]; index_housekeeping_excluded: number };
 }
 
 const sectionOf = (text: string, heading: string): string[] => {
@@ -120,7 +122,7 @@ describe("the stdio package's resources read every record they describe", () => 
   it("reads every category it lists under that category's own name, with the count it lists", async () => {
     const [listed] = await askTheStdioPackage(api.base, [{ method: "resources/list", params: {} }]) as Array<{ resources: Listed[] }>;
     const categories = listed!.resources.filter(resource => resource.uri.startsWith("agentdeals://category/"));
-    const { categories: held } = await (await fetch(`${api.base}/api/categories`)).json() as { categories: Array<{ name: string; count: number }> };
+    const { categories: held } = await (await retryLocalGets(api.base)(`${api.base}/api/categories`)).json() as { categories: Array<{ name: string; count: number }> };
     assert.deepStrictEqual(categories.map(resource => resource.name).sort(), held.map(category => category.name).sort());
     assert.ok(
       held.some(category => slugOf(category.name) !== category.name.toLowerCase()),

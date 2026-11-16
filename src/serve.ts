@@ -38,7 +38,7 @@ import { dropEndedFromNameList, endedIndex, endedRowStatement, markEndedVendorRo
 import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, reasonWeCannotConfirmTheTerms, vendorVerdictContextFrom, verdictLapseSentence, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
-import { LAST_READ_LABEL, READ_CONTRADICTS_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, confirmationDate, contradictedTermsSentence, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, readThatContradictsOurTerms, restatedReadingDate, verificationDatesCell, verificationDatesSentence, whereOurTermsCameFrom, whereOurTermsCameFromClause, type LastReading } from "./read-date.js";
+import { LAST_READ_LABEL, READ_CONTRADICTS_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, confirmationDate, contradictedTermsSentence, lastReadDate, lastReadNote, lastReadOutcome, publishedDateLabel, publishedDateValue, readThatContradictsOurTerms, restatedReadingDate, verificationDatesCell, verificationDatesSentence, whereOurTermsCameFrom, whereOurTermsCameFromClause, type LastReading } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, SUPERSEDED_TERMS_RULE, readingBehindTheChange, storedTermsLabel, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms, withoutFinalStop } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
@@ -5512,9 +5512,12 @@ function outgrowSentence(vendorName: string, phrase: string): string {
   return OUTGROW_SENTENCE_BY_VENDOR_AND_TEMPLATE_PHRASE[vendorName]?.[phrase] ?? `At ${phrase}, you'll need to upgrade.`;
 }
 
-function freeTierSourceLineHtml(offer: Offer, changes: readonly DealChange[], servedOn: string): string {
+function freeTierSourceLineHtml(offer: Offer, changes: readonly DealChange[], servedOn: string, latestOutcome: string | null = null): string {
   const source = freeTierSourceWeMayCite(offer, reasonWeCannotConfirmFor(offer), { changes, servedOn });
   if (!source.cited) return "";
+  if (latestOutcome === "confirmed" && source.finding?.endsWith(" and states amounts, none of which we matched to the terms we publish")) {
+    source.finding = null;
+  }
   const read = readClauseHtml(
     source.readOn,
     [readSourceOf(source)],
@@ -5721,7 +5724,7 @@ function buildVendorPage(slug: string): string | null {
     return `\n  <p class="product-subtypes-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong>Subtypes in ${escHtmlServer(classified.taxonomy)}:</strong> ${body}${clause} <a href="${CRITERIA_PATH}#subtypes">How we use this</a>.</p>`;
   })();
 
-  const freeTierSourceLine = freeTierSourceLineHtml(primary, vendorChanges, servedOn);
+  const freeTierSourceLine = freeTierSourceLineHtml(primary, vendorChanges, servedOn, lastReadOutcome(primary));
 
   const freePlanExcerptBlock = (() => {
     const excerpt = freePlanExcerptWeMayPublish(primary);
@@ -27482,6 +27485,8 @@ ${buildGlobalNav("guides")}
     }).join("\n    ")}
   </div>
 
+  ${buildSection("\u2705 Recently Completed", "These shutdowns have already happened. Listed for reference.", completed, "completed")}
+
   ${byMonth}
 
   ${buildSection("\u26a0\ufe0f Imminent", "These shutdowns are happening within the next 30 days. Take action now.", imminent, "imminent")}
@@ -27489,8 +27494,6 @@ ${buildGlobalNav("guides")}
   ${buildSection("\u23f3 Upcoming", "These shutdowns are 30\u201390 days away. Plan your migration now.", upcoming, "upcoming")}
 
   ${buildSection("Later", "These shutdowns are more than 90 days away.", later, "later")}
-
-  ${buildSection("\u2705 Recently Completed", "These shutdowns have already happened. Listed for reference.", completed, "completed")}
 
   ${relevantChanges.length > 0 ? `
   <h2 id="pricing-changes">Related Pricing Changes</h2>
@@ -49210,7 +49213,7 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
 
   const filterCategory: Record<string, string> = CHANGE_DIRECTION;
 
-  function buildChangeEntry(c: ChangeTimelineEntry, originalDate = c.originalRecord?.date ?? c.date, preview = false): string {
+  function buildChangeEntry(c: ChangeTimelineEntry, originalDate = c.originalRecord?.date ?? c.date, preview = false, compact = false): string {
     const housekeeping = isIndexHousekeeping(c);
     const badge = housekeeping
       ? { label: INDEX_HOUSEKEEPING_BADGE, color: INDEX_HOUSEKEEPING_BADGE_COLOR }
@@ -49219,7 +49222,7 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
     const dated = isEventDated(c);
     const isUpcoming = dated && c.date > today;
     const category = filterCategory[c.change_type] ?? "neutral";
-    const altHtml = c.alternatives && c.alternatives.length > 0
+    const altHtml = !compact && c.alternatives && c.alternatives.length > 0
       ? `<div class="pc-alts"><span class="pc-alts-label">Alternatives:</span> ${c.alternatives.map(a => changeVendorLinkHtml(a)).join(", ")}</div>`
       : "";
     const stateHtml = !isUpcoming && printsBeforeAndAfter(c)
@@ -49231,11 +49234,12 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
     const vendorCat = (c.category || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     const changeYear = dated ? c.date.slice(0, 4) : "";
     const entryAnchor = originalDate === c.date ? changeAnchor(c) : `${changeAnchor(c)}-retirement-${originalDate}`;
+    const summary = compact ? new Intl.Segmenter("en", { granularity: "sentence" }).segment(c.summary)[Symbol.iterator]().next().value?.segment.trimEnd() ?? c.summary : c.summary;
     return `      <div class="${preview ? "pc-preview" : "pc-entry"}${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}${changeIsUncited(c) ? " pc-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}" ${originalDate !== c.date ? `data-event-date="${escHtmlServer(originalDate)}" ` : ""}${preview ? "" : `id="${escHtmlServer(entryAnchor)}" `}data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
         <div class="pc-left">
           <div class="pc-date${dated ? "" : " pc-date-unknown"}">${changeEntryDateLabelHtml(c, escHtmlServer)}</div>
           ${isUpcoming ? `<div class="pc-upcoming-badge">upcoming</div>` : ""}
-          <a href="#${escHtmlServer(entryAnchor)}" class="pc-anchor" title="Link to this change">#</a>
+          ${compact ? "" : `<a href="#${escHtmlServer(entryAnchor)}" class="pc-anchor" title="Link to this change">#</a>`}
         </div>
         <div class="pc-right">
           <div class="pc-head">
@@ -49244,7 +49248,7 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
             <span class="pc-impact" style="color:${impactColor}">${c.impact} impact</span>
             ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
           </div>
-          <div class="pc-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
+          <div class="pc-summary">${changeSummaryHtml({ ...c, summary }, escHtmlServer)}</div>
 ${housekeeping ? `          <div class="chg-housekeeping-note" style="font-size:.75rem;color:var(--text-dim);margin-top:.25rem">${escHtmlServer(INDEX_HOUSEKEEPING_NOTE)}</div>` : ""}
 ${stateHtml}
 ${altHtml}
@@ -49593,7 +49597,7 @@ ${upcomingChanges.length > 0 ? `
       escHtmlServer,
       ' class="upcoming-intro dated-rule"',
     )}
-${shownUpcoming.map(c => buildChangeEntry(c.shown, c.original.date)).join("\n")}${overflowHtml ? "\n" + overflowHtml : ""}${UPCOMING_TIMELINE_END}
+${shownUpcoming.map(c => buildChangeEntry(c.shown, c.original.date, false, true)).join("\n")}${overflowHtml ? "\n" + overflowHtml : ""}${UPCOMING_TIMELINE_END}
   </div>
 ` : ""}${indexAfterUpcoming ? "\n" + changeVendorIndexHtml(indexSections, today) : ""}
 ${filterButtonsHtml}
