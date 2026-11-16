@@ -2982,13 +2982,13 @@
       "vendor": "CurrencyScoop",
       "change_type": "rebranded",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-11-02 (page_does_not_name_vendor) stated the same 2 figures, so the page showed these terms before the date this record gives",
-      "summary": "The vendor is now CurrencyBeacon, not CurrencyScoop, and the free tier is named 'Developer sandbox' with 5,000 API requests/month (REST and MCP calls share the quota).",
+      "detail": "the reading of this page refused on 2026-11-09 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal info names the vendor 'CurrencyScoop', but the pricing page is for 'CurrencyBeacon' (HATCHSQUARE Technologies LLC). The free tier itself still exists with 5,000 requests/month, but the vendor has been rebranded.",
       "previous_state": "Realtime currency data API for fintech apps. The free plan includes 5,000 calls per month.",
-      "current_state": "Free 'Developer sandbox' plan at $0/month with 5,000 API requests per month, hourly updates, latest/historical/conversion rates, community support; REST and MCP calls share this quota.",
+      "current_state": "Free 'Developer sandbox' plan at $0/month with 5,000 API requests per month, hourly updates, REST and MCP calls sharing the quota, latest/historical/conversion rates, and community support.",
       "source_url": "https://currencybeacon.com/",
       "category": "Dev Utilities",
-      "refused_date": "2026-11-09"
+      "refused_date": "2026-11-16"
     },
     {
       "vendor": "Cursor",
@@ -4773,6 +4773,18 @@
       "source_url": "https://gitdailies.com",
       "category": "Team Collaboration",
       "refused_date": "2026-10-26"
+    },
+    {
+      "vendor": "GitDailies",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-26 (removal_read_from_root) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier described in the stored deal info no longer exists. The pricing page now shows only paid plans (Pro $59/mo, Team $149/mo, Max $349/mo) with 14-day free trials, and no free tier with unlimited users, three repos, and 3 alert configs is listed.",
+      "previous_state": "Daily reports of your team's Commit and Pull Request activity on GitHub. Includes Push visualizer, peer recognition system, and custom alert builder. The free tier has unlimited users, three repos, and 3 alert configs.",
+      "current_state": "The page lists Pro ($59/month, up to 15 contributors, 3 months history, up to 50 alert rules), Team ($149/month, up to 60 contributors, 6 months history, unlimited alert rules), and Max ($349/month, up to 200 contributors, 18 months history, Metrics API). Each paid plan offers a 14-day free trial. No free tier is mentioned.",
+      "source_url": "https://gitdailies.com",
+      "category": "Team Collaboration",
+      "refused_date": "2026-11-16"
     },
     {
       "vendor": "GitDailies",
@@ -10874,15 +10886,15 @@
     },
     {
       "vendor": "Sematext",
-      "change_type": "limits_reduced",
+      "change_type": "free_tier_removed",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-09-20 (confirmed_unchanged) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
-      "summary": "The free tier for Logs now has a 500 MB/day limit, while the stored information does not mention a limit. The free tier now costs $0.1/GB received and $0.15/GB stored.",
+      "detail": "the reading of this vendor refused on 2026-10-04 (repeats_a_refused_reading) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored deal info describes a single 'Basic (Free)' tier combining Logs (500 MB/day, 7-day retention) and Monitoring (3 hosts, 3 containers/host, 30-min retention, 1 alert rule). The current pricing page no longer presents any free tier: the Logs Basic plan is now a paid plan ($0.1/GB received, $0.15/GB stored, 500 MB/day, 7-day retention), and the Infrastructure Monitoring Basic plan is a paid per-host plan with 1-day retention. No free plan is shown for any product.",
       "previous_state": "Observability platform — Logs: 500 MB/day ingestion, 7-day retention. Monitoring: 3 hosts, 3 containers/host, 30-min data retention, 1 alert rule. Volume-based pricing, no per-host charges on paid plans",
-      "current_state": "Basic plan is free with a 500 MB/day limit. Data Received: $0.1/GB, Data Stored: $0.15/GB, Retention 7 days.",
+      "current_state": "Logs Basic is a paid plan with Data Received: $0.1/GB, Data Stored: $0.15/GB, 7-day retention, and 500 MB/day daily volume. Infrastructure Monitoring Basic is a paid per-host plan with 1-day retention. All listed plans (Logs, Infra Monitoring, Integrations, Tracing, Service Monitoring, AI Agent Watch, Experience, Synthetics) are paid, starting at various monthly prices, with a 14-day free trial and no credit card needed.",
       "source_url": "https://sematext.com/pricing",
       "category": "Monitoring",
-      "refused_date": "2026-10-28"
+      "refused_date": "2026-11-16"
     },
     {
       "vendor": "Sematext",
@@ -12743,6 +12755,18 @@
       "source_url": "https://unirateapi.com",
       "category": "Dev Utilities",
       "refused_date": "2026-10-03"
+    },
+    {
+      "vendor": "UniRateAPI",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-26 (repeats_a_refused_reading) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The Free Tier now lists a 30 requests/minute limit and IBAN validation API, while the stored description says 200 requests/day and does not mention IBAN validation; the page also states 593 currencies in the hero/endpoints but 870+ currencies in the pricing/features sections.",
+      "previous_state": "Free Tier $0 /month Perfect for testing and personal projects 870+ currencies (FIAT + Crypto) Historical forex data 200 requests/day EU VAT rates included Precious metals API",
+      "current_state": "Free Tier $0 /month, described as perfect for testing and personal projects, with 870+ currencies (FIAT + Crypto), historical forex data, 200 requests/day, EU VAT rates included, IBAN validation API, and Precious metals API. The FAQ also says the free tier includes 30 requests per minute.",
+      "source_url": "https://unirateapi.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-11-16"
     },
     {
       "vendor": "UniRateAPI",

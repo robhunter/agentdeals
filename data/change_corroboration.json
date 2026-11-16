@@ -1,15 +1,15 @@
 {
   "held": [
     {
-      "vendor": "Firebase",
+      "vendor": "CircleCI",
       "change_type": "limits_reduced",
-      "impact": "low",
-      "summary": "Realtime Database Spark plan download limit is now stated as 360 MB/day (equivalent to ~10 GB/month). Previously 10 GB/month downloaded. The page also adds a Remote Config fetch-request pricing change effective September 1, 2026.",
-      "previous_state": "Spark plan, no payment method needed: Auth (50K MAU), Firestore Standard edition (1 GiB stored, 50K reads/day, 20K writes/day, 20K deletes/day), Realtime Database (100 simultaneous connections, 1 GB stored, 10 GB/month downloaded), Hosting (10 GB storage, 360 MB/day transfer), and no-cost Analytics, Crashlytics and Cloud Messaging. Firestore Enterprise on Spark includes 1 GiB stored, 10 GiB/month network egress, 40K write units/day, 50K read units/day, 50K real-time update units/day. Cloud Functions and Cloud Storage need the Blaze plan.",
-      "current_state": "Realtime Database on the no-cost Spark plan: 100 simultaneous connections, 1 GB stored, and 10 GB/month downloaded, with the page noting GB downloaded is no-cost up to 360 MB/day (equivalent to ~10 GB/month).",
-      "source_url": "https://firebase.google.com/pricing",
-      "category": "Databases",
-      "first_read_date": "2026-11-15"
+      "impact": "medium",
+      "summary": "The Free plan's concurrency for macOS VM has changed: previously 30x concurrency for macOS VM. The page shows macOS VM concurrency of 1 on Free (vs 30 for Docker, Linux VM, Arm VM, and Windows VM).",
+      "previous_state": "The Free plan includes 30,000 credits/month, 5 active users, and options for different resource classes (Docker, Windows, Linux, Arm, macOS) with varying concurrency levels (30x for Docker, Linux, Arm, Windows VM, and macOS VM).",
+      "current_state": "Free plan includes 30,000 credits/month, 5 active users, and 30 concurrent job runs for Docker, Linux VM, Arm VM (Linux), and Windows VM, but only 1 concurrent job run for macOS VM.",
+      "source_url": "https://circleci.com/pricing/",
+      "category": "CI/CD",
+      "first_read_date": "2026-11-16"
     },
     {
       "vendor": "Harness CI",
@@ -23,26 +23,48 @@
       "first_read_date": "2026-11-01"
     },
     {
-      "vendor": "ngrok",
-      "change_type": "restriction",
-      "impact": "low",
-      "summary": "The page no longer lists a 5K TCP connections figure for Free in the same way—actually the Free plan now shows 5k TCP connections, consistent. The Free plan now explicitly requires credit card verification for TCP endpoints, and the $5 one-time usage credit is described as lasting one year and cannot be used on data transfer out. The core limits (3 online endpoints, 1 GB bandwidth, 20K HTTP/S requests, 1 dev domain, 5K TCP connections) remain the same. The main discrepancy is the added restriction on the usage credit (cannot be used on data transfer out, lasts one year) and the credit card requirement for TCP endpoints.",
-      "previous_state": "Tunneling and ingress platform — 3 online endpoints, 1 GB bandwidth, 20K HTTP/S requests/month, 1 dev domain, 5K TCP connections. Includes $5 one-time usage credit.",
-      "current_state": "Free plan: $5 one-time included usage credit (lasts one year, cannot be used on data transfer out), up to 3 online endpoints, up to 1GB data transfer, up to 20k HTTP/S requests, interstitial page on HTTP/S endpoints, assigned dev domain, 1 team member, TCP endpoints require credit card verification.",
-      "source_url": "https://ngrok.com/pricing",
-      "category": "Infrastructure",
-      "first_read_date": "2026-11-15"
+      "vendor": "lost-pixel.com",
+      "change_type": "product_deprecated",
+      "impact": "high",
+      "summary": "Lost Pixel is sunsetting the product and joining Figma; the Hobby Free tier is still listed at 7,000 shots/month, but the product is being deprecated.",
+      "previous_state": "holistic visual regression testing for your Storybook, Ladle, Histoire stories and Web Apps — Lost Pixel is sunsetting the product and building what's next. A 'Hobby Free' tier is available with 7,000 shots per month. Paid tiers include Startup ($100/mo, 40,000 shots), Business ($250/mo, 100,000 shots), and Scale ($670/mo, 300,000 shots).",
+      "current_state": "The page states Lost Pixel is joining Figma and sunsetting the product. Pricing still lists Hobby Free with 7,000 shots per month, Startup at $100/mo with 40,000 shots, Business at $250/mo with 100,000 shots, and Scale at $670/mo with 300,000 shots.",
+      "source_url": "https://lost-pixel.com",
+      "category": "Testing",
+      "first_read_date": "2026-11-16"
     },
     {
-      "vendor": "windmill.dev",
-      "change_type": "free_tier_removed",
+      "vendor": "Netlify",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "Netlify's Free plan is now described with a 300 credit limit/month covering production deploys, compute, bandwidth, web requests and AI inference. The Free plan still exists at $0 but the credits are now framed as a hard limit (not a spend cap) and the Personal plan is still $9/month with 1,000 credits. Pro tiers start at 3,000 credits/month.",
+      "previous_state": "The Free plan is $0 with a limit of 300 credits per month, covering production deploys (15 credits each), compute (10 credits per GB-hour), bandwidth (20 credits per GB) and web requests (2 credits per 10k requests). Netlify says the Free plan is always free, with hard monthly limits that cannot be exceeded or incur costs; extra credits need a paid plan. Personal is $9 a month with 1,000 credits.",
+      "current_state": "Free is $0 forever with a 300 credit limit per month; usage credits cover production deploys (15 credits each), AI inference (varies by model), compute (10 credits per GB-hour), bandwidth (20 credits per GB), and web requests (2 credits per 10k requests). The free plan is always free with hard monthly limits that cannot be exceeded or incur costs. Personal is $9/month with 1,000 credits/month. Pro starts at $20/month with 3,000 credits/month and additional tiers up to 20,000 credits/month.",
+      "source_url": "https://www.netlify.com/pricing/",
+      "category": "Cloud Hosting",
+      "first_read_date": "2026-11-16"
+    },
+    {
+      "vendor": "SurrealDB Cloud",
+      "change_type": "pricing_restructured",
       "impact": "high",
-      "summary": "Previously Windmill Cloud's Free plan (1,000 executions/month, unlimited scripts/flows/apps, max 3 non-premium workspaces, Team plan $10/dev/month with 10,000 executions/seat and max 10 seats). The current pricing page no longer shows any cloud Free or Team plan with those execution limits. The page now presents a 'Free and Open-source' self-hosted edition (unlimited executions, max 10 users with SSO, 3 workspaces, 50 max users, 100 free app guests per 30 days) and an Enterprise plan starting at $120/mo (or $170/mo per builder with $20/mo/builder and $10/mo/non-builder pricing). The cloud Free plan with 1,000 executions/month and the $10/month Team plan are not present on the page.",
-      "previous_state": "Windmill is an open-source developer platform for building multi-step automations and internal apps from Python and TypeScript scripts. Windmill Cloud's Free plan is $0 with no credit card: 1,000 executions a month, unlimited scripts, flows, apps, variables and resources, Google, GitHub and GitLab sign-in, and community support on Discord. A free user can create and be a member of at most three non-premium workspaces. Cloud's Team plan is $10 a month per developer, with 10,000 executions a month per seat and at most 10 seats. The self-hosted open-source edition is free with unlimited executions and at most 10 users with SSO.",
-      "current_state": "The page shows a 'Free and Open-source' self-hosted edition with unlimited executions, max 10 users with SSO, 3 workspaces, 50 maximum users, 100 free app guests per 30 days, and community support on Discord. It also shows an Enterprise plan from $120/mo (Pro/Nonprofit/Enterprise) with pricing of $170/mo for 1 builder, $20/mo/builder, and $10/mo/non-builder. No cloud Free plan with 1,000 executions/month or $10/month Team plan is listed.",
-      "source_url": "https://www.windmill.dev/pricing",
-      "category": "Low-Code Platforms",
-      "first_read_date": "2026-11-15"
+      "summary": "The stored 'Start' plan no longer exists. The free tier is now 'Earth Free' with 3M requests, 10GB storage, and 100 database active hours per month, and the paid tier is 'Earth Pro' at $15/mo (launch price).",
+      "previous_state": "Multi-model cloud database — The 'Start' plan offers 1GB of storage free, forever, and a free compute instance with 0.25 vCPU and 1 GB memory ($0.000/hr). Further instances are available from $0.021/hr.",
+      "current_state": "The page lists plans: Earth Free ($0/mo, 3M requests, 10GB storage, 100 database active hours, no card), Earth Pro ($15/mo launch price, 10M requests, 25GB, 1,000 database hours), Cloud (From $0.021/hr per node hour), and Self-hosted Enterprise (custom). No 'Start' plan or free 1GB storage / free compute instance is mentioned.",
+      "source_url": "https://surrealdb.com/pricing",
+      "category": "Databases",
+      "first_read_date": "2026-11-16"
+    },
+    {
+      "vendor": "Upstash",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The current pricing page only documents Redis free-tier limits (250MB data, 500K commands/month, 10GB bandwidth).",
+      "previous_state": "Serverless Redis — 500K commands/month (250MB data). Vector: 200M vectors × dimensions and 10K queries a day free. QStash: 1,000 messages/day free",
+      "current_state": "Free plan is $0/month with 250 MB data size, 10 GB monthly bandwidth, and 500K monthly commands; a free account can have 1 database. The page's Redis pricing does not state any Vector or QStash free-tier allowances.",
+      "source_url": "https://upstash.com/pricing",
+      "category": "Databases",
+      "first_read_date": "2026-11-16"
     }
   ],
   "resolved": [
@@ -3723,6 +3745,42 @@
       "outcome": "contradicted",
       "detail": "a reading on 2026-11-15 read a change the gate refused as repeats_a_refused_claim",
       "resolved_date": "2026-11-15"
+    },
+    {
+      "vendor": "Firebase",
+      "change_type": "limits_reduced",
+      "impact": "low",
+      "summary": "Realtime Database Spark plan download limit is now stated as 360 MB/day (equivalent to ~10 GB/month). Previously 10 GB/month downloaded. The page also adds a Remote Config fetch-request pricing change effective September 1, 2026.",
+      "previous_state": "Spark plan, no payment method needed: Auth (50K MAU), Firestore Standard edition (1 GiB stored, 50K reads/day, 20K writes/day, 20K deletes/day), Realtime Database (100 simultaneous connections, 1 GB stored, 10 GB/month downloaded), Hosting (10 GB storage, 360 MB/day transfer), and no-cost Analytics, Crashlytics and Cloud Messaging. Firestore Enterprise on Spark includes 1 GiB stored, 10 GiB/month network egress, 40K write units/day, 50K read units/day, 50K real-time update units/day. Cloud Functions and Cloud Storage need the Blaze plan.",
+      "source_url": "https://firebase.google.com/pricing",
+      "first_read_date": "2026-11-15",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-16 read the page as unchanged",
+      "resolved_date": "2026-11-16"
+    },
+    {
+      "vendor": "ngrok",
+      "change_type": "restriction",
+      "impact": "low",
+      "summary": "The page no longer lists a 5K TCP connections figure for Free in the same way—actually the Free plan now shows 5k TCP connections, consistent. The Free plan now explicitly requires credit card verification for TCP endpoints, and the $5 one-time usage credit is described as lasting one year and cannot be used on data transfer out. The core limits (3 online endpoints, 1 GB bandwidth, 20K HTTP/S requests, 1 dev domain, 5K TCP connections) remain the same. The main discrepancy is the added restriction on the usage credit (cannot be used on data transfer out, lasts one year) and the credit card requirement for TCP endpoints.",
+      "previous_state": "Tunneling and ingress platform — 3 online endpoints, 1 GB bandwidth, 20K HTTP/S requests/month, 1 dev domain, 5K TCP connections. Includes $5 one-time usage credit.",
+      "source_url": "https://ngrok.com/pricing",
+      "first_read_date": "2026-11-15",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-16 read the page as unchanged",
+      "resolved_date": "2026-11-16"
+    },
+    {
+      "vendor": "windmill.dev",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "Previously Windmill Cloud's Free plan (1,000 executions/month, unlimited scripts/flows/apps, max 3 non-premium workspaces, Team plan $10/dev/month with 10,000 executions/seat and max 10 seats). The current pricing page no longer shows any cloud Free or Team plan with those execution limits. The page now presents a 'Free and Open-source' self-hosted edition (unlimited executions, max 10 users with SSO, 3 workspaces, 50 max users, 100 free app guests per 30 days) and an Enterprise plan starting at $120/mo (or $170/mo per builder with $20/mo/builder and $10/mo/non-builder pricing). The cloud Free plan with 1,000 executions/month and the $10/month Team plan are not present on the page.",
+      "previous_state": "Windmill is an open-source developer platform for building multi-step automations and internal apps from Python and TypeScript scripts. Windmill Cloud's Free plan is $0 with no credit card: 1,000 executions a month, unlimited scripts, flows, apps, variables and resources, Google, GitHub and GitLab sign-in, and community support on Discord. A free user can create and be a member of at most three non-premium workspaces. Cloud's Team plan is $10 a month per developer, with 10,000 executions a month per seat and at most 10 seats. The self-hosted open-source edition is free with unlimited executions and at most 10 users with SSO.",
+      "source_url": "https://www.windmill.dev/pricing",
+      "first_read_date": "2026-11-15",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-16 read it as pricing_restructured",
+      "resolved_date": "2026-11-16"
     }
   ]
 }
