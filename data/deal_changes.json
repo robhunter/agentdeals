@@ -20467,6 +20467,54 @@
       "recorded_date": "2026-11-15",
       "date_source": "vendor_page",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "AWS",
+      "change_type": "product_deprecated",
+      "date": "2027-03-30",
+      "summary": "Amazon Bedrock removes 26 models on March 30, 2027. DeepSeek: DeepSeek-R1, DeepSeek-V3.1. Google: Gemma 3 4B IT, Gemma 3 12B IT, Gemma 3 27B PT. Meta: Llama 3 8B Instruct, Llama 3 70B Instruct, Llama 3.1 8B Instruct, Llama 3.1 70B Instruct, Llama 3.3 70B Instruct, Llama 4 Maverick 17B Instruct, Llama 4 Scout 17B Instruct. MiniMax: MiniMax M2, MiniMax M2.1. Mistral AI: Devstral 2 123B, Mistral 7B Instruct, Mixtral 8x7B Instruct, Voxtral Mini 3B 2507, Voxtral Small 24B 2507. Moonshot AI: Kimi K2 Thinking. NVIDIA: NVIDIA Nemotron Nano 9B v2, NVIDIA Nemotron Nano 12B v2 VL BF16. Qwen: Qwen3-Coder-30B-A3B-Instruct, Qwen3 Coder 480B A35B Instruct. Z.AI: GLM 4.7, GLM 4.7 Flash. They have been Legacy on Bedrock since September 30, 2026. New customers cannot use them. Accounts that leave one unused for 15 days may lose access. No new Provisioned Throughput can be created. Bedrock moves them to public extended access before the end date, with higher prices set by the provider. It has not announced when. After March 30, 2027 requests to them on Bedrock fail. Bedrock does not migrate applications automatically. The date covers the Regions Bedrock lists for each model, us-west-2 among them for all 26. A model can stay available in other Regions. Bedrock names no replacement. Its model cards list newer models: DeepSeek V3.2, GLM 5, Gemma 4, Kimi K3, MiniMax M2.5 and Mistral Large 3.",
+      "what_ends": "26 Amazon Bedrock models from DeepSeek, Google, Meta, Mistral AI, Qwen and others",
+      "previous_state": "The 26 models can be called on Amazon Bedrock as Legacy models, closed to new customers.",
+      "current_state": "Amazon Bedrock User Guide, \"Model lifecycle (Legacy)\" (read 2026-11-16), table \"Models with a scheduled EOL date\": each of the 26 models has Legacy date September 30, 2026, EOL date March 30, 2027 and public extended access start date \"To be announced\", in Regions that include us-west-2. \"New customers can't use Legacy models and existing customers may lose access to Legacy models after 15 days of inactivity.\" \"You can't create a new Provisioned Throughput for models in the Legacy state.\" \"After a minimum of 3 months in the Legacy state, a model will enter the public extended access portion of the Legacy period.\" \"During this public extended access period, active users of a Legacy model can continue to use it until the EOL date (for a minimum of 3 months), but you should expect higher pricing, which will be set by the model provider.\" \"On, or soon after the EOL date, the model is no longer available for use in all AWS Regions and requests made to this version will fail, unless there is a private arrangement between you and the provider for continued access.\" \"Migration will not happen automatically.\" \"The Regions column in the following tables lists only the Regions covered by a model's announced EOL date. A model can remain Active in other Regions.\" \"Model lifecycle dates on this page are specific to Amazon Bedrock and may differ from dates published by model providers (such as Anthropic or Cohere). For Amazon Bedrock usage, only the dates on this page apply.\"",
+      "impact": "medium",
+      "source_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-16",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
+    },
+    {
+      "vendor": "AWS",
+      "change_type": "product_deprecated",
+      "date": "2027-01-08",
+      "summary": "Amazon Bedrock removes Claude Opus 4.1 on January 8, 2027. The date covers us-east-1, us-east-2 and us-west-2. Requests to it on Bedrock fail after that date. It has been Legacy on Bedrock since July 8, 2026. New customers cannot use it. Accounts that leave it unused for 15 days may lose access. Since October 8, 2026 it has been in public extended access. Bedrock says to expect higher prices set by Anthropic. Anthropic's own Claude API retired Claude Opus 4.1 on August 5, 2026. Bedrock's dates apply only to Bedrock. Bedrock lists Claude Opus 4.8, Claude Opus 5 and Claude Opus 5.5.",
+      "what_ends": "Claude Opus 4.1 on Amazon Bedrock",
+      "previous_state": "Claude Opus 4.1 can be called on Amazon Bedrock in three US Regions as a Legacy model.",
+      "current_state": "Amazon Bedrock User Guide, \"Model lifecycle (Legacy)\" (read 2026-11-16): Claude Opus 4.1, anthropic.claude-opus-4-1-20250805-v1:0, Regions us-east-1, us-east-2 and us-west-2, Legacy date July 8, 2026, public extended access start date October 8, 2026, EOL date January 8, 2027. \"New customers can't use Legacy models and existing customers may lose access to Legacy models after 15 days of inactivity.\" \"During this public extended access period, active users of a Legacy model can continue to use it until the EOL date (for a minimum of 3 months), but you should expect higher pricing, which will be set by the model provider.\" \"On, or soon after the EOL date, the model is no longer available for use in all AWS Regions and requests made to this version will fail, unless there is a private arrangement between you and the provider for continued access.\" \"Migration will not happen automatically.\" \"Model lifecycle dates on this page are specific to Amazon Bedrock and may differ from dates published by model providers (such as Anthropic or Cohere). For Amazon Bedrock usage, only the dates on this page apply.\" Anthropic's model deprecations page (read 2026-11-16): claude-opus-4-1-20250805 was retired on the Claude API on August 5, 2026, with claude-opus-4-8 as the recommended replacement.",
+      "impact": "low",
+      "source_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-16",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
+    },
+    {
+      "vendor": "AWS",
+      "change_type": "product_deprecated",
+      "date": "2027-04-08",
+      "summary": "Amazon Bedrock removes Claude Sonnet 4.5 on April 8, 2027. The date covers its commercial AWS Regions. In the AWS GovCloud (US) Regions it is later in April 2027. Requests to it on Bedrock fail after that date. Anthropic's own Claude API retires the model at the end of November 2026. Bedrock says only its own dates apply to Bedrock usage. It has been Legacy on Bedrock since October 8, 2026. New customers cannot use it. Accounts that leave it unused for 15 days may lose access. From January 2027 it is in public extended access. Bedrock says to expect higher prices set by Anthropic. Bedrock lists Claude Sonnet 5 and Claude Sonnet 5.5.",
+      "what_ends": "Claude Sonnet 4.5 on Amazon Bedrock",
+      "previous_state": "Claude Sonnet 4.5 can be called on Amazon Bedrock as a Legacy model, closed to new customers.",
+      "current_state": "Amazon Bedrock User Guide, \"Model lifecycle (Legacy)\" (read 2026-11-16): Claude Sonnet 4.5, anthropic.claude-sonnet-4-5-20250929-v1:0, in 31 commercial Regions including us-east-1, us-west-2 and eu-west-1: Legacy date October 8, 2026, EOL date April 8, 2027, public extended access from January 2027; in us-gov-east-1 and us-gov-west-1 each stage is later. \"Model lifecycle dates on this page are specific to Amazon Bedrock and may differ from dates published by model providers (such as Anthropic or Cohere). For Amazon Bedrock usage, only the dates on this page apply.\" \"New customers can't use Legacy models and existing customers may lose access to Legacy models after 15 days of inactivity.\" \"During this public extended access period, active users of a Legacy model can continue to use it until the EOL date (for a minimum of 3 months), but you should expect higher pricing, which will be set by the model provider.\" \"On, or soon after the EOL date, the model is no longer available for use in all AWS Regions and requests made to this version will fail, unless there is a private arrangement between you and the provider for continued access.\" \"Migration will not happen automatically.\" Anthropic's model deprecations page (read 2026-11-16) retires claude-sonnet-4-5-20250929 on the Claude API at the end of November 2026.",
+      "impact": "medium",
+      "source_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-16",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
     }
   ]
 }
