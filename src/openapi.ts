@@ -1138,13 +1138,13 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                           properties: {
                             vendor: { type: "string" },
                             category: { type: "string" },
-                            date: { type: "string", format: "date", description: "The date the sentence names." },
+                            date: { oneOf: [{ type: "string", format: "date" }, { type: "string", pattern: "^\\d{4}-(?:0[1-9]|1[0-2])$" }], description: "The date the sentence names." },
                             summary: { type: "string", description: "The sentence that names the date, as our listing or change record writes it." },
                             source_url: { type: "string", format: "uri", nullable: true, description: "Where that sentence's text comes from: the link of the listing condition that states it (the listing's own URL where the condition has none), the listing's URL for its description, or the source_url of the change record whose summary states it. Null when that text has none." },
-                            stated_in: { type: "string", enum: ["listing", "record"], description: "listing: a listing's description or one of its conditions states the date. record: the summary of a change record dated today or earlier states it." },
+                            stated_in: { type: "string", enum: ["listing", "record"], description: "listing: a listing's description or one of its conditions states the date. record: the summary of a change record states it." },
                             change_type: { type: "string", enum: [...CHANGE_TYPES], description: "Present only when stated_in is record: the type of the change record whose summary states the date. Absent when stated_in is listing." },
                             record_date: { type: "string", format: "date", description: "Present only when stated_in is record: the date of the change record whose summary states the date." },
-                            countdown_days: { type: "integer", description: "Whole days from today, UTC, to the date the sentence names." }
+                            countdown_days: { type: "integer", nullable: true, description: "Whole days from today, UTC, to the date the sentence names." }
                           }
                         }
                       ]

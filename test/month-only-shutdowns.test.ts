@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { createDocument } from "@mixmark-io/domino";
 import { isShutdownMonth, statedShutdownDateOf, statedShutdownMonthOf, shutdownDateStart, shutdownDateEnd } from "../dist/shutdown-date.js";
 import { forecastShutdownsWithoutACard, shutdownDateOf } from "../dist/forecast-shutdowns.js";
+import { openapiSpec } from "../dist/openapi.js";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const changes = JSON.parse(readFileSync(path.join(root, "data/deal_changes.json"), "utf8")).changes;
@@ -84,6 +85,18 @@ describe("shutdown months preserve calendar precision", () => {
     assert.equal(statedShutdownDateOf({ discontinued_date: "2027-04-15" }), "2027-04-15");
     assert.equal(shutdownDateStart("2027-04-15"), "2027-04-15");
     assert.equal(shutdownDateEnd("2027-04-15"), "2027-04-15");
+  });
+  it("documents a month date and an unavailable day countdown", () => {
+    const schema: any = openapiSpec.paths["/api/deadlines"].get.responses["200"].content["application/json"].schema.properties.deadlines.items;
+    const stated = schema.oneOf.find((branch: any) => branch.properties?.stated_in).properties;
+    const variants = stated.date.oneOf ?? [stated.date];
+    assert.ok(variants.some((branch: any) => branch.type === "string" && branch.format === "date"));
+    const month = variants.find((branch: any) => branch.pattern);
+    assert.ok(month);
+    assert.ok(new RegExp(month.pattern).test("2027-04"));
+    assert.ok(!new RegExp(month.pattern).test("2027-13"));
+    assert.equal(stated.countdown_days.type, "integer");
+    assert.equal(stated.countdown_days.nullable, true);
   });
   it("stores the Deno announcement, month, source and scope", () => {
     assert.equal(deno.discontinued_date, "2027-04");
