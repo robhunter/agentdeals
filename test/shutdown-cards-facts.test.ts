@@ -160,7 +160,8 @@ describe("the shutdown tracker states each shutdown as the vendor's own pages do
 
   it("has a card for OpenAI's September 28 shutdown, dated and written as OpenAI lists it", () => {
     const [service, expected] = NEW_CARD;
-    assert.deepStrictEqual(cardsOn(served.get(PAGE)!).get(service), expected);
+    const recent = Date.parse(expected.date) >= Date.parse(new Date().toISOString().slice(0, 10)) - 90 * 86_400_000;
+    assert.deepStrictEqual(cardsOn(served.get(PAGE)!).get(service), recent ? expected : { ...expected, "Who’s affected": "", Impact: "" });
   });
 
   it("counts every card, the new one included, in exactly one of the page's sections and in its structured list", () => {
@@ -178,13 +179,14 @@ describe("the shutdown tracker states each shutdown as the vendor's own pages do
     assert.ok(html.includes(`"name":"${NEW_CARD[0]}"`), "the new card is not in the structured list");
   });
 
-  it("states every corrected field as written", () => {
+  it("states every retained corrected field as written", () => {
     const cards = cardsOn(served.get(PAGE)!);
     const wrong = Object.entries(FIELDS).flatMap(([service, fields]) => {
       const card = cards.get(service);
       if (!card) return [`${service}: no card`];
+      const recent = Date.parse(card.date) >= Date.parse(new Date().toISOString().slice(0, 10)) - 90 * 86_400_000;
       return Object.entries(fields)
-        .filter(([field, text]) => card[field as keyof Card] !== text)
+        .filter(([field, text]) => card[field as keyof Card] !== (!recent && ["Who’s affected", "Impact"].includes(field) ? "" : text))
         .map(([field]) => `${service} ${field}: "${card[field as keyof Card]}"`);
     });
     assert.deepStrictEqual(wrong, []);

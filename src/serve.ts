@@ -26955,6 +26955,8 @@ function buildShutdownTrackerPage(): string {
   const today = new Date();
   const todayDay = today.toISOString().slice(0, 10);
 
+  const fullShutdownDetailsSince = new Date(Date.parse(todayDay) - 90 * 86_400_000).toISOString().slice(0, 10);
+
   const handTyped: ShutdownEntry[] = [
     {
       service: "AWS App Runner (New Customers)",
@@ -27286,7 +27288,7 @@ function buildShutdownTrackerPage(): string {
       p.slug.includes(s.vendorSlug)
     );
     const details = ([["Who\u2019s affected", s.whoAffected], ["Impact", s.impact], ["Migration path", s.migrationPath]] as [string, string | undefined][])
-      .flatMap(([label, value]) => value === undefined ? [] : [[label, value] as const]);
+      .flatMap(([label, value]) => value === undefined || (s.deadline < fullShutdownDetailsSince && label !== "Migration path") ? [] : [[label, value] as const]);
 
     return `<div class="shutdown-card" style="border-left-color:${color}">
       <div class="shutdown-header">

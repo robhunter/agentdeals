@@ -28,12 +28,13 @@ const extra = Array.from({ length: 25 }, (_, i) => {
 const scratch = mkdtempSync(path.join(tmpdir(), "shutdown-capacity-"));
 const pages = new Map<string, string>();
 
-async function readPages(name: string, records: unknown[]) {
+async function readPages(name: string, records: unknown[], atDay?: string) {
   const filename = path.join(scratch, `${name}.json`);
   writeFileSync(filename, JSON.stringify({ ...stored, changes: records }, null, 2) + "\n");
-  const child = spawn("node", [path.join(ROOT, "dist/serve.js")], {
+  const child = spawn("node", [...(atDay ? ["--import", path.join(ROOT, "scripts/shifted-clock.mjs")] : []), path.join(ROOT, "dist/serve.js")], {
     cwd: ROOT, stdio: ["ignore", "ignore", "pipe"],
-    env: { ...process.env, TZ: "UTC", PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off", AGENTDEALS_CHANGES_PATH: filename },
+    env: { ...process.env, TZ: "UTC", PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off", AGENTDEALS_CHANGES_PATH: filename,
+      ...(atDay ? { AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(atDay + "T12:00:00Z") - Date.now()) } : {}) },
   });
   try {
     const port = await new Promise<string>((resolve, reject) => {
@@ -57,6 +58,8 @@ async function readPages(name: string, records: unknown[]) {
 before(async () => {
   await readPages("live", stored.changes);
   await readPages("expanded", [...stored.changes, ...extra]);
+  await readPages("ninety", stored.changes, "2026-07-29");
+  await readPages("ninety-one", stored.changes, "2026-07-30");
 });
 after(() => rmSync(scratch, { recursive: true, force: true }));
 
@@ -77,6 +80,16 @@ function markdownOf(document: Document) {
 }
 
 describe("shutdown reading capacity", () => {
+  it("retains every detail for ninety calendar days and every migration paragraph afterwards", () => {
+    const cards = ["ninety", "ninety-one"].map(name => cardsOf(pages.get(`${name} /shutdowns`)!).cards.find(card => card.node.querySelector("h3")!.textContent === "AWS App Runner (New Customers)")!.node);
+    const rows = cards.map(card => Array.from(card.querySelectorAll(".detail-row")));
+    assert.deepEqual(rows[0].map(row => row.querySelector(".detail-label")!.textContent), ["Who’s affected:", "Impact:", "Migration path:"]);
+    assert.deepEqual(rows[1].map(row => row.querySelector(".detail-label")!.textContent), ["Migration path:"]);
+    assert.equal(rows[1][0].outerHTML, rows[0][2].outerHTML);
+    for (const selector of ["h3", ".shutdown-what", ".shutdown-links"]) assert.equal(cards[1].querySelector(selector)!.outerHTML, cards[0].querySelector(selector)!.outerHTML);
+    assert.equal(cards[1].querySelector(".figure-source")!.getAttribute("href"), cards[0].querySelector(".figure-source")!.getAttribute("href"));
+  });
+
   for (const name of ["live", "expanded"]) it(`${name} keeps every imminent and upcoming card inside 95000 characters`, () => {
     const { document, cards } = cardsOf(pages.get(`${name} /shutdowns`)!);
     const near = cards.filter(card => ["imminent", "upcoming"].includes(card.section));
