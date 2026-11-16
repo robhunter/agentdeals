@@ -20405,6 +20405,38 @@
       "listing_effect": "none"
     },
     {
+      "vendor": "AWS",
+      "change_type": "product_deprecated",
+      "date": "2027-01-01",
+      "summary": "AWS discontinues its Developer Support and Business Support plans on January 1, 2027. Accounts on either plan must opt in to Business Support+ before then. A Developer Support account that does not opt in is downgraded to Basic Support. Basic Support gives access to the Resource Center, Service Health Dashboard, Product FAQs and Discussion Forums at no charge. Business Support accounts are not moved to Business Support+ automatically. Business Support+ costs the greater of $29 a month per account or 9% of monthly AWS charges, falling in steps to 3% on larger bills. Neither plan has accepted new subscriptions since December 2, 2025. AWS emails each account 30 days before its plan changes. Enterprise On-Ramp also ends on January 1, 2027, and its customers are moved to Enterprise Support automatically. The three plans stay available in the AWS GovCloud (US) Region.",
+      "what_ends": "AWS support plans: Developer, Business and Enterprise On-Ramp",
+      "previous_state": "Existing AWS accounts keep Developer Support or Business Support. Neither plan accepts new subscriptions.",
+      "current_state": "AWS Support User Guide, \"Developer, Business, and Enterprise On-Ramp end of support\" (read 2026-11-15): \"Developer Support will be discontinued January 1, 2027. Customers with Developer Support can continue using their existing plan or choose to upgrade to Business Support+ anytime before January 1, 2027.\" \"Business Support will be discontinued January 1, 2027.\" Business Support+ gives \"24/7 access to AWS experts at $29/month minimum per account.\" \"On January 1, 2027, AWS will discontinue Enterprise On-Ramp. Throughout 2026, Enterprise On-Ramp customers will be automatically upgraded to AWS Enterprise Support during contract renewal or in periodic batches.\" \"Developer Support, Business Support, and Enterprise On-Ramp will remain available in the AWS GovCloud (US) Region.\" AWS Premium Support FAQs (read 2026-11-15): \"Developer Support and Business Support customers must actively opt-in to Business Support+ before January 1, 2027. Regardless of your plan, you'll receive email notifications 30 days before any changes to your account.\" \"customers can continue using their existing plans, except for Developer Support customers who must make an active choice to opt-in to Business Support+ or accept a downgrade to Basic Support.\" \"your existing Business Support accounts will not be automatically migrated to Business Support+.\" \"As of December 2nd, 2025, Developer Support and Business Support are no longer available for new subscriptions.\" AWS Support pricing (read 2026-11-15), Business Support+: the greater of \"$29/month per account\" or a share of monthly AWS charges, from \"9% of monthly AWS charges\" on the first tier to \"3% of monthly AWS charges\" on the highest.",
+      "impact": "medium",
+      "source_url": "https://docs.aws.amazon.com/awssupport/latest/user/support-plans-eos.html",
+      "category": "Cloud IaaS",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
+    },
+    {
+      "vendor": "Supabase",
+      "change_type": "product_deprecated",
+      "date": "2026-12-31",
+      "summary": "Supabase says it is deprecating its legacy anon and service_role API keys by the end of 2026 and gives no day they stop working. Legacy keys keep working alongside the new keys until then. Replace the anon key with a publishable key (`sb_publishable_...`) and the service_role key with a secret key (`sb_secret_...`). Supabase's announcement says legacy keys will be deleted in late 2026, a date still to be confirmed. Apps that have not migrated will break then. Send the new keys on the apikey header only. The platform rejects them on the Authorization: Bearer header with Invalid JWT.",
+      "what_ends": "Supabase legacy API keys",
+      "previous_state": "Supabase projects authenticate with the anon and service_role keys alongside the newer publishable and secret keys.",
+      "current_state": "Supabase docs, \"API keys\" (read 2026-11-15): \"Supabase is deprecating the `anon` and `service_role` keys by the end of 2026. Use the publishable (`sb_publishable_xxx`) and secret (`sb_secret_xxx`) keys instead.\" \"Creating publishable and secret keys doesn't revoke your legacy keys. Both key systems work at the same time.\" Supabase's announcement \"Upcoming changes to Supabase API Keys\" (github.com/orgs/supabase/discussions/29260, read 2026-11-15), timeline row \"Late 2026, TBC\": \"Legacy API keys will be deleted and removed from the Docs / Dashboard.\" \"You have to migrate to use the new API keys by this point or your app will break.\"",
+      "impact": "medium",
+      "source_url": "https://supabase.com/docs/guides/api/api-keys",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-11-15",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
+    },
+    {
       "vendor": "Azure",
       "change_type": "product_deprecated",
       "date": "2027-03-31",
