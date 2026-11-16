@@ -110,7 +110,7 @@ import { statesNoFreeTier } from "./retired-terms.js";
 import { countsDownTo, shutdownDeadlineHtml, shutdownDates, nextShutdownDate } from "./shutdown-deadline.js";
 import { isShutdownMonth, statedShutdownMonthOf, shutdownDateStart, shutdownDateEnd, shutdownMonthLabel, shutdownMonthDateLabel } from "./shutdown-date.js";
 import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
-import { deadlineTextsOf, quotesTheWholeDescription, statedDeadlines, statedShutdowns, type StatedDeadline } from "./stated-deadlines.js";
+import { datesNamedIn, deadlineTextsOf, quotesTheWholeDescription, statedDeadlines, statedShutdowns, type StatedDeadline } from "./stated-deadlines.js";
 import { COMING_UP_HEADING, lastDayComingUp } from "./coming-up.js";
 import { UPCOMING_CHANGES_HEADING, UPCOMING_CHANGES_INTRO, LATEST_PRICING_CHANGES_HEADING, LATEST_PRICING_CHANGES_SHOWN, splitAtTheDayServed, upcomingDateOf, atUpcomingDate } from "./upcoming-changes.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
@@ -49218,10 +49218,13 @@ function servedPageHtml(html: string, pathname: string): string {
   return withLedeBeforeNav(withPageGenerosityAnswer(withPageFreshness(withReviewByline(html, pathname), pathname)));
 }
 
-function compactPricingChangeSummary(summary: string): string {
-  const sentences = new Intl.Segmenter("en", { granularity: "sentence" }).segment(summary)[Symbol.iterator]();
-  const first = sentences.next().value?.segment ?? summary;
-  return (/\bkeeps running\.\s*$/.test(first) ? first + (sentences.next().value?.segment ?? "") : first).trimEnd();
+function compactPricingChangeSummary(summary: string, date: string): string {
+  const sentences = [...new Intl.Segmenter("en", { granularity: "sentence" }).segment(summary)].map(part => part.segment);
+  const count = /\bkeeps running\.\s*$/.test(sentences[0] ?? "") ? 2 : 1;
+  const opening = sentences.slice(0, count).join("").trimEnd();
+  if (datesNamedIn(opening).includes(date)) return opening;
+  const dated = sentences.slice(count).find(sentence => datesNamedIn(sentence).includes(date));
+  return dated ? `${opening} ${dated.trim()}` : opening;
 }
 
 function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealChanges(), overflowHtml = "", indexAfterUpcoming = false): string {
@@ -49255,7 +49258,7 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
     const vendorCat = (c.category || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     const changeYear = dated ? c.date.slice(0, 4) : "";
     const entryAnchor = originalDate === c.date ? changeAnchor(c) : `${changeAnchor(c)}-retirement-${originalDate}`;
-    const summary = compact ? compactPricingChangeSummary(c.summary) : c.summary;
+    const summary = compact ? compactPricingChangeSummary(c.summary, c.date) : c.summary;
     return `      <div class="${preview ? "pc-preview" : "pc-entry"}${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}${changeIsUncited(c) ? " pc-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}" ${originalDate !== c.date ? `data-event-date="${escHtmlServer(originalDate)}" ` : ""}${preview ? "" : `id="${escHtmlServer(entryAnchor)}" `}data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
         <div class="pc-left">
           <div class="pc-date${dated ? "" : " pc-date-unknown"}">${changeEntryDateLabelHtml(c, escHtmlServer)}</div>

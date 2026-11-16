@@ -28,8 +28,36 @@ const extra = [
   previous_state: "Earlier API version", current_state: "Current API version",
   source_url: `https://example.com/retirement/${i}`, alternatives: [],
 }));
+const dateCases = [
+  (date: string) => `The service keeps serving requests. The endpoint retires on ${date}. More migration details follow.`,
+  (date: string) => `The service keeps running. Version 2.0 costs $12.50. The endpoint retires on ${date}. More migration details follow.`,
+  (date: string) => `The service changes on ${date}. More migration details follow.`,
+  (date: string) => `The service keeps running. The endpoint retires on ${date}. More migration details follow.`,
+  (date: string) => `The service keeps serving requests. The endpoint retires on ${new Date(date + "T00:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })}. More migration details follow.`,
+  (date: string) => `The service keeps serving requests. The endpoint retires on ${date}. The endpoint is deleted on ${date}.`,
+  (date: string) => `The service keeps serving requests. Earlier version 2.0 changes on ${day(1)}. The endpoint retires on ${date}. More migration details follow.`,
+  (date: string) => `The service keeps serving requests. Its "Preview <2> & Beta" retires on ${date}! More migration details follow.`,
+  (_date: string) => "The service keeps serving requests. It retires by the end of 2026.",
+  (_date: string) => "The service keeps serving requests. Migration details give no retirement date.",
+].map((summary, i) => ({ ...extra[0], vendor: `Dated Summary ${i}`, date: day(20 + i), discontinued_date: day(20 + i),
+  summary: summary(day(20 + i)), source_url: `https://example.com/dated/${i}` }));
+
+function namesDate(sentence: string, date: string): boolean {
+  const [year, month, dateDay] = date.split("-");
+  const monthName = new Date(`${year}-${month}-01T00:00:00Z`).toLocaleDateString("en-US", { month: "long", timeZone: "UTC" });
+  return new RegExp(`\\b${date}\\b|\\b${monthName}\\s+${Number(dateDay)}(?:st|nd|rd|th)?,?\\s+${year}\\b`, "i").test(sentence);
+}
+
+function expectedSummary(record: { summary: string; date: string }): string {
+  const sentences = [...new Intl.Segmenter("en", { granularity: "sentence" }).segment(record.summary)].map(part => part.segment);
+  const count = /\bkeeps running\.\s*$/.test(sentences[0]) ? 2 : 1;
+  const opening = sentences.slice(0, count).join("").trimEnd();
+  const dated = namesDate(opening, record.date) ? undefined : sentences.slice(count).find(sentence => namesDate(sentence, record.date));
+  return dated ? `${opening} ${dated.trim()}` : opening;
+}
+
 const past = { ...extra[0], vendor: "Continuing Past", date: today, discontinued_date: today };
-const records = [...stored.changes, ...extra, past];
+const records = [...stored.changes, ...extra, ...dateCases, past];
 const scratch = mkdtempSync(path.join(tmpdir(), "upcoming-continuing-"));
 const pages = new Map<string, string>();
 
@@ -83,7 +111,7 @@ describe("upcoming continuing-service summaries", () => {
         assert.ok(sentences.length >= 2, `${record.vendor} ${record.date}`);
         const expected = sentences.slice(0, 2).join("").trimEnd();
         assert.ok(summaryFor(record).startsWith(expected), `${record.vendor} ${record.date}: ${expected}`);
-        if (sentences.length > 2) assert.ok(!summaryFor(record).includes(sentences[2].trim()));
+        if (sentences.length > 2 && !namesDate(sentences[2], record.date)) assert.ok(!summaryFor(record).includes(sentences[2].trim()));
       }
     }
   });
@@ -101,12 +129,34 @@ describe("upcoming continuing-service summaries", () => {
   it("keeps ordinary first-sentence summaries unchanged", () => {
     for (const record of [...upcoming, extra[3]]) {
       const first = [...new Intl.Segmenter("en", { granularity: "sentence" }).segment(record.summary)][0].segment.trimEnd();
-      if (/\bkeeps running\.$/.test(first)) continue;
+      if (/\bkeeps running\.$/.test(first) || expectedSummary(record) !== first) continue;
       const text = summaryFor(record);
       assert.ok(text.startsWith(first), `${record.vendor} ${record.date}`);
       const remainder = record.summary.slice(first.length).trim();
       if (remainder) assert.ok(!text.includes(remainder), `${record.vendor} ${record.date}`);
     }
+  });
+
+  it("includes the first later date sentence for every current Upcoming record", () => {
+    for (const record of upcoming) {
+      const expected = expectedSummary(record);
+      const card = createDocument(pages.get("/pricing-changes")!).querySelectorAll(".upcoming-section .pc-entry");
+      const node = [...card].find(node => node.querySelector(".pc-vendor")!.textContent === record.vendor
+        && node.querySelector(".pc-date")!.textContent!.includes(record.date)
+        && node.querySelector(".change-source")?.getAttribute("href") === record.source_url)!;
+      assert.ok(node, `${record.vendor} ${record.date}`);
+      const summary = node.querySelector(".pc-summary")!.cloneNode(true) as Element;
+      for (const citation of summary.querySelectorAll(".change-source, .unsourced-note")) citation.remove();
+      assert.equal(summary.textContent!.trimEnd(), expected, `${record.vendor} ${record.date}`);
+    }
+  });
+
+  for (const record of dateCases) it(`retains the complete dated sentence for ${record.vendor}`, () => {
+    const actual = summaryFor(record);
+    assert.ok(actual.startsWith(expectedSummary(record)), record.summary);
+    assert.ok(!actual.includes("More migration details"));
+    if (record.vendor === "Dated Summary 5") assert.ok(!actual.includes("is deleted"));
+    if (record.vendor === "Dated Summary 6") assert.ok(!actual.includes("Earlier version"));
   });
 
   it("keeps full summaries in historical pricing cards and Latest", () => {
