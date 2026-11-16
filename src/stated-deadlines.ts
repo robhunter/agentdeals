@@ -184,13 +184,13 @@ function deadlinesInTexts(
   today: string,
   shutdownsOnly: boolean,
 ): StatedDeadline[] {
-  const unlisted = deadlineCandidatesInTexts(texts, today, shutdownsOnly).filter((deadline) =>
+  const candidates = deadlineCandidatesInTexts(texts, today, shutdownsOnly);
+  const statedDays = new Set(candidates.map((deadline) => `${deadline.vendor}\u0000${deadline.date}`));
+  const preferred = candidates.filter((deadline) => shutdownsOnly || !statedDays.has(`${deadline.vendor}\u0000${dayAfter(deadline.date)}`));
+  return preferred.filter((deadline) =>
     !listedRecords.some((record) => record.vendor === deadline.vendor
       && (record.date === deadline.date || (daysBetween(record.date, deadline.date) === 1
-        && (record === deadline.record || Boolean(deadline.sourceUrl && record.source_url === deadline.sourceUrl))))));
-  const unlistedDays = new Set(unlisted.map((deadline) => `${deadline.vendor}\u0000${deadline.date}`));
-  return unlisted
-    .filter((deadline) => shutdownsOnly || !unlistedDays.has(`${deadline.vendor}\u0000${dayAfter(deadline.date)}`))
+        && (record === deadline.record || Boolean(deadline.sourceUrl && record.source_url === deadline.sourceUrl))))))
     .sort((a, b) => a.date.localeCompare(b.date) || a.vendor.localeCompare(b.vendor));
 }
 

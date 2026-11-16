@@ -82,6 +82,18 @@ describe("nearby records suppress deadlines by day and evidence", () => {
     assert.equal(result[0].statedIn, "condition");
   });
 
+  for (const [until, next] of [["2026-11-30", "2026-12-01"], ["2026-12-31", "2027-01-01"]]) {
+    it(`prefers the later stated date before suppressing its recorded copy across ${until}`, () => {
+      const text = statedText({ text: `Pricing applies until ${until}, then costs more from ${next}.` });
+      const record = { ...bedrock, date: next };
+      assert.deepEqual(statedDeadlines([text], [record], TODAY), []);
+      assert.deepEqual(statedDeadlines([text], [], TODAY).map(entry => entry.date), [next]);
+      assert.deepEqual(statedDeadlines([text], [{ ...record, vendor: "Other" }], TODAY).map(entry => entry.date), [next]);
+      assert.deepEqual(sameDayDeadlineSuppressions([text], [record], TODAY).map(entry => entry.deadline.date), [next]);
+      assert.deepEqual(statedDeadlines([text], [record], until), []);
+    });
+  }
+
   for (const date of ["2027-03-30", "2027-04-01"]) {
     it(`keeps an unrelated adjacent record on ${date}`, () => {
       assert.equal(statedDeadlines([statedText()], [{ ...bedrock, date }], TODAY).length, 1);
