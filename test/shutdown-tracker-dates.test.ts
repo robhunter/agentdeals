@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { countsDownTo, shutdownDeadlineHtml } from "../dist/shutdown-deadline.js";
 import { FIGURE_SOURCE_CLASS } from "../dist/source-citation.js";
 import { RECORD_SOURCE_CLASS } from "../dist/change-citation.js";
+import { retainedShutdownDetailsPage } from "./retained-shutdown-details.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -131,11 +132,14 @@ describe("the shutdown tracker counts down only to dates a vendor set", () => {
     assert.ok(tenor!.text.includes("Only the API ended"), tenor!.text);
   });
 
-  it("states that existing App Runner customers can still create services", () => {
+  it("states that existing App Runner customers can still create services", async () => {
     const appRunner = cards.find((c) => /App Runner/.test(c.title));
     assert.ok(appRunner, "the App Runner entry is missing");
     assert.ok(!/Cannot create new App Runner services/i.test(appRunner!.text), appRunner!.text);
-    assert.ok(appRunner!.text.includes("including creating new services"), appRunner!.text);
+    const retained = (await retainedShutdownDetailsPage(REPO)).split('<div class="shutdown-card"').slice(1)
+      .find(html => /App Runner/.test(textOf(html.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? "")));
+    assert.ok(retained, "the App Runner entry is missing");
+    assert.ok(textOf(retained!).includes("including creating new services"), textOf(retained!));
   });
 });
 
