@@ -3290,7 +3290,8 @@
       "daily": true
     },
     "/feed.xml": {
-      "daily": true
+      "hash": "0d767e1e439d4454",
+      "changed": "2026-11-16"
     },
     "/firebase-alternatives": {
       "hash": "464b71beb7eb18e0",
