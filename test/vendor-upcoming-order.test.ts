@@ -127,7 +127,7 @@ describe("vendor upcoming change order", () => {
   });
 
   it("keeps a positive-only vendor free of a negative change notice", () => {
-    assert.equal(document("Timeline Positive Only").querySelector(".change-notice") ?? null, null);
+    assert.equal(Boolean(document("Timeline Positive Only").querySelector(".change-notice")), false);
     assert.deepEqual(Array.from(history("Timeline Positive Only").querySelectorAll("h3")).map(node => node.textContent), ["Upcoming, soonest first"]);
   });
 
@@ -135,13 +135,13 @@ describe("vendor upcoming change order", () => {
     const section = history("Timeline Past");
     assert.deepEqual(Array.from(section.querySelectorAll(".change-date")).map(node => node.textContent.trim().replace(/^effective /, "")), [-5, -10, -20].map(day));
     assert.deepEqual(Array.from(section.querySelectorAll("h3")).map(node => node.textContent), ["Past, latest first"]);
-    assert.equal(document("Timeline Past").querySelector(".change-notice") ?? null, null);
+    assert.equal(Boolean(document("Timeline Past").querySelector(".change-notice")), false);
     assert.ok(document("Timeline Past").querySelector(".risk-cause-line")?.textContent.includes("Timeline Past changes plan -5."));
   });
 
   it("keeps an empty history without group headings or a notice", () => {
     assert.equal(history("Timeline Empty").querySelectorAll("h3").length, 0);
-    assert.equal(document("Timeline Empty").querySelector(".change-notice") ?? null, null);
+    assert.equal(Boolean(document("Timeline Empty").querySelector(".change-notice")), false);
     assert.ok(history("Timeline Empty").querySelector(".no-changes"));
   });
 
