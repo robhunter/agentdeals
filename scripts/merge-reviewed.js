@@ -145,27 +145,80 @@ try {
 run("git", ["config", "user.name", "github-actions[bot]"]);
 run("git", ["config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com"]);
 
+const pageLedger = "data/page-lastmod.json";
+
+function mergeTree(candidate, head, index) {
+  const result = spawnSync("git", ["merge-tree", "--write-tree", "--name-only", "-z", candidate, head], {
+    encoding: "utf8", maxBuffer: 16 * 1024 * 1024,
+  });
+  if (result.error) throw result.error;
+  const [tree, ...fields] = (result.stdout ?? "").split("\0");
+  if (!/^[a-f0-9]{40}$/.test(tree)) throw new Error(`Merge failed: ${result.stderr}`);
+  if (result.status === 0) return { tree, ledgerConflict: false };
+  const boundary = fields.indexOf("");
+  const conflicts = fields.slice(0, boundary);
+  if (result.status !== 1 || boundary < 0 || conflicts.length !== 1 || conflicts[0] !== pageLedger) {
+    throw new Error(`Merge conflicts require review: ${conflicts.join(", ")}. ${result.stderr}`);
+  }
+  let ledger;
+  for (const revision of [candidate, head, base]) {
+    const entry = run("git", ["ls-tree", revision, "--", pageLedger]);
+    if (!/^100644 blob [a-f0-9]{40}\tdata\/page-lastmod\.json$/.test(entry)) {
+      throw new Error("A conflicted page ledger must remain a regular file in both heads and main.");
+    }
+    ledger = entry.split(/\s+/)[2];
+  }
+  const env = { ...process.env, GIT_INDEX_FILE: index };
+  run("git", ["read-tree", tree], { env });
+  run("git", ["update-index", "--cacheinfo", `100644,${ledger},${pageLedger}`], { env });
+  return { tree: run("git", ["write-tree"], { env }), ledgerConflict: true };
+}
+
 function testCandidate(requests) {
   let candidate = base;
-  for (const request of requests) {
-    validateQueuedRequest(request);
-    reviewedPullRequest(request);
-    run("git", ["fetch", "origin", request.expectedHead]);
-    const tree = run("git", ["merge-tree", "--write-tree", candidate, request.expectedHead]);
-    candidate = run("git", ["commit-tree", tree, "-p", candidate, "-p", request.expectedHead], {
-      input: `${request.pr.title} (#${request.number})\n\nMerge reviewed head ${request.expectedHead}.\n`,
-    });
-  }
-  const tree = run("git", ["rev-parse", `${candidate}^{tree}`]);
-  record(`Testing publication candidate ${candidate}, tree ${tree}, pull requests ${requests.map((request) => request.number).join(", ")}.`);
+  let tree;
+  let ledgerConflict = false;
+  let addedWorktree = false;
   const scratch = mkdtempSync(join(tmpdir(), "reviewed-publication-"));
   const cwd = join(scratch, "work");
   try {
+    for (const request of requests) {
+      validateQueuedRequest(request);
+      reviewedPullRequest(request);
+      run("git", ["fetch", "origin", request.expectedHead]);
+      const merged = mergeTree(candidate, request.expectedHead, join(scratch, "index"));
+      ledgerConflict ||= merged.ledgerConflict;
+      candidate = run("git", ["commit-tree", merged.tree, "-p", candidate, "-p", request.expectedHead], {
+        input: `${request.pr.title} (#${request.number})\n\nMerge reviewed head ${request.expectedHead}.\n`,
+      });
+    }
     run("git", ["worktree", "add", "--detach", cwd, candidate]);
+    addedWorktree = true;
     run("npm", ["ci"], { cwd, stdio: "inherit" });
     run("npm", ["run", "build"], { cwd, stdio: "inherit" });
     const suiteEnv = { ...process.env, TZ: "UTC", POPULATION_FLOOR_BASE: base };
     delete suiteEnv.TEST_SHARD;
+    if (ledgerConflict) {
+      run("git", ["diff", "--exit-code", "HEAD", "--"], { cwd });
+      run("git", ["restore", "--source", base, "--worktree", "--", pageLedger], { cwd });
+      run("node", ["scripts/update-page-lastmod.js"], { cwd, stdio: "inherit", env: suiteEnv });
+      const changed = run("git", ["diff", "--name-only", "-z", "HEAD", "--"], { cwd }).split("\0").filter(Boolean);
+      if (changed.some((path) => path !== pageLedger)) throw new Error("Page ledger regeneration changed another tracked file.");
+      if (run("git", ["rev-parse", "HEAD"], { cwd }) !== candidate) throw new Error("Page ledger regeneration changed its merge commit.");
+      run("git", ["add", "--", pageLedger], { cwd });
+      tree = run("git", ["write-tree"], { cwd });
+      if (tree !== run("git", ["rev-parse", `${candidate}^{tree}`], { cwd })) {
+        candidate = run("git", ["commit-tree", tree, "-p", candidate], {
+          cwd, input: "Regenerate page dates for the reviewed merge.\n",
+        });
+        run("git", ["checkout", "--detach", candidate], { cwd });
+      }
+      run("node", ["scripts/update-page-lastmod.js", "--check"], { cwd, stdio: "inherit", env: suiteEnv });
+      record(`Regenerated the conflicted page ledger from main ${base} on the complete reviewed merge.`);
+    }
+    run("git", ["diff", "--exit-code", "HEAD", "--"], { cwd });
+    tree = run("git", ["rev-parse", `${candidate}^{tree}`], { cwd });
+    record(`Testing publication candidate ${candidate}, tree ${tree}, pull requests ${requests.map((request) => request.number).join(", ")}.`);
     run("npm", ["test"], { cwd, stdio: "inherit", env: suiteEnv });
     run("node", ["scripts/test-marked-conditions.mjs"], { cwd, stdio: "inherit", env: suiteEnv });
     if (run("git", ["rev-parse", "HEAD"], { cwd }) !== candidate) throw new Error("The suite changed its publication commit.");
@@ -176,10 +229,10 @@ function testCandidate(requests) {
     }
     return { candidate, tree, requests };
   } catch (error) {
-    record(`Publication candidate ${candidate}, tree ${tree}, refused: ${error.message}`);
+    record(`Publication candidate ${candidate}, tree ${tree ?? "unprepared"}, refused: ${error.message}`);
     throw error;
   } finally {
-    run("git", ["worktree", "remove", "--force", cwd]);
+    if (addedWorktree) run("git", ["worktree", "remove", "--force", cwd]);
     rmSync(scratch, { recursive: true, force: true });
   }
 }
