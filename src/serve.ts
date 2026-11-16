@@ -49203,6 +49203,12 @@ function servedPageHtml(html: string, pathname: string): string {
   return withLedeBeforeNav(withPageGenerosityAnswer(withPageFreshness(withReviewByline(html, pathname), pathname)));
 }
 
+function compactPricingChangeSummary(summary: string): string {
+  const sentences = new Intl.Segmenter("en", { granularity: "sentence" }).segment(summary)[Symbol.iterator]();
+  const first = sentences.next().value?.segment ?? summary;
+  return (/\bkeeps running\.\s*$/.test(first) ? first + (sentences.next().value?.segment ?? "") : first).trimEnd();
+}
+
 function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealChanges(), overflowHtml = "", indexAfterUpcoming = false): string {
   const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
   const today = new Date().toISOString().slice(0, 10);
@@ -49234,7 +49240,7 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
     const vendorCat = (c.category || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     const changeYear = dated ? c.date.slice(0, 4) : "";
     const entryAnchor = originalDate === c.date ? changeAnchor(c) : `${changeAnchor(c)}-retirement-${originalDate}`;
-    const summary = compact ? new Intl.Segmenter("en", { granularity: "sentence" }).segment(c.summary)[Symbol.iterator]().next().value?.segment.trimEnd() ?? c.summary : c.summary;
+    const summary = compact ? compactPricingChangeSummary(c.summary) : c.summary;
     return `      <div class="${preview ? "pc-preview" : "pc-entry"}${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}${changeIsUncited(c) ? " pc-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}" ${originalDate !== c.date ? `data-event-date="${escHtmlServer(originalDate)}" ` : ""}${preview ? "" : `id="${escHtmlServer(entryAnchor)}" `}data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
         <div class="pc-left">
           <div class="pc-date${dated ? "" : " pc-date-unknown"}">${changeEntryDateLabelHtml(c, escHtmlServer)}</div>
