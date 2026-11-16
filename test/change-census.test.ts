@@ -541,7 +541,10 @@ it("checks every census surface when a slice equals a non-change figure", async 
       assert.strictEqual(response.status, 200, route);
       const body = await response.text();
       for (const count of [753, 1343, 625, 1498, 300, 500]) {
-        assertNamedSliceFigures(body, nonTrackedSlices(dealChanges).map(slice => ({ ...slice, count })), route);
+        const figures = nonTrackedSliceFigures(body, [{ id: "fixture", noun: "", count }]);
+        const namedSlices = nonTrackedSlices(dealChanges).filter(slice => slice.count === count);
+        const unnamed = figures.filter(figure => !namedSlices.some(slice => figure.sentence.includes(slice.noun)));
+        assert.deepStrictEqual(unnamed, [], route);
       }
     }
   } finally {
