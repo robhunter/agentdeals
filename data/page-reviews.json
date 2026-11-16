@@ -2345,8 +2345,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 118,
-      "table_figures_from_records": 117,
+      "table_figures": 124,
+      "table_figures_from_records": 123,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2360,8 +2360,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 31,
-          "from_records": 31
+          "figures": 37,
+          "from_records": 37
         },
         {
           "label": "Recent Pricing Changes",
@@ -2553,8 +2553,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 57,
-      "table_figures_from_records": 57,
+      "table_figures": 63,
+      "table_figures_from_records": 63,
       "tables": [
         {
           "label": "What’s Changing",
@@ -2573,8 +2573,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 1,
-          "from_records": 1
+          "figures": 7,
+          "from_records": 7
         }
       ],
       "reads_changes": true,
@@ -2605,8 +2605,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 30,
-      "table_figures_from_records": 3,
+      "table_figures": 36,
+      "table_figures_from_records": 9,
       "tables": [
         {
           "label": "Cost Comparison by Usage Tier",
@@ -2630,8 +2630,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 1,
-          "from_records": 1
+          "figures": 7,
+          "from_records": 7
         }
       ],
       "reads_changes": true,
@@ -2663,8 +2663,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 62,
-      "table_figures_from_records": 62,
+      "table_figures": 68,
+      "table_figures_from_records": 68,
       "tables": [
         {
           "label": "2. Feature Migration Map",
@@ -2698,8 +2698,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 1,
-          "from_records": 1
+          "figures": 7,
+          "from_records": 7
         }
       ],
       "reads_changes": true,
@@ -2974,8 +2974,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 51,
-      "table_figures_from_records": 51,
+      "table_figures": 57,
+      "table_figures_from_records": 57,
       "tables": [
         {
           "label": "Related Pricing Changes",
@@ -2984,8 +2984,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 47,
-          "from_records": 47
+          "figures": 53,
+          "from_records": 53
         }
       ],
       "reads_changes": true,
