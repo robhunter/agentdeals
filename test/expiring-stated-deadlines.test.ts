@@ -16,7 +16,7 @@ function entries(html: string, prefix: "exp" | "dl") {
   return html.split(new RegExp(`<div class="${prefix === "exp" ? "exp-entry" : "dl-card"}[^\"]*">`)).slice(1).map(body => ({
     body,
     vendor: text(body.match(new RegExp(`<[^>]*class="${prefix}-vendor"[^>]*>(.*?)<\\/[^>]+>`))?.[1] ?? ""),
-    date: text(body.match(new RegExp(`<div class="${prefix}-date[^\"]*">([^<]*)<\\/div>`))?.[1] ?? "").match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? "",
+    date: body.match(new RegExp(`class="${prefix}-date[^\\"]*" data-date="([^\\"]+)"`))?.[1] ?? text(body.match(new RegExp(`<div class="${prefix}-date[^\"]*">([^<]*)<\\/div>`))?.[1] ?? "").match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? "",
     countdown: text(body.match(/<div class="exp-countdown[^\"]*">([^<]*)<\/div>/)?.[1] ?? ""),
   }));
 }
@@ -58,8 +58,9 @@ async function checkPages(base: string) {
   const upcoming = monthEntries(html);
   const pair = ({ vendor, date }: { vendor: string; date: string }) => `${vendor}\u0000${date}`;
   assert.ok(due.length > 0);
-  assert.deepEqual(upcoming.filter(entry => entry.date > TODAY).map(pair).sort(), due.map(pair).sort());
+  assert.deepEqual(upcoming.filter(entry => entry.date.length === 7 ? entry.date >= TODAY.slice(0, 7) : entry.date > TODAY).map(pair).sort(), due.map(pair).sort());
   for (const entry of upcoming) {
+    if (entry.date.length === 7) { assert.equal(entry.countdown, ""); continue; }
     const days = Math.round((Date.parse(entry.date) - Date.parse(TODAY)) / DAY);
     assert.equal(entry.countdown, days === 0 ? "today" : days === 1 ? "tomorrow" : `in ${days} days`, pair(entry));
   }
@@ -68,13 +69,13 @@ async function checkPages(base: string) {
     const heading = text(group.match(/<h2 class="month-heading">([^<]*)<\/h2>/)?.[1] ?? "");
     const end = group.search(/<div class="recent-section|<div class="mcp-cta"/);
     for (const entry of entries(end < 0 ? group : group.slice(0, end), "exp")) {
-      const month = new Date(`${entry.date}T00:00:00Z`).toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
+      const month = new Date(`${entry.date.length === 7 ? entry.date + "-01" : entry.date}T00:00:00Z`).toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
       assert.equal(heading, month, pair(entry));
     }
   }
   const tile = (label: string) => Number(html.match(new RegExp(`<div class="stat-value">(\\d+)<\\/div>\\s*<div class="stat-label">${label}<\\/div>`))?.[1]);
   assert.equal(tile("Upcoming"), upcoming.length);
-  assert.equal(tile("Within 14 Days"), upcoming.filter(entry => entry.date <= dateIn(14)).length);
+  assert.equal(tile("Within 14 Days"), upcoming.filter(entry => entry.date.length !== 7 && entry.date <= dateIn(14)).length);
   assert.match(html, new RegExp(`<p class="page-intro">${upcoming.length} upcoming pricing changes tracked\\.`));
   assert.match(html, new RegExp(`<meta name="description" content="${upcoming.length} upcoming pricing changes tracked\\.`));
   const discovered = html.split('<h2>Recently Discovered</h2>')[1] ?? "";

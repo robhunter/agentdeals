@@ -65,7 +65,7 @@ function decode(text: string): string {
 }
 
 function cardsOf(html: string): { badge: string | null; date: string; summary: string }[] {
-  return [...html.matchAll(/<div class="dl-card [^"]*">([\s\S]*?)<div class="dl-date">([^<]*)<\/div>\s*<div class="dl-summary">([\s\S]*?)<\/div>/g)]
+  return [...html.matchAll(/<div class="dl-card [^"]*">([\s\S]*?)<div class="dl-date"[^>]*>([^<]*)<\/div>\s*<div class="dl-summary">([\s\S]*?)<\/div>/g)]
     .map(([, head, date, summary]) => ({
       badge: head.match(/<span class="badge"[^>]*>([^<]*)<\/span>/)?.[1] ?? null,
       date: decode(date),

@@ -1296,17 +1296,17 @@ function buildChangingSoonSection(): string {
     const badge = c.citedRecord
       ? changeTypeBadge[c.citedRecord.change_type] ?? { label: c.citedRecord.change_type, color: "#8b949e" }
       : null;
-    const deadlineDate = new Date(c.date + "T00:00:00Z");
+    const deadlineDate = new Date(shutdownDateStart(c.date) + "T00:00:00Z");
     const todayDate = new Date(today + "T00:00:00Z");
     const daysLeft = Math.ceil((deadlineDate.getTime() - todayDate.getTime()) / 86400000);
     const relTime = daysLeft === 0 ? "today" : daysLeft === 1 ? "tomorrow" : `in ${daysLeft} days`;
     return `      <div class="cs-entry">
-        <div class="cs-countdown${daysLeft <= 14 ? " cs-urgent" : ""}">${daysLeft}<span class="cs-unit">${daysLeft === 1 ? "day" : "days"}</span></div>
+        ${isShutdownMonth(c.date) ? "" : `<div class="cs-countdown${daysLeft <= 14 ? " cs-urgent" : ""}">${daysLeft}<span class="cs-unit">${daysLeft === 1 ? "day" : "days"}</span></div>`}
         <div class="cs-detail">
           <div class="cs-head">
             ${badge ? `<span class="change-badge" style="background:${badge.color}">${badge.label}</span>` : ""}
             ${changeVendorLinkHtml(c.vendor, ' class="cs-vendor"')}
-            <span class="cs-rel">${escHtmlServer(c.dateLabel)} · ${relTime}</span>
+            <span class="cs-rel"${isShutdownMonth(c.date) ? ` data-date="${c.date}"` : ""}>${escHtmlServer(c.dateLabel)}${isShutdownMonth(c.date) ? "" : ` · ${relTime}`}</span>
           </div>
           <div class="cs-summary">${c.summaryHtml}</div>
         </div>
@@ -49982,12 +49982,12 @@ function buildExpiringPage(): string {
     const c = line.citedRecord;
     const badge = c ? changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" } : null;
     const dated = line.datedRecord ? isEventDated(line.datedRecord) : true;
-    const countdown = showCountdown ? countdownLabel(line.date) : null;
+    const countdown = showCountdown && !isShutdownMonth(line.date) ? countdownLabel(line.date) : null;
     const urgentClass = countdown?.urgent ? " entry-urgent" : "";
     return `      <div class="exp-entry${urgentClass}${dated ? "" : " exp-undated"}">
         <div class="exp-left">
           ${countdown ? `<div class="exp-countdown${countdown.urgent ? " exp-countdown-urgent" : ""}">${countdown.text}</div>` : ""}
-          <div class="exp-date${dated ? "" : " exp-date-unknown"}">${escHtmlServer(line.dateLabel)}</div>
+          <div class="exp-date${dated ? "" : " exp-date-unknown"}"${isShutdownMonth(line.date) ? ` data-date="${line.date}"` : ""}>${escHtmlServer(line.dateLabel)}</div>
         </div>
         <div class="exp-right">
           <div class="exp-head">
@@ -50009,7 +50009,7 @@ ${entriesHtml}
   }).join("\n");
 
   const totalUpcoming = upcoming.length;
-  const urgentCount = upcoming.filter(c => {
+  const urgentCount = upcoming.filter(c => !isShutdownMonth(c.date)).filter(c => {
     const diff = Math.ceil((new Date(c.date + "T00:00:00Z").getTime() - todayMs) / 86400000);
     return diff <= 14;
   }).length;
@@ -50426,7 +50426,7 @@ function monthShutdownDeadlines(changes: readonly DealChange[], today: string): 
 
 function deadlinesOurTextStates(changes: readonly DealChange[], listed: readonly DealChange[], today: string): StatedDeadline[] {
   const recordsBeforeToday = changesTheVendorMade(recordsStillInForce(changes)).filter(c => c.date <= today);
-  const stated = statedDeadlines(deadlineTextsOf(offers, recordsBeforeToday), listed, today);
+  const stated = [...statedDeadlines(deadlineTextsOf(offers, recordsBeforeToday), listed, today), ...monthShutdownDeadlines(changes, today)];
   const stages = forecastShutdownsWithoutACard(changes, []).flatMap(({ record, deadline }) =>
     shutdownDates({ deadline, stages: record.shutdown_stages }).filter(stage => stage.label && stage.date > today && stage.date < deadline)
       .map(stage => ({ vendor: record.vendor, category: record.category, date: stage.date,
@@ -50439,6 +50439,7 @@ function deadlinesOurTextStates(changes: readonly DealChange[], listed: readonly
 function vendorRecordsDatedAfter(changes: readonly DealChange[], today: string): DealChange[] {
   return changesTheVendorMade(changes)
     .filter(c => c.date > today)
+    .filter(record => record.change_type !== "product_deprecated" || statedShutdownMonthOf(record) === null)
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
@@ -50470,7 +50471,7 @@ function statedDeadlineLine(s: StatedDeadline): DeadlineLine {
     date: s.date,
     vendor: s.vendor,
     category: s.category,
-    dateLabel: s.date,
+    dateLabel: isShutdownMonth(s.date) ? shutdownMonthDateLabel(s.date) : s.date,
     sentence: s.sentence,
     summaryHtml: s.record
       ? changeSummaryHtml({ ...s.record, summary: s.sentence }, escHtmlServer)
@@ -50546,9 +50547,8 @@ function buildDeadlinesPage(): string {
   const today = new Date().toISOString().slice(0, 10);
   const todayMs = new Date(today + "T00:00:00Z").getTime();
 
-  const deadlines = vendorRecordsDatedAfter(allChanges, today)
-    .filter(record => record.change_type !== "product_deprecated" || statedShutdownMonthOf(record) === null);
-  const stated = [...deadlinesOurTextStates(allChanges, deadlines, today), ...monthShutdownDeadlines(allChanges, today)];
+  const deadlines = vendorRecordsDatedAfter(allChanges, today);
+  const stated = deadlinesOurTextStates(allChanges, deadlines, today);
   const entryCount = deadlines.length + stated.length;
 
   const migrationGuides: Record<string, string> = {
@@ -50638,7 +50638,7 @@ function buildDeadlinesPage(): string {
             ${changeVendorLinkHtml(card.vendor, ' class="dl-vendor"')}
             <span class="dl-category">${escHtmlServer(card.category)}</span>
           </div>
-          <div class="dl-date">${escHtmlServer(card.dateLabel)}</div>
+          <div class="dl-date"${isShutdownMonth(due) ? ` data-date="${due}"` : ""}>${escHtmlServer(card.dateLabel)}</div>
           <div class="dl-summary">${card.summaryHtml}</div>
 ${altHtml}${guideHtml}
         </div>
@@ -54316,7 +54316,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         ...c,
         countdown_days: countdownDays(c.date),
       }));
-    const statedDeadlineEntries = [...deadlinesOurTextStates(allChanges, listed, today), ...monthShutdownDeadlines(allChanges, today)]
+    const statedDeadlineEntries = deadlinesOurTextStates(allChanges, listed, today)
       .filter(s => !typeFilter || s.record?.change_type === typeFilter)
       .map(s => ({
         vendor: s.vendor,

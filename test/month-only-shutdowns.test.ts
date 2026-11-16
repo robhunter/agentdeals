@@ -19,13 +19,16 @@ const fullDates = ["2027-04-01", "2027-04-15", "2027-05-01"].map((date, i) => ({
   summary: `Calendar Service ${i} retires on ${date}.`, source_url: `https://example.com/calendar/${i}`,
 }));
 
-async function pages(day: string, records: any[], directory: string, zone = "UTC") {
+async function pages(day: string, records: any[], directory: string, zone = "UTC", emptyIndex = false) {
   const file = path.join(directory, "changes.json");
   writeFileSync(file, JSON.stringify({ changes: records }));
+  const index = path.join(directory, "index.json");
+  if (emptyIndex) writeFileSync(index, JSON.stringify({ offers: [] }));
   const child = spawn("node", ["--import", path.join(root, "scripts/shifted-clock.mjs"), path.join(root, "dist/serve.js")], {
     cwd: root, stdio: ["ignore", "ignore", "pipe"],
     env: { ...process.env, TZ: zone, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off",
-      AGENTDEALS_CHANGES_PATH: file, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${day}T12:00:00Z`) - Date.now()) },
+      AGENTDEALS_CHANGES_PATH: file, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${day}T12:00:00Z`) - Date.now()),
+      ...(emptyIndex ? { AGENTDEALS_INDEX_PATH: index } : {}) },
   });
   try {
     const port = await new Promise<string>((resolve, reject) => {
@@ -37,8 +40,8 @@ async function pages(day: string, records: any[], directory: string, zone = "UTC
       child.once("exit", code => { clearTimeout(timer); reject(new Error(`Server exited ${code}: ${stderr}`)); });
     });
     const result: Record<string, string> = {};
-    for (const route of ["/shutdowns", "/deadlines", "/api/deadlines"]) {
-      const response = await fetch(`http://localhost:${port}${route}`);
+    for (const route of ["/shutdowns", "/deadlines", "/api/deadlines", "/expiring", "/", "/this-week"]) {
+      const response = await fetch(`http://localhost:${port}${route}`, { redirect: "error" });
       assert.equal(response.status, 200);
       result[route] = await response.text();
     }
@@ -55,7 +58,7 @@ function cards(page: string, selector: string) {
 }
 
 function card(page: string, selector: string, name: string) {
-  const found = cards(page, selector).filter(element => element.querySelector("h3, .dl-vendor")?.textContent === name);
+  const found = cards(page, selector).filter(element => element.querySelector("h3, .dl-vendor, .cs-vendor, .exp-vendor")?.textContent === name);
   assert.equal(found.length, 1, `${name} appears once`);
   return found[0];
 }
@@ -149,7 +152,7 @@ describe("month-only shutdowns on HTTP pages", () => {
       const control = await pages(day, fullDates, directory);
       for (const selector of [".shutdown-card", ".dl-card"]) {
         const route = selector === ".shutdown-card" ? "/shutdowns" : "/deadlines";
-        const withoutDeno = cards(result[route], selector).filter(c => c.querySelector("h3, .dl-vendor")?.textContent !== "Deno Deploy");
+        const withoutDeno = cards(result[route], selector).filter(c => c.querySelector("h3, .dl-vendor, .cs-vendor, .exp-vendor")?.textContent !== "Deno Deploy");
         assert.deepEqual(withoutDeno.map(c => c.outerHTML), cards(control[route], selector).map(c => c.outerHTML));
       }
     });
@@ -157,7 +160,7 @@ describe("month-only shutdowns on HTTP pages", () => {
   it("orders an undated April shutdown ahead of April 1 on both pages and in By month", async () => {
     const result = await pages("2026-11-16", [...fullDates, deno], directory);
     for (const [route, selector] of [["/shutdowns", ".shutdown-card"], ["/deadlines", ".dl-card"]]) {
-      const names = cards(result[route], selector).map(c => c.querySelector("h3, .dl-vendor")?.textContent);
+      const names = cards(result[route], selector).map(c => c.querySelector("h3, .dl-vendor, .cs-vendor, .exp-vendor")?.textContent);
       assert.ok(names.indexOf("Deno Deploy") < names.indexOf("Calendar Service 0"));
     }
     const april = createDocument(result["/shutdowns"]).querySelector('[data-month="2027-04"]')!;
@@ -176,6 +179,21 @@ describe("month-only shutdowns on HTTP pages", () => {
     const result = await pages("2028-02-15", [{ ...deno, discontinued_date: "2028-02" }], directory);
     const header = createDocument(result["/shutdowns"]).querySelector(".pub-date")!;
     assert.doesNotMatch(header.textContent!, /Next deadline in/);
+  });
+  for (const day of ["2026-11-16", "2027-04-15"]) it(`shares the month without day countdowns on ${day}`, async () => {
+    const result = await pages(day, [{ ...deno, listing_effect: "ends" }], directory, "UTC", true);
+    for (const [route, selector, dateSelector, countdown] of [["/", ".cs-entry", ".cs-rel", ".cs-countdown"], ["/expiring", ".exp-entry", ".exp-date", ".exp-countdown"]]) {
+      const found = card(result[route], selector, "Deno Deploy");
+      assert.equal(found.querySelector(dateSelector)!.textContent, "April 2027 (no day is given)");
+      assert.equal(found.querySelector(dateSelector)!.getAttribute("data-date"), "2027-04");
+      assert.ok(!found.querySelector(countdown));
+      assert.doesNotMatch(found.outerHTML, /NaN|Invalid Date|2027-04-\d{2}/);
+    }
+    if (day === "2027-04-15") {
+      const lines = cards(result["/this-week"], ".coming-up-list li").filter(line => line.textContent!.includes("Deno Deploy"));
+      assert.equal(lines.length, 1);
+      assert.equal(lines[0].querySelector(".coming-up-date")!.textContent, "April 2027 (no day is given)");
+    }
   });
   it("keeps a leap-year February shutdown active through February 29 in a non-UTC timezone", async () => {
     const record = { ...deno, discontinued_date: "2028-02" };

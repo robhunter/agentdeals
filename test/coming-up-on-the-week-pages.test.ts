@@ -145,7 +145,7 @@ function linesOf(html: string): Line[] {
 }
 
 function deadlineCardsOf(html: string): { dateLabel: string; vendorHref: string | null; vendor: string; summaryHtml: string }[] {
-  return [...html.matchAll(/<div class="dl-card [^"]*">[\s\S]*?<(?:a|span)( href="[^"]*")? class="dl-vendor">([^<]*)<\/(?:a|span)>[\s\S]*?<div class="dl-date">([^<]*)<\/div>\s*<div class="dl-summary">([\s\S]*?)<\/div>\n/g)]
+  return [...html.matchAll(/<div class="dl-card [^"]*">[\s\S]*?<(?:a|span)( href="[^"]*")? class="dl-vendor">([^<]*)<\/(?:a|span)>[\s\S]*?<div class="dl-date"[^>]*>([^<]*)<\/div>\s*<div class="dl-summary">([\s\S]*?)<\/div>\n/g)]
     .map(([, href, vendor, dateLabel, summaryHtml]) => ({
       dateLabel: decode(dateLabel),
       vendorHref: href ? href.slice(' href="'.length, -1) : null,
