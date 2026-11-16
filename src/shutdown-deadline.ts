@@ -1,5 +1,6 @@
 import type { ShutdownStage } from "./types.js";
 import { figureSourceLinkHtml } from "./source-citation.js";
+import { shutdownDateEnd } from "./shutdown-date.js";
 
 export interface ShutdownDate {
   deadline: string;
@@ -15,7 +16,7 @@ export function shutdownDates(entry: ShutdownDate): readonly ShutdownStage[] {
 }
 
 export function nextShutdownDate(entry: ShutdownDate, today: string): string {
-  return shutdownDates(entry).find(stage => stage.date >= today)?.date ?? entry.deadline;
+  return shutdownDates(entry).find(stage => shutdownDateEnd(stage.date) >= today)?.date ?? entry.deadline;
 }
 
 export function countsDownTo(entry: ShutdownDate): boolean {

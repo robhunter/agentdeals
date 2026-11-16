@@ -4,7 +4,7 @@ import { changeIsUnconfirmed } from "./change-confirmation.js";
 import { isNoLongerInForce } from "./change-resolution.js";
 import { PRODUCT_DEPRECATED, discontinuationDate } from "./product-deprecation.js";
 import { servedVendorSlug, servedVendorSlugForName } from "./vendor-slug.js";
-import { statedShutdownDateOf } from "./shutdown-date.js";
+import { statedShutdownDateOf, statedShutdownMonthOf, shutdownDateEnd, isShutdownMonth } from "./shutdown-date.js";
 
 export interface RecordACardCovers {
   vendor: string;
@@ -25,7 +25,7 @@ export interface ForecastShutdown {
 }
 
 export function shutdownDateOf(record: DealChange): string {
-  return statedShutdownDateOf(record) ?? discontinuationDate(record) ?? record.date;
+  return statedShutdownDateOf(record) ?? statedShutdownMonthOf(record) ?? discontinuationDate(record) ?? record.date;
 }
 
 export function whatEnds(record: DealChange): string | null {
@@ -33,7 +33,9 @@ export function whatEnds(record: DealChange): string | null {
 }
 
 export function recordedBeforeItHappened(record: DealChange): boolean {
-  return typeof record.recorded_date === "string" && shutdownDateOf(record) > record.recorded_date;
+  if (typeof record.recorded_date !== "string") return false;
+  const date = shutdownDateOf(record);
+  return isShutdownMonth(date) ? shutdownDateEnd(date) >= record.recorded_date : date > record.recorded_date;
 }
 
 function ratingWouldBeWithheld(record: DealChange): boolean {
