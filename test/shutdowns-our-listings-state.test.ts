@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { statedDeadlines, statedShutdowns, type DeadlineText } from "../dist/stated-deadlines.js";
+import { toSlug } from "../dist/slug.js";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -188,7 +189,7 @@ describe("the shutdown tracker includes shutdowns stated only by listings", () =
       const found = cards.filter(card => card.name === vendor);
       assert.equal(found.length, 1, vendor);
       assert.ok(found[0].html.includes(`href="${offer.conditions[0]?.url ?? offer.url}"`), vendor);
-      assert.ok(found[0].html.includes("Vendor profile"), vendor);
+      assert.ok(found[0].html.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1].includes(`href="/vendor/${toSlug(vendor)}"`), vendor);
     }
   });
 

@@ -64,7 +64,7 @@ function entriesOf(timeline: string): { date: string; heading: string; body: str
 
 const asServed = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-const sourceLink = (url: string) => `<a href="${asServed(url)}" target="_blank" rel="nofollow noopener" style="font-size:.75rem;color:var(--text-dim)" title="${new URL(url).host}${new URL(url).pathname}">Source &nearr;</a>`;
+const sourceLink = (url: string) => `<a href="${asServed(url)}" target="_blank" rel="nofollow noopener" style="font-size:.75rem;color:var(--text-dim)">Source &nearr;</a>`;
 
 describe("Gemini documentation sources", () => {
   for (const [name, actual, page] of [

@@ -95,7 +95,6 @@ interface Card {
   section: string;
   title: string;
   href: string | null;
-  profile: string | null;
   date: string;
   what: string;
   source: string | null;
@@ -129,7 +128,6 @@ function cardsOn(page: string): Card[] {
       section,
       title: textOf(piece.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? ""),
       href: piece.match(/<h3[^>]*>\s*<a href="([^"]+)"/)?.[1] ?? null,
-      profile: piece.match(/<a href="([^"]+)">Vendor profile/)?.[1] ?? null,
       date: textOf(piece.match(/<span class="deadline-icon">[^<]*<\/span>\s*<span>([^<]+)<\/span>/)?.[1] ?? ""),
       what: textOf(piece.match(/<p class="shutdown-what">([\s\S]*?)<\/p>/)?.[1] ?? ""),
       source: piece.match(/<a href="([^"]+)"[^>]*class="(?:figure-source|record-source)"/)?.[1] ?? null,
@@ -202,10 +200,10 @@ describe("/shutdowns prints a card for each shutdown a record forecast and no ca
     const listed = JSON.parse(page.match(/<script type="application\/ld\+json">(\{"@context":"https:\/\/schema.org","@type":"ItemList"[\s\S]*?)<\/script>/)![1]);
     assert.deepStrictEqual(
       {
-        cards: cardFor(cards, NAMES_WHAT_ENDS).map((card) => [card.title, card.href, card.profile]),
+        cards: cardFor(cards, NAMES_WHAT_ENDS).map((card) => [card.title, card.href]),
         listed: listed.itemListElement.filter((item: { description: string }) => item.description === NAMES_WHAT_ENDS.summary).map((item: { name: string }) => item.name),
       },
-      { cards: [["Fixture Model 9", "/vendor/openai-codex", "/vendor/openai-codex"]], listed: ["Fixture Model 9"] },
+      { cards: [["Fixture Model 9", "/vendor/openai-codex"]], listed: ["Fixture Model 9"] },
     );
   });
 

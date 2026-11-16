@@ -66,7 +66,7 @@ export function changeSourceLinkHtml(change: CitableChange, esc: (text: string) 
   const url = change.source_url!.trim();
   return (
     `<a href="${esc(url)}" target="_blank" rel="${CITATION_REL}" class="${CITATION_CLASS}"` +
-    ` style="${CITATION_STYLE}" title="${esc(citationLabel(url))}">${CITATION_LINK_HTML}</a>`
+    ` style="${CITATION_STYLE}">${CITATION_LINK_HTML}</a>`
   );
 }
 
@@ -74,7 +74,7 @@ export function listingSourceLinkHtml(url: string | null, esc: (text: string) =>
   if (typeof url !== "string" || url.trim() === "") return "";
   return (
     `<a href="${esc(url.trim())}" target="_blank" rel="${CITATION_REL}" class="${RECORD_SOURCE_CLASS}"` +
-    ` style="${CITATION_STYLE}" title="${esc(citationLabel(url.trim()))}">${CITATION_LINK_HTML}</a>`
+    ` style="${CITATION_STYLE}">${CITATION_LINK_HTML}</a>`
   );
 }
 

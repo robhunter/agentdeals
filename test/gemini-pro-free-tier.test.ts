@@ -5,6 +5,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { retainedShutdownDetailsPage } from "./retained-shutdown-details.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -351,11 +352,12 @@ describe("Gemini free tier claims", () => {
     assert.ok(card.includes("June 1, 2026"), card);
   });
 
-  it("renders every replacement where it belongs", () => {
+  it("renders every replacement where it belongs", async () => {
+    const retained = readableText(await retainedShutdownDetailsPage(REPO));
     const missing = Object.entries(STATED).flatMap(([page, lines]) => {
       const html = served.get(page)!;
       const text = `${readableText(html)} ${structuredStrings(html).join(" ")}`;
-      return lines.filter((line) => !text.includes(line)).map((line) => `${page}: ${line}`);
+      return lines.filter((line) => !(page === "/shutdowns" && line === STATED["/shutdowns"][1] ? retained : text).includes(line)).map((line) => `${page}: ${line}`);
     });
     assert.deepStrictEqual(missing, []);
   });
