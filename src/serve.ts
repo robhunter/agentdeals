@@ -26974,7 +26974,7 @@ function buildShutdownTrackerPage(): string {
       service: "AWS App Runner (New Customers)",
       vendorSlug: "aws",
       covers: [{ vendor: "AWS", deadline: "2026-04-30", sourceUrl: "https://docs.aws.amazon.com/apprunner/latest/dg/apprunner-availability-change.html" }],
-      what: "App Runner closed to new customers — existing users can continue, but no new features. AWS recommends ECS Express Mode.",
+      what: "App Runner closed to new customers — existing users can continue, but no new features. AWS recommends ECS Express Mode. Existing customers can keep using it as normal, including creating new services. AWS lists it as in maintenance, with no new features.",
       deadline: "2026-04-30",
       dateSource: "https://web.archive.org/web/20260415193500/https://docs.aws.amazon.com/apprunner/latest/dg/apprunner-availability-change.html",
       impact: "New customers cannot use App Runner from 2026-04-30. Existing customers can keep using it as normal, including creating new services. AWS lists it as in maintenance, with no new features.",
@@ -26986,7 +26986,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "HubSpot Contact Lists API v1",
       vendorSlug: "hubspot",
-      what: "Legacy Contact Lists API v1 sunset \u2014 replaced by Lists API v3",
+      what: "Legacy Contact Lists API v1 sunset — replaced by Lists API v3 — Contact Lists API v1 endpoints return HTTP 404. HubSpot's changelog said three endpoints listing all, recently updated or recently created contacts would keep working, but its current migration guide lists them as returning 404 too. Six Contacts API v1 read endpoints (a contact or a batch of contacts by visitor ID, email address or user token) still work but no longer return list memberships.",
       deadline: "2026-04-30",
       dateSource: "https://developers.hubspot.com/changelog/extension-contact-lists-api-v1-sunset-moved-to-april-30-2026",
       impact: "Contact Lists API v1 endpoints return HTTP 404. HubSpot's changelog said three endpoints listing all, recently updated or recently created contacts would keep working, but its current migration guide lists them as returning 404 too. Six Contacts API v1 read endpoints (a contact or a batch of contacts by visitor ID, email address or user token) still work but no longer return list memberships.",
@@ -26997,7 +26997,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "OpenAI Realtime API Beta",
       vendorSlug: "openai",
-      what: "The Realtime API Beta (requests with the OpenAI-Beta: realtime=v1 header) was removed from the API on May 12, 2026.",
+      what: "The Realtime API Beta (requests with the OpenAI-Beta: realtime=v1 header) was removed from the API on May 12, 2026. The GA Realtime API was not affected.",
       deadline: "2026-05-12",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "Calls to the beta interface no longer work.",
@@ -27008,7 +27008,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "OpenAI DALL\u00b7E Model Snapshots",
       vendorSlug: "openai",
-      what: "dall-e-2 and dall-e-3 removed from the API \u2014 OpenAI lists gpt-image-2, gpt-image-1 or gpt-image-1-mini as substitutes, and gpt-image-1 itself shuts down on 2026-10-23 (gpt-image-1-mini on 2026-12-01)",
+      what: "dall-e-2 and dall-e-3 removed from the API — OpenAI lists gpt-image-2, gpt-image-1 or gpt-image-1-mini as substitutes, and gpt-image-1 itself shuts down on 2026-10-23 (gpt-image-1-mini on 2026-12-01) — Developers calling dall-e-2 or dall-e-3, including image generation calls (POST /v1/images/generations) that leave out the model parameter, which OpenAI's reference says default to dall-e-2 unless a parameter specific to the GPT image models is used, and any use of the image variations endpoint, which supports only dall-e-2.",
       deadline: "2026-05-12",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "Image generation apps calling dall-e-2 or dall-e-3",
@@ -27030,7 +27030,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "Firebase Studio (New Workspaces)",
       vendorSlug: "firebase",
-      what: "New workspace creation and user signup for Firebase Studio are disabled.",
+      what: "New workspace creation and user signup for Firebase Studio are disabled. Existing workspaces keep working until March 22, 2027.",
       deadline: "2026-06-22",
       dateSource: "https://firebase.google.com/docs/studio/migrating-project",
       impact: "Cannot create new cloud IDE workspaces",
@@ -27041,7 +27041,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "Tenor API",
       vendorSlug: "tenor",
-      what: "Google shut down the Tenor API on 2026-06-30; new API keys stopped on 2026-01-13. Only the API ended: Tenor.com, the GIF Keyboard apps and Gboard still serve Tenor GIFs.",
+      what: "Google shut down the Tenor API on 2026-06-30; new API keys stopped on 2026-01-13. Only the API ended: Tenor.com, the GIF Keyboard apps and Gboard still serve Tenor GIFs. Every Tenor API request fails with an error after 2026-06-30, so apps, bots and sites that searched GIFs through it need another source.",
       deadline: "2026-06-30",
       dateSource: "https://support.google.com/tenor/answer/10455265",
       impact: "Every Tenor API request fails with an error after 2026-06-30, so apps, bots and sites that searched GIFs through it need another source.",
@@ -27054,7 +27054,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "Gemini 2.0 Flash",
       vendorSlug: "google-gemini-api",
-      what: "Gemini 2.0 Flash and 2.0 Flash-Lite shut down on June 1, 2026. Image generation via 2.0 Flash shut down November 14, 2025.",
+      what: "Gemini 2.0 Flash and 2.0 Flash-Lite shut down on June 1, 2026. Image generation via 2.0 Flash shut down November 14, 2025. Calls to the gemini-2.0-flash and gemini-2.0-flash-lite model IDs no longer work.",
       deadline: "2026-06-01",
       dateSource: "https://aistudio.google.com/docs/deprecations",
       impact: "Calls to the gemini-2.0-flash and gemini-2.0-flash-lite model IDs no longer work.",
@@ -27066,7 +27066,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "OpenAI Assistants API",
       vendorSlug: "openai",
-      what: "Complete API shutdown \u2014 Assistants, Threads, Runs, and Messages endpoints removed",
+      what: "Complete API shutdown — Assistants, Threads, Runs, and Messages endpoints removed — AI agent builders using Assistants API for threads, code interpreter, file search, and persistent assistants",
       deadline: "2026-08-26",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "The Assistants API shut down. The call that retrieves thread messages no longer works.",
@@ -27078,7 +27078,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "OpenAI Videos API (Sora)",
       vendorSlug: "openai",
-      what: "Videos API (Sora) deprecated March 24, 2026 \u2014 complete removal September 24, 2026. No direct OpenAI replacement for video generation.",
+      what: "Videos API (Sora) deprecated March 24, 2026 — complete removal September 24, 2026. No direct OpenAI replacement for video generation. Developers using the Videos API (POST /v1/videos and the other /v1/videos endpoints) and the sora-2 and sora-2-pro models, including their dated snapshots.",
       deadline: "2026-09-24",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "Calls to the Videos API and the Sora 2 models no longer work. OpenAI says there is no one-to-one replacement API.",
@@ -27089,7 +27089,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "OpenAI legacy GPT models (September 2026)",
       vendorSlug: "openai",
-      what: "gpt-3.5-turbo-instruct, babbage-002, davinci-002 and gpt-3.5-turbo-1106 shut down in the OpenAI API on September 28, 2026. Fine-tuned babbage-002 and davinci-002 models (ft-babbage-002, ft-davinci-002) are listed separately, for October 23, 2026.",
+      what: "gpt-3.5-turbo-instruct, babbage-002, davinci-002 and gpt-3.5-turbo-1106 shut down in the OpenAI API on September 28, 2026. Fine-tuned babbage-002 and davinci-002 models (ft-babbage-002, ft-davinci-002) are listed separately, for October 23, 2026. gpt-3.5-turbo-instruct, babbage-002 and davinci-002 run on the legacy Completions endpoint (/v1/completions).",
       deadline: "2026-09-28",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "Calls to these model IDs stop working.",
@@ -27100,7 +27100,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "Firebase Studio (Full Shutdown)",
       vendorSlug: "firebase",
-      what: "Complete shutdown \u2014 all workspaces deleted, data removed",
+      what: "Complete shutdown — all workspaces deleted, data removed — All remaining Firebase Studio data permanently deleted",
       deadline: "2027-03-22",
       dateSource: "https://firebase.google.com/docs/studio/migrating-project",
       impact: "All remaining Firebase Studio data permanently deleted",
@@ -27111,7 +27111,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "AWS WorkSpaces Thin Client",
       vendorSlug: "aws",
-      what: "Closed to new customers since 2026-04-20. AWS ends support on 2027-03-31.",
+      what: "Closed to new customers since 2026-04-20. AWS ends support on 2027-03-31. After 2027-03-31 the devices stop working: they cannot connect to Amazon WorkSpaces or be managed in the console. Until then existing customers can use them as normal and can still buy devices.",
       deadline: "2027-03-31",
       dateSource: "https://docs.aws.amazon.com/workspaces-thin-client/latest/ug/workspacesthinclient-end-of-support.html",
       impact: "After 2027-03-31 the devices stop working: they cannot connect to Amazon WorkSpaces or be managed in the console. Until then existing customers can use them as normal and can still buy devices.",
@@ -27123,7 +27123,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "Node.js 20 AWS Lambda Runtime",
       vendorSlug: "aws",
-      what: "Deprecated 2026-04-30.",
+      what: "Deprecated 2026-04-30. Functions keep running; AWS never blocks invocations.",
       deadline: "2027-07-29",
       dateSource: "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html",
       impact: "Lambda blocks creating functions on nodejs20.x from 2027-07-29 and updating them from 2027-08-31. Functions keep running; AWS never blocks invocations.",
@@ -27139,13 +27139,13 @@ function buildShutdownTrackerPage(): string {
       dateSource: "https://developers.google.com/maps/premium/migrate-client-id",
       impact: "Client ID requests fail during Google's periodic restrictions, which Google says will increase in frequency and duration. Service usually returns within a few hours; project Owners or Editors can restore it sooner by unpausing the client ID in the Cloud Console, and developers who cannot migrate quickly can ask Google Maps Platform Support for a temporary exemption.",
       whoAffected: "Any application using Client ID (not API key) authentication for Google Maps APIs",
-      migrationPath: "Switch to API key authentication \u2014 generate key in Google Cloud Console, update all API calls",
+      migrationPath: "Switch to API key authentication — generate key in Google Cloud Console, update all API calls — Client ID requests fail during Google's periodic restrictions, which Google says will increase in frequency and duration. Service usually returns within a few hours; project Owners or Editors can restore it sooner by unpausing the client ID in the Cloud Console, and developers who cannot migrate quickly can ask Google Maps Platform Support for a temporary exemption.",
       status: "active",
     },
     {
       service: "AWS Fargate Platform Version 1.3.0",
       vendorSlug: "aws",
-      what: "End of support \u2014 tasks on Platform Version 1.3.0 will stop running",
+      what: "End of support — tasks on Platform Version 1.3.0 will stop running — ECS Fargate tasks on PV 1.3.0 will fail to launch",
       deadline: "2026-06-30",
       dateSource: "https://web.archive.org/web/20260702093328/https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform-versions-retired.html",
       impact: "ECS Fargate tasks on PV 1.3.0 will fail to launch",
@@ -27156,7 +27156,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "AWS App Mesh",
       vendorSlug: "aws",
-      what: "Complete service shutdown \u2014 App Mesh service mesh for ECS/EKS being retired",
+      what: "Complete service shutdown — App Mesh service mesh for ECS/EKS being retired — After September 30, 2026, you will no longer be able to access the AWS App Mesh console or AWS App Mesh resources.",
       deadline: "2026-09-30",
       dateSource: "https://docs.aws.amazon.com/app-mesh/latest/userguide/what-is-app-mesh.html",
       impact: "After September 30, 2026, you will no longer be able to access the AWS App Mesh console or AWS App Mesh resources.",
@@ -27167,7 +27167,7 @@ function buildShutdownTrackerPage(): string {
     {
       service: "AWS Proton",
       vendorSlug: "aws",
-      what: "Complete service shutdown \u2014 infrastructure-as-code provisioning service being retired",
+      what: "Complete service shutdown — infrastructure-as-code provisioning service being retired — The Proton console and Proton resources are no longer accessible after 2026-10-07. Deployed CloudFormation stacks and the resources they manage keep running.",
       deadline: "2026-10-07",
       dateSource: "https://docs.aws.amazon.com/proton/latest/userguide/proton-end-of-support.html",
       impact: "The Proton console and Proton resources are no longer accessible after 2026-10-07. Deployed CloudFormation stacks and the resources they manage keep running.",
