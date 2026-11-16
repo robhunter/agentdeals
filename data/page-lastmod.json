@@ -3086,7 +3086,7 @@
       "changed": "2026-11-16"
     },
     "/digest/2026-w41": {
-      "hash": "ae2fff595038a326",
+      "hash": "781069008af63e14",
       "changed": "2026-11-16"
     },
     "/digest/2026-w42": {
@@ -3416,11 +3416,11 @@
       "changed": "2026-11-16"
     },
     "/hosting-free-tier-comparison-2026": {
-      "hash": "ab25ee9d85e837e5",
+      "hash": "8b0c856327657574",
       "changed": "2026-11-16"
     },
     "/hosting-pricing": {
-      "hash": "0684a62c458fab9d",
+      "hash": "5fab94af416863ef",
       "changed": "2026-11-16"
     },
     "/ide-code-editors-alternatives": {
@@ -3647,7 +3647,7 @@
       "changed": "2026-11-16"
     },
     "/reports/2026-10": {
-      "hash": "5926f7e2b68daf39",
+      "hash": "17a0a0f38bed9e89",
       "changed": "2026-11-16"
     },
     "/reports/2026-11": {
@@ -3718,7 +3718,7 @@
       "changed": "2026-11-16"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "b9cb00473ca833c8",
+      "hash": "0a69eb52022bdb92",
       "changed": "2026-11-16"
     },
     "/setup": {
@@ -3729,7 +3729,7 @@
       "daily": true
     },
     "/stability": {
-      "hash": "892d15b302998659",
+      "hash": "958af9aa1e1db0bb",
       "changed": "2026-11-16"
     },
     "/stack-check": {
