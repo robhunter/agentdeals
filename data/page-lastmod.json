@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-15",
+  "generated": "2026-11-16",
   "pages": {
     "/": {
       "daily": true
@@ -1139,8 +1139,7 @@
       "changed": "2026-11-14"
     },
     "/category/cdn": {
-      "hash": "5a2a8d29e82ad8fd",
-      "changed": "2026-11-14"
+      "daily": true
     },
     "/category/ci-cd": {
       "hash": "b571abc9842dfd7a",
@@ -3108,10 +3107,12 @@
       "changed": "2026-11-15"
     },
     "/digest/2026-w46": {
-      "daily": true
+      "hash": "24c975d42e9ebd78",
+      "changed": "2026-11-16"
     },
     "/digest/2026-w47": {
-      "daily": true
+      "hash": "3c0e946cd11eb548",
+      "changed": "2026-11-16"
     },
     "/digest/2026-w49": {
       "hash": "dd60f6036295df59",
@@ -3738,8 +3739,7 @@
       "changed": "2026-11-15"
     },
     "/stack-check": {
-      "hash": "ae1fa5d3748f0ac0",
-      "changed": "2026-11-15"
+      "daily": true
     },
     "/stacks": {
       "hash": "d19266697f6b4e18",
@@ -3774,8 +3774,7 @@
       "changed": "2026-11-15"
     },
     "/storage-alternatives": {
-      "hash": "58d6ce8bc5063649",
-      "changed": "2026-11-15"
+      "daily": true
     },
     "/storage-comparison-2026": {
       "hash": "97715b6b1237d2ce",
@@ -7383,8 +7382,7 @@
       "changed": "2026-11-15"
     },
     "/vendor/namecheap-supersonic": {
-      "hash": "ba95c85f096288c4",
-      "changed": "2026-11-15"
+      "daily": true
     },
     "/vendor/nango": {
       "hash": "f5d2b7341060d5b7",
