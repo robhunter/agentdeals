@@ -274,7 +274,7 @@ describe("a deadline stated in a listing or an earlier record joins the deadline
         previous_state: "The legacy runtime is available.",
         current_state: "The legacy runtime is scheduled to stop.",
         impact: "low",
-        source_url: RECORD_URL,
+        source_url: LISTING_URL,
         category: "Cloud Hosting",
         alternatives: [],
         recorded_date: "2026-01-16",
@@ -328,7 +328,7 @@ describe("a deadline stated in a listing or an earlier record joins the deadline
     assert.ok(!dates.includes(IN_30), `an entry on ${IN_30} as well`);
   });
 
-  it("adds nothing beside a record of the vendor dated within a day, for a record no longer in force, for a date not later than today, or for a text with no deadline word", () => {
+  it("adds nothing beside a same-vendor record with the same source dated within a day, for a record no longer in force, for a date not later than today, or for a text with no deadline word", () => {
     assert.deepStrictEqual(fixtureEntries().map((entry) => entry.date).sort(), [IN_20, IN_31, IN_40, IN_60, IN_90].sort());
   });
 

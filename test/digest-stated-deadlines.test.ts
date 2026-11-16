@@ -94,8 +94,8 @@ before(async () => {
   ] }));
   writeFileSync(path.join(scratch, "changes.json"), JSON.stringify({ changes: [
     { ...record("Monday Cloud", "2026-10-01", "Personal-account access ended on 2026-10-01; the hosted console remains until its stated shutdown date."), change_type: "restriction" },
-    record("Duplicate Cloud", "2026-10-27", "The dashboard shuts down on 2026-10-27."),
-    record("Adjacent Cloud", "2026-11-02", "The dashboard shuts down on 2026-11-02."),
+    { ...record("Duplicate Cloud", "2026-10-27", "The dashboard shuts down on 2026-10-27."), source_url: "https://example.com/duplicate-cloud/pricing" },
+    { ...record("Adjacent Cloud", "2026-11-02", "The dashboard shuts down on 2026-11-02."), source_url: "https://example.com/adjacent-cloud/pricing" },
     record("Later Record", "2026-11-10", "The legacy endpoint retired on 2026-10-29."),
     record("Earlier Record", "2026-10-20", "The legacy endpoint retires on 2026-10-30."),
     record("Same Week Record", "2026-10-26", "The old importer retires on 2026-11-01."),
