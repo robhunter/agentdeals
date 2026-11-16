@@ -26,11 +26,12 @@ const audit = mkdtempSync(join(tmpdir(), "tracked-data-writes-"));
 const manifest = join(audit, "manifest.json");
 writeFileSync(manifest, JSON.stringify([...before.keys()].map(file => resolve(file))));
 const preload = new URL("./reject-tracked-data-writes.js", import.meta.url).href;
+const localFetch = new URL("./local-test-fetch.js", import.meta.url).href;
 const result = spawnSync(command, args, {
   stdio: "inherit",
   env: {
     ...process.env,
-    NODE_OPTIONS: `${process.env.NODE_OPTIONS || ""} --import=${preload}`,
+    NODE_OPTIONS: `${process.env.NODE_OPTIONS || ""} --import=${preload} --import=${localFetch}`,
     AGENTDEALS_DATA_GUARD_MANIFEST: manifest,
     AGENTDEALS_DATA_GUARD_LOG: audit,
   },

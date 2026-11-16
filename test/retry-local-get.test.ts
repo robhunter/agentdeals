@@ -46,7 +46,7 @@ describe("retrying a GET from the local test server", () => {
       if (attempt === 1) truncate(response);
       else response.end("complete");
     }, async (base, count) => {
-      assert.equal(await (await retryLocalGets(base)(`${base}/body`)).text(), "complete");
+      assert.equal(await (await retryLocalGets(base)(`${base}/body`, { headers: { connection: "keep-alive" } })).text(), "complete");
       assert.equal(count(), 2);
     });
   });
@@ -58,7 +58,7 @@ describe("retrying a GET from the local test server", () => {
         if (bodyStarted) truncate(response);
         else request.socket.destroy();
       }, async (base, count) => {
-        await assert.rejects(retryLocalGets(base)(`${base}/always-drops`), {
+        await assert.rejects(retryLocalGets(base)(`${base}/always-drops`, { headers: { connection: "keep-alive" } }), {
           message: `GET ${base}/always-drops failed on attempt 3`,
         });
         assert.equal(count(), 3);
@@ -98,7 +98,23 @@ describe("retrying a GET from the local test server", () => {
     });
   });
 
-  for (const code of ["ECONNREFUSED", "ENOTFOUND", "UND_ERR_CONNECT_TIMEOUT", "ABORT_ERR"]) {
+  it("rejects a content-length mismatch after one request", async () => {
+    await withServer((_request, response) => {
+      response.writeHead(200, { "Content-Length": "1000", Connection: "close" });
+      response.end("partial");
+    }, async (base, count) => {
+      await assert.rejects(retryLocalGets(base)(`${base}/wrong-length`), (error: Error & { cause?: unknown }) => {
+        assert.equal(error.message, `GET ${base}/wrong-length failed on attempt 1`);
+        let cause: any = error;
+        while (cause?.cause) cause = cause.cause;
+        assert.equal(cause?.code, "UND_ERR_RES_CONTENT_LENGTH_MISMATCH");
+        return true;
+      });
+      assert.equal(count(), 1);
+    });
+  });
+
+  for (const code of ["ECONNREFUSED", "ENOTFOUND", "UND_ERR_CONNECT_TIMEOUT", "UND_ERR_RES_CONTENT_LENGTH_MISMATCH", "ABORT_ERR"]) {
     it(`does not retry ${code}`, async () => {
       let attempts = 0;
       const request: typeof fetch = async () => {
