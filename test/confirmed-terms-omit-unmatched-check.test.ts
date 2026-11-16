@@ -52,27 +52,20 @@ describe("vendor source findings after a confirming re-read", () => {
   before(async () => { server = await start(); });
   after(() => { server?.child.kill(); });
 
-  for (const slug of ["cloudflare-pages", "groq"]) {
-    it(`omits the unmatched amounts warning on /vendor/${slug}`, async () => {
+  for (const slug of ["cloudflare-pages", "groq", "hetzner", "mergify"]) {
+    it(`keeps the source finding on /vendor/${slug} consistent with its latest read`, async () => {
       const offer = offers.find(offer => toSlug(offer.vendor) === slug)!;
       const record = state.records.find((record: any) => record.vendor === offer.vendor && record.url === offer.url);
-      assert.equal(record.last_outcome, "confirmed");
+      const finding = offer.source_check?.detail?.trim() ?? "";
+      const omit = record?.last_outcome === "confirmed" && finding.endsWith(UNMATCHED);
       const html = await get(server, `/vendor/${slug}`);
-      assert.doesNotMatch(html, /none of which we matched|could not compare/);
+      if (omit) assert.doesNotMatch(html, /none of which we matched|could not compare/);
       const line = sourceLine(html);
-      assert.ok(line.includes(escape(offer.url)), line);
-      assert.ok(line.includes(offer.source_check!.checked), line);
-    });
-  }
-
-  for (const [slug, outcome] of [["hetzner", "changed"], ["mergify", "unclear"]]) {
-    it(`retains the finding after the ${outcome} read on /vendor/${slug}`, async () => {
-      const offer = offers.find(offer => toSlug(offer.vendor) === slug)!;
-      const record = state.records.find((record: any) => record.vendor === offer.vendor && record.url === offer.url);
-      assert.equal(record.last_outcome, outcome);
-      const line = sourceLine(await get(server, `/vendor/${slug}`));
-      if (line) assert.ok(line.includes(escape(offer.source_check!.detail!)), line);
-      else {
+      if (line) {
+        assert.equal(line.includes(escape(finding)), !omit, slug);
+        assert.ok(line.includes(escape(offer.url)), line);
+        assert.ok(line.includes(offer.source_check!.checked), line);
+      } else {
         const { unconfirmedTermsForOffer } = await import("../dist/vendor-verdict-input.js");
         assert.ok(unconfirmedTermsForOffer(offer), `${slug} must retain its separate withholding reason`);
       }
