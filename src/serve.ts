@@ -49213,7 +49213,7 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
 
   const filterCategory: Record<string, string> = CHANGE_DIRECTION;
 
-  function buildChangeEntry(c: ChangeTimelineEntry, originalDate = c.originalRecord?.date ?? c.date, preview = false): string {
+  function buildChangeEntry(c: ChangeTimelineEntry, originalDate = c.originalRecord?.date ?? c.date, preview = false, compact = false): string {
     const housekeeping = isIndexHousekeeping(c);
     const badge = housekeeping
       ? { label: INDEX_HOUSEKEEPING_BADGE, color: INDEX_HOUSEKEEPING_BADGE_COLOR }
@@ -49222,7 +49222,7 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
     const dated = isEventDated(c);
     const isUpcoming = dated && c.date > today;
     const category = filterCategory[c.change_type] ?? "neutral";
-    const altHtml = c.alternatives && c.alternatives.length > 0
+    const altHtml = !compact && c.alternatives && c.alternatives.length > 0
       ? `<div class="pc-alts"><span class="pc-alts-label">Alternatives:</span> ${c.alternatives.map(a => changeVendorLinkHtml(a)).join(", ")}</div>`
       : "";
     const stateHtml = !isUpcoming && printsBeforeAndAfter(c)
@@ -49234,11 +49234,12 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
     const vendorCat = (c.category || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     const changeYear = dated ? c.date.slice(0, 4) : "";
     const entryAnchor = originalDate === c.date ? changeAnchor(c) : `${changeAnchor(c)}-retirement-${originalDate}`;
+    const summary = compact ? new Intl.Segmenter("en", { granularity: "sentence" }).segment(c.summary)[Symbol.iterator]().next().value?.segment.trimEnd() ?? c.summary : c.summary;
     return `      <div class="${preview ? "pc-preview" : "pc-entry"}${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}${changeIsUncited(c) ? " pc-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}" ${originalDate !== c.date ? `data-event-date="${escHtmlServer(originalDate)}" ` : ""}${preview ? "" : `id="${escHtmlServer(entryAnchor)}" `}data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
         <div class="pc-left">
           <div class="pc-date${dated ? "" : " pc-date-unknown"}">${changeEntryDateLabelHtml(c, escHtmlServer)}</div>
           ${isUpcoming ? `<div class="pc-upcoming-badge">upcoming</div>` : ""}
-          <a href="#${escHtmlServer(entryAnchor)}" class="pc-anchor" title="Link to this change">#</a>
+          ${compact ? "" : `<a href="#${escHtmlServer(entryAnchor)}" class="pc-anchor" title="Link to this change">#</a>`}
         </div>
         <div class="pc-right">
           <div class="pc-head">
@@ -49247,7 +49248,7 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
             <span class="pc-impact" style="color:${impactColor}">${c.impact} impact</span>
             ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
           </div>
-          <div class="pc-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
+          <div class="pc-summary">${changeSummaryHtml({ ...c, summary }, escHtmlServer)}</div>
 ${housekeeping ? `          <div class="chg-housekeeping-note" style="font-size:.75rem;color:var(--text-dim);margin-top:.25rem">${escHtmlServer(INDEX_HOUSEKEEPING_NOTE)}</div>` : ""}
 ${stateHtml}
 ${altHtml}
@@ -49596,7 +49597,7 @@ ${upcomingChanges.length > 0 ? `
       escHtmlServer,
       ' class="upcoming-intro dated-rule"',
     )}
-${shownUpcoming.map(c => buildChangeEntry(c.shown, c.original.date)).join("\n")}${overflowHtml ? "\n" + overflowHtml : ""}${UPCOMING_TIMELINE_END}
+${shownUpcoming.map(c => buildChangeEntry(c.shown, c.original.date, false, true)).join("\n")}${overflowHtml ? "\n" + overflowHtml : ""}${UPCOMING_TIMELINE_END}
   </div>
 ` : ""}${indexAfterUpcoming ? "\n" + changeVendorIndexHtml(indexSections, today) : ""}
 ${filterButtonsHtml}
