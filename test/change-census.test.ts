@@ -64,7 +64,9 @@ const NAMES_A_WINDOW =
 
 const COUNTS_SOMETHING_ELSE = /\bof\b/i;
 
-const COUNTS_FREE_TIERS_NOT_CHANGES = /^\s+(?:of the [\d,]+\s+)?(?:recorded\s+)?free tiers?\b/i;
+const CHANGE_COUNT_AFTER = /^\+?\s+(?:(?:total|tracked|pricing|developer|tool|infrastructure|deal|negative|positive|recorded|upcoming|more|additional|historical|held|dated|known|verified|published|all-time)\s+)*(?:changes?\b|records?\b)|^\+?\s+(?:total\s+)?tracked\s*(?:[,.!?;:]|$)/i;
+
+const CHANGE_COUNT_BEFORE = /\b(?:changes?|records?)(?:\s+(?:still in force|we stand behind|in the change log))?\s*[:=(]\s*$/i;
 
 const SENTENCE_BREAK = /[.!?;:]\s|\s[–—]\s/;
 
@@ -113,8 +115,10 @@ function nonTrackedSliceFigures(body: string, slices: SliceFigure[]) {
     const displayed = slice.count.toLocaleString("en-US");
     return [...text.matchAll(new RegExp(`(?<![\\w.,$/-])${displayed}(?![\\w.,%/-])`, "g"))].flatMap(match => {
       const sentence = sentenceAround(text, match.index ?? 0);
-      if (!/\bchange|\brecords?\b|\btrack/i.test(sentence)) return [];
-      if (COUNTS_FREE_TIERS_NOT_CHANGES.test(text.slice((match.index ?? 0) + match[0].length))) return [];
+      const index = match.index ?? 0;
+      const after = text.slice(index + match[0].length);
+      const before = text.slice(Math.max(0, index - 100), index);
+      if (!CHANGE_COUNT_AFTER.test(after) && !CHANGE_COUNT_BEFORE.test(before)) return [];
       return [{ ...slice, displayed, sentence }];
     });
   });
@@ -483,5 +487,103 @@ describe("slice figures use the displayed number and exclude vendor state quotat
         rmSync(scratch, { recursive: true, force: true });
       }
     });
+  }
+});
+
+describe("census figures identify what each number counts", () => {
+  const otherSubjects = [
+    [753, "we hold a free-tier record for 90% of them, and can confirm 753 of those 1,343 against a source we have read"],
+    [1343, "we hold a free-tier record for 90% of them, and can confirm 753 of those 1,343 against a source we have read"],
+    [625, "Real-time risk ratings based on 544 tracked pricing changes across 625 vendors"],
+    [625, "71 of the 625 vendors we hold a change history for are unrated on that basis, so their records below carry no class"],
+    [1498, "powered by 1,498 vendor profiles and 544 tracked pricing changes"],
+    [1498, "544 pricing changes tracked across 1,498 developer tools"],
+    [1498, "1,498 offers tracked"],
+    [300, "It announced the change alongside a Starter plan with 300 documents"],
+    [500, "data ingest, retention, APM, error tracking, uptime, and the observability cost trap at 10 to 500 hosts"],
+    [1000, "We track 1,000 DNS records"],
+    [1000, "We hold 1,000 free-tier records"],
+    [1000, "1,000 of the 1,343 recorded free tiers have a change in their history"],
+  ] as const;
+
+  for (const [count, sentence] of otherSubjects) {
+    for (const slice of nonTrackedSlices(dealChanges)) {
+      it(`excludes ${count} for ${slice.id} in ${sentence}`, () => {
+        const figures = assertNamedSliceFigures(`<p>${sentence}.</p>`, [{ ...slice, count }], "/state-of-free-tiers");
+        assert.deepStrictEqual(figures, []);
+      });
+    }
+  }
+
+  for (const label of ["changes", "records", "pricing changes", "tracked developer tool pricing changes", "total changes", "Total Tracked"]) {
+    it(`rejects an unnamed ${label} count beside a correctly named unrelated count`, () => {
+      const slice = { ...nonTrackedSlices(dealChanges)[0], count: 753 };
+      const body = `<p>753 ${label}, across 1,498 developer tools; 754 ${slice.noun}.</p>`;
+      assert.throws(() => assertNamedSliceFigures(body, [slice], "/state-of-free-tiers"), /\/state-of-free-tiers: 753/);
+    });
+  }
+
+  for (const label of ["Changes:", "Records:", "Changes (", "Changes still in force:"]) {
+    it(`rejects an unnamed count after ${label}`, () => {
+      const slice = { id: "held", noun: "records in the change log", count: 753 };
+      assert.throws(() => assertNamedSliceFigures(`<p>${label} 753 in total.</p>`, [slice], "/changes"), /\/changes: 753/);
+    });
+  }
+});
+
+it("checks every census surface when a slice equals a non-change figure", async () => {
+  let child: ChildProcess | undefined;
+  try {
+    const started = await startCensusServer();
+    child = started.child;
+    for (const route of SURFACES_THAT_PUBLISH_A_TOTAL) {
+      const response = await fetch(`http://localhost:${started.port}${route}`);
+      assert.strictEqual(response.status, 200, route);
+      const body = await response.text();
+      for (const count of [753, 1343, 625, 1498, 300, 500]) {
+        assertNamedSliceFigures(body, nonTrackedSlices(dealChanges).map(slice => ({ ...slice, count })), route);
+      }
+    }
+  } finally {
+    if (child) await stopCensusServer(child);
+  }
+});
+
+it("serves the confirmed-free-tier collision without accepting an unnamed change count", async () => {
+  const scratch = mkdtempSync(path.join(tmpdir(), "change-census-subject-"));
+  let child: ChildProcess | undefined;
+  try {
+    const records = dealChanges.filter(change => sliceById("in_force").of([change]).length === 0);
+    const changesPath = path.join(scratch, "changes.json");
+    writeFileSync(changesPath, JSON.stringify({ changes: records }));
+    const baseline = await startCensusServer({ AGENTDEALS_CHANGES_PATH: changesPath });
+    child = baseline.child;
+    const original = await (await fetch(`http://localhost:${baseline.port}/state-of-free-tiers`)).text();
+    const confirmed = visibleText(original).match(/can confirm ([\d,]+) of those/);
+    assert.ok(confirmed);
+    const count = Number(confirmed[1].replace(/,/g, ""));
+    assert.ok(count > 0);
+    await stopCensusServer(child);
+    child = undefined;
+    for (let i = 0; i < count; i++) records.push({
+      vendor: `Census Fixture ${i}`,
+      change_type: "record_corrected", date: "2026-02-15", date_source: "announced",
+      impact: "low", category: "DNS", summary: "The stored entry was corrected.",
+      current_state: "Our corrected entry", source_url: "https://example.com/pricing",
+    });
+    writeFileSync(changesPath, JSON.stringify({ changes: records }));
+    const started = await startCensusServer({ AGENTDEALS_CHANGES_PATH: changesPath });
+    child = started.child;
+    const response = await fetch(`http://localhost:${started.port}/state-of-free-tiers`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.text();
+    assert.match(visibleText(body), new RegExp(`can confirm ${count.toLocaleString("en-US")} of those`));
+    const slice = { id: "in_force", noun: sliceById("in_force").noun, count: sliceById("in_force").of(records).length };
+    assert.strictEqual(slice.count, count);
+    assertNamedSliceFigures(body, [slice], "/state-of-free-tiers");
+    assert.throws(() => assertNamedSliceFigures(`${body}<p>${count.toLocaleString("en-US")} changes.</p>`, [slice], "/state-of-free-tiers"), /\/state-of-free-tiers:/);
+  } finally {
+    if (child) await stopCensusServer(child);
+    rmSync(scratch, { recursive: true, force: true });
   }
 });
