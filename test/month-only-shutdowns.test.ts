@@ -120,7 +120,7 @@ describe("month-only shutdowns on HTTP pages", () => {
       assert.doesNotMatch(shutdown.outerHTML, /Invalid Date|NaN|2027-04-\d{2}|April (?:1|30), 2027/);
       const active = day <= "2027-04-30";
       const monthList = createDocument(result["/shutdowns"]).querySelector('[data-month="2027-04"]');
-      assert.equal(monthList?.textContent?.includes("Deno Deploy (April 2027 (no day is given))") ?? false, active);
+      assert.equal(monthList?.textContent?.includes("Deno Deploy (April 2027)") ?? false, active);
       const deadlines = cards(result["/deadlines"], ".dl-card").filter(c => c.querySelector(".dl-vendor")?.textContent === "Deno Deploy");
       const api = JSON.parse(result["/api/deadlines"]).deadlines.filter((d: any) => d.vendor === "Deno Deploy");
       assert.equal(deadlines.length, active ? 1 : 0);

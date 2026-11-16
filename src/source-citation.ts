@@ -229,7 +229,7 @@ export const FIGURE_SOURCE_CLASS = "figure-source";
 export function figureSourceLinkHtml(url: string, esc: Escaper): string {
   return (
     ` <a href="${esc(url)}" rel="nofollow noopener" class="${FIGURE_SOURCE_CLASS}"` +
-    ` style="${MARKER_STYLE}" title="${esc(citationLabel(url))}">${CITATION_LINK_HTML}</a>`
+    ` style="${MARKER_STYLE}">${CITATION_LINK_HTML}</a>`
   );
 }
 

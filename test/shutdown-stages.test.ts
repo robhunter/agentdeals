@@ -125,8 +125,8 @@ describe("staged shutdown cards and deadline lists", () => {
     const january = months.match(/data-month="2027-01">([\s\S]*?)<\/li>/);
     assert.ok(december);
     assert.ok(january);
-    assert.match(text(december[1]), /Stage fixture: First <stage> & pause \(December 1\)/);
-    assert.match(text(january[1]), /Stage fixture: Final stage \(January 10\)/);
+    assert.match(text(december[1]), /Stage fixture: First <stage> & pause \(1\)/);
+    assert.match(text(january[1]), /Stage fixture: Final stage \(10\)/);
   });
   it("lists the earlier stage in deadlines even when the summary names no date", () => {
     const page = initial["/deadlines"];
@@ -148,7 +148,7 @@ describe("staged shutdown cards and deadline lists", () => {
       assert.equal(header.match(/<span class="deadline-icon">[^<]*<\/span>\s*<span>([^<]+)<\/span>/)![1], date);
       assert.match(header, new RegExp(`>${badge}<`));
       if (day > "2026-12-01") assert.match(text(header), /December 1, 2026 : First <stage> & pause.*Completed/);
-      if (completed) assert.doesNotMatch(response["/shutdowns"], /Stage fixture[^<]*\(January 10\)/);
+      if (completed) assert.doesNotMatch(response["/shutdowns"], /Stage fixture[^<]*\(10\)/);
     });
   }
   it("uses the same pending dates and month groups west of Greenwich", async () => {

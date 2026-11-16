@@ -20893,7 +20893,7 @@ globalNavCss() + "\n" +
   "<div class=\"story-card\">\n" +
     "<h3>X (Twitter) API Paywall</h3>\n" +
     "<span class=\"story-impact\" style=\"background:#f8514922;color:#f85149\">Free Tier Removed &middot; High Impact</span>\n" +
-    "<p>On February 6, 2026, X launched <a class=\"change-source\" href=\"https://devcommunity.x.com/t/announcing-the-launch-of-x-api-pay-per-use-pricing/256476\" rel=\"nofollow noopener\" title=\"devcommunity.x.com/t/announcing-the-launch-of-x-api-pay-per-use-pricing/256476\">Pay-Per-Use pricing</a> for its API, charging per request with no fixed monthly fee, and ended its Legacy Free tier. Recently active free-tier users transitioned to Pay-Per-Use with a one-time $10 voucher; only Public Utility Apps retained free access. X later moved its <a class=\"change-source\" href=\"https://devcommunity.x.com/t/important-update-legacy-x-api-basic-plans-are-moving-to-pay-per-use-ppu/266305\" rel=\"nofollow noopener\" title=\"devcommunity.x.com/t/important-update-legacy-x-api-basic-plans-are-moving-to-pay-per-use-ppu/266305\">Basic plans to Pay-Per-Use after June 1, 2026</a>, and its <a class=\"change-source\" href=\"https://devcommunity.x.com/t/important-update-legacy-x-api-pro-plans-are-moving-to-pay-per-use-ppu/273255\" rel=\"nofollow noopener\" title=\"devcommunity.x.com/t/important-update-legacy-x-api-pro-plans-are-moving-to-pay-per-use-ppu/273255\">Pro plans after September 1, 2026</a>.</p>\n" +
+    "<p>On February 6, 2026, X launched <a class=\"change-source\" href=\"https://devcommunity.x.com/t/announcing-the-launch-of-x-api-pay-per-use-pricing/256476\" rel=\"nofollow noopener\">Pay-Per-Use pricing</a> for its API, charging per request with no fixed monthly fee, and ended its Legacy Free tier. Recently active free-tier users transitioned to Pay-Per-Use with a one-time $10 voucher; only Public Utility Apps retained free access. X later moved its <a class=\"change-source\" href=\"https://devcommunity.x.com/t/important-update-legacy-x-api-basic-plans-are-moving-to-pay-per-use-ppu/266305\" rel=\"nofollow noopener\">Basic plans to Pay-Per-Use after June 1, 2026</a>, and its <a class=\"change-source\" href=\"https://devcommunity.x.com/t/important-update-legacy-x-api-pro-plans-are-moving-to-pay-per-use-ppu/273255\" rel=\"nofollow noopener\">Pro plans after September 1, 2026</a>.</p>\n" +
     "<p><a href=\"/vendor/x-twitter\">View vendor profile</a> &middot; <a href=\"/alternative-to/x-twitter\">Alternatives</a></p>\n" +
   "</div>\n" +
 
@@ -21516,7 +21516,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin:1rem 0">
     <div class="impact-card" style="border-left-color:#f85149"><h3>Heavy GCP Users</h3><p class="impact-desc">Anyone using the full $500/year credits for Cloud Run, Compute Engine, or GKE loses the most. AI Pro's $120/yr covers a fraction of the same workloads.</p></div>
     <div class="impact-card" style="border-left-color:#f85149"><h3>Students &amp; Learners</h3><p class="impact-desc">Eligible college students aged 18+ in countries where the plan is offered, except Hong Kong, Macau and Tunisia, get <a href="https://one.google.com/offer/studentoffer8" target="_blank" rel="noopener">a Google AI plan free for 12 months</a> (which plan depends on the school's country; redeem by December 31, 2026; student status is verified through SheerID, a payment method is required, and the plan then renews at its standard monthly price). Otherwise, Oracle's Always Free tier and AWS's free plan cost nothing.</p></div>
-    <div class="impact-card" style="border-left-color:#d29922"><h3>Gemini API Users</h3><p class="impact-desc">AI Pro gives access to Gemini 4 Argon and Deep Research in the Gemini app. Link your Google AI Pro or Ultra plan on the <a href="https://developers.google.com/program" target="_blank" rel="noopener">Google Developer Program site</a> to receive monthly Google Cloud credits and higher Antigravity quotas. <a href="https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals" target="_blank" rel="nofollow noopener" class="change-source" title="developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals">Since June 18, 2026</a>, Gemini CLI and the Gemini Code Assist IDE extensions no longer serve Google AI Pro or Ultra subscribers. Google points them to Antigravity. The Gemini API keeps a free tier of its own; check Google's pricing page for your model. The monthly Google Cloud credits from Google AI Pro or Ultra are eligible Google Cloud credits. On the Prepay billing plan, these credits pay for Gemini API usage only after you buy Prepay credits in AI Studio. With a $0 Prepay balance, requests fail even with unused Google Cloud credits, according to <a href="https://discuss.ai.google.dev/t/error-code-402-message-your-prepayment-credits-are-depleted/185524" target="_blank" rel="noopener">a Google staff member on discuss.ai.google.dev</a>.</p></div>
+    <div class="impact-card" style="border-left-color:#d29922"><h3>Gemini API Users</h3><p class="impact-desc">AI Pro gives access to Gemini 4 Argon and Deep Research in the Gemini app. Link your Google AI Pro or Ultra plan on the <a href="https://developers.google.com/program" target="_blank" rel="noopener">Google Developer Program site</a> to receive monthly Google Cloud credits and higher Antigravity quotas. <a href="https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals" target="_blank" rel="nofollow noopener" class="change-source">Since June 18, 2026</a>, Gemini CLI and the Gemini Code Assist IDE extensions no longer serve Google AI Pro or Ultra subscribers. Google points them to Antigravity. The Gemini API keeps a free tier of its own; check Google's pricing page for your model. The monthly Google Cloud credits from Google AI Pro or Ultra are eligible Google Cloud credits. On the Prepay billing plan, these credits pay for Gemini API usage only after you buy Prepay credits in AI Studio. With a $0 Prepay balance, requests fail even with unused Google Cloud credits, according to <a href="https://discuss.ai.google.dev/t/error-code-402-message-your-prepayment-credits-are-depleted/185524" target="_blank" rel="noopener">a Google staff member on discuss.ai.google.dev</a>.</p></div>
     <div class="impact-card" style="border-left-color:#3fb950"><h3>Firebase-Only Devs</h3><p class="impact-desc">Spark (free) still covers Auth, Firestore and Hosting, but not Cloud Storage since February 3, 2026. If you only used GDP Premium for Firebase, you don't need AI Pro.</p></div>
   </div>
 
@@ -23273,7 +23273,7 @@ function geminiTimelineEntryHtml(entry: GeminiTimelineEntry): string {
     <div class="timeline-date">${escHtmlServer(entry.dateLabel)}</div>
     <div class="timeline-content">
       <h3 style="color:#f85149">${escHtmlServer(entry.heading)}</h3>
-      <p>${escHtmlServer(entry.text)} <a href="${escHtmlServer(entry.source)}" target="_blank" rel="${CITATION_REL}" style="font-size:.75rem;color:var(--text-dim)" title="${escHtmlServer(citationLabel(entry.source))}">Source &nearr;</a></p>
+      <p>${escHtmlServer(entry.text)} <a href="${escHtmlServer(entry.source)}" target="_blank" rel="${CITATION_REL}" style="font-size:.75rem;color:var(--text-dim)">Source &nearr;</a></p>
     </div>
   </div>`;
 }
@@ -26956,6 +26956,8 @@ function buildShutdownTrackerPage(): string {
   const today = new Date();
   const todayDay = today.toISOString().slice(0, 10);
 
+  const fullShutdownDetailsSince = new Date(Date.parse(todayDay) - 90 * 86_400_000).toISOString().slice(0, 10);
+
   const handTyped: ShutdownEntry[] = [
     {
       service: "AWS App Runner (New Customers)",
@@ -27240,7 +27242,7 @@ function buildShutdownTrackerPage(): string {
       ${[...shutdownMonths].map(([month, entries]) => {
         const label = new Date(`${month}-01`).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
         return `<li data-month="${month}"><strong>${escHtmlServer(label)}:</strong> ${entries.map(entry => {
-          const day = isShutdownMonth(entry.deadline) ? shutdownMonthDateLabel(entry.deadline) : new Date(entry.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
+          const day = isShutdownMonth(entry.deadline) ? shutdownMonthLabel(entry.deadline) : new Date(entry.deadline).toLocaleDateString("en-US", { day: "numeric", timeZone: "UTC" });
           return `<span class="shutdown-month-entry">${escHtmlServer(entry.service)}${entry.label ? `: ${escHtmlServer(entry.label)}` : ""} (${escHtmlServer(day)})</span>`;
         }).join("; ")}.</li>`;
       }).join("\n      ")}
@@ -27289,7 +27291,7 @@ function buildShutdownTrackerPage(): string {
       p.slug.includes(s.vendorSlug)
     );
     const details = ([["Who\u2019s affected", s.whoAffected], ["Impact", s.impact], ["Migration path", s.migrationPath]] as [string, string | undefined][])
-      .flatMap(([label, value]) => value === undefined ? [] : [[label, value] as const]);
+      .flatMap(([label, value]) => value === undefined || (shutdownDateEnd(s.deadline) < fullShutdownDetailsSince && label !== "Migration path") ? [] : [[label, value] as const]);
 
     return `<div class="shutdown-card" style="border-left-color:${color}">
       <div class="shutdown-header">
@@ -27304,7 +27306,6 @@ function buildShutdownTrackerPage(): string {
         ${details.map(([label, value]) => `<div class="detail-row"><span class="detail-label">${label}:</span> <span>${escHtmlServer(value)}</span></div>`).join("\n        ")}
       </div>`}
       <div class="shutdown-links">
-        ${servedVendorSlug(s.vendorSlug) === null ? "" : `<a href="/vendor/${escHtmlServer(s.vendorSlug)}">Vendor profile \u2192</a>`}
         ${s.migrationLink ? `<a href="${s.migrationLink}">Migration guide \u2192</a>` : ""}
         ${editorialLink && editorialLink.slug !== slug ? `<a href="/${editorialLink.slug}">Alternatives guide \u2192</a>` : ""}
       </div>
@@ -34576,7 +34577,7 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    Gemini Code Assist's free tier for individuals has ended. Google's <a href="https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals" target="_blank" rel="nofollow noopener" class="change-source" title="developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals">deprecation notice</a> says that starting June 18, 2026, the IDE extensions stopped serving requests for the Gemini Code Assist for individuals, Google AI Pro and Google AI Ultra tiers, and that this also applies to Gemini CLI. Gemini CLI still runs with a Gemini API key.
+    Gemini Code Assist's free tier for individuals has ended. Google's <a href="https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals" target="_blank" rel="nofollow noopener" class="change-source">deprecation notice</a> says that starting June 18, 2026, the IDE extensions stopped serving requests for the Gemini Code Assist for individuals, Google AI Pro and Google AI Ultra tiers, and that this also applies to Gemini CLI. Gemini CLI still runs with a Gemini API key.
   </div>
 
   <h2 id="stacks">Best Picks by Use Case</h2>
