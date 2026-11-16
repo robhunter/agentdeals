@@ -103,7 +103,7 @@ export function createArchiveClient({
       lastRequestAt = clock();
       let response;
       try {
-        response = await fetchImpl(url, { redirect: "follow" });
+        response = await fetchImpl(url, { redirect: "follow", headers: { "Accept-Language": "en-US,en;q=0.9" } });
       } catch (err) {
         lastProblem = `network error: ${err?.message ?? err}`;
         if (attempt < maxAttempts) await sleep(refusedBackoff);

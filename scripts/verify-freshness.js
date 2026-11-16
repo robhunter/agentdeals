@@ -229,6 +229,7 @@ export async function fetchPageText(url, options = {}) {
         "User-Agent":
           "Mozilla/5.0 (compatible; AgentDeals-Verify/1.0; +https://github.com/robhunter/agentdeals)",
         Accept: "text/html,application/xhtml+xml",
+        "Accept-Language": "en-US,en;q=0.9",
       },
       redirect: "follow",
     });

@@ -18,7 +18,8 @@ const quotePresent = (body, quote) => normalize(renderedText(body)).includes(nor
 async function readUrl(url, options, init = {}, readBody = true) {
   const response = await (options.fetchImpl ?? fetch)(url, {
     ...init,
-    headers: { "User-Agent": "agentdeals-internal-bot/1.0 official-mcp-check", ...init.headers },
+    headers: { "User-Agent": "agentdeals-internal-bot/1.0 official-mcp-check",
+      "Accept-Language": "en-US,en;q=0.9", ...init.headers },
     signal: AbortSignal.timeout(options.timeoutMs ?? 10000),
   });
   if (!readBody) {
