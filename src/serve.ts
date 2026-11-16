@@ -38,7 +38,7 @@ import { dropEndedFromNameList, endedIndex, endedRowStatement, markEndedVendorRo
 import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, reasonWeCannotConfirmTheTerms, vendorVerdictContextFrom, verdictLapseSentence, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
-import { LAST_READ_LABEL, READ_CONTRADICTS_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, confirmationDate, contradictedTermsSentence, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, readThatContradictsOurTerms, restatedReadingDate, verificationDatesCell, verificationDatesSentence, whereOurTermsCameFrom, whereOurTermsCameFromClause, type LastReading } from "./read-date.js";
+import { LAST_READ_LABEL, READ_CONTRADICTS_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, confirmationDate, contradictedTermsSentence, lastReadDate, lastReadNote, lastReadOutcome, publishedDateLabel, publishedDateValue, readThatContradictsOurTerms, restatedReadingDate, verificationDatesCell, verificationDatesSentence, whereOurTermsCameFrom, whereOurTermsCameFromClause, type LastReading } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, SUPERSEDED_TERMS_RULE, readingBehindTheChange, storedTermsLabel, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms, withoutFinalStop } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
@@ -5512,9 +5512,12 @@ function outgrowSentence(vendorName: string, phrase: string): string {
   return OUTGROW_SENTENCE_BY_VENDOR_AND_TEMPLATE_PHRASE[vendorName]?.[phrase] ?? `At ${phrase}, you'll need to upgrade.`;
 }
 
-function freeTierSourceLineHtml(offer: Offer, changes: readonly DealChange[], servedOn: string): string {
+function freeTierSourceLineHtml(offer: Offer, changes: readonly DealChange[], servedOn: string, latestOutcome: string | null = null): string {
   const source = freeTierSourceWeMayCite(offer, reasonWeCannotConfirmFor(offer), { changes, servedOn });
   if (!source.cited) return "";
+  if (latestOutcome === "confirmed" && source.finding?.endsWith(" and states amounts, none of which we matched to the terms we publish")) {
+    source.finding = null;
+  }
   const read = readClauseHtml(
     source.readOn,
     [readSourceOf(source)],
@@ -5721,7 +5724,7 @@ function buildVendorPage(slug: string): string | null {
     return `\n  <p class="product-subtypes-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong>Subtypes in ${escHtmlServer(classified.taxonomy)}:</strong> ${body}${clause} <a href="${CRITERIA_PATH}#subtypes">How we use this</a>.</p>`;
   })();
 
-  const freeTierSourceLine = freeTierSourceLineHtml(primary, vendorChanges, servedOn);
+  const freeTierSourceLine = freeTierSourceLineHtml(primary, vendorChanges, servedOn, lastReadOutcome(primary));
 
   const freePlanExcerptBlock = (() => {
     const excerpt = freePlanExcerptWeMayPublish(primary);
