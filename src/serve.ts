@@ -108,7 +108,7 @@ import { clauseNaming } from "./quoted-figures.js";
 import { figureProvenanceAgainst, statementsWeHold } from "./figure-provenance.js";
 import { statesNoFreeTier } from "./retired-terms.js";
 import { countsDownTo, shutdownDeadlineHtml, shutdownDates, nextShutdownDate } from "./shutdown-deadline.js";
-import { isShutdownMonth, shutdownDateStart, shutdownDateEnd, shutdownMonthLabel, shutdownMonthDateLabel } from "./shutdown-date.js";
+import { isShutdownMonth, statedShutdownMonthOf, shutdownDateStart, shutdownDateEnd, shutdownMonthLabel, shutdownMonthDateLabel } from "./shutdown-date.js";
 import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
 import { deadlineTextsOf, quotesTheWholeDescription, statedDeadlines, statedShutdowns, type StatedDeadline } from "./stated-deadlines.js";
 import { COMING_UP_HEADING, lastDayComingUp } from "./coming-up.js";
@@ -27246,14 +27246,13 @@ function buildShutdownTrackerPage(): string {
       }).join("\n      ")}
     </ul>
   </section>`;
-  const nextDeadline = shutdowns.find(s => countsDownTo(s) && !isShutdownMonth(nextShutdownDate(s, todayDay)) && nextShutdownDate(s, todayDay) >= todayDay);
+  const nextDeadline = shutdowns.find(s => countsDownTo(s) && shutdownDateEnd(nextShutdownDate(s, todayDay)) >= todayDay);
   const nextDaysLeft = nextDeadline ? Math.max(0, Math.ceil((new Date(nextShutdownDate(nextDeadline, todayDay)).getTime() - today.getTime()) / (1000 * 60 * 60 * 24))) : 0;
 
   function urgencyColor(deadline: string): string {
     if (shutdownDateEnd(deadline) < todayDay) return "#6b7280";
     const dl = new Date(shutdownDateStart(deadline));
     const days = Math.ceil((dl.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-    if (days < 0) return "#6b7280";
     if (days <= 30) return "#f85149";
     if (days <= 90) return "#d29922";
     return "#3fb950";
@@ -27472,7 +27471,7 @@ ${buildGlobalNav("guides")}
     escHtmlServer,
     ' class="subtitle dated-rule"',
   )}
-  <div class="pub-date">Published ${pubDate} &middot; ${activeCount} active shutdowns${nextDeadline ? ` &middot; Next deadline in ${countedNoun(nextDaysLeft, "day")}` : ""} &middot; ${pageDataProvenance("/shutdowns", offers.length)}</div>
+  <div class="pub-date">Published ${pubDate} &middot; ${activeCount} active shutdowns${nextDeadline && !isShutdownMonth(nextShutdownDate(nextDeadline, todayDay)) ? ` &middot; Next deadline in ${countedNoun(nextDaysLeft, "day")}` : ""} &middot; ${pageDataProvenance("/shutdowns", offers.length)}</div>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${activeCount}</div><div class="stat-label">Active Shutdowns</div></div>
@@ -50546,7 +50545,8 @@ function buildDeadlinesPage(): string {
   const today = new Date().toISOString().slice(0, 10);
   const todayMs = new Date(today + "T00:00:00Z").getTime();
 
-  const deadlines = vendorRecordsDatedAfter(allChanges, today);
+  const deadlines = vendorRecordsDatedAfter(allChanges, today)
+    .filter(record => record.change_type !== "product_deprecated" || statedShutdownMonthOf(record) === null);
   const stated = [...deadlinesOurTextStates(allChanges, deadlines, today), ...monthShutdownDeadlines(allChanges, today)];
   const entryCount = deadlines.length + stated.length;
 
@@ -54306,7 +54306,8 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     const today = new Date().toISOString().slice(0, 10);
     const todayMs = new Date(today + "T00:00:00Z").getTime();
     const typeFilter = url.searchParams.get("type") || undefined;
-    const listed = allChanges.filter(c => c.date > today);
+    const listed = allChanges.filter(c => c.date > today)
+      .filter(record => record.change_type !== "product_deprecated" || statedShutdownMonthOf(record) === null);
     const countdownDays = (date: string) => Math.ceil((new Date(date + "T00:00:00Z").getTime() - todayMs) / 86400000);
     const recordDeadlines = listed
       .filter(c => !typeFilter || c.change_type === typeFilter)

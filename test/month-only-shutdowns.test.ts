@@ -112,6 +112,7 @@ describe("month-only shutdowns on HTTP pages", () => {
       const result = await pages(day, [deno, ...fullDates], directory);
       const shutdown = card(result["/shutdowns"], ".shutdown-card", "Deno Deploy");
       assert.equal(sectionOf(shutdown), section);
+      if (section === "imminent") assert.ok(shutdown.getAttribute("style")!.includes("#f85149"));
       assert.equal(shutdown.querySelector(".shutdown-deadline > span:nth-child(2)")!.textContent, "April 2027 (no day is given)");
       assert.ok(!shutdown.querySelector(".days-badge"));
       assert.equal(shutdown.querySelector(".shutdown-what")!.textContent, summary);
@@ -148,6 +149,20 @@ describe("month-only shutdowns on HTTP pages", () => {
     }
     const april = createDocument(result["/shutdowns"]).querySelector('[data-month="2027-04"]')!;
     assert.ok(april.textContent!.indexOf("Deno Deploy") < april.textContent!.indexOf("Calendar Service 0"));
+  });
+  it("uses the effective month once when the announcement itself is still in the future", async () => {
+    const record = { ...deno, date: "2026-12-01" };
+    const result = await pages("2026-11-16", [record], directory);
+    const found = card(result["/deadlines"], ".dl-card", "Deno Deploy");
+    assert.equal(found.querySelector(".dl-date")!.textContent, "April 2027 (no day is given)");
+    const api = JSON.parse(result["/api/deadlines"]).deadlines.filter((d: any) => d.vendor === "Deno Deploy");
+    assert.equal(api.length, 1);
+    assert.equal(api[0].date, "2027-04");
+  });
+  it("does not turn the next month-only shutdown into a banner's day countdown", async () => {
+    const result = await pages("2028-02-15", [{ ...deno, discontinued_date: "2028-02" }], directory);
+    const header = createDocument(result["/shutdowns"]).querySelector(".pub-date")!;
+    assert.doesNotMatch(header.textContent!, /Next deadline in/);
   });
   it("keeps a leap-year February shutdown active through February 29 in a non-UTC timezone", async () => {
     const record = { ...deno, discontinued_date: "2028-02" };
