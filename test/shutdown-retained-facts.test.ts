@@ -32,14 +32,15 @@ const facts: Array<[string, string[]]> = [
 const cards = new Map<string, Element>();
 const scratch = mkdtempSync(path.join(tmpdir(), "shutdown-retained-facts-"));
 
-before(async () => {
+async function readCardsAt(day: string): Promise<Map<string, Element>> {
+  const read = new Map<string, Element>();
   writeFileSync(path.join(scratch, "index.json"), JSON.stringify({ offers: [] }));
   writeFileSync(path.join(scratch, "changes.json"), JSON.stringify({ changes: [] }));
   const child = spawn(process.execPath, ["--import", path.join(ROOT, "scripts/shifted-clock.mjs"), path.join(ROOT, "dist/serve.js")], {
     cwd: ROOT, stdio: ["ignore", "ignore", "pipe"],
     env: { ...process.env, TZ: "UTC", PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off",
       AGENTDEALS_INDEX_PATH: path.join(scratch, "index.json"), AGENTDEALS_CHANGES_PATH: path.join(scratch, "changes.json"),
-      AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse("2027-11-01T12:00:00Z") - Date.now()) },
+      AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${day}T12:00:00Z`) - Date.now()) },
   });
   try {
     const port = await new Promise<string>((resolve, reject) => {
@@ -55,10 +56,14 @@ before(async () => {
     });
     const response = await fetch(`http://localhost:${port}/shutdowns`, { redirect: "error" });
     assert.equal(response.status, 200);
-    for (const card of createDocument(await response.text()).querySelectorAll(".shutdown-card")) cards.set(card.querySelector("h3")!.textContent!, card);
+    for (const card of createDocument(await response.text()).querySelectorAll(".shutdown-card")) read.set(card.querySelector("h3")!.textContent!, card);
   } finally {
     if (child.exitCode === null && child.signalCode === null) { const exited = once(child, "exit"); child.kill(); await exited; }
   }
+  return read;
+}
+before(async () => {
+  for (const [service, card] of await readCardsAt("2027-11-01")) cards.set(service, card);
 });
 after(() => rmSync(scratch, { recursive: true, force: true }));
 
@@ -74,5 +79,46 @@ describe("hand-typed shutdown facts after the detail window", () => {
     assert.ok(card, service);
     const retained = card.querySelector(".shutdown-what")!.textContent + " " + [...card.querySelectorAll(".detail-row")].map(row => row.textContent).join(" ");
     for (const sentence of expected) assert.ok(retained.includes(sentence), `${service}: ${sentence}`);
+  });
+});
+
+
+describe("shutdown descriptions when detail rows disappear", () => {
+  it("adds Proton's omitted facts only after day ninety", async () => {
+    const sentence = "Deployed CloudFormation stacks and the resources they manage keep running.";
+    const atBoundary = (await readCardsAt("2027-01-05")).get("AWS Proton")!;
+    const afterBoundary = (await readCardsAt("2027-01-06")).get("AWS Proton")!;
+    assert.equal(atBoundary.querySelectorAll(".detail-row").length, 3);
+    assert.ok(!atBoundary.querySelector(".shutdown-what")!.textContent!.includes(sentence));
+    assert.equal(atBoundary.textContent!.split(sentence).length - 1, 1);
+    assert.deepEqual([...afterBoundary.querySelectorAll(".detail-label")].map(label => label.textContent), ["Migration path:"]);
+    assert.ok(afterBoundary.querySelector(".shutdown-what")!.textContent!.includes(sentence));
+    assert.equal(afterBoundary.textContent!.split(sentence).length - 1, 1);
+  });
+
+  it("keeps retained sentences in their visible rows exactly once", async () => {
+    const current = await readCardsAt("2026-11-16");
+    for (const [service, sentence] of [
+      ["AWS Proton", "Deployed CloudFormation stacks and the resources they manage keep running."],
+      ["AWS App Mesh", "After September 30, 2026, you will no longer be able to access the AWS App Mesh console or AWS App Mesh resources."],
+      ["OpenAI legacy GPT models (September 2026)", "gpt-3.5-turbo-instruct, babbage-002 and davinci-002 run on the legacy Completions endpoint (/v1/completions)."],
+      ["OpenAI Videos API (Sora)", "Developers using the Videos API (POST /v1/videos and the other /v1/videos endpoints) and the sora-2 and sora-2-pro models, including their dated snapshots."],
+      ["OpenAI Assistants API", "code interpreter, file search, and persistent assistants"],
+      ["Firebase Studio (Full Shutdown)", "All remaining Firebase Studio data permanently deleted"],
+      ["AWS WorkSpaces Thin Client", "After 2027-03-31 the devices stop working"],
+      ["Node.js 20 AWS Lambda Runtime", "Functions keep running; AWS never blocks invocations."],
+    ]) {
+      const card = current.get(service)!;
+      assert.equal(card.querySelectorAll(".detail-row").length, 3, service);
+      assert.equal(card.textContent!.split(sentence).length - 1, 1, service);
+    }
+  });
+
+  it("leads the completed App Runner description with the existing-customer allowance", async () => {
+    const card = (await readCardsAt("2026-11-16")).get("AWS App Runner (New Customers)")!;
+    const what = card.querySelector(".shutdown-what")!.textContent!;
+    assert.ok(what.startsWith("Existing customers can keep using it as normal, including creating new services."));
+    assert.ok(what.includes("App Runner closed to new customers"));
+    assert.equal(what.split("Existing customers can keep using it as normal, including creating new services.").length - 1, 1);
   });
 });
