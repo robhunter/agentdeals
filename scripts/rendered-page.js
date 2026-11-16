@@ -117,6 +117,8 @@ export function renderArguments(url, options = {}) {
     "--no-default-browser-check",
     `--user-agent=${options.userAgent ?? RENDER_USER_AGENT}`,
     ...environmentArguments(options.env),
+    "--lang=en-US",
+    "--accept-lang=en-US,en",
     `--virtual-time-budget=${options.virtualTimeBudgetMs ?? VIRTUAL_TIME_BUDGET_MS}`,
     "--dump-dom",
     url,
