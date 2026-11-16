@@ -42,6 +42,8 @@ const PREFERENCE: Record<DeadlineStatedIn, number> = { condition: 0, description
 
 const A_DAY_IN_MS = 86400000;
 
+type ListedDeadlineRecord = Pick<DealChange, "vendor" | "date"> & Partial<Pick<DealChange, "source_url">>;
+
 function isoOf(year: number, month: number, day: number): string | null {
   if (!year || month < 1 || month > 12 || day < 1 || day > 31) return null;
   const iso = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -141,7 +143,7 @@ const SHUTDOWN_CONJUNCTION = new RegExp(`\\band\\s+(?=(?:then\\s+)?${SHUTDOWN_WO
 
 function deadlinesInTexts(
   texts: readonly DeadlineText[],
-  listedRecords: readonly Pick<DealChange, "vendor" | "date">[],
+  listedRecords: readonly ListedDeadlineRecord[],
   today: string,
   shutdownsOnly: boolean,
 ): StatedDeadline[] {
@@ -175,7 +177,9 @@ function deadlinesInTexts(
     }
   }
   const unlisted = [...byVendorAndDay.values()].filter((deadline) =>
-    !listedRecords.some((record) => record.vendor === deadline.vendor && daysBetween(record.date, deadline.date) <= 1));
+    !listedRecords.some((record) => record.vendor === deadline.vendor
+      && daysBetween(record.date, deadline.date) <= 1
+      && (record === deadline.record || Boolean(deadline.sourceUrl && record.source_url === deadline.sourceUrl))));
   const unlistedDays = new Set(unlisted.map((deadline) => `${deadline.vendor}\u0000${deadline.date}`));
   return unlisted
     .filter((deadline) => shutdownsOnly || !unlistedDays.has(`${deadline.vendor}\u0000${dayAfter(deadline.date)}`))
@@ -184,7 +188,7 @@ function deadlinesInTexts(
 
 export function statedDeadlines(
   texts: readonly DeadlineText[],
-  listedRecords: readonly Pick<DealChange, "vendor" | "date">[],
+  listedRecords: readonly ListedDeadlineRecord[],
   today: string,
 ): StatedDeadline[] {
   return deadlinesInTexts(texts, listedRecords, today, false);
