@@ -840,7 +840,7 @@
       "changed": "2026-11-16"
     },
     "/azure-free-tier-2026": {
-      "hash": "37f7e972194ad6d9",
+      "hash": "6d011ec32160e3f4",
       "changed": "2026-11-16"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -1365,7 +1365,7 @@
       "changed": "2026-11-15"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "b9ed515ab393f14f",
+      "hash": "428f7db6ade7a94b",
       "changed": "2026-11-16"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -3111,7 +3111,7 @@
       "changed": "2026-11-16"
     },
     "/digest/2026-w47": {
-      "hash": "1cca08a01eab329d",
+      "hash": "f2c63cf348776cd5",
       "changed": "2026-11-16"
     },
     "/digest/2026-w49": {
@@ -3123,7 +3123,7 @@
       "changed": "2026-11-14"
     },
     "/digest/2026-w51": {
-      "hash": "b60ac4c9d313d49a",
+      "hash": "3c4308f88072ba1e",
       "changed": "2026-11-16"
     },
     "/digest/2026-w52": {
@@ -3283,7 +3283,7 @@
       "changed": "2026-11-15"
     },
     "/events/microsoft-build-2026": {
-      "hash": "85c04bfed43a15d7",
+      "hash": "a190bee8d2fce58f",
       "changed": "2026-11-16"
     },
     "/expiring": {
@@ -3660,7 +3660,7 @@
       "daily": true
     },
     "/reports/2026-12": {
-      "hash": "b0255c54628f014c",
+      "hash": "e838211d6c89e4f1",
       "changed": "2026-11-16"
     },
     "/reports/2027-01": {
@@ -3724,7 +3724,7 @@
       "changed": "2026-11-15"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "6ffa65b1f0ec22fd",
+      "hash": "ac9027b8a5075b6e",
       "changed": "2026-11-16"
     },
     "/setup": {
@@ -4404,7 +4404,7 @@
       "daily": true
     },
     "/vendor/azure": {
-      "hash": "ca9054650211ef0b",
+      "hash": "6c03cd152250f316",
       "changed": "2026-11-16"
     },
     "/vendor/back4app": {

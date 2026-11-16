@@ -20584,7 +20584,7 @@
       "vendor": "Azure",
       "change_type": "product_deprecated",
       "date": "2026-12-15",
-      "summary": "Azure OpenAI retires gpt-realtime-mini version 2025-12-15 on December 15, 2026. gpt-realtime-mini version 2025-10-06 retires later on Azure OpenAI, in April 2027, and is not covered by this date. Microsoft names no replacement. After that date requests to version 2025-12-15 return HTTP 410 Gone. OpenAI's own API retires gpt-realtime-mini later, in January 2027, and that is OpenAI's date, not Azure's.",
+      "summary": "Azure OpenAI retires gpt-realtime-mini version 2025-12-15 on December 15, 2026. gpt-realtime-mini version 2025-10-06 retires later on Azure OpenAI, in April 2027, and is not covered by this date. Microsoft names no replacement. After that date requests to version 2025-12-15 return HTTP 410 Gone. OpenAI's own API retires gpt-realtime-mini later, on January 20, and that is OpenAI's date, not Azure's.",
       "what_ends": "Azure OpenAI gpt-realtime-mini 2025-12-15 retirement",
       "previous_state": "gpt-realtime-mini version 2025-12-15 can be deployed and called on Azure OpenAI.",
       "current_state": "Microsoft Learn, \"Model retirement schedule - Microsoft Foundry\" (updated 2026-09-23, read 2026-11-16), table \"Azure OpenAI\": gpt-realtime-mini version 2025-12-15, lifecycle GA, retirement date 2026-12-15, no replacement. gpt-realtime-mini version 2025-10-06, lifecycle GA, retirement date 2027-04-06, no replacement. \"Foundry Models lifecycle and support policy\": \"Retired: Removed from service. All inference requests return 410 Gone.\"",
