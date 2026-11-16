@@ -27485,6 +27485,8 @@ ${buildGlobalNav("guides")}
     }).join("\n    ")}
   </div>
 
+  ${buildSection("\u2705 Recently Completed", "These shutdowns have already happened. Listed for reference.", completed, "completed")}
+
   ${byMonth}
 
   ${buildSection("\u26a0\ufe0f Imminent", "These shutdowns are happening within the next 30 days. Take action now.", imminent, "imminent")}
@@ -27492,8 +27494,6 @@ ${buildGlobalNav("guides")}
   ${buildSection("\u23f3 Upcoming", "These shutdowns are 30\u201390 days away. Plan your migration now.", upcoming, "upcoming")}
 
   ${buildSection("Later", "These shutdowns are more than 90 days away.", later, "later")}
-
-  ${buildSection("\u2705 Recently Completed", "These shutdowns have already happened. Listed for reference.", completed, "completed")}
 
   ${relevantChanges.length > 0 ? `
   <h2 id="pricing-changes">Related Pricing Changes</h2>
