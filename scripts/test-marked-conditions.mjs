@@ -32,7 +32,7 @@ try {
   writeFileSync(indexPath, JSON.stringify(index, null, 2) + "\n");
   console.log(`Marked-condition fixture: ${mixed.length} mixed listings; ${files.length} test files.`);
   run(["scripts/sync-page-reviews.js"]);
-  run(["--test", "--test-concurrency=1", ...files.map(name => `test/${name}`)]);
+  run(["--import", "./scripts/local-test-fetch.js", "--test", "--test-concurrency=1", ...files.map(name => `test/${name}`)]);
 } finally {
   for (const [path, bytes] of originals) writeFileSync(path, bytes);
 }
