@@ -22,11 +22,11 @@
       "changed": "2026-11-16"
     },
     "/ai-free-tiers": {
-      "hash": "b1dc17dd75c5e580",
+      "hash": "99ec6a058ae0518f",
       "changed": "2026-11-16"
     },
     "/ai-ml-alternatives": {
-      "hash": "9a8721e5a0ccaf9c",
+      "hash": "96e9eabbd697285d",
       "changed": "2026-11-16"
     },
     "/alternative-to": {
@@ -840,7 +840,7 @@
       "changed": "2026-11-16"
     },
     "/azure-free-tier-2026": {
-      "hash": "606fcc8d3f2ce665",
+      "hash": "37f7e972194ad6d9",
       "changed": "2026-11-16"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -1111,7 +1111,7 @@
       "changed": "2026-11-14"
     },
     "/category/ai-ml": {
-      "hash": "b01d6888128b6b42",
+      "hash": "1d97f0245d6d36f8",
       "changed": "2026-11-16"
     },
     "/category/analytics": {
@@ -1365,7 +1365,7 @@
       "changed": "2026-11-15"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "d6e85198a77ef661",
+      "hash": "b9ed515ab393f14f",
       "changed": "2026-11-16"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -3063,7 +3063,7 @@
       "changed": "2026-11-14"
     },
     "/digest/2026-w35": {
-      "hash": "65c888780617a67e",
+      "hash": "d4d8f4d667fd837f",
       "changed": "2026-11-16"
     },
     "/digest/2026-w36": {
@@ -3103,7 +3103,7 @@
       "changed": "2026-11-15"
     },
     "/digest/2026-w45": {
-      "hash": "3f69e85e7cbf5b08",
+      "hash": "8976127d3fc6b918",
       "changed": "2026-11-16"
     },
     "/digest/2026-w46": {
@@ -3111,7 +3111,7 @@
       "changed": "2026-11-16"
     },
     "/digest/2026-w47": {
-      "hash": "7bc34cf15d734ba8",
+      "hash": "1cca08a01eab329d",
       "changed": "2026-11-16"
     },
     "/digest/2026-w49": {
@@ -3123,7 +3123,7 @@
       "changed": "2026-11-14"
     },
     "/digest/2026-w51": {
-      "hash": "f2e0fe76f72badb8",
+      "hash": "b60ac4c9d313d49a",
       "changed": "2026-11-16"
     },
     "/digest/2026-w52": {
@@ -3283,7 +3283,7 @@
       "changed": "2026-11-15"
     },
     "/events/microsoft-build-2026": {
-      "hash": "247ac206197d7284",
+      "hash": "85c04bfed43a15d7",
       "changed": "2026-11-16"
     },
     "/expiring": {
@@ -3324,7 +3324,7 @@
       "changed": "2026-11-16"
     },
     "/free-llm-apis": {
-      "hash": "ed3c11a9ae16154a",
+      "hash": "5ae8578ec6352c35",
       "changed": "2026-11-16"
     },
     "/free-nextjs-stack": {
@@ -3434,7 +3434,7 @@
       "changed": "2026-11-16"
     },
     "/llm-api-pricing": {
-      "hash": "9e44fad42d216185",
+      "hash": "6803e438ed211683",
       "changed": "2026-11-16"
     },
     "/localstack-alternatives": {
@@ -3660,7 +3660,7 @@
       "daily": true
     },
     "/reports/2026-12": {
-      "hash": "a86dc382adcfff07",
+      "hash": "b0255c54628f014c",
       "changed": "2026-11-16"
     },
     "/reports/2027-01": {
@@ -3724,7 +3724,7 @@
       "changed": "2026-11-15"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "904204f6701e0673",
+      "hash": "6ffa65b1f0ec22fd",
       "changed": "2026-11-16"
     },
     "/setup": {
@@ -4404,7 +4404,7 @@
       "daily": true
     },
     "/vendor/azure": {
-      "hash": "480d165fe12dca55",
+      "hash": "ca9054650211ef0b",
       "changed": "2026-11-16"
     },
     "/vendor/back4app": {
