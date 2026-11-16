@@ -8493,7 +8493,7 @@
     {
       "vendor": "Crowdin",
       "category": "Localization",
-      "description": "Localization management. The Free plan is $0 a month: 60,000 hosted words, 1 private project, unlimited public projects, 1 integration, unlimited translators and Crowdin AI. Users on the Free plan donate their translations to Crowdin's translation memory. Pro starts at $50 a month (2 private projects), Team at $150 and Team+ at $450. Open-source and non-profit projects can apply for a free Open Source License. The CDN for over-the-air translations is free up to 1M requests and 10 GB of data transfer. CLI, GitHub integration, REST API",
+      "description": "Localization management. The Free plan is $0 a month with 40,000 hosted words, 1 private project, unlimited public projects, unlimited integrations, Crowdin AI, and translators on public projects only. Free plan users donate their translations to Crowdin's translation memory. Pro is $75 a month billed annually or $89 billed monthly, with 80,000 hosted words and unlimited private projects. Team is $450 a month, billed annually only. Open-source and non-profit projects can ask Crowdin for a free option. The CDN for over-the-air translations is free up to 1M requests and 10 GB of data transfer. CLI, GitHub integration and REST API are available.",
       "tier": "Free",
       "url": "https://crowdin.com/pricing",
       "tags": [
@@ -30420,9 +30420,9 @@
     {
       "vendor": "framer.com",
       "category": "Design",
-      "description": "Framer helps you iterate and animate interface ideas for your next app, website, or product—starting with powerful layouts. For anyone validating Framer as a professional prototyping tool: unlimited viewers, up to 2 editors, and up to 3 projects.",
+      "description": "Website builder with a visual editor, CMS and hosting. The Free plan is $0 and publishes on a free Framer domain with 1 GB of monthly bandwidth. It gives 500 AI credits a month for workspaces with no paid subscription. Projects on the Free plan get 10 CMS collections, 1,000 pages and 5 MB file uploads, and up to three editors can collaborate. Framer says the Free plan is ideal for non-commercial use. A custom domain needs a paid plan. Basic is $10 a month billed yearly or $15 billed monthly. Pro is $30 a month billed yearly or $45 billed monthly.",
       "tier": "Free",
-      "url": "https://www.framer.com/",
+      "url": "https://www.framer.com/pricing",
       "tags": [
         "design",
         "ui",
@@ -40164,7 +40164,7 @@
     {
       "vendor": "E2B",
       "category": "AI / ML",
-      "description": "Cloud sandboxes for AI agents: isolated Linux machines that run generated code and shell commands, work with files and reach the internet. The Hobby plan has no monthly fee and a one-time $100 usage credit, with no credit card needed to start. When the credit runs out, the account is blocked until a payment method is added. Hobby allows 20 concurrent sandboxes and up to 1 hour of continuous runtime per sandbox. Running sandboxes are billed per second for CPU and RAM. Pro is $150/month plus usage.",
+      "description": "Cloud sandboxes for AI agents: isolated Linux machines that run generated code and shell commands, work with files and reach the internet. The Hobby plan has no monthly fee and a one-time $100 usage credit, with no credit card needed to start. When the credit runs out, the account is blocked until a payment method is added. Hobby allows 10 concurrent sandboxes and up to 1 hour of continuous runtime per sandbox. Running sandboxes are billed per second for CPU and RAM. Pro is $150/month plus usage.",
       "tier": "Free Credits",
       "url": "https://e2b.dev/pricing",
       "tags": [
