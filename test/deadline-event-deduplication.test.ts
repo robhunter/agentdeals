@@ -136,7 +136,7 @@ describe("deadline views retain separate events", () => {
       const filtered = JSON.parse(await get("/api/deadlines?type=product_deprecated"));
       assert.equal(filtered.count, 2);
       const shutdowns = await get("/shutdowns");
-      assert.equal((shutdowns.match(/<h3[^>]*>[\s\S]*?<\/h3>/g) ?? []).filter(heading => heading.includes("Amazon WorkSpaces Thin Client")).length, 1);
+      assert.equal((shutdowns.match(/<h3[^>]*>[\s\S]*?<\/h3>/g) ?? []).filter(heading => heading.includes("WorkSpaces Thin Client")).length, 1);
     });
   });
 
