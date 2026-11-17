@@ -49216,7 +49216,7 @@ function changeVendorIndexHtml(sections: ReturnType<typeof changeLogSections<Dea
     const label = isIndexHousekeeping(change)
       ? INDEX_HOUSEKEEPING_BADGE
       : changeTypeBadge[change.change_type]?.label ?? change.change_type;
-    entries.push(isCancelledAnnouncement(change) ? escHtmlServer(change.resolution!.detail!) : `${escHtmlServer(label)} ${escHtmlServer(date)}${isEventDated(change) && change.date > today ? " (upcoming)" : ""}`);
+    entries.push(isCancelledAnnouncement(change) ? changeSummaryHtml(change, escHtmlServer) : `${escHtmlServer(label)} ${escHtmlServer(date)}${isEventDated(change) && change.date > today ? " (upcoming)" : ""}`);
     vendors.set(change.vendor, entries);
   }
   const lines = [...vendors].sort(([a], [b]) => a.localeCompare(b)).map(([vendor, entries]) =>

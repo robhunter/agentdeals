@@ -41,7 +41,7 @@ export function assertChangeVendorIndex(html: string, route: string) {
     assert.ok(date, `${route}: ${name} has an effective date`);
     const bucket = expected.get(name) ?? { href, entries: [] };
     assert.equal(bucket.href, href, `${route}: ${name} has a consistent link`);
-    const cancellation = visibleText(label) === "cancelled" ? visibleText((entry.match(/<div class="(?:pc|chg)-summary">([\s\S]*?)<\/div>/)?.[1] ?? "").replace(/<a\b[^>]*class="change-source"[^>]*>[\s\S]*?<\/a>/g, "")) : undefined;
+    const cancellation = visibleText(label) === "cancelled" ? visibleText((entry.match(/<div class="(?:pc|chg)-summary">([\s\S]*?)<\/div>/)?.[1] ?? "").replace(/\s*<a\b[^>]*class="change-source"[^>]*>[\s\S]*?<\/a>/g, "")) : undefined;
     if (cancellation !== undefined) assert.ok(cancellation.length > 0, `${route}: ${name} names its cancellation`);
     bucket.entries.push({ label: visibleText(label), date, cancellation });
     expected.set(name, bucket);
@@ -50,7 +50,7 @@ export function assertChangeVendorIndex(html: string, route: string) {
   const actual = [...index[0].matchAll(/<li>([\s\S]*?)<\/li>/g)].map(([, line]) => {
     const vendor = line.match(/^<(a|span)\b([^>]*)>([\s\S]*?)<\/\1>:\s*([\s\S]*)$/);
     assert.ok(vendor, `${route}: index line has one vendor and its changes`);
-    return { name: visibleText(vendor[3]), href: vendor[2].match(/href="([^"]+)"/)?.[1] ?? null, text: visibleText(vendor[4]) };
+    return { name: visibleText(vendor[3]), href: vendor[2].match(/href="([^"]+)"/)?.[1] ?? null, text: visibleText(vendor[4].replace(/\s*<a\b[^>]*class="change-source"[^>]*>[\s\S]*?<\/a>/g, "")) };
   });
   const names = [...expected.keys()].sort((a, b) => a.localeCompare(b));
   assert.deepEqual(actual.map(line => line.name), names, `${route}: index names every rendered vendor once in alphabetical order`);

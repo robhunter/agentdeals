@@ -161,11 +161,15 @@ for (const day of days) {
         const entries = html.split(/<div class="(?:pc|chg)-entry/).slice(1);
         const index = html.match(/<section class="change-vendor-index"[^>]*>([\s\S]*?)<\/section>/)?.[1];
         assert.ok(index);
-        const lines = [...index.matchAll(/<li>([\s\S]*?)<\/li>/g)].map(match => visibleText(match[1]).replace(/\s+:/g, ":"));
+        const lines = [...index.matchAll(/<li>([\s\S]*?)<\/li>/g)].map(match => ({ html: match[1], text: visibleText(match[1]).replace(/\s+:/g, ":") }));
         for (const cancelled of cancelledRecords) {
           const statement = cancelled.resolution!.detail!;
-          assert.ok(lines.some(line => line.startsWith(`${cancelled.vendor}: `) && line.includes(statement)));
-          assert.ok(!lines.some(line => line.startsWith(`${cancelled.vendor}: `) && /: cancelled \d/.test(line)));
+          const indexLine = lines.find(line => line.text.startsWith(`${cancelled.vendor}: `) && line.text.includes(statement));
+          assert.ok(indexLine);
+          assert.ok(indexLine.html.includes(`href="${cancelled.resolution!.source_url}"`));
+          assert.match(indexLine.html, /class="change-source"/);
+          assert.match(indexLine.html, /rel="nofollow noopener"/);
+          assert.ok(!lines.some(line => line.text.startsWith(`${cancelled.vendor}: `) && /: cancelled \d/.test(line.text)));
           const history = entries.find(entry => {
             const vendor = entry.match(/class="(?:pc|chg)-vendor"[^>]*>([\s\S]*?)<\/(?:a|span)>/)?.[1];
             return entry.slice(0, entry.indexOf(">") + 1).includes(`data-event-date="${cancelled.date}"`) && vendor !== undefined && visibleText(vendor) === cancelled.vendor;
