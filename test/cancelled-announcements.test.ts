@@ -6,6 +6,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
 import { visibleText } from "./change-vendor-index-observer.ts";
 import { isoWeekOf } from "../dist/change-dates.js";
+import { shutdownDateOf } from "../dist/forecast-shutdowns.js";
 import { changeAnchor } from "../dist/change-anchor.js";
 import type { DealChange } from "../src/types.ts";
 import { eventResolutionFields, EVENT_CANCELLED, isCancelledAnnouncement, printsBeforeAndAfter, publishedImpactOf, standingOf, summaryWithResolution, theEventNeverHappened } from "../dist/change-resolution.js";
@@ -124,7 +125,10 @@ for (const day of days) {
               for (const card of cards) {
                 const title = card.match(route === "/shutdowns" ? /<h3[^>]*>([\s\S]*?)<\/h3>/ : /class="dl-vendor"[^>]*>([\s\S]*?)<\/(?:a|span)>/)?.[1];
                 const subject = route === "/shutdowns" ? cancelled.what_ends ?? cancelled.vendor : cancelled.vendor;
-                assert.ok(!(title && visibleText(title) === subject && card.includes(cancelled.date)), `${cancelled.vendor} dated card`);
+                const dates = [cancelled.date, shutdownDateOf(cancelled), ...(cancelled.shutdown_stages ?? []).map(stage => stage.date)];
+                const cardText = visibleText(card);
+                const hasDate = dates.some(date => card.includes(date) || cardText.includes(new Date(date + "T00:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })));
+                assert.ok(!(title && visibleText(title) === subject && hasDate), `${cancelled.vendor} dated card`);
               }
             }
           }
