@@ -3118,7 +3118,7 @@
       "changed": "2026-11-17"
     },
     "/digest/2026-w50": {
-      "hash": "076f1fbbe7844cbe",
+      "hash": "1859275c23f338b3",
       "changed": "2026-11-17"
     },
     "/digest/2026-w51": {
@@ -3429,7 +3429,7 @@
       "changed": "2026-11-17"
     },
     "/llm-api-pricing": {
-      "hash": "a92cd9bb62108c5f",
+      "hash": "f773b4dbcc4c580e",
       "changed": "2026-11-17"
     },
     "/localstack-alternatives": {
@@ -3654,7 +3654,7 @@
       "daily": true
     },
     "/reports/2026-12": {
-      "hash": "7b263815e45f0418",
+      "hash": "db2ea3d920b83bea",
       "changed": "2026-11-17"
     },
     "/reports/2027-01": {
