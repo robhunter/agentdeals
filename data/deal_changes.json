@@ -19435,7 +19435,13 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "what_ends": "Conductor Cloud",
-      "announced_on": "2026-11-04"
+      "announced_on": "2026-11-04",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-11-17",
+        "detail": "Retracted 2026-11-17: Conductor called off the Conductor Cloud shutdown on 2026-11-13 before it happened. The changelog entry 0.94.2 stated: \"Conductor isn't shutting down. It's back, and we're building again.\"",
+        "source_url": "https://www.conductor.build/changelog"
+      }
     },
     {
       "vendor": "OpenAI custom GPTs",
