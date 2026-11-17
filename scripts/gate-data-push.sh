@@ -81,11 +81,10 @@ REPLAYS_ONTO_A_MOVED_MAIN="${GATE_REPLAYS_ONTO_A_MOVED_MAIN:-2}"
 COMMITS_ONE_REPLAY_RESOLVES=10
 HELD_BACK_VENDORS=""
 BATCH_AS_THE_RUN_WROTE_IT=""
-BATCH_COMMIT_AS_THE_RUN_WROTE_IT=""
 READINGS_THE_REPLAY_COULD_NOT_MERGE=""
 
 push_to_main() {
-  bash "$SCRIPT_DIR/push-tested-tree.sh" "$(git rev-parse HEAD)" "$(git rev-parse HEAD^{tree})"
+  bash "$SCRIPT_DIR/push-tested-tree.sh" "$TESTED_COMMIT" "$TESTED_TREE"
 }
 
 ask_the_suite_to_read_main() {
@@ -163,8 +162,8 @@ replay_onto_main() {
 
 quarantine() {
   local why="$1"
-  local refused="${BATCH_AS_THE_RUN_WROTE_IT:-$(git rev-parse HEAD)}"
-  local shown="${BATCH_COMMIT_AS_THE_RUN_WROTE_IT:-$COMMIT}"
+  local refused="${2:-${BATCH_AS_THE_RUN_WROTE_IT:-$(git rev-parse HEAD)}}"
+  local shown="$(git rev-parse --short "$refused")"
   local ref="${QUARANTINE_PREFIX}-$(date -u +%Y%m%dT%H%M%SZ)-${shown}"
   {
     echo "quarantined=true"
@@ -242,7 +241,6 @@ hold_back_the_vendors_a_failing_test_named() {
   [ -n "$named" ] || return 1
 
   BATCH_AS_THE_RUN_WROTE_IT="$(git rev-parse HEAD)"
-  BATCH_COMMIT_AS_THE_RUN_WROTE_IT="$COMMIT"
   HELD_BACK_VENDORS="$named"
   echo "── Held back: $HELD_BACK_VENDORS. What is left is derived again and read by the suite again, and only that reaches main ──"
   amend_with_what_the_derivation_moved "The vendors a failing test named read as main already has them, in this run's commit."
@@ -250,9 +248,20 @@ hold_back_the_vendors_a_failing_test_named() {
   return 0
 }
 
+require_tested_candidate() {
+  if [ "$(git rev-parse HEAD)" != "$TESTED_COMMIT" ] \
+    || [ "$(git rev-parse HEAD^{tree})" != "$TESTED_TREE" ] \
+    || ! git diff --quiet -- \
+    || ! git diff --cached --quiet "$TESTED_COMMIT" --; then
+    quarantine "the suite changed its candidate commit or tracked tree" "${BATCH_AS_THE_RUN_WROTE_IT:-$TESTED_COMMIT}"
+  fi
+}
+
 summarize() {
   grep -E '(tests|pass|fail) [0-9]+$' "$LOG" | tail -3 || true
 }
+
+put_back_what_this_run_does_not_commit "the build and suite read only this run's commit"
 
 if ! npm run build >"$LOG" 2>&1; then
   tail -n 60 "$LOG"
@@ -267,11 +276,19 @@ while :; do
   : >"$GATE_FAILING_TESTS"
   : >"$EXCUSED_FILES"
 
-  if env -u GATE_RATCHET_BUDGETS -u GATE_UPDATE_PAGE_LASTMOD -u GATE_REGENERATE_LLM_INDEX npm run test:gated >>"$LOG" 2>&1; then
-    summarize
+  TESTED_COMMIT="$(git rev-parse HEAD)"
+  TESTED_TREE="$(git rev-parse "$TESTED_COMMIT^{tree}")"
+  if ! git diff --quiet -- || ! git diff --cached --quiet "$TESTED_COMMIT" --; then
+    quarantine "the suite candidate has tracked workspace changes" "${BATCH_AS_THE_RUN_WROTE_IT:-$TESTED_COMMIT}"
+  fi
+  echo "Testing data candidate $TESTED_COMMIT, tree $TESTED_TREE."
+  SUITE_STATUS=0
+  env -u GATE_RATCHET_BUDGETS -u GATE_UPDATE_PAGE_LASTMOD -u GATE_REGENERATE_LLM_INDEX npm run test:gated >>"$LOG" 2>&1 || SUITE_STATUS=$?
+  summarize
+  require_tested_candidate
+  if [ "$SUITE_STATUS" -eq 0 ]; then
     SUITE_WAS_RED=""
   else
-    summarize
     if grep -q 'failing tests:' "$LOG"; then
       sed -n '/failing tests:/,$p' "$LOG"
     else
@@ -287,8 +304,9 @@ while :; do
     SUITE_WAS_RED="1"
   fi
 
+  require_tested_candidate
   if push_to_main; then
-    echo "pushed_commit=$COMMIT" >>"$OUTPUT"
+    echo "pushed_commit=$TESTED_COMMIT" >>"$OUTPUT"
     ask_the_suite_to_read_main
     if [ -n "$HELD_BACK_VENDORS" ]; then
       echo "held_back_vendors=$HELD_BACK_VENDORS" >>"$OUTPUT"

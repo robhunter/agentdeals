@@ -666,7 +666,9 @@ describe("#1317 the gate, run against a repository", () => {
 
     assert.strictEqual(run.status, 0, run.stdout + run.stderr);
     assert.strictEqual(git(origin, "show", "main:untracked-by-the-gate.txt"), "before");
-    assert.strictEqual(git(work, "diff", "--name-only"), "untracked-by-the-gate.txt");
+    assert.strictEqual(git(work, "diff", "--name-only"), "");
+    assert.strictEqual(readFileSync(join(work, "untracked-by-the-gate.txt"), "utf8"), "before\n");
+    assert.match(run.stdout, /untracked-by-the-gate\.txt/);
   });
 
   it("refuses to run without a quarantine branch, a message and a path", () => {
@@ -1648,11 +1650,12 @@ describe("#2057 a replay starts from the run's own commit, whatever else the wor
     });
   }
 
-  it("pushes what the run committed, not the copy a test rewrote while the suite ran", () => {
+  it("refuses a test rewrite before replaying onto remote main", () => {
     const { work, origin } = fixtureRepo();
     writeFileSync(join(work, "data", "health.json"), '{"checked":42}\n');
     commitToMainFromElsewhere(origin, "another-job-wrote-this.txt", "landed while the suite ran\n");
 
+    const before = mainSha(origin);
     const run = runGate(
       work,
       "green-and-rewrites-a-committed-file",
@@ -1661,17 +1664,17 @@ describe("#2057 a replay starts from the run's own commit, whatever else the wor
       "data/health.json",
     );
 
-    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
-    assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), []);
-    assert.strictEqual(
-      git(origin, "show", "main:data/health.json"),
-      '{"checked":42}',
-      "main carries what a test wrote, not what the run committed",
-    );
-    assert.strictEqual(suiteRuns(run.stdout), 2);
+    assert.strictEqual(run.status, 1, `${run.stdout}${run.stderr}`);
+    assert.strictEqual(mainSha(origin), before);
+    const refs = quarantineRefs(origin, "data-quarantine/fixture");
+    assert.strictEqual(refs.length, 1);
+    assert.strictEqual(git(origin, "show", `${refs[0]}:data/health.json`), '{"checked":42}');
+    assert.strictEqual(suiteRuns(run.stdout), 1);
+    assert.match(run.stdout, /the suite changed its candidate commit or tracked tree/);
+    assert.doesNotMatch(run.stdout, /Replaying this run's commit/);
   });
 
-  it("holds a vendor back from the run's own commit, not from a committed file a test rewrote while the suite ran", () => {
+  it("refuses a test rewrite before holding back any vendor", () => {
     const { work, origin } = fixtureRepo();
     writeFileSync(join(work, "data", "health.json"), '{"checked":43}\n');
     writeFileSync(
@@ -1682,6 +1685,7 @@ describe("#2057 a replay starts from the run's own commit, whatever else the wor
       ]),
     );
 
+    const before = mainSha(origin);
     const run = runGate(
       work,
       "vendor-and-rewrites-a-committed-file",
@@ -1691,22 +1695,18 @@ describe("#2057 a replay starts from the run's own commit, whatever else the wor
       "data/health.json",
     );
 
-    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
-    assert.match(run.outputs, /held_back_vendors=Blamedvendor/);
-    assert.deepStrictEqual(changesOn(origin, "main"), [
+    assert.strictEqual(run.status, 1, `${run.stdout}${run.stderr}`);
+    assert.strictEqual(mainSha(origin), before);
+    assert.doesNotMatch(run.outputs, /held_back_vendors=/);
+    const refs = quarantineRefs(origin, "data-quarantine/fixture");
+    assert.strictEqual(refs.length, 1);
+    assert.deepStrictEqual(changesOn(origin, refs[0]!), [
       { vendor: "Steadyvendor", summary: "a reading this run stands behind" },
-      { vendor: "Blamedvendor", summary: AS_MAIN_HAS_IT },
+      { vendor: "Blamedvendor", summary: "a reading the suite refuses", reading: "wrong" },
     ]);
-    assert.strictEqual(
-      git(origin, "show", "main:data/health.json"),
-      '{"checked":43}',
-      "the hold-back committed what a test wrote, not what the run committed",
-    );
-    assert.match(
-      run.stdout,
-      /in data\/health\.json\. Only the commit reaches main and a hold-back amends every path this run commits/,
-      "the log does not name the file the hold-back put back",
-    );
+    assert.strictEqual(git(origin, "show", `${refs[0]}:data/health.json`), '{"checked":43}');
+    assert.strictEqual(suiteRuns(run.stdout), 1);
+    assert.match(run.stdout, /the suite changed its candidate commit or tracked tree/);
   });
 });
 
@@ -2385,7 +2385,7 @@ describe("#1764 every scheduled data job reports the push that clears its alarm"
     const pushed = gate.slice(gate.indexOf("if push_to_main; then"));
     for (const branch of ["held_back_vendors=", "quarantined=false"]) {
       assert.ok(
-        pushed.indexOf("pushed_commit=$COMMIT") < pushed.indexOf(branch),
+        pushed.indexOf("pushed_commit=$TESTED_COMMIT") >= 0 && pushed.indexOf("pushed_commit=$TESTED_COMMIT") < pushed.indexOf(branch),
         `a push that reached main under ${branch.replace("=", "")} names no commit, so it closes no alarm`,
       );
     }
