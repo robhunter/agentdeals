@@ -30,6 +30,7 @@ const fixtures = [
   record("Retiring Service", 20, { change_type: "product_deprecated", date_source: "discovered" }),
   record("Undated Service", 50, { date_source: "discovered" }),
   record("Correction Service", 60, { change_type: "record_corrected" }),
+  record("Cancelled Service", 80, { resolution: { state: "cancelled", date: day(-1), detail: "Cancelled Service called off its announcement.", source_url: "https://example.com/changelog" } }),
   record("Retracted Service", 70, { resolution: { state: "retracted", date: today, detail: "An incorrect record" } }),
 ];
 const pages = new Map<string, string>();
@@ -103,7 +104,7 @@ describe("the change timelines separate announced changes from their history", (
       if (laterDates.length > 0) assert.match(upcoming(html), /upcoming-overflow/);
       if (name === "fixtures") assert.deepEqual(laterDates, []);
       assert.match(upcoming(html), /class="(?:pc|chg)-upcoming-badge"/);
-      assert.doesNotMatch(upcoming(html), /Undated Service/);
+      assert.doesNotMatch(upcoming(html), /Undated Service|Cancelled Service/);
       for (const vendor of ["Sooner Future", "Later Future"]) if (name === "fixtures") {
         const summaries = [...html.matchAll(/class="(?:pc|chg)-summary">([\s\S]*?)<\/div>/g)].map(match => visibleText(match[1]));
         assert.equal(summaries.filter(summary => summary.startsWith(`${vendor} changes its plan`)).length, 1);

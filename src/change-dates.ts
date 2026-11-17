@@ -2,7 +2,7 @@ import type { ArchiveCheck, DealChange, ChangeDateSource, DateMeaning } from "./
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { NEGATIVE_CHANGE_TYPES } from "./change-direction.js";
 import { sliceById } from "./change-census.js";
-import { isACorrectionToOurOwnRecord } from "./change-resolution.js";
+import { isACorrectionToOurOwnRecord, isCancelledAnnouncement } from "./change-resolution.js";
 import { reportsOurIndex } from "./change-reporting.js";
 import { OURS_ARCHIVE_OUTCOME } from "./change-confirmation.js";
 
@@ -10,6 +10,7 @@ export interface DatedChange {
   date: string;
   date_source?: ChangeDateSource;
   recorded_date?: string | null;
+  resolution?: DealChange["resolution"];
   change_type?: string;
   reports?: string | null;
   archive_check?: Pick<ArchiveCheck, "checked" | "outcome" | "brackets"> | null;
@@ -224,6 +225,7 @@ export function changeDateLabel(c: DatedChange): string {
 }
 
 export function changeEntryDateLabelFor(c: DatedChange, render: (date: string) => string): string {
+  if (isCancelledAnnouncement(c)) return render(c.resolution!.date);
   if (isEventDated(c)) return `${EFFECTIVE_DATE_PREFIX} ${render(c.date)}`;
   const corrected = dayWeCorrectedIt(c);
   if (corrected) return correctedDateLabel(c.recorded_date ?? c.date, corrected, render);

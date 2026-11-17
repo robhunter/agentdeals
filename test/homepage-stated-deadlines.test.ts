@@ -106,7 +106,7 @@ describe("the home page includes stated deadlines in its soonest five", () => {
   it("matches the deadline tracker's first five qualifying vendor/date pairs on live data", async () => {
     const changes = JSON.parse(readFileSync(path.join(REPO, "data/deal_changes.json"), "utf8")).changes;
     const offers = JSON.parse(readFileSync(path.join(REPO, "data/index.json"), "utf8")).offers;
-    const records = changesTheVendorMade(changes).filter(c => c.date > TODAY);
+    const records = changesTheVendorMade(recordsStillInForce(changes)).filter(c => c.date > TODAY);
     const stated = statedDeadlines(
       deadlineTextsOf(offers, changesTheVendorMade(recordsStillInForce(changes)).filter(c => c.date <= TODAY)),
       records,

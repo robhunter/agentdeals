@@ -135,7 +135,7 @@ export type StabilityClass = "stable" | "watch" | "volatile" | "improving";
 
 export type RiskLevel = "stable" | "caution" | "risky";
 
-export type ChangeResolutionState = "reversed" | "retracted";
+export type ChangeResolutionState = "reversed" | "retracted" | "cancelled";
 
 export type ChangeStanding = "in_force" | ChangeResolutionState;
 

@@ -11,6 +11,7 @@ import { assertChangeTimelineReadingBudget, changeTimelineMarkdown } from "./cha
 import { assertChangeVendorIndex } from "./change-vendor-index-observer.ts";
 import { renderUpcomingTimeline, UPCOMING_TIMELINE_END } from "../dist/upcoming-timeline-budget.js";
 import { changesTheVendorMade } from "../dist/data.js";
+import { recordsStillInForce } from "../dist/change-resolution.js";
 import { trackedChanges } from "../dist/change-census.js";
 import { partitionByDateProvenance } from "../dist/change-dates.js";
 import { upcomingDateOf } from "../dist/upcoming-changes.js";
@@ -185,7 +186,7 @@ describe("upcoming timeline budget on served pages", () => {
       const html = pages.get(`${name} ${route}`)!;
       assert.ok(!html.includes(UPCOMING_TIMELINE_END));
       const all = partitionByDateProvenance(records[name]).dated.sort((a, b) => b.date.localeCompare(a.date));
-      const expected = changesTheVendorMade(route === "/pricing-changes" ? trackedChanges(all) : all)
+      const expected = changesTheVendorMade(route === "/pricing-changes" ? trackedChanges(all) : recordsStillInForce(all))
         .map(c => ({ vendor: c.vendor, date: upcomingDateOf(c, today) })).filter(c => c.date > today).sort((a, b) => a.date.localeCompare(b.date));
       const upcoming = section(html, "upcoming");
       const kept = [...upcoming.querySelectorAll('.pc-entry, .chg-entry, .chg-preview')].map(node => ({

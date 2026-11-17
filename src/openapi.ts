@@ -1755,8 +1755,8 @@ export const openapiSpec = {
           {
             type: "object",
             properties: {
-              standing: { type: "string", enum: [...CHANGE_STANDINGS], description: "Where the record stands with us. 'in_force' — the change happened and still holds. 'reversed' — it happened and has since been undone, so the record is true history. 'retracted' — the record was our error and we do not stand behind it. Read this rather than testing whether resolution is present: 'reversed' and 'retracted' are different answers to a reader asking whether to trust the record, and the presence of resolution flattens them into one." },
-              impact: { type: "string", enum: ["high", "medium", "low", "none"], description: "'none' whenever standing is 'retracted' — a record we have withdrawn describes no event, so it weighs nothing. Derived at the point of serving; the stored value is left alone." },
+              standing: { type: "string", enum: [...CHANGE_STANDINGS], description: "Where the record stands with us. 'in_force' — the change happened and still holds. 'reversed' — it happened and has since been undone, so the record is true history. 'retracted' — the record was our error and we do not stand behind it. Read this rather than testing whether resolution is present: 'reversed' and 'retracted' are different answers to a reader asking whether to trust the record, and the presence of resolution flattens them into one. 'cancelled' — the vendor announced the change and called it off before its date, so the record is true history of an announcement that never took effect." },
+              impact: { type: "string", enum: ["high", "medium", "low", "none"], description: "'none' whenever standing is 'retracted' — a record we have withdrawn describes no event, so it weighs nothing. Derived at the point of serving; the stored value is left alone. It is also 'none' whenever standing is 'cancelled', because the change never took effect." },
               date_meaning: { type: "string", enum: [EFFECTIVE_DATE_PREFIX, DISCOVERED_DATE_PREFIX, EFFECTIVE_BY_DATE_MEANING], description: "What this record's date means. \"effective\": the day the change took effect. \"discovered\": the day we recorded the change; when it took effect is unknown. \"effective_by\": the latest day the change can have taken effect. Where archived copies of the vendor's page bracket a change, it is dated by the first copy that shows the new terms. Read this field, not date_source: date_source says who wrote the record, not what its date means." },
               ends_a_free_tier: ENDS_A_FREE_TIER_PROPERTY,
               listing_effect: LISTING_EFFECT_PROPERTY,
@@ -1782,9 +1782,9 @@ export const openapiSpec = {
       ChangeResolution: {
         type: "object",
         nullable: true,
-        description: "Present when the change this record describes is no longer in force. state is 'reversed' when the vendor ended it and 'retracted' when the record was our error. date is the day from which it stopped being in force, or the day we established that, whichever we can source. resolved_by names the change record that ended it, when one exists. A record carrying this field never rates the vendor.",
+        description: "Present when the change this record describes is no longer in force. state is 'reversed' when the vendor ended it and 'retracted' when the record was our error. date is the day from which it stopped being in force, or the day we established that, whichever we can source. resolved_by names the change record that ended it, when one exists. A record carrying this field never rates the vendor. state is 'cancelled' when the vendor called off an announced change before its date; the change never took effect, and date is the day the vendor called it off.",
         properties: {
-          state: { type: "string", enum: ["reversed", "retracted"] },
+          state: { type: "string", enum: ["reversed", "retracted", "cancelled"] },
           date: { type: "string", format: "date" },
           detail: { type: "string" },
           source_url: { type: "string", format: "uri" },
