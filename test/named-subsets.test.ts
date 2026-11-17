@@ -61,6 +61,8 @@ const CLOCK_BASE_DAYS = Number(process.env.AGENTDEALS_CLOCK_BASE_DAYS ?? 0);
 
 interface Surfaces {
   day: string;
+  subjectChanges: { vendor: string; heading: string; date: string; summary: string; upcoming: boolean; historyLink: boolean }[];
+  listingRows: { vendor: string; name: string; terms: string; retirement: string | null }[];
   timelineEntries: { heading: string; vendor: string; date: string }[];
   timelineAlternatives: { heading: string; vendor: string; owner: string; date: string }[];
   upcomingDeclaresMonthMove: boolean;
@@ -369,6 +371,45 @@ function timelineEntriesOf(body: string): Pick<Surfaces, "timelineEntries" | "ti
   return { timelineEntries: entries, timelineAlternatives: alternatives };
 }
 
+function subjectChangesOf(body: string): Surfaces["subjectChanges"] {
+  const title = headingsOf(body).find(heading => heading.level === 1)?.text ?? "";
+  const subject = title.match(/^Best (.+) Alternatives with Free Tiers \(\d{4}\)$/)?.[1] ?? title.match(/^(.+) Alternatives$/)?.[1];
+  if (!subject) return [];
+  const vendor = toSlug(subject);
+  const changes: Surfaces["subjectChanges"] = [];
+  for (const section of body.matchAll(/<div class="changes-summary">/g)) {
+    const html = elementAt(body, section.index!, "div");
+    const heading = headingsOf(html)[0]?.text;
+    if (!heading) continue;
+    const upcoming = withoutItsCount(heading) === "Upcoming Changes" && stripTags(html).includes(UPCOMING_CHANGES_INTRO);
+    const historyLink = [...html.matchAll(/<p class="more-link">([\s\S]*?)<\/p>/g)]
+      .some(link => link[1]!.includes(`href="/vendor/${vendor}"`) && stripTags(link[1]!).startsWith(`See ${subject}'s full history`));
+    for (const card of html.matchAll(/<div class="change-item(?: [^"]*)?">/g)) {
+      const entry = elementAt(html, card.index!, "div");
+      const date = entry.match(/<span class="change-date">effective (\d{4}-\d{2}-\d{2})<\/span>/)?.[1];
+      const summaryAt = entry.indexOf('<div class="change-summary">');
+      if (date && summaryAt >= 0) changes.push({ vendor, heading, date, summary: stripTags(elementAt(entry, summaryAt, "div")), upcoming, historyLink });
+    }
+  }
+  return changes;
+}
+
+function listingRowsOf(body: string): Surfaces["listingRows"] {
+  const rows: Surfaces["listingRows"] = [];
+  for (const row of body.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/g)) {
+    const cells = [...row[1]!.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map(cell => cell[1]!);
+    const link = cells[0]?.match(/^\s*<a\b[^>]*href="\/vendor\/([a-z0-9-]+)"[^>]*>([^<]+)<\/a>\s*$/);
+    if (!link || cells.length !== 4) continue;
+    const name = stripTags(link[2]!);
+    const terms = stripTags(cells[2]!);
+    const retirement = terms.startsWith(`${name} retires `)
+      ? terms.split(". ")[0]!.match(/ on (\d{4}-\d{2}-\d{2})\.?$/)?.[1] ?? null
+      : null;
+    rows.push({ vendor: link[1]!, name, terms, retirement });
+  }
+  return rows;
+}
+
 function upcomingOverflowDate(body: string): string | null {
   const headings = headingsOf(body);
   const at = headings.findIndex(heading => heading.text === "Upcoming Changes");
@@ -436,6 +477,8 @@ function surfacesOf(body: string, day = new Date().toISOString().slice(0, 10)): 
   }
   return {
     day,
+    subjectChanges: subjectChangesOf(body),
+    listingRows: listingRowsOf(body),
     ...timelineEntriesOf(body),
     upcomingOverflowDate: upcomingOverflowDate(body),
     upcomingDeclaresNotInEffect: headingsWhoseSectionSays(body, section => section.includes(UPCOMING_CHANGES_INTRO)).includes("Upcoming Changes"),
@@ -603,7 +646,16 @@ function movedOnlyBetweenDatedSections(before: Surfaces, after: Surfaces, vendor
     || entersItsEffectiveMonth(before, after, vendor, heading)
     || entersDeclaredTimeline(before, after, vendor, heading)
     || tableDestinations.has(heading)
+    || entersSubjectHistory(before, after, vendor, heading)
     || entersEffectiveAlternative(before, after, vendor, heading));
+}
+
+function entersSubjectHistory(before: Surfaces, after: Surfaces, vendor: string, heading: string): boolean {
+  if (Date.parse(after.day) - Date.parse(before.day) !== A_DAY_IN_MS || withoutItsCount(heading) !== "Recent Pricing Changes") return false;
+  return after.subjectChanges.some(entry => entry.vendor === vendor && entry.heading === heading && entry.date === after.day && entry.historyLink
+    && before.subjectChanges.some(previous => previous.vendor === vendor && previous.upcoming && previous.date === entry.date && previous.summary === entry.summary)
+    && !after.subjectChanges.some(next => next.vendor === vendor && next.upcoming && next.date === entry.date && next.summary === entry.summary)
+    && !before.subjectChanges.some(previous => previous.vendor === vendor && withoutItsCount(previous.heading) === "Recent Pricing Changes" && previous.date === entry.date && previous.summary === entry.summary));
 }
 
 function entersItsEffectiveMonth(before: Surfaces, after: Surfaces, vendor: string, heading: string): boolean {
@@ -709,12 +761,47 @@ function withoutItsFigures(sentence: string): string {
 }
 
 function sentencesItChangedWithoutSayingWhy(before: Surfaces, after: Surfaces): string[] {
-  const said = [before.metaDescription ?? "", ...before.faqAnswers];
-  const says = [after.metaDescription ?? "", ...after.faqAnswers];
+  const [beforeMeta, afterMeta] = metadataAfterDatedRetirements(before, after);
+  const said = [beforeMeta, ...before.faqAnswers];
+  const says = [afterMeta, ...after.faqAnswers];
   const differing = sentencesThatDiffer(said, says);
   if (differing.length === 0) return [];
   if (differing.some(sentence => A_DATE.test(sentence) || A_RANGE_OF_DAYS.test(sentence) || A_ROLLING_WINDOW.test(sentence))) return [];
   return sentencesThatDiffer(said.map(withoutItsFigures), says.map(withoutItsFigures));
+}
+
+function metadataAfterDatedRetirements(before: Surfaces, after: Surfaces): [string, string] {
+  const said = before.metaDescription ?? "";
+  const says = after.metaDescription ?? "";
+  const unchanged: [string, string] = [said, says];
+  if (Date.parse(after.day) - Date.parse(before.day) !== A_DAY_IN_MS) return unchanged;
+  const lede = /^Compare ([\d,]+) free (.+?) tools, free tiers, and developer deals\./;
+  const first = said.match(lede);
+  const next = says.match(lede);
+  if (!first || !next || first[2] !== next[2]) return unchanged;
+  const loss = asCount(first[1]!) - asCount(next[1]!);
+  const retiring = before.listingRows.filter(row => row.retirement === after.day
+    && after.listingRows.some(next => next.vendor === row.vendor && next.terms === row.terms && next.retirement === row.retirement));
+  if (loss <= 0 || loss > new Set(retiring.map(row => row.vendor)).size) return unchanged;
+  const nonFree = /(?:^| )([\d,]+) (?:is|are) not (?:a free offer|free offers)\./;
+  const priorNonFree = asCount(said.match(nonFree)?.[1] ?? "0");
+  const nextNonFree = asCount(says.match(nonFree)?.[1] ?? "0");
+  if (priorNonFree - nextNonFree < 0 || priorNonFree - nextNonFree > loss) return unchanged;
+  let previous = said.replace(nonFree, "");
+  let current = says.replace(nonFree, "");
+  const sample = /Nothing on record contradicts our terms for (.+?)( and more)?\.$/;
+  const priorSample = previous.match(sample);
+  const nextSample = current.match(sample);
+  if (priorSample && nextSample && said.replace(sample, "").length > says.replace(sample, "").length) {
+    const names = priorSample[1]!.split(", ");
+    const nextNames = nextSample[1]!.split(", ");
+    const namedRows = nextNames.every(name => after.listingRows.some(row => row.name === name && row.retirement !== after.day));
+    if (names.every((name, index) => nextNames[index] === name) && nextNames.length >= names.length && namedRows) {
+      previous = previous.replace(sample, "");
+      current = current.replace(sample, "");
+    }
+  }
+  return [previous, current];
 }
 
 function answersByQuestion(answers: string[]): Map<string, string> {
@@ -749,6 +836,114 @@ async function readEveryPage(base: string, paths: string[], day: string): Promis
   }
   return { read, refused };
 }
+
+describe("a subject's own dated cards enter its history", () => {
+  const card = (date = "2026-12-31", summary = "Legacy keys retire.") => `<div class="change-item"><span class="change-date">effective ${date}</span><div class="change-summary">${summary}</div></div>`;
+  const section = (heading: string, content: string) => `<div class="changes-summary"><h3>${heading} (1)</h3>${content}</div>`;
+  const intro = `<p>${UPCOMING_CHANGES_INTRO}</p>`;
+  const link = '<p class="more-link"><a href="/vendor/alfa">See alfa\'s full history &rarr;</a></p>';
+  const page = (content: string, day: string, subject = "alfa") => surfacesOf(`<title>Alternatives</title><h1>${subject} Alternatives</h1>${content}`, day);
+  const before = (content = card(), note = intro, day = "2026-12-30") => page(section("Upcoming Changes", note + content), day);
+  const after = (content = card(), historyLink = link, day = "2026-12-31") => page(section("Recent Pricing Changes", content + historyLink), day);
+
+  it("explains the subject gaining its self-history link on the card's effective date", () => {
+    assert.deepEqual(movesWithNoDatedReason(before(), after()), []);
+    assert.deepEqual(vendorsNoLongerNamed(before(), after()), []);
+    const headed = (content: string, day: string) => surfacesOf(`<title>Alternatives</title><h1>Best alfa Alternatives with Free Tiers (2026)</h1>${content}`, day);
+    assert.deepEqual(movesWithNoDatedReason(headed(section("Upcoming Changes", intro + card()), "2026-12-30"), headed(section("Recent Pricing Changes", card() + link), "2026-12-31")), []);
+  });
+
+  it("does not assign another vendor's history link to the subject", () => {
+    assert.deepEqual(movesWithNoDatedReason(before(), after(card(), link.replaceAll("alfa", "bravo"))), ["bravo"]);
+  });
+
+  it("requires the subject's own upcoming declaration", () => {
+    assert.deepEqual(movesWithNoDatedReason(before(card(), ""), after()), ["alfa"]);
+  });
+
+  it("does not borrow a date from the card's summary", () => {
+    assert.deepEqual(movesWithNoDatedReason(before(card().replace("effective", "recorded")), after()), ["alfa"]);
+    assert.deepEqual(movesWithNoDatedReason(before(card("2026-12-30", "Effective 2026-12-31.")), after(card("2026-12-30", "Effective 2026-12-31."))), ["alfa"]);
+  });
+
+  it("requires the same dated card in the subject's history", () => {
+    assert.deepEqual(movesWithNoDatedReason(before(), after(card("2026-12-31", "A different retirement."))), ["alfa"]);
+    assert.deepEqual(movesWithNoDatedReason(before(), after(card("2027-01-01"))), ["alfa"]);
+  });
+
+  it("rejects a card retained in Upcoming or already present in history", () => {
+    assert.deepEqual(movesWithNoDatedReason(before(), page(section("Upcoming Changes", intro + card()) + section("Recent Pricing Changes", card() + link), "2026-12-31")), ["alfa"]);
+    assert.deepEqual(movesWithNoDatedReason(page(section("Upcoming Changes", intro + card()) + section("Recent Pricing Changes", card()), "2026-12-30"), after()), ["alfa"]);
+  });
+
+  it("does not explain another heading or a nonconsecutive clock", () => {
+    assert.deepEqual(movesWithNoDatedReason(before(), after(card(), link, "2027-01-01")), ["alfa"]);
+    assert.deepEqual(movesWithNoDatedReason(before(), page(section("Recent Pricing Changes", card() + link) + '<h2>Recommended</h2><a href="/vendor/alfa">alfa</a>', "2026-12-31")), ["alfa"]);
+  });
+});
+
+describe("dated table retirements explain their own category count", () => {
+  const row = (name: string, terms: string) => `<tr><td><a href="/vendor/${toSlug(name)}">${name}</a></td><td>Free</td><td>${terms}</td><td>2026-11-01</td></tr>`;
+  const retirement = (date = "2026-12-31", name = "bravo") => row(name, `${name} retires its service on ${date}. Existing users keep access until then.`);
+  const rows = (date = "2026-12-31") => row("alfa", "Free.") + retirement(date) + row("charlie", "Free.");
+  const page = (count: number, note: string, sample: string, table: string, day: string, extra = "") => surfacesOf(`<title>Widgets</title><meta name="description" content="Compare ${count} free widget tools, free tiers, and developer deals.${note} Nothing on record contradicts our terms for ${sample} and more.${extra}"><h1>Widgets</h1><table>${table}</table>`, day);
+  const before = (table = rows(), count = 3, day = "2026-12-30") => page(count, " 1 is not a free offer.", "alfa", table, day);
+  const after = (table = rows(), count = 2, day = "2026-12-31", sample = "alfa, charlie", extra = "") => page(count, "", sample, table, day, extra);
+  const unexplained = (first: Surfaces, next: Surfaces) => sentencesItChangedWithoutSayingWhy(first, next);
+
+  it("explains a count loss and longer sample from the row's own dated retirement", () => {
+    assert.deepEqual(unexplained(before(), after()), []);
+    assert.deepEqual(before().listingRows.find(row => row.vendor === "bravo")?.retirement, "2026-12-31");
+  });
+
+  it("requires a retiring vendor on both clocks with the same stated terms", () => {
+    assert.ok(unexplained(before(), after(rows().replace(retirement(), ""))).length > 0);
+    assert.ok(unexplained(before(), after(rows().replace("Existing users keep access until then.", "Different terms."))).length > 0);
+  });
+
+  it("does not borrow another vendor's retirement date", () => {
+    const mismatched = rows().replace("bravo retires", "delta retires");
+    assert.ok(unexplained(before(mismatched), after(mismatched)).length > 0);
+  });
+
+  it("requires the retirement date to be the new consecutive day", () => {
+    for (const date of ["2026-12-30", "2027-01-01"]) assert.ok(unexplained(before(rows(date)), after(rows(date))).length > 0);
+    assert.ok(unexplained(before(rows(), 3, "2026-12-29"), after()).length > 0);
+  });
+
+  it("does not accept a loss larger than the dated vendor population", () => {
+    assert.ok(unexplained(before(), after(rows(), 1)).length > 0);
+    const duplicate = rows() + retirement();
+    assert.ok(unexplained(before(duplicate), after(duplicate, 1)).length > 0);
+  });
+
+  it("requires a positive count loss before accepting any sample change", () => {
+    assert.ok(unexplained(before(), after(rows(), 3)).length > 0);
+    assert.ok(unexplained(before(), after(rows(), 4)).length > 0);
+  });
+
+  it("keeps unrelated lede and FAQ rewrites visible", () => {
+    assert.ok(unexplained(before(), after(rows(), 2, "2026-12-31", "alfa, charlie", " Recommended for everyone.")).some(sentence => sentence.includes("Recommended")));
+    const next = after();
+    next.faqAnswers.push("Which one? :: Use delta.");
+    assert.ok(unexplained(before(), next).some(sentence => sentence.includes("delta")));
+  });
+
+  it("requires sample extensions to retain their prefix and name current table vendors", () => {
+    for (const sample of ["charlie, alfa", "alfa, delta", "alfa, bravo"]) assert.ok(unexplained(before(), after(rows(), 2, "2026-12-31", sample)).length > 0);
+  });
+
+  it("does not drop more non-free offers than the count loses", () => {
+    const first = before();
+    first.metaDescription = first.metaDescription!.replace("1 is not a free offer", "2 are not free offers");
+    assert.ok(unexplained(first, after()).length > 0);
+  });
+
+  it("does not let a retirement explain a sample rewrite without a shorter lede", () => {
+    const first = page(3, "", "alfa", rows(), "2026-12-30");
+    assert.ok(unexplained(first, after()).length > 0);
+  });
+});
 
 describe("a quoted deadline can leave without a change-log entry", () => {
   const source = (kind: string) => `<a href="https://example.com/terms" class="${kind}">Source</a>`;
