@@ -20459,7 +20459,7 @@
       "vendor": "Azure",
       "change_type": "product_deprecated",
       "date": "2027-03-31",
-      "summary": "Microsoft retires two tiers of Azure Cache for Redis on March 31, 2027: Enterprise and Enterprise Flash. From April 1, 2027 every remaining Enterprise cache and every remaining Enterprise Flash cache is disabled. Creating new Enterprise or Enterprise Flash caches has been blocked since April 1, 2026. Reservations for both tiers are supported until March 30, 2027. Microsoft's replacement is Azure Managed Redis. Applications must switch to the new cache's hostname and access credentials. Azure Managed Redis is clustered by default, so applications should check that their client library works with a clustered cache. New customers cannot create Basic, Standard or Premium caches either. Since April 1, 2026, in Azure's public cloud, only a tenant that had any Azure Cache for Redis instance before that date can create them. Those tiers retire later, in September 2028.",
+      "summary": "Microsoft retires two tiers of Azure Cache for Redis on March 31, 2027: Enterprise and Enterprise Flash. The Basic, Standard and Premium tiers retire later, on September 30, 2028. From April 1, 2027 every remaining Enterprise cache and every remaining Enterprise Flash cache is disabled. Creating new Enterprise or Enterprise Flash caches has been blocked since April 1, 2026. Reservations for both tiers are supported until March 30, 2027. Microsoft's replacement is Azure Managed Redis. Applications must switch to the new cache's hostname and access credentials. Azure Managed Redis is clustered by default, so applications should check that their client library works with a clustered cache. New customers cannot create Basic, Standard or Premium caches either. Since April 1, 2026, in Azure's public cloud, only a tenant that had any Azure Cache for Redis instance before that date can create them.",
       "what_ends": "Azure Cache for Redis Enterprise and Enterprise Flash tiers",
       "previous_state": "Azure Cache for Redis Enterprise and Enterprise Flash caches run normally until the retirement date.",
       "current_state": "Microsoft Learn's \"Azure Cache for Redis retirement FAQ\" (last updated 2026-08-18, read 2026-11-15): \"All instances of Azure Cache for Redis Enterprise and Enterprise Flash tiers will be retired on March 31, 2027.\" \"All existing Redis Enterprise instances remain available until March 31, 2027.\" \"All Azure Cache for Redis Enterprise instances are disabled starting April 1, 2027.\" \"Your existing reservations will be supported until March 30, 2027.\" \"Applications must update the Redis hostname and access credentials from the existing Azure Cache for Redis Enterprise instance to the corresponding Azure Managed Redis instance.\" Microsoft Learn's \"What's New in Azure Cache for Redis\" (read 2026-11-15), October 2025, April 1, 2026: \"Creating new caches in Enterprise or Enterprise Flash tiers is blocked.\" July 2026: \"Enterprise and Enterprise Flash timelines are unchanged.\" \"Your tenant qualifies as an existing customer if any subscription in the tenant had an Azure Cache for Redis instance before April 1, 2026.\" For Basic, Standard and Premium in Azure public cloud, April 1, 2026: \"Creating new caches is blocked for new customers. Existing customers can continue creating caches until retirement.\" (re-read 2026-11-16)",
@@ -20630,6 +20630,62 @@
       "recorded_date": "2026-11-16",
       "date_source": "vendor_page",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "E2B",
+      "change_type": "limits_reduced",
+      "date": "2026-11-11",
+      "date_source": "hand_written",
+      "summary": "By November 11, 2026, E2B had cut its free Hobby plan from 20 to 10 concurrent sandboxes. The Hobby plan still includes a $100 one-time usage credit, sessions up to 1 hour, and no credit card required. The Pro plan still includes 100 concurrent sandboxes.",
+      "tier": "Free Credits",
+      "tier_direction": "narrowed",
+      "previous_state": "\"20 concurrent sandboxes\" on the Hobby plan, and \"100 concurrent sandboxes, expandable to 1,100\" on Pro (e2b.dev/pricing, Internet Archive capture of 2026-11-06).",
+      "current_state": "\"10 concurrent sandboxes\" on the Hobby plan: \"The maximum number of sandboxes that can run at the same time.\" The concurrency table reads \"Hobby · 10 concurrent Included\" and \"Pro · 100 concurrent Included\" (e2b.dev/pricing, Internet Archive capture of 2026-11-11 and read 2026-11-17).",
+      "impact": "medium",
+      "source_url": "https://e2b.dev/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-17",
+      "archive_check": {
+        "checked": "2026-11-16",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-11-06",
+            "first_new": "2026-11-11",
+            "last_old_capture": "https://web.archive.org/web/20261106011924/https://e2b.dev/pricing",
+            "first_new_capture": "https://web.archive.org/web/20261111064309/https://e2b.dev/pricing"
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "Crowdin",
+      "change_type": "limits_reduced",
+      "date": "2026-11-16",
+      "date_source": "discovered",
+      "summary": "By November 16, 2026, Crowdin had cut its Free plan from 60,000 to 40,000 hosted words. The Free plan now allows unlimited integrations instead of 1, and translators can join public projects only. Pro went from $50 to $75 a month billed annually, or $89 billed monthly, with 80,000 hosted words and unlimited private projects instead of 2. The $150 Team and $450 Team+ plans were replaced by Team at $450 a month, billed annually only.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "\"Free Plan\" was 0.00 USD, \"Pro\" 50.00 USD, \"Team\" 150.00 USD, and \"Team+\" 450.00 USD (crowdin.com/pricing, Internet Archive capture of 2026-11-01). The Free plan had 60,000 hosted words and 1 integration, and Pro had 2 private projects (crowdin.com/pricing, read 2026-11-07).",
+      "current_state": "\"Free\" was 0.00 USD, \"Pro\" 75.00 USD, and \"Team\" 450.00 USD (crowdin.com/pricing, Internet Archive capture of 2026-11-16 and read 2026-11-17). The Free plan had 40K hosted words, unlimited integrations, and translators on public projects only (crowdin.com/pricing, read 2026-11-16). Pro was $75 a month billed annually or $89 billed monthly with 80K hosted words and unlimited private projects (crowdin.com/pricing, read 2026-11-16).",
+      "impact": "medium",
+      "source_url": "https://crowdin.com/pricing",
+      "category": "Localization",
+      "alternatives": [],
+      "recorded_date": "2026-11-17",
+      "archive_check": {
+        "checked": "2026-11-16",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-11-01",
+            "first_new": "2026-11-16",
+            "last_old_capture": "https://web.archive.org/web/20261101165307/https://crowdin.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20261116234440/https://crowdin.com/pricing"
+          }
+        ]
+      }
     }
   ]
 }
