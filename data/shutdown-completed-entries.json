@@ -1,0 +1,192 @@
+[
+  {
+    "card_title": "Alibaba Cloud Qwen Code",
+    "card_date": "2026-04-15",
+    "entry": "Alibaba Cloud Qwen Code's free tier (Qwen OAuth) (April 15, completed; Qwen Code points users to Alibaba Cloud Coding Plan, OpenRouter, Fireworks AI or another provider)"
+  },
+  {
+    "card_title": "AWS App Runner (New Customers)",
+    "card_date": "2026-04-30",
+    "entry": "AWS App Runner for new customers (April 30, completed; existing customers keep using it, including creating new services; AWS recommends ECS Express Mode)"
+  },
+  {
+    "card_title": "HubSpot Contact Lists API v1",
+    "card_date": "2026-04-30",
+    "entry": "HubSpot Contact Lists API v1 (April 30, completed; its endpoints return HTTP 404, replaced by Lists API v3; six Contacts API v1 read endpoints still work but no longer return list memberships)"
+  },
+  {
+    "card_title": "AWS Lambda's Node.js 20 runtime (nodejs20.x)",
+    "card_date": "2026-04-30",
+    "entry": "Deprecation of AWS Lambda's Node.js 20 runtime (nodejs20.x) (April 30, completed; existing functions can still be invoked indefinitely; Lambda blocks creating nodejs20.x functions from July 29, 2027 and updating them from August 31, 2027)"
+  },
+  {
+    "card_title": "OpenAI DALL·E Model Snapshots",
+    "card_date": "2026-05-12",
+    "entry": "OpenAI's dall-e-2 and dall-e-3 in the API, including the image variations endpoint, which supported only dall-e-2 (May 12, completed; this includes POST /v1/images/generations calls that leave out the model parameter, which default to dall-e-2; OpenAI's substitutes are gpt-image-2, gpt-image-1, which shut down on October 23, or gpt-image-1-mini, which shuts down on December 1, and its DALL·E model pages now recommend GPT-Image-2.5 Sunburst)"
+  },
+  {
+    "card_title": "OpenAI Realtime API Beta",
+    "card_date": "2026-05-12",
+    "entry": "OpenAI Realtime API Beta, requests with the OpenAI-Beta: realtime=v1 header (May 12, completed; the GA Realtime API keeps running)"
+  },
+  {
+    "card_title": "xAI",
+    "card_date": "2026-05-15",
+    "entry": "xAI's grok-4-1-fast-reasoning, grok-4-1-fast-non-reasoning, grok-4-fast-reasoning, grok-4-fast-non-reasoning, grok-4-0709, grok-3, grok-code-fast-1 and grok-imagine-image-pro (May 15, completed; the names still resolve and are served by grok-4.3, grok-build-0.1 and grok-imagine-image-2.0)"
+  },
+  {
+    "card_title": "Mistral AI",
+    "card_date": "2026-05-31",
+    "entry": "Mistral AI's mistral-large-2411, pixtral-large-2411, devstral-medium-2507, devstral-small-2507, voxtral-mini-2507 and mistral-ocr-2505 (May 31, completed), mistral-moderation-2411 (June 30), mistral-small-2506, magistral-small-2509, open-mistral-nemo-2407, devstral-2512 and magistral-medium-2509 (July 31), mistral-medium-2505 and mistral-medium-2508 (August 31) and mistral-ocr-4-0 (September 30) (a request to a retired model fails with a 404; Mistral Medium 3.5 replaces mistral-large-2411, pixtral-large-2411, devstral-medium-2507, devstral-2512, magistral-medium-2509, mistral-medium-2505 and mistral-medium-2508; Mistral Small 4 replaces devstral-small-2507, mistral-small-2506 and magistral-small-2509; Voxtral Mini Transcribe 2 replaces voxtral-mini-2507; OCR 4.1 replaces mistral-ocr-2505 and mistral-ocr-4-0; Mistral Moderation 2 replaces mistral-moderation-2411; Ministral 3 8B replaces open-mistral-nemo-2407)"
+  },
+  {
+    "card_title": "Google Maps Platform Client IDs",
+    "card_date": "2026-05-31",
+    "entry": "Google Maps Platform Client IDs (May 31, completed; switch to API keys; requests from a paused client ID usually return within a few hours, Owners or Editors can unpause it in the Cloud Console, and Support can grant a temporary exemption)"
+  },
+  {
+    "card_title": "Gemini 2.0 Flash",
+    "card_date": "2026-06-01",
+    "entry": "Gemini 2.0 Flash (gemini-2.0-flash) and 2.0 Flash-Lite (gemini-2.0-flash-lite) (June 1, completed; Google recommends gemini-3.6-flash for 2.0 Flash and gemini-3.1-flash-lite for 2.0 Flash-Lite)"
+  },
+  {
+    "card_title": "Firebase Studio (New Workspaces)",
+    "card_date": "2026-06-22",
+    "entry": "Firebase Studio new workspaces and sign-ups (June 22, completed; existing workspaces keep working until March 22, 2027; Google recommends moving workspaces to Google AI Studio or Google Antigravity)"
+  },
+  {
+    "card_title": "Tenor API",
+    "card_date": "2026-06-30",
+    "entry": "Tenor API (June 30, completed; only the API ended: Tenor.com, the GIF Keyboard apps and Gboard still serve Tenor GIFs; Klipy or GIPHY offer Tenor-compatible v2 endpoints)"
+  },
+  {
+    "card_title": "AWS Fargate Platform Version 1.3.0",
+    "card_date": "2026-06-30",
+    "entry": "AWS Fargate Platform Version 1.3.0 (June 30, completed; its tasks fail to launch; Platform Version 1.4.0 replaces it)"
+  },
+  {
+    "card_title": "DeepSeek API",
+    "card_date": "2026-07-24",
+    "entry": "DeepSeek API model names deepseek-chat and deepseek-reasoner (July 24, completed; use deepseek-flash or deepseek-v4-pro)"
+  },
+  {
+    "card_title": "GitHub Models",
+    "card_date": "2026-07-30",
+    "entry": "GitHub Models (July 30, completed)"
+  },
+  {
+    "card_title": "Phase Two",
+    "card_date": "2026-07-30",
+    "entry": "Phase Two's free shared realms (July 30, completed)"
+  },
+  {
+    "card_title": "Hypertune",
+    "card_date": "2026-08-10",
+    "entry": "Hypertune (August 10, completed)"
+  },
+  {
+    "card_title": "OpenAI Assistants API",
+    "card_date": "2026-08-26",
+    "entry": "OpenAI Assistants API: Assistants, Threads, Runs and Messages endpoints (August 26, completed; replaced by the Responses API and the Conversations API)"
+  },
+  {
+    "card_title": "OpenAI Videos API (Sora)",
+    "card_date": "2026-09-24",
+    "entry": "OpenAI Videos API (Sora): the /v1/videos endpoints and the sora-2 and sora-2-pro models, including their dated snapshots (September 24, completed; OpenAI says there is no one-to-one replacement; third-party video generation APIs include Runway, Pika and Luma)"
+  },
+  {
+    "card_title": "OpenAI legacy GPT models (September 2026)",
+    "card_date": "2026-09-28",
+    "entry": "OpenAI's gpt-3.5-turbo-instruct, babbage-002, davinci-002 and gpt-3.5-turbo-1106 (September 28, completed; replaced by gpt-5.6-terra)"
+  },
+  {
+    "card_title": "AWS App Mesh",
+    "card_date": "2026-09-30",
+    "entry": "AWS App Mesh (September 30, completed; migrate to Amazon ECS Service Connect, Istio, Linkerd or EKS native service mesh)"
+  },
+  {
+    "card_title": "xAI",
+    "card_date": "2026-10-02",
+    "entry": "xAI's grok-voice-transcribe-1.0 (October 2, completed; served by grok-voice-transcribe-2.0 at the same price)"
+  },
+  {
+    "card_title": "AWS Proton",
+    "card_date": "2026-10-07",
+    "entry": "AWS Proton (October 7, completed; the Proton console and Proton resources are no longer accessible, while deployed CloudFormation stacks and the resources they manage keep running; migrate to CloudFormation Git Sync, Harmonix on AWS, CodePipeline with CodeBuild, or GitHub Actions)"
+  },
+  {
+    "card_title": "GPT-5.5",
+    "card_date": "2026-10-14",
+    "entry": "GPT-5.5 in ChatGPT, ChatGPT Work and Codex (October 14, completed; for Codex with ChatGPT sign-in, OpenAI names GPT-6.1 Sol as the replacement on Plus, Pro, Business, Enterprise and Edu plans and GPT-6 Luna on Free and Go plans; the OpenAI API is not affected)"
+  },
+  {
+    "card_title": "free endpoint access to nvidia/nemotron-3-super-120b-a12b",
+    "card_date": "2026-10-19",
+    "entry": "NVIDIA's free endpoint for nvidia/nemotron-3-super-120b-a12b (October 19, completed)"
+  },
+  {
+    "card_title": "Gemini 2.5 Pro, 2.5 Flash and 2.5 Flash-Lite on Gemini Enterprise Agent Platform (formerly Vertex AI)",
+    "card_date": "2026-10-20",
+    "entry": "gemini-2.5-pro, gemini-2.5-flash and gemini-2.5-flash-lite on Gemini Enterprise Agent Platform (formerly Vertex AI) (October 20, completed; Google names gemini-3.8-flash; on the Gemini API, gemini-2.5-pro and gemini-2.5-flash run until December 1 and gemini-2.5-flash-lite has no shutdown date)"
+  },
+  {
+    "card_title": "Gemini Omni Flash Preview and the Veo 3.1 preview models",
+    "card_date": "2026-10-22",
+    "entry": "Gemini Omni Flash Preview (gemini-omni-flash-preview) and the Veo 3.1 preview models (veo-3.1-generate-preview, veo-3.1-fast-generate-preview and veo-3.1-lite-generate-preview) on the Gemini API (October 22, completed; Google names gemini-omni-1.1-flash as the replacement for all four)"
+  },
+  {
+    "card_title": "serverless access to meta-llama/Llama-3.3-70B-Instruct-Turbo and deepseek-ai/DeepSeek-V4-Flash-0731",
+    "card_date": "2026-10-22",
+    "entry": "Together AI serverless access to meta-llama/Llama-3.3-70B-Instruct-Turbo and deepseek-ai/DeepSeek-V4-Flash-0731 (October 22, completed; Together recommends meta-models/Muse-Glimmer-30B or a dedicated endpoint in place of Llama 3.3 70B, and deepseek-ai/DeepSeek-V4.1-Flash in place of DeepSeek-V4-Flash-0731)"
+  },
+  {
+    "card_title": "the deep-research-pro-preview-12-2025 agent",
+    "card_date": "2026-10-23",
+    "entry": "the Gemini API's deep-research-pro-preview-12-2025 agent (October 23, completed; replaced by deep-research-preview-04-2026)"
+  },
+  {
+    "card_title": "OpenAI legacy model snapshots",
+    "card_date": "2026-10-23",
+    "entry": "OpenAI's gpt-3.5-turbo (gpt-3.5-turbo-0125, gpt-3.5-turbo-completions), gpt-4 (gpt-4-0613, gpt-4-0613-completions, gpt-4-completions), gpt-4-turbo (gpt-4-turbo-2024-04-09, gpt-4-turbo-completions), gpt-4.1-nano (gpt-4.1-nano-2025-04-14), gpt-4o-2024-05-13, o1 (o1-2024-12-17), o1-pro (o1-pro-2025-03-19), o3-mini (o3-mini-2025-01-31), o4-mini (o4-mini-2025-04-16) and gpt-image-1 in the API, with fine-tuned versions of gpt-3.5-turbo, gpt-4, gpt-4.1-nano, o4-mini, babbage-002 and davinci-002 (October 23, completed; OpenAI's substitutes: gpt-5.6-terra for gpt-3.5-turbo and o4-mini; gpt-5.6-sol for gpt-4, gpt-4-turbo, gpt-4o-2024-05-13, o1 and o3-mini; gpt-5.6-sol with reasoning.mode: pro for o1-pro; gpt-5.6-luna for gpt-4.1-nano; gpt-image-2.5-sunburst or gpt-image-2.5-flare for gpt-image-1; for fine-tunes, gpt-5.6-terra replaces gpt-3.5-turbo, o4-mini, babbage-002 and davinci-002, gpt-5.6-sol replaces gpt-4 and gpt-5.6-luna replaces gpt-4.1-nano; the gpt-5.6 models do not support fine-tuning or the legacy /v1/completions endpoint)"
+  },
+  {
+    "card_title": "free endpoint access to z-ai/glm-5.3",
+    "card_date": "2026-10-27",
+    "entry": "NVIDIA's free endpoint for z-ai/glm-5.3 (October 27, completed; z-ai/glm-5.3-flash is still free)"
+  },
+  {
+    "card_title": "apiary.io",
+    "card_date": "2026-10-31",
+    "entry": "apiary.io (October 31, completed; Oracle stopped the service and deleted remaining instances, and told customers using the API Blueprint format to convert to OpenAPI and move the files to tools such as Apimatic, Postman, Swagger Editor, Stoplight, Redocly or Bump.sh)"
+  },
+  {
+    "card_title": "Mistral AI",
+    "card_date": "2026-10-31",
+    "entry": "Mistral AI's zai-glm-5-2 (October 31, completed; replaced by GLM 5.3)"
+  },
+  {
+    "card_title": "Ona",
+    "card_date": "2026-10-31",
+    "entry": "Ona Cloud (October 31, completed; Ona environments did not move to Codex automatically; Ona said it would refund October payments and unused purchased credits)"
+  },
+  {
+    "card_title": "xAI",
+    "card_date": "2026-11-02",
+    "entry": "xAI's grok-imagine-image-quality (November 2, completed; served by grok-imagine-image-2.0 at low quality)"
+  },
+  {
+    "card_title": "Val Town",
+    "card_date": "2026-11-10",
+    "entry": "Val Town's new signups and plan upgrades (November 10, completed; existing accounts work as before until December 10, when Val Town becomes read-only except SQLite and blob storage, and all its services end on January 10, 2027)"
+  },
+  {
+    "card_title": "Runpod's REST API v1",
+    "card_date": "2026-11-15",
+    "entry": "Runpod's REST API v1 (November 15, completed; the base URL moves to https://api.runpod.io/v2)"
+  },
+  {
+    "card_title": "NVIDIA NIM",
+    "card_date": "2026-11-16",
+    "entry": "NVIDIA's free endpoints for deepseek-ai/deepseek-v4.1-flash, meta/llama-3.2-90b-vision-instruct and meta/llama-guard-4-12b (November 16, completed; NVIDIA removed 55 other free endpoints between May 12 and November 12, 2026, each named with its date on agentdeals.dev/vendor/nvidia-nim; z-ai/glm-5.3-flash is still a free endpoint)"
+  }
+]

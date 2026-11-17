@@ -27269,26 +27269,24 @@ function buildShutdownTrackerPage(): string {
   const recentCompleted = completed.filter(entry => shutdownDateEnd(entry.deadline) >= recentCompletedSince);
   const olderCompleted = completed.filter(entry => shutdownDateEnd(entry.deadline) < recentCompletedSince);
   const completedAnchor = (entry: ShutdownEntry) => `shutdown-history-${createHash("sha256").update(JSON.stringify([entry.vendorSlug, entry.service, entry.deadline, entry.dateSource, entry.what])).digest("hex").slice(0, 16)}`;
-  const sentenceReader = new Intl.Segmenter("en", { granularity: "sentence" });
-  const firstSentence = (text: string) => [...sentenceReader.segment(text)][0]?.segment.trim() ?? "";
-  const completedLines = olderCompleted.length === 0 ? "" : `<ul class="shutdown-completed-index">
-    ${olderCompleted.map(entry => {
-      const summary = entry.groupedDeadlines
-        ? entry.groupedDeadlines.map(deadline => `${escHtmlServer(deadline.sentence)}${deadline.sourceUrl ? " " + listingSourceLinkHtml(deadline.sourceUrl, escHtmlServer) : ""}`).join(" ")
-        : [entry.completedSummary, firstSentence(entry.what)].filter((text): text is string => Boolean(text)).map(escHtmlServer).join(" ");
-      const completedConditions = (entry.groupedDeadlines ?? (entry.statedDeadline ? [{ ...entry.statedDeadline, sentence: firstSentence(entry.what) }] : []))
-        .map(conditionsAfterAWholeDescriptionHtml).join("");
-      const date = isShutdownMonth(entry.deadline) ? shutdownMonthDateLabel(entry.deadline) : new Date(entry.deadline + "T00:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
-      return `<li class="shutdown-completed-entry"><a href="#${completedAnchor(entry)}">${escHtmlServer(entry.service)}</a> — completed <time datetime="${escHtmlServer(entry.deadline)}">${escHtmlServer(date)}</time>. <span class="completed-summary">${summary}${!entry.groupedDeadlines && entry.dateSource ? " " + listingSourceLinkHtml(entry.dateSource, escHtmlServer) : ""}</span>${completedConditions}${entry.migrationPath ? ` <span class="completed-migration">${escHtmlServer(firstSentence(entry.migrationPath))}</span>` : ""}</li>`;
-    }).join("\n    ")}
-  </ul>`;
-
+  const completedEntries: { card_title: string; card_date: string; entry: string }[] = JSON.parse(readFileSync(join(__dirname, "..", "data", "shutdown-completed-entries.json"), "utf8"));
+  const completedCopy = new Map(completedEntries.map(entry => [JSON.stringify([entry.card_title, entry.card_date]), entry.entry]));
+  const completedSince = new Date(Date.parse(todayDay) - 183 * 86_400_000).toISOString().slice(0, 10);
   const activeCount = imminent.length + upcoming.length + later.length;
-  const shutdownMonths = new Map<string, { service: string; deadline: string; label: string; note: string }[]>();
-  const monthEntries = [...imminent, ...upcoming, ...later].flatMap(entry => shutdownDates(entry)
+  const shutdownMonths = new Map<string, { deadline: string; text: string; card?: string }[]>();
+  const monthEntries: { deadline: string; text: string; card?: string }[] = [...imminent, ...upcoming, ...later].flatMap(entry => shutdownDates(entry)
     .filter(stage => shutdownDateEnd(stage.date) >= todayDay)
-    .map((stage, index) => ({ service: entry.service, deadline: stage.date, label: stage.label, note: index === 0 ? shutdownIndexNote(entry, todayDay) : "" })))
-    .sort((a, b) => a.deadline.localeCompare(b.deadline));
+    .map((stage, index) => {
+      const date = isShutdownMonth(stage.date) ? shutdownMonthLabel(stage.date) : new Date(stage.date).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
+      const note = index === 0 ? shutdownIndexNote(entry, todayDay) : "";
+      return { deadline: stage.date, text: `${entry.service}${stage.label ? `: ${stage.label}` : ""} (${date}${note ? `; ${note}` : ""})` };
+    }));
+  for (const entry of completed.filter(entry => shutdownDateEnd(entry.deadline) >= completedSince)) {
+    const date = isShutdownMonth(entry.deadline) ? shutdownMonthLabel(entry.deadline) : new Date(entry.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
+    const note = shutdownIndexNote(entry, todayDay);
+    monthEntries.push({ deadline: entry.deadline, text: completedCopy.get(JSON.stringify([entry.service, entry.deadline])) ?? `${entry.service} (${date}, completed${note ? `; ${note}` : ""})`, card: completedAnchor(entry) });
+  }
+  monthEntries.sort((a, b) => a.deadline.localeCompare(b.deadline));
   for (const entry of monthEntries) {
     const month = entry.deadline.slice(0, 7);
     const entries = shutdownMonths.get(month) ?? [];
@@ -27300,10 +27298,7 @@ function buildShutdownTrackerPage(): string {
     <ul class="shutdown-months">
       ${[...shutdownMonths].map(([month, entries]) => {
         const label = new Date(`${month}-01`).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
-        return `<li data-month="${month}"><strong>${escHtmlServer(label)}:</strong> ${entries.map(entry => {
-          const day = isShutdownMonth(entry.deadline) ? shutdownMonthLabel(entry.deadline) : new Date(entry.deadline).toLocaleDateString("en-US", { day: "numeric", timeZone: "UTC" });
-          return `<span class="shutdown-month-entry">${escHtmlServer(entry.service)}${entry.label ? `: ${escHtmlServer(entry.label)}` : ""} (${escHtmlServer(day)}${entry.note ? `; ${escHtmlServer(entry.note)}` : ""})</span>`;
-        }).join("; ")}.</li>`;
+        return `<li data-month="${month}"><strong>${escHtmlServer(label)}:</strong> ${entries.map(entry => `<span class="shutdown-month-entry"${entry.card ? ` data-card="${entry.card}"` : ""}>${escHtmlServer(entry.text)}</span>`).join("; ")}.</li>`;
       }).join("\n      ")}
     </ul>
   </section>`;
@@ -27548,14 +27543,13 @@ ${buildGlobalNav("guides")}
     }).join("\n    ")}
   </div>
 
-  ${buildSection("\u2705 Recently Completed", "These shutdowns have already happened. Listed for reference.", recentCompleted, "completed")}
-  ${completedLines}
-
   ${byMonth}
 
   ${buildSection("\u26a0\ufe0f Imminent", "These shutdowns are happening within the next 30 days. Take action now.", imminent, "imminent")}
 
   ${buildSection("\u23f3 Upcoming", "These shutdowns are 30\u201390 days away. Plan your migration now.", upcoming, "upcoming")}
+
+  ${buildSection("\u2705 Recently Completed", "These shutdowns have already happened. Listed for reference.", recentCompleted, "completed")}
 
   ${buildSection("Later", "These shutdowns are more than 90 days away.", later, "later")}
 
