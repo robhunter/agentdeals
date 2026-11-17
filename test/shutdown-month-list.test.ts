@@ -119,7 +119,7 @@ describe("shutdowns by calendar month", () => {
       assert.ok(line.entries.length > 0, line.month);
       const label = new Date(`${line.month}-01`).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
       assert.ok(line.text.startsWith(`${label}:`), line.text);
-      const days = line.entries.map(entry => Number(entry.match(/\((\d+)\)$/)?.[1]));
+      const days = line.entries.map(entry => Number(entry.match(/\((\d+)(?:;[^()]*)?\)$/)?.[1]));
       assert.ok(days.every(Number.isFinite), line.text);
       assert.deepEqual(days, [...days].sort((a, b) => a - b), line.text);
     }
@@ -135,7 +135,7 @@ describe("shutdowns by calendar month", () => {
       const date = piece.match(/<span class="deadline-icon">[^<]*<\/span>\s*<span>([^<]+)<\/span>/)?.[1] ?? "";
       cards.push(`${title} (${String(new Date(date).getUTCDate())})`);
     }
-    const entries = monthLines(page).flatMap(line => line.entries);
+    const entries = monthLines(page).flatMap(line => line.entries).map(entry => entry.replace(/(\(\d+);[^()]*\)$/, "$1)"));
     assert.ok(cards.length > fixtures.length);
     assert.deepEqual([...entries].sort(), [...cards].sort());
     assert.equal(entries.length, Number(page.match(/(\d+) active shutdowns/)?.[1]));

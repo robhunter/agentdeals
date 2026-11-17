@@ -1,3 +1,4 @@
+import { shutdownIndexNote } from "./shutdown-index-note.js";
 import { renderUpcomingTimeline, UPCOMING_TIMELINE_END } from "./upcoming-timeline-budget.js";
 import { measuredValue, quantifiedAttributes } from "./quantity-reading.js";
 import { announcementsInWeek, weeklyAnnouncementNote, weeklyAnnouncementHeading, announcementDateLabel, WEEKLY_ANNOUNCEMENTS_INTRO } from "./weekly-announcements.js";
@@ -27262,10 +27263,10 @@ function buildShutdownTrackerPage(): string {
   completed.sort((a, b) => new Date(shutdownDateEnd(b.deadline)).getTime() - new Date(shutdownDateEnd(a.deadline)).getTime());
 
   const activeCount = imminent.length + upcoming.length + later.length;
-  const shutdownMonths = new Map<string, { service: string; deadline: string; label: string }[]>();
+  const shutdownMonths = new Map<string, { service: string; deadline: string; label: string; note: string }[]>();
   const monthEntries = [...imminent, ...upcoming, ...later].flatMap(entry => shutdownDates(entry)
     .filter(stage => shutdownDateEnd(stage.date) >= todayDay)
-    .map(stage => ({ service: entry.service, deadline: stage.date, label: stage.label })))
+    .map((stage, index) => ({ service: entry.service, deadline: stage.date, label: stage.label, note: index === 0 ? shutdownIndexNote(entry, todayDay) : "" })))
     .sort((a, b) => a.deadline.localeCompare(b.deadline));
   for (const entry of monthEntries) {
     const month = entry.deadline.slice(0, 7);
@@ -27280,7 +27281,7 @@ function buildShutdownTrackerPage(): string {
         const label = new Date(`${month}-01`).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
         return `<li data-month="${month}"><strong>${escHtmlServer(label)}:</strong> ${entries.map(entry => {
           const day = isShutdownMonth(entry.deadline) ? shutdownMonthLabel(entry.deadline) : new Date(entry.deadline).toLocaleDateString("en-US", { day: "numeric", timeZone: "UTC" });
-          return `<span class="shutdown-month-entry">${escHtmlServer(entry.service)}${entry.label ? `: ${escHtmlServer(entry.label)}` : ""} (${escHtmlServer(day)})</span>`;
+          return `<span class="shutdown-month-entry">${escHtmlServer(entry.service)}${entry.label ? `: ${escHtmlServer(entry.label)}` : ""} (${escHtmlServer(day)}${entry.note ? `; ${escHtmlServer(entry.note)}` : ""})</span>`;
         }).join("; ")}.</li>`;
       }).join("\n      ")}
     </ul>
