@@ -19239,7 +19239,7 @@
       "vendor": "Google Gemini API",
       "change_type": "product_deprecated",
       "date": "2026-12-13",
-      "summary": "gemini-live-2.5-flash-native-audio can be called on Gemini Enterprise Agent Platform (formerly Vertex AI) until December 13, 2026, when Google retires it. Google names gemini-3.8-live as the replacement.",
+      "summary": "gemini-live-2.5-flash-native-audio can be called on Gemini Enterprise Agent Platform (formerly Vertex AI) until December 13, 2026, when Google retires it. This date is for the Agent Platform model only. The Gemini API's preview model gemini-2.5-flash-native-audio-preview-12-2025 is a different model that Google shuts down later, on March 31. Google names gemini-3.8-live as the replacement.",
       "previous_state": "gemini-live-2.5-flash-native-audio could be called on Gemini Enterprise Agent Platform (formerly Vertex AI).",
       "current_state": "Google's Agent Platform model versions page (read 2026-11-12) lists December 13, 2026 as the retirement date for gemini-live-2.5-flash-native-audio, released December 12, 2025, with gemini-3.8-live as the replacement.",
       "impact": "low",
@@ -20709,6 +20709,40 @@
       "alternatives": [],
       "recorded_date": "2026-11-17",
       "announced_on": "2026-11-16"
+    },
+    {
+      "vendor": "Cursor",
+      "change_type": "product_deprecated",
+      "date": "2026-11-25",
+      "date_source": "vendor_page",
+      "summary": "Cursor keeps running, and models from Anthropic, Google, Meta and Grok stay available. OpenAI's models in Cursor, such as GPT-5.6 Sol, GPT-5.6 Terra and GPT-5.6 Luna, are available through November 25, 2026, after OpenAI moved its November 12 cutoff. OpenAI is ending its contract to supply models to Cursor and gives Cursor no newer models, and Cursor says it will share more before November 25.",
+      "what_ends": "OpenAI's models in Cursor",
+      "listing_effect": "none",
+      "previous_state": "Cursor offered OpenAI's models alongside models from Anthropic, Google and others, with no announced end.",
+      "current_state": "OpenAI, \"Our decision on Cursor following its acquisition by SpaceX\" (openai.com, August 28, 2026, read 2026-11-17): \"Today, we notified SpaceX that we intend to wind down our contract providing OpenAI models to Cursor, with a proposed shutoff date of November 12, 2026.\" \"we've decided to hold the contract cancellation to the latest date we can while not providing future models to Cursor.\" Its update of November 12, 2026: \"We've temporarily extended Cursor's access to our models beyond November 12. We will provide updates as available.\" Cursor's Community Support Engineer on Cursor's forum, November 16, 2026: \"As a result of productive ongoing discussions, OpenAI has extended access to its models in Cursor through November 25. We'll share more updates ahead of November 25 on ongoing access.\" Cursor staff in the same thread, August 29, 2026: \"Models from Anthropic, Google, Meta, and Grok will all continue to be offered through direct partnership.\" cursor.com/docs/models-and-pricing (read 2026-11-17) lists GPT-5.6 Sol, GPT-5.6 Terra and GPT-5.6 Luna and no GPT-6 model.",
+      "impact": "low",
+      "source_url": "https://forum.cursor.com/t/i-heard-openai-is-about-to-cut-off-gpt-access-for-cursor-is-this-true/169876/58",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-11-17",
+      "announced_on": "2026-08-28"
+    },
+    {
+      "vendor": "LeanCloud",
+      "change_type": "product_deprecated",
+      "date": "2027-01-12",
+      "date_source": "vendor_page",
+      "summary": "LeanCloud shuts down all its services, including app access, data reads and writes, API calls and the console, on January 12, 2027, and then permanently deletes or anonymizes all user data. It has not accepted new user registrations or new apps since January 12, 2026. Existing apps keep running until the shutdown.",
+      "what_ends": "LeanCloud",
+      "listing_effect": "none",
+      "previous_state": "LeanCloud offered a backend as a service for mobile apps with a free quota, open to new users, with no announced end.",
+      "current_state": "LeanCloud's \"Notice on the Discontinuation of LeanCloud Services\" (docs.leancloud.app/en/sdk/announcements/sunset-announcement, read 2026-11-17): \"Starting January 12, 2026: New user registration will be suspended. Creation of new applications (Apps) will be suspended. Existing applications can continue to operate normally until services are officially discontinued.\" \"Official service discontinuation date: one year from the date this notice is published, i.e., January 12, 2027. At that time, the platform will officially shut down all public-facing services, including application access, data read/write, API calls, and console usage.\" \"after services are discontinued we will, as required by law, permanently destroy or anonymize all user data retained on the platform. Once destroyed, the data cannot be recovered.\"",
+      "impact": "high",
+      "source_url": "https://docs.leancloud.app/en/sdk/announcements/sunset-announcement/",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-17",
+      "announced_on": "2026-01-12"
     }
   ]
 }
