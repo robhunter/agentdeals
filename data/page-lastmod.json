@@ -20,11 +20,11 @@
       "daily": true
     },
     "/ai-free-tiers": {
-      "hash": "aeacb9b44f59bf1d",
+      "hash": "61a697181f41a7ab",
       "changed": "2026-11-17"
     },
     "/ai-ml-alternatives": {
-      "hash": "16a856674a3cfd69",
+      "hash": "c913cfbd6fc773c3",
       "changed": "2026-11-17"
     },
     "/alternative-to": {
@@ -800,7 +800,7 @@
       "changed": "2026-11-16"
     },
     "/api-development-alternatives": {
-      "hash": "caaa2a015cd40821",
+      "hash": "0cb1a94a870df8a5",
       "changed": "2026-11-17"
     },
     "/api-development-free-tier-comparison-2026": {
@@ -812,7 +812,7 @@
       "changed": "2026-10-09"
     },
     "/auth-comparison-2026": {
-      "hash": "98aff7d09860e64d",
+      "hash": "69694150d4be380c",
       "changed": "2026-11-17"
     },
     "/auth0-alternatives": {
@@ -832,11 +832,11 @@
       "changed": "2026-11-16"
     },
     "/aws-free-tier-2026": {
-      "hash": "87e017a7d6589b99",
+      "hash": "4a589e4f5e54b841",
       "changed": "2026-11-17"
     },
     "/azure-free-tier-2026": {
-      "hash": "0ed95de06e664d43",
+      "hash": "8f99f7ec7b9bf173",
       "changed": "2026-11-17"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -1091,7 +1091,7 @@
       "changed": "2026-11-16"
     },
     "/budget-builder": {
-      "hash": "7f7eb0d95df0c922",
+      "hash": "bee1a1bec91589f1",
       "changed": "2026-11-17"
     },
     "/business-bank-account-fees-2026": {
@@ -1270,8 +1270,8 @@
       "changed": "2026-11-16"
     },
     "/category/payments": {
-      "hash": "ea5a3299e52f8b91",
-      "changed": "2026-11-15"
+      "hash": "3fc471be52e96b2a",
+      "changed": "2026-11-17"
     },
     "/category/productivity-notes": {
       "hash": "a27bbbd98e99dc42",
@@ -1345,15 +1345,15 @@
       "daily": true
     },
     "/ci-cd-alternatives": {
-      "hash": "f3db5f4d17ed4ff1",
+      "hash": "55f4567ee91c92c7",
       "changed": "2026-11-17"
     },
     "/ci-cd-pricing": {
-      "hash": "42f16570bb2dcf65",
+      "hash": "1876837b4db3dda2",
       "changed": "2026-11-17"
     },
     "/cicd-free-tier-comparison-2026": {
-      "hash": "777209f454ddb923",
+      "hash": "0bc00ee5de81e4fd",
       "changed": "2026-11-17"
     },
     "/circleci-vs-github-actions": {
@@ -1361,7 +1361,7 @@
       "changed": "2026-11-16"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "443e6daaa82ef715",
+      "hash": "22c74fb644ce6334",
       "changed": "2026-11-17"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -2708,15 +2708,15 @@
       "changed": "2026-11-16"
     },
     "/database-alternatives": {
-      "hash": "3cdaff344e33bb50",
+      "hash": "d30a91016b095210",
       "changed": "2026-11-17"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "44b6f60fc7a1b963",
+      "hash": "87e5fb8c4cbe9dc5",
       "changed": "2026-11-17"
     },
     "/database-pricing": {
-      "hash": "e2c318f46e228424",
+      "hash": "808024a4fd7e16d9",
       "changed": "2026-11-17"
     },
     "/datadog-alternatives": {
@@ -2728,7 +2728,7 @@
       "changed": "2026-11-16"
     },
     "/datadog-vs-new-relic": {
-      "hash": "11db0dc83b6018fd",
+      "hash": "014443358985779b",
       "changed": "2026-11-17"
     },
     "/datadog-vs-sentry": {
@@ -2742,7 +2742,7 @@
       "daily": true
     },
     "/developers": {
-      "hash": "c50ecb65f1e4bb43",
+      "hash": "764eac9a1cd78eaa",
       "changed": "2026-11-17"
     },
     "/digest/2022-w48": {
@@ -3165,7 +3165,7 @@
       "changed": "2026-11-16"
     },
     "/digest/2027-w13": {
-      "hash": "3b91ef736834ef5f",
+      "hash": "8d9ee619137d4f5d",
       "changed": "2026-11-17"
     },
     "/digest/2027-w14": {
@@ -3233,11 +3233,11 @@
       "changed": "2026-11-16"
     },
     "/digest/archive": {
-      "hash": "b96d9f7abfc9696c",
+      "hash": "b149c1e84516bb40",
       "changed": "2026-11-17"
     },
     "/digitalocean-free-tier-2026": {
-      "hash": "4904d2be2bc5ad0d",
+      "hash": "222c555953ab101a",
       "changed": "2026-11-17"
     },
     "/disclosure": {
@@ -3245,7 +3245,7 @@
       "changed": "2026-11-13"
     },
     "/email-alternatives": {
-      "hash": "7da5f34e71ce4bb7",
+      "hash": "e629d57839e62345",
       "changed": "2026-11-17"
     },
     "/email-comparison-2026": {
@@ -3292,7 +3292,7 @@
       "daily": true
     },
     "/free-ai-stack": {
-      "hash": "cc13f79d381c8f70",
+      "hash": "66bd2ec79345b646",
       "changed": "2026-11-17"
     },
     "/free-devops-stack": {
@@ -3305,14 +3305,14 @@
       "daily": true
     },
     "/free-frontend-stack": {
-      "hash": "023323b123ff523f",
+      "hash": "defca32f6cedd5ab",
       "changed": "2026-11-17"
     },
     "/free-go-stack": {
       "daily": true
     },
     "/free-llm-apis": {
-      "hash": "b3b75a75e3f87c1e",
+      "hash": "638ed99e92bb3fc4",
       "changed": "2026-11-17"
     },
     "/free-nextjs-stack": {
@@ -3345,7 +3345,7 @@
       "daily": true
     },
     "/gemini-api-pricing-2026": {
-      "hash": "f8327995cca78187",
+      "hash": "bda946b9ab5d0da3",
       "changed": "2026-11-17"
     },
     "/github-actions-alternatives": {
@@ -3357,7 +3357,7 @@
       "changed": "2026-11-16"
     },
     "/google-developer-program-2026": {
-      "hash": "9814391dca168153",
+      "hash": "0abbe6f485e8a27d",
       "changed": "2026-11-17"
     },
     "/groq-vs-hugging-face": {
@@ -3397,11 +3397,11 @@
       "changed": "2026-11-16"
     },
     "/hetzner-pricing-2026": {
-      "hash": "da4f032def967ce3",
+      "hash": "c67b2ce584dd6045",
       "changed": "2026-11-17"
     },
     "/hosting-alternatives": {
-      "hash": "1e243dc920ac6c80",
+      "hash": "e5fe70942fcf6fbc",
       "changed": "2026-11-17"
     },
     "/hosting-free-tier-comparison-2026": {
@@ -3409,15 +3409,15 @@
       "changed": "2026-11-16"
     },
     "/hosting-pricing": {
-      "hash": "e1f8b52bd60de472",
+      "hash": "6c7c928f0c5b5920",
       "changed": "2026-11-17"
     },
     "/ide-code-editors-alternatives": {
-      "hash": "50383c7aeb486aac",
+      "hash": "7f4d6c80e7303979",
       "changed": "2026-11-17"
     },
     "/llm-api-pricing": {
-      "hash": "8649a8f5eb9031b5",
+      "hash": "868201576e138019",
       "changed": "2026-11-17"
     },
     "/localstack-alternatives": {
@@ -3433,7 +3433,7 @@
       "changed": "2026-11-14"
     },
     "/monitoring-alternatives": {
-      "hash": "3f125ee1d99adf27",
+      "hash": "fd9ccf302cad0770",
       "changed": "2026-11-17"
     },
     "/monitoring-comparison-2026": {
@@ -3441,7 +3441,7 @@
       "changed": "2026-11-16"
     },
     "/neon-vs-supabase": {
-      "hash": "a65f04c08f07c0a9",
+      "hash": "41e38268bc2fe5a7",
       "changed": "2026-11-17"
     },
     "/neon-vs-turso": {
@@ -3484,19 +3484,19 @@
       "changed": "2026-10-09"
     },
     "/project-management-alternatives": {
-      "hash": "ccc1d8ecf5c3cd95",
+      "hash": "49a3e66cfeca1a69",
       "changed": "2026-11-17"
     },
     "/q1-2026-developer-pricing-report": {
-      "hash": "caf7defaf54f3cc8",
+      "hash": "d5a9fcc7dd64eabe",
       "changed": "2026-11-17"
     },
     "/q2-pricing-preview-2026": {
-      "hash": "044bb3751fcb8eae",
+      "hash": "405811b0b7fb1de3",
       "changed": "2026-11-17"
     },
     "/railway-vs-render": {
-      "hash": "ea2e7c2a388fc1a2",
+      "hash": "1cdeb801c110ec77",
       "changed": "2026-11-17"
     },
     "/redis-alternatives": {
@@ -3654,7 +3654,7 @@
       "changed": "2026-11-16"
     },
     "/reports/2027-03": {
-      "hash": "6f310e4b2377be90",
+      "hash": "07143dbf12d09487",
       "changed": "2026-11-17"
     },
     "/reports/2027-04": {
@@ -3698,7 +3698,7 @@
       "changed": "2026-11-16"
     },
     "/security-alternatives": {
-      "hash": "26f9a0440d34cae6",
+      "hash": "4583d015139ea794",
       "changed": "2026-11-17"
     },
     "/security-free-tier-comparison-2026": {
@@ -3706,7 +3706,7 @@
       "changed": "2026-11-16"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "a1375ed5dc499115",
+      "hash": "c2b0443af998bd32",
       "changed": "2026-11-17"
     },
     "/setup": {
@@ -3742,14 +3742,14 @@
       "daily": true
     },
     "/startup-credits": {
-      "hash": "507ae3c3b584a5e5",
+      "hash": "0c5350543e37f4ab",
       "changed": "2026-11-17"
     },
     "/state-of-free-tiers": {
       "daily": true
     },
     "/storage-alternatives": {
-      "hash": "631779f84875d7a6",
+      "hash": "fdf6605f5f777eb7",
       "changed": "2026-11-17"
     },
     "/storage-comparison-2026": {
@@ -3757,7 +3757,7 @@
       "changed": "2026-11-16"
     },
     "/supabase-vs-firebase": {
-      "hash": "3dd67d7dca6f46df",
+      "hash": "b45ccac04dd5f248",
       "changed": "2026-11-17"
     },
     "/team-collaboration-alternatives": {
@@ -3773,7 +3773,7 @@
       "changed": "2026-11-16"
     },
     "/testing-alternatives": {
-      "hash": "8618b1052aea0c38",
+      "hash": "5a21907fe142b121",
       "changed": "2026-11-17"
     },
     "/testing-free-tier-comparison-2026": {
@@ -3784,7 +3784,7 @@
       "daily": true
     },
     "/trends": {
-      "hash": "7fdb266b4f527098",
+      "hash": "c8ab947ef565288f",
       "changed": "2026-11-17"
     },
     "/trends/ai-coding": {
@@ -3939,8 +3939,7 @@
       "changed": "2026-11-16"
     },
     "/trends/payments": {
-      "hash": "5305d78dd6dd43a9",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/trends/productivity-notes": {
       "hash": "ad79c81a6cec8adf",
@@ -3958,8 +3957,8 @@
       "changed": "2026-11-16"
     },
     "/trends/security": {
-      "hash": "08aed2ca91e8a739",
-      "changed": "2026-11-16"
+      "hash": "d4cf9da3694388f2",
+      "changed": "2026-11-17"
     },
     "/trends/server-management": {
       "hash": "0f633b5658fd7e03",
@@ -3977,8 +3976,8 @@
       "changed": "2026-11-09"
     },
     "/trends/storage": {
-      "hash": "698873bfe8ef019a",
-      "changed": "2026-11-16"
+      "hash": "9e18ae58323fffa4",
+      "changed": "2026-11-17"
     },
     "/trends/team-collaboration": {
       "hash": "4e90e44b2b04be08",
@@ -4007,7 +4006,7 @@
       "changed": "2026-11-16"
     },
     "/vector-database-pricing": {
-      "hash": "ae22e7730b42cfe3",
+      "hash": "4a3995017ed8c786",
       "changed": "2026-11-17"
     },
     "/vendor": {
@@ -4015,107 +4014,107 @@
       "changed": "2026-11-13"
     },
     "/vendor/10minutemail": {
-      "hash": "32dd38527cb5916a",
+      "hash": "5c541bd4534cce49",
       "changed": "2026-11-17"
     },
     "/vendor/1984-is": {
-      "hash": "0ad0398550740617",
+      "hash": "da204bc1a5594ccf",
       "changed": "2026-11-17"
     },
     "/vendor/1password": {
-      "hash": "09fadaa4d27cdd1b",
+      "hash": "c5eb1eaed4065e17",
       "changed": "2026-11-17"
     },
     "/vendor/360-monitoring": {
       "daily": true
     },
     "/vendor/360username": {
-      "hash": "4527575c23bca6ac",
+      "hash": "a84b68130768c53e",
       "changed": "2026-11-17"
     },
     "/vendor/3cols": {
-      "hash": "c43fd0506460b8be",
+      "hash": "2f2122b50fc2a0b0",
       "changed": "2026-11-17"
     },
     "/vendor/4everland": {
-      "hash": "41dca1e7e9e9c3f6",
+      "hash": "98fe3285015813c0",
       "changed": "2026-11-17"
     },
     "/vendor/8base-com": {
       "daily": true
     },
     "/vendor/abby": {
-      "hash": "e62a8712a45acb95",
+      "hash": "3568dcab36f50f85",
       "changed": "2026-11-17"
     },
     "/vendor/ably": {
-      "hash": "c074e6bc5e28fd7b",
+      "hash": "87e314d6ac5804fb",
       "changed": "2026-11-17"
     },
     "/vendor/abstractapi": {
-      "hash": "6e96e13c817afb0f",
+      "hash": "36c39a39f96f96a3",
       "changed": "2026-11-17"
     },
     "/vendor/activepieces": {
-      "hash": "2ebb4755fe92e0c8",
+      "hash": "3658d6a44ddc15f1",
       "changed": "2026-11-17"
     },
     "/vendor/acunote-com": {
-      "hash": "9d399d41eed4aef7",
+      "hash": "120afad7b5930bca",
       "changed": "2026-11-17"
     },
     "/vendor/adapty-io": {
-      "hash": "6f35e45e7ac1c31e",
+      "hash": "8dd277903cae427a",
       "changed": "2026-11-17"
     },
     "/vendor/addy-io": {
-      "hash": "623eaa33317cf0f3",
+      "hash": "8616d77a3b48fddb",
       "changed": "2026-11-17"
     },
     "/vendor/ahasend": {
-      "hash": "1d86d6f3f76adffd",
+      "hash": "2e75dbe361ca3184",
       "changed": "2026-11-17"
     },
     "/vendor/aider": {
-      "hash": "c1239bc9304bc055",
+      "hash": "ac7bc186f70bc6d9",
       "changed": "2026-11-17"
     },
     "/vendor/aikido-dev": {
-      "hash": "6b6e7f726c15f809",
+      "hash": "e34dbf70fe275fa7",
       "changed": "2026-11-17"
     },
     "/vendor/aionda-mail": {
-      "hash": "0f9e54fc6a4faa7d",
+      "hash": "58b55db3ee5cb67c",
       "changed": "2026-11-17"
     },
     "/vendor/airtable": {
-      "hash": "022cb84bc1224750",
+      "hash": "3e5bc4f86ef48e6e",
       "changed": "2026-11-17"
     },
     "/vendor/airtop": {
-      "hash": "bc4fdd358d6e08f7",
+      "hash": "37b50ca7ab017d8d",
       "changed": "2026-11-17"
     },
     "/vendor/aiven": {
       "daily": true
     },
     "/vendor/akamai-cloud": {
-      "hash": "88b6595cc86f37e4",
+      "hash": "394738e62a1bda83",
       "changed": "2026-11-17"
     },
     "/vendor/algolia": {
-      "hash": "497ebb8cccfe5f3a",
+      "hash": "2f60d86c12494c61",
       "changed": "2026-11-17"
     },
     "/vendor/alias-email": {
-      "hash": "30a9851f5d987025",
+      "hash": "1824d79369549551",
       "changed": "2026-11-17"
     },
     "/vendor/alibaba-cloud-qwen-code": {
       "daily": true
     },
     "/vendor/allthefreestock": {
-      "hash": "a1061562e4ee6b9a",
+      "hash": "5c7110c1b3dc0eb5",
       "changed": "2026-11-17"
     },
     "/vendor/alwaysdata": {
@@ -4125,15 +4124,15 @@
       "daily": true
     },
     "/vendor/amazon-cloudfront": {
-      "hash": "6169524554e80895",
+      "hash": "16d6d9480b0d35da",
       "changed": "2026-11-17"
     },
     "/vendor/amazon-cognito": {
-      "hash": "c8ab0af893f35306",
+      "hash": "5b22735aecf57062",
       "changed": "2026-11-17"
     },
     "/vendor/amazon-ecr-public": {
-      "hash": "e28dac643dda705d",
+      "hash": "4c0023e7fc743e5a",
       "changed": "2026-11-17"
     },
     "/vendor/amazon-kiro": {
@@ -4143,37 +4142,37 @@
       "daily": true
     },
     "/vendor/amazon-lightsail": {
-      "hash": "256aa492f21e9cf5",
+      "hash": "227b3ebc68222e1b",
       "changed": "2026-11-17"
     },
     "/vendor/amazon-q-developer": {
-      "hash": "cb6c174d69b5c687",
+      "hash": "a5a0c3f16442497a",
       "changed": "2026-11-17"
     },
     "/vendor/amazon-ses": {
       "daily": true
     },
     "/vendor/amazon-sp-api": {
-      "hash": "178992bbe939bd28",
+      "hash": "1d4dcd8738a23676",
       "changed": "2026-11-17"
     },
     "/vendor/amplitude": {
-      "hash": "c5998973ecd83e03",
+      "hash": "a98c7f5c0e986767",
       "changed": "2026-11-17"
     },
     "/vendor/ampt-dev": {
       "daily": true
     },
     "/vendor/anchor-browser": {
-      "hash": "d9b6c49a5dd9129f",
+      "hash": "cb759aad7a452433",
       "changed": "2026-11-17"
     },
     "/vendor/android-studio": {
-      "hash": "611e4eb1b8d6a4dc",
+      "hash": "ff5a3e59fae17139",
       "changed": "2026-11-17"
     },
     "/vendor/androidide": {
-      "hash": "99f77d8acd449fa3",
+      "hash": "b50295746600fa11",
       "changed": "2026-11-17"
     },
     "/vendor/ant-design-landing-page": {
@@ -4183,74 +4182,74 @@
       "daily": true
     },
     "/vendor/antideo": {
-      "hash": "595e0609587987e0",
+      "hash": "93fdc82600bce2d4",
       "changed": "2026-11-17"
     },
     "/vendor/anvil-works": {
       "daily": true
     },
     "/vendor/apache-netbeans": {
-      "hash": "e258ef3f68eaa16a",
+      "hash": "cb4a25b2f38e7944",
       "changed": "2026-11-17"
     },
     "/vendor/apiary-io": {
-      "hash": "0a9c7feca8073d1c",
+      "hash": "57552638ebb94504",
       "changed": "2026-11-17"
     },
     "/vendor/apidog": {
-      "hash": "5bbaa86e26cf8cba",
+      "hash": "e8480f70f51e83fc",
       "changed": "2026-11-17"
     },
     "/vendor/apiflash": {
-      "hash": "f6df4a09529f8d60",
+      "hash": "165b6a75a6683aed",
       "changed": "2026-11-17"
     },
     "/vendor/apify": {
-      "hash": "40e732e16baa3712",
+      "hash": "dad24bc03a04088b",
       "changed": "2026-11-17"
     },
     "/vendor/apilayer": {
-      "hash": "ea506953815fc4fd",
+      "hash": "be0ff52b2fe1309b",
       "changed": "2026-11-17"
     },
     "/vendor/apitemplate-io": {
-      "hash": "a2b88ee318bcab7d",
+      "hash": "58b8d555a85b1bcd",
       "changed": "2026-11-17"
     },
     "/vendor/apiverve": {
-      "hash": "365ec8728b045e6f",
+      "hash": "ad7ef9879974442f",
       "changed": "2026-11-17"
     },
     "/vendor/apollo-graphos": {
-      "hash": "f90aed0ac4873d5c",
+      "hash": "deb70c0510b8f5d1",
       "changed": "2026-11-17"
     },
     "/vendor/appcircle": {
-      "hash": "20309cee93e3c88a",
+      "hash": "9b926d9bf3554928",
       "changed": "2026-11-17"
     },
     "/vendor/appetize": {
-      "hash": "54a8d87b8894e342",
+      "hash": "0f749f62a80572fd",
       "changed": "2026-11-17"
     },
     "/vendor/appfit": {
-      "hash": "a2b340ab646cc5a9",
+      "hash": "d829bcb85c23d1bb",
       "changed": "2026-11-17"
     },
     "/vendor/appho-st": {
-      "hash": "1a6f346b3a8a172c",
+      "hash": "2f769296830ae033",
       "changed": "2026-11-17"
     },
     "/vendor/appinvento": {
-      "hash": "16480d165fad7e43",
+      "hash": "ace2237f860c3c51",
       "changed": "2026-11-17"
     },
     "/vendor/apple-notes": {
-      "hash": "d9175fbac71d9e3c",
+      "hash": "d7c6231ef5473e07",
       "changed": "2026-11-17"
     },
     "/vendor/apple-passwords": {
-      "hash": "e0c067676cea5f97",
+      "hash": "257a83eb74813cea",
       "changed": "2026-11-17"
     },
     "/vendor/applitools-eyes": {
@@ -4263,45 +4262,45 @@
       "daily": true
     },
     "/vendor/appsmith": {
-      "hash": "b3f64097748301bf",
+      "hash": "d9662f4433953dfa",
       "changed": "2026-11-17"
     },
     "/vendor/appveyor-com": {
-      "hash": "491d76cc0c5017fd",
+      "hash": "98bf1c722f5ee054",
       "changed": "2026-11-17"
     },
     "/vendor/appwrite-cloud": {
       "daily": true
     },
     "/vendor/aptabase": {
-      "hash": "361958d5f316d9d4",
+      "hash": "5f31898aaa520910",
       "changed": "2026-11-17"
     },
     "/vendor/argo-cd": {
-      "hash": "48b94972739cfa1e",
+      "hash": "a2cfaf8a5e17322d",
       "changed": "2026-11-17"
     },
     "/vendor/argos": {
-      "hash": "22d2fe4d7ad2e7f5",
+      "hash": "bbe7dc891aa2c808",
       "changed": "2026-11-17"
     },
     "/vendor/arize-ax": {
       "daily": true
     },
     "/vendor/artillery": {
-      "hash": "564571fe56aeaa70",
+      "hash": "9e54bdccf7af14d3",
       "changed": "2026-11-17"
     },
     "/vendor/asana-com": {
-      "hash": "9118bb62c6f69a6d",
+      "hash": "ca2ab82b495079f4",
       "changed": "2026-11-17"
     },
     "/vendor/aserto": {
-      "hash": "016219f35f6c246c",
+      "hash": "f9851ea118cbfb3c",
       "changed": "2026-11-17"
     },
     "/vendor/asgardeo-io": {
-      "hash": "0286a816abcaa7a1",
+      "hash": "5cb1d0cbc413cf65",
       "changed": "2026-11-17"
     },
     "/vendor/assemblyai": {
@@ -4311,15 +4310,15 @@
       "daily": true
     },
     "/vendor/atlassian-for-startups": {
-      "hash": "eac83cbcc194812e",
+      "hash": "7fc1a3d56d26f851",
       "changed": "2026-11-17"
     },
     "/vendor/atlassian-statuspage": {
-      "hash": "e24bd02bac720106",
+      "hash": "b15badd669b26ab4",
       "changed": "2026-11-17"
     },
     "/vendor/audio-enhancer": {
-      "hash": "54eb61458b0469b1",
+      "hash": "c80a9b6734df31d9",
       "changed": "2026-11-17"
     },
     "/vendor/augment-code": {
@@ -4329,35 +4328,35 @@
       "daily": true
     },
     "/vendor/authentik": {
-      "hash": "8cb9ccc2b35812bb",
+      "hash": "591344c12e377356",
       "changed": "2026-11-17"
     },
     "/vendor/authgear": {
-      "hash": "e03a658318f73a24",
+      "hash": "4285cd62d861c96c",
       "changed": "2026-11-17"
     },
     "/vendor/authress": {
-      "hash": "8cd5518d9fc21cc6",
+      "hash": "c5798425f7cf0b0b",
       "changed": "2026-11-17"
     },
     "/vendor/authy": {
-      "hash": "be1978b5d2497ca7",
+      "hash": "7a6f9dc22f3a80aa",
       "changed": "2026-11-17"
     },
     "/vendor/autodesk-fusion-360-for-startups": {
-      "hash": "28e09eebd914411d",
+      "hash": "f64efbfbaa4507c5",
       "changed": "2026-11-17"
     },
     "/vendor/autolocalise-com": {
-      "hash": "558ec4ec19ce8f71",
+      "hash": "8f80a1e330e94477",
       "changed": "2026-11-17"
     },
     "/vendor/automatisch": {
-      "hash": "487f3a94acee06ba",
+      "hash": "42a9d9d5cd81fe40",
       "changed": "2026-11-17"
     },
     "/vendor/avo": {
-      "hash": "04679c6d2c5ed6bb",
+      "hash": "ef303d88d8973a95",
       "changed": "2026-11-17"
     },
     "/vendor/awardspace-com": {
@@ -4367,181 +4366,181 @@
       "daily": true
     },
     "/vendor/aws-activate": {
-      "hash": "8ea28f8f08844d8b",
+      "hash": "25702df076378150",
       "changed": "2026-11-17"
     },
     "/vendor/aws-sam-cli": {
-      "hash": "78e0569869c18815",
+      "hash": "fbc6c539f8ea3447",
       "changed": "2026-11-17"
     },
     "/vendor/axiom": {
       "daily": true
     },
     "/vendor/azure": {
-      "hash": "bb3542c104f85417",
+      "hash": "63544c44f3e8cfa3",
       "changed": "2026-11-17"
     },
     "/vendor/back4app": {
       "daily": true
     },
     "/vendor/backblaze": {
-      "hash": "0a11cdb45d3f8d00",
+      "hash": "b0c70cb01d8e3c44",
       "changed": "2026-11-17"
     },
     "/vendor/backblaze-b2": {
-      "hash": "70669dd89a777095",
+      "hash": "b39ad94ee46ac17a",
       "changed": "2026-11-17"
     },
     "/vendor/backgroundstyler-com": {
-      "hash": "6179a393a5575791",
+      "hash": "890234f39ea45212",
       "changed": "2026-11-17"
     },
     "/vendor/backlog": {
-      "hash": "67833669b9c746cc",
+      "hash": "7087f5b13d12b427",
       "changed": "2026-11-17"
     },
     "/vendor/base64-decoder-encoder": {
-      "hash": "8f3b78dfbd22516d",
+      "hash": "dee1d52fcbc14dd9",
       "changed": "2026-11-17"
     },
     "/vendor/basecamp": {
-      "hash": "c3197e46b1197e17",
+      "hash": "8dd96b998c19d674",
       "changed": "2026-11-17"
     },
     "/vendor/baselime": {
-      "hash": "09a7c47d5129edaf",
+      "hash": "bc5721679659c55d",
       "changed": "2026-11-17"
     },
     "/vendor/baseten": {
       "daily": true
     },
     "/vendor/bbedit": {
-      "hash": "31200c5cba1a5e72",
+      "hash": "de5a8d1b63a74f7a",
       "changed": "2026-11-17"
     },
     "/vendor/beampipe-io": {
-      "hash": "acd7b6c49f9634c0",
+      "hash": "4ae168ad65385c8f",
       "changed": "2026-11-17"
     },
     "/vendor/beanstalkapp-com": {
-      "hash": "186690a551a9c649",
+      "hash": "c436b525d92a88d0",
       "changed": "2026-11-17"
     },
     "/vendor/bearer": {
-      "hash": "ca9e6b6ac071ec87",
+      "hash": "f7bddf9f4f40e54f",
       "changed": "2026-11-17"
     },
     "/vendor/beeceptor": {
-      "hash": "2d7677eabcc0e730",
+      "hash": "9cd0d5deec1c0dcc",
       "changed": "2026-11-17"
     },
     "/vendor/bench": {
-      "hash": "4b70f91618575654",
+      "hash": "c32510d7fcf46909",
       "changed": "2026-11-17"
     },
     "/vendor/bencher": {
-      "hash": "6c8401a4956058a6",
+      "hash": "cffd80099959db44",
       "changed": "2026-11-17"
     },
     "/vendor/better-stack-logs": {
-      "hash": "e0dcd68b94df2b48",
+      "hash": "85c859a8d0361ca4",
       "changed": "2026-11-17"
     },
     "/vendor/betterstack": {
       "daily": true
     },
     "/vendor/bigdatacloud": {
-      "hash": "781ea6be0679f667",
+      "hash": "b03a2864a16a2fd0",
       "changed": "2026-11-17"
     },
     "/vendor/binder": {
-      "hash": "1268dd7bbbcd6c08",
+      "hash": "5eed719affa99e31",
       "changed": "2026-11-17"
     },
     "/vendor/binshare-net": {
-      "hash": "8934103d6a571b3f",
+      "hash": "b72e1bf6e3a84434",
       "changed": "2026-11-17"
     },
     "/vendor/bismuth-cloud": {
-      "hash": "87472505df8edfdf",
+      "hash": "0f39b5730188a841",
       "changed": "2026-11-17"
     },
     "/vendor/bitbucket-pipelines": {
-      "hash": "d73bbb51afebf4f9",
+      "hash": "878e6c9df92b9002",
       "changed": "2026-11-17"
     },
     "/vendor/bitnami-com": {
-      "hash": "0deedb51fd1e079d",
+      "hash": "8de9c6e0ed1607e2",
       "changed": "2026-11-17"
     },
     "/vendor/bitrise": {
-      "hash": "2e9cf7427adc5e5b",
+      "hash": "a7793409575721ab",
       "changed": "2026-11-17"
     },
     "/vendor/bitrix24-com": {
-      "hash": "b9625c5c0956503c",
+      "hash": "235120781d4ff4d1",
       "changed": "2026-11-17"
     },
     "/vendor/bitwarden": {
-      "hash": "141e0b7c2337f92b",
+      "hash": "8303d23b20ed4402",
       "changed": "2026-11-17"
     },
     "/vendor/blaxel": {
       "daily": true
     },
     "/vendor/blazemeter": {
-      "hash": "ba9971a985fd2b68",
+      "hash": "fdb675400e5c9419",
       "changed": "2026-11-17"
     },
     "/vendor/bleemeo-com": {
       "daily": true
     },
     "/vendor/blender": {
-      "hash": "70f919709410b9ff",
+      "hash": "a30386829db2bcc6",
       "changed": "2026-11-17"
     },
     "/vendor/bluej": {
-      "hash": "a7bf0ae5173f7812",
+      "hash": "20a3d5a1de7d4590",
       "changed": "2026-11-17"
     },
     "/vendor/blynk": {
-      "hash": "801c2ea95601b921",
+      "hash": "4747eee89c949c11",
       "changed": "2026-11-17"
     },
     "/vendor/bolt-new": {
-      "hash": "7bc4d46aa65ec345",
+      "hash": "d11fb2d21c33b15a",
       "changed": "2026-11-17"
     },
     "/vendor/bonsai-io": {
-      "hash": "c790fa3da95e1862",
+      "hash": "acc4541eb45a0dc1",
       "changed": "2026-11-17"
     },
     "/vendor/bookmarkos-com": {
-      "hash": "5762c3dd92f6cf63",
+      "hash": "dd3bce5db27d5681",
       "changed": "2026-11-17"
     },
     "/vendor/bootify-io": {
-      "hash": "eb38b10e81d32c53",
+      "hash": "c477ca4ddc8b7bd1",
       "changed": "2026-11-17"
     },
     "/vendor/bootstrapcdn-com": {
-      "hash": "1ddf300cf36059f3",
+      "hash": "cdeb39a0e7102ac6",
       "changed": "2026-11-17"
     },
     "/vendor/borgbase-com": {
-      "hash": "8ebda03dee11e7bf",
+      "hash": "1b67de0b679287f2",
       "changed": "2026-11-17"
     },
     "/vendor/brackets": {
-      "hash": "0b9fd454841f5835",
+      "hash": "27f6bcb985996d7d",
       "changed": "2026-11-17"
     },
     "/vendor/braid": {
-      "hash": "11f9ead69abafb9e",
+      "hash": "83a0b23cf2dafb50",
       "changed": "2026-11-17"
     },
     "/vendor/brainboard": {
-      "hash": "35ca39861d85f9fc",
+      "hash": "3021a66f45240b6f",
       "changed": "2026-11-17"
     },
     "/vendor/braintrust": {
@@ -4551,213 +4550,213 @@
       "daily": true
     },
     "/vendor/brevo": {
-      "hash": "5e9592c302b950cb",
+      "hash": "3e4671f4b1ac0087",
       "changed": "2026-11-17"
     },
     "/vendor/brex-partner-perks": {
-      "hash": "08f37a4d46c12447",
+      "hash": "11e25ca4529c931a",
       "changed": "2026-11-17"
     },
     "/vendor/bricks-note-calculator": {
-      "hash": "43f66241518f3f49",
+      "hash": "1e4be449e8bb7e50",
       "changed": "2026-11-17"
     },
     "/vendor/bright-data-mcp-server": {
-      "hash": "cf80ed4843b3a22a",
+      "hash": "de6cb21e0f96cdfd",
       "changed": "2026-11-17"
     },
     "/vendor/browse-ai": {
-      "hash": "f2b054e93498dbda",
+      "hash": "43f41ed532831ea9",
       "changed": "2026-11-17"
     },
     "/vendor/browser-use": {
-      "hash": "1450ebb093f82db8",
+      "hash": "c1f8246d8ff7404c",
       "changed": "2026-11-17"
     },
     "/vendor/browserbase": {
-      "hash": "a9520a01d2319af4",
+      "hash": "128e9eef5fc48380",
       "changed": "2026-11-17"
     },
     "/vendor/browsercat": {
-      "hash": "d676cb7a12c2d657",
+      "hash": "f35429eadc952e8f",
       "changed": "2026-11-17"
     },
     "/vendor/browserless": {
-      "hash": "5df65ae6d0b6de72",
+      "hash": "d140565e16faac96",
       "changed": "2026-11-17"
     },
     "/vendor/browserstack": {
-      "hash": "b3c28069548f4a3d",
+      "hash": "72b95615e4e180f4",
       "changed": "2026-11-17"
     },
     "/vendor/browserstack-percy": {
-      "hash": "f9d1184aee6214e5",
+      "hash": "2c28fa2b0592211a",
       "changed": "2026-11-17"
     },
     "/vendor/bruno": {
-      "hash": "7bab20f4e59c0441",
+      "hash": "7e7933e96233457a",
       "changed": "2026-11-17"
     },
     "/vendor/btunnel": {
-      "hash": "ae34cb57caec155f",
+      "hash": "ced5612b2db0caa9",
       "changed": "2026-11-17"
     },
     "/vendor/bubble": {
       "daily": true
     },
     "/vendor/buddy": {
-      "hash": "621dd034f6bdbe35",
+      "hash": "a3795ba8ba3d36e9",
       "changed": "2026-11-17"
     },
     "/vendor/buddyns": {
-      "hash": "9b92e422655b3038",
+      "hash": "c499c86931305073",
       "changed": "2026-11-17"
     },
     "/vendor/budibase": {
-      "hash": "03221ddfab870ae3",
+      "hash": "162fff89476e7a35",
       "changed": "2026-11-17"
     },
     "/vendor/bugbug": {
-      "hash": "3dbfb1dfde7640f8",
+      "hash": "bfb4e62051695b7a",
       "changed": "2026-11-17"
     },
     "/vendor/bugfender-com": {
-      "hash": "1c2ae46ebb80ebc1",
+      "hash": "e254d1fc2ade1487",
       "changed": "2026-11-17"
     },
     "/vendor/bugsink": {
-      "hash": "1de93a1129579ff3",
+      "hash": "febc32c889ee7c5c",
       "changed": "2026-11-17"
     },
     "/vendor/bugsnag": {
-      "hash": "33eaef2f54632dd4",
+      "hash": "66c0e3fbe4d00666",
       "changed": "2026-11-17"
     },
     "/vendor/build-opensuse-org": {
-      "hash": "fd1df7aa1ce7afc4",
+      "hash": "9d64e3ef2faff4e7",
       "changed": "2026-11-17"
     },
     "/vendor/buildkite": {
-      "hash": "7baa320e2ae79e6b",
+      "hash": "c3ba16c82888c07e",
       "changed": "2026-11-17"
     },
     "/vendor/bullmq": {
-      "hash": "906d42a70aa744e8",
+      "hash": "604d2dbb20652ef5",
       "changed": "2026-11-17"
     },
     "/vendor/burnermail": {
-      "hash": "083c60ad5107493b",
+      "hash": "85749c1075d0af37",
       "changed": "2026-11-17"
     },
     "/vendor/buttondown": {
-      "hash": "67a7dd6da4c3a719",
+      "hash": "d93ac91f4f80e56e",
       "changed": "2026-11-17"
     },
     "/vendor/bytebase-com": {
-      "hash": "35de21c782f480ac",
+      "hash": "bf0fce261233e816",
       "changed": "2026-11-17"
     },
     "/vendor/c2-object-storage": {
-      "hash": "b069b06116e5f911",
+      "hash": "4e2bfe11494837f9",
       "changed": "2026-11-17"
     },
     "/vendor/cachefly": {
-      "hash": "e0d84d3b1a4b4567",
+      "hash": "bdde58d99a3a64d9",
       "changed": "2026-11-17"
     },
     "/vendor/cacher-io": {
-      "hash": "7ea69affa94ceefa",
+      "hash": "be034c2a79aa2ee3",
       "changed": "2026-11-17"
     },
     "/vendor/cachet": {
-      "hash": "c9856bc3a0171fd4",
+      "hash": "67e690aca11ad765",
       "changed": "2026-11-17"
     },
     "/vendor/cacoo-com": {
-      "hash": "6760ddd84113441a",
+      "hash": "793476c31161e1ac",
       "changed": "2026-11-17"
     },
     "/vendor/cal-com": {
-      "hash": "eb01554c5d7a3229",
+      "hash": "e525026b18dfa972",
       "changed": "2026-11-17"
     },
     "/vendor/calendar-icons-generator": {
-      "hash": "c0992bfd1595ea40",
+      "hash": "6a31771ddd693cc7",
       "changed": "2026-11-17"
     },
     "/vendor/calendarific": {
-      "hash": "764610c77a7e015c",
+      "hash": "96fe62ba9c92e78b",
       "changed": "2026-11-17"
     },
     "/vendor/calendly": {
-      "hash": "49a5216d89238379",
+      "hash": "445406edef676207",
       "changed": "2026-11-17"
     },
     "/vendor/cally-com": {
-      "hash": "0e56e7a23f6ae34e",
+      "hash": "d089ffed93db040a",
       "changed": "2026-11-17"
     },
     "/vendor/canopy": {
-      "hash": "5f0136c4c148dda7",
+      "hash": "72b8c41c4e8205f8",
       "changed": "2026-11-17"
     },
     "/vendor/canva": {
-      "hash": "002d775bed84906d",
+      "hash": "04d8e3dd98625e72",
       "changed": "2026-11-17"
     },
     "/vendor/carapi-dev": {
-      "hash": "a4529ba3572adbc4",
+      "hash": "3fda06fdfe0a2347",
       "changed": "2026-11-17"
     },
     "/vendor/carbon-now-sh": {
-      "hash": "1fadef5fddc49fd0",
+      "hash": "afdcfc770bb3a7fb",
       "changed": "2026-11-17"
     },
     "/vendor/carousel-hero": {
-      "hash": "3bcdabd5a6675411",
+      "hash": "ee330ae49e3bf0bf",
       "changed": "2026-11-17"
     },
     "/vendor/catchjs-com": {
-      "hash": "6faa59fd6fc5bb54",
+      "hash": "958e486f82a46f9c",
       "changed": "2026-11-17"
     },
     "/vendor/cdnjs-com": {
-      "hash": "69f87e1e1be0fc84",
+      "hash": "d205f1b3852b80c6",
       "changed": "2026-11-17"
     },
     "/vendor/cdox": {
-      "hash": "61b75a8f32a2c23c",
+      "hash": "9c02a4e34c1096b1",
       "changed": "2026-11-17"
     },
     "/vendor/cerbos-hub": {
-      "hash": "bac108969098648e",
+      "hash": "4eeec48657460554",
       "changed": "2026-11-17"
     },
     "/vendor/cerebras": {
       "daily": true
     },
     "/vendor/certkit": {
-      "hash": "f0778faaf58289e5",
+      "hash": "07f50af36e609fb0",
       "changed": "2026-11-17"
     },
     "/vendor/chanty-com": {
-      "hash": "684c964ce74d3625",
+      "hash": "a270d12125dd083f",
       "changed": "2026-11-17"
     },
     "/vendor/chargebee-launch-programme": {
-      "hash": "5874f02433443a5c",
+      "hash": "f55263ccbac6945c",
       "changed": "2026-11-17"
     },
     "/vendor/checkbot-io": {
-      "hash": "fd7c6260932a60c9",
+      "hash": "48c0b449b155b189",
       "changed": "2026-11-17"
     },
     "/vendor/checkly": {
-      "hash": "486d744da8996aeb",
+      "hash": "51746d717f45711d",
       "changed": "2026-11-17"
     },
     "/vendor/checkov": {
-      "hash": "1ebb9c57f843b163",
+      "hash": "371303b0853ae99c",
       "changed": "2026-11-17"
     },
     "/vendor/choreo": {
@@ -4767,116 +4766,116 @@
       "daily": true
     },
     "/vendor/chromatic": {
-      "hash": "7c88cf7eeeb19cc3",
+      "hash": "cb1161e8e63fb7e2",
       "changed": "2026-11-17"
     },
     "/vendor/circleci": {
-      "hash": "385ff4868032d3bd",
+      "hash": "2d511800e17d1e6b",
       "changed": "2026-11-17"
     },
     "/vendor/circum-icons": {
-      "hash": "5e1661ce852753c9",
+      "hash": "3d29336433966205",
       "changed": "2026-11-17"
     },
     "/vendor/cirrus-ci-org": {
-      "hash": "2299df207e69e544",
+      "hash": "476ee581fac01496",
       "changed": "2026-11-17"
     },
     "/vendor/cirun-io": {
-      "hash": "0707da5c6f623827",
+      "hash": "0d9f58e3bd2de672",
       "changed": "2026-11-17"
     },
     "/vendor/clair": {
-      "hash": "fb304fc10a5b8d46",
+      "hash": "2d0d002bf7677079",
       "changed": "2026-11-17"
     },
     "/vendor/clappia": {
-      "hash": "ae163c1f2ed0ac47",
+      "hash": "d70ae0b2ed7ef665",
       "changed": "2026-11-17"
     },
     "/vendor/clarifai": {
-      "hash": "fb5341e8a04ba3cf",
+      "hash": "0f6d6b21467beb84",
       "changed": "2026-11-17"
     },
     "/vendor/claude-code": {
       "daily": true
     },
     "/vendor/claw-cloud": {
-      "hash": "090e07b7f76f000e",
+      "hash": "282896ef5243f055",
       "changed": "2026-11-17"
     },
     "/vendor/clerk": {
-      "hash": "65d76c50f5edae9f",
+      "hash": "e42bf5c760e471a8",
       "changed": "2026-11-17"
     },
     "/vendor/clevebrush-com": {
-      "hash": "b22f2845abaaf7da",
+      "hash": "78611262312716b8",
       "changed": "2026-11-17"
     },
     "/vendor/clever-bootstrap-program": {
-      "hash": "2829be56f533de0a",
+      "hash": "512cdbcca17577fa",
       "changed": "2026-11-17"
     },
     "/vendor/clever-cloud": {
       "daily": true
     },
     "/vendor/clickup": {
-      "hash": "4b292a6ef8c5bedd",
+      "hash": "6d037abf5e217e47",
       "changed": "2026-11-17"
     },
     "/vendor/clickup-com": {
-      "hash": "b86fd345a9af6fd0",
+      "hash": "742147358d8f4db4",
       "changed": "2026-11-17"
     },
     "/vendor/clicky": {
-      "hash": "52af6888d6ef5428",
+      "hash": "9b5e8eab74396aa3",
       "changed": "2026-11-17"
     },
     "/vendor/cline": {
-      "hash": "6fa2ee03eb46379e",
+      "hash": "8a38a1834ad41e75",
       "changed": "2026-11-17"
     },
     "/vendor/clockify": {
-      "hash": "92cbcf0ed1b87098",
+      "hash": "afb60ee4afe6f672",
       "changed": "2026-11-17"
     },
     "/vendor/clockwork-micro": {
-      "hash": "a22636144eff7f65",
+      "hash": "be3883e1ba0eee87",
       "changed": "2026-11-17"
     },
     "/vendor/cloud-66": {
-      "hash": "498dc018220afd98",
+      "hash": "ff8038d5443841a3",
       "changed": "2026-11-17"
     },
     "/vendor/cloud-iam": {
-      "hash": "d07df7e4bc56a1e3",
+      "hash": "39dea4ded7e7eb3e",
       "changed": "2026-11-17"
     },
     "/vendor/cloudamqp": {
-      "hash": "89a446e302e0b06b",
+      "hash": "089ceb5ac0057461",
       "changed": "2026-11-17"
     },
     "/vendor/cloudconvert-com": {
-      "hash": "9918f10906d89472",
+      "hash": "1a9ce82dc6010256",
       "changed": "2026-11-17"
     },
     "/vendor/cloudcraft": {
-      "hash": "0fdb36dac5f917d6",
+      "hash": "78da89d5ee1863ea",
       "changed": "2026-11-17"
     },
     "/vendor/clouddev": {
-      "hash": "0fee94e5601f83c6",
+      "hash": "7354811bd7f51b10",
       "changed": "2026-11-17"
     },
     "/vendor/cloudflare-ai-search": {
-      "hash": "181e2554c9056432",
+      "hash": "108676ceded72ed1",
       "changed": "2026-11-17"
     },
     "/vendor/cloudflare-d1": {
       "daily": true
     },
     "/vendor/cloudflare-dns": {
-      "hash": "ca8626cca73a7412",
+      "hash": "f88d3e89e163ddd1",
       "changed": "2026-11-17"
     },
     "/vendor/cloudflare-durable-objects": {
@@ -4892,18 +4891,18 @@
       "daily": true
     },
     "/vendor/cloudflare-mesh": {
-      "hash": "ca7d707a05aace12",
+      "hash": "9a5af83fe0c88d19",
       "changed": "2026-11-17"
     },
     "/vendor/cloudflare-pages": {
       "daily": true
     },
     "/vendor/cloudflare-queues": {
-      "hash": "9b244fe9f41a333c",
+      "hash": "4eb08477518765d6",
       "changed": "2026-11-17"
     },
     "/vendor/cloudflare-r2": {
-      "hash": "c32aa87c67d98e07",
+      "hash": "bee0a1832663851f",
       "changed": "2026-11-17"
     },
     "/vendor/cloudflare-sandboxes": {
@@ -4913,7 +4912,7 @@
       "daily": true
     },
     "/vendor/cloudflare-warp": {
-      "hash": "c7cb94e6e7e8607b",
+      "hash": "8061d3506831138c",
       "changed": "2026-11-17"
     },
     "/vendor/cloudflare-workers": {
@@ -4923,125 +4922,125 @@
       "daily": true
     },
     "/vendor/cloudinary": {
-      "hash": "d878ebb1fb658969",
+      "hash": "2c9a5109366e42e0",
       "changed": "2026-11-17"
     },
     "/vendor/cloudmersive": {
-      "hash": "2867ca5f09336fba",
+      "hash": "ded30f4e5e90b61a",
       "changed": "2026-11-17"
     },
     "/vendor/cloudns": {
-      "hash": "400d1fcd7abb3da5",
+      "hash": "945d5867a8830bc5",
       "changed": "2026-11-17"
     },
     "/vendor/cmyk-pantone": {
-      "hash": "d0697535cf77afcc",
+      "hash": "937f2841215b2cd7",
       "changed": "2026-11-17"
     },
     "/vendor/cname-dev": {
-      "hash": "704870f7530a1edb",
+      "hash": "861e4fe6384e99a8",
       "changed": "2026-11-17"
     },
     "/vendor/cocalc-com": {
-      "hash": "48297f14ffb2edf7",
+      "hash": "d9258fed33ecf5f8",
       "changed": "2026-11-17"
     },
     "/vendor/cockroachdb": {
       "daily": true
     },
     "/vendor/coda": {
-      "hash": "55acfe3b1fa73117",
+      "hash": "034c0327f36e345c",
       "changed": "2026-11-17"
     },
     "/vendor/codacy-com": {
-      "hash": "d4fe4f363faf3fc2",
+      "hash": "0f344506ddccc64f",
       "changed": "2026-11-17"
     },
     "/vendor/code-blocks": {
-      "hash": "5fbbf1736faa0c7e",
+      "hash": "fd18e2f22df1c18a",
       "changed": "2026-11-17"
     },
     "/vendor/code-cs50-io": {
-      "hash": "4dceab8bcc022cd3",
+      "hash": "59b1fed7f4233b94",
       "changed": "2026-11-17"
     },
     "/vendor/code-time": {
-      "hash": "60c450febdfb98fb",
+      "hash": "32240e12964e2baa",
       "changed": "2026-11-17"
     },
     "/vendor/codeac-io": {
-      "hash": "8fb8fe336bd9ade5",
+      "hash": "78ba0811c7b71053",
       "changed": "2026-11-17"
     },
     "/vendor/codeberg": {
-      "hash": "8205e5dcaa9ba93c",
+      "hash": "fa18550f64235da5",
       "changed": "2026-11-17"
     },
     "/vendor/codecov": {
-      "hash": "1f52c9b869193d69",
+      "hash": "eefaccb697d12df9",
       "changed": "2026-11-17"
     },
     "/vendor/codedthemes": {
-      "hash": "63e8c8656dd78725",
+      "hash": "4a650d4061487f4f",
       "changed": "2026-11-17"
     },
     "/vendor/codefactor": {
-      "hash": "11c1599bc37041c0",
+      "hash": "0c46ecc8dbfc3ae9",
       "changed": "2026-11-17"
     },
     "/vendor/codefresh": {
-      "hash": "c8b7c2c8d5f3eec1",
+      "hash": "30019bc4a46668cc",
       "changed": "2026-11-17"
     },
     "/vendor/codehooks-io": {
       "daily": true
     },
     "/vendor/codekeep": {
-      "hash": "6a3c1d1712bfcdb0",
+      "hash": "be3f29791b90ea5c",
       "changed": "2026-11-17"
     },
     "/vendor/codemagic": {
-      "hash": "62b349d32b04adb6",
+      "hash": "e52843180f304c14",
       "changed": "2026-11-17"
     },
     "/vendor/codemyui": {
-      "hash": "0d8642f74252ca80",
+      "hash": "3c112be18a1679f6",
       "changed": "2026-11-17"
     },
     "/vendor/codenameone-com": {
-      "hash": "78279e56b8fa9c58",
+      "hash": "75cbfe3ba044ec36",
       "changed": "2026-11-17"
     },
     "/vendor/codepen-io": {
-      "hash": "188f4ff921396af9",
+      "hash": "d3ec322a633b90e0",
       "changed": "2026-11-17"
     },
     "/vendor/codepng": {
-      "hash": "758cc5af41899b57",
+      "hash": "b5c65b8c25056201",
       "changed": "2026-11-17"
     },
     "/vendor/codeql": {
-      "hash": "959a75bddc658c11",
+      "hash": "94e546cc0ffe8d4a",
       "changed": "2026-11-17"
     },
     "/vendor/coder": {
-      "hash": "43a564f072cea8af",
+      "hash": "516b4304bc29d1f2",
       "changed": "2026-11-17"
     },
     "/vendor/coderabbit-ai": {
-      "hash": "37a03b178aadcfde",
+      "hash": "84d05f3550471051",
       "changed": "2026-11-17"
     },
     "/vendor/codesandbox-io": {
-      "hash": "c094a9b50bab25dc",
+      "hash": "7ad931f6e59acaf7",
       "changed": "2026-11-17"
     },
     "/vendor/codetoimage": {
-      "hash": "c21b2638eba1d599",
+      "hash": "ec3069b8a2dd2b25",
       "changed": "2026-11-17"
     },
     "/vendor/codspeed": {
-      "hash": "040c0aa9d91af27e",
+      "hash": "892654b7855aef9f",
       "changed": "2026-11-17"
     },
     "/vendor/cognee": {
@@ -5051,261 +5050,261 @@
       "daily": true
     },
     "/vendor/coinmarketcap": {
-      "hash": "e60faad189386faf",
+      "hash": "0231f9ce9e152a44",
       "changed": "2026-11-17"
     },
     "/vendor/colorkit": {
-      "hash": "b5f8b8460b991556",
+      "hash": "4a98dc33f915d8c2",
       "changed": "2026-11-17"
     },
     "/vendor/comet-ml": {
       "daily": true
     },
     "/vendor/compare-json": {
-      "hash": "e545f8b0cc955c76",
+      "hash": "6149595e42b8e520",
       "changed": "2026-11-17"
     },
     "/vendor/composio": {
-      "hash": "472cb5f902def723",
+      "hash": "0a2504ef95f18705",
       "changed": "2026-11-17"
     },
     "/vendor/configcat": {
-      "hash": "5b954e5416531fd6",
+      "hash": "fbf7fd6967f1d213",
       "changed": "2026-11-17"
     },
     "/vendor/connectycube-com": {
-      "hash": "37b44e67332d03ca",
+      "hash": "0a2b86d7848be7dc",
       "changed": "2026-11-17"
     },
     "/vendor/container-registry-service": {
-      "hash": "2a474267139b084e",
+      "hash": "1835ed28430b1e4c",
       "changed": "2026-11-17"
     },
     "/vendor/contentful": {
-      "hash": "6e30d2cf4f159bb2",
+      "hash": "148804e8d8c3b9c2",
       "changed": "2026-11-17"
     },
     "/vendor/conversion-tools": {
-      "hash": "2cebfd0fd7863155",
+      "hash": "5e25f8abe732a4a6",
       "changed": "2026-11-17"
     },
     "/vendor/convex": {
       "daily": true
     },
     "/vendor/conveyor-cloud": {
-      "hash": "d739471fe75353f7",
+      "hash": "27b6a6a2c81ea13a",
       "changed": "2026-11-17"
     },
     "/vendor/coolify": {
-      "hash": "cbc6edb1ef05c7ef",
+      "hash": "4faec17529832e4f",
       "changed": "2026-11-17"
     },
     "/vendor/coolors": {
-      "hash": "43efaf906a83df8d",
+      "hash": "6308cfaa12c19620",
       "changed": "2026-11-17"
     },
     "/vendor/copr-fedorainfracloud-org": {
-      "hash": "6c11898f7c081dfc",
+      "hash": "3e4c2cccf4be0a30",
       "changed": "2026-11-17"
     },
     "/vendor/core-web-vitals-history": {
-      "hash": "f37b41cd1e35d07d",
+      "hash": "7e9e359e4e3fa36c",
       "changed": "2026-11-17"
     },
     "/vendor/corgea": {
-      "hash": "fa931bd2695df238",
+      "hash": "22b0b128ed7bc31e",
       "changed": "2026-11-17"
     },
     "/vendor/cors-tester": {
-      "hash": "aaf22d0671222c01",
+      "hash": "1efa6f8ac99a4340",
       "changed": "2026-11-17"
     },
     "/vendor/cosmic": {
-      "hash": "a45eb2b32f7ee8fb",
+      "hash": "cd3789db75ca2434",
       "changed": "2026-11-17"
     },
     "/vendor/couchbase-capella": {
       "daily": true
     },
     "/vendor/counter-dev": {
-      "hash": "0e47402abed13fcd",
+      "hash": "95f6ee28d287c5d3",
       "changed": "2026-11-17"
     },
     "/vendor/country-state-city-microservice-api": {
-      "hash": "f6a7d4efe1281c96",
+      "hash": "6a2095efa054c34c",
       "changed": "2026-11-17"
     },
     "/vendor/coupler": {
-      "hash": "0efbbe2747d51575",
+      "hash": "e87d6777cda38474",
       "changed": "2026-11-17"
     },
     "/vendor/courier-com": {
-      "hash": "2a50a540a2e775ae",
+      "hash": "4c9f3efbea7567a2",
       "changed": "2026-11-17"
     },
     "/vendor/coursera": {
-      "hash": "9fc64564cb272507",
+      "hash": "d728902fab14a1f6",
       "changed": "2026-11-17"
     },
     "/vendor/coveralls-io": {
-      "hash": "200d1f1da9760256",
+      "hash": "876009cd1190ef6c",
       "changed": "2026-11-17"
     },
     "/vendor/craftmypdf": {
-      "hash": "89b2440158499446",
+      "hash": "328e48006b8d2e06",
       "changed": "2026-11-17"
     },
     "/vendor/cratedb": {
       "daily": true
     },
     "/vendor/crisp": {
-      "hash": "9e2440209969f41a",
+      "hash": "859cbff8fd275fcb",
       "changed": "2026-11-17"
     },
     "/vendor/cron-job-org": {
-      "hash": "757665d63ef030b6",
+      "hash": "2e9912325e32ecbc",
       "changed": "2026-11-17"
     },
     "/vendor/cronhooks": {
-      "hash": "e07badb21047bd4b",
+      "hash": "f104338d167cac6a",
       "changed": "2026-11-17"
     },
     "/vendor/cronitor": {
       "daily": true
     },
     "/vendor/crosswork": {
-      "hash": "69cf7e27acc9f821",
+      "hash": "0802a202c66ee851",
       "changed": "2026-11-17"
     },
     "/vendor/crowdin": {
-      "hash": "1e61bfb4b1261b1c",
+      "hash": "22e077a9d42230e9",
       "changed": "2026-11-17"
     },
     "/vendor/crypteron-com": {
-      "hash": "a67b787fb8332fbf",
+      "hash": "c9e3c4fba4c52931",
       "changed": "2026-11-17"
     },
     "/vendor/crystallize": {
-      "hash": "a716b74feabcbd2a",
+      "hash": "1a2e58f0ec55d7f0",
       "changed": "2026-11-17"
     },
     "/vendor/css-glass": {
-      "hash": "809f25d1516fd9a3",
+      "hash": "d356bb4845eb2ebb",
       "changed": "2026-11-17"
     },
     "/vendor/css-gradient-com": {
-      "hash": "afe822196751a365",
+      "hash": "a63d680b73696054",
       "changed": "2026-11-17"
     },
     "/vendor/cstate": {
-      "hash": "36f289323f806eab",
+      "hash": "324e5af3b1d91636",
       "changed": "2026-11-17"
     },
     "/vendor/cube": {
-      "hash": "522f48618c2ba62b",
+      "hash": "5b0c60b475502038",
       "changed": "2026-11-17"
     },
     "/vendor/curlhub": {
-      "hash": "f351af6b36051324",
+      "hash": "877281b67186e78f",
       "changed": "2026-11-17"
     },
     "/vendor/currencyapi": {
-      "hash": "a1fea8582fcbb06d",
+      "hash": "ca8d075c2cce349a",
       "changed": "2026-11-17"
     },
     "/vendor/currencyfreaks": {
-      "hash": "70755ab755e47592",
+      "hash": "83920675d356a935",
       "changed": "2026-11-17"
     },
     "/vendor/currencylayer": {
-      "hash": "2448b62317d0356e",
+      "hash": "21ce8ffc61e9bbb1",
       "changed": "2026-11-17"
     },
     "/vendor/currencyscoop": {
-      "hash": "05a3f677ab5afce8",
+      "hash": "8b4c1b52090c601b",
       "changed": "2026-11-17"
     },
     "/vendor/cursor": {
       "daily": true
     },
     "/vendor/customjs": {
-      "hash": "644166cee7a76e58",
+      "hash": "dfbb43fc560325ff",
       "changed": "2026-11-17"
     },
     "/vendor/cyberchef": {
-      "hash": "1e8adfd0ff508c7a",
+      "hash": "595b08150e6bbf7c",
       "changed": "2026-11-17"
     },
     "/vendor/cypress-cloud": {
-      "hash": "741aaf925dc84db6",
+      "hash": "961394ce51340fd7",
       "changed": "2026-11-17"
     },
     "/vendor/dadroit-v-web": {
-      "hash": "fbeeaa9c168956af",
+      "hash": "b767052ec73f4e1b",
       "changed": "2026-11-17"
     },
     "/vendor/daestro": {
       "daily": true
     },
     "/vendor/daily-co": {
-      "hash": "a7f7b7e5b11ccacd",
+      "hash": "d27bbe3ea027da81",
       "changed": "2026-11-17"
     },
     "/vendor/daisyui": {
-      "hash": "8db4b97bafc4ed8f",
+      "hash": "2dd0a0129bdce44f",
       "changed": "2026-11-17"
     },
     "/vendor/dappling-network": {
       "daily": true
     },
     "/vendor/data-fetcher": {
-      "hash": "80158136b131ca01",
+      "hash": "a1b6a459133aa879",
       "changed": "2026-11-17"
     },
     "/vendor/data-miner": {
-      "hash": "d0ed0ca4c73267f7",
+      "hash": "b66bc1a71b739576",
       "changed": "2026-11-17"
     },
     "/vendor/databricks-lakeflow-connect": {
-      "hash": "3deb337fffbeaf4b",
+      "hash": "256f3694435dea1f",
       "changed": "2026-11-17"
     },
     "/vendor/datadog": {
       "daily": true
     },
     "/vendor/dataimporter-io": {
-      "hash": "81d18344bac87206",
+      "hash": "bcafc6dfa0037eb8",
       "changed": "2026-11-17"
     },
     "/vendor/datalore": {
-      "hash": "a615dedeeb99a1ac",
+      "hash": "cdb5054f664c74ce",
       "changed": "2026-11-17"
     },
     "/vendor/datelist-io": {
-      "hash": "87872d33c669fcb4",
+      "hash": "0bb84e3089b9b48b",
       "changed": "2026-11-17"
     },
     "/vendor/datocms": {
-      "hash": "945e047733eadb28",
+      "hash": "e55a1789df780385",
       "changed": "2026-11-17"
     },
     "/vendor/datree": {
-      "hash": "f9b481ff2aff6fc7",
+      "hash": "32af25a2243ad4fe",
       "changed": "2026-11-17"
     },
     "/vendor/davinci-resolve": {
-      "hash": "7cb44bd6d0d63265",
+      "hash": "82ac21f9fe1df964",
       "changed": "2026-11-17"
     },
     "/vendor/daytona": {
       "daily": true
     },
     "/vendor/db-designer": {
-      "hash": "97e3fc635c60d830",
+      "hash": "7cc7fec100409e2f",
       "changed": "2026-11-17"
     },
     "/vendor/db-ip": {
-      "hash": "0ddbc23369e3f9cf",
+      "hash": "132cf02a34c7a409",
       "changed": "2026-11-17"
     },
     "/vendor/dbos": {
@@ -5315,316 +5314,316 @@
       "daily": true
     },
     "/vendor/debugmail-io": {
-      "hash": "689efc70c73c42d7",
+      "hash": "99c8554b2704e618",
       "changed": "2026-11-17"
     },
     "/vendor/deepar": {
-      "hash": "0bf762428e5d77dd",
+      "hash": "77e619b8b7f7143c",
       "changed": "2026-11-17"
     },
     "/vendor/deepgram": {
       "daily": true
     },
     "/vendor/deepnote": {
-      "hash": "8599138b31520b41",
+      "hash": "0c2edca46afe737c",
       "changed": "2026-11-17"
     },
     "/vendor/deepscan-io": {
-      "hash": "b839429efa7e4a0c",
+      "hash": "fc4fcca7e19f946e",
       "changed": "2026-11-17"
     },
     "/vendor/deepseek-api": {
       "daily": true
     },
     "/vendor/deepsource": {
-      "hash": "ad2fff7bb0584847",
+      "hash": "e1e123bd86ed8624",
       "changed": "2026-11-17"
     },
     "/vendor/degoo-com": {
-      "hash": "157a09d821177d6a",
+      "hash": "f4de9224a0ffb03c",
       "changed": "2026-11-17"
     },
     "/vendor/deno-deploy": {
       "daily": true
     },
     "/vendor/dependabot": {
-      "hash": "21b0f36251d3e5aa",
+      "hash": "85f0920e64d72bb4",
       "changed": "2026-11-17"
     },
     "/vendor/deployhq-com": {
-      "hash": "fe38bbfa7b81ebfc",
+      "hash": "b3854d5b038c7cb3",
       "changed": "2026-11-17"
     },
     "/vendor/deployment-io": {
-      "hash": "bbc76e9fa9d916b6",
+      "hash": "485db6979cfa2ec1",
       "changed": "2026-11-17"
     },
     "/vendor/descope": {
-      "hash": "3d52a0e0ebfcbfbb",
+      "hash": "04d32732e08a9b71",
       "changed": "2026-11-17"
     },
     "/vendor/desec": {
-      "hash": "7b47ba91d8394961",
+      "hash": "b96df7f620c9539e",
       "changed": "2026-11-17"
     },
     "/vendor/developers-google-com": {
-      "hash": "46bb394b47f5295d",
+      "hash": "260dfb3a934bcb04",
       "changed": "2026-11-17"
     },
     "/vendor/devin": {
       "daily": true
     },
     "/vendor/devtoollab": {
-      "hash": "89a2833dc393d805",
+      "hash": "e312cf10ef980d70",
       "changed": "2026-11-17"
     },
     "/vendor/dhiwise": {
-      "hash": "0aaeaaf5b86861c7",
+      "hash": "0cf6467347254a3f",
       "changed": "2026-11-17"
     },
     "/vendor/diagrams-net": {
-      "hash": "e0aa585ce95f3edc",
+      "hash": "d21bf149570133fc",
       "changed": "2026-11-17"
     },
     "/vendor/diawi": {
-      "hash": "dc0e492a638c041e",
+      "hash": "433f0a7ba90e068a",
       "changed": "2026-11-17"
     },
     "/vendor/difftext": {
-      "hash": "2483cafbd6b27865",
+      "hash": "94110d76e349d460",
       "changed": "2026-11-17"
     },
     "/vendor/digitalocean": {
       "daily": true
     },
     "/vendor/digitalocean-dns": {
-      "hash": "1d0a01eb2bde6b3b",
+      "hash": "8bdb00e4a901b4cb",
       "changed": "2026-11-17"
     },
     "/vendor/digitalplat": {
-      "hash": "ce66e2bd4c962e5b",
+      "hash": "a12a8e63e18ba91c",
       "changed": "2026-11-17"
     },
     "/vendor/directus": {
-      "hash": "221a4dd5aa19c2ce",
+      "hash": "641e4bf1c8cca8f1",
       "changed": "2026-11-17"
     },
     "/vendor/discord": {
-      "hash": "9f77d743f4049280",
+      "hash": "26769bdc84600f2b",
       "changed": "2026-11-17"
     },
     "/vendor/discord-api": {
-      "hash": "2105b7f20fa01ea0",
+      "hash": "35aa1a7bc17d74b3",
       "changed": "2026-11-17"
     },
     "/vendor/disease-sh": {
-      "hash": "45da04a977deb9d5",
+      "hash": "66edbf11568e5efc",
       "changed": "2026-11-17"
     },
     "/vendor/dj-checkup": {
-      "hash": "0e79690c349eef73",
+      "hash": "d84097119635a8f8",
       "changed": "2026-11-17"
     },
     "/vendor/dkimvalidator-com": {
-      "hash": "7220e18d42abed74",
+      "hash": "e348b1ec4f748a79",
       "changed": "2026-11-17"
     },
     "/vendor/dnsexit": {
-      "hash": "c9eed32b3f221dc6",
+      "hash": "1b99abe39b296df8",
       "changed": "2026-11-17"
     },
     "/vendor/dnspod-com": {
-      "hash": "1063c781db2ec265",
+      "hash": "0fcbaf6c9c583d94",
       "changed": "2026-11-17"
     },
     "/vendor/docbeacon": {
-      "hash": "db6a35953984d45b",
+      "hash": "fbee41856f84b7ae",
       "changed": "2026-11-17"
     },
     "/vendor/docker-hub": {
       "daily": true
     },
     "/vendor/docusaurus": {
-      "hash": "b1b9aa249c7ec2a9",
+      "hash": "20d4c8fcea7c5808",
       "changed": "2026-11-17"
     },
     "/vendor/doczilla": {
-      "hash": "9d04577a0cd37bba",
+      "hash": "0d96c4078349a1a9",
       "changed": "2026-11-17"
     },
     "/vendor/domain-forward": {
-      "hash": "8a7cf842781c1053",
+      "hash": "e89536db0a6f1996",
       "changed": "2026-11-17"
     },
     "/vendor/domcloud-co": {
       "daily": true
     },
     "/vendor/doppio": {
-      "hash": "c03e382018072b6e",
+      "hash": "c43b62e276e8716d",
       "changed": "2026-11-17"
     },
     "/vendor/doppler": {
-      "hash": "556929a9c76cee14",
+      "hash": "1f3fa9e2fcd7a436",
       "changed": "2026-11-17"
     },
     "/vendor/dotenv": {
-      "hash": "12e916fa2c5f6dbf",
+      "hash": "7559b19fbaf0939b",
       "changed": "2026-11-17"
     },
     "/vendor/downtimemonkey-com": {
       "daily": true
     },
     "/vendor/drawdb": {
-      "hash": "7aa6783febe3fff2",
+      "hash": "ba66b571cf45e7e1",
       "changed": "2026-11-17"
     },
     "/vendor/drift-for-early-stage-startups": {
-      "hash": "a0ceddc01136bb6e",
+      "hash": "7dd0504b429722f2",
       "changed": "2026-11-17"
     },
     "/vendor/drone-ci": {
-      "hash": "0da77622feea7fc4",
+      "hash": "c259c8a6e7b653be",
       "changed": "2026-11-17"
     },
     "/vendor/dropbox": {
-      "hash": "386f44709c8e1efd",
+      "hash": "81fbc196b905619f",
       "changed": "2026-11-17"
     },
     "/vendor/dropshare": {
-      "hash": "afdd24e905975bdb",
+      "hash": "f4faee0b8e986a26",
       "changed": "2026-11-17"
     },
     "/vendor/dub-co": {
-      "hash": "db5ba2b1f0e8fc24",
+      "hash": "97405d1a8ae8a5e6",
       "changed": "2026-11-17"
     },
     "/vendor/duckdns-org": {
-      "hash": "096e44aa7b6c539f",
+      "hash": "b1f81c02a60f6370",
       "changed": "2026-11-17"
     },
     "/vendor/duckly": {
-      "hash": "cef96d0c04429861",
+      "hash": "9ba90dba4931fb07",
       "changed": "2026-11-17"
     },
     "/vendor/duo-com": {
-      "hash": "04fe77582778d899",
+      "hash": "ece4569e40eacf88",
       "changed": "2026-11-17"
     },
     "/vendor/duolingo": {
-      "hash": "5834485e69f28dd9",
+      "hash": "82fbd41c63753d40",
       "changed": "2026-11-17"
     },
     "/vendor/dwh-dev": {
-      "hash": "cac1263cfbc114d6",
+      "hash": "974d213de7baa269",
       "changed": "2026-11-17"
     },
     "/vendor/dynamicdocs": {
-      "hash": "e6871f79ae72d65e",
+      "hash": "cb9ae5957f776059",
       "changed": "2026-11-17"
     },
     "/vendor/dynamodb-local": {
-      "hash": "46a6404bdc7d5374",
+      "hash": "c7aaddccf42ad495",
       "changed": "2026-11-17"
     },
     "/vendor/dynv6-com": {
-      "hash": "e14fa0363488c20f",
+      "hash": "4c8f5aec9fd3a006",
       "changed": "2026-11-17"
     },
     "/vendor/e2b": {
       "daily": true
     },
     "/vendor/easyretro-io": {
-      "hash": "9debffcb3d6847e9",
+      "hash": "d287ce1f646553d7",
       "changed": "2026-11-17"
     },
     "/vendor/eclipse-che": {
-      "hash": "1df994921c0faef0",
+      "hash": "1c744128c9fc0fb6",
       "changed": "2026-11-17"
     },
     "/vendor/economize-cloud": {
-      "hash": "ee2bc3a085987a71",
+      "hash": "c9e2c2245fa62b3f",
       "changed": "2026-11-17"
     },
     "/vendor/edx": {
-      "hash": "b563279c3b225dfd",
+      "hash": "7c056c35d2002e0e",
       "changed": "2026-11-17"
     },
     "/vendor/elastic": {
       "daily": true
     },
     "/vendor/elasticmq": {
-      "hash": "f095e6e34f82ea22",
+      "hash": "8b1c04dfeec0aa34",
       "changed": "2026-11-17"
     },
     "/vendor/element-io": {
-      "hash": "ec039664b93fc856",
+      "hash": "9bb79c611dc5e2f6",
       "changed": "2026-11-17"
     },
     "/vendor/elevenlabs": {
-      "hash": "679de5d2770f1292",
+      "hash": "43ab6b5c8ae7a50c",
       "changed": "2026-11-17"
     },
     "/vendor/elmah-io": {
-      "hash": "3991482c1e6cfd5f",
+      "hash": "ecc2a9fc40461d91",
       "changed": "2026-11-17"
     },
     "/vendor/emailjs": {
-      "hash": "fe9d7570b9a62137",
+      "hash": "0bdd47919a407777",
       "changed": "2026-11-17"
     },
     "/vendor/emaillabs-io": {
-      "hash": "d2e482212858e5e9",
+      "hash": "ee1ccb21c6c27af0",
       "changed": "2026-11-17"
     },
     "/vendor/emailoctopus": {
-      "hash": "8f48649c4aab39f8",
+      "hash": "b34b0510cc67617a",
       "changed": "2026-11-17"
     },
     "/vendor/emailvalidation-io": {
-      "hash": "f7255208d6a04064",
+      "hash": "52c0cea147484ba2",
       "changed": "2026-11-17"
     },
     "/vendor/embed-ly": {
-      "hash": "95c417afd62666a2",
+      "hash": "243aa845604ebba3",
       "changed": "2026-11-17"
     },
     "/vendor/embrace": {
-      "hash": "78b793dee7e5874d",
+      "hash": "2c348c215de7a9bf",
       "changed": "2026-11-17"
     },
     "/vendor/emqx-serverless": {
-      "hash": "f8d856d0e85b15e3",
+      "hash": "4be699afc6871022",
       "changed": "2026-11-17"
     },
     "/vendor/encore-dev": {
       "daily": true
     },
     "/vendor/engage": {
-      "hash": "c0b083e0eae1307c",
+      "hash": "d40c5a4e2d216b68",
       "changed": "2026-11-17"
     },
     "/vendor/engagespot-co": {
-      "hash": "f37a0c9ccea44a37",
+      "hash": "e984fd60379d5e91",
       "changed": "2026-11-17"
     },
     "/vendor/ente": {
-      "hash": "e4314fa416d26481",
+      "hash": "f160400eaefcbe58",
       "changed": "2026-11-17"
     },
     "/vendor/esm-sh": {
-      "hash": "6a504f944103b91f",
+      "hash": "54380469031ca2b8",
       "changed": "2026-11-17"
     },
     "/vendor/etherealmail": {
-      "hash": "3f5a016cdeed312a",
+      "hash": "15ee5d596f03ed9d",
       "changed": "2026-11-17"
     },
     "/vendor/etlr": {
-      "hash": "8e9e64c2bdfcf18c",
+      "hash": "bda0a09fc3411aae",
       "changed": "2026-11-17"
     },
     "/vendor/evernote": {
-      "hash": "08ca0125e13a2291",
+      "hash": "f3313d87fd1f9f97",
       "changed": "2026-11-17"
     },
     "/vendor/everystep-automation-com": {
@@ -5634,101 +5633,101 @@
       "daily": true
     },
     "/vendor/excalidraw": {
-      "hash": "630437e2472b172b",
+      "hash": "89fd59c442bdf211",
       "changed": "2026-11-17"
     },
     "/vendor/exceptionless": {
-      "hash": "481ae645eee29e3e",
+      "hash": "dd34422d335f9940",
       "changed": "2026-11-17"
     },
     "/vendor/exchangerate-api-com": {
-      "hash": "7129eed434fd53cb",
+      "hash": "f5298341d278ccad",
       "changed": "2026-11-17"
     },
     "/vendor/exif-editor": {
-      "hash": "06d47e100c29b864",
+      "hash": "29bf7a66dc636af3",
       "changed": "2026-11-17"
     },
     "/vendor/expensify": {
-      "hash": "403930df03a83b76",
+      "hash": "5fb910e742675783",
       "changed": "2026-11-17"
     },
     "/vendor/expo": {
-      "hash": "0ada3cdbe22ea53b",
+      "hash": "07a62a4280ddee7e",
       "changed": "2026-11-17"
     },
     "/vendor/export-sdk": {
-      "hash": "091dc5169fc01979",
+      "hash": "e10e6a4133576b33",
       "changed": "2026-11-17"
     },
     "/vendor/expose": {
-      "hash": "e0fb6179f73cbc90",
+      "hash": "faca9fbbbac1fa3d",
       "changed": "2026-11-17"
     },
     "/vendor/extendsclass": {
-      "hash": "3044c00f9bdb1add",
+      "hash": "7f6660ea8d3e8da5",
       "changed": "2026-11-17"
     },
     "/vendor/fabform": {
-      "hash": "1983dd2b9037830a",
+      "hash": "ce6512d20d3c4be8",
       "changed": "2026-11-17"
     },
     "/vendor/falco": {
-      "hash": "1631204218bdb815",
+      "hash": "ee5100604e797907",
       "changed": "2026-11-17"
     },
     "/vendor/fastly": {
-      "hash": "1d63a3f42e8de51b",
+      "hash": "3d1948907d919218",
       "changed": "2026-11-17"
     },
     "/vendor/feathery": {
-      "hash": "913328769e803c35",
+      "hash": "595d41ff99b01e09",
       "changed": "2026-11-17"
     },
     "/vendor/feedback-fish": {
-      "hash": "80cd7709249ca5ea",
+      "hash": "d4c57e2b8a077907",
       "changed": "2026-11-17"
     },
     "/vendor/feedbear": {
-      "hash": "fcfe616b1b8411a2",
+      "hash": "aa6b55f7da9f71a3",
       "changed": "2026-11-17"
     },
     "/vendor/fibery": {
-      "hash": "03af85c7b557d8ec",
+      "hash": "c76ae3244a3fa4cb",
       "changed": "2026-11-17"
     },
     "/vendor/fibo": {
-      "hash": "db7648e09fe27c6b",
+      "hash": "bdb64004f61d521c",
       "changed": "2026-11-17"
     },
     "/vendor/figma": {
-      "hash": "eb39123bdfb13a84",
+      "hash": "d3cca788b9d32a8a",
       "changed": "2026-11-17"
     },
     "/vendor/file-io": {
-      "hash": "61137ee8a7df6b05",
+      "hash": "19b84e47329efa2a",
       "changed": "2026-11-17"
     },
     "/vendor/filebase": {
-      "hash": "89acb2ea85ab7e89",
+      "hash": "57d0d68f79df3e48",
       "changed": "2026-11-17"
     },
     "/vendor/filess-io": {
       "daily": true
     },
     "/vendor/financial-data": {
-      "hash": "82df9d60497f7905",
+      "hash": "4623f8963c3fc497",
       "changed": "2026-11-17"
     },
     "/vendor/fingerprint": {
-      "hash": "58325db94a718e99",
+      "hash": "615e825186a33c56",
       "changed": "2026-11-17"
     },
     "/vendor/firebase": {
       "daily": true
     },
     "/vendor/firecrawl": {
-      "hash": "bcab89e7ca929258",
+      "hash": "700a5f4b004dc905",
       "changed": "2026-11-17"
     },
     "/vendor/fireworks-ai": {
@@ -5738,47 +5737,47 @@
       "daily": true
     },
     "/vendor/fivetran-activations": {
-      "hash": "4b43329bbed6fe3c",
+      "hash": "9bcefec68eb7d881",
       "changed": "2026-11-17"
     },
     "/vendor/fizzy": {
-      "hash": "18c7660b21aedb7f",
+      "hash": "731cae07b5f7226c",
       "changed": "2026-11-17"
     },
     "/vendor/flagsmith": {
-      "hash": "d0f97b0f19be7543",
+      "hash": "976b94945a406104",
       "changed": "2026-11-17"
     },
     "/vendor/flat-social": {
-      "hash": "5a57dfa5a7603d54",
+      "hash": "621488cf70347c74",
       "changed": "2026-11-17"
     },
     "/vendor/flickr": {
-      "hash": "43424a07ac4d3c8f",
+      "hash": "067c189431b3eebf",
       "changed": "2026-11-17"
     },
     "/vendor/float-ui": {
-      "hash": "7b9f6c80e6e39665",
+      "hash": "fb6280f62639380f",
       "changed": "2026-11-17"
     },
     "/vendor/floci": {
-      "hash": "4c5c9cd494d92c8a",
+      "hash": "0f63a1ed76279a9b",
       "changed": "2026-11-17"
     },
     "/vendor/flock-com": {
-      "hash": "29a6e913fd5b586a",
+      "hash": "2eef2bc78a642e28",
       "changed": "2026-11-17"
     },
     "/vendor/flows": {
-      "hash": "c5b1eefbf7db73d0",
+      "hash": "404051b9e464266c",
       "changed": "2026-11-17"
     },
     "/vendor/flutlab": {
-      "hash": "30433a85dccaf046",
+      "hash": "27a5a9b42d7d1b46",
       "changed": "2026-11-17"
     },
     "/vendor/flutter-flow": {
-      "hash": "a030beafb3d109c5",
+      "hash": "6daea106e8ade8ce",
       "changed": "2026-11-17"
     },
     "/vendor/fly-io": {
@@ -5788,236 +5787,236 @@
       "daily": true
     },
     "/vendor/flyon-ui": {
-      "hash": "33b67d3004107109",
+      "hash": "8667b85200ed02db",
       "changed": "2026-11-17"
     },
     "/vendor/forgecode": {
-      "hash": "ecb689407bf625c4",
+      "hash": "f1082bce24ce918b",
       "changed": "2026-11-17"
     },
     "/vendor/form-taxi": {
-      "hash": "021eb87f980dccb4",
+      "hash": "33a50567f7afbdce",
       "changed": "2026-11-17"
     },
     "/vendor/format-express": {
-      "hash": "46ddada223878b7e",
+      "hash": "3f028e3df18e2144",
       "changed": "2026-11-17"
     },
     "/vendor/formatjsononline-com": {
-      "hash": "a6206821ec1c4358",
+      "hash": "1d4720ebeb4143f0",
       "changed": "2026-11-17"
     },
     "/vendor/formbricks": {
-      "hash": "490a243a05266cef",
+      "hash": "ba36dee36594eefd",
       "changed": "2026-11-17"
     },
     "/vendor/formcarry-com": {
-      "hash": "6b22fe4839baf520",
+      "hash": "716533946e2dcb0d",
       "changed": "2026-11-17"
     },
     "/vendor/formester-com": {
-      "hash": "6b51bafe6bbd2739",
+      "hash": "c3662ec0bed4ce2c",
       "changed": "2026-11-17"
     },
     "/vendor/formkeep-com": {
-      "hash": "22cdf6c2b840e6f5",
+      "hash": "95d0af50c8cf9035",
       "changed": "2026-11-17"
     },
     "/vendor/formlets-com": {
-      "hash": "4a421d3dc395e095",
+      "hash": "fbb9bc638218c5a5",
       "changed": "2026-11-17"
     },
     "/vendor/formspark-io": {
-      "hash": "f40783399de1ef9a",
+      "hash": "eab3de05695c8912",
       "changed": "2026-11-17"
     },
     "/vendor/formspree": {
-      "hash": "775b02aa10c4faf8",
+      "hash": "4c59a5f9cb133008",
       "changed": "2026-11-17"
     },
     "/vendor/formsubmit-co": {
-      "hash": "8e2e72fbe9781128",
+      "hash": "4b115bad939d6a6c",
       "changed": "2026-11-17"
     },
     "/vendor/formware-io": {
-      "hash": "9b67e68c85d4de6b",
+      "hash": "2ccf8150f3c5752a",
       "changed": "2026-11-17"
     },
     "/vendor/forwardemail-net": {
-      "hash": "f714d98bfe89bf81",
+      "hash": "756f052ebbee43da",
       "changed": "2026-11-17"
     },
     "/vendor/fossa": {
-      "hash": "e37ab133e2c668ec",
+      "hash": "42f52b1712df80f9",
       "changed": "2026-11-17"
     },
     "/vendor/foursquare": {
-      "hash": "d3eb0ccd8b1bc6cc",
+      "hash": "03a9cdb24567014f",
       "changed": "2026-11-17"
     },
     "/vendor/framagit-org": {
-      "hash": "ee53b46482b82082",
+      "hash": "09c6480b5a374f79",
       "changed": "2026-11-17"
     },
     "/vendor/framer-com": {
-      "hash": "c07fd18d8281e4a6",
+      "hash": "2bb7a3621bc3619c",
       "changed": "2026-11-17"
     },
     "/vendor/fraudlabs-pro": {
-      "hash": "e15fd04d1c51c887",
+      "hash": "2bc5a64493ccb5f8",
       "changed": "2026-11-17"
     },
     "/vendor/free-po-editor": {
-      "hash": "f5d1b890bdd5b27a",
+      "hash": "01a25c55506c6f7d",
       "changed": "2026-11-17"
     },
     "/vendor/freedcamp-com": {
-      "hash": "fa988cdf41de422f",
+      "hash": "d85dd71cb79f2a0a",
       "changed": "2026-11-17"
     },
     "/vendor/freedns-afraid-org": {
-      "hash": "ff7e1002fa2d6db1",
+      "hash": "075a8f9f50c306b6",
       "changed": "2026-11-17"
     },
     "/vendor/freeflarum": {
       "daily": true
     },
     "/vendor/freeipapi": {
-      "hash": "13a9183d7641f158",
+      "hash": "ad6d1d8b650e1808",
       "changed": "2026-11-17"
     },
     "/vendor/freetools-site": {
-      "hash": "c28512c3bbcef6c3",
+      "hash": "8790c2283d112845",
       "changed": "2026-11-17"
     },
     "/vendor/freshworks-for-startups": {
-      "hash": "2b90146c2dc073b3",
+      "hash": "209ec7de8780646f",
       "changed": "2026-11-17"
     },
     "/vendor/fullstory-com": {
-      "hash": "10c65e66896723c2",
+      "hash": "c9d3da01523521aa",
       "changed": "2026-11-17"
     },
     "/vendor/fusionauth": {
-      "hash": "8bfcf95bc3b3645b",
+      "hash": "70a29fb80711ed78",
       "changed": "2026-11-17"
     },
     "/vendor/fxratesapi": {
-      "hash": "87c23e6dcac81760",
+      "hash": "d90bc34611cea40a",
       "changed": "2026-11-17"
     },
     "/vendor/gatling": {
-      "hash": "7d862794d1626f7a",
+      "hash": "34f0908a9d85ad43",
       "changed": "2026-11-17"
     },
     "/vendor/gcore-dns": {
-      "hash": "4596097e617b168e",
+      "hash": "09546faf97c87d57",
       "changed": "2026-11-17"
     },
     "/vendor/geekflare-api": {
-      "hash": "d9ff52c3f0cd57a4",
+      "hash": "d6c6a305b0aa4dad",
       "changed": "2026-11-17"
     },
     "/vendor/gel": {
-      "hash": "5b667b9807132af0",
+      "hash": "f9fc7b792fa14fb7",
       "changed": "2026-11-17"
     },
     "/vendor/gemfury": {
-      "hash": "76b77e63d1c45b09",
+      "hash": "72bc8aceb9283736",
       "changed": "2026-11-17"
     },
     "/vendor/gemini-cli": {
-      "hash": "e3f3ce1e53be05f1",
+      "hash": "f2e896fa27bcaee1",
       "changed": "2026-11-17"
     },
     "/vendor/geoapify-com": {
-      "hash": "570df3c04fa72ac5",
+      "hash": "62e5294d80ae4c88",
       "changed": "2026-11-17"
     },
     "/vendor/geocodify-com": {
-      "hash": "f186ad3b60f60772",
+      "hash": "9a9935d69cae974b",
       "changed": "2026-11-17"
     },
     "/vendor/geocodio": {
-      "hash": "c877a56cd49a2703",
+      "hash": "4ae2c95ef4842bbd",
       "changed": "2026-11-17"
     },
     "/vendor/geojs-io": {
-      "hash": "2005ac59437a4073",
+      "hash": "21471b7459269df1",
       "changed": "2026-11-17"
     },
     "/vendor/geokeo-api": {
-      "hash": "1c7ced55506f9248",
+      "hash": "bd0460b54fe6c157",
       "changed": "2026-11-17"
     },
     "/vendor/geolocated-io": {
-      "hash": "4aed25e75f73642c",
+      "hash": "31477768de58cb96",
       "changed": "2026-11-17"
     },
     "/vendor/gerrithub-io": {
-      "hash": "1bc31419aa8703c9",
+      "hash": "e626778d5f6be292",
       "changed": "2026-11-17"
     },
     "/vendor/getinsights-io": {
-      "hash": "86e452c66c3c7cbe",
+      "hash": "d468217ba5e8eadf",
       "changed": "2026-11-17"
     },
     "/vendor/getpantry-cloud": {
-      "hash": "bf80bb97e3e897d6",
+      "hash": "c6bafe71c5746dbb",
       "changed": "2026-11-17"
     },
     "/vendor/getupdraft": {
-      "hash": "87d3b9b2b81af777",
+      "hash": "18215617368ae1bd",
       "changed": "2026-11-17"
     },
     "/vendor/getvm": {
-      "hash": "6091b288eafa932e",
+      "hash": "f97dd6d2b9951a86",
       "changed": "2026-11-17"
     },
     "/vendor/gforge": {
-      "hash": "f28fee72d8423a94",
+      "hash": "7193826e0ce19498",
       "changed": "2026-11-17"
     },
     "/vendor/gigalixir-com": {
       "daily": true
     },
     "/vendor/gimp": {
-      "hash": "84a41b5acea922d0",
+      "hash": "b1ca42f68738f950",
       "changed": "2026-11-17"
     },
     "/vendor/gitbook": {
-      "hash": "e052e4bd1da228ee",
+      "hash": "01af23c4caf9de12",
       "changed": "2026-11-17"
     },
     "/vendor/gitdailies": {
-      "hash": "e8594a06f3f02e2e",
+      "hash": "15a1a3355c6f7159",
       "changed": "2026-11-17"
     },
     "/vendor/gitea": {
-      "hash": "9b088fa9c3f8975e",
+      "hash": "9ce367fb65e000d4",
       "changed": "2026-11-17"
     },
     "/vendor/gitguardian": {
-      "hash": "c2b1b01aeb93d177",
+      "hash": "283d1b3f4978506b",
       "changed": "2026-11-17"
     },
     "/vendor/gitgud": {
-      "hash": "796afafff412b0c0",
+      "hash": "0c268830d6fb8967",
       "changed": "2026-11-17"
     },
     "/vendor/github": {
-      "hash": "4ff587c7af81eda8",
+      "hash": "6c47c27df9c6e6c3",
       "changed": "2026-11-17"
     },
     "/vendor/github-actions": {
       "daily": true
     },
     "/vendor/github-codespaces": {
-      "hash": "d286ce9289a52510",
+      "hash": "df6277168425147d",
       "changed": "2026-11-17"
     },
     "/vendor/github-container-registry": {
-      "hash": "8337d2d9a9c9b574",
+      "hash": "2b302a821aa75b3a",
       "changed": "2026-11-17"
     },
     "/vendor/github-copilot": {
@@ -6030,106 +6029,106 @@
       "daily": true
     },
     "/vendor/gitlab-ci": {
-      "hash": "7f61da0f5e3addeb",
+      "hash": "8585423e17dc341e",
       "changed": "2026-11-17"
     },
     "/vendor/gitleaks": {
-      "hash": "76475e0b34953130",
+      "hash": "ff11512437564d9d",
       "changed": "2026-11-17"
     },
     "/vendor/gitter-im": {
-      "hash": "4cbb5179a5984a3f",
+      "hash": "ffe9fde131fc1872",
       "changed": "2026-11-17"
     },
     "/vendor/glauca": {
-      "hash": "8f6d4df406f3a99d",
+      "hash": "1cb608d56f6135cf",
       "changed": "2026-11-17"
     },
     "/vendor/gleek-io": {
-      "hash": "519df79726ad1458",
+      "hash": "beee8a0fcc5bfb05",
       "changed": "2026-11-17"
     },
     "/vendor/glitchtip": {
-      "hash": "d1df72e4a4f42076",
+      "hash": "b19fb746f2f8969c",
       "changed": "2026-11-17"
     },
     "/vendor/glyphs": {
-      "hash": "218735e608fb823c",
+      "hash": "bac584175dcdf93e",
       "changed": "2026-11-17"
     },
     "/vendor/gmail": {
-      "hash": "b41e5a4ce0040811",
+      "hash": "5a421b9ebd72a0de",
       "changed": "2026-11-17"
     },
     "/vendor/goatcounter": {
-      "hash": "95fc3a6cf18a9b7f",
+      "hash": "7007b0d2bfe0b7e3",
       "changed": "2026-11-17"
     },
     "/vendor/gofile-io": {
-      "hash": "675dc9f4e6f99522",
+      "hash": "9e3125fa26d63c6e",
       "changed": "2026-11-17"
     },
     "/vendor/gokanban-io": {
-      "hash": "b8e7b585bf4d5b58",
+      "hash": "a4622f14960a71c0",
       "changed": "2026-11-17"
     },
     "/vendor/google-ai-pro-ultra": {
-      "hash": "54f405d5c4b2e876",
+      "hash": "17007d5277134007",
       "changed": "2026-11-17"
     },
     "/vendor/google-analytics": {
-      "hash": "421f8f0bae6665af",
+      "hash": "b153317fa399a8e8",
       "changed": "2026-11-17"
     },
     "/vendor/google-antigravity": {
       "daily": true
     },
     "/vendor/google-artifact-registry": {
-      "hash": "2815e9e81f0c0d2d",
+      "hash": "5301bbb3f711aacf",
       "changed": "2026-11-17"
     },
     "/vendor/google-cloud-bigquery": {
       "daily": true
     },
     "/vendor/google-cloud-build": {
-      "hash": "db6a32a60d55b59a",
+      "hash": "5bf44b93b891a418",
       "changed": "2026-11-17"
     },
     "/vendor/google-cloud-logging": {
-      "hash": "eec1e992e8a6caea",
+      "hash": "baee1b9dbec7aa84",
       "changed": "2026-11-17"
     },
     "/vendor/google-cloud-monitoring": {
       "daily": true
     },
     "/vendor/google-cloud-pub-sub": {
-      "hash": "79a80652feb37d32",
+      "hash": "20226e138b878772",
       "changed": "2026-11-17"
     },
     "/vendor/google-cloud-run": {
       "daily": true
     },
     "/vendor/google-cloud-shell": {
-      "hash": "b8ab308966d46bb7",
+      "hash": "75b660203eef7db6",
       "changed": "2026-11-17"
     },
     "/vendor/google-cloud-storage": {
-      "hash": "0d9347ae2e7f48f9",
+      "hash": "28d5fd05396a7982",
       "changed": "2026-11-17"
     },
     "/vendor/google-colab": {
       "daily": true
     },
     "/vendor/google-compute-engine": {
-      "hash": "0a0d661261911f0d",
+      "hash": "7d6b96d65740959c",
       "changed": "2026-11-17"
     },
     "/vendor/google-content-api-for-shopping": {
-      "hash": "d2deaa899c49afc8",
+      "hash": "4ff18a09d07309a8",
       "changed": "2026-11-17"
     },
     "/vendor/google-drive": {
-      "hash": "d977906120c9ff99",
+      "hash": "501c6180451b97c8",
       "changed": "2026-11-17"
     },
     "/vendor/google-for-startups-cloud-program": {
@@ -6145,42 +6144,42 @@
       "daily": true
     },
     "/vendor/google-keep": {
-      "hash": "6e65352b7702f219",
+      "hash": "91d5fc020a1a3c76",
       "changed": "2026-11-17"
     },
     "/vendor/google-maps-platform": {
-      "hash": "b0abf4c47e22ad57",
+      "hash": "9b9d5fbccfba63bb",
       "changed": "2026-11-17"
     },
     "/vendor/google-meet": {
-      "hash": "94b2f3c9f73cd080",
+      "hash": "e237dcd2a77b3884",
       "changed": "2026-11-17"
     },
     "/vendor/google-photos": {
-      "hash": "fd5caf801a48280e",
+      "hash": "0eaa52f3ad7cddcf",
       "changed": "2026-11-17"
     },
     "/vendor/google-secret-manager": {
-      "hash": "7a24a92a28a5cc9d",
+      "hash": "4b0814e7e81db096",
       "changed": "2026-11-17"
     },
     "/vendor/google-vector-search-2-0": {
       "daily": true
     },
     "/vendor/google-vertex-ai-agent-engine": {
-      "hash": "a0e64c3ea7ee543d",
+      "hash": "0e48968088192185",
       "changed": "2026-11-17"
     },
     "/vendor/goreportcard-com": {
-      "hash": "a4844deeb6771859",
+      "hash": "f24078d40c270a08",
       "changed": "2026-11-17"
     },
     "/vendor/gpu-bridge": {
-      "hash": "e75d1aac1f51f692",
+      "hash": "bebcc66605812cc4",
       "changed": "2026-11-17"
     },
     "/vendor/gradientos": {
-      "hash": "b096f1b50b3a90ac",
+      "hash": "080e919a092c8894",
       "changed": "2026-11-17"
     },
     "/vendor/grafana": {
@@ -6190,82 +6189,82 @@
       "daily": true
     },
     "/vendor/grafana-k6-cloud": {
-      "hash": "ac8cf6d1f54e24d1",
+      "hash": "83c95ed84e93de69",
       "changed": "2026-11-17"
     },
     "/vendor/grafana-loki": {
-      "hash": "17c858d5a56c9e19",
+      "hash": "859dc05ee4e6e8f3",
       "changed": "2026-11-17"
     },
     "/vendor/grapedrop": {
-      "hash": "57452b2b6a8d8029",
+      "hash": "88e5089ddfe48fa1",
       "changed": "2026-11-17"
     },
     "/vendor/graphcomment": {
-      "hash": "80af94e15e7b5282",
+      "hash": "4f346c8f250b9f5d",
       "changed": "2026-11-17"
     },
     "/vendor/gridlastic-com": {
-      "hash": "c723a4f57f828938",
+      "hash": "47ec107ff8ec438e",
       "changed": "2026-11-17"
     },
     "/vendor/groq": {
       "daily": true
     },
     "/vendor/growthbook": {
-      "hash": "13ea90b205ed4ef0",
+      "hash": "70199fce58860125",
       "changed": "2026-11-17"
     },
     "/vendor/grype": {
-      "hash": "306fd4fbb04fa9ff",
+      "hash": "b034f25f9e312ed6",
       "changed": "2026-11-17"
     },
     "/vendor/gtmetrix-com": {
-      "hash": "576ef85ccd285b9a",
+      "hash": "276784a54e5df8b3",
       "changed": "2026-11-17"
     },
     "/vendor/gumlet-com": {
-      "hash": "4bf4011e1155b23c",
+      "hash": "1472d61ffeb4f915",
       "changed": "2026-11-17"
     },
     "/vendor/hackmd-io": {
-      "hash": "a34d038bb11a3624",
+      "hash": "fb1b62d36fe5e42b",
       "changed": "2026-11-17"
     },
     "/vendor/haikei-app": {
-      "hash": "00082e8343550a29",
+      "hash": "65eaa470b3abd5fc",
       "changed": "2026-11-17"
     },
     "/vendor/hamachi": {
-      "hash": "0daa52313b97d133",
+      "hash": "55e403cb9ddf87e9",
       "changed": "2026-11-17"
     },
     "/vendor/hanko": {
-      "hash": "4ea91c261f9d2624",
+      "hash": "c3e0950fcf29248d",
       "changed": "2026-11-17"
     },
     "/vendor/harbor": {
-      "hash": "08cb3093f144d315",
+      "hash": "c8afd4eeff46c4f5",
       "changed": "2026-11-17"
     },
     "/vendor/harness-ci": {
-      "hash": "4dc2dd7aae877169",
+      "hash": "8e1793f399d56a26",
       "changed": "2026-11-17"
     },
     "/vendor/harness-feature-flags": {
-      "hash": "bc7949c09419287b",
+      "hash": "4b33f96b9b4a4af2",
       "changed": "2026-11-17"
     },
     "/vendor/hashicorp-vault": {
-      "hash": "23e0f6cac6f0a5ad",
+      "hash": "988d994e44a95866",
       "changed": "2026-11-17"
     },
     "/vendor/hasura": {
-      "hash": "4e1ed15570f0c57c",
+      "hash": "65e1fd23906f82f0",
       "changed": "2026-11-17"
     },
     "/vendor/have-i-been-pwned": {
-      "hash": "dd901be7b2356c40",
+      "hash": "50704b17d00f0ba0",
       "changed": "2026-11-17"
     },
     "/vendor/hcp-terraform": {
@@ -6275,222 +6274,222 @@
       "daily": true
     },
     "/vendor/heap-io": {
-      "hash": "2e8d188ebfb822d6",
+      "hash": "f75d7afc2d5ee11f",
       "changed": "2026-11-17"
     },
     "/vendor/help-scout-for-startups": {
-      "hash": "eae6221a7ab747d5",
+      "hash": "805571b8a78cbb12",
       "changed": "2026-11-17"
     },
     "/vendor/helploom": {
-      "hash": "75e831b9cb50741a",
+      "hash": "bbd44777220cce8f",
       "changed": "2026-11-17"
     },
     "/vendor/heptapod-net": {
-      "hash": "f80aea983c40ec6b",
+      "hash": "1fcdd1a8b58f1afa",
       "changed": "2026-11-17"
     },
     "/vendor/heroku-for-startups-program": {
-      "hash": "c9c60857871d7f4f",
+      "hash": "3f1c5460f085697c",
       "changed": "2026-11-17"
     },
     "/vendor/herotofu-com": {
-      "hash": "c699444b507810ab",
+      "hash": "621c8cee006aba46",
       "changed": "2026-11-17"
     },
     "/vendor/heroui": {
-      "hash": "d0763267041e4f7c",
+      "hash": "5b4f29b47f2cd4c6",
       "changed": "2026-11-17"
     },
     "/vendor/hetzner": {
       "daily": true
     },
     "/vendor/hetzner-dns": {
-      "hash": "67212a40d8db0470",
+      "hash": "f84cb08128285a0b",
       "changed": "2026-11-17"
     },
     "/vendor/hetzner-inference-api": {
       "daily": true
     },
     "/vendor/hex": {
-      "hash": "30850cfb240469cf",
+      "hash": "cac74ba22d3164c6",
       "changed": "2026-11-17"
     },
     "/vendor/hexclave": {
-      "hash": "5bee2b6e0fd4a6d4",
+      "hash": "12c22f6ba8f47c0e",
       "changed": "2026-11-17"
     },
     "/vendor/highlight-io": {
-      "hash": "993332524bf3fe42",
+      "hash": "b782a38f1e819fad",
       "changed": "2026-11-17"
     },
     "/vendor/hightouch": {
-      "hash": "3b800a7dafb898a6",
+      "hash": "696acbed2d938ad6",
       "changed": "2026-11-17"
     },
     "/vendor/hivemq": {
-      "hash": "debac4125ee11edf",
+      "hash": "b95e31812437b54d",
       "changed": "2026-11-17"
     },
     "/vendor/holistic-dev": {
-      "hash": "c3d23e3f15b7e4a4",
+      "hash": "02cbec90bf751564",
       "changed": "2026-11-17"
     },
     "/vendor/honeybadger-io": {
-      "hash": "4e39d516df90423b",
+      "hash": "7560ec0bd21ae7c8",
       "changed": "2026-11-17"
     },
     "/vendor/hook-relay": {
-      "hash": "41c53b14bc553ac8",
+      "hash": "629a6997a6e7d7d5",
       "changed": "2026-11-17"
     },
     "/vendor/hook0": {
-      "hash": "27a47202a4aef17f",
+      "hash": "7befc8e72f61470e",
       "changed": "2026-11-17"
     },
     "/vendor/hookdeck": {
-      "hash": "37be00973fcc7691",
+      "hash": "1114dbf8d1a2a9be",
       "changed": "2026-11-17"
     },
     "/vendor/hoppscotch": {
-      "hash": "1c58cd12ce7f3c25",
+      "hash": "3e8915ff29c4e452",
       "changed": "2026-11-17"
     },
     "/vendor/hosting-checker": {
-      "hash": "d76001cc0f53301d",
+      "hash": "7dd5124ec3b1659c",
       "changed": "2026-11-17"
     },
     "/vendor/hotjar": {
-      "hash": "bc3118c8cc3f4f95",
+      "hash": "65a48c1e64349284",
       "changed": "2026-11-17"
     },
     "/vendor/houndci-com": {
-      "hash": "34b2ab755814aeb0",
+      "hash": "296e10f6bc95dbba",
       "changed": "2026-11-17"
     },
     "/vendor/howuku-com": {
-      "hash": "a4a89f6e069f1470",
+      "hash": "8b8444e7a08a137e",
       "changed": "2026-11-17"
     },
     "/vendor/httpsms": {
-      "hash": "7c8649f5a3e7821a",
+      "hash": "57415481c6e2b95a",
       "changed": "2026-11-17"
     },
     "/vendor/hubspot-for-startups": {
-      "hash": "738a6ada8316b9b0",
+      "hash": "c5b33771e387a14e",
       "changed": "2026-11-17"
     },
     "/vendor/hugging-face": {
       "daily": true
     },
     "/vendor/huly": {
-      "hash": "b67365407941ea20",
+      "hash": "85e51f06974de866",
       "changed": "2026-11-17"
     },
     "/vendor/hunter-io": {
-      "hash": "832b1f01d49ba949",
+      "hash": "4674feff2c4866bf",
       "changed": "2026-11-17"
     },
     "/vendor/hurricane-electric-dns": {
-      "hash": "76da0f0bb806b02f",
+      "hash": "99aba25a6eb98578",
       "changed": "2026-11-17"
     },
     "/vendor/hygger": {
-      "hash": "67457979084ef2ae",
+      "hash": "1620eb2587c815af",
       "changed": "2026-11-17"
     },
     "/vendor/hygraph": {
-      "hash": "5da10a2c89da440e",
+      "hash": "d65a45ad0dd01c55",
       "changed": "2026-11-17"
     },
     "/vendor/hyperbrowser": {
-      "hash": "10474e2b26dcfb54",
+      "hash": "c050ec45ec7c4f1e",
       "changed": "2026-11-17"
     },
     "/vendor/hypercolor-dev": {
-      "hash": "7bb23333dcfbb97c",
+      "hash": "f8cd7ab6d27f27c9",
       "changed": "2026-11-17"
     },
     "/vendor/hyperping": {
       "daily": true
     },
     "/vendor/hypertune": {
-      "hash": "4d4e003006eb0d27",
+      "hash": "5f11d210be5318cf",
       "changed": "2026-11-17"
     },
     "/vendor/hyperui": {
-      "hash": "d097dd48bdf48667",
+      "hash": "a018501ed0b1c6b3",
       "changed": "2026-11-17"
     },
     "/vendor/icedrive-net": {
-      "hash": "14b745e2201d519e",
+      "hash": "4cc9949fb76db71f",
       "changed": "2026-11-17"
     },
     "/vendor/icloud": {
-      "hash": "abec9d406e629db5",
+      "hash": "65ea601687e81e7b",
       "changed": "2026-11-17"
     },
     "/vendor/icon-horse": {
-      "hash": "9e70b6547568af78",
+      "hash": "629050a3cf010648",
       "changed": "2026-11-17"
     },
     "/vendor/iconify-design": {
-      "hash": "ddd328df34f5fe75",
+      "hash": "06d5d41f1ddaf99a",
       "changed": "2026-11-17"
     },
     "/vendor/iconoir": {
-      "hash": "dee867945979f8ee",
+      "hash": "5f4ff7ab582b54c4",
       "changed": "2026-11-17"
     },
     "/vendor/ifttt": {
-      "hash": "8252f531e531c4a3",
+      "hash": "92c2635c8f89f566",
       "changed": "2026-11-17"
     },
     "/vendor/ilograph": {
-      "hash": "2696b96c651238fb",
+      "hash": "7b0fbe2bc6379358",
       "changed": "2026-11-17"
     },
     "/vendor/image-bg-blurer": {
-      "hash": "044de585f1ae716e",
+      "hash": "659047f4adc7715b",
       "changed": "2026-11-17"
     },
     "/vendor/image-charts-com": {
-      "hash": "c857c8db89345796",
+      "hash": "3e79b5b0531cc4e8",
       "changed": "2026-11-17"
     },
     "/vendor/imageengine": {
       "daily": true
     },
     "/vendor/imagekit": {
-      "hash": "2092f86b5333d3a9",
+      "hash": "16d517f4a7d3aee2",
       "changed": "2026-11-17"
     },
     "/vendor/imgbb": {
-      "hash": "fe6ad1b2c868703c",
+      "hash": "7208cea42b8e6f54",
       "changed": "2026-11-17"
     },
     "/vendor/imgen": {
-      "hash": "b910b93bac55f7a7",
+      "hash": "463eea95381c894a",
       "changed": "2026-11-17"
     },
     "/vendor/imgix": {
-      "hash": "8dbd8f527d06ee2b",
+      "hash": "7d19b768a50ee26a",
       "changed": "2026-11-17"
     },
     "/vendor/imitate-email": {
-      "hash": "1ac1d80579f38ef9",
+      "hash": "80b389b0d505db02",
       "changed": "2026-11-17"
     },
     "/vendor/improvmx": {
-      "hash": "bf5f8a6b16fd26a3",
+      "hash": "c977e1d5dafb1c63",
       "changed": "2026-11-17"
     },
     "/vendor/inboxes-app": {
-      "hash": "63d1e53ff49b79bc",
+      "hash": "171d034fb90e033f",
       "changed": "2026-11-17"
     },
     "/vendor/inboxkitten-com": {
-      "hash": "8bfe67e065c95edf",
+      "hash": "b2f5b89190313231",
       "changed": "2026-11-17"
     },
     "/vendor/incident-io": {
@@ -6500,288 +6499,288 @@
       "daily": true
     },
     "/vendor/infisical": {
-      "hash": "ea5b3af58d170dea",
+      "hash": "e980737bc14c8ddb",
       "changed": "2026-11-17"
     },
     "/vendor/influxdb-cloud": {
-      "hash": "20a12216bd4572be",
+      "hash": "06c7dd195f28aadf",
       "changed": "2026-11-17"
     },
     "/vendor/inkscape": {
-      "hash": "8a3374ae503de20a",
+      "hash": "6e42d7f7625c946b",
       "changed": "2026-11-17"
     },
     "/vendor/inngest": {
-      "hash": "4427b5504c41f862",
+      "hash": "d17b342fb90da90b",
       "changed": "2026-11-17"
     },
     "/vendor/insomnia": {
-      "hash": "484d11a39798e52c",
+      "hash": "42869f2c8f179b43",
       "changed": "2026-11-17"
     },
     "/vendor/inspectlet-com": {
-      "hash": "aaab8986832a837c",
+      "hash": "fd0b064e1903d257",
       "changed": "2026-11-17"
     },
     "/vendor/inspector-dev": {
       "daily": true
     },
     "/vendor/instabug-for-startups": {
-      "hash": "520c733a22d12c52",
+      "hash": "c733fc3a2b7918f0",
       "changed": "2026-11-17"
     },
     "/vendor/installonair": {
-      "hash": "a44520cfac855f65",
+      "hash": "37b1271692a3192c",
       "changed": "2026-11-17"
     },
     "/vendor/instatus": {
-      "hash": "9d8582f09bc287c1",
+      "hash": "6dbd610973ab170f",
       "changed": "2026-11-17"
     },
     "/vendor/integrately": {
-      "hash": "d00aa76386cd8750",
+      "hash": "907a5177bd02b121",
       "changed": "2026-11-17"
     },
     "/vendor/intensedebate": {
-      "hash": "397235b5cc86c088",
+      "hash": "f6dad9244a5bedce",
       "changed": "2026-11-17"
     },
     "/vendor/internet-nl": {
-      "hash": "8a0bdeee77ea2ada",
+      "hash": "ccc9cd94f2afc308",
       "changed": "2026-11-17"
     },
     "/vendor/internxt": {
-      "hash": "fcebf5a59f4348fd",
+      "hash": "194140d84683978d",
       "changed": "2026-11-17"
     },
     "/vendor/invantive-cloud": {
-      "hash": "485387bdf2e3d491",
+      "hash": "c211508a81276ac9",
       "changed": "2026-11-17"
     },
     "/vendor/ip-city": {
-      "hash": "1e9ce7505a37fc63",
+      "hash": "06e83749a0c7cb33",
       "changed": "2026-11-17"
     },
     "/vendor/ip-geolocation": {
-      "hash": "4555c41aaff7d86a",
+      "hash": "79fdea816880cb51",
       "changed": "2026-11-17"
     },
     "/vendor/ip-geolocation-api-by-ipwho-org": {
-      "hash": "3854a73fe5622f7b",
+      "hash": "aaa3a1bd15c9b4bf",
       "changed": "2026-11-17"
     },
     "/vendor/ip2location-io": {
-      "hash": "d49ab8a89f26f57d",
+      "hash": "01a09e5c5b5bca72",
       "changed": "2026-11-17"
     },
     "/vendor/ipaddress-sh": {
-      "hash": "06d1a2a5d36ffc79",
+      "hash": "bcb4efe315035bee",
       "changed": "2026-11-17"
     },
     "/vendor/ipapi": {
-      "hash": "10845b5030612581",
+      "hash": "66433ccc039695d7",
       "changed": "2026-11-17"
     },
     "/vendor/ipapi-is": {
-      "hash": "25aef57ad7d93a19",
+      "hash": "596040e8dcd131d7",
       "changed": "2026-11-17"
     },
     "/vendor/ipbase-com": {
-      "hash": "b39ab765f38a2ec4",
+      "hash": "42a5b78a5a2253e4",
       "changed": "2026-11-17"
     },
     "/vendor/ipinfo-io": {
-      "hash": "c8aca6f8ec28fe9e",
+      "hash": "fc63d6d282b0efa2",
       "changed": "2026-11-17"
     },
     "/vendor/iplocate": {
-      "hash": "5d534513b94fa614",
+      "hash": "735930e5bb8c7210",
       "changed": "2026-11-17"
     },
     "/vendor/ipstack": {
-      "hash": "54012562e332dd1d",
+      "hash": "d1da00f7ab3bbf0c",
       "changed": "2026-11-17"
     },
     "/vendor/iptrace": {
-      "hash": "faca7235be34acaf",
+      "hash": "87edc01a6bd6920f",
       "changed": "2026-11-17"
     },
     "/vendor/isroot-in": {
-      "hash": "168e42af576afde3",
+      "hash": "08ea28fd34508bf4",
       "changed": "2026-11-17"
     },
     "/vendor/iubenda": {
-      "hash": "f87dcf3087a18552",
+      "hash": "34bd3393a09edcf2",
       "changed": "2026-11-17"
     },
     "/vendor/jaeger": {
       "daily": true
     },
     "/vendor/jam": {
-      "hash": "09c28d8c3df21741",
+      "hash": "6945e53b2b92fcba",
       "changed": "2026-11-17"
     },
     "/vendor/jamf-com": {
-      "hash": "3f0a6c13d8de0349",
+      "hash": "f333a64e268c7c28",
       "changed": "2026-11-17"
     },
     "/vendor/jdoodle": {
-      "hash": "53d0477aacc6a273",
+      "hash": "1708f8a0cf2a272c",
       "changed": "2026-11-17"
     },
     "/vendor/jenkins": {
-      "hash": "d34f15a413c1b2cb",
+      "hash": "d06f28814caf3585",
       "changed": "2026-11-17"
     },
     "/vendor/jetbrains": {
-      "hash": "252251d243a7df2a",
+      "hash": "8f3bd75b0ed1f97c",
       "changed": "2026-11-17"
     },
     "/vendor/jina-ai": {
       "daily": true
     },
     "/vendor/jitpack-io": {
-      "hash": "39cec83a97e1c2d2",
+      "hash": "a03b25ce66e68d58",
       "changed": "2026-11-17"
     },
     "/vendor/jotform": {
-      "hash": "aabfef440c5b7703",
+      "hash": "fe1d63abbb46990f",
       "changed": "2026-11-17"
     },
     "/vendor/jsdelivr": {
-      "hash": "75b290e8591dd9ed",
+      "hash": "ce56e67b11d097cd",
       "changed": "2026-11-17"
     },
     "/vendor/json-ip": {
-      "hash": "4b429ca66e0c9101",
+      "hash": "d4b3137af8f4de23",
       "changed": "2026-11-17"
     },
     "/vendor/json-to-table": {
-      "hash": "e84806dbdc87e448",
+      "hash": "bd7ef704ddae0634",
       "changed": "2026-11-17"
     },
     "/vendor/json2video": {
-      "hash": "8f5cd43f67a117f0",
+      "hash": "252adb325e1a1b42",
       "changed": "2026-11-17"
     },
     "/vendor/jsongrid": {
-      "hash": "791ae9f84d9c8f68",
+      "hash": "5a2d02be51b63980",
       "changed": "2026-11-17"
     },
     "/vendor/jsoning": {
-      "hash": "1fd8ef293b4bfe7b",
+      "hash": "d97513f6abaf1b28",
       "changed": "2026-11-17"
     },
     "/vendor/jsonswiss": {
-      "hash": "e6382c204b314b5a",
+      "hash": "bc1acb9c2500b7d2",
       "changed": "2026-11-17"
     },
     "/vendor/kaggle": {
       "daily": true
     },
     "/vendor/kan-bn": {
-      "hash": "adacdbf41f16ef26",
+      "hash": "a724a5eb6836d819",
       "changed": "2026-11-17"
     },
     "/vendor/kanbanflow-com": {
-      "hash": "aa38f88737d9f6a5",
+      "hash": "a7a2eb1a8a3c1e6f",
       "changed": "2026-11-17"
     },
     "/vendor/kanbantool-com": {
-      "hash": "a7b6877058d4de8d",
+      "hash": "c02d1a497a715b2c",
       "changed": "2026-11-17"
     },
     "/vendor/karbon-sites": {
-      "hash": "19ff7ba31160dd43",
+      "hash": "b087fbb58d1744ca",
       "changed": "2026-11-17"
     },
     "/vendor/katalon-com": {
-      "hash": "6a090b0e1db93bdd",
+      "hash": "fef2a298707d0d55",
       "changed": "2026-11-17"
     },
     "/vendor/keepassxc": {
-      "hash": "34ca367e57d6ee76",
+      "hash": "a8a17f70fc23295a",
       "changed": "2026-11-17"
     },
     "/vendor/keploy": {
-      "hash": "64159f8de1c7a0c4",
+      "hash": "6c11807bcdbc07a9",
       "changed": "2026-11-17"
     },
     "/vendor/kernel": {
-      "hash": "f9714eb2e717ac0a",
+      "hash": "84a1c444d5a015a2",
       "changed": "2026-11-17"
     },
     "/vendor/ketch": {
-      "hash": "59fb710feab79eb5",
+      "hash": "db28a7d4ae8a554c",
       "changed": "2026-11-17"
     },
     "/vendor/keybase": {
-      "hash": "995e7900d29742e7",
+      "hash": "2e4286e370de218c",
       "changed": "2026-11-17"
     },
     "/vendor/keycloak": {
-      "hash": "20d3a1def279dafd",
+      "hash": "0b474944061796ff",
       "changed": "2026-11-17"
     },
     "/vendor/keywords-ai": {
       "daily": true
     },
     "/vendor/khan-academy": {
-      "hash": "328ce157b3fdf10f",
+      "hash": "5ec120f7ab245af2",
       "changed": "2026-11-17"
     },
     "/vendor/killbait-api": {
-      "hash": "a9b6456c712dfd15",
+      "hash": "bef6cc3dae141596",
       "changed": "2026-11-17"
     },
     "/vendor/kinde": {
-      "hash": "b22925eef45d5eb0",
+      "hash": "dccf430aa3c37281",
       "changed": "2026-11-17"
     },
     "/vendor/knock": {
-      "hash": "411fed451b2f75ea",
+      "hash": "226a5d32348cedc5",
       "changed": "2026-11-17"
     },
     "/vendor/knowlarity-for-startups": {
-      "hash": "5865554be6ec83e1",
+      "hash": "52729e4fb4476b00",
       "changed": "2026-11-17"
     },
     "/vendor/kogiqa": {
-      "hash": "68a7fb89797004ac",
+      "hash": "77f04b68c3821990",
       "changed": "2026-11-17"
     },
     "/vendor/kong": {
-      "hash": "95635b0313dc5dc1",
+      "hash": "587ea8409cdadea6",
       "changed": "2026-11-17"
     },
     "/vendor/koyeb": {
       "daily": true
     },
     "/vendor/kraken-io": {
-      "hash": "b5f869f73f89ecc3",
+      "hash": "b1f31d9e53c3fb28",
       "changed": "2026-11-17"
     },
     "/vendor/kreya": {
-      "hash": "eb495231c00d037b",
+      "hash": "4f5c6f2a3a4bbd14",
       "changed": "2026-11-17"
     },
     "/vendor/krita": {
-      "hash": "cc78d64130ae5060",
+      "hash": "255914fb59ea5bbb",
       "changed": "2026-11-17"
     },
     "/vendor/kumu-io": {
-      "hash": "001718e30e730593",
+      "hash": "bd50477f5537c562",
       "changed": "2026-11-17"
     },
     "/vendor/kwes-io": {
-      "hash": "c032e4c816b49f43",
+      "hash": "654a7eb797473aec",
       "changed": "2026-11-17"
     },
     "/vendor/labelbox": {
       "daily": true
     },
     "/vendor/lambdatest": {
-      "hash": "f3a211badbe08c64",
+      "hash": "c17ac5300ccb8574",
       "changed": "2026-11-17"
     },
     "/vendor/lancedb": {
@@ -6794,18 +6793,18 @@
       "daily": true
     },
     "/vendor/langtrace": {
-      "hash": "6441bd01ab6c4ed1",
+      "hash": "5478aa17209aaef1",
       "changed": "2026-11-17"
     },
     "/vendor/langwatch": {
       "daily": true
     },
     "/vendor/lastpass": {
-      "hash": "8461147c7de560a4",
+      "hash": "3f2839555fd0e8d3",
       "changed": "2026-11-17"
     },
     "/vendor/launchdarkly": {
-      "hash": "722a51c2c6f8e196",
+      "hash": "366e283e8daa0906",
       "changed": "2026-11-17"
     },
     "/vendor/leancloud": {
@@ -6815,491 +6814,491 @@
       "daily": true
     },
     "/vendor/leiga-com": {
-      "hash": "dd8b5fe2b01b27ba",
+      "hash": "d7fff8e77079c3d6",
       "changed": "2026-11-17"
     },
     "/vendor/lemon-squeezy": {
-      "hash": "73408f8a2acf92f0",
+      "hash": "c2be5462eaf0c8ba",
       "changed": "2026-11-17"
     },
     "/vendor/lensdump-com": {
-      "hash": "0958a9852b900796",
+      "hash": "2a40e7bd2cb7fc20",
       "changed": "2026-11-17"
     },
     "/vendor/letsencrypt-org": {
-      "hash": "b857062fd7ae951c",
+      "hash": "01651f21de7a7ede",
       "changed": "2026-11-17"
     },
     "/vendor/letta": {
-      "hash": "e9bc3dc32826dde2",
+      "hash": "f9db54f0569752d7",
       "changed": "2026-11-17"
     },
     "/vendor/libraries-io": {
-      "hash": "5bfc1fc669795157",
+      "hash": "2ce5e111308d3c2b",
       "changed": "2026-11-17"
     },
     "/vendor/lil-bots": {
-      "hash": "82a29ea5e5657514",
+      "hash": "beffbcdf83d64a82",
       "changed": "2026-11-17"
     },
     "/vendor/linear": {
-      "hash": "5138618ec94b7fe5",
+      "hash": "bcd84873f26f593b",
       "changed": "2026-11-17"
     },
     "/vendor/lingohub-com": {
-      "hash": "e522646bfb40b098",
+      "hash": "a196dddfe44b98da",
       "changed": "2026-11-17"
     },
     "/vendor/linkinize": {
-      "hash": "e675c2f79f676fcb",
+      "hash": "e8d04576186d11e8",
       "changed": "2026-11-17"
     },
     "/vendor/linkok-com": {
-      "hash": "f797ae4d7e99c759",
+      "hash": "9a1911bba6b2871e",
       "changed": "2026-11-17"
     },
     "/vendor/linkup": {
       "daily": true
     },
     "/vendor/liveblocks": {
-      "hash": "4d4bf0fd51065e9a",
+      "hash": "de47cbbaf2d805b0",
       "changed": "2026-11-17"
     },
     "/vendor/livekit": {
-      "hash": "5f51decbd7abcb81",
+      "hash": "5c65d991e7ac0518",
       "changed": "2026-11-17"
     },
     "/vendor/llm7-io": {
       "daily": true
     },
     "/vendor/loader-io": {
-      "hash": "e363293b40da3ebc",
+      "hash": "b327b553b4dd005d",
       "changed": "2026-11-17"
     },
     "/vendor/loadly": {
-      "hash": "f696b6679cce09fa",
+      "hash": "b709b4ee95129607",
       "changed": "2026-11-17"
     },
     "/vendor/loadmill-com": {
-      "hash": "e20a87292e6d2366",
+      "hash": "7bc8cc56010d3f7d",
       "changed": "2026-11-17"
     },
     "/vendor/localazy-com": {
-      "hash": "24eb1ee61bad17a5",
+      "hash": "52bb2b14ee07096f",
       "changed": "2026-11-17"
     },
     "/vendor/localcert": {
-      "hash": "d83d5d8de5b97587",
+      "hash": "c546de408a14fdf0",
       "changed": "2026-11-17"
     },
     "/vendor/localhost-run": {
-      "hash": "cbc840388ae42c2c",
+      "hash": "8abb28b89ceec697",
       "changed": "2026-11-17"
     },
     "/vendor/localit": {
-      "hash": "29c955aa353a499c",
+      "hash": "a686ab56ce9c418f",
       "changed": "2026-11-17"
     },
     "/vendor/localizely-com": {
-      "hash": "ae474550587e3193",
+      "hash": "dbaf722582a41554",
       "changed": "2026-11-17"
     },
     "/vendor/localops": {
-      "hash": "6ae59957034beee8",
+      "hash": "68690a23a6043a59",
       "changed": "2026-11-17"
     },
     "/vendor/localstack": {
       "daily": true
     },
     "/vendor/localtunnel": {
-      "hash": "e39d8df5718332a9",
+      "hash": "198f89be7a8d8746",
       "changed": "2026-11-17"
     },
     "/vendor/localxpose": {
-      "hash": "f3ba9dab75f301dc",
+      "hash": "65dd34e3b447b7e7",
       "changed": "2026-11-17"
     },
     "/vendor/locationiq": {
-      "hash": "ff7e572552087a72",
+      "hash": "01f023ec9741c91b",
       "changed": "2026-11-17"
     },
     "/vendor/lockitbot": {
-      "hash": "e88951322108e79e",
+      "hash": "a8204edb8b7c4585",
       "changed": "2026-11-17"
     },
     "/vendor/loco": {
-      "hash": "c9528de02d356f60",
+      "hash": "ed9ac4fcb9f0e418",
       "changed": "2026-11-17"
     },
     "/vendor/locust": {
-      "hash": "78a5359c38b43eb0",
+      "hash": "6cdcb24a09aaf8f1",
       "changed": "2026-11-17"
     },
     "/vendor/log-dog": {
-      "hash": "bf922ba2186d5b9d",
+      "hash": "8e518c2d039d0ea4",
       "changed": "2026-11-17"
     },
     "/vendor/logflare-app": {
-      "hash": "f7f5cdbd3808367b",
+      "hash": "edd1b65b54534cfc",
       "changed": "2026-11-17"
     },
     "/vendor/loginllama": {
-      "hash": "6daa531e4a7fcf71",
+      "hash": "956b686ec6fc4837",
       "changed": "2026-11-17"
     },
     "/vendor/logintc-com": {
-      "hash": "bdfa0b2567eeb5ca",
+      "hash": "974e6b188cdd5b53",
       "changed": "2026-11-17"
     },
     "/vendor/logo-dev": {
-      "hash": "80f7a71235ce4d0b",
+      "hash": "ba135b0b114c06d5",
       "changed": "2026-11-17"
     },
     "/vendor/logrocket": {
-      "hash": "c5ec4f1213a85b20",
+      "hash": "b3eb082027df4d61",
       "changed": "2026-11-17"
     },
     "/vendor/logspot": {
-      "hash": "714d91f06101c677",
+      "hash": "f1ac8b5cc57a2b48",
       "changed": "2026-11-17"
     },
     "/vendor/logto": {
-      "hash": "afbea95172c32def",
+      "hash": "135ef674f35089ae",
       "changed": "2026-11-17"
     },
     "/vendor/logz-io": {
       "daily": true
     },
     "/vendor/logzab-com": {
-      "hash": "1435f8a9426bb0a9",
+      "hash": "211537678c9c89d6",
       "changed": "2026-11-17"
     },
     "/vendor/lokalise": {
-      "hash": "fbd4b445df693112",
+      "hash": "977597dd13d7376b",
       "changed": "2026-11-17"
     },
     "/vendor/loops": {
-      "hash": "ccbd3ac516e94cc2",
+      "hash": "ebfadf13c9fc362d",
       "changed": "2026-11-17"
     },
     "/vendor/lorem-picsum": {
-      "hash": "0441b1ec63ea94eb",
+      "hash": "9eb04b9961c9ad26",
       "changed": "2026-11-17"
     },
     "/vendor/lost-pixel-com": {
-      "hash": "1fb8fbdfb68dd60c",
+      "hash": "107316d2362726e6",
       "changed": "2026-11-17"
     },
     "/vendor/lottiefiles": {
-      "hash": "926998a31dd0d16c",
+      "hash": "391ca91301fdd08c",
       "changed": "2026-11-17"
     },
     "/vendor/lovable": {
-      "hash": "4755b5efe96e4ea8",
+      "hash": "03f3d17a7291e523",
       "changed": "2026-11-17"
     },
     "/vendor/luadns-com": {
-      "hash": "debf176ac0d6e805",
+      "hash": "9dbb53cef28ddab8",
       "changed": "2026-11-17"
     },
     "/vendor/lucidchart": {
-      "hash": "75b9d0d8f885a27f",
+      "hash": "e10c73535f4c2b6e",
       "changed": "2026-11-17"
     },
     "/vendor/lucide": {
-      "hash": "e2e389fbbe96edc9",
+      "hash": "ac0f213043627f97",
       "changed": "2026-11-17"
     },
     "/vendor/lumenfall-ai": {
       "daily": true
     },
     "/vendor/lunacy": {
-      "hash": "4ae3a7d185e1539d",
+      "hash": "5f8407d700713f3f",
       "changed": "2026-11-17"
     },
     "/vendor/lyssna": {
-      "hash": "55cd2336bae3bdcb",
+      "hash": "11a74bc7149f3dd8",
       "changed": "2026-11-17"
     },
     "/vendor/magicpattern": {
-      "hash": "08f0036c5657993b",
+      "hash": "42709f772223f502",
       "changed": "2026-11-17"
     },
     "/vendor/mail-tester-com": {
-      "hash": "cc20ce56de02cc8c",
+      "hash": "71d6872267352443",
       "changed": "2026-11-17"
     },
     "/vendor/mailboxvalidator": {
-      "hash": "bd06be1f73e9ec2c",
+      "hash": "96caab4602fc393b",
       "changed": "2026-11-17"
     },
     "/vendor/mailcatcher-me": {
-      "hash": "0605dc09532f84d2",
+      "hash": "3d526f381d8144a0",
       "changed": "2026-11-17"
     },
     "/vendor/mailchannels-com": {
-      "hash": "73365076f6b4932f",
+      "hash": "8461d47a561bf954",
       "changed": "2026-11-17"
     },
     "/vendor/mailchimp": {
-      "hash": "f376c0402f349f86",
+      "hash": "a60bf89723447da1",
       "changed": "2026-11-17"
     },
     "/vendor/maildroppa": {
-      "hash": "5248d719c5cb0447",
+      "hash": "18d8c4d9a9142134",
       "changed": "2026-11-17"
     },
     "/vendor/mailerlite-com": {
-      "hash": "5275196a529e7c0d",
+      "hash": "c0c7e4636561f9a8",
       "changed": "2026-11-17"
     },
     "/vendor/maileroo": {
-      "hash": "43decb8d8c28a4c8",
+      "hash": "06431c5dfd046e50",
       "changed": "2026-11-17"
     },
     "/vendor/mailersend-com": {
-      "hash": "56046996a695265d",
+      "hash": "e10e446bb39044cd",
       "changed": "2026-11-17"
     },
     "/vendor/mailinator-com": {
-      "hash": "ad4a11c1154f0207",
+      "hash": "68c21fa0c6eefae3",
       "changed": "2026-11-17"
     },
     "/vendor/mailjet": {
-      "hash": "382267008ce2826a",
+      "hash": "7d2d1048045cd8fb",
       "changed": "2026-11-17"
     },
     "/vendor/mailsac-com": {
-      "hash": "ca01406388f19151",
+      "hash": "d325e7f9023531f2",
       "changed": "2026-11-17"
     },
     "/vendor/mailtrap-io": {
-      "hash": "cc5c1f00a9da3582",
+      "hash": "7c02b47d889a931a",
       "changed": "2026-11-17"
     },
     "/vendor/make": {
-      "hash": "a33d843136301ce7",
+      "hash": "4224e2c5593e4c16",
       "changed": "2026-11-17"
     },
     "/vendor/manageengine-log360-cloud": {
-      "hash": "846e51ac42a59201",
+      "hash": "41cfe116b806c17f",
       "changed": "2026-11-17"
     },
     "/vendor/mantledb": {
-      "hash": "5ee7be9c3fd87011",
+      "hash": "c289b423ba85e9a7",
       "changed": "2026-11-17"
     },
     "/vendor/manubes": {
-      "hash": "4f1b01d011c25386",
+      "hash": "9d078df8b3883e20",
       "changed": "2026-11-17"
     },
     "/vendor/mapbox": {
-      "hash": "e69ed99cfc230bac",
+      "hash": "a677783e8dace5c6",
       "changed": "2026-11-17"
     },
     "/vendor/maps-stamen-com": {
-      "hash": "c0992acc1d468978",
+      "hash": "b62e323c63fb169b",
       "changed": "2026-11-17"
     },
     "/vendor/maptiler-com": {
-      "hash": "e14a4f4b05eefff7",
+      "hash": "a9fa7905ead058eb",
       "changed": "2026-11-17"
     },
     "/vendor/market-data-api": {
-      "hash": "60bd395df37ce7b9",
+      "hash": "78df926b5beb4f8a",
       "changed": "2026-11-17"
     },
     "/vendor/marscode": {
-      "hash": "4b357ed80525f259",
+      "hash": "cfec6ef6a946f5b7",
       "changed": "2026-11-17"
     },
     "/vendor/marvelapp-com": {
-      "hash": "55197d9252898d5f",
+      "hash": "cfae29b0dbfe55ca",
       "changed": "2026-11-17"
     },
     "/vendor/mastershot": {
-      "hash": "d8851c2d6ffdb199",
+      "hash": "da4ef6acaa3e802b",
       "changed": "2026-11-17"
     },
     "/vendor/matlab-and-simulink-for-startups": {
-      "hash": "0f6a4f2525f25bcc",
+      "hash": "3cde49ecf69d36fd",
       "changed": "2026-11-17"
     },
     "/vendor/maxim-ai": {
       "daily": true
     },
     "/vendor/mconverter": {
-      "hash": "f6d8e0c349d34a03",
+      "hash": "496830186b566915",
       "changed": "2026-11-17"
     },
     "/vendor/mdb-go": {
       "daily": true
     },
     "/vendor/mdbootstrap": {
-      "hash": "e221e36d5d48c58b",
+      "hash": "a245cb33ddf1a9ab",
       "changed": "2026-11-17"
     },
     "/vendor/mediaworkbench-ai": {
-      "hash": "b866860704e33934",
+      "hash": "77009060ea45ffe3",
       "changed": "2026-11-17"
     },
     "/vendor/meet-jit-si": {
-      "hash": "939e9bf22da6d28d",
+      "hash": "fe79b9a8bee2a163",
       "changed": "2026-11-17"
     },
     "/vendor/mega": {
-      "hash": "9de17dc4d2e86600",
+      "hash": "065f29a8769713d6",
       "changed": "2026-11-17"
     },
     "/vendor/meilisearch": {
-      "hash": "15808350076510c2",
+      "hash": "ca13c6a45f8f2c05",
       "changed": "2026-11-17"
     },
     "/vendor/meistertask": {
-      "hash": "b10cffbb7d2d760f",
+      "hash": "8b0c1a65744cb4bd",
       "changed": "2026-11-17"
     },
     "/vendor/mem0": {
       "daily": true
     },
     "/vendor/memfault-com": {
-      "hash": "90a6301fdf558521",
+      "hash": "f4f182686bf69a9b",
       "changed": "2026-11-17"
     },
     "/vendor/mendix": {
-      "hash": "4ec207b14b4168bc",
+      "hash": "b8b248d2d5fd956a",
       "changed": "2026-11-17"
     },
     "/vendor/mercury-perks": {
-      "hash": "7f5dcb8f510cf126",
+      "hash": "df0bd15df3e422a7",
       "changed": "2026-11-17"
     },
     "/vendor/mergify": {
-      "hash": "e3e12925d2513bc4",
+      "hash": "2a846ef21ec7a9dd",
       "changed": "2026-11-17"
     },
     "/vendor/metalama": {
-      "hash": "2c418ed7f9a79b1f",
+      "hash": "738229fc84eb9784",
       "changed": "2026-11-17"
     },
     "/vendor/meterian-io": {
-      "hash": "0e559d6b524ef212",
+      "hash": "b72cd5f8bfe4fb61",
       "changed": "2026-11-17"
     },
     "/vendor/metricswave": {
-      "hash": "dfbcd4408adcb62a",
+      "hash": "dd921dae3b79a6d2",
       "changed": "2026-11-17"
     },
     "/vendor/microlink-io": {
-      "hash": "36c116d7c61de93e",
+      "hash": "36ea7aae810131ae",
       "changed": "2026-11-17"
     },
     "/vendor/microsoft-ajax": {
-      "hash": "8bd6d7a61a05e72c",
+      "hash": "fa2dfb608c55278a",
       "changed": "2026-11-17"
     },
     "/vendor/microsoft-clarity": {
-      "hash": "8e0cdaf18590fd0e",
+      "hash": "d4108c7c1029b428",
       "changed": "2026-11-17"
     },
     "/vendor/microsoft-for-startups": {
-      "hash": "2d2250af59db24d6",
+      "hash": "59b1164881df5263",
       "changed": "2026-11-17"
     },
     "/vendor/microsoft-teams": {
-      "hash": "2687b9d7b9b56ba7",
+      "hash": "e645afed8c961a5b",
       "changed": "2026-11-17"
     },
     "/vendor/microsoft-to-do": {
-      "hash": "ede40b45cd9e84df",
+      "hash": "b254159faa921576",
       "changed": "2026-11-17"
     },
     "/vendor/middleware-io": {
       "daily": true
     },
     "/vendor/mindmup-com": {
-      "hash": "004966fed2f340a5",
+      "hash": "52b4d919b4f82f7a",
       "changed": "2026-11-17"
     },
     "/vendor/minimax": {
       "daily": true
     },
     "/vendor/minio": {
-      "hash": "476809710c8edd42",
+      "hash": "602b9c3bfff50129",
       "changed": "2026-11-17"
     },
     "/vendor/mintlify": {
-      "hash": "d328c4daa67774bc",
+      "hash": "b5921122224e5b49",
       "changed": "2026-11-17"
     },
     "/vendor/miradore": {
-      "hash": "219875dcebc650fb",
+      "hash": "e6b3d051e9f25462",
       "changed": "2026-11-17"
     },
     "/vendor/miro": {
-      "hash": "b458c8ea5fb1b101",
+      "hash": "9c96f11b9f0fc1ed",
       "changed": "2026-11-17"
     },
     "/vendor/mistral-ai": {
       "daily": true
     },
     "/vendor/mit-opencourseware": {
-      "hash": "6931903910974c32",
+      "hash": "b7a998110e2c208f",
       "changed": "2026-11-17"
     },
     "/vendor/mixpanel": {
-      "hash": "80d4a44637987d91",
+      "hash": "a7f168ac3924abc2",
       "changed": "2026-11-17"
     },
     "/vendor/mockapi": {
-      "hash": "0947010aea3976e9",
+      "hash": "938a1b736afd81b3",
       "changed": "2026-11-17"
     },
     "/vendor/mockaroo": {
-      "hash": "7427db077c959087",
+      "hash": "f53afc5743ae8087",
       "changed": "2026-11-17"
     },
     "/vendor/mockerito": {
-      "hash": "b58c32011dc4eeb9",
+      "hash": "fca537514baafa03",
       "changed": "2026-11-17"
     },
     "/vendor/mockfly": {
-      "hash": "26bfb92d9770c9c0",
+      "hash": "48e9e18133a698ca",
       "changed": "2026-11-17"
     },
     "/vendor/mocklets": {
-      "hash": "3e5713657b89c5a7",
+      "hash": "05fc352d94789fb7",
       "changed": "2026-11-17"
     },
     "/vendor/mocko-dev": {
-      "hash": "8bd448009c037251",
+      "hash": "490212a3da2bbe29",
       "changed": "2026-11-17"
     },
     "/vendor/mockoon": {
-      "hash": "933f46e1a1fd76d6",
+      "hash": "1e620fa647f7a30a",
       "changed": "2026-11-17"
     },
     "/vendor/mockplus-idoc": {
-      "hash": "3695637a1ac424de",
+      "hash": "e4c31358ce6022c7",
       "changed": "2026-11-17"
     },
     "/vendor/mockupmark-com": {
-      "hash": "b13dfeb7dbb4c4d6",
+      "hash": "54f754f1526df981",
       "changed": "2026-11-17"
     },
     "/vendor/modal": {
       "daily": true
     },
     "/vendor/moesif": {
-      "hash": "683262390cc5007d",
+      "hash": "4e73642207421cb7",
       "changed": "2026-11-17"
     },
     "/vendor/moesif-api-monetization": {
-      "hash": "d2150ac0c5df8a71",
+      "hash": "db5bea10ec956cc2",
       "changed": "2026-11-17"
     },
     "/vendor/mojoauth": {
-      "hash": "3ca7f917e6b4d9a2",
+      "hash": "d6d57654ec69d00c",
       "changed": "2026-11-17"
     },
     "/vendor/momento": {
@@ -7312,58 +7311,58 @@
       "daily": true
     },
     "/vendor/moss-sh": {
-      "hash": "75971bc333fa579b",
+      "hash": "a6c16e099be9d795",
       "changed": "2026-11-17"
     },
     "/vendor/mossaik": {
-      "hash": "0a38382d67a812e9",
+      "hash": "5fd8b2f153376cf1",
       "changed": "2026-11-17"
     },
     "/vendor/moto": {
-      "hash": "405adce74d14758e",
+      "hash": "e8faeba0ba0d2830",
       "changed": "2026-11-17"
     },
     "/vendor/mouseflow-com": {
-      "hash": "503e0221d4e25187",
+      "hash": "37dd88addecf864e",
       "changed": "2026-11-17"
     },
     "/vendor/mozilla-observatory": {
-      "hash": "4756df67ed0ffe9b",
+      "hash": "44e5022ba43f8c23",
       "changed": "2026-11-17"
     },
     "/vendor/multi-exit-ip-address-checker": {
-      "hash": "20b32e16a0b366ac",
+      "hash": "29466ac0c8b054e1",
       "changed": "2026-11-17"
     },
     "/vendor/mutant-mail": {
-      "hash": "4c756821b1b2bfc0",
+      "hash": "0e257ed5a947f6b2",
       "changed": "2026-11-17"
     },
     "/vendor/mux": {
-      "hash": "0bd3ee61cce47211",
+      "hash": "7393d388ba76edc2",
       "changed": "2026-11-17"
     },
     "/vendor/n8n": {
       "daily": true
     },
     "/vendor/namae": {
-      "hash": "ce5193589b4e4115",
+      "hash": "d6e157a24282386a",
       "changed": "2026-11-17"
     },
     "/vendor/namecheap-com": {
-      "hash": "367f308b962c4676",
+      "hash": "2e3817f620add800",
       "changed": "2026-11-17"
     },
     "/vendor/namecheap-supersonic": {
-      "hash": "7fc9d2498c342da7",
+      "hash": "07d304f4671105e7",
       "changed": "2026-11-17"
     },
     "/vendor/nango": {
-      "hash": "e989e2558174b5da",
+      "hash": "3e011e8f5e8cab86",
       "changed": "2026-11-17"
     },
     "/vendor/nappy": {
-      "hash": "0db2b232948a1641",
+      "hash": "0a6408ed266761b1",
       "changed": "2026-11-17"
     },
     "/vendor/neo4j-auradb": {
@@ -7388,23 +7387,23 @@
       "daily": true
     },
     "/vendor/newreleases-io": {
-      "hash": "438a3e8f4ec0781c",
+      "hash": "04b8fcbcf42870a9",
       "changed": "2026-11-17"
     },
     "/vendor/news-api": {
-      "hash": "b2655a7f57ba8d76",
+      "hash": "4047726046ac17b7",
       "changed": "2026-11-17"
     },
     "/vendor/nextdns-io": {
-      "hash": "1eced512f2f241fb",
+      "hash": "528ceb3641133f33",
       "changed": "2026-11-17"
     },
     "/vendor/nextra": {
-      "hash": "ef1010108ed5c683",
+      "hash": "34df61c1e11d5407",
       "changed": "2026-11-17"
     },
     "/vendor/ngrok": {
-      "hash": "2d9c937fa8efea88",
+      "hash": "3e3459f3244ce069",
       "changed": "2026-11-17"
     },
     "/vendor/nhost": {
@@ -7414,141 +7413,141 @@
       "daily": true
     },
     "/vendor/ninja-outreach": {
-      "hash": "3d07e9e58d4dfbee",
+      "hash": "be146efcc414abf4",
       "changed": "2026-11-17"
     },
     "/vendor/nitropack-io": {
-      "hash": "c3cd031fad6ea62b",
+      "hash": "a1c50bdd9bc9e9e9",
       "changed": "2026-11-17"
     },
     "/vendor/noip": {
-      "hash": "3db6e7db677bac36",
+      "hash": "cab6132ef5754451",
       "changed": "2026-11-17"
     },
     "/vendor/nominatim-org": {
-      "hash": "353008c7a13a3de3",
+      "hash": "8f9817025d42a268",
       "changed": "2026-11-17"
     },
     "/vendor/nordpass": {
-      "hash": "f2d5f9ac034a8946",
+      "hash": "f3d518f1c481dbc8",
       "changed": "2026-11-17"
     },
     "/vendor/northflank": {
       "daily": true
     },
     "/vendor/notion": {
-      "hash": "983f00dd4a09bae8",
+      "hash": "2f9ce15e3fe946fb",
       "changed": "2026-11-17"
     },
     "/vendor/novita-sandbox": {
       "daily": true
     },
     "/vendor/novu": {
-      "hash": "874dc7dc09dbcf68",
+      "hash": "eb0e5f41002df1ad",
       "changed": "2026-11-17"
     },
     "/vendor/npoint-io": {
-      "hash": "d5f9c526133903b9",
+      "hash": "6b9a7c1daab82622",
       "changed": "2026-11-17"
     },
     "/vendor/ns1-connect": {
-      "hash": "4c0286f4657e9935",
+      "hash": "e6c4a3b4b4386a45",
       "changed": "2026-11-17"
     },
     "/vendor/nspolygon": {
-      "hash": "3879944b8518a877",
+      "hash": "df2db5e8b0f6ae0e",
       "changed": "2026-11-17"
     },
     "/vendor/ntask": {
-      "hash": "a9b0f38de57b14a6",
+      "hash": "19d8d666a4867450",
       "changed": "2026-11-17"
     },
     "/vendor/nuclei": {
-      "hash": "34e92ba3bc85f798",
+      "hash": "69f6d14cb630701b",
       "changed": "2026-11-17"
     },
     "/vendor/nuclino": {
-      "hash": "fd3e12a30b6dfbe0",
+      "hash": "34c639ad02272e2c",
       "changed": "2026-11-17"
     },
     "/vendor/numlookupapi-com": {
-      "hash": "fa5422436824ce63",
+      "hash": "1860da5e126f36d1",
       "changed": "2026-11-17"
     },
     "/vendor/numverify": {
-      "hash": "4071d709d1996378",
+      "hash": "5c59e770059f84ad",
       "changed": "2026-11-17"
     },
     "/vendor/nvidia-nim": {
       "daily": true
     },
     "/vendor/nx-cloud": {
-      "hash": "ca05288e185a1b16",
+      "hash": "2d2ad7521672d50a",
       "changed": "2026-11-17"
     },
     "/vendor/oaysus": {
-      "hash": "824c39dbc27bec81",
+      "hash": "2d1c355a1127b2d4",
       "changed": "2026-11-17"
     },
     "/vendor/obsidian": {
-      "hash": "7bd30c7db3beca34",
+      "hash": "d435814b3df44b2d",
       "changed": "2026-11-17"
     },
     "/vendor/ocr-space": {
       "daily": true
     },
     "/vendor/octopus-do": {
-      "hash": "9ba42da58696ef6f",
+      "hash": "2124730dc4987318",
       "changed": "2026-11-17"
     },
     "/vendor/odrive": {
-      "hash": "06bc212217eb2636",
+      "hash": "f6e23047148e81ed",
       "changed": "2026-11-17"
     },
     "/vendor/oklch": {
-      "hash": "93d5e6a7cd31519a",
+      "hash": "ef1501dea4203222",
       "changed": "2026-11-17"
     },
     "/vendor/okso-app": {
-      "hash": "b77963261057796c",
+      "hash": "d760ada10e36f196",
       "changed": "2026-11-17"
     },
     "/vendor/okta": {
-      "hash": "61e783be50560e5d",
+      "hash": "c587235453fe5494",
       "changed": "2026-11-17"
     },
     "/vendor/ollama-cloud": {
       "daily": true
     },
     "/vendor/ona": {
-      "hash": "41be0e769d51a950",
+      "hash": "3b433c7641e28b6d",
       "changed": "2026-11-17"
     },
     "/vendor/onecompiler": {
-      "hash": "326ef5d576b12c15",
+      "hash": "44d583902852991f",
       "changed": "2026-11-17"
     },
     "/vendor/onedrive": {
-      "hash": "1a3742e7fcf9f13f",
+      "hash": "e119e41dd939bcd6",
       "changed": "2026-11-17"
     },
     "/vendor/onesignal": {
-      "hash": "323c7923049ce56e",
+      "hash": "20bb730dedf1fc10",
       "changed": "2026-11-17"
     },
     "/vendor/onlineexifviewer": {
-      "hash": "3a5e8ab64f363bec",
+      "hash": "517c9b3c211c70f0",
       "changed": "2026-11-17"
     },
     "/vendor/onlineinterview-io": {
-      "hash": "45168e1df4b92c1b",
+      "hash": "f87534f5fa926720",
       "changed": "2026-11-17"
     },
     "/vendor/onlineornot": {
       "daily": true
     },
     "/vendor/ontarionet-ca-cn-test": {
-      "hash": "41107d0aea38523a",
+      "hash": "59a3c4cbabe18bc5",
       "changed": "2026-11-17"
     },
     "/vendor/openai": {
@@ -7558,88 +7557,88 @@
       "daily": true
     },
     "/vendor/openapi3-designer": {
-      "hash": "a84ef32925cd0726",
+      "hash": "8754f909c8b4f9aa",
       "changed": "2026-11-17"
     },
     "/vendor/opencagedata-com": {
-      "hash": "d8bd9e654c54c35d",
+      "hash": "8da925a82919258b",
       "changed": "2026-11-17"
     },
     "/vendor/openobserve-ai": {
-      "hash": "c8525c1cf4650831",
+      "hash": "558e4fd46077cf70",
       "changed": "2026-11-17"
     },
     "/vendor/openreplay-com": {
-      "hash": "8d5207b52adf59e3",
+      "hash": "b2ea472e58cf4af7",
       "changed": "2026-11-17"
     },
     "/vendor/openrouter": {
       "daily": true
     },
     "/vendor/openstatus": {
-      "hash": "09c48dcb2cee4a23",
+      "hash": "b7246405064fe670",
       "changed": "2026-11-17"
     },
     "/vendor/openvps": {
-      "hash": "2de206d750c6b4d6",
+      "hash": "82c0bd24c3e5d839",
       "changed": "2026-11-17"
     },
     "/vendor/openweathermap": {
-      "hash": "bcb382a9a700032c",
+      "hash": "6577a0cdb1645b18",
       "changed": "2026-11-17"
     },
     "/vendor/oracle-cloud": {
-      "hash": "ff61c3ded2bf972b",
+      "hash": "1e2a53cc1f8e00c4",
       "changed": "2026-11-17"
     },
     "/vendor/orama": {
-      "hash": "c4a14ec64542d304",
+      "hash": "66dc5ca5e35628cf",
       "changed": "2026-11-17"
     },
     "/vendor/ory": {
-      "hash": "7500cae33f1dbe3b",
+      "hash": "83a8bcfec6c67488",
       "changed": "2026-11-17"
     },
     "/vendor/osmnames": {
-      "hash": "3cfc04459832a555",
+      "hash": "ee684f662714bf2d",
       "changed": "2026-11-17"
     },
     "/vendor/othor-ai": {
-      "hash": "090d3bdd716138d6",
+      "hash": "59edea92397b9d31",
       "changed": "2026-11-17"
     },
     "/vendor/outlook-com": {
-      "hash": "55e084621e800594",
+      "hash": "f91387aa64c71700",
       "changed": "2026-11-17"
     },
     "/vendor/outsystems-com": {
-      "hash": "59d37a962a9f97c2",
+      "hash": "d75996d56832461d",
       "changed": "2026-11-17"
     },
     "/vendor/ovhcloud": {
       "daily": true
     },
     "/vendor/owasp-zap": {
-      "hash": "ba4c7950c01d4189",
+      "hash": "f54ebae0f35a5b38",
       "changed": "2026-11-17"
     },
     "/vendor/packagecloud-io": {
-      "hash": "4f0e6178b3d565f1",
+      "hash": "ca763d450b9b3369",
       "changed": "2026-11-17"
     },
     "/vendor/paddle": {
-      "hash": "454fb992cf0118ed",
+      "hash": "ef7b47fab49e27fa",
       "changed": "2026-11-17"
     },
     "/vendor/pageclip": {
-      "hash": "684298a0eb086a91",
+      "hash": "907deae4ddd222cc",
       "changed": "2026-11-17"
     },
     "/vendor/pagecrawl-io": {
       "daily": true
     },
     "/vendor/pagegym-com": {
-      "hash": "372a6855fe911b07",
+      "hash": "0d246c9d3510a881",
       "changed": "2026-11-17"
     },
     "/vendor/pagerduty": {
@@ -7649,11 +7648,11 @@
       "daily": true
     },
     "/vendor/pagure-io": {
-      "hash": "36c33ea635e97dfe",
+      "hash": "66c7bd867be8d88f",
       "changed": "2026-11-17"
     },
     "/vendor/paiza": {
-      "hash": "397b25bf41035deb",
+      "hash": "7beafe52bb6e4b2f",
       "changed": "2026-11-17"
     },
     "/vendor/pandastack": {
@@ -7672,58 +7671,58 @@
       "daily": true
     },
     "/vendor/pareto-security": {
-      "hash": "4716d7fcfa082a7d",
+      "hash": "61bba71f4e3be1b3",
       "changed": "2026-11-17"
     },
     "/vendor/parityvend": {
-      "hash": "103157918b5bced4",
+      "hash": "420742800e8fe7fe",
       "changed": "2026-11-17"
     },
     "/vendor/parseur": {
       "daily": true
     },
     "/vendor/payload-cms": {
-      "hash": "5e5b16efc6e4e4d0",
+      "hash": "780299d9457e68ed",
       "changed": "2026-11-17"
     },
     "/vendor/pcloud": {
-      "hash": "5b8ee689abb6ac90",
+      "hash": "b1cf0a95601e7911",
       "changed": "2026-11-17"
     },
     "/vendor/pdf-api-io": {
-      "hash": "b5b67d665e657ea9",
+      "hash": "462f000a06b97ab7",
       "changed": "2026-11-17"
     },
     "/vendor/pdfbolt": {
-      "hash": "1961aec17d4da510",
+      "hash": "e52976909b5b2a50",
       "changed": "2026-11-17"
     },
     "/vendor/pdfendpoint-com": {
-      "hash": "a5567b0e19ddbd4e",
+      "hash": "69edf6db89cf29d7",
       "changed": "2026-11-17"
     },
     "/vendor/pdfmonkey": {
-      "hash": "a6a9b0725c51fcc0",
+      "hash": "2068de6f5f4cfa36",
       "changed": "2026-11-17"
     },
     "/vendor/pendulums": {
-      "hash": "acf612697cb00f67",
+      "hash": "05aa30842b066479",
       "changed": "2026-11-17"
     },
     "/vendor/penpot": {
-      "hash": "f04137d9c79fc27b",
+      "hash": "0b6a62da7e0636b7",
       "changed": "2026-11-17"
     },
     "/vendor/permit-io": {
-      "hash": "71b0d03cf966a982",
+      "hash": "2f97017abcd5aa48",
       "changed": "2026-11-17"
     },
     "/vendor/pexels-com": {
-      "hash": "8040875d6de8f0f8",
+      "hash": "3e56b835d29187e4",
       "changed": "2026-11-17"
     },
     "/vendor/phantomjscloud": {
-      "hash": "1bdb0f09334ef418",
+      "hash": "7d32ceac4250601f",
       "changed": "2026-11-17"
     },
     "/vendor/phare-io": {
@@ -7733,23 +7732,23 @@
       "daily": true
     },
     "/vendor/photopea": {
-      "hash": "243a3ce2f4e1410c",
+      "hash": "5c7d957bbf5b29f8",
       "changed": "2026-11-17"
     },
     "/vendor/phpsandbox": {
-      "hash": "3f263c0c7af4d4ab",
+      "hash": "4ef29f6ce42e87d0",
       "changed": "2026-11-17"
     },
     "/vendor/pijul-com": {
-      "hash": "aaa39bcf4e431eee",
+      "hash": "d13ab8bcd0fa54b8",
       "changed": "2026-11-17"
     },
     "/vendor/pika-code-screenshots": {
-      "hash": "ba515d87513c7c7e",
+      "hash": "9b93190c3a44827a",
       "changed": "2026-11-17"
     },
     "/vendor/pinata-ipfs": {
-      "hash": "cf3fc0ca12f65ec0",
+      "hash": "9dc35031eb203999",
       "changed": "2026-11-17"
     },
     "/vendor/pinecone": {
@@ -7759,7 +7758,7 @@
       "daily": true
     },
     "/vendor/pinggy": {
-      "hash": "e6cafd0bd35c528b",
+      "hash": "815e706964ecf816",
       "changed": "2026-11-17"
     },
     "/vendor/pingmeter-com": {
@@ -7769,85 +7768,85 @@
       "daily": true
     },
     "/vendor/pingram-io": {
-      "hash": "b1a8b2a9c0316a54",
+      "hash": "932586d3056d801b",
       "changed": "2026-11-17"
     },
     "/vendor/pipedream": {
-      "hash": "24886be86dfb2c0d",
+      "hash": "c52c14426118f762",
       "changed": "2026-11-17"
     },
     "/vendor/pixela": {
-      "hash": "3c3c77c93fbd9463",
+      "hash": "c863b1d12d231e67",
       "changed": "2026-11-17"
     },
     "/vendor/pixlr": {
-      "hash": "a150eca73718887d",
+      "hash": "ee44826f75eddf0a",
       "changed": "2026-11-17"
     },
     "/vendor/plane": {
-      "hash": "bf23756687cbebb3",
+      "hash": "ceafda90a93cd9e8",
       "changed": "2026-11-17"
     },
     "/vendor/planetscale": {
       "daily": true
     },
     "/vendor/planitpoker-com": {
-      "hash": "7d69ea78474ce51f",
+      "hash": "c2a27e9bf2e7fafd",
       "changed": "2026-11-17"
     },
     "/vendor/plasmic": {
-      "hash": "6975d3ade21f45a7",
+      "hash": "8c354b2ad0b6764f",
       "changed": "2026-11-17"
     },
     "/vendor/plausible-analytics": {
-      "hash": "e0a80e11f4328a68",
+      "hash": "f866e7f881b91cb3",
       "changed": "2026-11-17"
     },
     "/vendor/play-with-docker": {
-      "hash": "8d7f1681dae4af55",
+      "hash": "cd28e9975aff6954",
       "changed": "2026-11-17"
     },
     "/vendor/playwright": {
-      "hash": "57d5c16ad3b8dfd6",
+      "hash": "41836e2f868730be",
       "changed": "2026-11-17"
     },
     "/vendor/ploi-io": {
-      "hash": "babb61d1e59091fc",
+      "hash": "3a9ada6036c6bf49",
       "changed": "2026-11-17"
     },
     "/vendor/plot-ly": {
-      "hash": "0ffbc1a093c0b9e3",
+      "hash": "e5f456ca43762309",
       "changed": "2026-11-17"
     },
     "/vendor/plunk": {
-      "hash": "483b9072b19ea59e",
+      "hash": "de10e2b5f5b77059",
       "changed": "2026-11-17"
     },
     "/vendor/png-to-webp-converter": {
-      "hash": "cc4cec31f9f1a840",
+      "hash": "9d860596829ec6ab",
       "changed": "2026-11-17"
     },
     "/vendor/pocket-alert": {
-      "hash": "5a042aaeee6feeaa",
+      "hash": "77692cbb4808b812",
       "changed": "2026-11-17"
     },
     "/vendor/pocketbase": {
       "daily": true
     },
     "/vendor/podio-com": {
-      "hash": "8bc6d772ca1010ba",
+      "hash": "17e7e12b6885e71a",
       "changed": "2026-11-17"
     },
     "/vendor/poeditor": {
-      "hash": "3cb7cd88e06fc63f",
+      "hash": "d27eca82bdd1cc71",
       "changed": "2026-11-17"
     },
     "/vendor/point-poker": {
-      "hash": "f5eb68333bfd28bc",
+      "hash": "ecb027932aacfdbf",
       "changed": "2026-11-17"
     },
     "/vendor/polar": {
-      "hash": "67680ecf4fd6f8ed",
+      "hash": "3790757f992b8dae",
       "changed": "2026-11-17"
     },
     "/vendor/pollinations-ai": {
@@ -7857,127 +7856,127 @@
       "daily": true
     },
     "/vendor/positionstack": {
-      "hash": "698e048c66a073b4",
+      "hash": "19f54e0a80955ed5",
       "changed": "2026-11-17"
     },
     "/vendor/postal": {
-      "hash": "37b38605f39a4d19",
+      "hash": "005e8cef7c906eb7",
       "changed": "2026-11-17"
     },
     "/vendor/posthog": {
-      "hash": "0f8cd94af6ab8ab0",
+      "hash": "4717be2822881936",
       "changed": "2026-11-17"
     },
     "/vendor/postman": {
       "daily": true
     },
     "/vendor/postmark": {
-      "hash": "d6fb438015c57647",
+      "hash": "97033601237ad95a",
       "changed": "2026-11-17"
     },
     "/vendor/pp-ua": {
-      "hash": "76a171997e50cd34",
+      "hash": "cda4a79433895d5f",
       "changed": "2026-11-17"
     },
     "/vendor/pravatar": {
-      "hash": "c129015e27da8564",
+      "hash": "980fe3c12575ca9f",
       "changed": "2026-11-17"
     },
     "/vendor/prefectcloud": {
-      "hash": "070114704a2501ed",
+      "hash": "fd51f8a399dbb948",
       "changed": "2026-11-17"
     },
     "/vendor/preset-cloud": {
-      "hash": "0b4939c22796f8b4",
+      "hash": "a215ab6f26898f8b",
       "changed": "2026-11-17"
     },
     "/vendor/prisma-accelerate": {
-      "hash": "2bc1a3d20ddbe24c",
+      "hash": "3ab95d63b4440141",
       "changed": "2026-11-17"
     },
     "/vendor/prismic": {
-      "hash": "1a520c16238c4a38",
+      "hash": "c4b0e357735b5608",
       "changed": "2026-11-17"
     },
     "/vendor/probely": {
-      "hash": "08cef7d44ea763bc",
+      "hash": "17c3dd3907cd425b",
       "changed": "2026-11-17"
     },
     "/vendor/prometheus": {
       "daily": true
     },
     "/vendor/promoproxy": {
-      "hash": "d6fba3e0d9c712e1",
+      "hash": "ddb463cadf9ea930",
       "changed": "2026-11-17"
     },
     "/vendor/propelauth": {
-      "hash": "42bc771c8bfa99c5",
+      "hash": "6ba00cb6bef6787a",
       "changed": "2026-11-17"
     },
     "/vendor/proto-io": {
-      "hash": "25c3c73aab3c148b",
+      "hash": "52920eb5778545ca",
       "changed": "2026-11-17"
     },
     "/vendor/proton-drive": {
-      "hash": "e2b4e4e664484e57",
+      "hash": "d41e2f47a2853235",
       "changed": "2026-11-17"
     },
     "/vendor/proton-mail": {
-      "hash": "ecd4970089e06485",
+      "hash": "f0057cc86a177d05",
       "changed": "2026-11-17"
     },
     "/vendor/proton-pass": {
-      "hash": "d68fa7c27ebf632b",
+      "hash": "5adf1962ebae7e02",
       "changed": "2026-11-17"
     },
     "/vendor/proton-vpn": {
-      "hash": "6dbcbe402ff0ada1",
+      "hash": "4d04ee611995de15",
       "changed": "2026-11-17"
     },
     "/vendor/proxysentry": {
-      "hash": "d5ef29bd5dfa32b1",
+      "hash": "97450a3e94d6690d",
       "changed": "2026-11-17"
     },
     "/vendor/public-cloud-threat-intelligence": {
-      "hash": "9c916ab828960e83",
+      "hash": "4c1ce41963791ece",
       "changed": "2026-11-17"
     },
     "/vendor/pubnub-com": {
-      "hash": "df752f502fdb5718",
+      "hash": "a7f6680d52dc2180",
       "changed": "2026-11-17"
     },
     "/vendor/pullflow": {
-      "hash": "71790117d4733745",
+      "hash": "881b39556e743d3d",
       "changed": "2026-11-17"
     },
     "/vendor/pulse-red": {
-      "hash": "c7f543f6b88f5879",
+      "hash": "955bceee86136642",
       "changed": "2026-11-17"
     },
     "/vendor/pulsetic": {
       "daily": true
     },
     "/vendor/pulumi": {
-      "hash": "981588705c367bf8",
+      "hash": "210268611e9347e7",
       "changed": "2026-11-17"
     },
     "/vendor/pumble": {
-      "hash": "35dd77060324f9e7",
+      "hash": "86156ad0f77806ff",
       "changed": "2026-11-17"
     },
     "/vendor/puppeteer": {
-      "hash": "f6bcc40faaaa7b8d",
+      "hash": "fac6d7f92f08fc49",
       "changed": "2026-11-17"
     },
     "/vendor/pusher": {
-      "hash": "4735270ac7feb2d5",
+      "hash": "a741a183c1a02d0a",
       "changed": "2026-11-17"
     },
     "/vendor/pythonanywhere": {
       "daily": true
     },
     "/vendor/qase-io": {
-      "hash": "75b26dd744e48e4d",
+      "hash": "6210ad8d2238d870",
       "changed": "2026-11-17"
     },
     "/vendor/qdrant": {
@@ -7987,43 +7986,43 @@
       "daily": true
     },
     "/vendor/qonversion": {
-      "hash": "bc9ad447aa438afa",
+      "hash": "253bb91902cfbd2e",
       "changed": "2026-11-17"
     },
     "/vendor/qrme-sh": {
-      "hash": "ea600e955b25a740",
+      "hash": "8950597d9cbae96c",
       "changed": "2026-11-17"
     },
     "/vendor/qrtracer": {
-      "hash": "f8ec5648fe72f843",
+      "hash": "ad030c0a8a551a85",
       "changed": "2026-11-17"
     },
     "/vendor/qstash": {
-      "hash": "4a83e852aa237da8",
+      "hash": "f0cfbf2e123775c3",
       "changed": "2026-11-17"
     },
     "/vendor/qualys-com": {
-      "hash": "840353d5d9dab28b",
+      "hash": "ae33cff425d41632",
       "changed": "2026-11-17"
     },
     "/vendor/quant-ux": {
-      "hash": "a60196ca1d7230ea",
+      "hash": "5679d84b902391dc",
       "changed": "2026-11-17"
     },
     "/vendor/quay-io": {
-      "hash": "cdcbb337f661b010",
+      "hash": "29039e4c6cfa443c",
       "changed": "2026-11-17"
     },
     "/vendor/quickchart": {
-      "hash": "55a9d65fb3c4f995",
+      "hash": "41d795e14b7273d8",
       "changed": "2026-11-17"
     },
     "/vendor/quicktype-io": {
-      "hash": "2cb1cba91eb5154b",
+      "hash": "0fc2cba3d76c6340",
       "changed": "2026-11-17"
     },
     "/vendor/radmin-vpn": {
-      "hash": "c1ca9b18b93877ce",
+      "hash": "eb5bda54ffc59637",
       "changed": "2026-11-17"
     },
     "/vendor/railway": {
@@ -8033,45 +8032,45 @@
       "daily": true
     },
     "/vendor/raindrop-io": {
-      "hash": "d0269d416cb9ea67",
+      "hash": "3ddef721ce89a6db",
       "changed": "2026-11-17"
     },
     "/vendor/ramp-partner-rewards": {
-      "hash": "53faa6203a6abcfe",
+      "hash": "af76f5914baed62e",
       "changed": "2026-11-17"
     },
     "/vendor/randomkeygen": {
-      "hash": "1f5a9a8804fd6747",
+      "hash": "38c39c05ec0d5a41",
       "changed": "2026-11-17"
     },
     "/vendor/rapidapi": {
-      "hash": "4a04ec8bc5560926",
+      "hash": "c5dc12a6e695742c",
       "changed": "2026-11-17"
     },
     "/vendor/ravion": {
       "daily": true
     },
     "/vendor/raw-githack-com": {
-      "hash": "3213c88f99634fbe",
+      "hash": "67a4fb0bf9145174",
       "changed": "2026-11-17"
     },
     "/vendor/ray-so": {
-      "hash": "b4815325a8a18f23",
+      "hash": "bde5163852dd2a35",
       "changed": "2026-11-17"
     },
     "/vendor/readme": {
-      "hash": "5e16487512fba759",
+      "hash": "013dc55ef87e0aea",
       "changed": "2026-11-17"
     },
     "/vendor/readthedocs-org": {
       "daily": true
     },
     "/vendor/redirect-pizza": {
-      "hash": "582d34adaf14fd7b",
+      "hash": "a6576d754e675976",
       "changed": "2026-11-17"
     },
     "/vendor/redirection-io": {
-      "hash": "c695c7bf23e427f9",
+      "hash": "70733b2eaca63733",
       "changed": "2026-11-17"
     },
     "/vendor/redis-cloud": {
@@ -8081,26 +8080,26 @@
       "daily": true
     },
     "/vendor/remarkbox": {
-      "hash": "c1f404c591dad279",
+      "hash": "0820b3ff3c22a40d",
       "changed": "2026-11-17"
     },
     "/vendor/remote-for-startups": {
-      "hash": "2a9865ae9d9a648e",
+      "hash": "477c6cca306585bb",
       "changed": "2026-11-17"
     },
     "/vendor/renamer-ai": {
-      "hash": "4ab7df63f93aa872",
+      "hash": "57bb90b1da5f0360",
       "changed": "2026-11-17"
     },
     "/vendor/render": {
       "daily": true
     },
     "/vendor/rendi": {
-      "hash": "72e548dd432ba209",
+      "hash": "1c92fb4d6745d188",
       "changed": "2026-11-17"
     },
     "/vendor/renovate": {
-      "hash": "714c1454240251a3",
+      "hash": "c36ffbc5e2704711",
       "changed": "2026-11-17"
     },
     "/vendor/replicate": {
@@ -8110,261 +8109,261 @@
       "daily": true
     },
     "/vendor/repoflow": {
-      "hash": "8514e301e3fc6933",
+      "hash": "6a39d9fa326dfaed",
       "changed": "2026-11-17"
     },
     "/vendor/repoforge": {
-      "hash": "8a007b2d204d833f",
+      "hash": "7b224225f4109456",
       "changed": "2026-11-17"
     },
     "/vendor/repohistory": {
-      "hash": "2b6b8fa9b9be8ba8",
+      "hash": "abb87a1e3a95c475",
       "changed": "2026-11-17"
     },
     "/vendor/reportgpt": {
-      "hash": "6d611ecc55029aa9",
+      "hash": "09dabaeb40f822a1",
       "changed": "2026-11-17"
     },
     "/vendor/repsy-io": {
-      "hash": "bfc4307756a7f6cb",
+      "hash": "cbdcb6d93096766d",
       "changed": "2026-11-17"
     },
     "/vendor/reqbin": {
-      "hash": "b6053db4148fa33a",
+      "hash": "eb295a72911b217f",
       "changed": "2026-11-17"
     },
     "/vendor/requestbin-com": {
-      "hash": "970f397ccd2fb566",
+      "hash": "57163745504f5b62",
       "changed": "2026-11-17"
     },
     "/vendor/resend": {
-      "hash": "d4b292d30c8edbca",
+      "hash": "e9e8849f8a1b9143",
       "changed": "2026-11-17"
     },
     "/vendor/resizeappicon-com": {
-      "hash": "4015d4e13d3df8a4",
+      "hash": "0e9c0aa923c85424",
       "changed": "2026-11-17"
     },
     "/vendor/resmush-it": {
-      "hash": "17d4b1c05c3fcc5b",
+      "hash": "e56725c4288bbc67",
       "changed": "2026-11-17"
     },
     "/vendor/responsively-app": {
-      "hash": "80f70a55870a7f05",
+      "hash": "8484da9ff7a3089a",
       "changed": "2026-11-17"
     },
     "/vendor/restdb-io": {
       "daily": true
     },
     "/vendor/retool": {
-      "hash": "b9becdede2f94c73",
+      "hash": "5a431bb9f2a0b697",
       "changed": "2026-11-17"
     },
     "/vendor/revenuecat": {
-      "hash": "23cafd6f6e790b62",
+      "hash": "02567e2c828226d7",
       "changed": "2026-11-17"
     },
     "/vendor/reviewable-io": {
-      "hash": "7f5684b4c4f18268",
+      "hash": "578d5edca2479a4c",
       "changed": "2026-11-17"
     },
     "/vendor/revolt-chat": {
-      "hash": "da87ecb22e40e0ce",
+      "hash": "8bdf014dc42667c8",
       "changed": "2026-11-17"
     },
     "/vendor/rightfeature": {
-      "hash": "d9489ff03eecfee0",
+      "hash": "2ed8bd68ee28e925",
       "changed": "2026-11-17"
     },
     "/vendor/rive": {
-      "hash": "988f7f7765546092",
+      "hash": "1a365de30984b764",
       "changed": "2026-11-17"
     },
     "/vendor/roboflow": {
       "daily": true
     },
     "/vendor/robohash": {
-      "hash": "f878b66628175eca",
+      "hash": "3df519b35a592d64",
       "changed": "2026-11-17"
     },
     "/vendor/robusta-dev": {
-      "hash": "886d12b4df81c950",
+      "hash": "039445c3ddb6c730",
       "changed": "2026-11-17"
     },
     "/vendor/rocket-chat": {
-      "hash": "55748ba80726a494",
+      "hash": "75379bfe5bcf1cab",
       "changed": "2026-11-17"
     },
     "/vendor/rocketgit": {
-      "hash": "c6998a06c839910b",
+      "hash": "69b70d0b3ef737a6",
       "changed": "2026-11-17"
     },
     "/vendor/rollbar": {
-      "hash": "7cc1d396906310f8",
+      "hash": "dc1efb5badba97c9",
       "changed": "2026-11-17"
     },
     "/vendor/row-zero": {
-      "hash": "804c1286d7129cfb",
+      "hash": "c89589626ec14d90",
       "changed": "2026-11-17"
     },
     "/vendor/runcloud-io": {
-      "hash": "c831fec7c7a250b2",
+      "hash": "4e8c929266957ec2",
       "changed": "2026-11-17"
     },
     "/vendor/runloop": {
       "daily": true
     },
     "/vendor/runmyjob": {
-      "hash": "178c9ef5964f5879",
+      "hash": "3f331f21cbdbc53e",
       "changed": "2026-11-17"
     },
     "/vendor/ruttl-com": {
-      "hash": "c0c1062dd55d80a7",
+      "hash": "2233f345099a985f",
       "changed": "2026-11-17"
     },
     "/vendor/rybbit": {
-      "hash": "6265fe0fc6626ffa",
+      "hash": "abf340804b90438a",
       "changed": "2026-11-17"
     },
     "/vendor/safety": {
-      "hash": "a0735fcf9597090e",
+      "hash": "399ff92e3f71f189",
       "changed": "2026-11-17"
     },
     "/vendor/sanity": {
-      "hash": "bf085e3268d8755e",
+      "hash": "a1ba4586f8895c60",
       "changed": "2026-11-17"
     },
     "/vendor/sauce-labs": {
-      "hash": "7631dcbfaff2c740",
+      "hash": "a04515d1ae7a476f",
       "changed": "2026-11-17"
     },
     "/vendor/savannah-gnu-org": {
-      "hash": "01661ef02fafad65",
+      "hash": "b54c87e2421f97d7",
       "changed": "2026-11-17"
     },
     "/vendor/savannah-nongnu-org": {
-      "hash": "0201715f0426111d",
+      "hash": "c6cebc3e3ec9c13e",
       "changed": "2026-11-17"
     },
     "/vendor/scale-ai": {
       "daily": true
     },
     "/vendor/scaledrone-com": {
-      "hash": "e232f1b5900f8a47",
+      "hash": "85c18cb6087f8eda",
       "changed": "2026-11-17"
     },
     "/vendor/scalegrid-startup-program": {
-      "hash": "60e8a8722f665eef",
+      "hash": "cee356e880d1fe1a",
       "changed": "2026-11-17"
     },
     "/vendor/scaleway-startup-program": {
-      "hash": "4bdc28cbedd574ec",
+      "hash": "3f9159b4bae27866",
       "changed": "2026-11-17"
     },
     "/vendor/scalr": {
-      "hash": "dbf249ed7eb5c4d7",
+      "hash": "c78fc4a80388f869",
       "changed": "2026-11-17"
     },
     "/vendor/scan-coverity-com": {
-      "hash": "61813edb314421fe",
+      "hash": "5efcef3dca405e53",
       "changed": "2026-11-17"
     },
     "/vendor/scraper-s-proxy": {
-      "hash": "f885e221889c95fa",
+      "hash": "66438900ee31ea13",
       "changed": "2026-11-17"
     },
     "/vendor/scraperapi": {
-      "hash": "2eb6869a99d49cb7",
+      "hash": "8fee47a3023d7975",
       "changed": "2026-11-17"
     },
     "/vendor/scrapingant": {
-      "hash": "46bd679844552683",
+      "hash": "a8a456fc9e561097",
       "changed": "2026-11-17"
     },
     "/vendor/screen-sharing-via-browser": {
-      "hash": "b8080df324d15058",
+      "hash": "d91331381c539cd7",
       "changed": "2026-11-17"
     },
     "/vendor/screenshot-scout": {
-      "hash": "20eed9bb945ef7f1",
+      "hash": "3ccafa475fd7d7b3",
       "changed": "2026-11-17"
     },
     "/vendor/screenshotbase-com": {
-      "hash": "e941aa18f5ed0404",
+      "hash": "bd5569f0b212c391",
       "changed": "2026-11-17"
     },
     "/vendor/screenshotlayer": {
-      "hash": "df20dc235498a405",
+      "hash": "e4b78e22c3948f24",
       "changed": "2026-11-17"
     },
     "/vendor/screenshotmachine-com": {
-      "hash": "1dc9202ad2f6ebfa",
+      "hash": "6c643c6716ceefc0",
       "changed": "2026-11-17"
     },
     "/vendor/scrollbar-app": {
-      "hash": "c7b954f329983c5a",
+      "hash": "abcdbc5a42d5007d",
       "changed": "2026-11-17"
     },
     "/vendor/scrumfast": {
-      "hash": "9cc30289df16a8b6",
+      "hash": "4097696d2558a984",
       "changed": "2026-11-17"
     },
     "/vendor/scrutinizer-ci-com": {
-      "hash": "a648618ae8b001ce",
+      "hash": "032f41491596f60b",
       "changed": "2026-11-17"
     },
     "/vendor/seafile-com": {
-      "hash": "4c6da1a40737f0dd",
+      "hash": "8677bf221641e5a0",
       "changed": "2026-11-17"
     },
     "/vendor/seatable": {
-      "hash": "4b50dc069931060f",
+      "hash": "ccfc5174a5d4630e",
       "changed": "2026-11-17"
     },
     "/vendor/segment-startup-program": {
-      "hash": "7815eca5f5ed8bce",
+      "hash": "4321230e6c5b4ea5",
       "changed": "2026-11-17"
     },
     "/vendor/selenium-grid": {
-      "hash": "f9538efcbda90e1b",
+      "hash": "016fd9c7ea3f7d5e",
       "changed": "2026-11-17"
     },
     "/vendor/semanticdiff-com": {
-      "hash": "2e977b4d54ae0af6",
+      "hash": "8c4077f45372452a",
       "changed": "2026-11-17"
     },
     "/vendor/semaphore-ci": {
-      "hash": "2f617b357a5aab80",
+      "hash": "20077ff3ea4974dc",
       "changed": "2026-11-17"
     },
     "/vendor/semaphr": {
-      "hash": "624b29ee3754af9a",
+      "hash": "a5c6d5b0fa765e2f",
       "changed": "2026-11-17"
     },
     "/vendor/sematext": {
       "daily": true
     },
     "/vendor/semgrep": {
-      "hash": "bd6b918e797cca63",
+      "hash": "c84f1f01f31a366e",
       "changed": "2026-11-17"
     },
     "/vendor/sendbird": {
-      "hash": "46646c8cfcb36af1",
+      "hash": "d98aab1e57712a35",
       "changed": "2026-11-17"
     },
     "/vendor/sendpulse": {
-      "hash": "e71d94d4480aee51",
+      "hash": "ab3c4714369625fc",
       "changed": "2026-11-17"
     },
     "/vendor/sendstreak": {
-      "hash": "68066ae5381d04c7",
+      "hash": "6a20019980f17d8d",
       "changed": "2026-11-17"
     },
     "/vendor/sentry": {
       "daily": true
     },
     "/vendor/seotest-me": {
-      "hash": "69a91e77fd777a2c",
+      "hash": "b08a55e09c98dad1",
       "changed": "2026-11-17"
     },
     "/vendor/serpapi": {
@@ -8377,11 +8376,11 @@
       "daily": true
     },
     "/vendor/serveo": {
-      "hash": "4c3259561d416b41",
+      "hash": "1ba2fd831d9eaf27",
       "changed": "2026-11-17"
     },
     "/vendor/serveravatar-com": {
-      "hash": "fc182e0eb196fc7d",
+      "hash": "c23596f28c01126a",
       "changed": "2026-11-17"
     },
     "/vendor/servervana": {
@@ -8391,39 +8390,39 @@
       "daily": true
     },
     "/vendor/shadcn-space": {
-      "hash": "e62b6755452968a0",
+      "hash": "b3c65ed2ac866e29",
       "changed": "2026-11-17"
     },
     "/vendor/shadcn-studio": {
-      "hash": "335c33446ce7ddc2",
+      "hash": "f99340d85fada760",
       "changed": "2026-11-17"
     },
     "/vendor/shadcnui": {
-      "hash": "af638061782a9cf6",
+      "hash": "66bc6d3f1b3edd18",
       "changed": "2026-11-17"
     },
     "/vendor/shake": {
-      "hash": "e6b65813bf37a880",
+      "hash": "d00bda91b60360a9",
       "changed": "2026-11-17"
     },
     "/vendor/shields-io": {
-      "hash": "376c103423876e46",
+      "hash": "8270e4ca203bef0b",
       "changed": "2026-11-17"
     },
     "/vendor/shipfox": {
-      "hash": "e151de5f4c9c0a27",
+      "hash": "a623c108005c5d35",
       "changed": "2026-11-17"
     },
     "/vendor/shortcut": {
-      "hash": "49a989ec2dd73c73",
+      "hash": "61bf28a7c70cac09",
       "changed": "2026-11-17"
     },
     "/vendor/shotstack-startup-program": {
-      "hash": "4f64701d33ad0084",
+      "hash": "79a3d4757028610a",
       "changed": "2026-11-17"
     },
     "/vendor/signal": {
-      "hash": "4d95dc163cdd9dea",
+      "hash": "ec18ad3a720955ca",
       "changed": "2026-11-17"
     },
     "/vendor/signoz": {
@@ -8439,31 +8438,31 @@
       "daily": true
     },
     "/vendor/simplelocalize": {
-      "hash": "8904535b5f93744b",
+      "hash": "4e19ffdfcd31147f",
       "changed": "2026-11-17"
     },
     "/vendor/simplelogin": {
-      "hash": "240f201cf4d042b5",
+      "hash": "1be3c24d4efc6ffe",
       "changed": "2026-11-17"
     },
     "/vendor/simplenote": {
-      "hash": "0933d28c482cd2eb",
+      "hash": "65a211c926caae02",
       "changed": "2026-11-17"
     },
     "/vendor/simplepdf-eu": {
-      "hash": "5f859ed627c27631",
+      "hash": "e37536211a95d99e",
       "changed": "2026-11-17"
     },
     "/vendor/simplescraper": {
-      "hash": "34be40f5b28286c1",
+      "hash": "17692d1003f01221",
       "changed": "2026-11-17"
     },
     "/vendor/sirv-com": {
-      "hash": "efdb9faf857a3941",
+      "hash": "1a907c71d329139b",
       "changed": "2026-11-17"
     },
     "/vendor/sitedots": {
-      "hash": "d0b1afd951f09d7d",
+      "hash": "4273e117255e3c56",
       "changed": "2026-11-17"
     },
     "/vendor/sitesure-net": {
@@ -8473,178 +8472,178 @@
       "daily": true
     },
     "/vendor/skypack": {
-      "hash": "be034ef411f90e58",
+      "hash": "bc878efe1b3b8528",
       "changed": "2026-11-17"
     },
     "/vendor/skyvia-com": {
-      "hash": "c51f8612d4f80091",
+      "hash": "763197a79e02cf7c",
       "changed": "2026-11-17"
     },
     "/vendor/slab": {
-      "hash": "21d6a9d3d8c35918",
+      "hash": "df17d59163cc0b99",
       "changed": "2026-11-17"
     },
     "/vendor/slack": {
-      "hash": "808c7f03374c4bde",
+      "hash": "8da3b52d47900bab",
       "changed": "2026-11-17"
     },
     "/vendor/slingsite": {
-      "hash": "ec7c61e1e8188e59",
+      "hash": "820718ae8f61a57d",
       "changed": "2026-11-17"
     },
     "/vendor/smart-grow-logs": {
-      "hash": "708b963636e8d4e4",
+      "hash": "4b66149eadbc71bf",
       "changed": "2026-11-17"
     },
     "/vendor/smart-grow-vault": {
-      "hash": "5e635e30e2cf153a",
+      "hash": "afd49f78f451185b",
       "changed": "2026-11-17"
     },
     "/vendor/smartcar-api": {
-      "hash": "8df5b6f1ab608fb7",
+      "hash": "3b484edc8d2532ec",
       "changed": "2026-11-17"
     },
     "/vendor/smartforms-dev": {
-      "hash": "42ee70e7e98843cc",
+      "hash": "ceb78edfb4c03f73",
       "changed": "2026-11-17"
     },
     "/vendor/smartlook-com": {
-      "hash": "92f001b6eff6144f",
+      "hash": "3e1fc90bf2974d99",
       "changed": "2026-11-17"
     },
     "/vendor/smartmockups-com": {
-      "hash": "a36deecb7e9841b1",
+      "hash": "2f2ee158a4467c2c",
       "changed": "2026-11-17"
     },
     "/vendor/smartparse": {
-      "hash": "63705834990884d5",
+      "hash": "ef115d049c982b3c",
       "changed": "2026-11-17"
     },
     "/vendor/smsgate": {
-      "hash": "4cf30ce1ac674819",
+      "hash": "152b079bcfc9500c",
       "changed": "2026-11-17"
     },
     "/vendor/snapapi": {
-      "hash": "e61ea5cb25e72037",
+      "hash": "354617ebdf04b1d9",
       "changed": "2026-11-17"
     },
     "/vendor/snappify": {
-      "hash": "ef82816e988d16c3",
+      "hash": "d2abedd74d08be91",
       "changed": "2026-11-17"
     },
     "/vendor/snippets-uilicious-com": {
-      "hash": "ea1917a2e981ced0",
+      "hash": "fa279000a8abbf1b",
       "changed": "2026-11-17"
     },
     "/vendor/snyk": {
-      "hash": "f9e17727075921f2",
+      "hash": "66de1245c2f62938",
       "changed": "2026-11-17"
     },
     "/vendor/socket-dev": {
-      "hash": "408f9f93b3f91d26",
+      "hash": "78bb64c152bbcd75",
       "changed": "2026-11-17"
     },
     "/vendor/sofodata": {
-      "hash": "160023d7824f5f9c",
+      "hash": "4f038de0fa24db20",
       "changed": "2026-11-17"
     },
     "/vendor/solo": {
-      "hash": "5c7359ddca9a9b5b",
+      "hash": "af825f60fd5ff8c1",
       "changed": "2026-11-17"
     },
     "/vendor/sololearn": {
-      "hash": "176a2cee7f4f3964",
+      "hash": "287a43b7c549e669",
       "changed": "2026-11-17"
     },
     "/vendor/sonarqube-cloud": {
       "daily": true
     },
     "/vendor/soos": {
-      "hash": "0f27905238bb6861",
+      "hash": "a4a90141363e204f",
       "changed": "2026-11-17"
     },
     "/vendor/sourceforge": {
-      "hash": "2d04d539db4e50ec",
+      "hash": "5f554152ca1c0091",
       "changed": "2026-11-17"
     },
     "/vendor/spacelift": {
-      "hash": "f89a56364de60692",
+      "hash": "75c18677725536be",
       "changed": "2026-11-17"
     },
     "/vendor/sphinx": {
-      "hash": "9d98e5d39b9cfb1f",
+      "hash": "3ebed62104cfcf17",
       "changed": "2026-11-17"
     },
     "/vendor/sqlable": {
-      "hash": "e5aee2a70b0a0ea6",
+      "hash": "2d009809194f7763",
       "changed": "2026-11-17"
     },
     "/vendor/squash-labs": {
-      "hash": "129db148a35cb968",
+      "hash": "d854614481c78b65",
       "changed": "2026-11-17"
     },
     "/vendor/squidex": {
-      "hash": "4bb63e431a6c3b91",
+      "hash": "a1dc57fa564d123d",
       "changed": "2026-11-17"
     },
     "/vendor/sslip-io": {
-      "hash": "b0b3a1f8724e2b19",
+      "hash": "0b425141f2bcc644",
       "changed": "2026-11-17"
     },
     "/vendor/ssllabs-com": {
-      "hash": "af8d8e36a8ff6f84",
+      "hash": "16e43202cfccd07b",
       "changed": "2026-11-17"
     },
     "/vendor/ssr-server-side-rendering-checker": {
-      "hash": "2151628fa634a75c",
+      "hash": "7fa34b31559eb5b3",
       "changed": "2026-11-17"
     },
     "/vendor/stability-ai": {
-      "hash": "a6b17a9856c793eb",
+      "hash": "73098f0f9a41b966",
       "changed": "2026-11-17"
     },
     "/vendor/stackblitz-com": {
-      "hash": "72a2f5662acea4a3",
+      "hash": "08fca2bbd95a739d",
       "changed": "2026-11-17"
     },
     "/vendor/stackby": {
-      "hash": "1b6838fa51af66a0",
+      "hash": "ee6f412ba9c49691",
       "changed": "2026-11-17"
     },
     "/vendor/stackhawk": {
-      "hash": "c390361d3850e85e",
+      "hash": "1caafb73f6435056",
       "changed": "2026-11-17"
     },
     "/vendor/stadiamaps-com": {
-      "hash": "ce7c48bd546bb0bd",
+      "hash": "4af43e7fe08269c7",
       "changed": "2026-11-17"
     },
     "/vendor/standard-notes": {
-      "hash": "f4ac017df056efdd",
+      "hash": "d77783534304fad6",
       "changed": "2026-11-17"
     },
     "/vendor/startup-with-ibm": {
-      "hash": "4c30d510c9579744",
+      "hash": "3975b2ea46c0da53",
       "changed": "2026-11-17"
     },
     "/vendor/statcounter": {
-      "hash": "1b8c68cf11a8790f",
+      "hash": "b213a81192fdb96f",
       "changed": "2026-11-17"
     },
     "/vendor/stategraph": {
-      "hash": "55f767dfcf6a9b9d",
+      "hash": "91971bebfdbce8e2",
       "changed": "2026-11-17"
     },
     "/vendor/statically": {
-      "hash": "efebbba64e38f982",
+      "hash": "b0c1fa13886f3ac4",
       "changed": "2026-11-17"
     },
     "/vendor/staticforms-xyz": {
-      "hash": "82023ef57aa9f5d2",
+      "hash": "139a603ffdb20875",
       "changed": "2026-11-17"
     },
     "/vendor/statsig": {
-      "hash": "fab6c96ddbd5347d",
+      "hash": "e04414dfefed54c2",
       "changed": "2026-11-17"
     },
     "/vendor/statuscake": {
@@ -8657,19 +8656,19 @@
       "daily": true
     },
     "/vendor/steel": {
-      "hash": "6962733b19631505",
+      "hash": "d747707136cd8119",
       "changed": "2026-11-17"
     },
     "/vendor/stellate": {
-      "hash": "ce5d1fd2e0fcf65d",
+      "hash": "ffba0cbbd3c7b458",
       "changed": "2026-11-17"
     },
     "/vendor/stickies": {
-      "hash": "d93890840b4cc2bc",
+      "hash": "da1ce1dcdecc73ec",
       "changed": "2026-11-17"
     },
     "/vendor/stoplight": {
-      "hash": "ac00430f3b5193d9",
+      "hash": "686459263a9fadfd",
       "changed": "2026-11-17"
     },
     "/vendor/storj": {
@@ -8679,80 +8678,80 @@
       "daily": true
     },
     "/vendor/storyset-com": {
-      "hash": "eca1cb63f814c3e1",
+      "hash": "05ac01bfe3787cb9",
       "changed": "2026-11-17"
     },
     "/vendor/strale": {
-      "hash": "35916bfd4764c6e8",
+      "hash": "800420bcbd729753",
       "changed": "2026-11-17"
     },
     "/vendor/strapi": {
-      "hash": "d283cebc5e0c2509",
+      "hash": "48594253a8b9550c",
       "changed": "2026-11-17"
     },
     "/vendor/stream": {
-      "hash": "b654848cfb42c475",
+      "hash": "b770f011f7688bbd",
       "changed": "2026-11-17"
     },
     "/vendor/streambackdrops": {
-      "hash": "627b1510a70e9daa",
+      "hash": "a5c95198c0462968",
       "changed": "2026-11-17"
     },
     "/vendor/stripe": {
       "daily": true
     },
     "/vendor/stripe-atlas": {
-      "hash": "0e3b7946c06cee51",
+      "hash": "4acf359a01f59038",
       "changed": "2026-11-17"
     },
     "/vendor/stytch": {
-      "hash": "3b89c6754ed5400a",
+      "hash": "eb353a31d736e189",
       "changed": "2026-11-17"
     },
     "/vendor/sublime-text": {
-      "hash": "9dafb10e7a48d050",
+      "hash": "78e628694dc641e3",
       "changed": "2026-11-17"
     },
     "/vendor/substack": {
-      "hash": "1d4a344bbaf86aa9",
+      "hash": "efeb9bf7100cc974",
       "changed": "2026-11-17"
     },
     "/vendor/sucuri-sitecheck": {
-      "hash": "09d6e1b9b94dd86e",
+      "hash": "1e98c08a3c4622c4",
       "changed": "2026-11-17"
     },
     "/vendor/sunrise-and-sunset": {
-      "hash": "0740e67ffd929caf",
+      "hash": "2643ae9ee2859ebb",
       "changed": "2026-11-17"
     },
     "/vendor/supabase": {
       "daily": true
     },
     "/vendor/superdesigner": {
-      "hash": "8cf86c34473d974c",
+      "hash": "e73ac4f2408ee76f",
       "changed": "2026-11-17"
     },
     "/vendor/superfeedr-com": {
-      "hash": "92bddbd238738569",
+      "hash": "aa3eea0372c3079c",
       "changed": "2026-11-17"
     },
     "/vendor/supermaven": {
-      "hash": "d80a2e2f508c99c5",
+      "hash": "ff810665cb648f17",
       "changed": "2026-11-17"
     },
     "/vendor/supermemory": {
       "daily": true
     },
     "/vendor/supertokens": {
-      "hash": "3443924859a42d8b",
+      "hash": "03f439cdfa9d99cc",
       "changed": "2026-11-17"
     },
     "/vendor/supportivekoala": {
-      "hash": "9307e0140420ebad",
+      "hash": "39f9672b02774172",
       "changed": "2026-11-17"
     },
     "/vendor/suprsend": {
-      "hash": "070232aeda274ef3",
+      "hash": "1adde95c7661cd09",
       "changed": "2026-11-17"
     },
     "/vendor/surge-sh": {
@@ -8762,35 +8761,35 @@
       "daily": true
     },
     "/vendor/surveymonkey-com": {
-      "hash": "5715a0c488ece080",
+      "hash": "37a4a8c71cb21195",
       "changed": "2026-11-17"
     },
     "/vendor/survicate": {
-      "hash": "ccf9f62e9f3bfab5",
+      "hash": "8e1e18ecc8e6bebc",
       "changed": "2026-11-17"
     },
     "/vendor/svb-startup-banking-offers": {
-      "hash": "15cd3a552bbe1ad8",
+      "hash": "f5060a2e8ffd1567",
       "changed": "2026-11-17"
     },
     "/vendor/svg-converter": {
-      "hash": "cf497539f10894a2",
+      "hash": "e63f67f190665e94",
       "changed": "2026-11-17"
     },
     "/vendor/svix": {
-      "hash": "c5449c7f11897cf8",
+      "hash": "446a55b3cbc7542e",
       "changed": "2026-11-17"
     },
     "/vendor/swaggerhub": {
-      "hash": "547d4b7105379a2f",
+      "hash": "166779f0e71f7a64",
       "changed": "2026-11-17"
     },
     "/vendor/swaggo-swag": {
-      "hash": "ed928709fd92273e",
+      "hash": "df302c565e8aefc5",
       "changed": "2026-11-17"
     },
     "/vendor/sweego": {
-      "hash": "8a42257d3325a271",
+      "hash": "ca5f7d5212c03e87",
       "changed": "2026-11-17"
     },
     "/vendor/sweetuptime": {
@@ -8800,286 +8799,286 @@
       "daily": true
     },
     "/vendor/synadia-com": {
-      "hash": "6ad188e500027e46",
+      "hash": "eca876d7a4a24e00",
       "changed": "2026-11-17"
     },
     "/vendor/sync-com": {
-      "hash": "6a4f8e510e327074",
+      "hash": "3c78765e35c910c2",
       "changed": "2026-11-17"
     },
     "/vendor/tabler-icons-io": {
-      "hash": "3df2d92732bca118",
+      "hash": "dbe1dd66a981f2b3",
       "changed": "2026-11-17"
     },
     "/vendor/taiga-io": {
-      "hash": "d3065ceb7aa23774",
+      "hash": "3047bfbc8cbd2019",
       "changed": "2026-11-17"
     },
     "/vendor/tailark": {
-      "hash": "8e900649f937b468",
+      "hash": "fb2c90a6e3ead996",
       "changed": "2026-11-17"
     },
     "/vendor/tailcolors": {
-      "hash": "5b8804016e9cf14b",
+      "hash": "88ca9d514f1bef26",
       "changed": "2026-11-17"
     },
     "/vendor/tailkits": {
-      "hash": "8bbb1a8235d2bb2d",
+      "hash": "e6ca42b87973170b",
       "changed": "2026-11-17"
     },
     "/vendor/tailscale": {
-      "hash": "8e97df3028796e14",
+      "hash": "65c8e959a569bdbf",
       "changed": "2026-11-17"
     },
     "/vendor/tailwindadmin": {
-      "hash": "c2d0f674b9f5f124",
+      "hash": "2c0a0d3c5cc0377f",
       "changed": "2026-11-17"
     },
     "/vendor/talky-io": {
-      "hash": "c2d3e5bdb60f01bf",
+      "hash": "9fd7b4624b1108b5",
       "changed": "2026-11-17"
     },
     "/vendor/tally": {
-      "hash": "248d47ffa85fc3d9",
+      "hash": "a8f9f3f0f7b97757",
       "changed": "2026-11-17"
     },
     "/vendor/taskade-com": {
-      "hash": "649a0375e7053cb9",
+      "hash": "d7160d0ec0131513",
       "changed": "2026-11-17"
     },
     "/vendor/tavily-ai": {
       "daily": true
     },
     "/vendor/tawk-to": {
-      "hash": "c6958ea82ea8bcaa",
+      "hash": "89b728da640b8ac0",
       "changed": "2026-11-17"
     },
     "/vendor/teamcamp": {
-      "hash": "90659e42479ef5a0",
+      "hash": "7a58a6a10785f8dd",
       "changed": "2026-11-17"
     },
     "/vendor/teaminal": {
-      "hash": "3938733589aadede",
+      "hash": "cc1c70841f66e1a5",
       "changed": "2026-11-17"
     },
     "/vendor/teamplify": {
-      "hash": "956085a99c77765c",
+      "hash": "045d2f1d8133dad6",
       "changed": "2026-11-17"
     },
     "/vendor/teamwork-com": {
-      "hash": "e942c14c9506c0c6",
+      "hash": "c8edadccf7dfd644",
       "changed": "2026-11-17"
     },
     "/vendor/telegram": {
-      "hash": "2b92090e6874e422",
+      "hash": "8f85211b00f329a7",
       "changed": "2026-11-17"
     },
     "/vendor/teleporthq": {
-      "hash": "3099227fef0bfbef",
+      "hash": "557f825b0716ff64",
       "changed": "2026-11-17"
     },
     "/vendor/teleretro-com": {
-      "hash": "a855822a7cae6bc9",
+      "hash": "fcc8c1ca0f06ad79",
       "changed": "2026-11-17"
     },
     "/vendor/temp-mail-io": {
-      "hash": "9f2d5734af67cfd8",
+      "hash": "ccac3d28a1feaa55",
       "changed": "2026-11-17"
     },
     "/vendor/tempmaildetector-com": {
-      "hash": "d5b12cce345a1e04",
+      "hash": "74c5766f6eb577e9",
       "changed": "2026-11-17"
     },
     "/vendor/tencent-rtc": {
-      "hash": "f454375d34659bb8",
+      "hash": "1532a6024c2c2811",
       "changed": "2026-11-17"
     },
     "/vendor/tenzu": {
-      "hash": "f5ca343222894929",
+      "hash": "ee0af545faf189d2",
       "changed": "2026-11-17"
     },
     "/vendor/terragrunt-scale": {
       "daily": true
     },
     "/vendor/terramate": {
-      "hash": "17b8693de8c7e625",
+      "hash": "c2a96f6257a6252c",
       "changed": "2026-11-17"
     },
     "/vendor/testcontainers": {
-      "hash": "2bd384ca94f637e5",
+      "hash": "f6bfd5b5211327cd",
       "changed": "2026-11-17"
     },
     "/vendor/testingbot-com": {
-      "hash": "53551e6439b13b9e",
+      "hash": "09b13bb13eb6eb68",
       "changed": "2026-11-17"
     },
     "/vendor/testspace-com": {
-      "hash": "8823b2a20c28f61d",
+      "hash": "c950c2bb7c9f2fa3",
       "changed": "2026-11-17"
     },
     "/vendor/testtls-com": {
-      "hash": "b894a1b83a229f34",
+      "hash": "bc350b2dfa154173",
       "changed": "2026-11-17"
     },
     "/vendor/tesults-com": {
-      "hash": "35fa2b7fd87f91fb",
+      "hash": "b6d19dc0623022e3",
       "changed": "2026-11-17"
     },
     "/vendor/texterify": {
-      "hash": "0668cd321dcfa8e7",
+      "hash": "2928a04d37780d74",
       "changed": "2026-11-17"
     },
     "/vendor/the-gosquared-early-stage-plan": {
-      "hash": "65be7d4b364a838e",
+      "hash": "887ef99878c1645d",
       "changed": "2026-11-17"
     },
     "/vendor/the-intercom-early-stage-program": {
-      "hash": "905e57ee0a02b05a",
+      "hash": "c8dacad34f7ba98b",
       "changed": "2026-11-17"
     },
     "/vendor/the-ip-api": {
-      "hash": "ced12ea5259db125",
+      "hash": "e88f4a8d52b729ff",
       "changed": "2026-11-17"
     },
     "/vendor/thumbnail-ws": {
-      "hash": "867bd1237493198e",
+      "hash": "97ae33599fc55cec",
       "changed": "2026-11-17"
     },
     "/vendor/thunder-client": {
-      "hash": "1ab016eb0d71841f",
+      "hash": "e6fda395a45fc173",
       "changed": "2026-11-17"
     },
     "/vendor/tickgit-com": {
-      "hash": "acdaae48f7fb8f8f",
+      "hash": "e27a4a7c46bcdd4d",
       "changed": "2026-11-17"
     },
     "/vendor/ticktick": {
-      "hash": "0f5acb0bdfbb0003",
+      "hash": "c5f5619e1a28d1a6",
       "changed": "2026-11-17"
     },
     "/vendor/tigris": {
-      "hash": "a2f85a3508e6f302",
+      "hash": "4fe917f0bfb7ba69",
       "changed": "2026-11-17"
     },
     "/vendor/tilda-cc": {
       "daily": true
     },
     "/vendor/timecamp": {
-      "hash": "8c9fa45911aeb174",
+      "hash": "23a449334b3a08ec",
       "changed": "2026-11-17"
     },
     "/vendor/tinacms": {
-      "hash": "8b92501c24786b32",
+      "hash": "5e3ea3a6944d11e7",
       "changed": "2026-11-17"
     },
     "/vendor/tinybird": {
       "daily": true
     },
     "/vendor/tinymce": {
-      "hash": "2ba628bd00f207a2",
+      "hash": "899d36546c5b35f5",
       "changed": "2026-11-17"
     },
     "/vendor/tinypng-com": {
-      "hash": "30dd50865031ffc4",
+      "hash": "269a808ca5e96568",
       "changed": "2026-11-17"
     },
     "/vendor/titanapps-io": {
-      "hash": "9bdd6896dd068aac",
+      "hash": "8e190b31974276bc",
       "changed": "2026-11-17"
     },
     "/vendor/tldraw-com": {
-      "hash": "624f7f1363b609fd",
+      "hash": "2db718967eccaafa",
       "changed": "2026-11-17"
     },
     "/vendor/todoist": {
-      "hash": "9dc96dd48f2b17aa",
+      "hash": "9a412f15e3167b4c",
       "changed": "2026-11-17"
     },
     "/vendor/together-ai": {
       "daily": true
     },
     "/vendor/toggl": {
-      "hash": "9969a8c9a20d2e9b",
+      "hash": "5b355a9b7f773b64",
       "changed": "2026-11-17"
     },
     "/vendor/toggled-dev": {
-      "hash": "bef1186383832bd0",
+      "hash": "241f761e03825249",
       "changed": "2026-11-17"
     },
     "/vendor/tolgee": {
-      "hash": "b001b534a780707c",
+      "hash": "d145794d1c484b60",
       "changed": "2026-11-17"
     },
     "/vendor/tollbooth": {
-      "hash": "dbb38505cec8a4f6",
+      "hash": "e298945557af7b0c",
       "changed": "2026-11-17"
     },
     "/vendor/tomorrow-io-weather-api": {
-      "hash": "ec3fef7fe2a74b2f",
+      "hash": "9d69d9968633778e",
       "changed": "2026-11-17"
     },
     "/vendor/tooljet": {
-      "hash": "9254c202289a7a53",
+      "hash": "dee02569e685faf2",
       "changed": "2026-11-17"
     },
     "/vendor/toranproxy-com": {
-      "hash": "bb317714300b8ad5",
+      "hash": "0f231e516fa17da4",
       "changed": "2026-11-17"
     },
     "/vendor/tracelog": {
-      "hash": "15932bfac006b081",
+      "hash": "6ce0776ddf765c23",
       "changed": "2026-11-17"
     },
     "/vendor/trackingplan": {
-      "hash": "90b0d8ab4fffca37",
+      "hash": "89c23561a605977f",
       "changed": "2026-11-17"
     },
     "/vendor/trackwith-dicloud": {
-      "hash": "ff62b1c857b26c64",
+      "hash": "571bfb83044726c2",
       "changed": "2026-11-17"
     },
     "/vendor/traefik": {
-      "hash": "0422bf08975399ad",
+      "hash": "5fa75a90ae211c24",
       "changed": "2026-11-17"
     },
     "/vendor/transfernow": {
-      "hash": "b528a5b3126ade6b",
+      "hash": "98dec9e8d640f902",
       "changed": "2026-11-17"
     },
     "/vendor/transifex-com": {
-      "hash": "44c1f4c76ce5f9fa",
+      "hash": "fa20bff1e4ba05cb",
       "changed": "2026-11-17"
     },
     "/vendor/transloadit-com": {
-      "hash": "ae5280b1e3ffc1af",
+      "hash": "5f4a8782c67c9e51",
       "changed": "2026-11-17"
     },
     "/vendor/treblle": {
-      "hash": "55a781383173b926",
+      "hash": "f88ae2830cc7fde7",
       "changed": "2026-11-17"
     },
     "/vendor/trello": {
-      "hash": "4dbe11fc92ec4776",
+      "hash": "5e5a5d78e506ffb7",
       "changed": "2026-11-17"
     },
     "/vendor/trigger-dev": {
-      "hash": "c3f6d7f4cc75c2b9",
+      "hash": "c6d407f10d6b549b",
       "changed": "2026-11-17"
     },
     "/vendor/trivy": {
-      "hash": "81d19fdf5232a772",
+      "hash": "60d9aeeb65015e40",
       "changed": "2026-11-17"
     },
     "/vendor/trufflehog": {
-      "hash": "139d5996c45125b7",
+      "hash": "b546b21c89f34c07",
       "changed": "2026-11-17"
     },
     "/vendor/ttl-sh": {
-      "hash": "35d5ca334c614c32",
+      "hash": "d31581f8d46d39f1",
       "changed": "2026-11-17"
     },
     "/vendor/tugboat": {
-      "hash": "d97a66f2c7e2df25",
+      "hash": "949b7740d98feeae",
       "changed": "2026-11-17"
     },
     "/vendor/turbopuffer": {
@@ -9089,106 +9088,106 @@
       "daily": true
     },
     "/vendor/tuta": {
-      "hash": "5703811c7ea07d27",
+      "hash": "64c8ac536fc94c8d",
       "changed": "2026-11-17"
     },
     "/vendor/tutanota": {
-      "hash": "60d244d963e2f9c4",
+      "hash": "661f8b6115dfab85",
       "changed": "2026-11-17"
     },
     "/vendor/tw-elements": {
-      "hash": "fbd77cdf07f10aa1",
+      "hash": "4fda8551a5141be3",
       "changed": "2026-11-17"
     },
     "/vendor/tweakcn": {
-      "hash": "ad18c398d00fceb6",
+      "hash": "b62b3ecf84427b29",
       "changed": "2026-11-17"
     },
     "/vendor/tweek": {
-      "hash": "45d7e16ea24f6f79",
+      "hash": "24ca5383e5936b62",
       "changed": "2026-11-17"
     },
     "/vendor/twicpics-com": {
-      "hash": "14fe5631e5cf6a9f",
+      "hash": "334bd610415c6274",
       "changed": "2026-11-17"
     },
     "/vendor/twilio-startups-program": {
-      "hash": "ed6a829e7a108bb3",
+      "hash": "33cd661b11fb0e5a",
       "changed": "2026-11-17"
     },
     "/vendor/twingate": {
-      "hash": "40cd4eed7136f71a",
+      "hash": "9632160b7d45eaf5",
       "changed": "2026-11-17"
     },
     "/vendor/twist-com": {
-      "hash": "065da6d84935b736",
+      "hash": "59c76584264b0288",
       "changed": "2026-11-17"
     },
     "/vendor/tyk": {
-      "hash": "2ed422e36149fda8",
+      "hash": "3feb4ca543fdf8a5",
       "changed": "2026-11-17"
     },
     "/vendor/typeform-com": {
-      "hash": "e6fa3432f4085d67",
+      "hash": "44b18a2bf7629dd9",
       "changed": "2026-11-17"
     },
     "/vendor/typesense-cloud": {
-      "hash": "b069dcd9b7cd5934",
+      "hash": "f7770dbaee6b8808",
       "changed": "2026-11-17"
     },
     "/vendor/ui-avatars": {
-      "hash": "6e2000acbb233a44",
+      "hash": "cea220844ab94913",
       "changed": "2026-11-17"
     },
     "/vendor/ui-bakery": {
-      "hash": "fead665d8c2a7eb8",
+      "hash": "a5b38714e9ca1be6",
       "changed": "2026-11-17"
     },
     "/vendor/umami": {
-      "hash": "ddc472d405d3b148",
+      "hash": "82689d5e87999491",
       "changed": "2026-11-17"
     },
     "/vendor/umso": {
-      "hash": "d63c99263c847e97",
+      "hash": "d564821fec11445c",
       "changed": "2026-11-17"
     },
     "/vendor/undraw": {
-      "hash": "16b68e1c543be8f2",
+      "hash": "3a61ea6a6bfeea84",
       "changed": "2026-11-17"
     },
     "/vendor/unicorn-platform": {
-      "hash": "adec70a3b1b08d2e",
+      "hash": "43b08a6a384cc64f",
       "changed": "2026-11-17"
     },
     "/vendor/unirateapi": {
-      "hash": "30e9007980caccad",
+      "hash": "991f33a03d255228",
       "changed": "2026-11-17"
     },
     "/vendor/unity-devops": {
       "daily": true
     },
     "/vendor/unkey": {
-      "hash": "78bc79f2cc3f1814",
+      "hash": "deb0b559a49af520",
       "changed": "2026-11-17"
     },
     "/vendor/unpkg": {
-      "hash": "a09885996b190822",
+      "hash": "a786f8b18a08f735",
       "changed": "2026-11-17"
     },
     "/vendor/unsplash-com": {
-      "hash": "d2caea7d56243b71",
+      "hash": "320d2ffd34740989",
       "changed": "2026-11-17"
     },
     "/vendor/updrafts-app": {
-      "hash": "7f4e992644bd27e4",
+      "hash": "1c9236d7250d0d0c",
       "changed": "2026-11-17"
     },
     "/vendor/uploadcare": {
-      "hash": "da52dc244082bf0b",
+      "hash": "51a4fc16f989bc93",
       "changed": "2026-11-17"
     },
     "/vendor/upptime": {
-      "hash": "34a7fcbdde0f4618",
+      "hash": "ad31417722c6cbc2",
       "changed": "2026-11-17"
     },
     "/vendor/upstash": {
@@ -9210,39 +9209,39 @@
       "daily": true
     },
     "/vendor/urlscan-io": {
-      "hash": "5e4a2a1d9acb7162",
+      "hash": "f8669652230a7763",
       "changed": "2026-11-17"
     },
     "/vendor/usercheck": {
-      "hash": "f853047eb51f5f5d",
+      "hash": "c63751b685dd07a4",
       "changed": "2026-11-17"
     },
     "/vendor/userforge-com": {
-      "hash": "66a14ccada1f49fb",
+      "hash": "5c88353f8ec5a9f3",
       "changed": "2026-11-17"
     },
     "/vendor/usewebhook-com": {
-      "hash": "9f571d7f35e8dfab",
+      "hash": "c9d0ac3448df28eb",
       "changed": "2026-11-17"
     },
     "/vendor/utterances": {
-      "hash": "2eb4047949dd57d7",
+      "hash": "26e1ddbdc01a6ed3",
       "changed": "2026-11-17"
     },
     "/vendor/uuid-generator": {
-      "hash": "8f6a0388db93520c",
+      "hash": "51c01124161bb12c",
       "changed": "2026-11-17"
     },
     "/vendor/uxtweak-com": {
-      "hash": "54e36cf43448741f",
+      "hash": "6d9c5891f3544184",
       "changed": "2026-11-17"
     },
     "/vendor/v0-dev": {
-      "hash": "284463d59ce358b1",
+      "hash": "16cfb7c166391b89",
       "changed": "2026-11-17"
     },
     "/vendor/vaadin": {
-      "hash": "16542f02d09f6ab7",
+      "hash": "9e2a17d17ef9084c",
       "changed": "2026-11-17"
     },
     "/vendor/val-town": {
@@ -9252,31 +9251,31 @@
       "daily": true
     },
     "/vendor/vaocherapp-qr-code-generator": {
-      "hash": "586e97a72b4ec2bc",
+      "hash": "b0e003739f0d5f24",
       "changed": "2026-11-17"
     },
     "/vendor/vast-ai": {
-      "hash": "d3ccf4b4599d1c47",
+      "hash": "b61ddabb8e57f630",
       "changed": "2026-11-17"
     },
     "/vendor/vatcheckapi-com": {
-      "hash": "ce592ac1b57049eb",
+      "hash": "0d7c7500a2276833",
       "changed": "2026-11-17"
     },
     "/vendor/vatlayer": {
-      "hash": "9ec2f40d7c61f597",
+      "hash": "51cf1da1c1242904",
       "changed": "2026-11-17"
     },
     "/vendor/vector-express": {
-      "hash": "c0a3aec270da77e8",
+      "hash": "4d6c2fd624fd1982",
       "changed": "2026-11-17"
     },
     "/vendor/vectr-com": {
-      "hash": "050d34bbd718270c",
+      "hash": "2de7fd1c75d6a2b1",
       "changed": "2026-11-17"
     },
     "/vendor/vera-aws": {
-      "hash": "a5d9f92e3bec50d8",
+      "hash": "6bac194a081ef89f",
       "changed": "2026-11-17"
     },
     "/vendor/vercel": {
@@ -9286,250 +9285,250 @@
       "daily": true
     },
     "/vendor/verifalia": {
-      "hash": "b52412c77d62df54",
+      "hash": "a9e37810fc507c1b",
       "changed": "2026-11-17"
     },
     "/vendor/verimail-io": {
-      "hash": "34872f57cb4181f1",
+      "hash": "5834d251c9eb4107",
       "changed": "2026-11-17"
     },
     "/vendor/veriphone": {
-      "hash": "10af27dbd6add7cd",
+      "hash": "11aefd424d0f7af8",
       "changed": "2026-11-17"
     },
     "/vendor/versionfeeds": {
-      "hash": "a3c2c0d167651f9e",
+      "hash": "129a0978cf286a90",
       "changed": "2026-11-17"
     },
     "/vendor/versoly": {
       "daily": true
     },
     "/vendor/vertopal": {
-      "hash": "42019758c06ecafb",
+      "hash": "1994f405463124ea",
       "changed": "2026-11-17"
     },
     "/vendor/videoinu": {
-      "hash": "c45fd44840a79fa7",
+      "hash": "66d44a6a092ad1e4",
       "changed": "2026-11-17"
     },
     "/vendor/vidhook": {
-      "hash": "0b8a783daf8ac615",
+      "hash": "a08e89cb3783f1e9",
       "changed": "2026-11-17"
     },
     "/vendor/virgil-security": {
-      "hash": "dd17f24e86293981",
+      "hash": "600e88bac3a2a1d9",
       "changed": "2026-11-17"
     },
     "/vendor/virustotal": {
-      "hash": "71232e636fd3fac4",
+      "hash": "e3bf5ad69fe075d1",
       "changed": "2026-11-17"
     },
     "/vendor/visual-debug": {
-      "hash": "8b4ee17e7eba3d9f",
+      "hash": "d0ebadc6b978533a",
       "changed": "2026-11-17"
     },
     "/vendor/visual-studio-code": {
-      "hash": "cb1e06b0c4be97eb",
+      "hash": "f40c07e9c1815848",
       "changed": "2026-11-17"
     },
     "/vendor/visual-studio-community": {
-      "hash": "292b4777ce6c0b01",
+      "hash": "9ed867ca7c60730d",
       "changed": "2026-11-17"
     },
     "/vendor/vitepress": {
-      "hash": "74d0f76dd3e9277f",
+      "hash": "eb39b02fe9f3cbf2",
       "changed": "2026-11-17"
     },
     "/vendor/volaryddns": {
-      "hash": "36e205e04b227c1f",
+      "hash": "3d79432f656363af",
       "changed": "2026-11-17"
     },
     "/vendor/volume": {
-      "hash": "a018a53b85f0393c",
+      "hash": "f47694ae87eb2add",
       "changed": "2026-11-17"
     },
     "/vendor/volume-shader-bm": {
-      "hash": "762fd2c4aefb75a2",
+      "hash": "c1465e7832bc7b3d",
       "changed": "2026-11-17"
     },
     "/vendor/vscodium": {
-      "hash": "65a55895b7329333",
+      "hash": "3e4b6f2b1fe2e172",
       "changed": "2026-11-17"
     },
     "/vendor/vultr": {
-      "hash": "64c178006ccb4949",
+      "hash": "6df3725a324ce468",
       "changed": "2026-11-17"
     },
     "/vendor/vultr-dns": {
-      "hash": "5e753ea3a5ecbd60",
+      "hash": "3df92b16379733fd",
       "changed": "2026-11-17"
     },
     "/vendor/wachete": {
       "daily": true
     },
     "/vendor/waitlio": {
-      "hash": "00a9418d9fd956a5",
+      "hash": "ce557e8a2d511c44",
       "changed": "2026-11-17"
     },
     "/vendor/waiverstevie-com": {
-      "hash": "bef409f5f1d0d92d",
+      "hash": "339092b033615f5a",
       "changed": "2026-11-17"
     },
     "/vendor/wakatime-com": {
-      "hash": "70fda141e6097f6b",
+      "hash": "f0172b9571e33865",
       "changed": "2026-11-17"
     },
     "/vendor/wave-terminal": {
-      "hash": "6eac7498ca530d1c",
+      "hash": "630cdb5ae9e23dd0",
       "changed": "2026-11-17"
     },
     "/vendor/wdrfree-svg": {
-      "hash": "cf87c4016e5eb9ec",
+      "hash": "d286d274ff2e8e02",
       "changed": "2026-11-17"
     },
     "/vendor/we-team": {
-      "hash": "b56d278ef02a6c21",
+      "hash": "89e4c25db9a1b9f7",
       "changed": "2026-11-17"
     },
     "/vendor/weatherxu": {
-      "hash": "004c94cda8a01572",
+      "hash": "ef97c6e046d50115",
       "changed": "2026-11-17"
     },
     "/vendor/weaviate": {
       "daily": true
     },
     "/vendor/web3forms": {
-      "hash": "f50a2b82a09b530e",
+      "hash": "fb97b1123c49c31d",
       "changed": "2026-11-17"
     },
     "/vendor/webacus": {
-      "hash": "14eed10b2b8b8709",
+      "hash": "1ec814459d259fa9",
       "changed": "2026-11-17"
     },
     "/vendor/webcomponents-dev": {
-      "hash": "f19f0f0642971ea5",
+      "hash": "d11f9246b1015f9c",
       "changed": "2026-11-17"
     },
     "/vendor/webex": {
-      "hash": "d4c8ba9f31a171fc",
+      "hash": "c317e67b6765c566",
       "changed": "2026-11-17"
     },
     "/vendor/webflow": {
-      "hash": "a9d1410a4fa0ad04",
+      "hash": "d9b8faa6e06dcde2",
       "changed": "2026-11-17"
     },
     "/vendor/webhook-site": {
-      "hash": "388e430a6f54e3b6",
+      "hash": "edc25d44661bb1f9",
       "changed": "2026-11-17"
     },
     "/vendor/webhookrelay-com": {
-      "hash": "a6b847ed6b82b360",
+      "hash": "515265eadd5dbcfd",
       "changed": "2026-11-17"
     },
     "/vendor/webpushr": {
-      "hash": "a8b622599001a07e",
+      "hash": "2497da933ea9445f",
       "changed": "2026-11-17"
     },
     "/vendor/webscraping-ai": {
-      "hash": "45fc47a1abf0096b",
+      "hash": "1b63a64c38e10be6",
       "changed": "2026-11-17"
     },
     "/vendor/websitepulse-com": {
-      "hash": "9d3f921c540b1ee8",
+      "hash": "f48b0bae102426cd",
       "changed": "2026-11-17"
     },
     "/vendor/webstudio": {
-      "hash": "e4aeaa9b1ea68809",
+      "hash": "1776356ea8e46d1f",
       "changed": "2026-11-17"
     },
     "/vendor/webvizio": {
-      "hash": "cdede39d0bf2c08d",
+      "hash": "33e1a11db40a1d02",
       "changed": "2026-11-17"
     },
     "/vendor/weights-biases": {
       "daily": true
     },
     "/vendor/weserv": {
-      "hash": "56659c4bb3c35326",
+      "hash": "5030c68d29941374",
       "changed": "2026-11-17"
     },
     "/vendor/what-the-diff": {
-      "hash": "3f183cf62af25bd7",
+      "hash": "4367039b0f096cbe",
       "changed": "2026-11-17"
     },
     "/vendor/whatsapp": {
-      "hash": "f2268f16e2339c03",
+      "hash": "6f49fe76ad1e9def",
       "changed": "2026-11-17"
     },
     "/vendor/whatsapp-business-platform": {
-      "hash": "d461058fba53a2a9",
+      "hash": "fe0890bcef25989d",
       "changed": "2026-11-17"
     },
     "/vendor/whereby": {
-      "hash": "1ffb31e3805e4e61",
+      "hash": "9654f8a7d669c892",
       "changed": "2026-11-17"
     },
     "/vendor/whimsical-com": {
-      "hash": "2b5140e1f5366722",
+      "hash": "26fd2f53201d180e",
       "changed": "2026-11-17"
     },
     "/vendor/whitespace": {
-      "hash": "043d7ea14047ad3f",
+      "hash": "fd94db46fb601290",
       "changed": "2026-11-17"
     },
     "/vendor/windmill-dev": {
-      "hash": "6873073c8491999e",
+      "hash": "3cb6d3117578708f",
       "changed": "2026-11-17"
     },
     "/vendor/windscribe": {
-      "hash": "9b0f5e17465bcb2e",
+      "hash": "a5ea377841358879",
       "changed": "2026-11-17"
     },
     "/vendor/windsurf": {
       "daily": true
     },
     "/vendor/wistia-com": {
-      "hash": "3a9c77a46aeb0061",
+      "hash": "8282f6ee416597b4",
       "changed": "2026-11-17"
     },
     "/vendor/woodpecker-ci": {
-      "hash": "96b6ab8ea5c775c4",
+      "hash": "b44017584e384b85",
       "changed": "2026-11-17"
     },
     "/vendor/workos": {
-      "hash": "5c89ee2d6ca26530",
+      "hash": "4d5974208b1203f9",
       "changed": "2026-11-17"
     },
     "/vendor/wormhol-org": {
-      "hash": "36c4090bda1dc438",
+      "hash": "6b2d0b644e2e15c6",
       "changed": "2026-11-17"
     },
     "/vendor/wormhole": {
-      "hash": "0ad5156b50841dca",
+      "hash": "9d1250db9583bb3a",
       "changed": "2026-11-17"
     },
     "/vendor/wpjack": {
-      "hash": "63c40d47e6a421fb",
+      "hash": "b36644931268808a",
       "changed": "2026-11-17"
     },
     "/vendor/wrapapi-com": {
-      "hash": "adfc6f2830545668",
+      "hash": "149338af58ed2e78",
       "changed": "2026-11-17"
     },
     "/vendor/wraps": {
-      "hash": "247e4848c9b3f3a3",
+      "hash": "fcba75b0a74f4797",
       "changed": "2026-11-17"
     },
     "/vendor/wufoo": {
-      "hash": "7b2bccdcdcff7f98",
+      "hash": "a3d41a86d98720fe",
       "changed": "2026-11-17"
     },
     "/vendor/wundergraph": {
-      "hash": "f14cff6d837b467e",
+      "hash": "a11753af096a0cc1",
       "changed": "2026-11-17"
     },
     "/vendor/x-twitter": {
-      "hash": "789eb1d9783a5605",
+      "hash": "dcda5dd0cd982557",
       "changed": "2026-11-17"
     },
     "/vendor/xai": {
@@ -9539,64 +9538,64 @@
       "daily": true
     },
     "/vendor/xcloud-host": {
-      "hash": "d71c67cc5da5147d",
+      "hash": "b66e38994491e3a4",
       "changed": "2026-11-17"
     },
     "/vendor/xirsys": {
-      "hash": "8869803d1c64ca45",
+      "hash": "1a7c9c9361708514",
       "changed": "2026-11-17"
     },
     "/vendor/xitoring-com": {
       "daily": true
     },
     "/vendor/xkit": {
-      "hash": "55d9f0d5a1bc324c",
+      "hash": "a56dae7938907bd5",
       "changed": "2026-11-17"
     },
     "/vendor/yepcode": {
-      "hash": "93611ec1155481d4",
+      "hash": "d4ad282baff80ec0",
       "changed": "2026-11-17"
     },
     "/vendor/yodiz": {
-      "hash": "58f8dafec0027e80",
+      "hash": "214bc281e3e423a8",
       "changed": "2026-11-17"
     },
     "/vendor/you-com": {
       "daily": true
     },
     "/vendor/zapier": {
-      "hash": "4dcd38a30fffabf7",
+      "hash": "f30029e5fb9b667a",
       "changed": "2026-11-17"
     },
     "/vendor/zed": {
-      "hash": "d9542a975ff4a51c",
+      "hash": "53a38a0da83eb12d",
       "changed": "2026-11-17"
     },
     "/vendor/zenable": {
-      "hash": "cf688c61fd9a05ae",
+      "hash": "0191738e22c35384",
       "changed": "2026-11-17"
     },
     "/vendor/zendesk-for-startups": {
-      "hash": "559eea3cc573136b",
+      "hash": "e7b94cacecdcbea2",
       "changed": "2026-11-17"
     },
     "/vendor/zenhub-com": {
-      "hash": "7502df6c12f15425",
+      "hash": "7a471104a34c5657",
       "changed": "2026-11-17"
     },
     "/vendor/zenscrape": {
-      "hash": "ff81b422e929ee78",
+      "hash": "41da4052414d3a38",
       "changed": "2026-11-17"
     },
     "/vendor/zep": {
       "daily": true
     },
     "/vendor/zeplin": {
-      "hash": "a2c9b331ad8fdb21",
+      "hash": "b2f203651b8e838e",
       "changed": "2026-11-17"
     },
     "/vendor/zerotier": {
-      "hash": "4b12d1a3218b34a9",
+      "hash": "7dabb580fb3cc211",
       "changed": "2026-11-17"
     },
     "/vendor/zhipu-ai": {
@@ -9606,119 +9605,119 @@
       "daily": true
     },
     "/vendor/zilore-com": {
-      "hash": "1e8eba210cb5f8ed",
+      "hash": "66e03c30aeb61920",
       "changed": "2026-11-17"
     },
     "/vendor/zipcodebase": {
-      "hash": "3af003e69ab33fb6",
+      "hash": "fa3fe176e6925af8",
       "changed": "2026-11-17"
     },
     "/vendor/zipcodestack": {
-      "hash": "54e43ea7dfac255e",
+      "hash": "2dc9b01d64cb75e1",
       "changed": "2026-11-17"
     },
     "/vendor/zitadel-cloud": {
-      "hash": "8a780c4ce8e15b01",
+      "hash": "f887fa844a4bc927",
       "changed": "2026-11-17"
     },
     "/vendor/zoho": {
-      "hash": "cdaba92eaa00f137",
+      "hash": "dbc0901a277cc9a5",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-assist": {
-      "hash": "6cd23c6f80f32d47",
+      "hash": "fc24c7f7b95894bd",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-bookings": {
-      "hash": "45007dc3db502ef0",
+      "hash": "4df21f1141f99e82",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-campaigns": {
-      "hash": "85df3d9f1c8e2ddb",
+      "hash": "c61784d3c997e5f0",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-checkout": {
-      "hash": "3b296ac69bdbdec9",
+      "hash": "ce1a0bf0c8c2cc00",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-cliq": {
-      "hash": "1429d236ac5ed3e7",
+      "hash": "c393e467721a965d",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-connect": {
-      "hash": "bc67603fa3756064",
+      "hash": "7d1cb289da725738",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-desk": {
-      "hash": "0bd60489d4f3f3b9",
+      "hash": "7621c636cefd035b",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-docs": {
-      "hash": "3f5fadae8d73ace7",
+      "hash": "6ee9a401823879de",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-forms": {
-      "hash": "e3960bc970855c85",
+      "hash": "e546827cfa40ff06",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-meeting": {
-      "hash": "07f443c9d8517846",
+      "hash": "0264c3bf5da63970",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-notebook": {
-      "hash": "20b34af40d987481",
+      "hash": "9bc3579aeb1507ce",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-projects": {
-      "hash": "41bccb2946855d4a",
+      "hash": "dd425c232e54659e",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-showtime": {
-      "hash": "1f30566aa0f5c22c",
+      "hash": "cde6f20dad68eb1a",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-sign": {
-      "hash": "ee0c9cb25ea9080c",
+      "hash": "a6fb9d77bf816bdb",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-survey": {
-      "hash": "2420ff7ec8c99348",
+      "hash": "d8b7604fcd1b763c",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-vault": {
-      "hash": "d0435ae8eadd97a3",
+      "hash": "5125d4069e17536f",
       "changed": "2026-11-17"
     },
     "/vendor/zoho-wiki": {
-      "hash": "92b102f75a302c3e",
+      "hash": "79fd812634cb9b57",
       "changed": "2026-11-17"
     },
     "/vendor/zoneedit-com": {
-      "hash": "1a8f18c694feebbe",
+      "hash": "5ff9b861b69f1d11",
       "changed": "2026-11-17"
     },
     "/vendor/zonomi": {
-      "hash": "0f668ffe7a9ecf47",
+      "hash": "0bcb0260b1faeb3e",
       "changed": "2026-11-17"
     },
     "/vendor/zoom": {
-      "hash": "945bb6f9a6507269",
+      "hash": "2109f9cbbbbfd7a8",
       "changed": "2026-11-17"
     },
     "/vendor/zoom-us": {
-      "hash": "71a85a164f76f7a7",
+      "hash": "6bd04d5de58f31be",
       "changed": "2026-11-17"
     },
     "/vendor/zube": {
-      "hash": "6a1669532ff30fb1",
+      "hash": "ab51e89fb2d15efe",
       "changed": "2026-11-17"
     },
     "/vendor/zulip": {
-      "hash": "e70521a07c7b2404",
+      "hash": "e46be7c5cdaffa20",
       "changed": "2026-11-17"
     },
     "/vendor/zuplo": {
-      "hash": "5b9676f4c7876b5e",
+      "hash": "229ee8eca44d9c8c",
       "changed": "2026-11-17"
     },
     "/vercel-alternatives": {
@@ -9726,7 +9725,7 @@
       "changed": "2026-11-16"
     },
     "/vercel-vs-netlify": {
-      "hash": "40c14ed271a2620c",
+      "hash": "5459ef1a3066576d",
       "changed": "2026-11-17"
     },
     "/whatsapp-business-api-pricing-2026": {
