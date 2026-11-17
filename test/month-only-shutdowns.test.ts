@@ -66,7 +66,7 @@ function card(page: string, selector: string, name: string) {
 function sectionOf(element: any): string {
   let previous = element.previousElementSibling;
   while (previous && previous.tagName !== "H2") previous = previous.previousElementSibling;
-  return previous?.id ?? "";
+  return previous?.id === "completed-history" ? "completed" : previous?.id ?? "";
 }
 
 describe("shutdown months preserve calendar precision", () => {
