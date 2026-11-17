@@ -45,6 +45,7 @@ const STATED: Record<string, string[]> = {
     "Free tier: 50,000 monthly retained users (MRU) per app, unlimited social logins, email/password, organizations, and webhooks. MFA needs Pro ($25/month)."
   ],
   "/free-saas-stack": [
+    "You don't outgrow Stripe — it scales to billions. Consider Stripe Managed Payments (3.5% per successful transaction plus standard Stripe fees) or Paddle (5% + 50¢ per transaction) if you need a merchant of record. A merchant of record handles sales tax, VAT and compliance globally and you receive net payouts, but charges higher per-transaction fees.",
     "When you exceed 50,000 executions/month. Trigger.dev's free plan includes $5 of compute credits monthly and allows 20 concurrent runs.",
     "Free tier: 50,000 executions/month with 5 concurrent steps.",
     "Inngest (50K background job executions)",
@@ -97,6 +98,7 @@ const WITHDRAWN: Record<string, string[]> = {
     "Free tier: 10,000 monthly active users, unlimited social logins, email/password, MFA, organizations, and webhooks."
   ],
   "/free-saas-stack": [
+    "Consider Lemon Squeezy",
     "When you exceed 25,000 runs/month. Trigger.dev offers 10,000 runs/month free with a similar developer experience.",
     "Free tier: 25,000 function runs/month with 5 concurrent steps.",
     "Inngest (25K background job runs)",

@@ -343,11 +343,11 @@ describe("Gemini free tier claims", () => {
 
   it("lists Gemini 2.0 Flash among the completed shutdowns, dated June 1, 2026", () => {
     const sections = served.get("/shutdowns")!.split(/<h2\b/).slice(1).map((section) => ({
-      heading: readableText(`<h2${section.slice(0, section.indexOf("</h2>") + 5)}`),
+      sectionId: section.match(/\bid="([^"]+)"/)?.[1],
       cards: section.split('<div class="shutdown-card"').slice(1).map((card) => readableText(`<div${card}`)),
     }));
     const holding = sections.filter(({ cards }) => cards.some((card) => card.startsWith("Gemini 2.0 Flash ")));
-    assert.deepStrictEqual(holding.map(({ heading }) => heading.replace(/\s*\(\d+\)$/, "")), ["✅ Recently Completed"]);
+    assert.deepStrictEqual(holding.map(({ sectionId }) => sectionId === "completed-history" ? "completed" : sectionId), ["completed"]);
     const card = holding[0].cards.find((text) => text.startsWith("Gemini 2.0 Flash "))!;
     assert.ok(card.includes("June 1, 2026"), card);
   });

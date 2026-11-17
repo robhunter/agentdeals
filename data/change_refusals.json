@@ -2050,6 +2050,18 @@
       "refused_date": "2026-09-09"
     },
     {
+      "vendor": "CloudDev",
+      "change_type": "limits_increased",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 14289 characters, so it states no terms to have changed",
+      "summary": "Stored info describes CloudDev as very early stage (launched March 2026, 8 GitHub stars) with support for only S3, DynamoDB, Lambda, SQS, and API Gateway. The current page shows the project has matured substantially: 37 stars, 3 forks, 284 commits, and 43 AWS services emulated across v0.1.0–v0.7.0, including EC2, RDS, OpenSearch, MSK, CodePipeline, WAF, and many more.",
+      "previous_state": "Open-source LocalStack alternative for running AWS services locally. Supports S3, DynamoDB, Lambda, SQS, and API Gateway in one command. Written in Go. Very early stage (launched March 2026, 8 GitHub stars). Single binary, no Docker required",
+      "current_state": "Free, open-source local AWS emulator (self-hosted alternative to LocalStack) running 43 AWS services locally as a single Go binary with zero runtime dependencies; 37 stars, 3 forks, 284 commits; roadmap through v0.7.0 covering S3, DynamoDB, Lambda, SQS, API Gateway plus 38 more services including EC2, RDS, OpenSearch, MSK, CodePipeline, and WAF.",
+      "source_url": "https://github.com/Jeffrin-dev/CloudDev",
+      "category": "Cloud IaaS",
+      "refused_date": "2026-11-17"
+    },
+    {
       "vendor": "Cloudflare DNS",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_claim",
@@ -10639,6 +10651,18 @@
       "refused_date": "2026-10-26"
     },
     {
+      "vendor": "RunMyJob",
+      "change_type": "rebranded",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-26 (page_does_not_name_vendor) stated the same 9 figures, so the page showed these terms before the date this record gives",
+      "summary": "The vendor has rebranded from RunMyJob to RunJob (runmyjob.io redirects to runjob.eu). The Free tier still exists at €0/m with the same core limits (1 integration, 10 concurrent jobs, 12 vCPU, 32 GB memory, 400 vCPU-minutes, 800 GB-minutes included monthly), but the page now also lists overage pricing (€0.00002 per vCPU-second, €0.000001 per GB-second) and additional details not in the stored description.",
+      "previous_state": "Now RunJob — runmyjob.io redirects to runjob.eu, which serves the same product. Cloud runners for GitHub Actions and GitLab CI. Free plan is EUR 0/month: 1 integration with a GitLab or GitHub organisation, 10 concurrent jobs, 12 vCPU and 32 GB of memory per job, 400 vCPU-minutes and 800 GB-minutes included monthly, usage-priced above that. GitHub runners work with organisation accounts only.",
+      "current_state": "Free €0/m: 1 integration with your GitLab or GitHub organization, 10 concurrent jobs, 12 vCPU and 32 GB of Memory per Job, 400 vCPU-minutes included monthly (€0.00002 per vCPU-second over included), 800 GB-minutes included monthly (€0.000001 per GB-second over included). GitHub runners work with organisation accounts only.",
+      "source_url": "https://runjob.eu/",
+      "category": "CI/CD",
+      "refused_date": "2026-11-17"
+    },
+    {
       "vendor": "ruttl.com",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -12832,6 +12856,18 @@
     },
     {
       "vendor": "Upstash",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report only notes that Vector and QStash details are absent from the current page, but the stored description never claimed those terms were on this page; the Redis free-tier terms match.",
+      "summary": "The current pricing page only documents Redis free-tier terms (250MB data, 500K commands/month, 10GB bandwidth). The Vector and QStash free-tier details (200M vectors × dimensions, 10K queries/day, 1,000 messages/day) are not present on this page.",
+      "previous_state": "Serverless Redis — 500K commands/month (250MB data). Vector: 200M vectors × dimensions and 10K queries a day free. QStash: 1,000 messages/day free",
+      "current_state": "Free plan is $0/month with 250 MB data size, 10 GB monthly bandwidth, and 500K monthly commands.",
+      "source_url": "https://upstash.com/pricing",
+      "category": "Databases",
+      "refused_date": "2026-11-17"
+    },
+    {
+      "vendor": "Upstash",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
       "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 500 command/mo against 500 command/mo, 256 MB data against 256 MB data",
@@ -13035,6 +13071,18 @@
       "source_url": "https://vectr.com/",
       "category": "Design",
       "refused_date": "2026-10-13"
+    },
+    {
+      "vendor": "Vera AWS",
+      "change_type": "record_corrected",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 8195 characters, so it states no terms to have changed",
+      "summary": "The stored description says Vera AWS is an open-source local AWS emulator that requires no Docker, but the current page describes a Docker-based setup (docker compose up -d) and a local setup using install.sh/uv, and it now presents Vera as a multi-cloud emulator (AWS + GCP) rather than AWS-only. The page also states Vera AWS passes 80% of 260 real AWS CLI commands vs 47% for LocalStack, and lists 89 EC2 resource types, matching the stored count, but the 'no Docker required' claim is contradicted by the documented Docker quick start.",
+      "previous_state": "Open-source local AWS emulator. v0.1 supports 89 resource types including VPCs, EC2 instances, security groups, and EBS volumes — EC2 emulation is unique among LocalStack alternatives. Includes awscli drop-in wrapper and terlocal terraform wrapper. No AWS account or Docker required. Runs entirely on your machine",
+      "current_state": "Vera is a high-fidelity, multi-cloud emulator running on your laptop with no cloud accounts, no billing, and no risk. It emulates Amazon EC2 (89 resources) and GCP Compute (91 resources). Quick Start uses Docker (docker compose up -d) or a local setup via install.sh and uv run. Drop-in wrappers for AWS CLI (awscli) and Terraform (terlocal) are included. In head-to-head testing against 260 real AWS CLI commands, Vera AWS passes 80% compared to 47% for LocalStack.",
+      "source_url": "https://github.com/project-vera/vera-aws",
+      "category": "Cloud IaaS",
+      "refused_date": "2026-11-17"
     },
     {
       "vendor": "Vercel",
@@ -13885,6 +13933,18 @@
       "refused_date": "2026-10-10"
     },
     {
+      "vendor": "Zoho Showtime",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-10 (no_price_signal) claimed the same change, product_deprecated, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "Zoho ShowTime has reached end of life and will shut down; the page now directs users to migrate to TrainerCentral, and no free tier for ShowTime is described.",
+      "previous_state": "Yet another Meeting software for training for a remote session of up to 5 attendees.",
+      "current_state": "Zoho ShowTime reached end of life on December 31, 2025, and will shut down on May 30, 2026; users are directed to migrate to TrainerCentral, with a free trial available for existing Zoho ShowTime users.",
+      "source_url": "https://zoho.com/showtime",
+      "category": "Video",
+      "refused_date": "2026-11-17"
+    },
+    {
       "vendor": "Zoho Sign",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -13931,6 +13991,18 @@
       "source_url": "https://zoho.com/vault",
       "category": "Password Managers",
       "refused_date": "2026-10-01"
+    },
+    {
+      "vendor": "Zoho Wiki",
+      "change_type": "product_deprecated",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 958 characters, so it states no terms to have changed",
+      "summary": "Zoho Wiki is now Zoho Learn; the page no longer describes the free three-user/50 MB plan and instead promotes Zoho Learn.",
+      "previous_state": "Free for three users with 50 MB storage, unlimited pages, zip backups, RSS & Atom feed, access controls & customizable CSS.",
+      "current_state": "Zoho Wiki is now Zoho Learn, with a link to visit Zoho Learn or access Zoho wiki; the page describes features like workspaces, pages, knowledge base, brand control, secure content, and an editor, but does not state any free tier limits or pricing.",
+      "source_url": "https://zoho.com/wiki",
+      "category": "Documentation",
+      "refused_date": "2026-11-17"
     },
     {
       "vendor": "Zoho",
