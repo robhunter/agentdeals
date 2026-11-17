@@ -20686,6 +20686,23 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Lemon Squeezy",
+      "change_type": "product_deprecated",
+      "date": "2027-03-31",
+      "date_source": "vendor_page",
+      "summary": "Lemon Squeezy stops processing transactions, including subscription renewals, on March 31, 2027, and stores must move off it by then. It closed new store sign-ups on November 16, 2026. It recommends Stripe Managed Payments, with migration tooling from December 2, 2026 for eligible stores.",
+      "what_ends": "Lemon Squeezy",
+      "listing_effect": "none",
+      "previous_state": "Lemon Squeezy offered a merchant of record for digital products at $0 a month plus 5% + 50¢ per transaction, open to new stores, with no announced end.",
+      "current_state": "Lemon Squeezy's migration guide, \"Key dates\" (docs.lemonsqueezy.com/migration, read 2026-11-17): \"November 16, 2026\" \"Lemon Squeezy stops accepting new users and new store sign-ups\", \"December 2, 2026\" \"Migration tooling for Managed Payments launches at app.lemonsqueezy.com/migration for eligible stores\", \"March 31, 2027\" \"Lemon Squeezy stops processing transactions, including subscription renewals\". The guide adds: \"All Lemon Squeezy stores need to move off the platform by then, and extensions will not be offered.\"",
+      "impact": "high",
+      "source_url": "https://docs.lemonsqueezy.com/migration#key-dates",
+      "category": "Payments",
+      "alternatives": [],
+      "recorded_date": "2026-11-17",
+      "announced_on": "2026-11-16"
     }
   ]
 }
