@@ -20,11 +20,11 @@
       "daily": true
     },
     "/ai-free-tiers": {
-      "hash": "051bc366ec7a9ac8",
+      "hash": "ea43e5a0177f7a70",
       "changed": "2026-11-17"
     },
     "/ai-ml-alternatives": {
-      "hash": "365c9a4ff9b69a60",
+      "hash": "d651c8ec20fa4c20",
       "changed": "2026-11-17"
     },
     "/alternative-to": {
@@ -1103,8 +1103,8 @@
       "changed": "2026-11-13"
     },
     "/category/ai-coding": {
-      "hash": "87a8426932d51b4e",
-      "changed": "2026-11-14"
+      "hash": "66f5fa90aefc4412",
+      "changed": "2026-11-17"
     },
     "/category/ai-ml": {
       "hash": "fd0ede7963db69f2",
@@ -3413,7 +3413,7 @@
       "changed": "2026-11-17"
     },
     "/ide-code-editors-alternatives": {
-      "hash": "fdcdba2cc12f17d7",
+      "hash": "50383c7aeb486aac",
       "changed": "2026-11-17"
     },
     "/llm-api-pricing": {
