@@ -18,10 +18,6 @@ const expected = [
     "closed to new customers"
   ],
   [
-    "Conductor Cloud",
-    "read-only since November 13, 2026"
-  ],
-  [
     "OpenAI Agent Builder, Evals platform and reusable prompts",
     "existing evals read-only since October 31, 2026"
   ],
@@ -176,8 +172,12 @@ describe("restrictions in the shutdown month index", () => {
   it("removes a note when its last shutdown date has passed", () => {
     const twenty = entries("2026-11-20");
     assert.ok(!twenty.some(line => line.startsWith("Azure OpenAI o-series model retirement")));
-    assert.ok(twenty.some(line => line.startsWith("Conductor Cloud") && line.includes("read-only since November 13, 2026")));
+    assert.ok(entries("2026-11-17").some(line => line.startsWith("Azure OpenAI o-series model retirement") && line.includes("closed to new customers")));
+    assert.ok(!twenty.some(line => line.startsWith("Conductor Cloud") && line.includes("read-only since November 13, 2026")));
     assert.ok(!entries("2026-11-21").some(line => line.startsWith("Conductor Cloud")));
+  });
+  it("does not restate a restriction from a cancelled announcement", () => {
+    assert.equal(shutdownIndexNote({ service: "Conductor Cloud", dateSource: "https://www.conductor.build/changelog/0.93.0-conductor-is-joining-meta", what: "It goes read-only on November 13, 2026: old chats can still be read and exported, but no new messages sent. Since November 4, 2026, new users cannot sign up or download the app." }, "2026-11-17"), "");
   });
   it("moves the single note to the next remaining stage", () => {
     const own = entries("2027-01-29").filter(line => line.startsWith("Heroku Postgres 15"));

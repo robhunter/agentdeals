@@ -26,16 +26,6 @@ const restrictions: readonly ShutdownIndexRestriction[] = [
     "note": "closed to new customers"
   },
   {
-    "service": "Conductor Cloud",
-    "sourceUrl": "https://www.conductor.build/changelog/0.93.0-conductor-is-joining-meta",
-    "sourceText": [
-      "It goes read-only on November 13, 2026: old chats can still be read and exported, but no new messages sent.",
-      "Since November 4, 2026, new users cannot sign up or download the app."
-    ],
-    "knownOn": "2026-11-13",
-    "note": "read-only since November 13, 2026"
-  },
-  {
     "service": "OpenAI Agent Builder, Evals platform and reusable prompts",
     "sourceUrl": "https://developers.openai.com/api/docs/deprecations",
     "sourceText": [
