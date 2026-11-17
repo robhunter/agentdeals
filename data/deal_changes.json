@@ -19239,7 +19239,7 @@
       "vendor": "Google Gemini API",
       "change_type": "product_deprecated",
       "date": "2026-12-13",
-      "summary": "gemini-live-2.5-flash-native-audio can be called on Gemini Enterprise Agent Platform (formerly Vertex AI) until December 13, 2026, when Google retires it. This date is for the Agent Platform model only. The Gemini API's preview model gemini-2.5-flash-native-audio-preview-12-2025 is a different model that Google shuts down later, on March 31. Google names gemini-3.8-live as the replacement.",
+      "summary": "gemini-live-2.5-flash-native-audio can be called on Gemini Enterprise Agent Platform (formerly Vertex AI) until December 13, 2026, when Google retires it. The December 13 date does not apply to the Gemini API, where gemini-2.5-flash-native-audio-preview-12-2025 keeps running until March 31. Google names gemini-3.8-live as the replacement.",
       "previous_state": "gemini-live-2.5-flash-native-audio could be called on Gemini Enterprise Agent Platform (formerly Vertex AI).",
       "current_state": "Google's Agent Platform model versions page (read 2026-11-12) lists December 13, 2026 as the retirement date for gemini-live-2.5-flash-native-audio, released December 12, 2025, with gemini-3.8-live as the replacement.",
       "impact": "low",
