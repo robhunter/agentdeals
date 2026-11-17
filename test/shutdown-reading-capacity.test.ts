@@ -59,8 +59,10 @@ before(async () => {
   await readPages("live", stored.changes);
   await readPages("expanded", [...stored.changes, ...extra]);
   for (const offset of [31, 61, 91]) {
-    const shifted = extra.map(record => ({ ...record, date: day(offset + Math.round((Date.parse(record.date) - Date.parse(today)) / 86_400_000)),
-      discontinued_date: day(offset + Math.round((Date.parse(record.date) - Date.parse(today)) / 86_400_000)), recorded_date: day(offset) }));
+    const shifted = extra.map(record => {
+      const date = day(offset + Math.round((Date.parse(record.date) - Date.parse(today)) / 86_400_000));
+      return { ...record, date, discontinued_date: date, recorded_date: day(offset), summary: record.summary.replace(record.date, date) };
+    });
     await readPages(`expanded-${offset}`, [...stored.changes, ...shifted], day(offset));
   }
   await readPages("ninety", stored.changes, "2026-07-29");
