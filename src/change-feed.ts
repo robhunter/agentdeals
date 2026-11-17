@@ -1,6 +1,6 @@
 import type { DealChange } from "./types.js";
 import { changeCitesASource, type CitableChange } from "./change-citation.js";
-import { printsBeforeAndAfter, resolutionTag, theEventNeverHappened } from "./change-resolution.js";
+import { printsBeforeAndAfter, resolutionTag, isCancelledAnnouncement, theEventNeverHappened } from "./change-resolution.js";
 import {
   DISCOVERED_DATE_PREFIX,
   EFFECTIVE_DATE_PREFIX,
@@ -184,13 +184,14 @@ export function digestSourceXml(
 
 export function feedEntryTitle(change: Pick<DealChange, "vendor" | "change_type" | "resolution">): string {
   const { resolution } = change;
-  const label = resolution && theEventNeverHappened(change)
+  const label = resolution && (theEventNeverHappened(change) || isCancelledAnnouncement(change))
     ? resolutionTag(resolution)
     : changeTypeFeedLabel(change.change_type);
   return `${change.vendor}: ${label}`;
 }
 
 export function feedEntryCategory(change: Pick<DealChange, "change_type" | "resolution">): FeedCategory {
+  if (isCancelledAnnouncement(change)) return { term: "cancelled", label: resolutionTag(change.resolution!) };
   return theEventNeverHappened(change)
     ? RETRACTED_FEED_CATEGORY
     : { term: change.change_type, label: changeTypeFeedLabel(change.change_type) };

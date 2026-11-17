@@ -108,7 +108,7 @@ describe("a record can say its change is no longer in force", () => {
       resolutionTag({ state: "retracted", date: "2026-09-02" })
     );
     for (const state of RESOLUTION_STATES) {
-      assert.match(resolutionTag({ state, date: "2026-09-02" }), /2026-09-02/, `${state} names its date`);
+      assert.match(resolutionTag({ state, date: "2026-09-02", detail: "Cancelled on 2026-09-02." }), /2026-09-02/, `${state} names its date`);
     }
   });
 
@@ -168,6 +168,11 @@ describe("the resolution survives the render sites that cut the summary short", 
     const narrowest = Math.min(...cuts);
     for (const record of resolvedRecords) {
       const tag = resolutionTag(record.resolution!);
+      if (record.resolution!.state === "cancelled") {
+        assert.equal(summaryWithResolution(record), record.resolution!.detail);
+        assert.ok(tag.length <= narrowest);
+        continue;
+      }
       assert.ok(
         narrowest - tag.length >= 60,
         `${record.vendor} ${record.date} leaves ${narrowest - tag.length} characters of claim`
@@ -283,7 +288,13 @@ describe("no record publishes a retraction the structured field does not hold", 
       assert.ok(RESOLUTION_STATES.includes(record.resolution!.state), `${record.vendor} ${record.date}`);
       assert.match(record.resolution!.date, /^\d{4}-\d{2}-\d{2}$/);
       assert.ok((record.resolution!.detail ?? "").trim().length > 0 || record.resolution!.source_url, `${record.vendor} ${record.date}`);
-      assert.ok(record.resolution!.date >= record.date, `${record.vendor} resolved after it happened`);
+      if (record.resolution!.state === "cancelled") {
+        assert.ok(record.resolution!.date < record.date, `${record.vendor} cancelled before its effective date`);
+        assert.ok(record.resolution!.detail?.trim());
+        assert.ok(record.resolution!.source_url);
+      } else {
+        assert.ok(record.resolution!.date >= record.date, `${record.vendor} resolved after it happened`);
+      }
     }
   });
 

@@ -12,7 +12,7 @@ export interface ResolvableChange {
   resolution?: ChangeResolution | null;
 }
 
-export const RESOLUTION_STATES: ChangeResolutionState[] = ["reversed", "retracted"];
+export const RESOLUTION_STATES: ChangeResolutionState[] = ["reversed", "retracted", "cancelled"];
 
 export function isNoLongerInForce(change: { resolution?: ChangeResolution | null }): boolean {
   return Boolean(change.resolution);
@@ -24,6 +24,18 @@ export function reversedOn(change: { resolution?: ChangeResolution | null }): st
 
 export function theEventNeverHappened(change: { resolution?: ChangeResolution | null }): boolean {
   return change.resolution?.state === "retracted";
+}
+
+export function isCancelledAnnouncement(change: { resolution?: ChangeResolution | null }): boolean {
+  return change.resolution?.state === "cancelled";
+}
+
+export function cancelledOn(change: { resolution?: ChangeResolution | null }): string | null {
+  return isCancelledAnnouncement(change) ? change.resolution!.date : null;
+}
+
+export function cancellationStatementOf(change: { resolution?: ChangeResolution | null }): string {
+  return isCancelledAnnouncement(change) ? resolutionTag(change.resolution!) : "";
 }
 
 export const CORRECTION_TO_OUR_OWN_RECORD = "record_corrected";
@@ -59,7 +71,7 @@ export function standingOf(change: Resolvable): ChangeStanding {
 }
 
 export function publishedImpactOf(change: Resolvable & Pick<DealChange, "impact">): PublishedDealChange["impact"] {
-  return theEventNeverHappened(change) ? WITHDRAWN_RECORDS_CARRY_NO_IMPACT : change.impact;
+  return theEventNeverHappened(change) || isCancelledAnnouncement(change) ? WITHDRAWN_RECORDS_CARRY_NO_IMPACT : change.impact;
 }
 
 export type StandingDeclared = Omit<PublishedDealChange, "date_meaning" | "ends_a_free_tier">;
@@ -78,7 +90,7 @@ export function eventResolutionFields(change: {
   resolution?: ChangeResolution | null;
 }): { eventStatus: string } | { endDate: string } | Record<string, never> {
   if (!change.resolution) return {};
-  if (theEventNeverHappened(change)) return { eventStatus: EVENT_CANCELLED };
+  if (theEventNeverHappened(change) || isCancelledAnnouncement(change)) return { eventStatus: EVENT_CANCELLED };
   return change.resolution.date ? { endDate: change.resolution.date } : {};
 }
 
@@ -93,18 +105,23 @@ export function resolvingRecord<T extends { vendor: string; date: string; change
   );
 }
 
-const RESOLUTION_TAGS: Record<ChangeResolutionState, (date: string) => string> = {
+const RESOLUTION_TAGS: Record<ChangeResolutionState, (date: string, detail?: string) => string> = {
+  cancelled: (_date, detail) => {
+    if (!detail?.trim()) throw new Error("A cancelled announcement requires the vendor cancellation statement.");
+    return detail;
+  },
   reversed: (date) => `No longer in force (${date}).`,
   retracted: (date) => `Retracted — this record was our error (${date}).`,
 };
 
 export function resolutionTag(resolution: ChangeResolution): string {
-  return RESOLUTION_TAGS[resolution.state](resolution.date);
+  return RESOLUTION_TAGS[resolution.state](resolution.date, resolution.detail);
 }
 
 export function summaryWithResolution(change: ResolvableChange): string {
   const resolution = change.resolution;
   if (!resolution) return change.summary;
+  if (isCancelledAnnouncement(change)) return resolutionTag(resolution);
   const tag = resolutionTag(resolution);
   const detail = resolution.detail;
   if (theEventNeverHappened(change)) return detail ? `${tag} ${detail}` : tag;
@@ -114,12 +131,12 @@ export function summaryWithResolution(change: ResolvableChange): string {
 }
 
 export function printsBeforeAndAfter(change: { resolution?: ChangeResolution | null; previous_state?: string | null; current_state?: string | null }): boolean {
-  return Boolean(change.previous_state && change.current_state) && !theEventNeverHappened(change);
+  return Boolean(change.previous_state && change.current_state) && !theEventNeverHappened(change) && !isCancelledAnnouncement(change);
 }
 
 export function withResolutionInSummary<T extends ResolvableChange>(change: T): T {
   if (!change.resolution) return change;
-  return { ...change, summary: summaryWithResolution(change) };
+  return { ...change, summary: summaryWithResolution(change), ...(isCancelledAnnouncement(change) && change.resolution.source_url ? { source_url: change.resolution.source_url } : {}) };
 }
 
 const RESOLUTION_ASSERTIONS = [

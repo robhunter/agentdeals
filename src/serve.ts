@@ -73,7 +73,7 @@ import { changesToStartupProgrammes } from "./startup-programme-changes.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_COST_OPTIMIZED_PAGE, HETZNER_PRICE_ADJUSTMENT_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableEuPlanForEachMemorySizeSentence, cheapestOrderableHetznerPlan, cheaperVpsInGermanyParagraph, mostRamForTheMoneyParagraph, costOptimizedLineNobodyCanOrder, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
-import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isNoLongerInForce, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
+import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isCancelledAnnouncement, cancelledOn, standingOf as changeStandingOf, isNoLongerInForce, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
 import { trackedChanges, howEachRecordWasRead, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, CORRECTION_TO_OUR_OWN_RECORD_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
@@ -49208,7 +49208,7 @@ ${rows}
 function changeVendorIndexHtml(sections: ReturnType<typeof changeLogSections<DealChange>>, today: string): string {
   const dated = [...sections.recentMonths, ...sections.olderMonths]
     .flatMap(group => group.changes)
-    .sort((a, b) => b.date.localeCompare(a.date));
+    .sort((a, b) => (cancelledOn(b) ?? b.date).localeCompare(cancelledOn(a) ?? a.date));
   const vendors = new Map<string, string[]>();
   for (const change of [...dated, ...sections.undated]) {
     const entries = vendors.get(change.vendor) ?? [];
@@ -49216,7 +49216,7 @@ function changeVendorIndexHtml(sections: ReturnType<typeof changeLogSections<Dea
     const label = isIndexHousekeeping(change)
       ? INDEX_HOUSEKEEPING_BADGE
       : changeTypeBadge[change.change_type]?.label ?? change.change_type;
-    entries.push(`${escHtmlServer(label)} ${escHtmlServer(date)}${isEventDated(change) && change.date > today ? " (upcoming)" : ""}`);
+    entries.push(isCancelledAnnouncement(change) ? escHtmlServer(change.resolution!.detail!) : `${escHtmlServer(label)} ${escHtmlServer(date)}${isEventDated(change) && change.date > today ? " (upcoming)" : ""}`);
     vendors.set(change.vendor, entries);
   }
   const lines = [...vendors].sort(([a], [b]) => a.localeCompare(b)).map(([vendor, entries]) =>
@@ -49266,12 +49266,14 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
 
   function buildChangeEntry(c: ChangeTimelineEntry, originalDate = c.originalRecord?.date ?? c.date, preview = false, compact = false): string {
     const housekeeping = isIndexHousekeeping(c);
-    const badge = housekeeping
-      ? { label: INDEX_HOUSEKEEPING_BADGE, color: INDEX_HOUSEKEEPING_BADGE_COLOR }
-      : changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const badge = isCancelledAnnouncement(c)
+      ? { label: changeStandingOf(c), color: "#8b949e" }
+      : housekeeping
+        ? { label: INDEX_HOUSEKEEPING_BADGE, color: INDEX_HOUSEKEEPING_BADGE_COLOR }
+        : changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const impactColor = changeImpactColor(c.impact);
     const dated = isEventDated(c);
-    const isUpcoming = dated && c.date > today;
+    const isUpcoming = dated && c.date > today && !isNoLongerInForce(c);
     const category = filterCategory[c.change_type] ?? "neutral";
     const altHtml = !compact && c.alternatives && c.alternatives.length > 0
       ? `<div class="pc-alts"><span class="pc-alts-label">Alternatives:</span> ${c.alternatives.map(a => changeVendorLinkHtml(a)).join(", ")}</div>`
@@ -49286,7 +49288,7 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
     const changeYear = dated ? c.date.slice(0, 4) : "";
     const entryAnchor = originalDate === c.date ? changeAnchor(c) : `${changeAnchor(c)}-retirement-${originalDate}`;
     const summary = compact ? compactPricingChangeSummary(c.summary, c.date) : c.summary;
-    return `      <div class="${preview ? "pc-preview" : "pc-entry"}${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}${changeIsUncited(c) ? " pc-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}" ${originalDate !== c.date ? `data-event-date="${escHtmlServer(originalDate)}" ` : ""}${preview ? "" : `id="${escHtmlServer(entryAnchor)}" `}data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
+    return `      <div class="${preview ? "pc-preview" : "pc-entry"}${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}${changeIsUncited(c) ? " pc-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}" ${originalDate !== c.date || isCancelledAnnouncement(c) ? `data-event-date="${escHtmlServer(originalDate)}" ` : ""}${preview ? "" : `id="${escHtmlServer(entryAnchor)}" `}data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(isCancelledAnnouncement(c) ? "none" : c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
         <div class="pc-left">
           <div class="pc-date${dated ? "" : " pc-date-unknown"}">${changeEntryDateLabelHtml(c, escHtmlServer)}</div>
           ${isUpcoming ? `<div class="pc-upcoming-badge">upcoming</div>` : ""}
@@ -49296,7 +49298,7 @@ function buildPricingChangesPage(upcomingLimit?: number, allChanges = loadDealCh
           <div class="pc-head">
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
             ${changeVendorLinkHtml(c.vendor, ' class="pc-vendor"')}
-            <span class="pc-impact" style="color:${impactColor}">${c.impact} impact</span>
+            ${isCancelledAnnouncement(c) ? "" : `<span class="pc-impact" style="color:${impactColor}">${c.impact} impact</span>`}
             ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
           </div>
           <div class="pc-summary">${changeSummaryHtml({ ...c, summary }, escHtmlServer)}</div>
@@ -49332,7 +49334,7 @@ ${altHtml}
   if (upcomingLimit === undefined) return renderUpcomingTimeline(upcomingChanges.map(c => c.shown), (limit, overflow, afterUpcoming) => buildPricingChangesPage(limit, allChanges, overflow, afterUpcoming), page => servedPageHtml(page, "/pricing-changes"));
   const shownUpcoming = upcomingChanges.slice(0, upcomingLimit);
   const omitted = new Set(upcomingChanges.slice(shownUpcoming.length).map(c => c.original));
-  const sections = changeLogSections<ChangeTimelineEntry>([...allChanges, ...retirementEntries].filter((c: ChangeTimelineEntry) => !isEventDated(c) || c.date <= today || isOurOwnBookkeeping(c) || omitted.has(c.originalRecord ?? c)), today);
+  const sections = changeLogSections<ChangeTimelineEntry>([...allChanges, ...retirementEntries].filter((c: ChangeTimelineEntry) => !isEventDated(c) || c.date <= today || isOurOwnBookkeeping(c) || isCancelledAnnouncement(c) || omitted.has(c.originalRecord ?? c)), today);
   const indexSections = changeLogSections(allChanges, today);
 
   const vendorCategories = [...new Set(sorted.map(c => c.category || "").filter(Boolean))].sort();
@@ -49744,12 +49746,12 @@ function buildChangesPage(upcomingLimit?: number, allChanges = loadDealChanges()
   const retirementEntries = retirementTimelineEntries(allChanges);
   const countable = changesTheVendorMade(trackedChanges(sorted));
   const latest = changesTheVendorMade(trackedChanges<ChangeTimelineEntry>([...sorted, ...retirementEntries])).filter(c => c.date <= today).sort((a, b) => b.date.localeCompare(a.date)).slice(0, LATEST_PRICING_CHANGES_SHOWN);
-  const upcomingOriginals = changesTheVendorMade(sorted).filter(c => c.date > today).sort((a, b) => upcomingDateOf(a, today).localeCompare(upcomingDateOf(b, today)));
-  const upcomingChanges = changesTheVendorMade(sorted).map(c => ({ original: c, shown: atUpcomingDate(c, today) })).filter(c => c.shown.date > today).sort((a, b) => a.shown.date.localeCompare(b.shown.date));
+  const upcomingOriginals = changesTheVendorMade(recordsStillInForce(sorted)).filter(c => c.date > today).sort((a, b) => upcomingDateOf(a, today).localeCompare(upcomingDateOf(b, today)));
+  const upcomingChanges = changesTheVendorMade(recordsStillInForce(sorted)).map(c => ({ original: c, shown: atUpcomingDate(c, today) })).filter(c => c.shown.date > today).sort((a, b) => a.shown.date.localeCompare(b.shown.date));
   if (upcomingLimit === undefined) return renderUpcomingTimeline(upcomingChanges.map(c => c.shown), (limit, overflow, afterUpcoming) => buildChangesPage(limit, allChanges, overflow, afterUpcoming), page => servedPageHtml(page, "/changes"));
   const shownUpcoming = upcomingChanges.slice(0, upcomingLimit);
   const omitted = new Set(upcomingChanges.slice(shownUpcoming.length).map(c => c.original));
-  const sections = changeLogSections<ChangeTimelineEntry>([...allChanges, ...retirementEntries].filter((c: ChangeTimelineEntry) => !isEventDated(c) || c.date <= today || isOurOwnBookkeeping(c) || omitted.has(c.originalRecord ?? c)), today);
+  const sections = changeLogSections<ChangeTimelineEntry>([...allChanges, ...retirementEntries].filter((c: ChangeTimelineEntry) => !isEventDated(c) || c.date <= today || isOurOwnBookkeeping(c) || isCancelledAnnouncement(c) || omitted.has(c.originalRecord ?? c)), today);
   const indexSections = changeLogSections(allChanges, today);
   const inPageOrder = [...upcomingOriginals.filter(c => !omitted.has(c)), ...changeLogInPageOrder(sections).filter(c => !c.originalRecord)];
 
@@ -49768,18 +49770,20 @@ function buildChangesPage(upcomingLimit?: number, allChanges = loadDealChanges()
 
   function buildChangeEntry(c: ChangeTimelineEntry, preview = Boolean(c.originalRecord), original = c.originalRecord ?? c): string {
     const housekeeping = isIndexHousekeeping(c);
-    const badge = housekeeping
-      ? { label: INDEX_HOUSEKEEPING_BADGE, color: INDEX_HOUSEKEEPING_BADGE_COLOR }
-      : changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const badge = isCancelledAnnouncement(c)
+      ? { label: changeStandingOf(c), color: "#8b949e" }
+      : housekeeping
+        ? { label: INDEX_HOUSEKEEPING_BADGE, color: INDEX_HOUSEKEEPING_BADGE_COLOR }
+        : changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const impactColor = changeImpactColor(c.impact);
     const dated = isEventDated(c);
-    const isUpcoming = dated && c.date > today;
+    const isUpcoming = dated && c.date > today && !isNoLongerInForce(c);
     const anchor = changeLogAnchorFor(c.vendor);
     const anchorAttr = !preview && anchor && anchorHolder.get(anchor) === original ? ` id="${anchor}"` : "";
     const altHtml = c.alternatives && c.alternatives.length > 0
       ? `<div class="chg-alts"><span class="chg-alts-label">Alternatives:</span> ${c.alternatives.map(a => changeVendorLinkHtml(a)).join(", ")}</div>`
       : "";
-    return `      <div class="${preview ? "chg-preview" : "chg-entry"}${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${isNoLongerInForce(c) ? " chg-resolved" : ""}${changeIsUncited(c) ? " chg-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}${isACorrectionToOurOwnRecord(c) ? ` ${CORRECTION_TO_OUR_OWN_RECORD_CLASS}` : ""}"${original.date !== c.date ? ` data-event-date="${escHtmlServer(original.date)}"` : ""}${anchorAttr}>
+    return `      <div class="${preview ? "chg-preview" : "chg-entry"}${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${isNoLongerInForce(c) ? " chg-resolved" : ""}${changeIsUncited(c) ? " chg-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}${isACorrectionToOurOwnRecord(c) ? ` ${CORRECTION_TO_OUR_OWN_RECORD_CLASS}` : ""}"${original.date !== c.date || isCancelledAnnouncement(c) ? ` data-event-date="${escHtmlServer(original.date)}"` : ""}${anchorAttr}>
         <div class="chg-left">
           <div class="chg-date${dated ? "" : " chg-date-unknown"}">${changeEntryDateLabelHtml(c, escHtmlServer)}</div>
           ${isUpcoming ? `<div class="chg-upcoming-badge">upcoming</div>` : ""}
@@ -49788,7 +49792,7 @@ function buildChangesPage(upcomingLimit?: number, allChanges = loadDealChanges()
           <div class="chg-head">
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
             ${changeVendorLinkHtml(c.vendor, ' class="chg-vendor"')}
-            <span class="chg-impact" style="color:${impactColor}">${c.impact}</span>
+            ${isCancelledAnnouncement(c) ? "" : `<span class="chg-impact" style="color:${impactColor}">${c.impact}</span>`}
             ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
           </div>
           <div class="chg-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
@@ -50478,7 +50482,7 @@ function deadlinesOurTextStates(changes: readonly DealChange[], listed: readonly
 }
 
 function vendorRecordsDatedAfter(changes: readonly DealChange[], today: string): DealChange[] {
-  return changesTheVendorMade(changes)
+  return changesTheVendorMade(recordsStillInForce(changes))
     .filter(c => c.date > today)
     .filter(record => record.change_type !== "product_deprecated" || statedShutdownMonthOf(record) === null)
     .sort((a, b) => a.date.localeCompare(b.date));
@@ -50812,7 +50816,7 @@ ${globalNavCss()}
   <h1>Developer Tool Deadline Tracker</h1>
   <p class="page-intro">${entryCount} upcoming deadlines across developer infrastructure \u2014 API shutdowns, free tier removals, and price changes. ${listOrderSentence("soonest-first")}</p>
   ${datedSectionNoticeHtml(
-    `${namedWhileAheadOf("A change record", today)} It is not removed because the shutdown was cancelled or because we stopped holding the record.`,
+    namedWhileAheadOf("A change record", today),
     [
       { when: "On the day its date arrives it leaves this page for", text: "the full change log", href: "/changes" },
     ],
@@ -54348,8 +54352,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     const today = new Date().toISOString().slice(0, 10);
     const todayMs = new Date(today + "T00:00:00Z").getTime();
     const typeFilter = url.searchParams.get("type") || undefined;
-    const listed = allChanges.filter(c => c.date > today)
-      .filter(record => record.change_type !== "product_deprecated" || statedShutdownMonthOf(record) === null);
+    const listed = vendorRecordsDatedAfter(allChanges, today);
     const countdownDays = (date: string) => Math.ceil((new Date(date + "T00:00:00Z").getTime() - todayMs) / 86400000);
     const recordDeadlines = listed
       .filter(c => !typeFilter || c.change_type === typeFilter)

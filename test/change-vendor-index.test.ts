@@ -32,6 +32,8 @@ const fixtures = [
   change("Unlisted Vendor", "pricing_restructured", day(-30)),
   change("Housekeeping Only", "product_deprecated", day(-1), { current_state: "Removed from index" }),
   change("Cerebras", "limits_reduced", day(-30), { resolution: { state: "retracted", date: today, detail: "An incorrect record" } }),
+  change("Cerebras", "restriction", day(20), { resolution: { state: "cancelled", date: day(-1), detail: "Cerebras called off its announcement.", source_url: "https://example.com/changelog" } }),
+  change("A & B <Cloud>", "product_deprecated", day(30), { resolution: { state: "cancelled", date: day(-2), detail: 'A & B <Cloud> called off "its" migration.', source_url: "https://example.com/changelog" } }),
   change("Correction Only", "record_corrected", day(-2)),
   change("Unlisted Vendor", "record_corrected", day(-2)),
 ];
@@ -77,7 +79,7 @@ describe("the change log's vendor index", () => {
       assert.ok(census.vendors > 0);
       if (name === "fixtures") {
         assert.equal(census.vendors, 4);
-        assert.equal(census.entries, 9);
+        assert.equal(census.entries, 11);
         assert.equal(census.linked, 1);
       }
     });

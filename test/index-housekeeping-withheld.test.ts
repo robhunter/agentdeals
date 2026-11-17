@@ -68,7 +68,7 @@ function recordsTheChangeLogHolds(): Population {
 
 function deprecationsTheVendorMade(): Population {
   const theirs = heldRecords().filter(
-    (c) => c.change_type === "product_deprecated" && c.current_state !== INDEX_SWEEP_STATE && !c.resolution,
+    (c) => c.change_type === "product_deprecated" && c.current_state !== INDEX_SWEEP_STATE && c.resolution?.state !== "retracted",
   );
   return { size: theirs.length, read: "deprecations in the log that a vendor made" };
 }
@@ -114,10 +114,10 @@ describe("our own index housekeeping reaches no caller who did not ask for it", 
   it("withholds them from a type-filtered feed, which is the query that named six live products", async () => {
     const answer = await ask("type=product_deprecated&limit=1000");
     const deprecations = heldRecords().filter((c) => c.change_type === "product_deprecated");
-    const withheldAsOurs = deprecations.filter((c) => c.current_state === INDEX_SWEEP_STATE && !c.resolution);
-    const withheldAsRetracted = deprecations.filter((c) => c.resolution);
+    const withheldAsOurs = deprecations.filter((c) => c.current_state === INDEX_SWEEP_STATE && c.resolution?.state !== "retracted");
+    const withheldAsRetracted = deprecations.filter((c) => c.resolution?.state === "retracted");
     const vendorsOwnDeprecations = deprecations.filter(
-      (c) => c.current_state !== INDEX_SWEEP_STATE && !c.resolution,
+      (c) => c.current_state !== INDEX_SWEEP_STATE && c.resolution?.state !== "retracted",
     );
 
     assertPopulationFloor(deprecations.length, 50, "records typed product_deprecated in the log");
@@ -195,7 +195,9 @@ describe("our own index housekeeping reaches no caller who did not ask for it", 
     );
     for (const change of served.changes) {
       assert.strictEqual(change.change_type, "product_deprecated");
-      assert.strictEqual(change.standing, "in_force");
+      const stored = heldRecords().find(record => recordKey(record) === recordKey(change));
+      assert.ok(stored);
+      assert.strictEqual(change.standing, stored.resolution?.state ?? "in_force");
     }
   });
 
