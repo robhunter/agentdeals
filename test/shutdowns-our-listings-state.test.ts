@@ -138,7 +138,7 @@ function cardsOf(html: string) {
     if (heading) section = heading[1];
     if (!piece.startsWith('<div class="shutdown-card"')) return [];
     return [{
-      section, html: piece,
+      section: section === "completed-history" ? "completed" : section, physicalSection: section, html: piece,
       name: textOf(piece.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? ""),
       date: textOf(piece.match(/<span class="deadline-icon">[^<]*<\/span>\s*<span>([^<]+)<\/span>/)?.[1] ?? ""),
       what: textOf(piece.match(/<p class="shutdown-what">([\s\S]*?)<\/p>/)?.[1] ?? ""),
@@ -279,7 +279,8 @@ describe("the shutdown tracker includes shutdowns stated only by listings", () =
       assert.equal(Number(page.match(/(\d+) active shutdowns/)?.[1]), active, day);
       const tiles = [...page.matchAll(/<div class="stat-number[^"]*">(\d+)<\/div>/g)].map(match => Number(match[1]));
       assert.deepEqual(tiles, [active, counts.imminent, counts.upcoming, counts.later], day);
-      for (const [section, count] of Object.entries(counts)) {
+      for (const section of ["imminent", "upcoming", "later", "completed", "completed-history"]) {
+        const count = cards.filter(card => card.physicalSection === section).length;
         const shown = page.match(new RegExp(`<h2 id="${section}">[\\s\\S]*?class="section-count">\\((\\d+)\\)`))?.[1];
         assert.equal(Number(shown ?? 0), count, `${day}: ${section}`);
       }

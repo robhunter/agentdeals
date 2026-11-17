@@ -93,6 +93,7 @@ const FIXTURES = [
 
 interface Card {
   section: string;
+  physicalSection: string;
   title: string;
   href: string | null;
   date: string;
@@ -117,15 +118,17 @@ function textOf(html: string): string {
 function cardsOn(page: string): Card[] {
   const cards: Card[] = [];
   let section = "";
+  let physicalSection = "";
   for (const piece of page.split(/(?=<h2 id=")|(?=<div class="shutdown-card")/)) {
     const heading = piece.match(/^<h2 id="([^"]+)"/);
     if (heading) {
+      physicalSection = heading[1];
       section = heading[1] === "completed-history" ? "completed" : heading[1];
       continue;
     }
     if (!piece.startsWith('<div class="shutdown-card"')) continue;
     cards.push({
-      section,
+      section, physicalSection,
       title: textOf(piece.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? ""),
       href: piece.match(/<h3[^>]*>\s*<a href="([^"]+)"/)?.[1] ?? null,
       date: textOf(piece.match(/<span class="deadline-icon">[^<]*<\/span>\s*<span>([^<]+)<\/span>/)?.[1] ?? ""),
@@ -314,9 +317,9 @@ describe("/shutdowns prints a card for each shutdown a record forecast and no ca
         },
       },
     );
-    for (const id of ["imminent", "upcoming", "later", "completed"]) {
+    for (const id of ["imminent", "upcoming", "later", "completed", "completed-history"]) {
       const heading = page.match(new RegExp(`<h2 id="${id}">[\\s\\S]*?class="section-count">\\((\\d+)\\)`))?.[1];
-      assert.strictEqual(Number(heading), inSection(id), `the ${id} heading`);
+      assert.strictEqual(Number(heading ?? 0), cards.filter(card => card.physicalSection === id).length, `the ${id} heading`);
     }
   });
 

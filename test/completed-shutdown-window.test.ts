@@ -25,12 +25,12 @@ const boundary = [1, 30, 31, 183, 184].map(offset => ({ ...extra[0], vendor: `Wi
 const scratch = mkdtempSync(path.join(tmpdir(), "shutdown-window-"));
 const pages = new Map<string, string>();
 
-async function readPages(name: string, records: unknown[]) {
+async function readPages(name: string, records: unknown[], indexPath?: string) {
   const filename = path.join(scratch, `${name}.json`);
   writeFileSync(filename, JSON.stringify({ ...stored, changes: records }, null, 2) + "\n");
   const child = spawn("node", [path.join(ROOT, "dist/serve.js")], {
     cwd: ROOT, stdio: ["ignore", "ignore", "pipe"],
-    env: { ...process.env, TZ: "UTC", PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off", AGENTDEALS_CHANGES_PATH: filename },
+    env: { ...process.env, TZ: "UTC", PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off", AGENTDEALS_CHANGES_PATH: filename, ...(indexPath ? { AGENTDEALS_INDEX_PATH: indexPath } : {}) },
   });
   try {
     const port = await new Promise<string>((resolve, reject) => {
@@ -54,6 +54,15 @@ async function readPages(name: string, records: unknown[]) {
 before(async () => {
   await readPages("live", stored.changes);
   await readPages("expanded", [...stored.changes, ...extra, ...boundary]);
+  const indexPath = path.join(scratch, "conditioned-index.json");
+  const offers = ["Whole", "Excerpt", "Empty", "NVIDIA NIM"].map(vendor => ({
+    vendor, category: "APIs", tier: "Free", url: `https://example.com/${vendor.replaceAll(" ", "-")}`, verifiedDate: today,
+    description: `${vendor} endpoint retires on ${day(-40)}.${vendor === "Excerpt" ? " Other endpoints remain available." : ""}`,
+    conditions: vendor === "Empty" ? [] : [{ text: `${vendor} accepts existing customers only.`, quote: "Existing customers only.", url: "https://example.com/terms", read_on: today }],
+  }));
+  writeFileSync(indexPath, JSON.stringify({ offers }));
+  await readPages("conditions", [], indexPath);
+
 });
 after(() => rmSync(scratch, { recursive: true, force: true }));
 
@@ -90,6 +99,20 @@ describe("completed shutdown reading window", () => {
       for (const offset of [1, 30, 31, 183]) assert.ok(recent.some(card => card.node.querySelector("h3")!.textContent === `Window Past ${offset} API`));
       assert.ok(!recent.some(card => card.node.querySelector("h3")!.textContent === "Window Past 184 API"));
       assert.equal(cards.filter(card => card.node.querySelector("h3")!.textContent!.startsWith("Window Future ")).length, 30);
+    }
+  });
+
+  it("carries conditions beside a complete listing description in a completed entry", () => {
+    const { document } = cardsOf(pages.get("conditions /shutdowns")!);
+    const lines = [...document.querySelectorAll(".shutdown-completed-entry")];
+    for (const vendor of ["Whole", "Excerpt", "Empty", "NVIDIA NIM"]) {
+      const line = lines.find(node => node.querySelector("a")!.textContent === vendor)!;
+      assert.ok(line, vendor);
+      const conditions = line.querySelectorAll(".listing-conditions");
+      assert.equal(conditions.length, ["Whole", "NVIDIA NIM"].includes(vendor) ? 1 : 0, vendor);
+      if (conditions.length) assert.ok(conditions[0].textContent!.includes(`${vendor} accepts existing customers only.`));
+      assert.equal(line.querySelectorAll(".completed-summary .listing-conditions").length, 0);
+      if (vendor === "Excerpt") assert.ok(!line.textContent!.includes("Other endpoints remain available."));
     }
   });
 

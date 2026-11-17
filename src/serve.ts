@@ -27276,8 +27276,10 @@ function buildShutdownTrackerPage(): string {
       const summary = entry.groupedDeadlines
         ? entry.groupedDeadlines.map(deadline => `${escHtmlServer(deadline.sentence)}${deadline.sourceUrl ? " " + listingSourceLinkHtml(deadline.sourceUrl, escHtmlServer) : ""}`).join(" ")
         : [entry.completedSummary, firstSentence(entry.what)].filter((text): text is string => Boolean(text)).map(escHtmlServer).join(" ");
+      const completedConditions = (entry.groupedDeadlines ?? (entry.statedDeadline ? [{ ...entry.statedDeadline, sentence: firstSentence(entry.what) }] : []))
+        .map(conditionsAfterAWholeDescriptionHtml).join("");
       const date = isShutdownMonth(entry.deadline) ? shutdownMonthDateLabel(entry.deadline) : new Date(entry.deadline + "T00:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
-      return `<li class="shutdown-completed-entry"><a href="#${completedAnchor(entry)}">${escHtmlServer(entry.service)}</a> — completed <time datetime="${escHtmlServer(entry.deadline)}">${escHtmlServer(date)}</time>. <span class="completed-summary">${summary}${!entry.groupedDeadlines && entry.dateSource ? " " + listingSourceLinkHtml(entry.dateSource, escHtmlServer) : ""}</span>${entry.migrationPath ? ` <span class="completed-migration">${escHtmlServer(firstSentence(entry.migrationPath))}</span>` : ""}</li>`;
+      return `<li class="shutdown-completed-entry"><a href="#${completedAnchor(entry)}">${escHtmlServer(entry.service)}</a> — completed <time datetime="${escHtmlServer(entry.deadline)}">${escHtmlServer(date)}</time>. <span class="completed-summary">${summary}${!entry.groupedDeadlines && entry.dateSource ? " " + listingSourceLinkHtml(entry.dateSource, escHtmlServer) : ""}</span>${completedConditions}${entry.migrationPath ? ` <span class="completed-migration">${escHtmlServer(firstSentence(entry.migrationPath))}</span>` : ""}</li>`;
     }).join("\n    ")}
   </ul>`;
 
@@ -27372,7 +27374,7 @@ function buildShutdownTrackerPage(): string {
   function buildSection(heading: string, description: string, entries: ShutdownEntry[], urgency: string): string {
     if (entries.length === 0 && (urgency !== "completed" || completed.length === 0)) return "";
     return `
-    <h2 id="${urgency}">${escHtmlServer(heading)} <span class="section-count">(${urgency === "completed" ? completed.length : entries.length})</span></h2>
+    <h2 id="${urgency}">${escHtmlServer(heading)} <span class="section-count">(${entries.length})</span></h2>
     <p class="section-intro">${escHtmlServer(description)}</p>
     ${entries.map(s => buildShutdownCard(s)).join("\n    ")}`;
   }
