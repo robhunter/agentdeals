@@ -36842,7 +36842,7 @@
     {
       "vendor": "Google Antigravity",
       "category": "AI Coding",
-      "description": "Agentic development platform by Google, generally available: a desktop app to manage multiple local agents in parallel, an agentic IDE, a CLI and an SDK, for macOS, Windows and Linux. Its agents can open and drive a local Chrome browser. The individual plan is $0/month, with Gemini, Claude and gpt-oss agent models, \"Unlimited Tab completions\", \"Unlimited Command requests\" and \"Basic weekly rate limits\". Google AI Pro ($19.99/month) adds \"More rate limits\" and Google AI Ultra (from $99.99/month) \"Even more rate limits\", each with a \"Flexible AI credit pool\", and organizations can use it through Google Cloud. Announced November 2025.",
+      "description": "Agentic development platform by Google, generally available: a desktop app to manage multiple local agents in parallel, an agentic IDE, a CLI and an SDK, for macOS, Windows and Linux. Its agents can open and drive a local Chrome browser. The individual plan is $0/month. It includes a baseline agent quota refreshed weekly and unlimited Tab completions. On November 18, 2026, Google removes Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b from it, leaving Gemini 3.8 Flash as its only model. Google AI Pro ($19.99/month) adds \"More rate limits\" and Google AI Ultra (from $99.99/month) \"Even more rate limits\", each with a \"Flexible AI credit pool\", and organizations can use it through Google Cloud. Announced November 2025.",
       "tier": "Free",
       "url": "https://antigravity.google/pricing",
       "tags": [
@@ -36861,10 +36861,10 @@
       },
       "conditions": [
         {
-          "text": "Until November 18, 2026, the Free and Google AI Plus plans include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date. After that date, Antigravity's models page lists two reasoning models for the Free and Google AI Plus plans: Gemini 3.8 Flash and Gemini 4 Hydrogen.",
+          "text": "Until November 18, 2026, the Free and Google AI Plus plans include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date. After November 18, 2026, the $0 plan includes only Gemini 3.8 Flash. Gemini 4 Hydrogen is not on the Free and Google AI Plus plans.",
           "quote": "Will be removed on November 18, 2026.",
           "url": "https://antigravity.google/docs/models",
-          "read_on": "2026-11-13"
+          "read_on": "2026-11-17"
         },
         {
           "text": "Google AI Pro and Ultra include Gemini 4 Argon, Claude Sonnet 5.5 and Claude Opus 5.5. On a Google AI Pro trial, Claude Sonnet 5.5 and Claude Opus 5.5 are not included and Gemini 4 Argon is included only on trials with eligible premium devices.",
@@ -36879,10 +36879,10 @@
           "read_on": "2026-11-11"
         },
         {
-          "text": "Gemini 4 Hydrogen has been in Antigravity since November 12, 2026. Antigravity's models page lists it on every plan, including Free and Google AI Plus. Google's announcement says it is rolling out across paid Google AI Pro and Ultra subscribers. Orchestrator (Argon) is on paid Google AI Pro and Google AI Ultra, Orchestrator (Carbon) on Google AI Ultra only. Each pairs a planner (Gemini 4 Argon or Gemini 4 Carbon) with Gemini 4 Hydrogen.",
+          "text": "Gemini 4 Hydrogen has been in Antigravity since November 12, 2026 on paid Google AI Pro (non-trial), Google AI Ultra and Enterprise. The Free and Google AI Plus plans do not include it. Orchestrator (Argon) is on paid Google AI Pro and Google AI Ultra, Orchestrator (Carbon) on Google AI Ultra only. Each pairs a planner (Gemini 4 Argon or Gemini 4 Carbon) with Gemini 4 Hydrogen.",
           "quote": "Starting today, Gemini 4 Hydrogen is rolling out across paid Google AI Pro and Ultra subscribers.",
           "url": "https://antigravity.google/blog/gemini-4-hydrogen-in-google-antigravity",
-          "read_on": "2026-11-13"
+          "read_on": "2026-11-17"
         },
         {
           "text": "Google's FAQ says some models \"are not included in free trials\" and directs memberships through third-party partners, Pixel Pass, or Google Fi to Google One help for subscription management.",
@@ -36896,12 +36896,7 @@
           "url": "https://antigravity.google/docs/faq",
           "read_on": "2026-10-21"
         }
-      ],
-      "free_plan_excerpt": {
-        "text": "For Individuals $0/month Experience Antigravity without a subscription plan Get started Plan includes: Access to a variety of agent models Unlimited Tab completions Unlimited Command requests Basic weekly rate limits *",
-        "url": "https://antigravity.google/pricing",
-        "read_on": "2026-11-05"
-      }
+      ]
     },
     {
       "vendor": "Gemini CLI",

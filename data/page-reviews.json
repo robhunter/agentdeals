@@ -135,8 +135,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 138,
-      "table_figures_from_records": 31,
+      "table_figures": 139,
+      "table_figures_from_records": 32,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -160,8 +160,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 0,
-          "from_records": 0
+          "figures": 1,
+          "from_records": 1
         }
       ],
       "reads_changes": true,
@@ -1959,8 +1959,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 151,
-      "table_figures_from_records": 102,
+      "table_figures": 152,
+      "table_figures_from_records": 103,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1984,8 +1984,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 38,
-          "from_records": 38
+          "figures": 39,
+          "from_records": 39
         }
       ],
       "reads_changes": true,
