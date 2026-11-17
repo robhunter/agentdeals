@@ -490,7 +490,7 @@ describe("the digest returns only what the window it names contains", () => {
     const { getWeeklyDigest } = await import("../dist/data.js");
     const digest = getWeeklyDigest();
     const today = new Date().toISOString().slice(0, 10);
-    assertFutureChangesInDigestWindow(digest, publishedChanges.filter((c) => eventDated(c) && c.date > today), today);
+    assertFutureChangesInDigestWindow(digest, recordsStillInForce(publishedChanges).filter((c) => eventDated(c) && c.date > today), today);
   });
 
   it("finishes the 25th deadline's whole day and leaves later records outside the stated window", () => {

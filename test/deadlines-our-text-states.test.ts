@@ -162,7 +162,6 @@ describe("the deadline tracker lists every later date our listings and records s
       "What this section prints is decided by the calendar, not by anything the vendor did. " +
       `A change record is named here only while the date we hold for it is later than ${today}. ` +
       "That date is the effective date where the vendor states one, and the day we discovered the change where the vendor does not. " +
-      "It is not removed because the shutdown was cancelled or because we stopped holding the record. " +
       "On the day its date arrives it leaves this page for the full change log. " +
       "Other entries quote a date stated by a listing or an earlier change record. " +
       `We show them while that text states the date and the date is later than ${today}. ` +

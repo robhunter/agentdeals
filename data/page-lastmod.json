@@ -1270,8 +1270,8 @@
       "changed": "2026-11-16"
     },
     "/category/payments": {
-      "hash": "ea5a3299e52f8b91",
-      "changed": "2026-11-15"
+      "hash": "3fc471be52e96b2a",
+      "changed": "2026-11-17"
     },
     "/category/productivity-notes": {
       "hash": "a27bbbd98e99dc42",
@@ -2742,7 +2742,7 @@
       "daily": true
     },
     "/developers": {
-      "hash": "c50ecb65f1e4bb43",
+      "hash": "a9ad5283bba248e8",
       "changed": "2026-11-17"
     },
     "/digest/2022-w48": {
@@ -3098,7 +3098,7 @@
       "changed": "2026-11-16"
     },
     "/digest/2026-w45": {
-      "hash": "0108473caa0acf79",
+      "hash": "465e9f13b38c076d",
       "changed": "2026-11-17"
     },
     "/digest/2026-w46": {
@@ -3165,7 +3165,7 @@
       "changed": "2026-11-16"
     },
     "/digest/2027-w13": {
-      "hash": "3b91ef736834ef5f",
+      "hash": "8d9ee619137d4f5d",
       "changed": "2026-11-17"
     },
     "/digest/2027-w14": {
@@ -3233,7 +3233,7 @@
       "changed": "2026-11-16"
     },
     "/digest/archive": {
-      "hash": "b96d9f7abfc9696c",
+      "hash": "1fea9c680a8533e4",
       "changed": "2026-11-17"
     },
     "/digitalocean-free-tier-2026": {
@@ -3654,7 +3654,7 @@
       "changed": "2026-11-16"
     },
     "/reports/2027-03": {
-      "hash": "6f310e4b2377be90",
+      "hash": "07143dbf12d09487",
       "changed": "2026-11-17"
     },
     "/reports/2027-04": {
@@ -3784,7 +3784,7 @@
       "daily": true
     },
     "/trends": {
-      "hash": "7fdb266b4f527098",
+      "hash": "2f6415ebdc8495e1",
       "changed": "2026-11-17"
     },
     "/trends/ai-coding": {
@@ -3939,8 +3939,7 @@
       "changed": "2026-11-16"
     },
     "/trends/payments": {
-      "hash": "5305d78dd6dd43a9",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/trends/productivity-notes": {
       "hash": "ad79c81a6cec8adf",
@@ -3959,7 +3958,7 @@
     },
     "/trends/security": {
       "hash": "08aed2ca91e8a739",
-      "changed": "2026-11-16"
+      "changed": "2026-11-17"
     },
     "/trends/server-management": {
       "hash": "0f633b5658fd7e03",
@@ -3978,7 +3977,7 @@
     },
     "/trends/storage": {
       "hash": "698873bfe8ef019a",
-      "changed": "2026-11-16"
+      "changed": "2026-11-17"
     },
     "/trends/team-collaboration": {
       "hash": "4e90e44b2b04be08",
@@ -6819,7 +6818,7 @@
       "changed": "2026-11-17"
     },
     "/vendor/lemon-squeezy": {
-      "hash": "73408f8a2acf92f0",
+      "hash": "3269608033a3c4f0",
       "changed": "2026-11-17"
     },
     "/vendor/lensdump-com": {

@@ -2,7 +2,7 @@ import type { DealChange, RatingWithheld, RatingWithheldReason, RiskCause, Sourc
 import { restatedReadingDate, type TermsWeCannotConfirm } from "./read-date.js";
 import { CHANGE_DIRECTION, freeTierRestoredOn, isACorrectionToOurOwnRecord, isOurOwnBookkeeping, recordRestoringTheFreeTier } from "./data.js";
 import { changeRatesTheListedTier, type GradedOffer } from "./change-tier.js";
-import { isNoLongerInForce, reversedOn, theEventNeverHappened } from "./change-resolution.js";
+import { cancellationStatementOf, isCancelledAnnouncement, isNoLongerInForce, reversedOn, theEventNeverHappened } from "./change-resolution.js";
 import { changeIsUncited, changeSummaryText, ratingWithheldSentence, type WithheldRecordCounts } from "./change-citation.js";
 import { changeDateClause, hasNotTakenEffect } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationTouchesTheListing } from "./product-deprecation.js";
@@ -779,6 +779,11 @@ export function narrowingSentence(
   termsSuperseded: boolean = false,
   asOf: string = new Date().toISOString().slice(0, 10),
 ): string {
+  const cancelled = changes.filter(isCancelledAnnouncement);
+  if (cancelled.length > 0) {
+    const remaining = changes.filter(c => !isCancelledAnnouncement(c));
+    return [...cancelled.map(cancellationStatementOf), narrowingSentence(remaining, offer, termsSuperseded, asOf)].filter(Boolean).join(" ");
+  }
   const announced = announcedNarrowings(changes, offer, asOf);
   const opening = changes.length > 0 && changes.every(c => hasNotTakenEffect(c, asOf))
     ? NO_RECORD_IN_EFFECT_YET
