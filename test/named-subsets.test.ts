@@ -594,8 +594,9 @@ function promotesOverflowEntry(before: Surfaces, after: Surfaces, vendor: string
     heading === monthHeadingLabel(entry.date.slice(0, 7))
     && entry.date > after.day && entry.date >= before.upcomingOverflowDate!
     && (after.upcomingOverflowDate === null || entry.date <= after.upcomingOverflowDate)
-    && !before.timelineEntries.some(previous => previous.heading === "Upcoming Changes" && previous.vendor === vendor && previous.date === entry.date)
-    && after.timelineEntries.some(next => next.heading === "Upcoming Changes" && next.vendor === vendor && next.date === entry.date));
+    && after.timelineEntries.filter(next => next.heading === "Upcoming Changes" && next.vendor === vendor && next.date === entry.date).length
+      - before.timelineEntries.filter(previous => previous.heading === "Upcoming Changes" && previous.vendor === vendor && previous.date === entry.date).length
+      >= entries.filter(previous => previous.date === entry.date).length);
 }
 
 function entersDeclaredTimeline(before: Surfaces, after: Surfaces, vendor: string, heading: string): boolean {
@@ -867,6 +868,16 @@ describe("a scheduled entry enters space freed in Upcoming Changes", () => {
     it(`${layout}: explains a month loss when another entry already names the vendor in Upcoming`, () => {
       const earlier = entry("alfa", "2026-12-01");
       assert.deepEqual(movesWithNoDatedReason(page(earlier, entry()), page(earlier + entry(), "", "", "2026-10-20")), []);
+    });
+
+    it(`${layout}: counts distinct records sharing a vendor and effective date`, () => {
+      assert.deepEqual(movesWithNoDatedReason(page(entry(), entry()), page(entry() + entry(), "", "", "2026-10-20")), []);
+      assert.deepEqual(movesWithNoDatedReason(page("", entry() + entry()), page(entry() + entry(), "", "", "2026-10-20")), []);
+    });
+
+    it(`${layout}: rejects a same-day promotion that does not retain every record`, () => {
+      assert.ok(movesWithNoDatedReason(page(entry(), entry()), page(entry(), "", "", "2026-10-20")).includes("alfa"));
+      assert.ok(movesWithNoDatedReason(page("", entry() + entry()), page(entry(), "", "", "2026-10-20")).includes("alfa"));
     });
 
     for (const [name, change] of [
