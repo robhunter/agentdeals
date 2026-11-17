@@ -293,8 +293,11 @@ describe("short model price lists in provider tables", () => {
     const answer = readable(html.match(/<dd><a href="\/vendor\/nvidia-nim">[\s\S]*?<\/dd>/)![0]);
     const models = answer.match(/such as (.*?), at up to/)![1].split(/, | and /);
     const listing = shipped.offers.find(o => toSlug(o.vendor) === "nvidia-nim")!;
-    assert.deepEqual(models, ["DeepSeek V4.1 Flash", "GLM 5.3 Flash", "gpt-oss-20b"]);
-    for (const model of models) assert.ok(listing.description.includes(model), model);
+    assert.deepEqual(models, ["GLM 5.3 Flash", "gpt-oss-20b"]);
+    const freeClause = listing.description.match(/models marked Free Endpoint, including (.*?), can be called at no cost\./);
+    assert.ok(freeClause, "NVIDIA listing has no named free endpoint clause");
+    const freeModels = freeClause[1].split(/, | and /);
+    for (const model of models) assert.ok(freeModels.includes(model), `${model} is not named as a free endpoint`);
     assert.ok(!answer.includes("Kimi K3"));
     assert.ok(answer.includes("NVIDIA retires hosted models on dates it posts on each model's page"));
   });
