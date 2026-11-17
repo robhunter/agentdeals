@@ -4102,7 +4102,7 @@
     {
       "vendor": "Cursor",
       "category": "AI Coding",
-      "description": "AI code editor built on VS Code. Since 2026-10-12, Cursor's pricing docs (cursor.com/docs/models-and-pricing) say: \"Cursor is sold as part of The X Subscription, one subscription for Grok, Cursor, and X.\" Free is $0, with limited Agent and Chat usage. Paid plans are Plus $8/month, Premium $30/month (4x Plus's usage), Super $100/month (15x) and Ultra $200/month (50x), or $80, $300, $1,000 and $2,000 a year. Each paid plan's usage is one weekly pool shared with Grok, covering Grok 4.7, Grok 4.6, Grok 4.5 and Cursor's Composer 2.5. Claude, GPT, Gemini and other third-party models are outside every plan's pool: on Premium and above they cost the model's API list price, paid from prepaid credit, and Free and Plus cannot use them or your own API keys. Teams seats are $30, $100 or $200 per user a month, and on Teams and Enterprise third-party models cost API list price plus the Cursor Token Rate. Existing Hobby, Pro ($20), Pro+ ($60), Ultra and Teams Standard and Premium subscribers keep their plans, with monthly usage pools and included third-party usage, until they choose to switch. Cursor announced the change on its forum on 2026-10-12 (forum.cursor.com/t/introducing-the-x-subscription/174450).",
+      "description": "AI code editor built on VS Code. Since 2026-10-12, Cursor's pricing docs (cursor.com/docs/models-and-pricing) say: \"Cursor is sold as part of The X Subscription, one subscription for Grok, Cursor, and X.\" Free is $0, with limited Agent and Chat usage. Paid plans are Plus $8/month, Premium $30/month (4x Plus's usage), Super $100/month (15x) and Ultra $200/month (50x), or $80, $300, $1,000 and $2,000 a year. Each paid plan's usage is one weekly pool shared with Grok, covering Grok 4.7, Grok 4.6, Grok 4.5 and Cursor's Composer 2.5. Claude, GPT, Gemini and other third-party models are outside every plan's pool: on Premium and above they cost the model's API list price, paid from prepaid credit, and Free and Plus cannot use them or your own API keys. OpenAI is ending Cursor's access to its models, GPT models are available in Cursor through November 25, 2026, and Cursor offers no GPT-6 model. Teams seats are $30, $100 or $200 per user a month, and on Teams and Enterprise third-party models cost API list price plus the Cursor Token Rate. Existing Hobby, Pro ($20), Pro+ ($60), Ultra and Teams Standard and Premium subscribers keep their plans, with monthly usage pools and included third-party usage, until they choose to switch. Cursor announced the change on its forum on 2026-10-12 (forum.cursor.com/t/introducing-the-x-subscription/174450).",
       "tier": "Free",
       "url": "https://www.cursor.com/pricing",
       "tags": [
@@ -26425,7 +26425,7 @@
     {
       "vendor": "LeanCloud",
       "category": "Cloud Hosting",
-      "description": "Mobile backend. 1GB of data storage, 30K API requests/day, and 10K pushes/day are free. Compute instances require paid plan. (API is very similar to Parse Platform)",
+      "description": "Backend as a service for mobile apps, with an API similar to Parse Platform. LeanCloud shuts down all services on January 12, 2027 and then deletes user data, and it no longer accepts new user registrations or new apps. Existing apps on the free Developer plan get 1 GB of storage space and 30,000 API requests a day.",
       "tier": "Free",
       "url": "https://leancloud.app/pricing",
       "tags": [
@@ -26449,11 +26449,6 @@
           }
         ],
         "reviewed": "2026-08-31"
-      },
-      "free_plan_excerpt": {
-        "text": "1 GB free space with $0.001 per GB per day for the exceeding part.",
-        "url": "https://leancloud.app/pricing",
-        "read_on": "2026-11-07"
       }
     },
     {
