@@ -58,6 +58,11 @@ async function readPages(name: string, records: unknown[], atDay?: string) {
 before(async () => {
   await readPages("live", stored.changes);
   await readPages("expanded", [...stored.changes, ...extra]);
+  for (const offset of [31, 61, 91]) {
+    const shifted = extra.map(record => ({ ...record, date: day(offset + Math.round((Date.parse(record.date) - Date.parse(today)) / 86_400_000)),
+      discontinued_date: day(offset + Math.round((Date.parse(record.date) - Date.parse(today)) / 86_400_000)), recorded_date: day(offset) }));
+    await readPages(`expanded-${offset}`, [...stored.changes, ...shifted], day(offset));
+  }
   await readPages("ninety", stored.changes, "2026-07-29");
   await readPages("ninety-one", stored.changes, "2026-07-30");
 });
@@ -90,7 +95,7 @@ describe("shutdown reading capacity", () => {
     assert.equal(cards[1].querySelector(".figure-source")!.getAttribute("href"), cards[0].querySelector(".figure-source")!.getAttribute("href"));
   });
 
-  for (const name of ["live", "expanded"]) it(`${name} keeps every imminent and upcoming card inside 95000 characters`, () => {
+  for (const name of ["live", "expanded", "expanded-31", "expanded-61", "expanded-91"]) it(`${name} keeps every imminent and upcoming card inside 95000 characters`, () => {
     const { document, cards } = cardsOf(pages.get(`${name} /shutdowns`)!);
     const near = cards.filter(card => ["imminent", "upcoming"].includes(card.section));
     assert.ok(near.length > 0);
@@ -101,10 +106,67 @@ describe("shutdown reading capacity", () => {
       const start = markdown.indexOf(content);
       assert.ok(start >= 0 && start + content.length <= 95_000, `${card.node.querySelector("h3")!.textContent}: ${start + content.length}`);
     }
-    if (name === "expanded") {
+    if (name.startsWith("expanded")) {
       assert.equal(near.filter(card => card.node.querySelector("h3")!.textContent!.startsWith("Capacity Shutdown ")).length, 25);
-      console.log(JSON.stringify({ nearCards: near.length, nearEnd: Math.max(...near.map(card => { const text = converter.turndown(card.node); return markdown.indexOf(text) + text.length; })) }));
+      console.log(JSON.stringify({ render: name, nearCards: near.length, nearEnd: Math.max(...near.map(card => { const text = converter.turndown(card.node); return markdown.indexOf(text) + text.length; })) }));
     }
+  });
+
+  for (const offset of [0, 31, 61, 91]) it(`retains completed facts in the first 100000 characters at day ${offset}`, () => {
+    const { document, cards } = cardsOf(pages.get(`${offset ? `expanded-${offset}` : "expanded"} /shutdowns`)!);
+    const atDay = Date.parse(day(offset));
+    const converter = new TurndownService();
+    const markdown = markdownOf(document);
+    const lines = [...document.querySelectorAll(".shutdown-completed-entry")];
+    const completed = cards.filter(card => ["completed", "completed-history"].includes(card.section));
+    assert.ok(completed.length > 20);
+    assert.equal(lines.length, completed.filter(card => card.section === "completed-history").length);
+    let visible = 0;
+    for (const card of completed) {
+      const dates = [...card.node.querySelectorAll(".shutdown-deadline")].map(node => Date.parse(node.querySelectorAll("span")[1].textContent!));
+      const date = Math.max(...dates);
+      const age = Math.round((atDay - date) / 86_400_000);
+      const line = lines.find(node => node.querySelector("a")!.getAttribute("href") === `#${card.node.id}`);
+      if (age <= 30) {
+        assert.equal(card.section, "completed");
+        assert.equal(line, undefined);
+        assert.ok(markdown.indexOf(converter.turndown(card.node)) < markdown.indexOf(converter.turndown(document.querySelector("#imminent")!)));
+      } else {
+        assert.equal(card.section, "completed-history");
+        assert.ok(line);
+        assert.equal(line.querySelector("a")!.textContent, card.node.querySelector("h3")!.textContent);
+        assert.equal(Date.parse(line.querySelector("time")!.getAttribute("datetime")!), date);
+        assert.ok(markdown.indexOf(converter.turndown(card.node)) > markdown.indexOf(converter.turndown(document.querySelector("#later")!)));
+        const sentences = card.node.querySelectorAll(".shutdown-what li");
+        const summaries = sentences.length ? [...sentences].map(node => node.childNodes[0].textContent!.trim())
+          : [card.node.querySelector(".shutdown-what")!.textContent!.match(/^.*?(?:[.!?](?=\s|$)|$)/s)![0]];
+        for (const summary of summaries) assert.ok(line.textContent!.includes(summary), summary);
+        const migration = [...card.node.querySelectorAll(".detail-row")].find(node => node.querySelector(".detail-label")!.textContent === "Migration path:");
+        if (migration) {
+          const text = migration.querySelectorAll("span")[1].textContent!;
+          const first = [...new Intl.Segmenter("en", { granularity: "sentence" }).segment(text)][0].segment.trim();
+          assert.ok(line.querySelector(".completed-migration")!.textContent!.includes(first), first);
+        }
+      }
+      if (age <= 183) {
+        const content = converter.turndown(line ?? card.node);
+        const start = markdown.indexOf(content);
+        assert.ok(start >= 0 && start + content.length <= 100_000, card.node.querySelector("h3")!.textContent!);
+        visible++;
+      }
+    }
+    assert.ok(visible > 10);
+    console.log(JSON.stringify({ offset, completed: completed.length, visible, lines: lines.length }));
+  });
+
+  it("keeps the HubSpot and Maps recovery facts in their completed entries", () => {
+    const document = createDocument(pages.get("live /shutdowns")!);
+    const entries = [...document.querySelectorAll(".shutdown-completed-entry")];
+    const hubspot = entries.find(node => node.querySelector("a")!.textContent === "HubSpot Contact Lists API v1")!;
+    assert.ok(hubspot.textContent!.includes("still work but no longer return list memberships"));
+    const maps = entries.find(node => node.querySelector("a")!.textContent === "Google Maps Platform Client IDs")!;
+    assert.ok(maps.textContent!.includes("unpausing the client ID in the Cloud Console"));
+    assert.ok(maps.textContent!.includes("Support for a temporary exemption"));
   });
 
   it("preserves every added card's complete description, date and source", () => {
@@ -122,7 +184,7 @@ describe("shutdown reading capacity", () => {
     const original = cardsOf(pages.get("live /shutdowns")!);
     const expanded = cardsOf(pages.get("expanded /shutdowns")!);
     const actual = expanded.cards.filter(card => !card.node.querySelector("h3")!.textContent!.startsWith("Capacity Shutdown "));
-    for (const section of ["completed", "imminent", "upcoming", "later"]) assert.deepEqual(
+    for (const section of ["completed", "completed-history", "imminent", "upcoming", "later"]) assert.deepEqual(
       actual.filter(card => card.section === section).map(card => card.node.outerHTML),
       original.cards.filter(card => card.section === section).map(card => card.node.outerHTML));
     const markdown = markdownOf(expanded.document);

@@ -4,7 +4,7 @@ import { measuredValue, quantifiedAttributes } from "./quantity-reading.js";
 import { announcementsInWeek, weeklyAnnouncementNote, weeklyAnnouncementHeading, announcementDateLabel, WEEKLY_ANNOUNCEMENTS_INTRO } from "./weekly-announcements.js";
 import { createServer as createHttpServer, ServerResponse, type IncomingMessage } from "node:http";
 import { readFileSync, existsSync, statSync, writeFileSync, writeSync } from "node:fs";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { alternativeAllowanceOpening } from "./alternative-allowance.js";
@@ -26957,6 +26957,7 @@ function buildShutdownTrackerPage(): string {
     impact?: string;
     whoAffected?: string;
     retainedDetails?: { what?: string; migrationPath?: string };
+    completedSummary?: string;
     migrationPath?: string;
     migrationLink?: string;
     covers?: RecordACardCovers[];
@@ -26987,6 +26988,7 @@ function buildShutdownTrackerPage(): string {
     },
     {
       service: "HubSpot Contact Lists API v1",
+      completedSummary: "Six Contacts API v1 read endpoints (a contact or a batch of contacts by visitor ID, email address or user token) still work but no longer return list memberships.",
       vendorSlug: "hubspot",
       what: "Legacy Contact Lists API v1 sunset \u2014 replaced by Lists API v3",
       retainedDetails: { what: "Contact Lists API v1 endpoints return HTTP 404. HubSpot's changelog said three endpoints listing all, recently updated or recently created contacts would keep working, but its current migration guide lists them as returning 404 too. Six Contacts API v1 read endpoints (a contact or a batch of contacts by visitor ID, email address or user token) still work but no longer return list memberships." },
@@ -27147,6 +27149,7 @@ function buildShutdownTrackerPage(): string {
     },
     {
       service: "Google Maps Platform Client IDs",
+      completedSummary: "Service usually returns within a few hours; project Owners or Editors can restore it sooner by unpausing the client ID in the Cloud Console, and developers who cannot migrate quickly can ask Google Maps Platform Support for a temporary exemption.",
       vendorSlug: "google-maps",
       what: "Google Maps Platform client IDs have been deprecated since May 26, 2025. Google says they can no longer be used after May 31, 2026. Since May 2026, Google has restricted access periodically as a phased deprecation, and it has published no final termination date.",
       deadline: "2026-05-31",
@@ -27262,6 +27265,22 @@ function buildShutdownTrackerPage(): string {
 
   completed.sort((a, b) => new Date(shutdownDateEnd(b.deadline)).getTime() - new Date(shutdownDateEnd(a.deadline)).getTime());
 
+  const recentCompletedSince = new Date(Date.parse(todayDay) - 30 * 86_400_000).toISOString().slice(0, 10);
+  const recentCompleted = completed.filter(entry => shutdownDateEnd(entry.deadline) >= recentCompletedSince);
+  const olderCompleted = completed.filter(entry => shutdownDateEnd(entry.deadline) < recentCompletedSince);
+  const completedAnchor = (entry: ShutdownEntry) => `shutdown-history-${createHash("sha256").update(JSON.stringify([entry.vendorSlug, entry.service, entry.deadline, entry.dateSource, entry.what])).digest("hex").slice(0, 16)}`;
+  const sentenceReader = new Intl.Segmenter("en", { granularity: "sentence" });
+  const firstSentence = (text: string) => [...sentenceReader.segment(text)][0]?.segment.trim() ?? "";
+  const completedLines = olderCompleted.length === 0 ? "" : `<ul class="shutdown-completed-index">
+    ${olderCompleted.map(entry => {
+      const summary = entry.groupedDeadlines
+        ? entry.groupedDeadlines.map(deadline => `${escHtmlServer(deadline.sentence)}${deadline.sourceUrl ? " " + listingSourceLinkHtml(deadline.sourceUrl, escHtmlServer) : ""}`).join(" ")
+        : [entry.completedSummary, firstSentence(entry.what)].filter((text): text is string => Boolean(text)).map(escHtmlServer).join(" ");
+      const date = isShutdownMonth(entry.deadline) ? shutdownMonthDateLabel(entry.deadline) : new Date(entry.deadline + "T00:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+      return `<li class="shutdown-completed-entry"><a href="#${completedAnchor(entry)}">${escHtmlServer(entry.service)}</a> — completed <time datetime="${escHtmlServer(entry.deadline)}">${escHtmlServer(date)}</time>. <span class="completed-summary">${summary}</span>${entry.migrationPath ? ` <span class="completed-migration">${escHtmlServer(firstSentence(entry.migrationPath))}</span>` : ""}</li>`;
+    }).join("\n    ")}
+  </ul>`;
+
   const activeCount = imminent.length + upcoming.length + later.length;
   const shutdownMonths = new Map<string, { service: string; deadline: string; label: string; note: string }[]>();
   const monthEntries = [...imminent, ...upcoming, ...later].flatMap(entry => shutdownDates(entry)
@@ -27331,7 +27350,7 @@ function buildShutdownTrackerPage(): string {
     const details = ([["Who\u2019s affected", s.whoAffected], ["Impact", s.impact], ["Migration path", s.migrationPath]] as [string, string | undefined][])
       .flatMap(([label, value]) => value === undefined || (shutdownDateEnd(s.deadline) < fullShutdownDetailsSince && label !== "Migration path") ? [] : [[label, value] as const]);
 
-    return `<div class="shutdown-card" style="border-left-color:${color}">
+    return `<div class="shutdown-card"${olderCompleted.includes(s) ? ` id="${completedAnchor(s)}"` : ""} style="border-left-color:${color}">
       <div class="shutdown-header">
         <div>
           <h3 style="margin:0">${handwrittenVendorLinkHtml(s.vendorSlug, s.service, ' style="color:var(--text)"')}</h3>
@@ -27351,9 +27370,9 @@ function buildShutdownTrackerPage(): string {
   }
 
   function buildSection(heading: string, description: string, entries: ShutdownEntry[], urgency: string): string {
-    if (entries.length === 0) return "";
+    if (entries.length === 0 && (urgency !== "completed" || completed.length === 0)) return "";
     return `
-    <h2 id="${urgency}">${escHtmlServer(heading)} <span class="section-count">(${entries.length})</span></h2>
+    <h2 id="${urgency}">${escHtmlServer(heading)} <span class="section-count">(${urgency === "completed" ? completed.length : entries.length})</span></h2>
     <p class="section-intro">${escHtmlServer(description)}</p>
     ${entries.map(s => buildShutdownCard(s)).join("\n    ")}`;
   }
@@ -27471,7 +27490,7 @@ h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .
 .shutdown-links a:hover{text-decoration:underline}
 .timeline-bar{display:flex;gap:4px;margin:1.5rem 0 2rem;height:8px;border-radius:4px;overflow:hidden}
 .timeline-segment{height:100%;border-radius:2px;min-width:4px}
-.shutdown-months{padding-left:1.25rem;margin:1rem 0 2rem;line-height:1.7}
+.shutdown-completed-index{padding-left:1.25rem;color:var(--text-muted);font-size:.9rem}\n.shutdown-completed-entry{margin-bottom:.75rem}\n.shutdown-months{padding-left:1.25rem;margin:1rem 0 2rem;line-height:1.7}
 .shutdown-months li{margin-bottom:.75rem}
 .pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
 .pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
@@ -27527,7 +27546,8 @@ ${buildGlobalNav("guides")}
     }).join("\n    ")}
   </div>
 
-  ${buildSection("\u2705 Recently Completed", "These shutdowns have already happened. Listed for reference.", completed, "completed")}
+  ${buildSection("\u2705 Recently Completed", "These shutdowns have already happened. Listed for reference.", recentCompleted, "completed")}
+  ${completedLines}
 
   ${byMonth}
 
@@ -27536,6 +27556,8 @@ ${buildGlobalNav("guides")}
   ${buildSection("\u23f3 Upcoming", "These shutdowns are 30\u201390 days away. Plan your migration now.", upcoming, "upcoming")}
 
   ${buildSection("Later", "These shutdowns are more than 90 days away.", later, "later")}
+
+  ${buildSection("Completed", "These shutdowns have already happened. Listed for reference.", olderCompleted, "completed-history")}
 
   ${relevantChanges.length > 0 ? `
   <h2 id="pricing-changes">Related Pricing Changes</h2>

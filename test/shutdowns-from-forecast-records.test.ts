@@ -120,7 +120,7 @@ function cardsOn(page: string): Card[] {
   for (const piece of page.split(/(?=<h2 id=")|(?=<div class="shutdown-card")/)) {
     const heading = piece.match(/^<h2 id="([^"]+)"/);
     if (heading) {
-      section = heading[1];
+      section = heading[1] === "completed-history" ? "completed" : heading[1];
       continue;
     }
     if (!piece.startsWith('<div class="shutdown-card"')) continue;

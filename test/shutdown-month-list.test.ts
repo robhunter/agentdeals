@@ -130,7 +130,7 @@ describe("shutdowns by calendar month", () => {
     let section = "";
     for (const piece of page.split(/(?=<h2 id=")|(?=<div class="shutdown-card")/)) {
       section = piece.match(/^<h2 id="([^"]+)"/)?.[1] ?? section;
-      if (!piece.startsWith('<div class="shutdown-card"') || section === "completed") continue;
+      if (!piece.startsWith('<div class="shutdown-card"') || !["imminent", "upcoming", "later"].includes(section)) continue;
       const title = textOf(piece.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? "");
       const date = piece.match(/<span class="deadline-icon">[^<]*<\/span>\s*<span>([^<]+)<\/span>/)?.[1] ?? "";
       cards.push(`${title} (${String(new Date(date).getUTCDate())})`);

@@ -20,7 +20,7 @@ const extra = Array.from({ length: 30 }, (_, i) => ({
   previous_state: "API available", current_state: "API retired", impact: "high", category: "APIs",
   source_url: `https://example.com/window/${i}`, alternatives: [], listing_effect: "none",
 }));
-const boundary = [1, 183, 184].map(offset => ({ ...extra[0], vendor: `Window Past ${offset}`, what_ends: `Window Past ${offset} API`,
+const boundary = [1, 30, 31, 183, 184].map(offset => ({ ...extra[0], vendor: `Window Past ${offset}`, what_ends: `Window Past ${offset} API`,
   date: day(-offset), recorded_date: day(-offset - 1), discontinued_date: day(-offset), summary: `Window Past ${offset} retired its API on ${day(-offset)}. Full migration details remain available.` }));
 const scratch = mkdtempSync(path.join(tmpdir(), "shutdown-window-"));
 const pages = new Map<string, string>();
@@ -62,7 +62,7 @@ function cardsOf(html: string) {
   let section = "";
   const cards: { section: string; node: Element; date: number }[] = [];
   for (const node of Array.from(document.querySelector(".container")!.children)) {
-    if (node.tagName === "H2") section = node.id;
+    if (node.tagName === "H2") section = node.id === "completed-history" ? "completed" : node.id;
     if (node.classList.contains("shutdown-card")) {
       const dates = [...node.querySelectorAll(".shutdown-deadline")].map(deadline => Date.parse(deadline.querySelectorAll("span")[1].textContent!));
       assert.ok(dates.length > 0 && dates.every(Number.isFinite));
@@ -81,14 +81,25 @@ describe("completed shutdown reading window", () => {
     const converter = new TurndownService();
     const markdown = converter.turndown(document.body);
     for (const card of recent) {
-      const content = converter.turndown(card.node);
+      const link = [...document.querySelectorAll(".shutdown-completed-entry")].find(node => node.querySelector("a")!.getAttribute("href") === `#${card.node.id}`);
+      const content = converter.turndown(link ?? card.node);
       const start = markdown.indexOf(content);
       assert.ok(start >= 0 && start + content.length <= 100_000, `${card.node.querySelector("h3")!.textContent}: ${start + content.length}`);
     }
     if (name === "expanded") {
-      for (const offset of [1, 183]) assert.ok(recent.some(card => card.node.querySelector("h3")!.textContent === `Window Past ${offset} API`));
+      for (const offset of [1, 30, 31, 183]) assert.ok(recent.some(card => card.node.querySelector("h3")!.textContent === `Window Past ${offset} API`));
       assert.ok(!recent.some(card => card.node.querySelector("h3")!.textContent === "Window Past 184 API"));
       assert.equal(cards.filter(card => card.node.querySelector("h3")!.textContent!.startsWith("Window Future ")).length, 30);
+    }
+  });
+
+  it("keeps the thirty-day boundary in full above imminent", () => {
+    const { document, cards } = cardsOf(pages.get("expanded /shutdowns")!);
+    const children = Array.from(document.querySelector(".container")!.children);
+    for (const offset of [1, 30, 31, 183, 184]) {
+      const card = cards.find(card => card.node.querySelector("h3")!.textContent === `Window Past ${offset} API`)!;
+      assert.ok(card);
+      assert.equal(children.indexOf(card.node) < children.indexOf(document.querySelector("#imminent")!), offset <= 30);
     }
   });
 
