@@ -3108,6 +3108,10 @@
     "/digest/2026-w47": {
       "daily": true
     },
+    "/digest/2026-w48": {
+      "hash": "e20d47609bafea4a",
+      "changed": "2026-11-17"
+    },
     "/digest/2026-w49": {
       "hash": "743e645540006a55",
       "changed": "2026-11-16"
