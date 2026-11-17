@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-16",
+  "generated": "2026-11-17",
   "pages": {
     "/": {
       "daily": true
@@ -17,8 +17,7 @@
       "daily": true
     },
     "/ai-coding-tools-pricing": {
-      "hash": "c969d2d5ddb8c772",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/ai-free-tiers": {
       "hash": "3ffb90356dc21e41",
@@ -29,8 +28,7 @@
       "changed": "2026-11-16"
     },
     "/alternative-to": {
-      "hash": "3fe3ae84f6ec2ad6",
-      "changed": "2026-11-12"
+      "daily": true
     },
     "/alternative-to/360-monitoring": {
       "daily": true
@@ -795,8 +793,7 @@
       "changed": "2026-11-16"
     },
     "/analytics-alternatives": {
-      "hash": "7f6c6b73fe92a7b5",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/analytics-free-tier-comparison-2026": {
       "hash": "6947f9f88296d4f9",
@@ -1138,7 +1135,8 @@
       "changed": "2026-11-16"
     },
     "/category/cdn": {
-      "daily": true
+      "hash": "6ab458e54852637c",
+      "changed": "2026-11-17"
     },
     "/category/ci-cd": {
       "hash": "0830535548a984b2",
@@ -1181,8 +1179,7 @@
       "changed": "2026-11-16"
     },
     "/category/design": {
-      "hash": "ba2f4b4d5b98fa52",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/category/design-creative": {
       "hash": "f2c1b4277a6993ee",
@@ -2742,8 +2739,7 @@
       "daily": true
     },
     "/design-alternatives": {
-      "hash": "496e6d7d3fed2485",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/developers": {
       "hash": "5dd6997a14b59dc3",
@@ -3110,8 +3106,7 @@
       "changed": "2026-11-16"
     },
     "/digest/2026-w47": {
-      "hash": "f1a3f308cdb4293c",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/digest/2026-w49": {
       "hash": "743e645540006a55",
@@ -3274,12 +3269,10 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "hash": "ad05f04b4ec64759",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/events/google-io-2026": {
-      "hash": "25682e8d4b89d8cb",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/events/microsoft-build-2026": {
       "hash": "a29d8c2ec26b5b02",
@@ -3289,8 +3282,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "cf8fc99e7b56e0d6",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/firebase-alternatives": {
       "hash": "5fc38ebcc6fedc1d",
@@ -3304,8 +3296,7 @@
       "changed": "2026-11-16"
     },
     "/free-devops-stack": {
-      "hash": "fe52e3f0c78fd74a",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/free-django-stack": {
       "daily": true
@@ -3338,8 +3329,7 @@
       "changed": "2026-11-12"
     },
     "/free-tier-risk": {
-      "hash": "2f38d5841d696a4e",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/free-tier-tracker": {
       "daily": true
@@ -3352,8 +3342,7 @@
       "changed": "2026-11-16"
     },
     "/gcp-free-tier-2026": {
-      "hash": "d915362ac46c2297",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/gemini-api-pricing-2026": {
       "hash": "0d560ca487d3b078",
@@ -3519,8 +3508,7 @@
       "changed": "2026-11-12"
     },
     "/reports": {
-      "hash": "159f2bc75299063f",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/reports/2022-11": {
       "hash": "a484f9037b2afe28",
@@ -3729,8 +3717,7 @@
       "daily": true
     },
     "/stability": {
-      "hash": "87fde989a18824b4",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/stack-check": {
       "daily": true
@@ -3740,34 +3727,30 @@
       "changed": "2026-11-14"
     },
     "/stacks/ai-startup": {
-      "hash": "42acd556ca56511e",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/stacks/api-first": {
       "daily": true
     },
     "/stacks/open-source": {
-      "hash": "260b6214fedf8c84",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/stacks/saas-mvp": {
-      "hash": "cd8fa525139bdcb9",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/stacks/side-project": {
-      "hash": "40673bb3d435d4b9",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/startup-credits": {
       "hash": "b6a1b571951fb878",
       "changed": "2026-11-16"
     },
     "/state-of-free-tiers": {
-      "hash": "3cc4c5a8bd6f51db",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/storage-alternatives": {
-      "daily": true
+      "hash": "b37ed1b6ac6293bc",
+      "changed": "2026-11-17"
     },
     "/storage-comparison-2026": {
       "hash": "7f74a45f5c5cb815",
@@ -3811,8 +3794,7 @@
       "daily": true
     },
     "/trends/analytics": {
-      "hash": "305583ca50baed7b",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/trends/api-development": {
       "hash": "5a5b9b521719605c",
@@ -4195,8 +4177,7 @@
       "changed": "2026-11-16"
     },
     "/vendor/ant-design-landing-page": {
-      "hash": "5ffcd8d9c3d51455",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/vendor/anthropic-api": {
       "daily": true
@@ -6101,8 +6082,7 @@
       "changed": "2026-11-16"
     },
     "/vendor/google-antigravity": {
-      "hash": "2784549e4cdba0a3",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/vendor/google-artifact-registry": {
       "hash": "35012391babe927f",
@@ -7375,7 +7355,8 @@
       "changed": "2026-11-16"
     },
     "/vendor/namecheap-supersonic": {
-      "daily": true
+      "hash": "db1df3a12678177d",
+      "changed": "2026-11-17"
     },
     "/vendor/nango": {
       "hash": "90e72158599f89a0",
@@ -8992,8 +8973,7 @@
       "changed": "2026-11-16"
     },
     "/vendor/tinybird": {
-      "hash": "f3826c8c9092f871",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/vendor/tinymce": {
       "hash": "b6501ae056fa10ea",
