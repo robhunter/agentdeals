@@ -218,6 +218,81 @@
           "description": "Secrets management — Developer plan: Free for 3 users, $8/mo per additional user; includes Doppler CLI for local development, service tokens, email alerts and recurring reminders, 3 days of activity logs, secrets referencing, secret value types, API and webhooks access, config syncs (5), 10 projects, 4 environments, 10 configs per environment, 5 webhook limits, 5 CLI tokens per user, and 25 users."
         }
       ]
+    },
+    {
+      "proposal_id": "2026-11-17/circleci/limits_reduced",
+      "proposed_on": "2026-11-17",
+      "vendor": "CircleCI",
+      "change_type": "limits_reduced",
+      "date": "2026-11-17",
+      "date_source": "discovered",
+      "summary": "The Free plan's concurrency for macOS VM is now 1 (not 30x as stored), and the Free plan now includes 5 self-hosted runner concurrent tasks. Previously's claim of 30x concurrency across macOS VM is inaccurate.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "The Free plan includes 30,000 credits/month, 5 active users, and options for different resource classes (Docker, Windows, Linux, Arm, macOS) with varying concurrency levels (30x for Docker, Linux, Arm, Windows VM, and macOS VM).",
+      "current_state": "Free plan: 30,000 free credits/month, 5 active users included, up to 6,000 build minutes using a small Docker resource class, 30x concurrency for Docker, Linux VM, Arm VM (Linux), and Windows VM, but only 1x concurrency for macOS VM; 5 self-hosted runner concurrent tasks; 1 GB network, 2 GB storage; 1,000 test atoms/month for Smarter Testing.",
+      "impact": "medium",
+      "source_url": "https://circleci.com/pricing/",
+      "category": "CI/CD",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-17",
+      "restatement": [
+        {
+          "url": "https://circleci.com/pricing/",
+          "description": "Free plan: 30,000 free credits/month, 5 active users included, up to 6,000 build minutes using a small Docker resource class, 30x concurrency for Docker, Linux VM, Arm VM (Linux), and Windows VM, but only 1x concurrency for macOS VM; 5 self-hosted runner concurrent tasks; 1 GB network, 2 GB storage; 1,000 test atoms/month for Smarter Testing."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-17/lost-pixel-com/product_deprecated",
+      "proposed_on": "2026-11-17",
+      "vendor": "lost-pixel.com",
+      "change_type": "product_deprecated",
+      "date": "2026-11-17",
+      "date_source": "discovered",
+      "summary": "The Hobby Free tier and paid tier pricing/limits still appear on the page.",
+      "tier": "Hobby Free",
+      "tier_direction": "unchanged",
+      "previous_state": "holistic visual regression testing for your Storybook, Ladle, Histoire stories and Web Apps — Lost Pixel is sunsetting the product and building what's next. A 'Hobby Free' tier is available with 7,000 shots per month. Paid tiers include Startup ($100/mo, 40,000 shots), Business ($250/mo, 100,000 shots), and Scale ($670/mo, 300,000 shots).",
+      "current_state": "The page states 'Lost Pixel is joining Figma. We are sunsetting the product and building what's next.' The pricing section still lists Hobby Free with 7,000 shots per month, Startup at $100/mo with 40,000 shots, Business at $250/mo with 100,000 shots, and Scale at $670/mo with 300,000 shots.",
+      "impact": "high",
+      "source_url": "https://lost-pixel.com",
+      "category": "Testing",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-17",
+      "restatement": [
+        {
+          "url": "https://lost-pixel.com",
+          "refused": "reading_describes_the_page_not_the_terms"
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-17/surrealdb-cloud/pricing_restructured",
+      "proposed_on": "2026-11-17",
+      "vendor": "SurrealDB Cloud",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-17",
+      "date_source": "discovered",
+      "summary": "The stored 'Start' plan (1GB storage free forever, free 0.25 vCPU / 1GB compute instance) no longer appears. The page now shows a 'Free' plan under SurrealDB Earth with 3M requests, 10GB storage, 100 database active hours, no card needed, and a Pro plan at $15/mo launch price. Cloud is now billed from $0.021/hr per node hour with no free instance mentioned.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Multi-model cloud database — The 'Start' plan offers 1GB of storage free, forever, and a free compute instance with 0.25 vCPU and 1 GB memory ($0.000/hr). Further instances are available from $0.021/hr.",
+      "current_state": "SurrealDB Earth Free plan: $0/mo, 3M requests per month, 10GB storage per month, 100 database active hours per month, unlimited egress, up to 100 databases, up to 100 cells, 330+ regions, pauses at its limits and keeps your data. Pro plan: $15/mo launch price with 10M requests, 25GB storage, 1,000 database active hours, then billed at $0.65 per 1M requests, $0.25 per GB storage, $0.05 per hour. Cloud: from $0.021/hr per node hour, single-node or cluster, billed by the node hour.",
+      "impact": "medium",
+      "source_url": "https://surrealdb.com/pricing",
+      "category": "Databases",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-17",
+      "restatement": [
+        {
+          "url": "https://surrealdb.com/pricing",
+          "description": "Multi-model cloud database — SurrealDB Earth Free plan: $0/mo, 3M requests per month, 10GB storage per month, 100 database active hours per month, unlimited egress, up to 100 databases, up to 100 cells, 330+ regions, pauses at its limits and keeps your data. Pro plan: $15/mo launch price with 10M requests, 25GB storage, 1,000 database active hours, then billed at $0.65 per 1M requests, $0.25 per GB storage, $0.05 per hour. Cloud: from $0.021/hr per node hour, single-node or cluster, billed by the node hour."
+        }
+      ]
     }
   ],
   "dropped": [
