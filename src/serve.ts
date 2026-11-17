@@ -18932,7 +18932,7 @@ function buildFreeSaasStackPage(): string {
       icon: "\u{1F4B3}",
       recommended: { vendor: "Stripe", why: "The default SaaS billing platform. No monthly fees \u2014 only 2.9% + 30\u00a2 per transaction. Subscriptions, usage-based billing, invoicing, tax calculation, customer portal, and webhooks. Every SaaS billing library (Stripe.js, @stripe/stripe-js) is built for Stripe first. Start collecting revenue on day one with zero fixed costs." },
       alternatives: [] as string[],
-      outgrow: "You don't outgrow Stripe \u2014 it scales to billions. Consider Lemon Squeezy ($0 fixed + 5% + 50\u00a2) if you need a Merchant of Record (handles sales tax, VAT, and compliance globally \u2014 you receive net payouts). Paddle (5% + 50\u00a2) is the enterprise MoR alternative. The trade-off: MoR services charge higher per-transaction fees but eliminate tax/compliance complexity.",
+      outgrow: "You don't outgrow Stripe — it scales to billions. Consider Stripe Managed Payments (3.5% per successful transaction plus standard Stripe fees) or Paddle (5% + 50¢ per transaction) if you need a merchant of record. A merchant of record handles sales tax, VAT and compliance globally and you receive net payouts, but charges higher per-transaction fees.",
       whyNot: "Why not PayPal: Higher fees, worse developer experience, no native subscription billing. Why not building your own billing: Subscription billing has edge cases (proration, dunning, tax compliance, refunds, upgrades/downgrades) that take months to build correctly. Stripe handles all of this. Why not free alternatives: There aren't any \u2014 payment processing requires financial infrastructure.",
       relatedPage: null,
       isFrameworkSection: false,
