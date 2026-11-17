@@ -27277,7 +27277,7 @@ function buildShutdownTrackerPage(): string {
         ? entry.groupedDeadlines.map(deadline => `${escHtmlServer(deadline.sentence)}${deadline.sourceUrl ? " " + listingSourceLinkHtml(deadline.sourceUrl, escHtmlServer) : ""}`).join(" ")
         : [entry.completedSummary, firstSentence(entry.what)].filter((text): text is string => Boolean(text)).map(escHtmlServer).join(" ");
       const date = isShutdownMonth(entry.deadline) ? shutdownMonthDateLabel(entry.deadline) : new Date(entry.deadline + "T00:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
-      return `<li class="shutdown-completed-entry"><a href="#${completedAnchor(entry)}">${escHtmlServer(entry.service)}</a> — completed <time datetime="${escHtmlServer(entry.deadline)}">${escHtmlServer(date)}</time>. <span class="completed-summary">${summary}</span>${entry.migrationPath ? ` <span class="completed-migration">${escHtmlServer(firstSentence(entry.migrationPath))}</span>` : ""}</li>`;
+      return `<li class="shutdown-completed-entry"><a href="#${completedAnchor(entry)}">${escHtmlServer(entry.service)}</a> — completed <time datetime="${escHtmlServer(entry.deadline)}">${escHtmlServer(date)}</time>. <span class="completed-summary">${summary}${!entry.groupedDeadlines && entry.dateSource ? " " + listingSourceLinkHtml(entry.dateSource, escHtmlServer) : ""}</span>${entry.migrationPath ? ` <span class="completed-migration">${escHtmlServer(firstSentence(entry.migrationPath))}</span>` : ""}</li>`;
     }).join("\n    ")}
   </ul>`;
 

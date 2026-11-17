@@ -136,6 +136,9 @@ describe("shutdown reading capacity", () => {
         assert.ok(line);
         assert.equal(line.querySelector("a")!.textContent, card.node.querySelector("h3")!.textContent);
         assert.equal(Date.parse(line.querySelector("time")!.getAttribute("datetime")!), date);
+        assert.equal(line.querySelector("time")!.textContent, [...card.node.querySelectorAll(".shutdown-deadline")][dates.indexOf(date)].querySelectorAll("span")[1].textContent);
+        const source = card.node.querySelector(".figure-source")?.getAttribute("href");
+        if (source) assert.ok(Array.from(line.querySelectorAll("a")).some(node => node.getAttribute("href") === source));
         assert.ok(markdown.indexOf(converter.turndown(card.node)) > markdown.indexOf(converter.turndown(document.querySelector("#later")!)));
         const sentences = card.node.querySelectorAll(".shutdown-what li");
         const summaries = sentences.length ? [...sentences].map(node => node.childNodes[0].textContent!.trim())
