@@ -62,6 +62,7 @@ interface Surfaces {
   day: string;
   timelineEntries: { heading: string; vendor: string; date: string }[];
   upcomingDeclaresMonthMove: boolean;
+  upcomingOverflowDate: string | null;
   title: string | null;
   regions: Record<string, string[]>;
   vendors: string[];
@@ -336,14 +337,25 @@ function quotedDateVendorsByHeading(body: string): Record<string, string[]> {
 function timelineEntriesOf(body: string): Surfaces["timelineEntries"] {
   const headings = headingsOf(body);
   const entries: Surfaces["timelineEntries"] = [];
-  for (const match of body.matchAll(/<div\b[^>]*class="(?:chg|pc)-(?:entry|preview)\b[^"]*"[^>]*>/g)) {
+  for (const match of body.matchAll(/<div\b[^>]*class="(?:(?:chg|pc)-(?:entry|preview)|timeline-item)\b[^"]*"[^>]*>/g)) {
     const html = elementAt(body, match.index!, "div");
     const heading = headings.filter(h => h.at < match.index!).pop()?.text;
-    const vendor = html.match(/<a\b[^>]*href="\/vendor\/([a-z0-9-]+)"[^>]*class="(?:chg|pc)-vendor"[^>]*>/)?.[1];
-    const date = html.match(/<div class="(?:chg|pc)-date">effective (\d{4}-\d{2}-\d{2})<\/div>/)?.[1];
+    const vendor = html.match(/<a\b[^>]*href="\/vendor\/([a-z0-9-]+)"[^>]*class="(?:(?:chg|pc)-vendor|timeline-vendor)"[^>]*>/)?.[1];
+    const date = html.match(/<(?:div|span) class="(?:(?:chg|pc)-date|timeline-date)">effective (\d{4}-\d{2}-\d{2})<\/(?:div|span)>/)?.[1];
     if (heading && vendor && date) entries.push({ heading, vendor, date });
   }
   return entries;
+}
+
+function upcomingOverflowDate(body: string): string | null {
+  const headings = headingsOf(body);
+  const at = headings.findIndex(heading => heading.text === "Upcoming Changes");
+  if (at < 0) return null;
+  const section = body.slice(headings[at]!.at, headings[at + 1]?.at ?? body.length);
+  const overflow = section.match(/<p class="upcoming-overflow">[\d,]+ more scheduled changes from ([A-Z][a-z]+ \d{1,2}, \d{4}) are listed on <a href="\/deadlines">\/deadlines<\/a>\.<\/p>/);
+  if (!overflow) return null;
+  const date = Date.parse(`${overflow[1]} 00:00:00 GMT`);
+  return Number.isFinite(date) ? new Date(date).toISOString().slice(0, 10) : null;
 }
 
 function jsonLdBlocks(body: string): unknown[] {
@@ -403,6 +415,7 @@ function surfacesOf(body: string, day = new Date().toISOString().slice(0, 10)): 
   return {
     day,
     timelineEntries: timelineEntriesOf(body),
+    upcomingOverflowDate: upcomingOverflowDate(body),
     upcomingDeclaresMonthMove: headingsWhoseSectionSays(body, section =>
       section.includes(A_DATED_SECTION_MARKER)
       && section.includes("On that date it stops being upcoming and is listed only under the month it falls in")
@@ -555,10 +568,12 @@ function missingDateDestinations(before: Surfaces, after: Surfaces, pages: Map<s
 function movedOnlyBetweenDatedSections(before: Surfaces, after: Surfaces, vendor: string): boolean {
   const { lost, gained } = headingsGainedAndLost(before, after, vendor);
   if (lost.length === 0 && gained.length === 0) return true;
-  if (!lost.every(heading => before.datedHeadings.includes(heading))) return false;
+  if (!lost.every(heading => before.datedHeadings.includes(heading)
+    || promotesOverflowEntry(before, after, vendor, heading))) return false;
   const sentTo = headingsADeclarationSendsThemTo(before, after, lost);
   return gained.every(heading => after.datedHeadings.includes(heading) || sentTo.has(heading)
-    || entersItsEffectiveMonth(before, after, vendor, heading));
+    || entersItsEffectiveMonth(before, after, vendor, heading)
+    || entersDeclaredTimeline(before, after, vendor, heading));
 }
 
 function entersItsEffectiveMonth(before: Surfaces, after: Surfaces, vendor: string, heading: string): boolean {
@@ -568,6 +583,28 @@ function entersItsEffectiveMonth(before: Surfaces, after: Surfaces, vendor: stri
     entry.heading === "Upcoming Changes" && entry.vendor === vendor && entry.date === after.day
     && heading === monthHeadingLabel(entry.date.slice(0, 7))
     && !after.timelineEntries.some(next => next.heading === "Upcoming Changes" && next.vendor === vendor && next.date === entry.date)
+    && after.timelineEntries.some(next => next.heading === heading && next.vendor === vendor && next.date === entry.date));
+}
+
+function promotesOverflowEntry(before: Surfaces, after: Surfaces, vendor: string, heading: string): boolean {
+  if (Date.parse(after.day) - Date.parse(before.day) !== A_DAY_IN_MS) return false;
+  if (!before.upcomingDeclaresMonthMove || !after.upcomingDeclaresMonthMove || !before.upcomingOverflowDate) return false;
+  const entries = before.timelineEntries.filter(entry => entry.heading === heading && entry.vendor === vendor);
+  return entries.length > 0 && entries.every(entry =>
+    heading === monthHeadingLabel(entry.date.slice(0, 7))
+    && entry.date > after.day && entry.date >= before.upcomingOverflowDate!
+    && (after.upcomingOverflowDate === null || entry.date <= after.upcomingOverflowDate)
+    && !before.timelineEntries.some(previous => previous.heading === "Upcoming Changes" && previous.vendor === vendor && previous.date === entry.date)
+    && after.timelineEntries.some(next => next.heading === "Upcoming Changes" && next.vendor === vendor && next.date === entry.date));
+}
+
+function entersDeclaredTimeline(before: Surfaces, after: Surfaces, vendor: string, heading: string): boolean {
+  if (Date.parse(after.day) - Date.parse(before.day) !== A_DAY_IN_MS) return false;
+  return before.timelineEntries.some(entry =>
+    entry.heading === ANNOUNCED_HEADING && before.datedHeadings.includes(entry.heading)
+    && entry.vendor === vendor && entry.date === after.day
+    && headingsADeclarationSendsThemTo(before, after, [entry.heading]).has(heading)
+    && !after.timelineEntries.some(next => next.heading === entry.heading && next.vendor === vendor && next.date === entry.date)
     && after.timelineEntries.some(next => next.heading === heading && next.vendor === vendor && next.date === entry.date));
 }
 
@@ -801,6 +838,81 @@ describe("a timeline entry moves into its effective month", () => {
       for (const note of ["", rule.replace(A_DATED_SECTION_MARKER, ""), rule.replace("On that date it stops being upcoming and is listed only under the month it falls in", "The entry moves elsewhere"), rule.replace(/<a[^>]*>.*?<\/a>/, "the timeline below")]) {
         assert.deepEqual(unexplained(before(entry(), note), after()), ["alfa"]);
       }
+    });
+  }
+});
+
+describe("a scheduled entry enters space freed in Upcoming Changes", () => {
+  const rule = `${A_DATED_SECTION_MARKER} A change is upcoming while its effective date is later than 2026-10-19. On that date it stops being upcoming and is listed only under the month it falls in, in <a href="/changes">the timeline below</a>.`;
+  const overflow = (date = "April 4, 2027", destination = "/deadlines") => `<p class="upcoming-overflow">25 more scheduled changes from ${date} are listed on <a href="${destination}">${destination}</a>.</p>`;
+  const section = (heading: string, content: string) => `<h2>${heading}</h2>${content}`;
+  for (const layout of ["chg", "pc"]) {
+    const entry = (vendor = "alfa", date = "2027-04-04", label = "effective") => `<div class="${layout}-entry"><div class="${layout}-date">${label} ${date}</div><a href="/vendor/${vendor}" class="${layout}-vendor">${vendor}</a></div>`;
+    const page = (upcoming: string, month = "", note = overflow(), day = "2026-10-19", declaration = rule, monthHeading = "April 2027") => surfacesOf(`<title>Changes</title>${section("Upcoming Changes", `<p>${declaration}</p>${upcoming}${note}`)}${section(monthHeading, month)}`, day);
+    const before = () => page(entry("bravo", "2026-10-20"), entry());
+    const after = () => page(entry(), entry("bravo", "2026-10-20"), overflow("April 5, 2027"), "2026-10-20", rule, "October 2026");
+
+    it(`${layout}: reads the printed overflow cutoff from Upcoming only`, () => {
+      assert.equal(before().upcomingOverflowDate, "2027-04-04");
+      assert.equal(page("", overflow(), "").upcomingOverflowDate, null);
+      assert.equal(page("", "", overflow("April 4, 2027", "/elsewhere")).upcomingOverflowDate, null);
+    });
+
+    it(`${layout}: explains the next overflow entry gaining Upcoming when an earlier entry takes effect`, () => {
+      assert.deepEqual(movesWithNoDatedReason(before(), after()), []);
+      assert.deepEqual(movesWithNoDatedReason(before(), page(entry(), "", "", "2026-10-20")), []);
+      assert.deepEqual(movesWithNoDatedReason(before(), page(entry(), "", overflow(), "2026-10-20")), []);
+    });
+
+    it(`${layout}: explains a month loss when another entry already names the vendor in Upcoming`, () => {
+      const earlier = entry("alfa", "2026-12-01");
+      assert.deepEqual(movesWithNoDatedReason(page(earlier, entry()), page(earlier + entry(), "", "", "2026-10-20")), []);
+    });
+
+    for (const [name, change] of [
+      ["missing overflow sentence", () => [page("", entry(), ""), after()]],
+      ["cutoff beyond the promoted record", () => [page("", entry(), overflow("April 5, 2027")), after()]],
+      ["cutoff before tomorrow's still omitted records", () => [before(), page(entry(), "", overflow("April 3, 2027"), "2026-10-20")]],
+      ["unrelated overflow destination", () => [page("", entry(), overflow("April 4, 2027", "/elsewhere")), after()]],
+      ["missing calendar declaration", () => [page("", entry(), overflow(), "2026-10-19", ""), after()]],
+      ["missing destination calendar declaration", () => [before(), page(entry(), "", "", "2026-10-20", "")]],
+      ["wrong month heading", () => [page("", entry(), overflow(), "2026-10-19", rule, "March 2027"), after()]],
+      ["nonconsecutive days", () => [before(), page(entry(), "", "", "2026-10-21")]],
+      ["another vendor's record", () => [before(), page(entry("charlie"), "", "", "2026-10-20")]],
+      ["changed effective date", () => [before(), page(entry("alfa", "2027-04-05"), "", "", "2026-10-20")]],
+      ["a discovery date", () => [page("", entry("alfa", "2027-04-04", "recorded")), after()]],
+      ["a summary's effective date", () => [page("", entry("alfa", "2027-04-04", "recorded") + "<p>effective 2027-04-04</p>"), after()]],
+    ] as const) {
+      it(`${layout}: rejects a promotion with ${name}`, () => {
+        assert.ok(movesWithNoDatedReason(...change() as [Surfaces, Surfaces]).includes("alfa"));
+      });
+    }
+  }
+});
+
+describe("an announced record joins its declared history", () => {
+  const entry = (vendor = "alfa", date = "2026-10-20", label = "effective") => `<div class="timeline-item"><div class="timeline-head"><a href="/vendor/${vendor}" class="timeline-vendor">${vendor}</a><span class="timeline-date">${label} ${date}</span></div></div>`;
+  const rule = `${A_DATED_SECTION_MARKER} On its own date a record here joins <a href="#timeline">the Pricing Change Timeline, below</a>.`;
+  const page = (announced: string, history = "", day = "2026-10-19", note = rule, anchor = "timeline") => surfacesOf(`<title>Trends</title><h2>${ANNOUNCED_HEADING}</h2><p>${note}</p>${announced}<h2 id="${anchor}">Pricing Change Timeline</h2>${history}`, day);
+  const later = entry("alfa", "2026-11-01");
+
+  it("explains a vendor gaining history while its later record stays announced", () => {
+    assert.deepEqual(movesWithNoDatedReason(page(entry() + later), page(later, entry(), "2026-10-20")), []);
+  });
+
+  for (const [name, change] of [
+    ["no calendar declaration", () => [page(entry() + later, "", "2026-10-19", ""), page(later, entry(), "2026-10-20")]],
+    ["a different destination", () => [page(entry() + later), page(later, entry(), "2026-10-20", rule, "elsewhere")]],
+    ["the wrong crossing date", () => [page(entry("alfa", "2026-10-21") + later), page(later, entry("alfa", "2026-10-21"), "2026-10-20")]],
+    ["a changed record date", () => [page(entry() + later), page(later, entry("alfa", "2026-10-19"), "2026-10-20")]],
+    ["the record still announced", () => [page(entry() + later), page(entry() + later, entry(), "2026-10-20")]],
+    ["another vendor's crossing", () => [page(entry("bravo") + entry("alfa", "2026-10-19") + later), page(later, entry(), "2026-10-20")]],
+    ["nonconsecutive days", () => [page(entry("alfa", "2026-10-22") + later), page(later, entry("alfa", "2026-10-22"), "2026-10-22")]],
+    ["a discovery date", () => [page(entry("alfa", "2026-10-20", "recorded") + later), page(later, entry(), "2026-10-20")]],
+    ["a summary's effective date", () => [page(entry("alfa", "2026-10-20", "recorded") + later + "<p>effective 2026-10-20</p>"), page(later, entry(), "2026-10-20")]],
+  ] as const) {
+    it(`rejects a history gain with ${name}`, () => {
+      assert.ok(movesWithNoDatedReason(...change() as [Surfaces, Surfaces]).includes("alfa"));
     });
   }
 });
