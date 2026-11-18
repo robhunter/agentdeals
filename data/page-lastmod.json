@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-17",
+  "generated": "2026-11-18",
   "pages": {
     "/": {
       "daily": true
@@ -18,7 +18,8 @@
       "changed": "2026-11-17"
     },
     "/ai-coding-tools-pricing": {
-      "daily": true
+      "hash": "d3694a89ed75ea8b",
+      "changed": "2026-11-18"
     },
     "/ai-free-tiers": {
       "hash": "77d9ed3222ba3ae4",
@@ -29,7 +30,8 @@
       "changed": "2026-11-17"
     },
     "/alternative-to": {
-      "daily": true
+      "hash": "3c1df9bd5231b6d7",
+      "changed": "2026-11-18"
     },
     "/alternative-to/360-monitoring": {
       "daily": true
@@ -794,7 +796,8 @@
       "changed": "2026-11-16"
     },
     "/analytics-alternatives": {
-      "daily": true
+      "hash": "a6f7bc73cebe512c",
+      "changed": "2026-11-18"
     },
     "/analytics-free-tier-comparison-2026": {
       "hash": "6947f9f88296d4f9",
@@ -837,8 +840,7 @@
       "changed": "2026-11-17"
     },
     "/azure-free-tier-2026": {
-      "hash": "9091cb979a05051c",
-      "changed": "2026-11-17"
+      "daily": true
     },
     "/backblaze-b2-vs-cloudflare-r2": {
       "hash": "a53ae0bb735b5c08",
@@ -1180,7 +1182,8 @@
       "changed": "2026-11-17"
     },
     "/category/design": {
-      "daily": true
+      "hash": "b5e231dfefd17a92",
+      "changed": "2026-11-18"
     },
     "/category/design-creative": {
       "hash": "f2c1b4277a6993ee",
@@ -1350,8 +1353,7 @@
       "changed": "2026-11-17"
     },
     "/ci-cd-pricing": {
-      "hash": "908680dad4d42fc0",
-      "changed": "2026-11-17"
+      "daily": true
     },
     "/cicd-free-tier-comparison-2026": {
       "hash": "bba34f675ca1fe9b",
@@ -1362,8 +1364,7 @@
       "changed": "2026-11-17"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "20083c2395e3eb05",
-      "changed": "2026-11-17"
+      "daily": true
     },
     "/cloudflare-pages-vs-vercel": {
       "hash": "cab9c86e235d468c",
@@ -2740,7 +2741,8 @@
       "daily": true
     },
     "/design-alternatives": {
-      "daily": true
+      "hash": "712b03c260127a9f",
+      "changed": "2026-11-18"
     },
     "/developers": {
       "hash": "83312401fc2baee4",
@@ -3280,8 +3282,7 @@
       "daily": true
     },
     "/events/microsoft-build-2026": {
-      "hash": "db63f7b36d429316",
-      "changed": "2026-11-17"
+      "daily": true
     },
     "/expiring": {
       "daily": true
@@ -3297,8 +3298,7 @@
       "daily": true
     },
     "/free-ai-stack": {
-      "hash": "f496a19141ff36b3",
-      "changed": "2026-11-17"
+      "daily": true
     },
     "/free-devops-stack": {
       "hash": "8ea938e8f60b2f57",
@@ -3429,8 +3429,7 @@
       "changed": "2026-11-17"
     },
     "/llm-api-pricing": {
-      "hash": "f773b4dbcc4c580e",
-      "changed": "2026-11-17"
+      "daily": true
     },
     "/localstack-alternatives": {
       "hash": "8ae3bd477812402c",
@@ -3469,8 +3468,7 @@
       "changed": "2026-11-16"
     },
     "/openai-assistants-migration": {
-      "hash": "cc39cbc55043dec4",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/openai-assistants-migration-2026": {
       "hash": "beacb07bd87d1943",
@@ -3718,8 +3716,7 @@
       "changed": "2026-11-16"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "38aee490052c9c1b",
-      "changed": "2026-11-17"
+      "daily": true
     },
     "/setup": {
       "hash": "eb646d7d3dfff83f",
@@ -3732,7 +3729,8 @@
       "daily": true
     },
     "/stack-check": {
-      "daily": true
+      "hash": "1053210e1073ac57",
+      "changed": "2026-11-18"
     },
     "/stacks": {
       "hash": "b42a5ff11e51a3d0",
@@ -3811,7 +3809,8 @@
       "daily": true
     },
     "/trends/analytics": {
-      "daily": true
+      "hash": "c863c85009958a18",
+      "changed": "2026-11-18"
     },
     "/trends/api-development": {
       "hash": "5a5b9b521719605c",
@@ -3897,8 +3896,7 @@
       "changed": "2026-11-16"
     },
     "/trends/email": {
-      "hash": "b254a4cf113c62d1",
-      "changed": "2026-11-16"
+      "daily": true
     },
     "/trends/error-tracking": {
       "hash": "4c5732f2a005e19a",
@@ -4193,7 +4191,8 @@
       "changed": "2026-11-17"
     },
     "/vendor/ant-design-landing-page": {
-      "daily": true
+      "hash": "090c388290670366",
+      "changed": "2026-11-18"
     },
     "/vendor/anthropic-api": {
       "daily": true
@@ -4394,8 +4393,7 @@
       "daily": true
     },
     "/vendor/azure": {
-      "hash": "d8ce10a788153162",
-      "changed": "2026-11-17"
+      "daily": true
     },
     "/vendor/back4app": {
       "daily": true
@@ -6098,7 +6096,8 @@
       "changed": "2026-11-17"
     },
     "/vendor/google-antigravity": {
-      "daily": true
+      "hash": "d5948dd6983cc060",
+      "changed": "2026-11-18"
     },
     "/vendor/google-artifact-registry": {
       "hash": "cd4d08041cdbd454",
@@ -8989,7 +8988,8 @@
       "changed": "2026-11-17"
     },
     "/vendor/tinybird": {
-      "daily": true
+      "hash": "b69d75ecc9869a92",
+      "changed": "2026-11-18"
     },
     "/vendor/tinymce": {
       "hash": "539fa824127ae4b3",
