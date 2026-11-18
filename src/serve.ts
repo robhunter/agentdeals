@@ -27347,7 +27347,7 @@ function buildShutdownTrackerPage(): string {
     const details = ([["Who\u2019s affected", s.whoAffected], ["Impact", s.impact], ["Migration path", s.migrationPath]] as [string, string | undefined][])
       .flatMap(([label, value]) => value === undefined || (shutdownDateEnd(s.deadline) < fullShutdownDetailsSince && label !== "Migration path") ? [] : [[label, value] as const]);
 
-    return `<div class="shutdown-card"${olderCompleted.includes(s) ? ` id="${completedAnchor(s)}"` : ""} style="border-left-color:${color}">
+    return `<div class="shutdown-card"${completed.includes(s) ? ` id="${completedAnchor(s)}"` : ""} style="border-left-color:${color}">
       <div class="shutdown-header">
         <div>
           <h3 style="margin:0">${handwrittenVendorLinkHtml(s.vendorSlug, s.service, ' style="color:var(--text)"')}</h3>

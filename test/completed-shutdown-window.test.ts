@@ -150,6 +150,16 @@ describe("completed shutdown reading window", () => {
     assert.deepEqual(entries("expanded"), entries("live"));
   });
 
+  it("identifies the full card for each completed month entry", () => {
+    const { document } = cardsOf(pages.get("expanded /shutdowns")!);
+    const entries = Array.from(document.querySelectorAll(".shutdown-month-entry[data-card]"));
+    assert.ok(entries.length > 0);
+    for (const entry of entries) {
+      const card = document.getElementById(entry.getAttribute("data-card")!);
+      assert.ok(card?.classList.contains("shutdown-card"));
+    }
+  });
+
   it("keeps every added completed shutdown and its complete record", () => {
     const { cards } = cardsOf(pages.get("expanded /shutdowns")!);
     const log = createDocument(pages.get("expanded /changes")!);
