@@ -217,6 +217,6 @@
   {
     "card_date": "2026-11-18",
     "card_title": "NVIDIA NIM",
-    "entry": "NVIDIA's free endpoint for openai/gpt-oss-20b (November 18, completed; NVIDIA's free endpoint for openai/gpt-oss-120b ended September 3, 2026)"
+    "entry": "NVIDIA's free endpoints for deepseek-ai/deepseek-v4.1-flash, meta/llama-3.2-90b-vision-instruct and meta/llama-guard-4-12b (November 16, completed) and openai/gpt-oss-20b (November 18, completed; 55 other free endpoints ended between May 12 and November 12, 2026, including openai/gpt-oss-120b on September 3, each named with its date on agentdeals.dev/vendor/nvidia-nim; z-ai/glm-5.3-flash is still a free endpoint)"
   }
 ]
