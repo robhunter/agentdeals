@@ -67,7 +67,7 @@
   {
     "card_title": "DeepSeek API",
     "card_date": "2026-07-24",
-    "entry": "DeepSeek API model names deepseek-chat and deepseek-reasoner (July 24, completed; use deepseek-flash or deepseek-v4-pro)"
+    "entry": "DeepSeek API model names deepseek-chat and deepseek-reasoner (July 24, completed; replaced by deepseek-flash and deepseek-v4-pro; DeepSeek API still serves deepseek-v4-pro; NVIDIA's free endpoint for deepseek-ai/deepseek-v4-pro ended August 7, 2026)"
   },
   {
     "card_title": "GitHub Models",
@@ -162,7 +162,7 @@
   {
     "card_title": "Mistral AI",
     "card_date": "2026-10-31",
-    "entry": "Mistral AI's zai-glm-5-2 (October 31, completed; replaced by GLM 5.3)"
+    "entry": "Z.ai GLM 5.2 (zai-glm-5-2) on Mistral AI's API (October 31, completed; Mistral replaced it with GLM 5.3)"
   },
   {
     "card_title": "Ona",
