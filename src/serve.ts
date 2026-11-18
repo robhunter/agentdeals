@@ -27283,8 +27283,7 @@ function buildShutdownTrackerPage(): string {
     }));
   for (const entry of completed.filter(entry => shutdownDateEnd(entry.deadline) >= completedSince)) {
     const date = isShutdownMonth(entry.deadline) ? shutdownMonthLabel(entry.deadline) : new Date(entry.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
-    const note = shutdownIndexNote(entry, todayDay);
-    monthEntries.push({ deadline: entry.deadline, text: completedCopy.get(JSON.stringify([entry.service, entry.deadline])) ?? `${entry.service} (${date}, completed${note ? `; ${note}` : ""})`, card: completedAnchor(entry) });
+    monthEntries.push({ deadline: entry.deadline, text: completedCopy.get(JSON.stringify([entry.service, entry.deadline])) ?? `${entry.service} (${date}, completed)`, card: completedAnchor(entry) });
   }
   monthEntries.sort((a, b) => a.deadline.localeCompare(b.deadline));
   for (const entry of monthEntries) {
