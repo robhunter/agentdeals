@@ -1,7 +1,7 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -153,10 +153,14 @@ describe("/shutdowns prints a card for each shutdown a record forecast and no ca
   before(async () => {
     dir = mkdtempSync(path.join(tmpdir(), "forecast-shutdowns-"));
     const changesPath = path.join(dir, "deal_changes.json");
+    const indexPath = path.join(dir, "index.json");
+    const index = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8"));
+    index.offers = index.offers.map((offer: Record<string, unknown>) => ({ ...offer, description: "", conditions: [] }));
+    writeFileSync(indexPath, JSON.stringify(index));
     writeFileSync(changesPath, JSON.stringify({ changes: FIXTURES }));
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changesPath },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changesPath, AGENTDEALS_INDEX_PATH: indexPath },
     });
     proc = child;
     const port = await new Promise<number>((resolve, reject) => {
@@ -223,7 +227,8 @@ describe("/shutdowns prints a card for each shutdown a record forecast and no ca
     const rows = [IMMINENT, UPCOMING, LATER, COMPLETED].flatMap((record) => cardFor(cards, record).map((card) => card.detailRows));
     assert.deepStrictEqual(rows, [0, 0, 0, 0]);
     const proton = cards.filter((card) => card.title === "AWS Proton");
-    assert.deepStrictEqual(proton.map((card) => card.detailRows), [3]);
+    const full = ON_PROTONS_CARD.date >= dayFromToday(-90);
+    assert.deepStrictEqual(proton.map((card) => card.detailRows), [full ? 3 : 1]);
   });
 
   it("prints no card for a record written after its shutdown date, or on it", () => {
