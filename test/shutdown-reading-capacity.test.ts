@@ -125,6 +125,7 @@ describe("shutdown reading capacity", () => {
     assert.ok(completed.length > 20);
     let visible = 0;
     for (const card of completed) {
+      assert.ok(card.node.querySelector("a.figure-source, a.record-source"), card.node.querySelector("h3")!.textContent!);
       const dates = [...card.node.querySelectorAll(".shutdown-deadline")].map(node => Date.parse(node.querySelectorAll("span")[1].textContent!));
       const date = Math.max(...dates);
       const age = Math.round((atDay - date) / 86_400_000);
