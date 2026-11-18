@@ -27277,7 +27277,7 @@ function buildShutdownTrackerPage(): string {
   const monthEntries: { deadline: string; text: string; card?: string }[] = [...imminent, ...upcoming, ...later].flatMap(entry => shutdownDates(entry)
     .filter(stage => shutdownDateEnd(stage.date) >= todayDay)
     .map((stage, index) => {
-      const date = isShutdownMonth(stage.date) ? shutdownMonthLabel(stage.date) : new Date(stage.date).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
+      const date = isShutdownMonth(stage.date) ? shutdownMonthLabel(stage.date) : new Date(stage.date + "T00:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
       const note = index === 0 ? shutdownIndexNote(entry, todayDay) : "";
       return { deadline: stage.date, text: `${entry.service}${stage.label ? `: ${stage.label}` : ""} (${date}${note ? `; ${note}` : ""})` };
     }));
