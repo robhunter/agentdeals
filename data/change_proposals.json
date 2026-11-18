@@ -293,6 +293,60 @@
           "description": "Multi-model cloud database — SurrealDB Earth Free plan: $0/mo, 3M requests per month, 10GB storage per month, 100 database active hours per month, unlimited egress, up to 100 databases, up to 100 cells, 330+ regions, pauses at its limits and keeps your data. Pro plan: $15/mo launch price with 10M requests, 25GB storage, 1,000 database active hours, then billed at $0.65 per 1M requests, $0.25 per GB storage, $0.05 per hour. Cloud: from $0.021/hr per node hour, single-node or cluster, billed by the node hour."
         }
       ]
+    },
+    {
+      "proposal_id": "2026-11-18/wraps/limits_increased",
+      "proposed_on": "2026-11-18",
+      "vendor": "Wraps",
+      "change_type": "limits_increased",
+      "date": "2026-11-18",
+      "date_source": "discovered",
+      "summary": "Previously info describes the Free tier as including '5K tracked events/mo, 1 workflow' and 'Dashboard + AI template editor'. The current pricing page lists the Free plan as '5,000 custom events/mo' and '2 workflows'.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Free forever: Get started — no credit card required. Dashboard + AI template editor, 5K tracked events/mo, 1 workflow, Unlimited contacts. Sending costs go straight to AWS — $0.10/1K on à la carte, or $0.16/1K on the new default Essentials plan.",
+      "current_state": "Free forever plan: $0 you pay AWS directly, Unlimited sends, domains & contacts, Broadcasts to all contacts, Unlimited team members, 5,000 custom events/mo, 1 AWS account, 2 workflows, 30-day history.",
+      "impact": "low",
+      "source_url": "https://wraps.dev",
+      "category": "Email",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-18",
+      "restatement": [
+        {
+          "url": "https://wraps.dev",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$0.10",
+            "$0.16"
+          ]
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-18/apidog/limits_reduced",
+      "proposed_on": "2026-11-18",
+      "vendor": "Apidog",
+      "change_type": "limits_reduced",
+      "date": "2026-11-18",
+      "date_source": "discovered",
+      "summary": "The Free plan now lists a 7-day API change history and up to 4 users.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "API design, debugging, testing, and documentation platform — free tier: up to 4 users, unlimited projects, unlimited APIs, unlimited requests. API mocking included. 7-day change history",
+      "current_state": "Free plan: $0 per user/month, up to 4 users, all core features for up to 4 users, full API client support, all core mocking and testing features, unlimited test/collection runs, basic documentation features with unlimited views, real-time collaboration, unlimited sprint branches/versions per project, SQL database operations, scheduled import every 3 hours, 7-day API change history, 1 comment per resource, 10K cloud mock calls/month, 100MB test reports cloud storage, 5 team projects, <5 team members.",
+      "impact": "medium",
+      "source_url": "https://apidog.com/pricing/",
+      "category": "API Development",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-18",
+      "restatement": [
+        {
+          "url": "https://apidog.com/pricing/",
+          "description": "API design, debugging, testing, and documentation platform — Free plan: $0 per user/month, up to 4 users, all core features for up to 4 users, full API client support, all core mocking and testing features, unlimited test/collection runs, basic documentation features with unlimited views, real-time collaboration, unlimited sprint branches/versions per project, SQL database operations, scheduled import every 3 hours, 7-day API change history, 1 comment per resource, 10K cloud mock calls/month, 100MB test reports cloud storage, 5 team projects, <5 team members."
+        }
+      ]
     }
   ],
   "dropped": [

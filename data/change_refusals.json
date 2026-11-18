@@ -133,6 +133,18 @@
       "refused_date": "2026-09-13"
     },
     {
+      "vendor": "addy.io",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "Same free-tier terms restated in different words; no substantive difference.",
+      "summary": "The current page describes the free plan as 'Unlimited aliases on your username' plus '10 random aliases, like x481n904@anonaddy.me'. The free plan now also explicitly lists alias domains @anonaddy.com and @anonaddy.me, forwards to 1 inbox, and 10MB of forwarded email a month.",
+      "previous_state": "Open-source email alias/forwarding — Free $ 0 /month Sign Up Unlimited Standard Aliases 10 Active Shared Domain Aliases 1 Recipient (real email address) 2 Available Alias Domains 10MB Monthly Bandwidth Limit",
+      "current_state": "Free plan: $0/month, free forever; unlimited aliases on your username; 10 random aliases like x481n904@anonaddy.me; forwards to 1 inbox; alias domains @anonaddy.com and @anonaddy.me; 10MB of forwarded email a month.",
+      "source_url": "https://addy.io/",
+      "category": "Email",
+      "refused_date": "2026-11-18"
+    },
+    {
       "vendor": "aikido.dev",
       "change_type": "pricing_restructured",
       "reason": "states_no_terms",
@@ -2024,6 +2036,18 @@
       "category": "Messaging",
       "refused_date": "2026-09-25",
       "collided_with": "CloudAMQP|limits_reduced|2026-09-09|https://www.cloudamqp.com/plans.html"
+    },
+    {
+      "vendor": "cloudconvert.com",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 10 conversion/day against 10 conversion/day, 10 \"instead of\" 10",
+      "summary": "The free tier now allows 10 conversions per day instead of the stored 10 conversions per day... wait, that matches. However, the stored description says '+200 supported formats including videos and gifs,' which the pricing page does not mention. The page states the free tier gives 10 conversion credits per day, not 10 conversions per day, and credits are consumed per minute of conversion time with base credit costs per conversion type. This means the free tier is effectively fewer than 10 conversions per day for many conversion types.",
+      "previous_state": "Convert anything to anything. +200 supported formats including videos and gifs. Free for up to 10 conversions per day.",
+      "current_state": "Free tier: 10 conversion credits per day, daily reset, low processing priority, max file size 1 GB, max processing time 5 minutes, 5 concurrent tasks. Credits are consumed based on conversion time (typically 1 credit per minute) plus a base credit cost per conversion type (General 1, Office to PDF 2, iWork to PDF 2, PDF to Office 4).",
+      "source_url": "https://cloudconvert.com/pricing",
+      "category": "Design",
+      "refused_date": "2026-11-18"
     },
     {
       "vendor": "Cloudcraft",
@@ -4245,13 +4269,13 @@
       "vendor": "Flows",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-04 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The free tier now has a limit of 100 MTUs, not 250.",
+      "detail": "the reading of this page refused on 2026-10-29 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now lists 100 monthly tracked users (MTUs) instead of the 250 MTUs in the stored deal info.",
       "previous_state": "A fully customizable product adoption platform for building onboarding and user engagement experiences. Free for up to 250 monthly tracked users.",
-      "current_state": "The Hobby plan is free and includes 100 MTUs and no credit card requirement.",
+      "current_state": "Hobby plan is Free with 100 MTUs, no credit card required, custom components preview, unlimited workflows, and community support.",
       "source_url": "https://flows.sh/",
       "category": "Design",
-      "refused_date": "2026-10-29"
+      "refused_date": "2026-11-18"
     },
     {
       "vendor": "Flows",
@@ -6046,6 +6070,18 @@
       "source_url": "https://www.hypertune.com/pricing",
       "category": "Feature Flags",
       "refused_date": "2026-09-11"
+    },
+    {
+      "vendor": "Hypertune",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-29 (repeats_a_refused_reading) claimed the same change, product_deprecated, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The pricing page no longer describes a feature-flag SaaS with a free tier; it now presents Hypertune as a PC/gaming performance optimization app with only paid Yearly ($69.99/year) and Monthly ($9.99/month) plans and a 7-day free trial.",
+      "previous_state": "Free: $0 / month, 1m CDN requests, 1m analytics events, Up to 3 team members, Unlimited CDN bandwidth and service connections, Unlimited MAUs / MTUs, Unlimited environments and projects, Unlimited feature flags and experiments. The service will shut down on 10th August 2026.",
+      "current_state": "The page describes Hypertune as a PC performance optimization app with Yearly ($69.99/year) and Monthly ($9.99/month) plans, a 7-day free trial, and no free tier or feature-flag/CDN/analytics offerings.",
+      "source_url": "https://www.hypertune.com/pricing",
+      "category": "Feature Flags",
+      "refused_date": "2026-11-18"
     },
     {
       "vendor": "Hypertune",
@@ -10697,6 +10733,18 @@
       "source_url": "https://rybbit.com/",
       "category": "Analytics",
       "refused_date": "2026-10-04"
+    },
+    {
+      "vendor": "Rybbit",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-29 (repeats_a_refused_reading) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored free tier (3,000 monthly events) no longer appears on the pricing page; the page now shows only paid Standard ($13/mo), Pro ($26/mo), and Enterprise plans with a 7-day free trial, and pricing is based on monthly pageviews (starting at 100,000) rather than events.",
+      "previous_state": "Open-source and cookieless alternative to Google Analytics that is 10x more intuitive. Free plans has 3,000 monthly events.",
+      "current_state": "Pricing page lists Standard at $13/month billed annually (up to 5 websites, up to 3 team members, custom events, funnels, goals, journeys, web vitals), Pro at $26/month billed annually (unlimited websites, unlimited team members, session replays, 5 year data retention, 5x higher API rate limit, priority support), and Enterprise (custom, contact us). A 7-day free trial is offered with no credit card charges until the trial ends; pricing is set by monthly pageviews starting at 100,000.",
+      "source_url": "https://rybbit.com/",
+      "category": "Analytics",
+      "refused_date": "2026-11-18"
     },
     {
       "vendor": "Rybbit",

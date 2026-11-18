@@ -1,28 +1,6 @@
 {
   "held": [
     {
-      "vendor": "Apidog",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "Free tier now lists 'up to 4 users' but the comparison table shows team members '<5' and team projects '5'. Free tier also now shows 7-day API change history (matches stored). The stored 'unlimited projects' and 'unlimited APIs' claims are not supported by the page.",
-      "previous_state": "API design, debugging, testing, and documentation platform — free tier: up to 4 users, unlimited projects, unlimited APIs, unlimited requests. API mocking included. 7-day change history",
-      "current_state": "Free plan: $0 per user/month, up to 4 users, all core features for up to 4 users, full API client support, all core mocking and testing features, unlimited test/collection runs, basic documentation features with unlimited views, real-time collaboration, unlimited sprint branches/versions per project, SQL database operations, scheduled import every 3 hours, 7-day API change history, 1 comment per resource, 10K cloud mock calls/month, 100MB test reports cloud storage, 5 team projects, team members <5.",
-      "source_url": "https://apidog.com/pricing/",
-      "category": "API Development",
-      "first_read_date": "2026-11-17"
-    },
-    {
-      "vendor": "cloudconvert.com",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "Free tier now offers 10 conversions per day. Instead of the stored 10 conversions per day?. Wait—stored says 10/day, page says 10/day. Page also states free tier has 1 GB max file size, 5 min max processing time, 5 concurrent tasks, low priority. The page's free tier is described as '10 / day' conversion credits, not conversions—and credits are consumed per minute of conversion time with base costs, so 10 credits/day is not the same as 10 conversions/day.",
-      "previous_state": "Convert anything to anything. +200 supported formats including videos and gifs. Free for up to 10 conversions per day.",
-      "current_state": "Free plan: €0, 10 conversion credits per day (daily reset), all API features, all bandwidth included, low processing priority, max file size 1 GB, max processing time 5 minutes, 5 concurrent tasks.",
-      "source_url": "https://cloudconvert.com/pricing",
-      "category": "Design",
-      "first_read_date": "2026-11-17"
-    },
-    {
       "vendor": "Harness CI",
       "change_type": "pricing_restructured",
       "impact": "high",
@@ -32,6 +10,17 @@
       "source_url": "https://www.harness.io/pricing",
       "category": "CI/CD",
       "first_read_date": "2026-11-01"
+    },
+    {
+      "vendor": "Replit",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The pricing page no longer shows a free Starter plan; the lowest-priced plan listed is Core at $18/month billed annually ($20/month monthly), and no free tier or Starter plan is mentioned.",
+      "previous_state": "Cloud IDE with AI agent — The Starter plan includes daily Agent credits up to a monthly cap, and monthly credits for databases, storage and publishing. It uses Lite build only. Starter supports one published app; the link goes down after 30 days and shows a \"Made with Replit\" badge. Full build, Plan Mode, third-party connectors and slide decks require Core ($20 a month).",
+      "current_state": "The page lists Core at $18/month billed annually (for personal projects and simple apps, up to 30 hours of chat on Free Mode, up to 60 projects on Free Mode, $20 towards more powerful models, unlimited workspaces, AI integrations), Pro at $90/month billed annually, and Enterprise (custom). No free or Starter plan is shown.",
+      "source_url": "https://replit.com/pricing",
+      "category": "IDE & Code Editors",
+      "first_read_date": "2026-11-18"
     }
   ],
   "resolved": [
@@ -3808,6 +3797,30 @@
       "outcome": "contradicted",
       "detail": "a reading on 2026-11-17 read a change the gate refused as confirmed_unchanged",
       "resolved_date": "2026-11-17"
+    },
+    {
+      "vendor": "Apidog",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "Free tier now lists 'up to 4 users' but the comparison table shows team members '<5' and team projects '5'. Free tier also now shows 7-day API change history (matches stored). The stored 'unlimited projects' and 'unlimited APIs' claims are not supported by the page.",
+      "previous_state": "API design, debugging, testing, and documentation platform — free tier: up to 4 users, unlimited projects, unlimited APIs, unlimited requests. API mocking included. 7-day change history",
+      "source_url": "https://apidog.com/pricing/",
+      "first_read_date": "2026-11-17",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-18 read it as limits_reduced too",
+      "resolved_date": "2026-11-18"
+    },
+    {
+      "vendor": "cloudconvert.com",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "Free tier now offers 10 conversions per day. Instead of the stored 10 conversions per day?. Wait—stored says 10/day, page says 10/day. Page also states free tier has 1 GB max file size, 5 min max processing time, 5 concurrent tasks, low priority. The page's free tier is described as '10 / day' conversion credits, not conversions—and credits are consumed per minute of conversion time with base costs, so 10 credits/day is not the same as 10 conversions/day.",
+      "previous_state": "Convert anything to anything. +200 supported formats including videos and gifs. Free for up to 10 conversions per day.",
+      "source_url": "https://cloudconvert.com/pricing",
+      "first_read_date": "2026-11-17",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-18 read a change the gate refused as measures_no_change",
+      "resolved_date": "2026-11-18"
     }
   ]
 }
