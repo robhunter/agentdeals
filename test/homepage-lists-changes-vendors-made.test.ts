@@ -140,10 +140,19 @@ describe("the home page lists changes the vendors made", () => {
 
 describe("the home page lists only changes with a known effective date", () => {
   function cardsIn(recent: string): Array<{ vendor: string; label: string }> {
-    return [...recent.matchAll(/class="rc-vendor"[^>]*>([^<]*)<\/a>\s*<span class="rc-date">([^<]*)<\/span>/g)].map(
+    return [...recent.matchAll(/class="rc-vendor"[^>]*>([^<]*)<\/(?:a|span)>\s*<span class="rc-date">([^<]*)<\/span>/g)].map(
       ([, vendor, label]) => ({ vendor, label }),
     );
   }
+
+  it("counts linked and unlinked vendor cards", () => {
+    const recent = '<a href="/vendor/example" class="rc-vendor">Example</a><span class="rc-date">2026-01-01</span>' +
+      '<span class="rc-vendor">Unlisted</span><span class="rc-date">2026-01-02</span>';
+    assert.deepStrictEqual(cardsIn(recent), [
+      { vendor: "Example", label: "2026-01-01" },
+      { vendor: "Unlisted", label: "2026-01-02" },
+    ]);
+  });
 
   function itemListIn(recent: string): { numberOfItems: number; itemListElement: Array<{ item: { headline: string } }> } {
     const json = recent.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
