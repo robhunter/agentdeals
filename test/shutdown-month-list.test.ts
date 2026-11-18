@@ -1,7 +1,7 @@
 import { after, before, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { spawn, type ChildProcess } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -42,7 +42,7 @@ function monthSection(html: string): string {
 function monthLines(html: string): { month: string; text: string; entries: string[] }[] {
   return [...monthSection(html).matchAll(/<li data-month="([^"]+)">([\s\S]*?)<\/li>/g)].map(match => ({
     month: match[1], text: textOf(match[2]),
-    entries: [...match[2].matchAll(/<span class="shutdown-month-entry">([\s\S]*?)<\/span>/g)].map(entry => textOf(entry[1])),
+    entries: [...match[2].matchAll(/<span class="shutdown-month-entry"[^>]*>([\s\S]*?)<\/span>/g)].map(entry => textOf(entry[1])),
   }));
 }
 
@@ -103,7 +103,7 @@ describe("shutdowns by calendar month", () => {
   it("keeps month-end and next-month dates on their own UTC month lines", () => {
     const lines = monthLines(page);
     for (const fixture of fixtures.filter(entry => entry.date >= "2026-11-09")) {
-      const label = new Date(fixture.date).toLocaleDateString("en-US", { day: "numeric", timeZone: "UTC" });
+      const label = new Date(fixture.date).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
       const value = `${fixture.vendor} (${label})`;
       const found = lines.filter(line => line.entries.includes(value));
       assert.equal(found.length, 1, value);
@@ -119,13 +119,13 @@ describe("shutdowns by calendar month", () => {
       assert.ok(line.entries.length > 0, line.month);
       const label = new Date(`${line.month}-01`).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
       assert.ok(line.text.startsWith(`${label}:`), line.text);
-      const days = line.entries.map(entry => Number(entry.match(/\((\d+)(?:;[^()]*)?\)$/)?.[1]));
+      const days = line.entries.map(entry => Number(entry.match(/\([A-Za-z]+ (\d+)(?:[,;][^()]*)?\)/)?.[1]));
       assert.ok(days.every(Number.isFinite), line.text);
       assert.deepEqual(days, [...days].sort((a, b) => a - b), line.text);
     }
   });
 
-  it("names every upcoming card once and excludes completed cards", () => {
+  it("names every upcoming card once and includes completed cards", () => {
     const cards: string[] = [];
     let section = "";
     for (const piece of page.split(/(?=<h2 id=")|(?=<div class="shutdown-card")/)) {
@@ -133,19 +133,19 @@ describe("shutdowns by calendar month", () => {
       if (!piece.startsWith('<div class="shutdown-card"') || !["imminent", "upcoming", "later"].includes(section)) continue;
       const title = textOf(piece.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? "");
       const date = piece.match(/<span class="deadline-icon">[^<]*<\/span>\s*<span>([^<]+)<\/span>/)?.[1] ?? "";
-      cards.push(`${title} (${String(new Date(date).getUTCDate())})`);
+      cards.push(`${title} (${new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" })})`);
     }
-    const entries = monthLines(page).flatMap(line => line.entries).map(entry => entry.replace(/(\(\d+);[^()]*\)$/, "$1)"));
+    const entries = monthLines(page).flatMap(line => line.entries).filter(entry => !entry.includes(", completed")).map(entry => entry.replace(/(\([A-Za-z]+ \d+);[^()]*\)$/, "$1)"));
     assert.ok(cards.length > fixtures.length);
     assert.deepEqual([...entries].sort(), [...cards].sort());
     assert.equal(entries.length, Number(page.match(/(\d+) active shutdowns/)?.[1]));
-    assert.ok(!monthSection(page).includes("Calendar fixture completed"));
+    assert.ok(monthSection(page).includes("Calendar fixture completed (November 8, completed)"));
     assert.equal(entries.filter(entry => entry.startsWith("Calendar fixture same service")).length, 2);
   });
 
   it("keeps different records on one vendor page and date as separate month entries", () => {
     const december = monthLines(page).find(line => line.month === "2026-12")!;
-    assert.equal(december.entries.filter(entry => entry === "Calendar fixture shared vendor (11)").length, 2);
+    assert.equal(december.entries.filter(entry => entry === "Calendar fixture shared vendor (December 11)").length, 2);
   });
 
   it("escapes service titles as text", () => {
@@ -157,9 +157,13 @@ describe("shutdowns by calendar month", () => {
     assert.equal(monthSection(westPage), monthSection(page));
   });
 
-  it("omits the list when every entry has completed", () => {
+  it("retains only keyed entries when every card is long completed", () => {
     assert.match(completedPage, /0 active shutdowns/);
-    assert.equal(monthSection(completedPage), "");
+    const keyed = JSON.parse(readFileSync(path.join(REPO, "data/shutdown-completed-entries.json"), "utf8")) as { entry: string }[];
+    const entries = monthLines(completedPage).flatMap(line => line.entries);
+    assert.ok(entries.length > 0);
+    assert.ok(entries.every(entry => keyed.some(item => item.entry === entry)));
+    assert.ok(!monthSection(completedPage).includes("Calendar fixture completed"));
     assert.match(completedPage, /id="completed"/);
   });
 });

@@ -90,7 +90,7 @@ describe("completed shutdown reading window", () => {
     const converter = new TurndownService();
     const markdown = converter.turndown(document.body);
     for (const card of recent) {
-      const link = [...document.querySelectorAll(".shutdown-completed-entry")].find(node => node.querySelector("a")!.getAttribute("href") === `#${card.node.id}`);
+      const link = [...document.querySelectorAll(".shutdown-month-entry[data-card]")].find(node => node.getAttribute("data-card") === card.node.id);
       const content = converter.turndown(link ?? card.node);
       const start = markdown.indexOf(content);
       assert.ok(start >= 0 && start + content.length <= 100_000, `${card.node.querySelector("h3")!.textContent}: ${start + content.length}`);
@@ -102,27 +102,23 @@ describe("completed shutdown reading window", () => {
     }
   });
 
-  it("carries conditions beside a complete listing description in a completed entry", () => {
+  it("omits pre-deadline conditions from completed fallback entries", () => {
     const { document } = cardsOf(pages.get("conditions /shutdowns")!);
-    const lines = [...document.querySelectorAll(".shutdown-completed-entry")];
     for (const vendor of ["Whole", "Excerpt", "Empty", "NVIDIA NIM"]) {
-      const line = lines.find(node => node.querySelector("a")!.textContent === vendor)!;
+      const line = [...document.querySelectorAll(".shutdown-month-entry[data-card]")].find(node => node.textContent!.startsWith(`${vendor} (`));
       assert.ok(line, vendor);
-      const conditions = line.querySelectorAll(".listing-conditions");
-      assert.equal(conditions.length, ["Whole", "NVIDIA NIM"].includes(vendor) ? 1 : 0, vendor);
-      if (conditions.length) assert.ok(conditions[0].textContent!.includes(`${vendor} accepts existing customers only.`));
-      assert.equal(line.querySelectorAll(".completed-summary .listing-conditions").length, 0);
-      if (vendor === "Excerpt") assert.ok(!line.textContent!.includes("Other endpoints remain available."));
+      assert.ok(line.textContent!.includes(", completed)"));
+      assert.ok(!line.textContent!.includes("existing customers"));
     }
   });
 
-  it("keeps the thirty-day boundary in full above imminent", () => {
+  it("keeps the thirty-day boundary between upcoming and later", () => {
     const { document, cards } = cardsOf(pages.get("expanded /shutdowns")!);
     const children = Array.from(document.querySelector(".container")!.children);
     for (const offset of [1, 30, 31, 183, 184]) {
       const card = cards.find(card => card.node.querySelector("h3")!.textContent === `Window Past ${offset} API`)!;
       assert.ok(card);
-      assert.equal(children.indexOf(card.node) < children.indexOf(document.querySelector("#imminent")!), offset <= 30);
+      assert.equal(children.indexOf(card.node) > children.indexOf(document.querySelector("#upcoming")!) && children.indexOf(card.node) < children.indexOf(document.querySelector("#later")!), offset <= 30);
     }
   });
 
@@ -146,8 +142,18 @@ describe("completed shutdown reading window", () => {
 
   it("retains every original by-month entry when future records are added", () => {
     const entries = (name: string) => [...cardsOf(pages.get(`${name} /shutdowns`)!).document.querySelectorAll(".shutdown-month-entry")]
-      .filter(node => !node.textContent!.startsWith("Window Future ")).map(node => node.outerHTML);
+      .filter(node => !node.textContent!.startsWith("Window ")).map(node => node.outerHTML);
     assert.deepEqual(entries("expanded"), entries("live"));
+  });
+
+  it("identifies the full card for each completed month entry", () => {
+    const { document } = cardsOf(pages.get("expanded /shutdowns")!);
+    const entries = Array.from(document.querySelectorAll(".shutdown-month-entry[data-card]"));
+    assert.ok(entries.length > 0);
+    for (const entry of entries) {
+      const card = document.getElementById(entry.getAttribute("data-card")!);
+      assert.ok(card?.classList.contains("shutdown-card"));
+    }
   });
 
   it("keeps every added completed shutdown and its complete record", () => {

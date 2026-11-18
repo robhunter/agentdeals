@@ -15,6 +15,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const today = new Date().toISOString().slice(0, 10);
 const day = (offset: number) => new Date(Date.parse(today) + offset * 86_400_000).toISOString().slice(0, 10);
 const stored = JSON.parse(readFileSync(process.env.AGENTDEALS_CHANGES_PATH || path.join(ROOT, "data/deal_changes.json"), "utf8"));
+const keyedEntries: { card_title: string; card_date: string; entry: string }[] = JSON.parse(readFileSync(path.join(ROOT, "data/shutdown-completed-entries.json"), "utf8"));
 const extra = Array.from({ length: 25 }, (_, i) => {
   const date = day(1 + Math.round(i * 89 / 24));
   return {
@@ -65,6 +66,7 @@ before(async () => {
     });
     await readPages(`expanded-${offset}`, [...stored.changes, ...shifted], day(offset));
   }
+  await readPages("recovery", stored.changes, "2026-10-29");
   await readPages("ninety", stored.changes, "2026-07-29");
   await readPages("ninety-one", stored.changes, "2026-07-30");
 });
@@ -119,45 +121,38 @@ describe("shutdown reading capacity", () => {
     const atDay = Date.parse(day(offset));
     const converter = new TurndownService();
     const markdown = markdownOf(document);
-    const lines = [...document.querySelectorAll(".shutdown-completed-entry")];
+    const lines = [...document.querySelectorAll(".shutdown-month-entry[data-card]")];
     const completed = cards.filter(card => ["completed", "completed-history"].includes(card.section));
     assert.ok(completed.length > 20);
-    assert.equal(lines.length, completed.filter(card => card.section === "completed-history").length);
     let visible = 0;
     for (const card of completed) {
+      assert.ok(card.node.querySelector("a.figure-source, a.record-source"), card.node.querySelector("h3")!.textContent!);
       const dates = [...card.node.querySelectorAll(".shutdown-deadline")].map(node => Date.parse(node.querySelectorAll("span")[1].textContent!));
       const date = Math.max(...dates);
       const age = Math.round((atDay - date) / 86_400_000);
-      const line = lines.find(node => node.querySelector("a")!.getAttribute("href") === `#${card.node.id}`);
+      const line = lines.find(node => node.getAttribute("data-card") === card.node.id);
+      const cardStart = markdown.indexOf(converter.turndown(card.node));
       if (age <= 30) {
         assert.equal(card.section, "completed");
-        assert.equal(line, undefined);
-        assert.ok(markdown.indexOf(converter.turndown(card.node)) < markdown.indexOf(converter.turndown(document.querySelector("#imminent")!)));
+        assert.ok(cardStart > markdown.indexOf(converter.turndown(document.querySelector("#upcoming")!)));
+        assert.ok(cardStart < markdown.indexOf(converter.turndown(document.querySelector("#later")!)));
       } else {
         assert.equal(card.section, "completed-history");
-        assert.ok(line);
-        assert.equal(line.querySelector("a")!.textContent, card.node.querySelector("h3")!.textContent);
-        assert.equal(Date.parse(line.querySelector("time")!.getAttribute("datetime")!), date);
-        assert.equal(line.querySelector("time")!.textContent, [...card.node.querySelectorAll(".shutdown-deadline")][dates.indexOf(date)].querySelectorAll("span")[1].textContent);
-        const source = card.node.querySelector(".figure-source")?.getAttribute("href");
-        if (source) assert.ok(Array.from(line.querySelectorAll("a")).some(node => node.getAttribute("href") === source));
-        assert.ok(markdown.indexOf(converter.turndown(card.node)) > markdown.indexOf(converter.turndown(document.querySelector("#later")!)));
-        const sentences = card.node.querySelectorAll(".shutdown-what li");
-        const summaries = sentences.length ? [...sentences].map(node => node.childNodes[0].textContent!.trim())
-          : [card.node.querySelector(".shutdown-what")!.textContent!.match(/^.*?(?:[.!?](?=\s|$)|$)/s)![0]];
-        for (const summary of summaries) assert.ok(line.textContent!.includes(summary), summary);
-        const migration = [...card.node.querySelectorAll(".detail-row")].find(node => node.querySelector(".detail-label")!.textContent === "Migration path:");
-        if (migration) {
-          const text = migration.querySelectorAll("span")[1].textContent!;
-          const first = [...new Intl.Segmenter("en", { granularity: "sentence" }).segment(text)][0].segment.trim();
-          assert.ok(line.querySelector(".completed-migration")!.textContent!.includes(first), first);
-        }
+        assert.ok(cardStart > markdown.indexOf(converter.turndown(document.querySelector("#later")!)));
       }
-      if (age <= 183) {
-        const content = converter.turndown(line ?? card.node);
+      const keyed = keyedEntries.find(entry => entry.card_title === card.node.querySelector("h3")!.textContent && Date.parse(entry.card_date) === date);
+      if (age <= 183 || keyed) {
+        assert.ok(line, card.node.querySelector("h3")!.textContent!);
+        if (keyed) assert.equal(line.textContent, keyed.entry);
+        const formatted = new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
+        assert.ok(line.textContent!.includes(formatted));
+        assert.ok(line.textContent!.includes("completed"));
+        const content = converter.turndown(line);
         const start = markdown.indexOf(content);
         assert.ok(start >= 0 && start + content.length <= 100_000, card.node.querySelector("h3")!.textContent!);
         visible++;
+      } else {
+        assert.equal(line, undefined);
       }
     }
     assert.ok(visible > 10);
@@ -165,13 +160,13 @@ describe("shutdown reading capacity", () => {
   });
 
   it("keeps the HubSpot and Maps recovery facts in their completed entries", () => {
-    const document = createDocument(pages.get("live /shutdowns")!);
-    const entries = [...document.querySelectorAll(".shutdown-completed-entry")];
-    const hubspot = entries.find(node => node.querySelector("a")!.textContent === "HubSpot Contact Lists API v1")!;
-    assert.ok(hubspot.textContent!.includes("still work but no longer return list memberships"));
-    const maps = entries.find(node => node.querySelector("a")!.textContent === "Google Maps Platform Client IDs")!;
-    assert.ok(maps.textContent!.includes("unpausing the client ID in the Cloud Console"));
-    assert.ok(maps.textContent!.includes("Support for a temporary exemption"));
+    const document = createDocument(pages.get("recovery /shutdowns")!);
+    const entries = [...document.querySelectorAll(".shutdown-month-entry[data-card]")];
+    const hubspot = entries.find(node => node.textContent!.includes("HubSpot Contact Lists API v1"))!;
+    assert.ok(hubspot.textContent!.includes("read endpoints still work but no longer return list memberships"));
+    const maps = entries.find(node => node.textContent!.includes("Google Maps Platform Client IDs"))!;
+    assert.ok(maps.textContent!.includes("unpause it in the Cloud Console"));
+    assert.ok(maps.textContent!.includes("Support can grant a temporary exemption"));
   });
 
   it("preserves every added card's complete description, date and source", () => {
