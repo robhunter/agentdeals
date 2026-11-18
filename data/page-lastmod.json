@@ -6,8 +6,8 @@
       "daily": true
     },
     "/accounting-software-pricing-2026": {
-      "hash": "590198a14e2d2eba",
-      "changed": "2026-11-12"
+      "hash": "24bab4c7e219514c",
+      "changed": "2026-11-18"
     },
     "/agent-payments": {
       "hash": "66b8b19b1afe49e3",
@@ -18,15 +18,15 @@
       "changed": "2026-11-17"
     },
     "/ai-coding-tools-pricing": {
-      "hash": "d3694a89ed75ea8b",
+      "hash": "e05f7509ded5cc35",
       "changed": "2026-11-18"
     },
     "/ai-free-tiers": {
-      "hash": "e9f557319db0762a",
+      "hash": "6cefebc1099c134c",
       "changed": "2026-11-18"
     },
     "/ai-ml-alternatives": {
-      "hash": "23b141a3d74131b9",
+      "hash": "c963e5760687613e",
       "changed": "2026-11-18"
     },
     "/alternative-to": {
@@ -1110,7 +1110,7 @@
       "changed": "2026-11-17"
     },
     "/category/ai-ml": {
-      "hash": "c51652807915c296",
+      "hash": "f2e3294bf4487666",
       "changed": "2026-11-18"
     },
     "/category/analytics": {
@@ -1314,8 +1314,8 @@
       "changed": "2026-11-16"
     },
     "/category/storage": {
-      "hash": "f5c098f8b4e17ef0",
-      "changed": "2026-11-17"
+      "hash": "928e6f4210475076",
+      "changed": "2026-11-18"
     },
     "/category/team-collaboration": {
       "hash": "a0bd0005eb880f6b",
@@ -3268,8 +3268,8 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "f260188d99decbcd",
-      "changed": "2026-11-14"
+      "hash": "291b9cf5bc14ea70",
+      "changed": "2026-11-18"
     },
     "/events": {
       "hash": "10c036e7bfb60e32",
@@ -3321,7 +3321,7 @@
       "changed": "2026-11-17"
     },
     "/free-llm-apis": {
-      "hash": "397195b74a0862ff",
+      "hash": "00f4f51b75dd1d1f",
       "changed": "2026-11-18"
     },
     "/free-nextjs-stack": {
@@ -3357,8 +3357,8 @@
       "daily": true
     },
     "/gemini-api-pricing-2026": {
-      "hash": "523a796b7d61b462",
-      "changed": "2026-11-17"
+      "hash": "7ad49af7ab8c247a",
+      "changed": "2026-11-18"
     },
     "/github-actions-alternatives": {
       "hash": "6b8e1e29dbb1ee2b",
@@ -3464,15 +3464,15 @@
       "changed": "2026-11-17"
     },
     "/openai-assistants-alternatives": {
-      "hash": "18a2fecbcbdfde24",
-      "changed": "2026-11-16"
+      "hash": "fd759431f2877f61",
+      "changed": "2026-11-18"
     },
     "/openai-assistants-migration": {
       "daily": true
     },
     "/openai-assistants-migration-2026": {
-      "hash": "beacb07bd87d1943",
-      "changed": "2026-11-16"
+      "hash": "9092a9338cf553b1",
+      "changed": "2026-11-18"
     },
     "/postman-alternatives": {
       "hash": "0deca0fe684e54bd",
@@ -3729,7 +3729,7 @@
       "daily": true
     },
     "/stack-check": {
-      "hash": "f9a45891ffcc7356",
+      "hash": "cb47b53ca589f1e5",
       "changed": "2026-11-18"
     },
     "/stacks": {
@@ -3764,12 +3764,12 @@
       "daily": true
     },
     "/storage-alternatives": {
-      "hash": "1d6eda5fe56fd192",
-      "changed": "2026-11-17"
+      "hash": "05966ee121fcd84e",
+      "changed": "2026-11-18"
     },
     "/storage-comparison-2026": {
-      "hash": "ccc1b8977e055f2e",
-      "changed": "2026-11-17"
+      "hash": "a0a370ab721a6b0e",
+      "changed": "2026-11-18"
     },
     "/supabase-vs-firebase": {
       "hash": "3a12287f71aa5765",
@@ -8973,8 +8973,8 @@
       "changed": "2026-11-17"
     },
     "/vendor/tigris": {
-      "hash": "c01e3c4a960fdf18",
-      "changed": "2026-11-17"
+      "hash": "e638f347086ec7a6",
+      "changed": "2026-11-18"
     },
     "/vendor/tilda-cc": {
       "daily": true
