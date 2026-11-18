@@ -1,7 +1,7 @@
 import { after, before, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { spawn, type ChildProcess } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -157,9 +157,13 @@ describe("shutdowns by calendar month", () => {
     assert.equal(monthSection(westPage), monthSection(page));
   });
 
-  it("omits the list when every entry has completed", () => {
+  it("retains only keyed entries when every card is long completed", () => {
     assert.match(completedPage, /0 active shutdowns/);
-    assert.equal(monthSection(completedPage), "");
+    const keyed = JSON.parse(readFileSync(path.join(REPO, "data/shutdown-completed-entries.json"), "utf8")) as { entry: string }[];
+    const entries = monthLines(completedPage).flatMap(line => line.entries);
+    assert.ok(entries.length > 0);
+    assert.ok(entries.every(entry => keyed.some(item => item.entry === entry)));
+    assert.ok(!monthSection(completedPage).includes("Calendar fixture completed"));
     assert.match(completedPage, /id="completed"/);
   });
 });

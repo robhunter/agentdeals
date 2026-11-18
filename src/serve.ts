@@ -27282,7 +27282,7 @@ function buildShutdownTrackerPage(): string {
       const note = index === 0 ? shutdownIndexNote(entry, todayDay) : "";
       return { deadline: stage.date, text: `${entry.service}${stage.label ? `: ${stage.label}` : ""} (${date}${note ? `; ${note}` : ""})` };
     }));
-  for (const entry of completed.filter(entry => shutdownDateEnd(entry.deadline) >= completedSince)) {
+  for (const entry of completed.filter(entry => shutdownDateEnd(entry.deadline) >= completedSince || completedCopy.has(JSON.stringify([entry.service, entry.deadline])))) {
     const date = isShutdownMonth(entry.deadline) ? shutdownMonthLabel(entry.deadline) : new Date(entry.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
     monthEntries.push({ deadline: entry.deadline, text: completedCopy.get(JSON.stringify([entry.service, entry.deadline])) ?? `${entry.service} (${date}, completed)`, card: completedAnchor(entry) });
   }

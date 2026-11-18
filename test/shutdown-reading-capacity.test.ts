@@ -15,6 +15,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const today = new Date().toISOString().slice(0, 10);
 const day = (offset: number) => new Date(Date.parse(today) + offset * 86_400_000).toISOString().slice(0, 10);
 const stored = JSON.parse(readFileSync(process.env.AGENTDEALS_CHANGES_PATH || path.join(ROOT, "data/deal_changes.json"), "utf8"));
+const keyedEntries: { card_title: string; card_date: string; entry: string }[] = JSON.parse(readFileSync(path.join(ROOT, "data/shutdown-completed-entries.json"), "utf8"));
 const extra = Array.from({ length: 25 }, (_, i) => {
   const date = day(1 + Math.round(i * 89 / 24));
   return {
@@ -139,8 +140,10 @@ describe("shutdown reading capacity", () => {
         assert.equal(card.section, "completed-history");
         assert.ok(cardStart > markdown.indexOf(converter.turndown(document.querySelector("#later")!)));
       }
-      if (age <= 183) {
+      const keyed = keyedEntries.find(entry => entry.card_title === card.node.querySelector("h3")!.textContent && Date.parse(entry.card_date) === date);
+      if (age <= 183 || keyed) {
         assert.ok(line, card.node.querySelector("h3")!.textContent!);
+        if (keyed) assert.equal(line.textContent, keyed.entry);
         const formatted = new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
         assert.ok(line.textContent!.includes(formatted));
         assert.ok(line.textContent!.includes("completed"));
@@ -148,6 +151,8 @@ describe("shutdown reading capacity", () => {
         const start = markdown.indexOf(content);
         assert.ok(start >= 0 && start + content.length <= 100_000, card.node.querySelector("h3")!.textContent!);
         visible++;
+      } else {
+        assert.equal(line, undefined);
       }
     }
     assert.ok(visible > 10);
