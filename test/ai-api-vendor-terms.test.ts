@@ -217,7 +217,6 @@ const STATED: Record<string, string[]> = {
     "Claude Fable 5.2, launched November 9, 2026, is $8/$40, below Claude Fable 5.1 and OpenAI GPT-6 Astra at $10/$50.",
     "Claude Fable 5.2 ($8/$40/M) for long-horizon agentic work.",
     "25+ free models",
-    "Free inference endpoints on build.nvidia.com: models marked Free Endpoint, including GLM 5.3 Flash, gpt-oss-20b, Gemma 4 31B and NVIDIA Nemotron 3 Ultra, can be called at no cost.",
     "Up to 40 requests per minute; limits may vary by model, and traffic from other users may cause throttling. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production.",
     "New workspaces receive credits for testing and deployment; Baseten does not state the amount. Basic plan: $0 per month, pay as you go. Dedicated deployments bill per minute. Model APIs bill per 1M tokens: GLM-5.3 $1.40/$4.40. GLM-5.3-Flash $0.15/$0.50.",
     "Free for light use: LLM7.io — 100,000 tokens/24h with a free token",
@@ -238,7 +237,7 @@ const STATED: Record<string, string[]> = {
     "Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic's Claude Max, Ultra and Team plans include monthly credits for the Claude API), and OpenAI prices no GPT model free.",
     "OpenRouter — 25+ free models through one OpenAI-compatible API; free models are capped at 20 requests a minute and 50 a day, or 1,000 a day once you have bought at least $10 of credits.",
     "Want to test hosted models before paying?",
-    "NVIDIA NIM — free endpoints on build.nvidia.com for models marked Free Endpoint, such as GLM 5.3 Flash and gpt-oss-20b, at up to 40 requests per minute; NVIDIA retires hosted models on dates it posts on each model's page, and NVIDIA's API Trial Terms allow testing and evaluation only, not production. Baseten — new workspaces receive credits for testing and deployment; Baseten does not state the amount.",
+    "NVIDIA retires hosted models on dates it posts on each model's page, and NVIDIA's API Trial Terms allow testing and evaluation only, not production. Baseten — new workspaces receive credits for testing and deployment; Baseten does not state the amount.",
     "Or download Hugging Face models and run them locally; Hugging Face's hosted Inference Providers API serves 200+ models; since 2026-10-07, free accounts buy credits to call it, or upgrade to PRO ($9/month, $2.00 a month of credits).",
   ],
   "/gemini-api-pricing-2026": [
@@ -373,6 +372,18 @@ describe("AI API vendors' free terms on the guides", () => {
       return lines.filter((line) => !(page === "/shutdowns" && detailLines.has(line) ? retained : text).includes(line)).map((line) => `${page}: ${line}`);
     });
     assert.deepStrictEqual(missing, []);
+  });
+
+  it("keeps NVIDIA free endpoint examples consistent with the listing", () => {
+    const index = JSON.parse(readFileSync(path.join(REPO, "data/index.json"), "utf8"));
+    const listing = index.offers.find((offer: { vendor: string }) => offer.vendor === "NVIDIA NIM").description as string;
+    const free = listing.match(/^Free inference endpoints on build\.nvidia\.com: models marked Free Endpoint, including (.+?), can be called at no cost\./);
+    assert.ok(free);
+    assert.ok(readableText(served.get("/llm-api-pricing")!).includes(free[0]));
+    const text = readableText(served.get("/free-llm-apis")!);
+    const examples = text.match(/NVIDIA NIM — free endpoints on build\.nvidia\.com for models marked Free Endpoint, such as (.+?), at up to 40 requests per minute;/);
+    assert.ok(examples);
+    assert.strictEqual(examples[1], free[1]);
   });
 
   it("names all three subscription plans across the credit guides", () => {
