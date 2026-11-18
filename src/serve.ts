@@ -15144,6 +15144,7 @@ function buildFreeLlmApisPage(): string {
   const offeredToday = enrichedAll.filter(o => !listingHasEnded(o));
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
+  const nvidiaExamples = offerForSlug("nvidia-nim")?.description.match(/^Free inference endpoints on build\.nvidia\.com: models marked Free Endpoint, including (.+?), can be called at no cost\./)?.[1];
   const githubModels = offerForSlug("github-models");
   const githubModelsEnded = offerRetired(githubModels);
   const githubModelsStatus = escHtmlServer(githubModels?.tier ?? "not in our index");
@@ -15362,7 +15363,7 @@ ${buildCards(aiGateways)}
       <dd><a href="/vendor/cloudflare-workers-ai">Cloudflare Workers AI</a> \u2014 10,000 Neurons a day at no charge on every account; on the Workers Free plan, requests beyond that fail until the daily reset at 00:00 UTC. Some models, including Kimi K2.6 and GLM-5.3, need the Workers Paid plan or prepaid AI Gateway credits.</dd>
 
       <dt>Want to test hosted models before paying?</dt>
-      <dd><a href="/vendor/nvidia-nim">NVIDIA NIM</a> \u2014 free endpoints on build.nvidia.com for models marked Free Endpoint, such as GLM 5.3 Flash and gpt-oss-20b, at up to 40 requests per minute; NVIDIA retires hosted models on dates it posts on each model's page, and NVIDIA's API Trial Terms allow testing and evaluation only, not production. <a href="/vendor/baseten">Baseten</a> \u2014 new workspaces receive credits for testing and deployment; Baseten does not state the amount.</dd>
+      <dd><a href="/vendor/nvidia-nim">NVIDIA NIM</a> \u2014 free endpoints on build.nvidia.com for models marked Free Endpoint${nvidiaExamples ? `, such as ${escHtmlServer(nvidiaExamples)}` : ""}, at up to 40 requests per minute; NVIDIA retires hosted models on dates it posts on each model's page, and NVIDIA's API Trial Terms allow testing and evaluation only, not production. <a href="/vendor/baseten">Baseten</a> \u2014 new workspaces receive credits for testing and deployment; Baseten does not state the amount.</dd>
 
       <dt>Want completely free, self-hosted inference?</dt>
       <dd><a href="/vendor/ollama-cloud">Ollama</a> \u2014 open source (MIT) and free to run on your own machine; its cloud models are paid per token on the $0 Pay as you go plan. Pro and higher plans include monthly usage credits. Or download <a href="/vendor/hugging-face">Hugging Face</a> models and run them locally; Hugging Face's hosted Inference Providers API serves 200+ models; since 2026-10-07, free accounts buy credits to call it, or upgrade to PRO ($9/month, $2.00 a month of credits).</dd>
