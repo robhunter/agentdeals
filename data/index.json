@@ -3642,7 +3642,13 @@
           "read_on": "2026-10-23"
         },
         {
-          "text": "Tigris announced on 2026-11-05 that Dropbox plans to acquire it. Tigris says nothing changes for its customers: the same product, the same S3-compatible API and the same pricing with zero egress fees.",
+          "text": "Dropbox completed its acquisition of Tigris Data on 2026-11-17.",
+          "quote": "Today, Dropbox completed its acquisition of Tigris Data, a globally distributed, S3-compatible object storage platform purpose-built for AI.",
+          "url": "https://blog.dropbox.com/topics/company/dropbox-completes-acquisition-of-tigris-data",
+          "read_on": "2026-11-18"
+        },
+        {
+          "text": "Tigris said on 2026-11-05 that nothing changes for customers: same product, S3-compatible API, pricing and zero egress fees.",
           "quote": "Dropbox plans to acquire Tigris. Nothing about your experience changes: the same product, the same S3-compatible API, the same pricing with zero egress fees, and the same team.",
           "url": "https://www.tigrisdata.com/blog/dropbox-plans-acquire-tigris/",
           "read_on": "2026-11-11"
@@ -10444,7 +10450,7 @@
     {
       "vendor": "OpenAI",
       "category": "AI / ML",
-      "description": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. No GPT model is priced free. GPT prices per 1M tokens (Standard, short context): gpt-6-astra $10.00/$50.00; gpt-6.1-sol $2.00/$10.00; gpt-6.1-terra $1.00/$5.00; gpt-6-sol $2.00/$10.00; gpt-6-luna $0.10/$0.50; gpt-5.6-sol $4.00/$20.00; gpt-5.6-terra $2.00/$12.00; gpt-5.6-luna $0.20/$1.20. OpenAI's promotional pricing for gpt-5.6-sol is available until November 30, 2026. Batch and Flex processing halve these prices. gpt-6-astra cached input $1.00 per 1M tokens, against $10.00 uncached. gpt-6.1-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6.1-terra cached input $0.05 per 1M tokens, against $1.00 uncached. gpt-6-luna cached input $0.01 per 1M tokens, against $0.10 uncached. Prompt caching is on by default. Cache writes cost 1.25× the input price for 30 minutes or 2.5× for 12 hours. Embeddings from $0.02 per 1M tokens. Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models. Since 2026-10-28, OpenAI's API docs say: \"Eligible ChatGPT Pro and Business subscriptions can claim free API credits as part of their subscription benefits.\" ChatGPT Plus, Go and Free plans do not get API credits. Pro's $100, $200 and $500 tiers get $100, $200 and $500 in API credits a month. Business gets $20 per paid Standard seat and $100 per paid Premium seat, pooled and capped at $500 per workspace a month.",
+      "description": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. No GPT model is priced free. GPT prices per 1M tokens (Standard, short context): gpt-6.2-astra $8.00/$40.00; gpt-6.2-sol $2.00/$10.00; gpt-6-astra $10.00/$50.00; gpt-6.1-sol $2.00/$10.00; gpt-6.1-terra $1.00/$5.00; gpt-6-sol $2.00/$10.00; gpt-6-luna $0.10/$0.50; gpt-5.6-sol $4.00/$20.00; gpt-5.6-terra $2.00/$12.00; gpt-5.6-luna $0.20/$1.20. OpenAI's promotional pricing for gpt-5.6-sol is available until November 30, 2026. Batch processing halves these prices. Flex processing halves them for all these models except gpt-6.2-astra and gpt-6.2-sol. Flex processing is in beta with limited model availability. gpt-6.2-astra cached input $0.40 per 1M tokens, against $8.00 uncached. gpt-6.2-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6-astra cached input $1.00 per 1M tokens, against $10.00 uncached. gpt-6.1-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6.1-terra cached input $0.05 per 1M tokens, against $1.00 uncached. gpt-6-luna cached input $0.01 per 1M tokens, against $0.10 uncached. Prompt caching is on by default. Cache writes cost 1.25× the input price for 30 minutes or 2.5× for 12 hours. Embeddings from $0.02 per 1M tokens. Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models. Since 2026-10-28, OpenAI's API docs say: \"Eligible ChatGPT Pro and Business subscriptions can claim free API credits as part of their subscription benefits.\" ChatGPT Plus, Go and Free plans do not get API credits. Pro's $100, $200 and $500 tiers get $100, $200 and $500 in API credits a month. Business gets $20 per paid Standard seat and $100 per paid Premium seat, pooled and capped at $500 per workspace a month.",
       "conditions": [
         {
           "text": "OpenAI does not use data sent to the API to train its models unless you opt in to share data.",
@@ -10482,6 +10488,12 @@
           "url": "https://developers.openai.com/api/docs/guides/rate-limits",
           "read_on": "2026-11-12",
           "operating_detail": true
+        },
+        {
+          "text": "gpt-6.2-astra, gpt-6.2-sol, gpt-6.1-terra and gpt-6-luna have 2-hour and 8-hour background completion windows. The 2-hour window is 30% below Standard. The 8-hour window is 40% below Standard. These windows are in public beta. They require Standard processing. They share the Batch/Background Rate Limit with Batch API jobs.",
+          "quote": "For GPT‑6.2 Astra, GPT‑6.2 Sol, GPT‑6.1 Terra, and GPT‑6 Luna, model token rates for eligible background requests are 30% below Standard for the 2‑hour completion window and 40% below Standard for the 8‑hour completion window.",
+          "url": "https://developers.openai.com/api/docs/pricing",
+          "read_on": "2026-11-18"
         }
       ],
       "tier": "Pay-as-you-go",
@@ -41760,6 +41772,12 @@
           "quote": "As long as the Inference API remains in experimental status, it is free of charge. Should this status change, we will notify you in advance via email.",
           "url": "https://docs.hetzner.com/general/company-and-policy/experiments/inference/",
           "read_on": "2026-10-09"
+        },
+        {
+          "text": "Hetzner's AI terms, effective 2026-11-17, govern the Inference API. Misuse includes circumventing limits via parallel sessions or multiple accounts, and transferring the service to third parties. Automated use via APIs and MCP servers is allowed. On misuse, Hetzner may throttle or block access.",
+          "quote": "Use that is expressly provided for in the Service Description or has been approved by us is not considered abusive; this includes, in particular, automated use via APIs, MCP servers, or the integration of our own or third-party AI models.",
+          "url": "https://www.hetzner.com/legal/ai-terms-and-conditions/",
+          "read_on": "2026-11-18"
         }
       ],
       "source_check": {
