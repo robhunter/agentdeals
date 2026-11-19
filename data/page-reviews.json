@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-18",
+  "measured_on": "2026-11-19",
   "pages": [
     {
       "path": "/agent-payments",
@@ -1959,8 +1959,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 152,
-      "table_figures_from_records": 103,
+      "table_figures": 151,
+      "table_figures_from_records": 102,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1979,8 +1979,8 @@
         },
         {
           "label": "Recent GCP & Google Changes",
-          "figures": 5,
-          "from_records": 5
+          "figures": 4,
+          "from_records": 4
         },
         {
           "label": "Upcoming Changes",
@@ -2916,8 +2916,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 110,
-      "table_figures_from_records": 75,
+      "table_figures": 108,
+      "table_figures_from_records": 73,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2946,8 +2946,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 22,
-          "from_records": 22
+          "figures": 20,
+          "from_records": 20
         },
         {
           "label": "Upcoming Changes",
