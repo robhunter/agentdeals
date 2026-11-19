@@ -258,7 +258,7 @@ describe("pages beyond the AWS guide describe AWS's 6-month Free plan, not the 1
     assert.ok(textOf(uses).includes("GCP's e2-micro VM is the only permanent free VM among these four clouds. Oracle Cloud, not compared here, also has Always Free VMs."));
     assert.ok(textOf(uses).includes("Azure's Cosmos DB and SQL Database both stay free with no time limit."));
     const databases = markup.split('<h2 id="databases">')[1].split('<h2 id="serverless">')[0];
-    const cosmos = rowsOf(databases).find((row) => row[0] === "Azure" && row[1] === "Cosmos DB");
+    const cosmos = rowsOf(databases).find((row) => namedFor(row[0], "Azure") && row[1] === "Cosmos DB");
     assert.ok(cosmos);
     assert.strictEqual(cosmos[4], "Always free");
     const context = databases.match(/<div class="context-box">([\s\S]*?)<\/div>/)![1];
