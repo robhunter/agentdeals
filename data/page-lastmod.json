@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-18",
+  "generated": "2026-11-19",
   "pages": {
     "/": {
       "daily": true
@@ -840,7 +840,8 @@
       "changed": "2026-11-17"
     },
     "/azure-free-tier-2026": {
-      "daily": true
+      "hash": "6f09bbad5723aa15",
+      "changed": "2026-11-19"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
       "hash": "a53ae0bb735b5c08",
@@ -1353,7 +1354,8 @@
       "changed": "2026-11-17"
     },
     "/ci-cd-pricing": {
-      "daily": true
+      "hash": "a629c665b9e77455",
+      "changed": "2026-11-19"
     },
     "/cicd-free-tier-comparison-2026": {
       "hash": "338beabc4130fd17",
@@ -1364,7 +1366,8 @@
       "changed": "2026-11-17"
     },
     "/cloud-free-tier-comparison-2026": {
-      "daily": true
+      "hash": "4ffbcf9a16e29ecf",
+      "changed": "2026-11-19"
     },
     "/cloudflare-pages-vs-vercel": {
       "hash": "385bbad28b7dec91",
@@ -3276,13 +3279,16 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "daily": true
+      "hash": "55fb9f8438dbd584",
+      "changed": "2026-11-19"
     },
     "/events/google-io-2026": {
-      "daily": true
+      "hash": "737fd5caf22b7440",
+      "changed": "2026-11-19"
     },
     "/events/microsoft-build-2026": {
-      "daily": true
+      "hash": "60a527b22765b0ea",
+      "changed": "2026-11-19"
     },
     "/expiring": {
       "daily": true
@@ -3302,8 +3308,7 @@
       "changed": "2026-11-18"
     },
     "/free-devops-stack": {
-      "hash": "abc1eda5af7fda98",
-      "changed": "2026-11-18"
+      "daily": true
     },
     "/free-django-stack": {
       "hash": "31bfeb363f82967b",
@@ -3355,7 +3360,8 @@
       "changed": "2026-11-16"
     },
     "/gcp-free-tier-2026": {
-      "daily": true
+      "hash": "43052aff49da2de0",
+      "changed": "2026-11-19"
     },
     "/gemini-api-pricing-2026": {
       "hash": "7ad49af7ab8c247a",
@@ -3469,7 +3475,8 @@
       "changed": "2026-11-18"
     },
     "/openai-assistants-migration": {
-      "daily": true
+      "hash": "a713405b913047cd",
+      "changed": "2026-11-19"
     },
     "/openai-assistants-migration-2026": {
       "hash": "9092a9338cf553b1",
@@ -3738,8 +3745,7 @@
       "changed": "2026-11-18"
     },
     "/stacks/ai-startup": {
-      "hash": "9e4cf60261781213",
-      "changed": "2026-11-18"
+      "daily": true
     },
     "/stacks/api-first": {
       "hash": "e5bfb0dd4a8b6719",
@@ -3897,7 +3903,8 @@
       "changed": "2026-11-16"
     },
     "/trends/email": {
-      "daily": true
+      "hash": "9c1c76c56c6889eb",
+      "changed": "2026-11-19"
     },
     "/trends/error-tracking": {
       "hash": "4c5732f2a005e19a",
@@ -4394,7 +4401,8 @@
       "daily": true
     },
     "/vendor/azure": {
-      "daily": true
+      "hash": "7c047f173030d088",
+      "changed": "2026-11-19"
     },
     "/vendor/back4app": {
       "daily": true
