@@ -18,15 +18,15 @@
       "changed": "2026-11-17"
     },
     "/ai-coding-tools-pricing": {
-      "hash": "f9ada4e8febc90c5",
+      "hash": "ec6cbf6d184d15ea",
       "changed": "2026-11-19"
     },
     "/ai-free-tiers": {
-      "hash": "48f9094e4f9a7f3f",
+      "hash": "42c3dbae1ba353e6",
       "changed": "2026-11-19"
     },
     "/ai-ml-alternatives": {
-      "hash": "a31cd28267b30e95",
+      "hash": "5175de79c688aa0c",
       "changed": "2026-11-19"
     },
     "/alternative-to": {
@@ -840,7 +840,7 @@
       "changed": "2026-11-17"
     },
     "/azure-free-tier-2026": {
-      "hash": "6f09bbad5723aa15",
+      "hash": "0f8dd9d8a604b6f1",
       "changed": "2026-11-19"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -1107,11 +1107,11 @@
       "changed": "2026-11-13"
     },
     "/category/ai-coding": {
-      "hash": "8efd950d056c6637",
+      "hash": "254a10a3e1c011e3",
       "changed": "2026-11-19"
     },
     "/category/ai-ml": {
-      "hash": "4b55ab71526a9f50",
+      "hash": "9b12bea7c323c105",
       "changed": "2026-11-19"
     },
     "/category/analytics": {
@@ -1366,7 +1366,7 @@
       "changed": "2026-11-17"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "4ffbcf9a16e29ecf",
+      "hash": "9da1685796cfeba1",
       "changed": "2026-11-19"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -2748,8 +2748,8 @@
       "changed": "2026-11-18"
     },
     "/developers": {
-      "hash": "83312401fc2baee4",
-      "changed": "2026-11-17"
+      "hash": "9307d3272178c9a8",
+      "changed": "2026-11-19"
     },
     "/digest/2022-w48": {
       "hash": "f298dfd9b93047be",
@@ -3127,8 +3127,8 @@
       "changed": "2026-11-19"
     },
     "/digest/2026-w51": {
-      "hash": "9ae9c856dcbc7f52",
-      "changed": "2026-11-16"
+      "hash": "45625d762124aa83",
+      "changed": "2026-11-19"
     },
     "/digest/2026-w52": {
       "hash": "53101d2d2c774c1b",
@@ -3199,16 +3199,16 @@
       "changed": "2026-11-16"
     },
     "/digest/2027-w22": {
-      "hash": "b209369cb6f3003c",
-      "changed": "2026-11-16"
+      "hash": "c99d39d693d7e817",
+      "changed": "2026-11-19"
     },
     "/digest/2027-w24": {
       "hash": "4bbf5809b0f8dc2a",
       "changed": "2026-11-19"
     },
     "/digest/2027-w26": {
-      "hash": "2bf69fceaebe41a7",
-      "changed": "2026-11-16"
+      "hash": "3fce780407d8b171",
+      "changed": "2026-11-19"
     },
     "/digest/2027-w30": {
       "hash": "5a576e97a67e5c66",
@@ -3247,8 +3247,8 @@
       "changed": "2026-11-16"
     },
     "/digest/archive": {
-      "hash": "97963268cd8d7c8d",
-      "changed": "2026-11-17"
+      "hash": "3999f32591df0200",
+      "changed": "2026-11-19"
     },
     "/digitalocean-free-tier-2026": {
       "hash": "738dd39ad9c8060d",
@@ -3291,7 +3291,7 @@
       "changed": "2026-11-19"
     },
     "/events/microsoft-build-2026": {
-      "hash": "60a527b22765b0ea",
+      "hash": "8d46dd575bbe37da",
       "changed": "2026-11-19"
     },
     "/expiring": {
@@ -3331,7 +3331,7 @@
       "changed": "2026-11-17"
     },
     "/free-llm-apis": {
-      "hash": "b85f517d4cba9211",
+      "hash": "e3e091f9e0337be1",
       "changed": "2026-11-19"
     },
     "/free-nextjs-stack": {
@@ -3368,7 +3368,7 @@
       "changed": "2026-11-19"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "c9d0e380028ea922",
+      "hash": "754ff17849e95e77",
       "changed": "2026-11-19"
     },
     "/github-actions-alternatives": {
@@ -3436,7 +3436,7 @@
       "changed": "2026-11-17"
     },
     "/ide-code-editors-alternatives": {
-      "hash": "9833731ceef4f4be",
+      "hash": "024583677362952a",
       "changed": "2026-11-19"
     },
     "/llm-api-pricing": {
@@ -3664,7 +3664,7 @@
       "daily": true
     },
     "/reports/2026-12": {
-      "hash": "dbde2d072c5efcc9",
+      "hash": "7623380c193771f3",
       "changed": "2026-11-19"
     },
     "/reports/2027-01": {
@@ -3688,8 +3688,8 @@
       "changed": "2026-11-16"
     },
     "/reports/2027-06": {
-      "hash": "94d6f3e5bfe5bf93",
-      "changed": "2026-11-16"
+      "hash": "a6e3a868fbd54843",
+      "changed": "2026-11-19"
     },
     "/reports/2027-07": {
       "hash": "fb8a0df1a797459c",
@@ -3741,7 +3741,7 @@
       "daily": true
     },
     "/stack-check": {
-      "hash": "8f0d22301f1f9d06",
+      "hash": "85fab6e7f69a24e4",
       "changed": "2026-11-19"
     },
     "/stacks": {
@@ -4405,7 +4405,7 @@
       "daily": true
     },
     "/vendor/azure": {
-      "hash": "7c047f173030d088",
+      "hash": "6e0008dd9907bc44",
       "changed": "2026-11-19"
     },
     "/vendor/back4app": {
@@ -6109,7 +6109,7 @@
       "changed": "2026-11-17"
     },
     "/vendor/google-antigravity": {
-      "hash": "113334fed20698f0",
+      "hash": "35fd55536218aa3f",
       "changed": "2026-11-19"
     },
     "/vendor/google-artifact-registry": {
