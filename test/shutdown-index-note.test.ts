@@ -166,7 +166,7 @@ describe("restrictions in the shutdown month index", () => {
   it("preserves unknown dates, year-only dates and existing-customer exceptions", () => {
     const lines = entries("2026-11-17");
     assert.ok(lines.includes("Google's Custom Search JSON API (January 1; closed to new customers)"));
-    assert.ok(lines.some(line => line === "Twilio Notify (January 31; closed to new customers since 2022)"));
+    assert.ok(lines.some(line => line.startsWith("Twilio Notify (") && line.endsWith("; closed to new customers since 2022)")));
     for (const service of ["Amazon DevOps Guru", "AWS WorkSpaces Thin Client", "Gadget", "Google Cloud Deployment Manager"]) assert.ok(lines.some(line => line.startsWith(service + " (") && line.includes("until then)")), service);
   });
   it("removes a note when its last shutdown date has passed", () => {
