@@ -688,10 +688,10 @@
           "operating_detail": true
         },
         {
-          "text": "A Pages project can have any number of preview deployments active at once. Any number of users can manage a Pages site from the dashboard.",
-          "quote": "You can have an unlimited number of preview deployments active on your project at a time.",
+          "text": "A Pages project keeps each deployment, production or preview, for 30 days. After 30 days a deployment is deleted unless it is one of the project's 100 most recent deployments or the current production deployment. A deleted deployment's preview URL stops working and it can no longer be rolled back to. Any number of users can manage a Pages site from the dashboard.",
+          "quote": "Preview deployments older than 30 days are deleted, unless they are one of the project's 100 most recent deployments.",
           "url": "https://developers.cloudflare.com/pages/platform/limits/",
-          "read_on": "2026-11-05",
+          "read_on": "2026-11-19",
           "operating_detail": true
         },
         {

@@ -20771,6 +20771,22 @@
       "alternatives": [],
       "recorded_date": "2026-11-17",
       "announced_on": "2026-01-12"
+    },
+    {
+      "vendor": "Microsoft To Do",
+      "change_type": "product_deprecated",
+      "date": "2027-06-30",
+      "summary": "Microsoft is retiring the Microsoft To Do apps on the web, Windows, Mac, iOS and Android on June 30, 2027, for work or school accounts and for personal Microsoft accounts. Work or school accounts move to Microsoft Planner, but existing To Do tasks and lists do not migrate to it. Planner is not available for personal Microsoft accounts. Microsoft says it will provide a way to export To Do data before the apps retire. The To Do service and its APIs retire later, on dates Microsoft has not announced.",
+      "previous_state": "Microsoft To Do was a free task app on the web, Windows, Mac, iOS and Android, for personal and work or school Microsoft accounts, with no announced end.",
+      "current_state": "Microsoft Support, \"Moving from Microsoft To Do to Microsoft Planner\" (read 2026-11-19): \"Microsoft To Do apps will retire on June 30, 2027. This includes To Do on the web, Windows, Mac, iOS, and Android, for both work or school accounts and personal Microsoft accounts.\" \"The underlying To Do service, APIs, and related synchronization support will retire on separate, later timelines.\" \"Existing To Do tasks and lists will not migrate to Planner.\" For personal Microsoft accounts: \"Planner is not available for these accounts.\"",
+      "impact": "medium",
+      "source_url": "https://support.microsoft.com/en-us/planner/to-do-to-planner",
+      "category": "Productivity & Notes",
+      "alternatives": [],
+      "recorded_date": "2026-11-19",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Microsoft To Do apps"
     }
   ]
 }
