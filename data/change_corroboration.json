@@ -10,17 +10,6 @@
       "source_url": "https://www.harness.io/pricing",
       "category": "CI/CD",
       "first_read_date": "2026-11-01"
-    },
-    {
-      "vendor": "Replit",
-      "change_type": "free_tier_removed",
-      "impact": "high",
-      "summary": "The pricing page no longer shows a free Starter plan; the lowest-priced plan listed is Core at $18/month billed annually ($20/month monthly), and no free tier or Starter plan is mentioned.",
-      "previous_state": "Cloud IDE with AI agent — The Starter plan includes daily Agent credits up to a monthly cap, and monthly credits for databases, storage and publishing. It uses Lite build only. Starter supports one published app; the link goes down after 30 days and shows a \"Made with Replit\" badge. Full build, Plan Mode, third-party connectors and slide decks require Core ($20 a month).",
-      "current_state": "The page lists Core at $18/month billed annually (for personal projects and simple apps, up to 30 hours of chat on Free Mode, up to 60 projects on Free Mode, $20 towards more powerful models, unlimited workspaces, AI integrations), Pro at $90/month billed annually, and Enterprise (custom). No free or Starter plan is shown.",
-      "source_url": "https://replit.com/pricing",
-      "category": "IDE & Code Editors",
-      "first_read_date": "2026-11-18"
     }
   ],
   "resolved": [
@@ -3821,6 +3810,18 @@
       "outcome": "contradicted",
       "detail": "a reading on 2026-11-18 read a change the gate refused as measures_no_change",
       "resolved_date": "2026-11-18"
+    },
+    {
+      "vendor": "Replit",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The pricing page no longer shows a free Starter plan; the lowest-priced plan listed is Core at $18/month billed annually ($20/month monthly), and no free tier or Starter plan is mentioned.",
+      "previous_state": "Cloud IDE with AI agent — The Starter plan includes daily Agent credits up to a monthly cap, and monthly credits for databases, storage and publishing. It uses Lite build only. Starter supports one published app; the link goes down after 30 days and shows a \"Made with Replit\" badge. Full build, Plan Mode, third-party connectors and slide decks require Core ($20 a month).",
+      "source_url": "https://replit.com/pricing",
+      "first_read_date": "2026-11-18",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-19 read it as free_tier_removed too",
+      "resolved_date": "2026-11-19"
     }
   ]
 }
