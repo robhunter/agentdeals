@@ -185,11 +185,6 @@
     "entry": "Runpod's REST API v1 (November 15, completed; the base URL moves to https://api.runpod.io/v2)"
   },
   {
-    "card_title": "NVIDIA NIM",
-    "card_date": "2026-11-16",
-    "entry": "NVIDIA's free endpoints for deepseek-ai/deepseek-v4.1-flash, meta/llama-3.2-90b-vision-instruct and meta/llama-guard-4-12b (November 16, completed; NVIDIA removed 55 other free endpoints between May 12 and November 12, 2026, each named with its date on agentdeals.dev/vendor/nvidia-nim; z-ai/glm-5.3-flash is still a free endpoint)"
-  },
-  {
     "card_date": "2026-11-18",
     "card_title": "Claude 4.6 models and GPT-OSS-120b on Antigravity's Free and Google AI Plus plans",
     "entry": "Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b on Google Antigravity's Free and Google AI Plus plans (November 18, completed; the plans keep running with only Gemini 3.8 Flash)"
