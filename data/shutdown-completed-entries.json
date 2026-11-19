@@ -213,5 +213,60 @@
     "card_date": "2026-11-18",
     "card_title": "NVIDIA NIM",
     "entry": "NVIDIA's free endpoints for deepseek-ai/deepseek-v4.1-flash, meta/llama-3.2-90b-vision-instruct and meta/llama-guard-4-12b (November 16, completed) and openai/gpt-oss-20b (November 18, completed; 55 other free endpoints ended between May 12 and November 12, 2026, including openai/gpt-oss-120b on September 3, each named with its date on agentdeals.dev/vendor/nvidia-nim; z-ai/glm-5.3-flash is still a free endpoint)"
+  },
+  {
+    "card_date": "2026-11-30",
+    "card_title": "Solo",
+    "entry": "Solo's websites, accounts and data (November 30, completed; deleted and cannot be recovered; site owners were sent a ZIP with an HTML export of the site, a CSV of links to its images, and its contact form and newsletter submissions; image source files were not in the ZIP)"
+  },
+  {
+    "card_date": "2026-11-30",
+    "card_title": "OpenAI Agent Builder, Evals platform and reusable prompts",
+    "entry": "OpenAI's Agent Builder, Evals platform and the v1/prompts API for reusable prompts (November 30, completed; the OpenAI API and ChatKit keep running; migrate from Agent Builder to the Agents SDK or ChatGPT Workspace Agents, from Evals to Promptfoo, and move reusable prompt content into application code)"
+  },
+  {
+    "card_date": "2026-11-30",
+    "card_title": "Claude Sonnet 4.5",
+    "entry": "Claude Sonnet 4.5 (claude-sonnet-4-5-20250929) on the Claude API (November 30, completed; requests to it fail; claude-sonnet-5-5 is the replacement Anthropic names; Amazon Bedrock and Google Cloud set their own retirement dates)"
+  },
+  {
+    "card_date": "2026-12-01",
+    "card_title": "Cloudflare's DNS Analytics and DNS Firewall Analytics REST APIs",
+    "entry": "Cloudflare's DNS Analytics API and DNS Firewall Analytics API (December 1, completed; their endpoints GET /zones/{zone_id}/dns_analytics/ and GET /accounts/{account_id}/dns_firewall/{dns_firewall_id}/dns_analytics/report retired; integrations move to GraphQL Analytics API; Cloudflare DNS keeps running)"
+  },
+  {
+    "card_date": "2026-12-01",
+    "card_title": "Railway's Config as Code (railway.json and railway.toml)",
+    "entry": "Railway's Config as Code (railway.json and railway.toml) (December 1, completed; it stopped working for services that still used it; the replacement is Infrastructure as Code in a .railway/railway.ts file; the command \"railway config migrate --apply\" writes that file from existing railway.json or railway.toml files; Railway keeps running)"
+  },
+  {
+    "card_date": "2026-12-01",
+    "card_title": "remove.bg's self-service API and website",
+    "entry": "remove.bg's self-service API and website (December 1, completed; the self-service API stopped accepting requests at 9:00 CET; the standalone website and accounts closed; unused pay-as-you-go credits expired; background removal moved to Canva and the API to Leonardo.Ai's API; Enterprise API contracts continue)"
+  },
+  {
+    "card_date": "2026-12-01",
+    "card_title": "Gemini 2.5 Pro (gemini-2.5-pro) and Gemini 2.5 Flash (gemini-2.5-flash) on the Gemini API",
+    "entry": "Gemini 2.5 Pro (gemini-2.5-pro) and Gemini 2.5 Flash (gemini-2.5-flash) on the Gemini API (December 1, completed; both shut down; requests that still name gemini-2.5-pro are answered by gemini-3.8-flash, billed at Gemini 3.8 Flash rates; requests that still name gemini-2.5-flash are answered by gemini-3.5-flash-lite, billed at Gemini 3.5 Flash-Lite rates; Gemini 2.5 Flash-Lite (gemini-2.5-flash-lite) is not deprecated and keeps running)"
+  },
+  {
+    "card_date": "2026-12-01",
+    "card_title": "Prisma Accelerate",
+    "entry": "Prisma Accelerate (December 1, completed; it retired, including Prisma Postgres connections that went through it; Prisma Postgres keeps running, and its databases come with connection pooling)"
+  },
+  {
+    "card_date": "2026-12-01",
+    "card_title": "gpt-image-1-mini, gpt-image-1.5 and chatgpt-image-latest",
+    "entry": "gpt-image-1-mini, gpt-image-1.5 and chatgpt-image-latest (December 1, completed; the three models shut down; OpenAI's substitutes are gpt-image-2.6-sunburst or gpt-image-2.6-flare; the OpenAI API keeps running)"
+  },
+  {
+    "card_date": "2026-12-02",
+    "card_title": "publishing new pods and versions to CocoaPods trunk",
+    "entry": "publishing new pods and versions to CocoaPods trunk (December 2, completed; trunk stopped accepting new pods and new versions; dependencies published through trunk get no more updates; existing builds keep working because the Specs repo and CDN stay up; projects with their own specs repos are not affected)"
+  },
+  {
+    "card_date": "2026-12-03",
+    "card_title": "Gemini Omni 1.1 Flash (gemini-omni-1.1-flash) on the Gemini API",
+    "entry": "Gemini Omni 1.1 Flash (gemini-omni-1.1-flash) on the Gemini API (December 3, completed; it shut down; requests that still name gemini-omni-1.1-flash are answered by gemini-omni-1.2-flash, billed at Gemini Omni 1.2 Flash rates; the Gemini API keeps running)"
   }
 ]
