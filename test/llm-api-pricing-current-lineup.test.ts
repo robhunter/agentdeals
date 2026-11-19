@@ -328,9 +328,9 @@ describe("#2446 /llm-api-pricing's use cases, trend and gotchas name current mod
 
   it("offers GPT-6 Sol, GPT-6.1 Sol and Claude Sonnet 5.5 for production chat at $2/$10, and Sonnet 5.5 for long context", () => {
     const chat = useCase(served, "Production chat / assistants");
-    assert.ok(chat.startsWith("OpenAI GPT-6 Sol or GPT-6.1 Sol ($2/M in, $10/M out)"), chat);
+    assert.ok(chat.startsWith("OpenAI GPT-6.2 Sol ($2/M in, $10/M out)"), chat);
     assert.ok(chat.includes("Claude Sonnet 5.5 ($2/$10/M)"), chat);
-    assert.ok(chat.includes("GPT-5.6 Terra costs $2/$12"), chat);
+    assert.ok(chat.includes("GPT-5.6 Terra is $2/$12"), chat);
     assert.ok(/Sonnet 5\.5/.test(useCase(served, "Long context (100K+ tokens)")));
   });
 
@@ -353,6 +353,23 @@ describe("#2446 /llm-api-pricing's use cases, trend and gotchas name current mod
       assert.ok(answer.includes("Groq's free plan offers gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B."), `${surface}: ${answer}`);
       const llama = sentencesOf(answer).filter((s) => s.includes("Llama 3.3 70B"));
       assert.ok(llama.length > 0 && llama.every((s) => /\bleft\b|shut down|dropped/.test(s)), `${surface}: ${answer}`);
+    }
+  });
+});
+
+describe("OpenAI pricing follows its listing", () => {
+  it("uses the first listed rate in the lede, reasoning and both FAQ surfaces", async () => {
+    const listing = shipped.offers.find((offer) => offer.vendor === "OpenAI")!;
+    const description = listing.description.replace("GPT prices per 1M tokens (Standard, short context): ", "GPT prices per 1M tokens (Standard, short context): gpt-7-test $13.00/$37.00; ");
+    assert.notStrictEqual(description, listing.description);
+    const modified = { ...shipped, offers: shipped.offers.map((offer) => offer.vendor === "OpenAI" ? { ...offer, description } : offer) };
+    const html = await servePage(modified);
+    const text = readable(html);
+    assert.match(text, /gpt-7-test is \$13\.00\/\$37\.00 per M tokens/);
+    assert.match(useCase(html, "Complex reasoning"), /gpt-7-test \(\$13\.00\/\$37\.00\/M\)/);
+    for (const [, answer] of bothAnswers(html, "How much does OpenAI's API cost per token?")) {
+      assert.match(answer, /gpt-7-test costs \$13\.00\/M input and \$37\.00\/M output tokens/);
+      assert.match(answer, /Batch API offers 50% discount/);
     }
   });
 });

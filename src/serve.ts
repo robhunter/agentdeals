@@ -21598,7 +21598,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
       </tbody>
     </table>
   </div>
-  ${geminiChange ? `<div class="context-box"><strong>Context — Gemini API free tier reduction:</strong> ${changeSummaryHtml(geminiChange, escHtmlServer)} <a href="https://aistudio.google.com/docs/changelog" target="_blank" rel="noopener">Since September 18, 2026</a>, Google limits the Gemini 2.5 models to users who have used them before. New projects should use Gemini 3.5 Flash-Lite or 3.8 Flash. See our <a href="/free-llm-apis">Free LLM APIs</a> comparison for full details.</div>` : ""}
+  ${geminiChange ? `<div class="context-box"><strong>Context — Gemini API free tier reduction:</strong> ${changeSummaryHtml(geminiChange, escHtmlServer)} ${geminiRetired() ? `${geminiRetirementText} <a href="https://aistudio.google.com/docs/deprecations" target="_blank" rel="noopener">Source &nearr;</a>` : `<a href="https://aistudio.google.com/docs/changelog" target="_blank" rel="noopener">Since September 18, 2026</a>, Google limits the Gemini 2.5 models to users who have used them before. New projects should use Gemini 3.5 Flash-Lite or 3.8 Flash.`} See our <a href="/free-llm-apis">Free LLM APIs</a> comparison for full details.</div>` : ""}
 
   <h2 id="firebase-alts">7. Firebase Alternatives</h2>
   <p class="section-intro">Firebase's Spark (free) plan was not part of GDP Premium, but it lost Cloud Storage on February 3, 2026. If you're re-evaluating your stack, these BaaS alternatives offer competitive free tiers.</p>
@@ -23279,6 +23279,12 @@ ${globalNavCss()}
 </html>`;
 }
 
+const geminiRetirementText = "Google shut down Gemini 2.5 Pro and 2.5 Flash on the Gemini API on 2026-12-01; requests that name them are answered by 3.8 Flash and 3.5 Flash-Lite. Gemini 2.5 Flash-Lite, a separate model, still runs. New projects use 3.5 Flash-Lite or 3.8 Flash.";
+
+function geminiRetired(): boolean {
+  return utcToday() >= "2026-12-01";
+}
+
 function geminiTimelineEntryHtml(entry: GeminiTimelineEntry): string {
   return `<div class="timeline-item">
     <div class="timeline-date">${escHtmlServer(entry.dateLabel)}</div>
@@ -23442,7 +23448,7 @@ ${globalNavCss()}
 
   <div class="executive-summary">
     <p>Google began enforcing monthly spend caps on the Gemini API on April 1, 2026 (Tier 1: $250, Tier 2: $2,000, Tier 3: $20,000 to $100,000+). When a billing account reaches its cap, requests pause until the next billing month. New users default to Prepay (minimum $5 or local equivalent), and existing Postpay accounts must switch to Prepay by the cutover date in their account notice, reported as October 12, 2026. Gemini 3.1 Pro Preview is paid only.</p>
-    <p>For developers who built on Gemini's generous early free tier, the API has fundamentally changed: <strong>On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none.</strong> The free tier covers the Gemini 3.x Flash and Flash-Lite models. Google publishes no free-tier limits; AI Studio shows each project's. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who used them before. New projects use 3.5 Flash-Lite or 3.8 Flash. Below we cover what changed, who's affected, and which alternatives offer better free access.</p>
+    <p>For developers who built on Gemini's generous early free tier, the API has fundamentally changed: <strong>On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none.</strong> The free tier covers the Gemini 3.x Flash and Flash-Lite models. Google publishes no free-tier limits; AI Studio shows each project's. ${geminiRetired() ? geminiRetirementText : "Since 2026-09-18 Google serves the Gemini 2.5 models only to users who used them before. New projects use 3.5 Flash-Lite or 3.8 Flash."} Below we cover what changed, who's affected, and which alternatives offer better free access.</p>
     ${rateLimitChange ? `<p><strong>From our tracker:</strong> ${changeSummaryHtml(rateLimitChange, escHtmlServer)}</p>` : ""}
   </div>
 
@@ -23501,7 +23507,7 @@ ${globalNavCss()}
       <p>${spendCapChange ? changeSummaryHtml(spendCapChange, escHtmlServer) : "Billing-account-level spend caps enforced. API requests pause when tier cap is reached until next billing month."}</p>
     </div>
   </div>
-  ${geminiTimelineEntryHtml(GEMINI_2_5_MODELS_LIMITED)}
+  ${geminiTimelineEntryHtml(geminiRetired() ? { ...GEMINI_2_5_MODELS_LIMITED, text: `${GEMINI_2_5_MODELS_LIMITED.text} On 2026-12-01 Google shut down 2.5 Pro and 2.5 Flash on the Gemini API; 2.5 Flash-Lite, a separate model, still runs.` } : GEMINI_2_5_MODELS_LIMITED)}
   ${flashPriceStep ? geminiTimelineEntryHtml(flashPriceStep) : ""}
 
   <h2 id="who-affected">3. Who's Affected</h2>
@@ -23588,7 +23594,7 @@ ${globalNavCss()}
     <p class="impact-desc">
       <strong>1. Set project-level spend caps</strong> in AI Studio (available since March 12, 2026; Google marks them experimental). This prevents one project from consuming the entire billing account's spend cap.<br>
       <strong>2. Monitor usage</strong> via the Gemini API usage dashboard. Set billing alerts before you hit the spend cap.<br>
-      <strong>3. Move to the 3.x models</strong> — Gemini 2.0 Flash shut down on 2026-06-01, and new projects cannot use the 2.5 models. Google points new projects to <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.5-flash-lite</code> or <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.8-flash</code>.<br>
+      <strong>3. Move to the 3.x models</strong> — ${geminiRetired() ? "Gemini 2.0 Flash shut down on 2026-06-01 and Gemini 2.5 Pro and 2.5 Flash on 2026-12-01, and new projects cannot use 2.5 Flash-Lite. Gemini 2.5 Flash-Lite, a separate model, still runs." : "Gemini 2.0 Flash shut down on 2026-06-01, and new projects cannot use the 2.5 models."} Google points new projects to <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.5-flash-lite</code> or <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.8-flash</code>.<br>
       <strong>4. Separate billing accounts</strong> if you run multiple projects — every project on a billing account shares its tier spend cap.
     </p>
   </div>
@@ -23703,7 +23709,7 @@ function buildFreeTierRiskPage(): string {
       <td style="font-weight:600">${changeVendorLinkHtml(e.vendor, ' style="color:var(--text)"')}</td>
       <td style="color:${color};font-weight:600;font-size:.85rem">${riskEmoji[e.risk]} ${riskLabels[e.risk]}<div style="color:var(--text-dim);font-weight:400;font-size:.72rem;font-family:var(--mono);white-space:nowrap">graded ${escHtmlServer(e.graded)}</div></td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(e.category)}</td>
-      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(e.reasoning)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(e.vendor === "Google Gemini API" && geminiRetired() ? e.reasoning.replace("Since 2026-09-18 the 2.5 models are limited to earlier users.", geminiRetirementText) : e.reasoning)}</td>
       <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim)">${lastChange ? `<div style="white-space:nowrap">${escHtmlServer(lastChange)}</div>${beforeTheGrade}` : "&mdash;"}</td>
       <td style="color:var(--text-muted);font-size:.75rem;min-width:200px">${sinceGradedCell(e)}</td>
     </tr>`;
@@ -32481,6 +32487,19 @@ function buildLlmApiPricingPage(): string {
       "The Batch API offers 50% discount on all models.",
     ].filter(sentence => sentence !== "").join(" ");
 
+  const openaiRecord = offerForSlug("openai");
+  const openaiRates = cellsOf.get("openai")!.rates.filter((rate): rate is NamedRate => rate.model !== null);
+  const openaiLead = openaiRates[0];
+  const openaiPriceAnswer = openaiRates.length === 0
+    ? "Our record holds no current OpenAI model rate" + (openaiRecord ? "; OpenAI lists them at " + openaiRecord.url : "") + "."
+    : [claudeLeadRate(openaiLead), openaiRates.length > 1 ? joinWithAnd(openaiRates.slice(1).map(claudeListedRate)) + "." : "", "The Batch API offers 50% discount on all models."].filter(Boolean).join(" ");
+  const openaiHeadlineRate = openaiLead && openaiLead.output !== null
+    ? openaiLead.model + " is " + openaiLead.input + "/" + openaiLead.output + " per M tokens."
+    : "";
+  const openaiReasoningRate = openaiLead && openaiLead.output !== null
+    ? " OpenAI " + openaiLead.model + " (" + openaiLead.input + "/" + openaiLead.output + "/M) for the hardest end-to-end work."
+    : "";
+
   type PricedRate = NamedRate & { output: string };
   type PricedModel = { provider: LlmProvider; rate: PricedRate };
 
@@ -32525,7 +32544,7 @@ function buildLlmApiPricingPage(): string {
 
   const faqEntries: FaqItem[] = [
     { q: "Which LLM API has the best free tier in 2026?", a: freeTierAnswer },
-    { q: "How much does GPT-4o cost per token?", a: "GPT-4o costs $2.50 per million input tokens and $10 per million output tokens. For reference, 1 million tokens is roughly 750,000 words. The batch API offers 50% discount ($1.25/$5 per M tokens). GPT-4o-mini is significantly cheaper at $0.15/$0.60 per M tokens." },
+    { q: "How much does OpenAI's API cost per token?", a: openaiPriceAnswer, ...(openaiRates.length > 0 && openaiRecord ? { figuresFromRecord: { vendor: openaiRecord.vendor, lastRead: lastReadDate(openaiRecord) } } : {}) },
     {
       q: "How much does Claude cost per token?",
       a: claudePriceAnswer,
@@ -32534,7 +32553,7 @@ function buildLlmApiPricingPage(): string {
         : {}),
     },
     ...(cheapestModels.length > 0 ? [{ q: "What is the cheapest LLM API for production use?", a: cheapestForProductionAnswer, figuresFromRecords: cheapestForProductionRecords }] : []),
-    { q: "Should I use a frontier lab API or an inference provider?", a: "Use frontier lab APIs (OpenAI, Anthropic, Google) when you need their proprietary models (GPT-4o, Claude, Gemini Pro) or specific features (function calling, vision, extended thinking). Use inference providers (Groq, Cerebras, OpenRouter) when running open-weight models, which usually cost less per token. Groq's free plan offers gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B. Llama 3.3 70B left it on 2026-08-16." },
+    { q: "Should I use a frontier lab API or an inference provider?", a: "Use frontier lab APIs (OpenAI, Anthropic, Google) when you need their proprietary models (GPT, Claude, Gemini) or specific features (function calling, vision, extended thinking). Use inference providers (Groq, Cerebras, OpenRouter) when running open-weight models, which usually cost less per token. Groq's free plan offers gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B. Llama 3.3 70B left it on 2026-08-16." },
   ];
 
   const jsonLd = {
@@ -32658,7 +32677,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>LLM API pricing:</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. GPT-6 Astra is $10/$50 per M tokens. Claude Fable 5.2 is $8/$40. Claude Fable 5.1 is $10/$50. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models; 3.1 Pro Preview is paid-only. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak.' + (freeInferenceLeaders === "" ? '' : ' ' + freeInferenceLeaders) + '</p>\n' +
+    '    <p><strong>LLM API pricing:</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. ' + escHtmlServer(openaiHeadlineRate) + ' Claude Fable 5.2 is $8/$40. Claude Fable 5.1 is $10/$50. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models; 3.1 Pro Preview is paid-only. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak.' + (freeInferenceLeaders === "" ? '' : ' ' + freeInferenceLeaders) + '</p>\n' +
     '    <p><strong>Key trends:</strong> Inference providers (' + namedAsFree(["groq", "cerebras", "openrouter"]) + ') are commoditizing open-source model access — free tiers with no credit card required. xAI retired Grok 4.1 Fast on 2026-05-15; requests to its model names now go to grok-4.3 at $1.25/M input and $2.50/M output (under 200k prompt tokens). The gap between frontier and open-source quality is narrowing, making the price delta harder to justify for many use cases.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, provider breakdowns, free tier analysis, pricing gotchas, recent changes, and options by use case.</p>\n' +
     '  </div>\n' +
@@ -32735,12 +32754,12 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Production chat / assistants</strong>\n' +
-    '      <p><a href="/vendor/openai">OpenAI GPT-6 Sol or GPT-6.1 Sol</a> ($2/M in, $10/M out) — function calling, structured outputs; GPT-5.6 Terra costs $2/$12 and GPT-4o $2.50/$10. <a href="/vendor/anthropic-api">Claude Sonnet 5.5</a> ($2/$10/M) with a 1M-token context.</p>\n' +
+    '      <p><a href="/vendor/openai">OpenAI GPT-6.2 Sol</a> ($2/M in, $10/M out) supports function calling and structured outputs. GPT-6.1 Sol and GPT-6 Sol cost the same. GPT-5.6 Terra is $2/$12. <a href="/vendor/anthropic-api">Claude Sonnet 5.5</a> ($2/$10/M) with a 1M-token context.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Complex reasoning</strong>\n' +
-    '      <p><a href="/vendor/anthropic-api">Claude Opus 5.5</a> ($4/$20/M), or <a href="/vendor/anthropic-api">Claude Fable 5.2</a> ($8/$40/M) for long-horizon agentic work. <a href="/vendor/deepseek-api">DeepSeek V4-Pro</a> ($1.32/$3.96/M at peak, half off-peak), thinking mode on by default. OpenAI GPT-6 Astra ($10/$50/M) for the hardest end-to-end work.</p>\n' +
+    '      <p><a href="/vendor/anthropic-api">Claude Opus 5.5</a> ($4/$20/M), or <a href="/vendor/anthropic-api">Claude Fable 5.2</a> ($8/$40/M) for long-horizon agentic work. <a href="/vendor/deepseek-api">DeepSeek V4-Pro</a> ($1.32/$3.96/M at peak, half off-peak), thinking mode on by default.' + escHtmlServer(openaiReasoningRate) + '</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -32799,7 +32818,7 @@ function buildLlmApiPricingPage(): string {
     upcomingChangesSection +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The trend:</strong> Opus-class prices fell from $15/$75 per M tokens (Opus 4.1) to $5/$25 in November 2025 and $4/$20 with Opus 5.5. Claude Fable 5.2, launched November 9, 2026, is $8/$40, below Claude Fable 5.1 and OpenAI GPT-6 Astra at $10/$50. Open-weight inference is cheap: Groq\'s free plan allows 200K tokens a day on each of its free chat models. The implication: if you\'re paying more than $5/M input tokens, you should evaluate whether a cheaper model handles your use case.\n' +
+    '    <strong>The trend:</strong> Opus-class prices fell from $15/$75 per M tokens (Opus 4.1) to $5/$25 in November 2025 and $4/$20 with Opus 5.5. Claude Fable 5.2, launched November 9, 2026, is $8/$40. OpenAI GPT-6.2 Astra, launched November 17, 2026, costs the same. Claude Fable 5.1 is $10/$50. Open-weight inference is cheap: Groq\'s free plan allows 200K tokens a day on each of its free chat models. The implication: if you\'re paying more than $5/M input tokens, you should evaluate whether a cheaper model handles your use case.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +

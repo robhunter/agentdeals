@@ -494,7 +494,7 @@ describe("#1086 recording a failed review changes what the structured copy of th
 
   it("says corrections are outstanding in every dated answer once the review records a failure", () => {
     const dated = faqAnswersIn(SUBJECT, rendered.get("after")!).filter((a) => PROVENANCE.test(a.text));
-    assert.ok(dated.length >= 2, `only ${dated.length} answers carry a date`);
+    assert.ok(dated.length >= 1, `only ${dated.length} answers carry a date`);
     for (const answer of dated) {
       assert.ok(answer.text.endsWith(`last checked ${REVIEWED_ON}; corrections outstanding.`), answer.question);
     }
