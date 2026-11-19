@@ -26950,6 +26950,7 @@ interface ShutdownEntry {
   service: string;
   vendorSlug: string;
   what: string;
+  pathIdentity?: string;
   deadline: string;
   dateSource?: string;
   impact?: string;
@@ -27195,6 +27196,7 @@ function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTy
   ];
 
   for (const entry of handTyped) {
+    entry.pathIdentity = entry.what;
     if (shutdownDateEnd(entry.deadline) >= fullShutdownDetailsSince || !entry.retainedDetails) continue;
     const retained = entry.retainedDetails;
     if (retained.what) {
@@ -27207,6 +27209,7 @@ function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTy
     service: whatEnds(record) ?? (vendorPage === null ? null : recordNamedBySlug(vendorPage)) ?? record.vendor,
     vendorSlug: vendorPage ?? toSlug(record.vendor),
     what: record.summary,
+    pathIdentity: record.summary,
     deadline,
     dateSource: record.source_url,
     stages: record.shutdown_stages,
@@ -27222,6 +27225,7 @@ function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTy
       service: deadline.vendor,
       vendorSlug: servedVendorSlugForName(deadline.vendor) ?? toSlug(deadline.vendor),
       what: deadline.sentence,
+      pathIdentity: deadline.sentence,
       deadline: deadline.date,
       dateSource: deadline.sourceUrl ?? undefined,
       statedDeadline: deadline,

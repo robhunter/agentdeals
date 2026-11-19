@@ -1,8 +1,10 @@
 import { shutdownDates, type ShutdownDate } from "./shutdown-deadline.js";
+import { createHash } from "node:crypto";
 
 export interface ShutdownPathEntry extends ShutdownDate {
   vendorSlug: string;
   service: string;
+  identity: string;
 }
 
 function pathPart(value: string): string {
@@ -13,10 +15,11 @@ export function shutdownPath(entry: ShutdownPathEntry): string {
   const vendor = pathPart(entry.vendorSlug);
   const service = pathPart(entry.service);
   const firstDate = shutdownDates(entry)[0].date;
-  if (!vendor || !service || !/^\d{4}-\d{2}(?:-\d{2})?$/.test(firstDate)) {
+  if (!vendor || !service || !entry.identity || !/^\d{4}-\d{2}(?:-\d{2})?$/.test(firstDate)) {
     throw new Error("Invalid shutdown page identity");
   }
-  return `/shutdowns/${vendor}-${firstDate}-${service}`;
+  const discriminator = createHash("sha256").update(entry.identity).digest("hex").slice(0, 16);
+  return `/shutdowns/${vendor}-${firstDate}-${service}-${discriminator}`;
 }
 
 export function shutdownPaths<T extends ShutdownPathEntry>(entries: readonly T[]): Map<string, T> {
