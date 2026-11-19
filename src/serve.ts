@@ -23279,7 +23279,7 @@ ${globalNavCss()}
 </html>`;
 }
 
-const geminiRetirementText = "Google shut down Gemini 2.5 Pro and 2.5 Flash on the Gemini API on 2026-12-01; requests that name them are answered by 3.8 Flash and 3.5 Flash-Lite. Gemini 2.5 Flash-Lite still runs, only for users who used it before 2026-09-18. New projects use 3.5 Flash-Lite or 3.8 Flash.";
+const geminiRetirementText = "Google shut down Gemini 2.5 Pro and 2.5 Flash on the Gemini API on 2026-12-01; requests that name them are answered by 3.8 Flash and 3.5 Flash-Lite. Gemini 2.5 Flash-Lite, a separate model, still runs. New projects use 3.5 Flash-Lite or 3.8 Flash.";
 
 function geminiRetired(): boolean {
   return utcToday() >= "2026-12-01";
@@ -23507,7 +23507,7 @@ ${globalNavCss()}
       <p>${spendCapChange ? changeSummaryHtml(spendCapChange, escHtmlServer) : "Billing-account-level spend caps enforced. API requests pause when tier cap is reached until next billing month."}</p>
     </div>
   </div>
-  ${geminiTimelineEntryHtml(geminiRetired() ? { ...GEMINI_2_5_MODELS_LIMITED, text: `${GEMINI_2_5_MODELS_LIMITED.text} On 2026-12-01 Google shut down 2.5 Pro and 2.5 Flash on the Gemini API; 2.5 Flash-Lite still runs, only for users who used it before 2026-09-18.` } : GEMINI_2_5_MODELS_LIMITED)}
+  ${geminiTimelineEntryHtml(geminiRetired() ? { ...GEMINI_2_5_MODELS_LIMITED, text: `${GEMINI_2_5_MODELS_LIMITED.text} On 2026-12-01 Google shut down 2.5 Pro and 2.5 Flash on the Gemini API; 2.5 Flash-Lite, a separate model, still runs.` } : GEMINI_2_5_MODELS_LIMITED)}
   ${flashPriceStep ? geminiTimelineEntryHtml(flashPriceStep) : ""}
 
   <h2 id="who-affected">3. Who's Affected</h2>
@@ -23594,7 +23594,7 @@ ${globalNavCss()}
     <p class="impact-desc">
       <strong>1. Set project-level spend caps</strong> in AI Studio (available since March 12, 2026; Google marks them experimental). This prevents one project from consuming the entire billing account's spend cap.<br>
       <strong>2. Monitor usage</strong> via the Gemini API usage dashboard. Set billing alerts before you hit the spend cap.<br>
-      <strong>3. Move to the 3.x models</strong> — ${geminiRetired() ? "Gemini 2.0 Flash shut down on 2026-06-01 and Gemini 2.5 Pro and 2.5 Flash on 2026-12-01, and new projects cannot use 2.5 Flash-Lite. Gemini 2.5 Flash-Lite still runs, only for users who used it before 2026-09-18." : "Gemini 2.0 Flash shut down on 2026-06-01, and new projects cannot use the 2.5 models."} Google points new projects to <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.5-flash-lite</code> or <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.8-flash</code>.<br>
+      <strong>3. Move to the 3.x models</strong> — ${geminiRetired() ? "Gemini 2.0 Flash shut down on 2026-06-01 and Gemini 2.5 Pro and 2.5 Flash on 2026-12-01, and new projects cannot use 2.5 Flash-Lite. Gemini 2.5 Flash-Lite, a separate model, still runs." : "Gemini 2.0 Flash shut down on 2026-06-01, and new projects cannot use the 2.5 models."} Google points new projects to <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.5-flash-lite</code> or <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.8-flash</code>.<br>
       <strong>4. Separate billing accounts</strong> if you run multiple projects — every project on a billing account shares its tier spend cap.
     </p>
   </div>

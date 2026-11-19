@@ -48,7 +48,7 @@ global.Date = class extends RealDate {
       } else {
         for (const page of pages) {
           assert.ok(page.includes("Google shut down Gemini 2.5 Pro and 2.5 Flash on the Gemini API on 2026-12-01"));
-          assert.ok(page.includes("Gemini 2.5 Flash-Lite still runs, only for users who used it before 2026-09-18."));
+          assert.ok(page.includes("Gemini 2.5 Flash-Lite, a separate model, still runs."));
         }
         assert.ok(pages[0].includes("On 2026-12-01 Google shut down 2.5 Pro and 2.5 Flash on the Gemini API"));
         assert.ok(pages[0].includes("Gemini 2.0 Flash shut down on 2026-06-01 and Gemini 2.5 Pro and 2.5 Flash on 2026-12-01"));
