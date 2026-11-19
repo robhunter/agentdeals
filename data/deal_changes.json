@@ -20624,11 +20624,11 @@
     {
       "vendor": "Azure",
       "change_type": "product_deprecated",
-      "date": "2026-12-16",
-      "summary": "Azure OpenAI retires gpt-image-1.5 version 2025-12-16 on December 16, 2026. Microsoft names no replacement. After that date requests to it return HTTP 410 Gone. OpenAI's own API retires gpt-image-1.5 earlier, on December 1, and that is OpenAI's date, not Azure's.",
+      "date": "2027-06-16",
+      "summary": "Azure OpenAI retires gpt-image-1.5 version 2025-12-16 on June 16, 2027. Microsoft names no replacement. After that date requests to it return HTTP 410 Gone. OpenAI's own API retires gpt-image-1.5 earlier, on December 1, and that is OpenAI's date, not Azure's.",
       "what_ends": "Azure OpenAI gpt-image-1.5 retirement",
       "previous_state": "gpt-image-1.5 version 2025-12-16 can be deployed and called on Azure OpenAI.",
-      "current_state": "Microsoft Learn, \"Model retirement schedule - Microsoft Foundry\" (updated 2026-09-23, read 2026-11-16), table \"Azure OpenAI\": gpt-image-1.5 version 2025-12-16, lifecycle GA, retirement date 2026-12-16, no replacement. \"Foundry Models lifecycle and support policy\": \"Retired: Removed from service. All inference requests return 410 Gone.\"",
+      "current_state": "Microsoft Learn, \"Model retirement schedule - Microsoft Foundry\" (updated 2026-11-18, read 2026-11-19), table \"Azure OpenAI\": gpt-image-1.5 version 2025-12-16, lifecycle GA, retirement date 2027-06-16, no replacement. \"Foundry Models lifecycle and support policy\": \"Retired: Removed from service. All inference requests return 410 Gone.\"",
       "impact": "medium",
       "source_url": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
       "category": "AI / ML",
@@ -20636,6 +20636,20 @@
       "recorded_date": "2026-11-16",
       "date_source": "vendor_page",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "Azure",
+      "change_type": "record_corrected",
+      "date": "2026-11-19",
+      "summary": "Data correction - our record of Azure OpenAI's gpt-image-1.5 (version 2025-12-16) retirement carried December 16, 2026, the date Microsoft's model retirement schedule gave when we read it on 2026-11-16. Microsoft updated the schedule on 2026-11-18 and now gives June 16, 2027, so the record carries that date.",
+      "previous_state": "Dated 2026-12-16 from Microsoft's model retirement schedule (read 2026-11-16)",
+      "current_state": "Dated 2027-06-16 from Microsoft's model retirement schedule (updated 2026-11-18, read 2026-11-19)",
+      "impact": "low",
+      "source_url": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule#azure-openai",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "E2B",
