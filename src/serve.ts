@@ -26940,37 +26940,26 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '</body>\n</html>', pubDate);
 }
 
-function buildShutdownTrackerPage(): string {
-  const title = "Developer Tool Shutdown Tracker 2026";
-  const subtitle = "API sunsets, deprecations & migration deadlines \u2014 updated as new shutdowns are announced";
-  const metaDesc = "Track every developer tool API sunset, deprecation, and service shutdown in 2026. Timelines, impact assessments, migration paths, and free alternatives.";
-  const slug = "shutdowns";
-  const pubDate = "2026-04-02";
+interface ShutdownEntry {
+  service: string;
+  vendorSlug: string;
+  what: string;
+  deadline: string;
+  dateSource?: string;
+  impact?: string;
+  whoAffected?: string;
+  retainedDetails?: { what?: string; migrationPath?: string };
+  completedSummary?: string;
+  migrationPath?: string;
+  migrationLink?: string;
+  covers?: RecordACardCovers[];
+  statedDeadline?: StatedDeadline;
+  groupedDeadlines?: StatedDeadline[];
+  stages?: DealChange["shutdown_stages"];
+  status: "active" | "imminent" | "completed";
+}
 
-  const stabilityMap = publishedStabilityIndex();
-
-  interface ShutdownEntry {
-    service: string;
-    vendorSlug: string;
-    what: string;
-    deadline: string;
-    dateSource?: string;
-    impact?: string;
-    whoAffected?: string;
-    retainedDetails?: { what?: string; migrationPath?: string };
-    completedSummary?: string;
-    migrationPath?: string;
-    migrationLink?: string;
-    covers?: RecordACardCovers[];
-    statedDeadline?: StatedDeadline;
-    groupedDeadlines?: StatedDeadline[];
-    stages?: DealChange["shutdown_stages"];
-    status: "active" | "imminent" | "completed";
-  }
-
-  const today = new Date();
-  const todayDay = today.toISOString().slice(0, 10);
-
+function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTyped: ShutdownEntry[] } {
   const fullShutdownDetailsSince = new Date(Date.parse(todayDay) - 90 * 86_400_000).toISOString().slice(0, 10);
 
   const handTyped: ShutdownEntry[] = [
@@ -27241,6 +27230,23 @@ function buildShutdownTrackerPage(): string {
     groupedDeadlines: nimSentences,
   }];
   const shutdowns: ShutdownEntry[] = [...covered, ...statedOnly.filter(card => !nimCompleted.includes(card)), ...nimGroup];
+
+  return { shutdowns, handTyped };
+}
+
+function buildShutdownTrackerPage(): string {
+  const title = "Developer Tool Shutdown Tracker 2026";
+  const subtitle = "API sunsets, deprecations & migration deadlines \u2014 updated as new shutdowns are announced";
+  const metaDesc = "Track every developer tool API sunset, deprecation, and service shutdown in 2026. Timelines, impact assessments, migration paths, and free alternatives.";
+  const slug = "shutdowns";
+  const pubDate = "2026-04-02";
+
+  const stabilityMap = publishedStabilityIndex();
+
+  const today = new Date();
+  const todayDay = today.toISOString().slice(0, 10);
+  const fullShutdownDetailsSince = new Date(Date.parse(todayDay) - 90 * 86_400_000).toISOString().slice(0, 10);
+  const { shutdowns, handTyped } = shutdownEntries(todayDay);
 
   shutdowns.sort((a, b) => nextShutdownDate(a, todayDay).localeCompare(nextShutdownDate(b, todayDay)));
 
