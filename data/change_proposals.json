@@ -347,6 +347,31 @@
           "description": "API design, debugging, testing, and documentation platform — Free plan: $0 per user/month, up to 4 users, all core features for up to 4 users, full API client support, all core mocking and testing features, unlimited test/collection runs, basic documentation features with unlimited views, real-time collaboration, unlimited sprint branches/versions per project, SQL database operations, scheduled import every 3 hours, 7-day API change history, 1 comment per resource, 10K cloud mock calls/month, 100MB test reports cloud storage, 5 team projects, <5 team members."
         }
       ]
+    },
+    {
+      "proposal_id": "2026-11-19/replit/free_tier_removed",
+      "proposed_on": "2026-11-19",
+      "vendor": "Replit",
+      "change_type": "free_tier_removed",
+      "date": "2026-11-19",
+      "date_source": "discovered",
+      "summary": "The pricing page no longer shows a Free/Starter plan; it lists Core at $18/month billed annually ($20 monthly) and Pro at $90/month billed annually, with no free tier or Starter plan mentioned.",
+      "tier": "Starter",
+      "tier_direction": "narrowed",
+      "previous_state": "Cloud IDE with AI agent — The Starter plan includes daily Agent credits up to a monthly cap, and monthly credits for databases, storage and publishing. It uses Lite build only. Starter supports one published app; the link goes down after 30 days and shows a \"Made with Replit\" badge. Full build, Plan Mode, third-party connectors and slide decks require Core ($20 a month).",
+      "current_state": "The page lists Core at $18/month billed annually (up to 30 hours of chat on Free Mode, up to 60 projects on Free Mode, $20 towards more powerful models, unlimited workspaces, AI integrations) and Pro at $90/month billed annually, plus Enterprise custom. No Free or Starter plan is shown.",
+      "impact": "high",
+      "source_url": "https://replit.com/pricing",
+      "category": "IDE & Code Editors",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-19",
+      "restatement": [
+        {
+          "url": "https://replit.com/pricing",
+          "refused": "reading_describes_the_page_not_the_terms"
+        }
+      ]
     }
   ],
   "dropped": [
