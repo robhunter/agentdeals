@@ -21598,7 +21598,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
       </tbody>
     </table>
   </div>
-  ${geminiChange ? `<div class="context-box"><strong>Context — Gemini API free tier reduction:</strong> ${changeSummaryHtml(geminiChange, escHtmlServer)} <a href="https://aistudio.google.com/docs/changelog" target="_blank" rel="noopener">Since September 18, 2026</a>, Google limits the Gemini 2.5 models to users who have used them before. New projects should use Gemini 3.5 Flash-Lite or 3.8 Flash. See our <a href="/free-llm-apis">Free LLM APIs</a> comparison for full details.</div>` : ""}
+  ${geminiChange ? `<div class="context-box"><strong>Context — Gemini API free tier reduction:</strong> ${changeSummaryHtml(geminiChange, escHtmlServer)} ${geminiRetired() ? `${geminiRetirementText} <a href="https://aistudio.google.com/docs/deprecations" target="_blank" rel="noopener">Source &nearr;</a>` : `<a href="https://aistudio.google.com/docs/changelog" target="_blank" rel="noopener">Since September 18, 2026</a>, Google limits the Gemini 2.5 models to users who have used them before. New projects should use Gemini 3.5 Flash-Lite or 3.8 Flash.`} See our <a href="/free-llm-apis">Free LLM APIs</a> comparison for full details.</div>` : ""}
 
   <h2 id="firebase-alts">7. Firebase Alternatives</h2>
   <p class="section-intro">Firebase's Spark (free) plan was not part of GDP Premium, but it lost Cloud Storage on February 3, 2026. If you're re-evaluating your stack, these BaaS alternatives offer competitive free tiers.</p>
@@ -23279,6 +23279,12 @@ ${globalNavCss()}
 </html>`;
 }
 
+const geminiRetirementText = "Google shut down Gemini 2.5 Pro and 2.5 Flash on the Gemini API on 2026-12-01; requests that name them are answered by 3.8 Flash and 3.5 Flash-Lite. Gemini 2.5 Flash-Lite still runs, only for users who used it before 2026-09-18. New projects use 3.5 Flash-Lite or 3.8 Flash.";
+
+function geminiRetired(): boolean {
+  return utcToday() >= "2026-12-01";
+}
+
 function geminiTimelineEntryHtml(entry: GeminiTimelineEntry): string {
   return `<div class="timeline-item">
     <div class="timeline-date">${escHtmlServer(entry.dateLabel)}</div>
@@ -23442,7 +23448,7 @@ ${globalNavCss()}
 
   <div class="executive-summary">
     <p>Google began enforcing monthly spend caps on the Gemini API on April 1, 2026 (Tier 1: $250, Tier 2: $2,000, Tier 3: $20,000 to $100,000+). When a billing account reaches its cap, requests pause until the next billing month. New users default to Prepay (minimum $5 or local equivalent), and existing Postpay accounts must switch to Prepay by the cutover date in their account notice, reported as October 12, 2026. Gemini 3.1 Pro Preview is paid only.</p>
-    <p>For developers who built on Gemini's generous early free tier, the API has fundamentally changed: <strong>On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none.</strong> The free tier covers the Gemini 3.x Flash and Flash-Lite models. Google publishes no free-tier limits; AI Studio shows each project's. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who used them before. New projects use 3.5 Flash-Lite or 3.8 Flash. Below we cover what changed, who's affected, and which alternatives offer better free access.</p>
+    <p>For developers who built on Gemini's generous early free tier, the API has fundamentally changed: <strong>On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none.</strong> The free tier covers the Gemini 3.x Flash and Flash-Lite models. Google publishes no free-tier limits; AI Studio shows each project's. ${geminiRetired() ? geminiRetirementText : "Since 2026-09-18 Google serves the Gemini 2.5 models only to users who used them before. New projects use 3.5 Flash-Lite or 3.8 Flash."} Below we cover what changed, who's affected, and which alternatives offer better free access.</p>
     ${rateLimitChange ? `<p><strong>From our tracker:</strong> ${changeSummaryHtml(rateLimitChange, escHtmlServer)}</p>` : ""}
   </div>
 
@@ -23501,7 +23507,7 @@ ${globalNavCss()}
       <p>${spendCapChange ? changeSummaryHtml(spendCapChange, escHtmlServer) : "Billing-account-level spend caps enforced. API requests pause when tier cap is reached until next billing month."}</p>
     </div>
   </div>
-  ${geminiTimelineEntryHtml(GEMINI_2_5_MODELS_LIMITED)}
+  ${geminiTimelineEntryHtml(geminiRetired() ? { ...GEMINI_2_5_MODELS_LIMITED, text: `${GEMINI_2_5_MODELS_LIMITED.text} On 2026-12-01 Google shut down 2.5 Pro and 2.5 Flash on the Gemini API; 2.5 Flash-Lite still runs, only for users who used it before 2026-09-18.` } : GEMINI_2_5_MODELS_LIMITED)}
   ${flashPriceStep ? geminiTimelineEntryHtml(flashPriceStep) : ""}
 
   <h2 id="who-affected">3. Who's Affected</h2>
@@ -23588,7 +23594,7 @@ ${globalNavCss()}
     <p class="impact-desc">
       <strong>1. Set project-level spend caps</strong> in AI Studio (available since March 12, 2026; Google marks them experimental). This prevents one project from consuming the entire billing account's spend cap.<br>
       <strong>2. Monitor usage</strong> via the Gemini API usage dashboard. Set billing alerts before you hit the spend cap.<br>
-      <strong>3. Move to the 3.x models</strong> — Gemini 2.0 Flash shut down on 2026-06-01, and new projects cannot use the 2.5 models. Google points new projects to <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.5-flash-lite</code> or <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.8-flash</code>.<br>
+      <strong>3. Move to the 3.x models</strong> — ${geminiRetired() ? "Gemini 2.0 Flash shut down on 2026-06-01 and Gemini 2.5 Pro and 2.5 Flash on 2026-12-01, and new projects cannot use 2.5 Flash-Lite. Gemini 2.5 Flash-Lite still runs, only for users who used it before 2026-09-18." : "Gemini 2.0 Flash shut down on 2026-06-01, and new projects cannot use the 2.5 models."} Google points new projects to <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.5-flash-lite</code> or <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.8-flash</code>.<br>
       <strong>4. Separate billing accounts</strong> if you run multiple projects — every project on a billing account shares its tier spend cap.
     </p>
   </div>
@@ -23703,7 +23709,7 @@ function buildFreeTierRiskPage(): string {
       <td style="font-weight:600">${changeVendorLinkHtml(e.vendor, ' style="color:var(--text)"')}</td>
       <td style="color:${color};font-weight:600;font-size:.85rem">${riskEmoji[e.risk]} ${riskLabels[e.risk]}<div style="color:var(--text-dim);font-weight:400;font-size:.72rem;font-family:var(--mono);white-space:nowrap">graded ${escHtmlServer(e.graded)}</div></td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(e.category)}</td>
-      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(e.reasoning)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(e.vendor === "Google Gemini API" && geminiRetired() ? e.reasoning.replace("Since 2026-09-18 the 2.5 models are limited to earlier users.", geminiRetirementText) : e.reasoning)}</td>
       <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim)">${lastChange ? `<div style="white-space:nowrap">${escHtmlServer(lastChange)}</div>${beforeTheGrade}` : "&mdash;"}</td>
       <td style="color:var(--text-muted);font-size:.75rem;min-width:200px">${sinceGradedCell(e)}</td>
     </tr>`;
