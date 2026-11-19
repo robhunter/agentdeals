@@ -213,8 +213,8 @@ const STATED: Record<string, string[]> = {
     "OpenAI's substitutes are gpt-image-2, gpt-image-1 or gpt-image-1-mini, and its DALL·E model pages now recommend GPT-Image-2.5 Sunburst.",
   ],
   "/llm-api-pricing": [
-    "GPT-6 Astra is $10/$50 per M tokens. Claude Fable 5.2 is $8/$40. Claude Fable 5.1 is $10/$50.",
-    "Claude Fable 5.2, launched November 9, 2026, is $8/$40, below Claude Fable 5.1 and OpenAI GPT-6 Astra at $10/$50.",
+    "Claude Fable 5.2 is $8/$40. Claude Fable 5.1 is $10/$50.",
+    "Claude Fable 5.2, launched November 9, 2026, is $8/$40. OpenAI GPT-6.2 Astra, launched November 17, 2026, costs the same. Claude Fable 5.1 is $10/$50.",
     "Claude Fable 5.2 ($8/$40/M) for long-horizon agentic work.",
     "25+ free models",
     "Up to 40 requests per minute; limits may vary by model, and traffic from other users may cause throttling. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production.",

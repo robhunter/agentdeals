@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-18",
+  "generated": "2026-11-19",
   "pages": {
     "/": {
       "daily": true
@@ -18,16 +18,16 @@
       "changed": "2026-11-17"
     },
     "/ai-coding-tools-pricing": {
-      "hash": "e05f7509ded5cc35",
-      "changed": "2026-11-18"
+      "hash": "f9ada4e8febc90c5",
+      "changed": "2026-11-19"
     },
     "/ai-free-tiers": {
-      "hash": "8cf20a7ff30e1746",
-      "changed": "2026-11-18"
+      "hash": "48f9094e4f9a7f3f",
+      "changed": "2026-11-19"
     },
     "/ai-ml-alternatives": {
-      "hash": "e0606814b0c00832",
-      "changed": "2026-11-18"
+      "hash": "a31cd28267b30e95",
+      "changed": "2026-11-19"
     },
     "/alternative-to": {
       "hash": "3c1df9bd5231b6d7",
@@ -840,7 +840,8 @@
       "changed": "2026-11-17"
     },
     "/azure-free-tier-2026": {
-      "daily": true
+      "hash": "6f09bbad5723aa15",
+      "changed": "2026-11-19"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
       "hash": "a53ae0bb735b5c08",
@@ -1106,12 +1107,12 @@
       "changed": "2026-11-13"
     },
     "/category/ai-coding": {
-      "hash": "0bf7085f993dc71a",
-      "changed": "2026-11-18"
+      "hash": "8efd950d056c6637",
+      "changed": "2026-11-19"
     },
     "/category/ai-ml": {
-      "hash": "3fe1be713f65e1a1",
-      "changed": "2026-11-18"
+      "hash": "4b55ab71526a9f50",
+      "changed": "2026-11-19"
     },
     "/category/analytics": {
       "hash": "34b347b0dfe03681",
@@ -1353,7 +1354,8 @@
       "changed": "2026-11-17"
     },
     "/ci-cd-pricing": {
-      "daily": true
+      "hash": "a629c665b9e77455",
+      "changed": "2026-11-19"
     },
     "/cicd-free-tier-comparison-2026": {
       "hash": "338beabc4130fd17",
@@ -1364,7 +1366,8 @@
       "changed": "2026-11-17"
     },
     "/cloud-free-tier-comparison-2026": {
-      "daily": true
+      "hash": "4ffbcf9a16e29ecf",
+      "changed": "2026-11-19"
     },
     "/cloudflare-pages-vs-vercel": {
       "hash": "385bbad28b7dec91",
@@ -3065,8 +3068,8 @@
       "changed": "2026-11-17"
     },
     "/digest/2026-w36": {
-      "hash": "42ffd8cfefaa9e22",
-      "changed": "2026-11-18"
+      "hash": "c6d1f4b5d945b231",
+      "changed": "2026-11-19"
     },
     "/digest/2026-w37": {
       "hash": "0c192a5f56dc0719",
@@ -3093,16 +3096,16 @@
       "changed": "2026-11-16"
     },
     "/digest/2026-w43": {
-      "hash": "d0178b3e26d65cbf",
-      "changed": "2026-11-16"
+      "hash": "5d09dd2c01adf9b2",
+      "changed": "2026-11-19"
     },
     "/digest/2026-w44": {
       "hash": "c1e283412ad05f71",
       "changed": "2026-11-16"
     },
     "/digest/2026-w45": {
-      "hash": "465e9f13b38c076d",
-      "changed": "2026-11-17"
+      "hash": "4b4b2f8838b47433",
+      "changed": "2026-11-19"
     },
     "/digest/2026-w46": {
       "hash": "1262be5530e9e3f1",
@@ -3116,12 +3119,12 @@
       "changed": "2026-11-17"
     },
     "/digest/2026-w49": {
-      "hash": "0d50d93a15fce6cd",
-      "changed": "2026-11-17"
+      "hash": "4f7935d7d1c80875",
+      "changed": "2026-11-19"
     },
     "/digest/2026-w50": {
-      "hash": "1859275c23f338b3",
-      "changed": "2026-11-17"
+      "hash": "15d7c79473be59a1",
+      "changed": "2026-11-19"
     },
     "/digest/2026-w51": {
       "hash": "9ae9c856dcbc7f52",
@@ -3276,13 +3279,16 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "daily": true
+      "hash": "3513e0057a271cc7",
+      "changed": "2026-11-19"
     },
     "/events/google-io-2026": {
-      "daily": true
+      "hash": "a2a5e0cab554abf4",
+      "changed": "2026-11-19"
     },
     "/events/microsoft-build-2026": {
-      "daily": true
+      "hash": "60a527b22765b0ea",
+      "changed": "2026-11-19"
     },
     "/expiring": {
       "daily": true
@@ -3302,8 +3308,7 @@
       "changed": "2026-11-18"
     },
     "/free-devops-stack": {
-      "hash": "abc1eda5af7fda98",
-      "changed": "2026-11-18"
+      "daily": true
     },
     "/free-django-stack": {
       "hash": "31bfeb363f82967b",
@@ -3322,8 +3327,8 @@
       "changed": "2026-11-17"
     },
     "/free-llm-apis": {
-      "hash": "00f4f51b75dd1d1f",
-      "changed": "2026-11-18"
+      "hash": "b85f517d4cba9211",
+      "changed": "2026-11-19"
     },
     "/free-nextjs-stack": {
       "hash": "f0584816ed91c101",
@@ -3355,11 +3360,12 @@
       "changed": "2026-11-16"
     },
     "/gcp-free-tier-2026": {
-      "daily": true
+      "hash": "5c71078a87e9bf8f",
+      "changed": "2026-11-19"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "7ad49af7ab8c247a",
-      "changed": "2026-11-18"
+      "hash": "c9d0e380028ea922",
+      "changed": "2026-11-19"
     },
     "/github-actions-alternatives": {
       "hash": "6b8e1e29dbb1ee2b",
@@ -3426,8 +3432,8 @@
       "changed": "2026-11-17"
     },
     "/ide-code-editors-alternatives": {
-      "hash": "5bb41b83720ef35b",
-      "changed": "2026-11-18"
+      "hash": "9833731ceef4f4be",
+      "changed": "2026-11-19"
     },
     "/llm-api-pricing": {
       "daily": true
@@ -3465,15 +3471,16 @@
       "changed": "2026-11-17"
     },
     "/openai-assistants-alternatives": {
-      "hash": "fd759431f2877f61",
-      "changed": "2026-11-18"
+      "hash": "f7b4ad66143705f3",
+      "changed": "2026-11-19"
     },
     "/openai-assistants-migration": {
-      "daily": true
+      "hash": "266e0a5db8e0b1c3",
+      "changed": "2026-11-19"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "9092a9338cf553b1",
-      "changed": "2026-11-18"
+      "hash": "e204176392b16c17",
+      "changed": "2026-11-19"
     },
     "/postman-alternatives": {
       "hash": "0deca0fe684e54bd",
@@ -3653,8 +3660,8 @@
       "daily": true
     },
     "/reports/2026-12": {
-      "hash": "db2ea3d920b83bea",
-      "changed": "2026-11-17"
+      "hash": "dbde2d072c5efcc9",
+      "changed": "2026-11-19"
     },
     "/reports/2027-01": {
       "hash": "02f82a46fcc7c8d2",
@@ -3730,16 +3737,15 @@
       "daily": true
     },
     "/stack-check": {
-      "hash": "4bc0d7e9f320eb6f",
-      "changed": "2026-11-18"
+      "hash": "8f0d22301f1f9d06",
+      "changed": "2026-11-19"
     },
     "/stacks": {
       "hash": "8b99a59002cf3f5b",
       "changed": "2026-11-18"
     },
     "/stacks/ai-startup": {
-      "hash": "9e4cf60261781213",
-      "changed": "2026-11-18"
+      "daily": true
     },
     "/stacks/api-first": {
       "hash": "e5bfb0dd4a8b6719",
@@ -3897,7 +3903,8 @@
       "changed": "2026-11-16"
     },
     "/trends/email": {
-      "daily": true
+      "hash": "9c1c76c56c6889eb",
+      "changed": "2026-11-19"
     },
     "/trends/error-tracking": {
       "hash": "4c5732f2a005e19a",
@@ -4394,7 +4401,8 @@
       "daily": true
     },
     "/vendor/azure": {
-      "daily": true
+      "hash": "7c047f173030d088",
+      "changed": "2026-11-19"
     },
     "/vendor/back4app": {
       "daily": true
@@ -5743,8 +5751,8 @@
       "daily": true
     },
     "/vendor/firecrawl": {
-      "hash": "7766bd1da087f89c",
-      "changed": "2026-11-17"
+      "hash": "d309fc6b005f2978",
+      "changed": "2026-11-19"
     },
     "/vendor/fireworks-ai": {
       "daily": true
@@ -6097,8 +6105,8 @@
       "changed": "2026-11-17"
     },
     "/vendor/google-antigravity": {
-      "hash": "d5948dd6983cc060",
-      "changed": "2026-11-18"
+      "hash": "113334fed20698f0",
+      "changed": "2026-11-19"
     },
     "/vendor/google-artifact-registry": {
       "hash": "cd4d08041cdbd454",
