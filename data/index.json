@@ -36958,6 +36958,12 @@
           "read_on": "2026-11-17"
         },
         {
+          "text": "Since November 18, 2026, Gemini 4 Neon is in Antigravity on paid Google AI Pro, Google AI Pro trials with eligible premium devices, Google AI Ultra, and Enterprise. It is in the app, CLI, and IDE extensions. The Free and Google AI Plus plans do not include it. On every plan that includes it, Gemini 4 Neon is the default model for new conversations unless the user chose another model. Orchestrator (Neon) pairs Gemini 4 Neon with Gemini 4 Hydrogen on Google AI Pro and Google AI Ultra, not Enterprise.",
+          "quote": "Availability: Google AI Ultra, Google AI Pro (paid plans, or trials with eligible premium devices), and Gemini Enterprise. Gemini 4 Neon isn’t available on Free and Plus plans.",
+          "url": "https://antigravity.google/docs/models",
+          "read_on": "2026-11-19"
+        },
+        {
           "text": "Google's FAQ says some models \"are not included in free trials\" and directs memberships through third-party partners, Pixel Pass, or Google Fi to Google One help for subscription management.",
           "quote": "are not included in free trials",
           "url": "https://antigravity.google/docs/faq",
