@@ -13939,7 +13939,7 @@
       "date": "2026-10-14",
       "date_source": "vendor_page",
       "summary": "ChatGPT and Codex keep running. Only the GPT-5.5 model retires from ChatGPT, ChatGPT Work and Codex on all plans on 2026-10-14. For Codex with ChatGPT sign-in, OpenAI names GPT-6.1 Sol as the replacement on Plus, Pro, Business, Enterprise and Edu plans (its page named GPT-6 Sol when we read it on 2026-10-06) and GPT-6 Luna on Free and Go plans. The OpenAI API is not affected.",
-      "what_ends": "GPT-5.5",
+      "what_ends": "GPT-5.5 in ChatGPT, ChatGPT Work and Codex",
       "tier": "Codex",
       "tier_direction": "narrowed",
       "previous_state": "GPT-5.5 available in ChatGPT, ChatGPT Work and Codex",
