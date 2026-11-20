@@ -2587,7 +2587,7 @@
     {
       "vendor": "CircleCI",
       "category": "CI/CD",
-      "description": "The Free plan includes 30,000 credits/month, 5 active users, and options for different resource classes (Docker, Windows, Linux, Arm, macOS) with varying concurrency levels (30x for Docker, Linux, Arm, Windows VM, and macOS VM).",
+      "description": "The Free plan includes 30,000 credits a month and 5 active users. Free runs up to 30 jobs at once on Docker, Linux VM, Arm VM and Windows VM, and 1 at a time on macOS VM. It allows 5 concurrent self-hosted runner tasks.",
       "tier": "Free",
       "url": "https://circleci.com/pricing/",
       "tags": [
@@ -2603,12 +2603,9 @@
         "outcome": "ok",
         "detail": "the page names CircleCI as \"circleci\" and states \"5 active users/month\" and \"30,000 free credits/month\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-03",
-        "source_url": "https://circleci.com/pricing/",
+      "restatement_reverted": {
         "record_date": "2026-09-03",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-11-20"
       }
     },
     {
@@ -9513,7 +9510,7 @@
     {
       "vendor": "Cerebras",
       "category": "AI / ML",
-      "description": "Ultra-fast LLM inference API — no permanent free tier. New accounts get $5 in free credits after adding a verified payment method, expiring 30 days after they are granted. Free Trial limits on gpt-oss-120b and qwen-3.8-27b: 5 requests/min and 1M tokens/day. Pay as you go after: GPT OSS 120B $0.35/$0.75 per M tokens, Qwen 3.8 27B $0.99/$1.49 per M tokens. Cerebras's public API now serves only gpt-oss-120b and qwen-3.8-27b, and a request to a model ID it has deprecated fails with 404 model not found. Model IDs Cerebras deprecated in 2026: zai-glm-4.6 on 2026-01-20; llama-3.3-70b on 2026-02-16, replaced by gpt-oss-120b; qwen-3-32b on 2026-02-16, replaced by gpt-oss-120b; llama3.1-8b on 2026-05-27, replaced by gpt-oss-120b; qwen-3-235b-a22b-instruct-2507 on 2026-05-27, replaced by gpt-oss-120b; zai-glm-4.7 on 2026-08-17, with no replacement named; gemma-4-31b on 2026-09-03, replaced by qwen-3.8-27b (Gemma 4 31B stays available on Dedicated Inference). Multi-thousand tokens/sec inference speed.",
+      "description": "Ultra-fast LLM inference API — no permanent free tier. New accounts get $5 in free credits after adding a verified payment method, expiring 30 days after they are granted. On the $5 Free Trial, gpt-oss-120b allows 5 requests a minute and 1M tokens/day. qwen-3.8-27b allows 300 requests a minute and 150K uncached tokens a minute with no hourly or daily cap, the same as Pay as You Go. Pay as you go after: GPT OSS 120B $0.35/$0.75 per M tokens, Qwen 3.8 27B $0.99/$1.49 per M tokens. Cerebras's public API now serves only gpt-oss-120b and qwen-3.8-27b, and a request to a model ID it has deprecated fails with 404 model not found. Model IDs Cerebras deprecated in 2026: zai-glm-4.6 on 2026-01-20; llama-3.3-70b on 2026-02-16, replaced by gpt-oss-120b; qwen-3-32b on 2026-02-16, replaced by gpt-oss-120b; llama3.1-8b on 2026-05-27, replaced by gpt-oss-120b; qwen-3-235b-a22b-instruct-2507 on 2026-05-27, replaced by gpt-oss-120b; zai-glm-4.7 on 2026-08-17, with no replacement named; gemma-4-31b on 2026-09-03, replaced by qwen-3.8-27b (Gemma 4 31B stays available on Dedicated Inference). Multi-thousand tokens/sec inference speed.",
       "tier": "Trial",
       "url": "https://inference-docs.cerebras.ai/support/rate-limits",
       "tags": [
@@ -11545,7 +11542,7 @@
     {
       "vendor": "SurrealDB Cloud",
       "category": "Databases",
-      "description": "Multi-model cloud database — The 'Start' plan offers 1GB of storage free, forever, and a free compute instance with 0.25 vCPU and 1 GB memory ($0.000/hr). Further instances are available from $0.021/hr.",
+      "description": "Multi-model cloud database. SurrealDB's free plan is on SurrealDB Earth, its serverless service on Cloudflare: $0 a month with no card, 3 million requests, 10 GB storage and 100 database active hours a month. A free database pauses at a limit and keeps its data. Pro is $15 a month at a launch price, for 10 million requests, 25 GB and 1,000 database hours. SurrealDB Cloud instances are billed by the node hour from $0.021 an hour, and Cloud no longer lists a free instance.",
       "tier": "Free",
       "url": "https://surrealdb.com/pricing",
       "tags": [
@@ -11588,17 +11585,14 @@
         ],
         "reviewed": "2026-08-31"
       },
-      "restated_from": {
-        "reading_date": "2026-10-04",
-        "source_url": "https://surrealdb.com/pricing",
-        "record_date": "2026-10-04",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-10-04"
-      },
       "free_plan_excerpt": {
         "text": "Free $0 /mo 3M requests, 10GB storage, no card",
         "url": "https://surrealdb.com/pricing",
         "read_on": "2026-11-17"
+      },
+      "restatement_reverted": {
+        "record_date": "2026-10-04",
+        "reverted_on": "2026-11-20"
       }
     },
     {
@@ -24218,7 +24212,7 @@
     {
       "vendor": "Wraps",
       "category": "Email",
-      "description": "Free forever: Get started — no credit card required. Dashboard + AI template editor, 5K tracked events/mo, 1 workflow, Unlimited contacts. Sending costs go straight to AWS — $0.10/1K on à la carte, or $0.16/1K on the new default Essentials plan.",
+      "description": "Free forever: Get started — no credit card required. Unlimited sends, domains and contacts, 5,000 custom events a month, 2 workflows, 30 days of history and 1 AWS account. Sending costs go straight to AWS — $0.10/1K on à la carte, or $0.16/1K on the new default Essentials plan.",
       "tier": "Free",
       "url": "https://wraps.dev",
       "tags": [
@@ -24231,17 +24225,14 @@
         "outcome": "ok",
         "detail": "the page names Wraps as \"wraps\" and states \"$0.10\" and \"$0.16\" and \"5,000 custom events/mo\""
       },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://wraps.dev",
-        "record_date": "2026-08-28",
-        "change_type": "new_free_tier",
-        "restated_on": "2026-09-20"
-      },
       "free_plan_excerpt": {
         "text": "Free forever Free Try the platform with your AWS account $0 you pay AWS directly Unlimited sends, domains & contacts Broadcasts to all contacts Unlimited team members 5,000 custom events/mo 1 AWS account 2 workflows 30-day history",
         "url": "https://wraps.dev",
         "read_on": "2026-11-18"
+      },
+      "restatement_reverted": {
+        "record_date": "2026-08-28",
+        "reverted_on": "2026-11-20"
       }
     },
     {
@@ -25052,7 +25043,7 @@
     {
       "vendor": "Keywords AI",
       "category": "AI / ML",
-      "description": "Rebranded to Respan; keywordsai.co redirects to respan.ai. Free plan: full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, 5 prompts. No credit card required.",
+      "description": "Rebranded to Respan; keywordsai.co redirects to respan.ai — Free $0 plan includes Full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, and 10 prompts; no credit card required.",
       "tier": "Free",
       "url": "https://www.respan.ai/pricing",
       "tags": [
@@ -25092,6 +25083,13 @@
         "text": "Free $0 For getting started Full platform 100k logs 1k scores 5 datasets 2 evaluators 10 prompts",
         "url": "https://www.respan.ai/pricing",
         "read_on": "2026-11-20"
+      },
+      "restated_from": {
+        "reading_date": "2026-11-20",
+        "source_url": "https://www.respan.ai/pricing",
+        "record_date": "2026-11-06",
+        "change_type": "limits_increased",
+        "restated_on": "2026-11-20"
       }
     },
     {
