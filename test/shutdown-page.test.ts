@@ -27,4 +27,12 @@ describe("shutdown page content", () => {
     assert.match(page.body, /Upcoming/);
     assert.match(shutdownPageContent({ service: "A", vendorSlug: "a", what: "B", deadline: "2027-03" }, "2027-04-01").body, /Completed/);
   });
+  it("carries card details and each grouped source", () => {
+    const page = shutdownPageContent({ ...entry, whoAffected: "Users & teams", impact: "Calls stop", migrationPath: "Use <GA>", migrationLink: "/migration", groupedDeadlines: [{ sentence: "First model ends", sourceUrl: "https://example.com/first?a=1&b=2" }, { sentence: "Second model ends", sourceUrl: "https://example.com/second" }] }, "2026-11-20");
+    for (const text of ["Users &amp; teams", "Calls stop", "Use &lt;GA&gt;", "First model ends", "Second model ends", "/migration", "https://example.com/first?a=1&amp;b=2", "https://example.com/second"]) assert.ok(page.body.includes(text));
+  });
+  it("rejects unsafe grouped source and migration links", () => {
+    const page = shutdownPageContent({ ...entry, migrationLink: "//evil.example", groupedDeadlines: [{ sentence: "Model ends", sourceUrl: "javascript:alert(1)" }] }, "2026-11-20");
+    assert.doesNotMatch(page.body, /evil\.example|javascript:/);
+  });
 });
