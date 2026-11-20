@@ -115,7 +115,7 @@
     "entry": "AWS Proton (October 7, completed; the Proton console and Proton resources are no longer accessible, while deployed CloudFormation stacks and the resources they manage keep running; migrate to CloudFormation Git Sync, Harmonix on AWS, CodePipeline with CodeBuild, or GitHub Actions)"
   },
   {
-    "card_title": "GPT-5.5",
+    "card_title": "GPT-5.5 in ChatGPT, ChatGPT Work and Codex",
     "card_date": "2026-10-14",
     "entry": "GPT-5.5 in ChatGPT, ChatGPT Work and Codex (October 14, completed; for Codex with ChatGPT sign-in, OpenAI names GPT-6.1 Sol as the replacement on Plus, Pro, Business, Enterprise and Edu plans and GPT-6 Luna on Free and Go plans; the OpenAI API is not affected)"
   },
