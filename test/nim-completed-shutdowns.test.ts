@@ -34,6 +34,7 @@ describe("completed NVIDIA endpoint cards", () => {
   let scratch: string;
   const children: ChildProcess[] = [];
   const pages = new Map<string, string>();
+  const bases = new Map<string, string>();
 
   async function serve(day: string, zone = "UTC", input = [listing]): Promise<string> {
     const index = path.join(scratch, `index-${children.length}.json`);
@@ -56,6 +57,7 @@ describe("completed NVIDIA endpoint cards", () => {
       child.on("error", error => { clearTimeout(timeout); reject(error); });
       child.on("exit", code => { clearTimeout(timeout); reject(new Error(`Server exited ${code}: ${stderr}`)); });
     });
+    bases.set(zone === "UTC" && input.length === 1 && input[0].vendor === "NVIDIA NIM" ? day : `${day}-${zone}-${input.length}`, `http://localhost:${port}`);
     const response = await fetch(`http://localhost:${port}/shutdowns`, { redirect: "error" });
     assert.equal(response.status, 200);
     return response.text();
@@ -77,6 +79,29 @@ describe("completed NVIDIA endpoint cards", () => {
       child.kill("SIGKILL");
     })));
     if (scratch) rmSync(scratch, { recursive: true, force: true });
+  });
+
+  it("redirects the former NVIDIA group to the merged page after a retirement", async () => {
+    const beforeBase = bases.get("2026-11-15")!;
+    const afterBase = bases.get("2026-11-16")!;
+    const pathsAt = async (base: string) => {
+      const xml = await (await fetch(`${base}/sitemap-pages.xml`)).text();
+      return [...xml.matchAll(/<loc>http:\/\/localhost(\/shutdowns\/nvidia-nim-[^<]+)<\/loc>/g)].map(match => match[1]);
+    };
+    const before = await pathsAt(beforeBase);
+    const after = await pathsAt(afterBase);
+    assert.equal(before.length, 3);
+    assert.equal(after.length, 2);
+    const disappeared = before.filter(route => !after.includes(route));
+    assert.equal(disappeared.length, 1);
+    const response = await fetch(afterBase + disappeared[0], { redirect: "manual" });
+    assert.equal(response.status, 301);
+    const target = response.headers.get("location");
+    assert.ok(target && after.includes(target));
+    const merged = await fetch(afterBase + target, { redirect: "manual" });
+    assert.equal(merged.status, 200);
+    const html = await merged.text();
+    for (const sentence of [qwen, gemma, future]) assert.ok(html.includes(sentence));
   });
 
   it("prints each completed family sentence once with its model IDs, dates and source", () => {
