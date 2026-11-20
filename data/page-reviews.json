@@ -2345,13 +2345,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 124,
-      "table_figures_from_records": 123,
+      "table_figures": 123,
+      "table_figures_from_records": 122,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 49,
-          "from_records": 49
+          "figures": 48,
+          "from_records": 48
         },
         {
           "label": "What You Actually Get for Free",
