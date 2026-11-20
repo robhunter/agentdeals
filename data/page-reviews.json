@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-19",
+  "measured_on": "2026-11-20",
   "pages": [
     {
       "path": "/agent-payments",
@@ -2916,8 +2916,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 108,
-      "table_figures_from_records": 73,
+      "table_figures": 103,
+      "table_figures_from_records": 68,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2946,8 +2946,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 20,
-          "from_records": 20
+          "figures": 15,
+          "from_records": 15
         },
         {
           "label": "Upcoming Changes",
