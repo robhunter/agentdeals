@@ -1,8 +1,12 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { shutdownPageContent } from "../dist/shutdown-page.js";
+import { shutdownPageContent as renderShutdownPage } from "../dist/shutdown-page.js";
 
 const entry = { service: "Chroma Cloud", vendorSlug: "chroma", what: "Writes stop & reads end.", deadline: "2026-12-22", dateSource: "https://example.com/source?a=1&b=2", stages: [{ date: "2026-12-22", label: "stops serving reads" }, { date: "2026-12-07", label: "read-only" }] };
+
+const options = { vendorPath: "/vendor/chroma", conditionsHtml: () => "" };
+const shutdownPageContent = (item, today, overrides = {}) => renderShutdownPage(item, today, { ...options, ...overrides });
+const stated = (sentence, sourceUrl) => ({ vendor: "Example", category: "API", date: "2026-12-22", sentence, sourceUrl, statedIn: "description" });
 
 describe("shutdown page content", () => {
   it("includes each ordered stage and preserves the record and source safely", () => {
@@ -28,11 +32,27 @@ describe("shutdown page content", () => {
     assert.match(shutdownPageContent({ service: "A", vendorSlug: "a", what: "B", deadline: "2027-03" }, "2027-04-01").body, /Completed/);
   });
   it("carries card details and each grouped source", () => {
-    const page = shutdownPageContent({ ...entry, whoAffected: "Users & teams", impact: "Calls stop", migrationPath: "Use <GA>", migrationLink: "/migration", groupedDeadlines: [{ sentence: "First model ends", sourceUrl: "https://example.com/first?a=1&b=2" }, { sentence: "Second model ends", sourceUrl: "https://example.com/second" }] }, "2026-11-20");
+    const page = shutdownPageContent({ ...entry, whoAffected: "Users & teams", impact: "Calls stop", migrationPath: "Use <GA>", migrationLink: "/migration", groupedDeadlines: [stated("First model ends", "https://example.com/first?a=1&b=2"), stated("Second model ends", "https://example.com/second")] }, "2026-11-20");
     for (const text of ["Users &amp; teams", "Calls stop", "Use &lt;GA&gt;", "First model ends", "Second model ends", "/migration", "https://example.com/first?a=1&amp;b=2", "https://example.com/second"]) assert.ok(page.body.includes(text));
   });
   it("rejects unsafe grouped source and migration links", () => {
-    const page = shutdownPageContent({ ...entry, migrationLink: "//evil.example", groupedDeadlines: [{ sentence: "Model ends", sourceUrl: "javascript:alert(1)" }] }, "2026-11-20");
+    const page = shutdownPageContent({ ...entry, migrationLink: "//evil.example", groupedDeadlines: [stated("Model ends", "javascript:alert(1)")] }, "2026-11-20");
     assert.doesNotMatch(page.body, /evil\.example|javascript:/);
   });
+  it("places listing conditions beside each corresponding description", () => {
+    const first = stated("First model ends", "https://example.com/first");
+    const second = stated("Second model ends", "https://example.com/second");
+    const conditionsHtml = item => `<strong>Conditions for ${item.sentence}</strong>`;
+    const ordinary = shutdownPageContent({ ...entry, statedDeadline: first }, "2026-11-20", { conditionsHtml });
+    assert.match(ordinary.body, /Writes stop &amp; reads end\.<\/p><strong>Conditions for First model ends<\/strong>/);
+    const grouped = shutdownPageContent({ ...entry, groupedDeadlines: [first, second] }, "2026-11-20", { conditionsHtml });
+    assert.match(grouped.body, /First model ends.*Conditions for First model ends<\/strong><\/li>/);
+    assert.match(grouped.body, /Second model ends.*Conditions for Second model ends<\/strong><\/li>/);
+  });
+  it("omits the vendor link when no vendor page is served", () => {
+    const page = shutdownPageContent(entry, "2026-11-20", { vendorPath: null });
+    assert.doesNotMatch(page.body, /href="\/vendor\//);
+    assert.match(page.body, /href="\/shutdowns"/);
+  });
+
 });
