@@ -1,6 +1,7 @@
 import { shutdownIndexNote } from "./shutdown-index-note.js";
 import { shutdownPaths, groupedShutdownRedirects } from "./shutdown-paths.js";
 import { shutdownPageContent } from "./shutdown-page.js";
+import { reconcileShutdownRedirects } from "./shutdown-redirects.js";
 import { renderUpcomingTimeline, UPCOMING_TIMELINE_END } from "./upcoming-timeline-budget.js";
 import { measuredValue, quantifiedAttributes } from "./quantity-reading.js";
 import { announcementsInWeek, weeklyAnnouncementNote, weeklyAnnouncementHeading, announcementDateLabel, WEEKLY_ANNOUNCEMENTS_INTRO } from "./weekly-announcements.js";
@@ -27252,10 +27253,14 @@ function shutdownPageInventory(todayDay: string) {
     if (!entry.pathIdentity) throw new Error(`Shutdown page has no identity: ${entry.service}`);
     return { ...entry, identity: entry.pathIdentity };
   };
-  return {
-    pages: shutdownPaths(shutdowns.map(withIdentity)),
-    redirects: groupedShutdownRedirects(nimCompleted.map(withIdentity), nimGroup && withIdentity(nimGroup)),
-  };
+  const pages = shutdownPaths(shutdowns.map(withIdentity));
+  const maintained: Record<string, string> = JSON.parse(readFileSync(join(__dirname, "..", "data", "shutdown-redirects.json"), "utf8"));
+  const derived = groupedShutdownRedirects(nimCompleted.map(withIdentity), nimGroup && withIdentity(nimGroup));
+  for (const path of derived.keys()) {
+    if (Object.hasOwn(maintained, path)) throw new Error(`Duplicate shutdown redirect: ${path}`);
+  }
+  const redirects = reconcileShutdownRedirects([], pages.keys(), { ...maintained, ...Object.fromEntries(derived) });
+  return { pages, redirects };
 }
 
 function shutdownPageForEntry(entry: ShutdownEntry, todayDay: string) {
@@ -55916,11 +55921,22 @@ ${catList}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/tenor-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(withVerdictLinks(buildTenorAlternativesPage()));
-  } else if (url.pathname.startsWith("/shutdowns/") && isGetOrHead && shutdownPageInventory(utcToday()).pages.has(url.pathname)) {
-    const entry = shutdownPageInventory(utcToday()).pages.get(url.pathname)!;
-    const content = shutdownPageForEntry(entry, utcToday());
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escHtmlServer(content.title)}</title></head><body><main>${content.body}</main></body></html>`);
+  } else if (url.pathname.startsWith("/shutdowns/") && isGetOrHead) {
+    const today = utcToday();
+    const inventory = shutdownPageInventory(today);
+    const entry = inventory.pages.get(url.pathname);
+    const redirect = inventory.redirects.get(url.pathname);
+    if (entry) {
+      const content = shutdownPageForEntry(entry, today);
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escHtmlServer(content.title)}</title></head><body><main>${content.body}</main></body></html>`);
+    } else if (redirect) {
+      res.writeHead(301, { Location: redirect });
+      res.end();
+    } else {
+      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("Not found");
+    }
   } else if (url.pathname === "/shutdowns" && isGetOrHead) {
     recordApiHit("/shutdowns");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/shutdowns", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
