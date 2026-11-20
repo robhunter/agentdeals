@@ -1,4 +1,6 @@
 import { shutdownIndexNote } from "./shutdown-index-note.js";
+import { shutdownPaths, groupedShutdownRedirects } from "./shutdown-paths.js";
+import { shutdownPageContent } from "./shutdown-page.js";
 import { renderUpcomingTimeline, UPCOMING_TIMELINE_END } from "./upcoming-timeline-budget.js";
 import { measuredValue, quantifiedAttributes } from "./quantity-reading.js";
 import { announcementsInWeek, weeklyAnnouncementNote, weeklyAnnouncementHeading, announcementDateLabel, WEEKLY_ANNOUNCEMENTS_INTRO } from "./weekly-announcements.js";
@@ -26966,7 +26968,7 @@ interface ShutdownEntry {
   status: "active" | "imminent" | "completed";
 }
 
-function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTyped: ShutdownEntry[] } {
+function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTyped: ShutdownEntry[]; nimCompleted: ShutdownEntry[]; nimGroup: ShutdownEntry | undefined } {
   const fullShutdownDetailsSince = new Date(Date.parse(todayDay) - 90 * 86_400_000).toISOString().slice(0, 10);
 
   const handTyped: ShutdownEntry[] = [
@@ -27241,7 +27243,27 @@ function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTy
   }];
   const shutdowns: ShutdownEntry[] = [...covered, ...statedOnly.filter(card => !nimCompleted.includes(card)), ...nimGroup];
 
-  return { shutdowns, handTyped };
+  return { shutdowns, handTyped, nimCompleted, nimGroup: nimGroup[0] };
+}
+
+function shutdownPageInventory(todayDay: string) {
+  const { shutdowns, nimCompleted, nimGroup } = shutdownEntries(todayDay);
+  const withIdentity = (entry: ShutdownEntry) => {
+    if (!entry.pathIdentity) throw new Error(`Shutdown page has no identity: ${entry.service}`);
+    return { ...entry, identity: entry.pathIdentity };
+  };
+  return {
+    pages: shutdownPaths(shutdowns.map(withIdentity)),
+    redirects: groupedShutdownRedirects(nimCompleted.map(withIdentity), nimGroup && withIdentity(nimGroup)),
+  };
+}
+
+function shutdownPageForEntry(entry: ShutdownEntry, todayDay: string) {
+  const vendorSlug = servedVendorSlug(entry.vendorSlug);
+  return shutdownPageContent(entry, todayDay, {
+    conditionsHtml: conditionsAfterAWholeDescriptionHtml,
+    vendorPath: vendorSlug === null ? null : `/vendor/${vendorSlug}`,
+  });
 }
 
 function buildShutdownTrackerPage(): string {
