@@ -1,429 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-11-14/steel/record_corrected",
-      "proposed_on": "2026-11-14",
-      "vendor": "Steel",
-      "change_type": "record_corrected",
-      "date": "2026-11-14",
-      "date_source": "discovered",
-      "summary": "Launch plan browser-hour rate changed from $0.10/hour to $0.10/hour (unchanged) but the page now lists browser hours from $0.08/hour and CAPTCHA solves from $1/1k and proxies from $6/GB. The page still confirms. The page confirms this. Page confirms. Page confirms. Page confirms. No discrepancy found in the stored tier's terms.",
-      "tier": "Launch",
-      "tier_direction": "unchanged",
-      "previous_state": "Cloud browser API for AI agents. The Launch plan is $0 a month plus usage and comes with a one-time $30 credit, valid for 90 days, which Steel puts at about 300 browser hours at $0.10 an hour. Launch allows 10 concurrent sessions, 15-minute sessions, 60 requests a minute and 7-day data retention; CAPTCHA solving and Steel's proxies need a $10 deposit first. Scale is $250 a month plus usage, with $100 of credit each month.",
-      "current_state": "Launch is $0 + usage with $30 one-time free usage credits valid for 90 days, 10 concurrent sessions, 15-minute max session time, 60 requests per minute, 7-day data retention, browser hours at $0.10/hour, and CAPTCHA solving or Steel-provided proxies require a $10 paid deposit (free credits do not count).",
-      "impact": "low",
-      "source_url": "https://docs.steel.dev/overview/pricinglimits",
-      "category": "Browser Automation",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-14",
-      "restatement": []
-    },
-    {
-      "proposal_id": "2026-11-14/render/record_corrected",
-      "proposed_on": "2026-11-14",
-      "vendor": "Render",
-      "change_type": "record_corrected",
-      "date": "2026-11-14",
-      "date_source": "discovered",
-      "summary": "The current pricing page still lists a Free Postgres tier ($0/month, 256 MB RAM, 100 connections) and a Free Key Value tier ($0/month, 25 MB RAM, 50 connections). It no longer states the 1 GB storage limit, the 30-day expiry for Postgres, or the 'not continuously persisted to disk' caveat for Key Value. The page also now shows a 3-day point-in-time recovery window for Hobby Postgres.",
-      "tier": "Hobby",
-      "tier_direction": "unchanged",
-      "previous_state": "Hobby plan, $0 a month plus compute. Free web services (512 MB RAM, 0.1 CPU) spin down after 15 minutes without traffic, with 750 free instance hours per workspace a month. One free Postgres database (256 MB RAM, 1 GB storage, 30-day expiry) and one free Key Value instance (25 MB, not continuously persisted to disk) per workspace. 5 GB bandwidth/month included then $0.15/GB; without a payment method on file, Render suspends Free services for the rest of the month instead. 500 build minutes/month. Up to 25 services, unlimited projects with 2 environments each. Pro is $25 a month plus compute.",
-      "current_state": "Hobby is $0/mo + compute. Free compute plans include web services, Render Key Value instances, and Render Postgres databases at no charge with usage limits. Free Postgres: $0/month, 256 MB RAM, 100 connections, less than 1 CPU, 3-day point-in-time recovery window. Free Key Value: $0/month, 25 MB RAM, 50 connections. Hobby includes 5 GB bandwidth included per month then $0.15 per GB, 500 build minutes per month then $5 per 1K mins, up to 25 services, unlimited projects, 2 environments per project, 1 team seat, 1 workspace, 7-day log retention, 5 builds retained, 2 custom domains included then $0.25/domain/month. Pro is $25/mo + compute.",
-      "impact": "low",
-      "source_url": "https://render.com/pricing",
-      "category": "Cloud Hosting",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-14",
-      "restatement": [
-        {
-          "url": "https://render.com/pricing",
-          "description": "Hobby is $0/mo + compute. Free compute plans include web services, Render Key Value instances, and Render Postgres databases at no charge with usage limits. Free Postgres: $0/month, 256 MB RAM, 100 connections, less than 1 CPU, 3-day point-in-time recovery window. Free Key Value: $0/month, 25 MB RAM, 50 connections. Hobby includes 5 GB bandwidth included per month then $0.15 per GB, 500 build minutes per month then $5 per 1K mins, up to 25 services, unlimited projects, 2 environments per project, 1 team seat, 1 workspace, 7-day log retention, 5 builds retained, 2 custom domains included then $0.25/domain/month. Pro is $25/mo + compute."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-14/postman/limits_increased",
-      "proposed_on": "2026-11-14",
-      "vendor": "Postman",
-      "change_type": "limits_increased",
-      "date": "2026-11-14",
-      "date_source": "discovered",
-      "summary": "The Free plan's Postman AI credits are now 50/month per the comparison table. The plan card on the pricing page states 100 AI credits. Previously 50 AI credits a month. Matches the comparison table but conflicts with the plan card. Previously 'unlimited manual Flows' which the page confirms, and '1,000 API monitoring requests a month'. Cloud performance testing at $0.04 per virtual-user hour is confirmed. Team plan at $19 per user/month billed annually is confirmed.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Free plan for one user: 50 Postman AI credits a month, the API client and core tools, specs and mock servers, native Git, unlimited manual Flows, automated API testing with the Collection Runner (without data files), unlimited local performance testing and 1,000 API monitoring requests a month. Cloud performance testing is on paid plans only, at $0.04 per virtual-user hour. Team collaboration needs the Team plan ($19 per user a month, billed annually).",
-      "current_state": "Free plan is $0 per month and includes 100 AI credits (per plan card) or 50 AI credits/month (per comparison table), API client & core tools, Specs & mock servers, Native Git, Collection Runner & Performance Testing runs, and Manual Flows. The comparison table lists Free with 50 AI credits/month, 1,000 production API monitoring requests per team per month, 1 user, up to 5 integrations, 10,000 calls to Postman API monthly, 1 day collection recovery, and 25 Flows credits/month. Data file support in Collection Runner and Datasets are not included in Free.",
-      "impact": "low",
-      "source_url": "https://www.postman.com/pricing/",
-      "category": "Testing",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-14",
-      "restatement": [
-        {
-          "url": "https://www.postman.com/pricing/",
-          "refused": "reading_drops_a_figure_our_source_check_found",
-          "figures": [
-            "$19",
-            "$0.04"
-          ]
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-14/loops/limits_increased",
-      "proposed_on": "2026-11-14",
-      "vendor": "Loops",
-      "change_type": "limits_increased",
-      "date": "2026-11-14",
-      "date_source": "discovered",
-      "summary": "The page now says the free plan stores unlimited contacts and includes 4,000 total marketing and transactional sends per rolling 30 days to your first 1,000 contacts.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "1,000 contacts, 4,000 emails per 30 days (marketing + transactional). All features included. Transactional-only recipients don't count toward contact limit",
-      "current_state": "Free plan: $0, up to 10 emails per second, unlimited contacts stored, 4,000 total marketing and transactional sends per rolling 30 days to your first 1,000 contacts, Loops branding included.",
-      "impact": "low",
-      "source_url": "https://loops.so/pricing",
-      "category": "Email",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-14",
-      "restatement": [
-        {
-          "url": "https://loops.so/pricing",
-          "description": "Free plan: $0, up to 10 emails per second, unlimited contacts stored, 4,000 total marketing and transactional sends per rolling 30 days to your first 1,000 contacts, Loops branding included."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-15/deployhq-com/limits_increased",
-      "proposed_on": "2026-11-15",
-      "vendor": "deployhq.com",
-      "change_type": "limits_increased",
-      "date": "2026-11-15",
-      "date_source": "discovered",
-      "summary": "The stored free-tier description (1 project, 3 deployments/day, 5 servers, 1 concurrent deployment, 30 build minutes, 1 user) is not reflected on the current page. The page now advertises a free plan with 3 projects and unlimited deployments, and paid plans starting at $9/month for unlimited deployments.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Automated deployment platform — free plan: 1 project, 3 deployments per day, 5 servers, 1 concurrent deployment, 30 build minutes, 1 user. Unlimited deployments and 3 projects start at $9/mo (Solo). Open-source projects can ask for a free account with unlimited deployments. Git-based workflow with support for FTP/SFTP/SSH deployment targets",
-      "current_state": "The page states 'Start free with 3 projects and unlimited deployments' and 'Unlimited deployments from $9/month'. It does not mention the previously described free-tier limits of 1 project, 3 deployments per day, 5 servers, 1 concurrent deployment, 30 build minutes, or 1 user.",
-      "impact": "medium",
-      "source_url": "https://www.deployhq.com/",
-      "category": "CI/CD",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-15",
-      "restatement": [
-        {
-          "url": "https://www.deployhq.com/",
-          "refused": "reading_describes_the_page_not_the_terms"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-15/cerebras/limits_increased",
-      "proposed_on": "2026-11-15",
-      "vendor": "Cerebras",
-      "change_type": "limits_increased",
-      "date": "2026-11-15",
-      "date_source": "discovered",
-      "summary": "Free Trial rate limits for gpt-oss-120b and qwen-3.8-27b differ from previously: the page lists gpt-oss-120b at 5 RPM / 30K uncached TPM / 90K total TPM / 1M TPH / 1M TPD, and qwen-3.8-27b at 300 RPM / 150K uncached TPM / 750K total TPM with no hourly or daily caps. Rather than the stored '5 requests/min and 1M tokens/day' for both models.",
-      "tier": "Free Trial",
-      "tier_direction": "widened",
-      "previous_state": "Ultra-fast LLM inference API — no permanent free tier. New accounts get $5 in free credits after adding a verified payment method, expiring 30 days after they are granted. Free Trial limits on gpt-oss-120b and qwen-3.8-27b: 5 requests/min and 1M tokens/day. Pay as you go after: GPT OSS 120B $0.35/$0.75 per M tokens, Qwen 3.8 27B $0.99/$1.49 per M tokens. Cerebras's public API now serves only gpt-oss-120b and qwen-3.8-27b, and a request to a model ID it has deprecated fails with 404 model not found. Model IDs Cerebras deprecated in 2026: zai-glm-4.6 on 2026-01-20; llama-3.3-70b on 2026-02-16, replaced by gpt-oss-120b; qwen-3-32b on 2026-02-16, replaced by gpt-oss-120b; llama3.1-8b on 2026-05-27, replaced by gpt-oss-120b; qwen-3-235b-a22b-instruct-2507 on 2026-05-27, replaced by gpt-oss-120b; zai-glm-4.7 on 2026-08-17, with no replacement named; gemma-4-31b on 2026-09-03, replaced by qwen-3.8-27b (Gemma 4 31B stays available on Dedicated Inference). Multi-thousand tokens/sec inference speed.",
-      "current_state": "Free Trial limits apply while using the $5 in Free Trial credits. gpt-oss-120b: 5 RPM, 30K uncached TPM, 90K total TPM, 1M TPH, 1M TPD. qwen-3.8-27b: 300 RPM, 150K uncached TPM, 750K total TPM (temporarily increased from 450K), with no hourly or daily token caps on either tier. New accounts receive $5 in free credits after adding a verified payment method, expiring 30 days after they're granted; there is no permanently free tier.",
-      "impact": "medium",
-      "source_url": "https://inference-docs.cerebras.ai/support/rate-limits",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-15",
-      "restatement": []
-    },
-    {
-      "proposal_id": "2026-11-15/middleware-io/limits_increased",
-      "proposed_on": "2026-11-15",
-      "vendor": "Middleware.io",
-      "change_type": "limits_increased",
-      "date": "2026-11-15",
-      "date_source": "discovered",
-      "summary": "The free tier still exists as 'Free Forever' at $0. Previously omits several limits now shown on the page: 10 Browser Test Runs and 2 million OpsAI Tokens per month. The page also lists 'Community Based Support' and 14-day retention, consistent with previously. The core data/RUM/synthetic limits match (100GB, 1k RUM sessions, 20k synthetic checks, unlimited users).",
-      "tier": "Free Forever",
-      "tier_direction": "widened",
-      "previous_state": "Full-stack observability platform — free forever plan: 100 GB/month data (APM, logs, infrastructure, traces, RUM, synthetics, database, serverless), 1,000 RUM sessions/month, 20,000 synthetic checks/month, 14-day data retention, unlimited users",
-      "current_state": "Free Forever $0: up to 100GB data, up to 1k RUM sessions, up to 20k synthetic checks, 10 browser test runs, 2 million OpsAI tokens, unlimited users, community based support, 14 day retention.",
-      "impact": "low",
-      "source_url": "https://middleware.io/pricing/",
-      "category": "Monitoring",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-15",
-      "restatement": [
-        {
-          "url": "https://middleware.io/pricing/",
-          "description": "Full-stack observability platform — Free Forever $0: up to 100GB data, up to 1k RUM sessions, up to 20k synthetic checks, 10 browser test runs, 2 million OpsAI tokens, unlimited users, community based support, 14 day retention."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-15/currencyapi/pricing_restructured",
-      "proposed_on": "2026-11-15",
-      "vendor": "Currencyapi",
-      "change_type": "pricing_restructured",
-      "date": "2026-11-15",
-      "date_source": "discovered",
-      "summary": "The page no longer mentions the 10 requests per minute limit, private-use-only restriction, or that the convert endpoint is excluded from the free plan. Paid plans now start at $10.83/month billed yearly ($129.90) or $12.99 monthly, with 15,000 requests/month, commercial use, historical rates since 1999, and hourly updates.",
-      "tier": "Free",
-      "tier_direction": "unchanged",
-      "previous_state": "300 requests a month for $0 on the Free plan, up to 10 requests a minute. The Free plan is for private use only. Currencyapi is a currency exchange rate API. The free plan has daily updates and historical rates back to 1999. Commercial use needs a paid plan. Paid plans start at $12.99 a month. The convert endpoint is not on the free plan.",
-      "current_state": "Free plan offers 300 free requests every month with daily rate updates; paid plans start at $10.83/month billed yearly ($129.90) or $12.99 monthly and include 15,000 requests a month, commercial use, historical rates since 1999, and hourly rate updates.",
-      "impact": "low",
-      "source_url": "https://currencyapi.com",
-      "category": "Payments",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-15",
-      "restatement": [
-        {
-          "url": "https://currencyapi.com",
-          "description": "Free plan offers 300 free requests every month with daily rate updates; paid plans start at $10.83/month billed yearly ($129.90) or $12.99 monthly and include 15,000 requests a month, commercial use, historical rates since 1999, and hourly rate updates."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-15/doppler/pricing_restructured",
-      "proposed_on": "2026-11-15",
-      "vendor": "Doppler",
-      "change_type": "pricing_restructured",
-      "date": "2026-11-15",
-      "date_source": "discovered",
-      "summary": "The Developer (free) plan now lists 25 users instead of the stored 'free for 3 users' with $8/mo per additional user; the page no longer states a per-additional-user price for the free tier.",
-      "tier": "Developer",
-      "tier_direction": "widened",
-      "previous_state": "Secrets management — free for 3 users, $8 a month per additional user (Doppler: \"AI agents and non-human identities ride free\"). 10 projects, 4 environments per project, 3 days of activity logs. CLI, SDKs, and integrations included",
-      "current_state": "Developer plan: Free for 3 users, $8/mo per additional user; includes Doppler CLI for local development, service tokens, email alerts and recurring reminders, 3 days of activity logs, secrets referencing, secret value types, API and webhooks access, config syncs (5), 10 projects, 4 environments, 10 configs per environment, 5 webhook limits, 5 CLI tokens per user, and 25 users.",
-      "impact": "medium",
-      "source_url": "https://www.doppler.com/pricing",
-      "category": "Secrets Management",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-15",
-      "restatement": [
-        {
-          "url": "https://www.doppler.com/pricing",
-          "description": "Secrets management — Developer plan: Free for 3 users, $8/mo per additional user; includes Doppler CLI for local development, service tokens, email alerts and recurring reminders, 3 days of activity logs, secrets referencing, secret value types, API and webhooks access, config syncs (5), 10 projects, 4 environments, 10 configs per environment, 5 webhook limits, 5 CLI tokens per user, and 25 users."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-17/circleci/limits_reduced",
-      "proposed_on": "2026-11-17",
-      "vendor": "CircleCI",
-      "change_type": "limits_reduced",
-      "date": "2026-11-17",
-      "date_source": "discovered",
-      "summary": "The Free plan's concurrency for macOS VM is now 1 (not 30x as stored), and the Free plan now includes 5 self-hosted runner concurrent tasks. Previously's claim of 30x concurrency across macOS VM is inaccurate.",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "The Free plan includes 30,000 credits/month, 5 active users, and options for different resource classes (Docker, Windows, Linux, Arm, macOS) with varying concurrency levels (30x for Docker, Linux, Arm, Windows VM, and macOS VM).",
-      "current_state": "Free plan: 30,000 free credits/month, 5 active users included, up to 6,000 build minutes using a small Docker resource class, 30x concurrency for Docker, Linux VM, Arm VM (Linux), and Windows VM, but only 1x concurrency for macOS VM; 5 self-hosted runner concurrent tasks; 1 GB network, 2 GB storage; 1,000 test atoms/month for Smarter Testing.",
-      "impact": "medium",
-      "source_url": "https://circleci.com/pricing/",
-      "category": "CI/CD",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-17",
-      "restatement": [
-        {
-          "url": "https://circleci.com/pricing/",
-          "description": "Free plan: 30,000 free credits/month, 5 active users included, up to 6,000 build minutes using a small Docker resource class, 30x concurrency for Docker, Linux VM, Arm VM (Linux), and Windows VM, but only 1x concurrency for macOS VM; 5 self-hosted runner concurrent tasks; 1 GB network, 2 GB storage; 1,000 test atoms/month for Smarter Testing."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-17/lost-pixel-com/product_deprecated",
-      "proposed_on": "2026-11-17",
-      "vendor": "lost-pixel.com",
-      "change_type": "product_deprecated",
-      "date": "2026-11-17",
-      "date_source": "discovered",
-      "summary": "The Hobby Free tier and paid tier pricing/limits still appear on the page.",
-      "tier": "Hobby Free",
-      "tier_direction": "unchanged",
-      "previous_state": "holistic visual regression testing for your Storybook, Ladle, Histoire stories and Web Apps — Lost Pixel is sunsetting the product and building what's next. A 'Hobby Free' tier is available with 7,000 shots per month. Paid tiers include Startup ($100/mo, 40,000 shots), Business ($250/mo, 100,000 shots), and Scale ($670/mo, 300,000 shots).",
-      "current_state": "The page states 'Lost Pixel is joining Figma. We are sunsetting the product and building what's next.' The pricing section still lists Hobby Free with 7,000 shots per month, Startup at $100/mo with 40,000 shots, Business at $250/mo with 100,000 shots, and Scale at $670/mo with 300,000 shots.",
-      "impact": "high",
-      "source_url": "https://lost-pixel.com",
-      "category": "Testing",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-17",
-      "restatement": [
-        {
-          "url": "https://lost-pixel.com",
-          "refused": "reading_describes_the_page_not_the_terms"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-17/surrealdb-cloud/pricing_restructured",
-      "proposed_on": "2026-11-17",
-      "vendor": "SurrealDB Cloud",
-      "change_type": "pricing_restructured",
-      "date": "2026-11-17",
-      "date_source": "discovered",
-      "summary": "The stored 'Start' plan (1GB storage free forever, free 0.25 vCPU / 1GB compute instance) no longer appears. The page now shows a 'Free' plan under SurrealDB Earth with 3M requests, 10GB storage, 100 database active hours, no card needed, and a Pro plan at $15/mo launch price. Cloud is now billed from $0.021/hr per node hour with no free instance mentioned.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Multi-model cloud database — The 'Start' plan offers 1GB of storage free, forever, and a free compute instance with 0.25 vCPU and 1 GB memory ($0.000/hr). Further instances are available from $0.021/hr.",
-      "current_state": "SurrealDB Earth Free plan: $0/mo, 3M requests per month, 10GB storage per month, 100 database active hours per month, unlimited egress, up to 100 databases, up to 100 cells, 330+ regions, pauses at its limits and keeps your data. Pro plan: $15/mo launch price with 10M requests, 25GB storage, 1,000 database active hours, then billed at $0.65 per 1M requests, $0.25 per GB storage, $0.05 per hour. Cloud: from $0.021/hr per node hour, single-node or cluster, billed by the node hour.",
-      "impact": "medium",
-      "source_url": "https://surrealdb.com/pricing",
-      "category": "Databases",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-17",
-      "restatement": [
-        {
-          "url": "https://surrealdb.com/pricing",
-          "description": "Multi-model cloud database — SurrealDB Earth Free plan: $0/mo, 3M requests per month, 10GB storage per month, 100 database active hours per month, unlimited egress, up to 100 databases, up to 100 cells, 330+ regions, pauses at its limits and keeps your data. Pro plan: $15/mo launch price with 10M requests, 25GB storage, 1,000 database active hours, then billed at $0.65 per 1M requests, $0.25 per GB storage, $0.05 per hour. Cloud: from $0.021/hr per node hour, single-node or cluster, billed by the node hour."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-18/wraps/limits_increased",
-      "proposed_on": "2026-11-18",
-      "vendor": "Wraps",
-      "change_type": "limits_increased",
-      "date": "2026-11-18",
-      "date_source": "discovered",
-      "summary": "Previously info describes the Free tier as including '5K tracked events/mo, 1 workflow' and 'Dashboard + AI template editor'. The current pricing page lists the Free plan as '5,000 custom events/mo' and '2 workflows'.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Free forever: Get started — no credit card required. Dashboard + AI template editor, 5K tracked events/mo, 1 workflow, Unlimited contacts. Sending costs go straight to AWS — $0.10/1K on à la carte, or $0.16/1K on the new default Essentials plan.",
-      "current_state": "Free forever plan: $0 you pay AWS directly, Unlimited sends, domains & contacts, Broadcasts to all contacts, Unlimited team members, 5,000 custom events/mo, 1 AWS account, 2 workflows, 30-day history.",
-      "impact": "low",
-      "source_url": "https://wraps.dev",
-      "category": "Email",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-18",
-      "restatement": [
-        {
-          "url": "https://wraps.dev",
-          "refused": "reading_drops_a_figure_our_source_check_found",
-          "figures": [
-            "$0.10",
-            "$0.16"
-          ]
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-18/apidog/limits_reduced",
-      "proposed_on": "2026-11-18",
-      "vendor": "Apidog",
-      "change_type": "limits_reduced",
-      "date": "2026-11-18",
-      "date_source": "discovered",
-      "summary": "The Free plan now lists a 7-day API change history and up to 4 users.",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "API design, debugging, testing, and documentation platform — free tier: up to 4 users, unlimited projects, unlimited APIs, unlimited requests. API mocking included. 7-day change history",
-      "current_state": "Free plan: $0 per user/month, up to 4 users, all core features for up to 4 users, full API client support, all core mocking and testing features, unlimited test/collection runs, basic documentation features with unlimited views, real-time collaboration, unlimited sprint branches/versions per project, SQL database operations, scheduled import every 3 hours, 7-day API change history, 1 comment per resource, 10K cloud mock calls/month, 100MB test reports cloud storage, 5 team projects, <5 team members.",
-      "impact": "medium",
-      "source_url": "https://apidog.com/pricing/",
-      "category": "API Development",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-18",
-      "restatement": [
-        {
-          "url": "https://apidog.com/pricing/",
-          "description": "API design, debugging, testing, and documentation platform — Free plan: $0 per user/month, up to 4 users, all core features for up to 4 users, full API client support, all core mocking and testing features, unlimited test/collection runs, basic documentation features with unlimited views, real-time collaboration, unlimited sprint branches/versions per project, SQL database operations, scheduled import every 3 hours, 7-day API change history, 1 comment per resource, 10K cloud mock calls/month, 100MB test reports cloud storage, 5 team projects, <5 team members."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-19/replit/free_tier_removed",
-      "proposed_on": "2026-11-19",
-      "vendor": "Replit",
-      "change_type": "free_tier_removed",
-      "date": "2026-11-19",
-      "date_source": "discovered",
-      "summary": "The pricing page no longer shows a Free/Starter plan; it lists Core at $18/month billed annually ($20 monthly) and Pro at $90/month billed annually, with no free tier or Starter plan mentioned.",
-      "tier": "Starter",
-      "tier_direction": "narrowed",
-      "previous_state": "Cloud IDE with AI agent — The Starter plan includes daily Agent credits up to a monthly cap, and monthly credits for databases, storage and publishing. It uses Lite build only. Starter supports one published app; the link goes down after 30 days and shows a \"Made with Replit\" badge. Full build, Plan Mode, third-party connectors and slide decks require Core ($20 a month).",
-      "current_state": "The page lists Core at $18/month billed annually (up to 30 hours of chat on Free Mode, up to 60 projects on Free Mode, $20 towards more powerful models, unlimited workspaces, AI integrations) and Pro at $90/month billed annually, plus Enterprise custom. No Free or Starter plan is shown.",
-      "impact": "high",
-      "source_url": "https://replit.com/pricing",
-      "category": "IDE & Code Editors",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-19",
-      "restatement": [
-        {
-          "url": "https://replit.com/pricing",
-          "refused": "reading_describes_the_page_not_the_terms"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-20/keywords-ai/limits_increased",
-      "proposed_on": "2026-11-20",
-      "vendor": "Keywords AI",
-      "change_type": "limits_increased",
-      "date": "2026-11-20",
-      "date_source": "discovered",
-      "summary": "Free plan prompt limit changed from 5 prompts to 10 prompts; vendor rebranded to Respan (keywordsai.co redirects to respan.ai)",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Rebranded to Respan; keywordsai.co redirects to respan.ai. Free plan: full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, 5 prompts. No credit card required.",
-      "current_state": "Free $0 plan includes Full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, and 10 prompts; no credit card required.",
-      "impact": "low",
-      "source_url": "https://www.respan.ai/pricing",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-20",
-      "restatement": [
-        {
-          "url": "https://www.respan.ai/pricing",
-          "description": "Rebranded to Respan; keywordsai.co redirects to respan.ai — Free $0 plan includes Full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, and 10 prompts; no credit card required."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-11-20/ocr-space/record_corrected",
-      "proposed_on": "2026-11-20",
-      "vendor": "OCR.Space",
-      "change_type": "record_corrected",
-      "date": "2026-11-20",
-      "date_source": "discovered",
-      "summary": "The page also confirms Engine 1 is retired and redirected to Engine 2, 25,000 requests/month, 1 MB file limit, 3-page PDF limit, 500 requests/day per IP, watermark on free searchable PDFs, and PRO at $30/month for 300,000 requests and 5 MB files.",
-      "tier": "Free",
-      "tier_direction": "unchanged",
-      "previous_state": "Free OCR API that parses image and PDF files and returns the text as JSON: 25,000 requests/month, 1 MB file size limit, 3-page PDF limit, 500 requests/day per IP address, plus 1,000 Engine 3 conversions/month, down from 2,500 in October 2026. Engine 1 is retired; OCR.Space redirects calls to it to Engine 2. Free-tier searchable PDFs carry a watermark. PRO is $30/month for 300,000 requests and 5 MB files. The online OCR web form needs no registration and accepts files up to 5MB.",
-      "current_state": "Free plan: 25,000 requests/month, 1 MB file size limit, 3-page PDF limit, 500 requests/day per IP address, 1,000 Engine 3 conversions/month, searchable PDFs with watermark; Engine 1 retired and calls redirected to Engine 2; PRO is $30/month for 300,000 requests and 5 MB files.",
-      "impact": "low",
-      "source_url": "https://ocr.space/ocrapi",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-20",
-      "restatement": [
-        {
-          "url": "https://ocr.space/ocrapi",
-          "description": "Free plan: 25,000 requests/month, 1 MB file size limit, 3-page PDF limit, 500 requests/day per IP address, 1,000 Engine 3 conversions/month, searchable PDFs with watermark; Engine 1 retired and calls redirected to Engine 2; PRO is $30/month for 300,000 requests and 5 MB files."
-        }
-      ]
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
@@ -2939,6 +2515,387 @@
       ],
       "dropped_on": "2026-11-13",
       "drop_reason": "Not a change: Linkup's pricing docs (docs.linkup.so/pages/documentation/development/pricing, read 2026-11-13) still credit professional-email sign-ups $20 and top eligible accounts back to $20 each month, and its rate-limits docs still set 10 queries per second per organization. The pricing page states 4,000 free queries with no period, as the listing already says; a page that omits a term does not change it."
+    },
+    {
+      "proposal_id": "2026-11-14/steel/record_corrected",
+      "proposed_on": "2026-11-14",
+      "vendor": "Steel",
+      "change_type": "record_corrected",
+      "date": "2026-11-14",
+      "date_source": "discovered",
+      "summary": "Launch plan browser-hour rate changed from $0.10/hour to $0.10/hour (unchanged) but the page now lists browser hours from $0.08/hour and CAPTCHA solves from $1/1k and proxies from $6/GB. The page still confirms. The page confirms this. Page confirms. Page confirms. Page confirms. No discrepancy found in the stored tier's terms.",
+      "tier": "Launch",
+      "tier_direction": "unchanged",
+      "previous_state": "Cloud browser API for AI agents. The Launch plan is $0 a month plus usage and comes with a one-time $30 credit, valid for 90 days, which Steel puts at about 300 browser hours at $0.10 an hour. Launch allows 10 concurrent sessions, 15-minute sessions, 60 requests a minute and 7-day data retention; CAPTCHA solving and Steel's proxies need a $10 deposit first. Scale is $250 a month plus usage, with $100 of credit each month.",
+      "current_state": "Launch is $0 + usage with $30 one-time free usage credits valid for 90 days, 10 concurrent sessions, 15-minute max session time, 60 requests per minute, 7-day data retention, browser hours at $0.10/hour, and CAPTCHA solving or Steel-provided proxies require a $10 paid deposit (free credits do not count).",
+      "impact": "low",
+      "source_url": "https://docs.steel.dev/overview/pricinglimits",
+      "category": "Browser Automation",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-14",
+      "restatement": [],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Not a change: the reading itself confirms every stored Launch term at docs.steel.dev/overview/pricinglimits."
+    },
+    {
+      "proposal_id": "2026-11-14/render/record_corrected",
+      "proposed_on": "2026-11-14",
+      "vendor": "Render",
+      "change_type": "record_corrected",
+      "date": "2026-11-14",
+      "date_source": "discovered",
+      "summary": "The current pricing page still lists a Free Postgres tier ($0/month, 256 MB RAM, 100 connections) and a Free Key Value tier ($0/month, 25 MB RAM, 50 connections). It no longer states the 1 GB storage limit, the 30-day expiry for Postgres, or the 'not continuously persisted to disk' caveat for Key Value. The page also now shows a 3-day point-in-time recovery window for Hobby Postgres.",
+      "tier": "Hobby",
+      "tier_direction": "unchanged",
+      "previous_state": "Hobby plan, $0 a month plus compute. Free web services (512 MB RAM, 0.1 CPU) spin down after 15 minutes without traffic, with 750 free instance hours per workspace a month. One free Postgres database (256 MB RAM, 1 GB storage, 30-day expiry) and one free Key Value instance (25 MB, not continuously persisted to disk) per workspace. 5 GB bandwidth/month included then $0.15/GB; without a payment method on file, Render suspends Free services for the rest of the month instead. 500 build minutes/month. Up to 25 services, unlimited projects with 2 environments each. Pro is $25 a month plus compute.",
+      "current_state": "Hobby is $0/mo + compute. Free compute plans include web services, Render Key Value instances, and Render Postgres databases at no charge with usage limits. Free Postgres: $0/month, 256 MB RAM, 100 connections, less than 1 CPU, 3-day point-in-time recovery window. Free Key Value: $0/month, 25 MB RAM, 50 connections. Hobby includes 5 GB bandwidth included per month then $0.15 per GB, 500 build minutes per month then $5 per 1K mins, up to 25 services, unlimited projects, 2 environments per project, 1 team seat, 1 workspace, 7-day log retention, 5 builds retained, 2 custom domains included then $0.25/domain/month. Pro is $25/mo + compute.",
+      "impact": "low",
+      "source_url": "https://render.com/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-14",
+      "restatement": [
+        {
+          "url": "https://render.com/pricing",
+          "description": "Hobby is $0/mo + compute. Free compute plans include web services, Render Key Value instances, and Render Postgres databases at no charge with usage limits. Free Postgres: $0/month, 256 MB RAM, 100 connections, less than 1 CPU, 3-day point-in-time recovery window. Free Key Value: $0/month, 25 MB RAM, 50 connections. Hobby includes 5 GB bandwidth included per month then $0.15 per GB, 500 build minutes per month then $5 per 1K mins, up to 25 services, unlimited projects, 2 environments per project, 1 team seat, 1 workspace, 7-day log retention, 5 builds retained, 2 custom domains included then $0.25/domain/month. Pro is $25/mo + compute."
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Not a change: render.com/docs/free (read 2026-11-20) still states the 1 GB cap, the 30-day expiry with a 14-day grace period, and that a free Key Value instance does not persist to disk; the pricing page leaves them out."
+    },
+    {
+      "proposal_id": "2026-11-14/postman/limits_increased",
+      "proposed_on": "2026-11-14",
+      "vendor": "Postman",
+      "change_type": "limits_increased",
+      "date": "2026-11-14",
+      "date_source": "discovered",
+      "summary": "The Free plan's Postman AI credits are now 50/month per the comparison table. The plan card on the pricing page states 100 AI credits. Previously 50 AI credits a month. Matches the comparison table but conflicts with the plan card. Previously 'unlimited manual Flows' which the page confirms, and '1,000 API monitoring requests a month'. Cloud performance testing at $0.04 per virtual-user hour is confirmed. Team plan at $19 per user/month billed annually is confirmed.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Free plan for one user: 50 Postman AI credits a month, the API client and core tools, specs and mock servers, native Git, unlimited manual Flows, automated API testing with the Collection Runner (without data files), unlimited local performance testing and 1,000 API monitoring requests a month. Cloud performance testing is on paid plans only, at $0.04 per virtual-user hour. Team collaboration needs the Team plan ($19 per user a month, billed annually).",
+      "current_state": "Free plan is $0 per month and includes 100 AI credits (per plan card) or 50 AI credits/month (per comparison table), API client & core tools, Specs & mock servers, Native Git, Collection Runner & Performance Testing runs, and Manual Flows. The comparison table lists Free with 50 AI credits/month, 1,000 production API monitoring requests per team per month, 1 user, up to 5 integrations, 10,000 calls to Postman API monthly, 1 day collection recovery, and 25 Flows credits/month. Data file support in Collection Runner and Datasets are not included in Free.",
+      "impact": "low",
+      "source_url": "https://www.postman.com/pricing/",
+      "category": "Testing",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-14",
+      "restatement": [
+        {
+          "url": "https://www.postman.com/pricing/",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$19",
+            "$0.04"
+          ]
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Not confirmable: since a capture between 2026-10-05 and 2026-10-24 the Free plan card says '100 AI credits' while the comparison table on the same page still says '50 / month' (read 2026-11-20), and Postman's AI credit docs give no figure. The listing keeps the table's 50 a month."
+    },
+    {
+      "proposal_id": "2026-11-14/loops/limits_increased",
+      "proposed_on": "2026-11-14",
+      "vendor": "Loops",
+      "change_type": "limits_increased",
+      "date": "2026-11-14",
+      "date_source": "discovered",
+      "summary": "The page now says the free plan stores unlimited contacts and includes 4,000 total marketing and transactional sends per rolling 30 days to your first 1,000 contacts.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "1,000 contacts, 4,000 emails per 30 days (marketing + transactional). All features included. Transactional-only recipients don't count toward contact limit",
+      "current_state": "Free plan: $0, up to 10 emails per second, unlimited contacts stored, 4,000 total marketing and transactional sends per rolling 30 days to your first 1,000 contacts, Loops branding included.",
+      "impact": "low",
+      "source_url": "https://loops.so/pricing",
+      "category": "Email",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-14",
+      "restatement": [
+        {
+          "url": "https://loops.so/pricing",
+          "description": "Free plan: $0, up to 10 emails per second, unlimited contacts stored, 4,000 total marketing and transactional sends per rolling 30 days to your first 1,000 contacts, Loops branding included."
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Not a change: loops.so/pricing (read 2026-11-20) still caps Free at 4,000 marketing and transactional sends per rolling 30 days to the first 1,000 contacts."
+    },
+    {
+      "proposal_id": "2026-11-15/deployhq-com/limits_increased",
+      "proposed_on": "2026-11-15",
+      "vendor": "deployhq.com",
+      "change_type": "limits_increased",
+      "date": "2026-11-15",
+      "date_source": "discovered",
+      "summary": "The stored free-tier description (1 project, 3 deployments/day, 5 servers, 1 concurrent deployment, 30 build minutes, 1 user) is not reflected on the current page. The page now advertises a free plan with 3 projects and unlimited deployments, and paid plans starting at $9/month for unlimited deployments.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Automated deployment platform — free plan: 1 project, 3 deployments per day, 5 servers, 1 concurrent deployment, 30 build minutes, 1 user. Unlimited deployments and 3 projects start at $9/mo (Solo). Open-source projects can ask for a free account with unlimited deployments. Git-based workflow with support for FTP/SFTP/SSH deployment targets",
+      "current_state": "The page states 'Start free with 3 projects and unlimited deployments' and 'Unlimited deployments from $9/month'. It does not mention the previously described free-tier limits of 1 project, 3 deployments per day, 5 servers, 1 concurrent deployment, 30 build minutes, or 1 user.",
+      "impact": "medium",
+      "source_url": "https://www.deployhq.com/",
+      "category": "CI/CD",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-15",
+      "restatement": [
+        {
+          "url": "https://www.deployhq.com/",
+          "refused": "reading_describes_the_page_not_the_terms"
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Not a change: deployhq.com/pricing (read 2026-11-20) lists Free as 1 project, 3 deployments per day, 5 servers, 1 concurrent deployment and 30 build minutes; the reading took a homepage headline."
+    },
+    {
+      "proposal_id": "2026-11-15/middleware-io/limits_increased",
+      "proposed_on": "2026-11-15",
+      "vendor": "Middleware.io",
+      "change_type": "limits_increased",
+      "date": "2026-11-15",
+      "date_source": "discovered",
+      "summary": "The free tier still exists as 'Free Forever' at $0. Previously omits several limits now shown on the page: 10 Browser Test Runs and 2 million OpsAI Tokens per month. The page also lists 'Community Based Support' and 14-day retention, consistent with previously. The core data/RUM/synthetic limits match (100GB, 1k RUM sessions, 20k synthetic checks, unlimited users).",
+      "tier": "Free Forever",
+      "tier_direction": "widened",
+      "previous_state": "Full-stack observability platform — free forever plan: 100 GB/month data (APM, logs, infrastructure, traces, RUM, synthetics, database, serverless), 1,000 RUM sessions/month, 20,000 synthetic checks/month, 14-day data retention, unlimited users",
+      "current_state": "Free Forever $0: up to 100GB data, up to 1k RUM sessions, up to 20k synthetic checks, 10 browser test runs, 2 million OpsAI tokens, unlimited users, community based support, 14 day retention.",
+      "impact": "low",
+      "source_url": "https://middleware.io/pricing/",
+      "category": "Monitoring",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-15",
+      "restatement": [
+        {
+          "url": "https://middleware.io/pricing/",
+          "description": "Full-stack observability platform — Free Forever $0: up to 100GB data, up to 1k RUM sessions, up to 20k synthetic checks, 10 browser test runs, 2 million OpsAI tokens, unlimited users, community based support, 14 day retention."
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Not a change to the stored terms: middleware.io/pricing (read 2026-11-20) lists the same data, RUM, synthetic-check and retention limits, and also 10 browser test runs and 2 million OpsAI tokens, undated."
+    },
+    {
+      "proposal_id": "2026-11-15/currencyapi/pricing_restructured",
+      "proposed_on": "2026-11-15",
+      "vendor": "Currencyapi",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-15",
+      "date_source": "discovered",
+      "summary": "The page no longer mentions the 10 requests per minute limit, private-use-only restriction, or that the convert endpoint is excluded from the free plan. Paid plans now start at $10.83/month billed yearly ($129.90) or $12.99 monthly, with 15,000 requests/month, commercial use, historical rates since 1999, and hourly updates.",
+      "tier": "Free",
+      "tier_direction": "unchanged",
+      "previous_state": "300 requests a month for $0 on the Free plan, up to 10 requests a minute. The Free plan is for private use only. Currencyapi is a currency exchange rate API. The free plan has daily updates and historical rates back to 1999. Commercial use needs a paid plan. Paid plans start at $12.99 a month. The convert endpoint is not on the free plan.",
+      "current_state": "Free plan offers 300 free requests every month with daily rate updates; paid plans start at $10.83/month billed yearly ($129.90) or $12.99 monthly and include 15,000 requests a month, commercial use, historical rates since 1999, and hourly rate updates.",
+      "impact": "low",
+      "source_url": "https://currencyapi.com",
+      "category": "Payments",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-15",
+      "restatement": [
+        {
+          "url": "https://currencyapi.com",
+          "description": "Free plan offers 300 free requests every month with daily rate updates; paid plans start at $10.83/month billed yearly ($129.90) or $12.99 monthly and include 15,000 requests a month, commercial use, historical rates since 1999, and hourly rate updates."
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Not a change: currencyapi.com/pricing/ (read 2026-11-20) still lists Free with 300 requests, Private Use and 10 Requests / Min., and Convert Rates only on paid plans; the reading was of the homepage."
+    },
+    {
+      "proposal_id": "2026-11-15/doppler/pricing_restructured",
+      "proposed_on": "2026-11-15",
+      "vendor": "Doppler",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-15",
+      "date_source": "discovered",
+      "summary": "The Developer (free) plan now lists 25 users instead of the stored 'free for 3 users' with $8/mo per additional user; the page no longer states a per-additional-user price for the free tier.",
+      "tier": "Developer",
+      "tier_direction": "widened",
+      "previous_state": "Secrets management — free for 3 users, $8 a month per additional user (Doppler: \"AI agents and non-human identities ride free\"). 10 projects, 4 environments per project, 3 days of activity logs. CLI, SDKs, and integrations included",
+      "current_state": "Developer plan: Free for 3 users, $8/mo per additional user; includes Doppler CLI for local development, service tokens, email alerts and recurring reminders, 3 days of activity logs, secrets referencing, secret value types, API and webhooks access, config syncs (5), 10 projects, 4 environments, 10 configs per environment, 5 webhook limits, 5 CLI tokens per user, and 25 users.",
+      "impact": "medium",
+      "source_url": "https://www.doppler.com/pricing",
+      "category": "Secrets Management",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-15",
+      "restatement": [
+        {
+          "url": "https://www.doppler.com/pricing",
+          "description": "Secrets management — Developer plan: Free for 3 users, $8/mo per additional user; includes Doppler CLI for local development, service tokens, email alerts and recurring reminders, 3 days of activity logs, secrets referencing, secret value types, API and webhooks access, config syncs (5), 10 projects, 4 environments, 10 configs per environment, 5 webhook limits, 5 CLI tokens per user, and 25 users."
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Not a change: 25 users is the Developer plan's seat limit; the reading's own current state says free for 3 users and $8 a month per additional user."
+    },
+    {
+      "proposal_id": "2026-11-17/circleci/limits_reduced",
+      "proposed_on": "2026-11-17",
+      "vendor": "CircleCI",
+      "change_type": "limits_reduced",
+      "date": "2026-11-17",
+      "date_source": "discovered",
+      "summary": "The Free plan's concurrency for macOS VM is now 1 (not 30x as stored), and the Free plan now includes 5 self-hosted runner concurrent tasks. Previously's claim of 30x concurrency across macOS VM is inaccurate.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "The Free plan includes 30,000 credits/month, 5 active users, and options for different resource classes (Docker, Windows, Linux, Arm, macOS) with varying concurrency levels (30x for Docker, Linux, Arm, Windows VM, and macOS VM).",
+      "current_state": "Free plan: 30,000 free credits/month, 5 active users included, up to 6,000 build minutes using a small Docker resource class, 30x concurrency for Docker, Linux VM, Arm VM (Linux), and Windows VM, but only 1x concurrency for macOS VM; 5 self-hosted runner concurrent tasks; 1 GB network, 2 GB storage; 1,000 test atoms/month for Smarter Testing.",
+      "impact": "medium",
+      "source_url": "https://circleci.com/pricing/",
+      "category": "CI/CD",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-17",
+      "restatement": [
+        {
+          "url": "https://circleci.com/pricing/",
+          "description": "Free plan: 30,000 free credits/month, 5 active users included, up to 6,000 build minutes using a small Docker resource class, 30x concurrency for Docker, Linux VM, Arm VM (Linux), and Windows VM, but only 1x concurrency for macOS VM; 5 self-hosted runner concurrent tasks; 1 GB network, 2 GB storage; 1,000 test atoms/month for Smarter Testing."
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Undated: macOS VM concurrency on Free was 1 in the 2026-08-24 capture of circleci.com/pricing/ and is 1 on 2026-11-20, so our listing was wrong; corrected in this PR."
+    },
+    {
+      "proposal_id": "2026-11-17/lost-pixel-com/product_deprecated",
+      "proposed_on": "2026-11-17",
+      "vendor": "lost-pixel.com",
+      "change_type": "product_deprecated",
+      "date": "2026-11-17",
+      "date_source": "discovered",
+      "summary": "The Hobby Free tier and paid tier pricing/limits still appear on the page.",
+      "tier": "Hobby Free",
+      "tier_direction": "unchanged",
+      "previous_state": "holistic visual regression testing for your Storybook, Ladle, Histoire stories and Web Apps — Lost Pixel is sunsetting the product and building what's next. A 'Hobby Free' tier is available with 7,000 shots per month. Paid tiers include Startup ($100/mo, 40,000 shots), Business ($250/mo, 100,000 shots), and Scale ($670/mo, 300,000 shots).",
+      "current_state": "The page states 'Lost Pixel is joining Figma. We are sunsetting the product and building what's next.' The pricing section still lists Hobby Free with 7,000 shots per month, Startup at $100/mo with 40,000 shots, Business at $250/mo with 100,000 shots, and Scale at $670/mo with 300,000 shots.",
+      "impact": "high",
+      "source_url": "https://lost-pixel.com",
+      "category": "Testing",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-17",
+      "restatement": [
+        {
+          "url": "https://lost-pixel.com",
+          "refused": "reading_describes_the_page_not_the_terms"
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Not a change: Lost Pixel's sunset on joining Figma is recorded on 2026-08-28, and the page still lists the same Hobby Free and paid tiers."
+    },
+    {
+      "proposal_id": "2026-11-18/wraps/limits_increased",
+      "proposed_on": "2026-11-18",
+      "vendor": "Wraps",
+      "change_type": "limits_increased",
+      "date": "2026-11-18",
+      "date_source": "discovered",
+      "summary": "Previously info describes the Free tier as including '5K tracked events/mo, 1 workflow' and 'Dashboard + AI template editor'. The current pricing page lists the Free plan as '5,000 custom events/mo' and '2 workflows'.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Free forever: Get started — no credit card required. Dashboard + AI template editor, 5K tracked events/mo, 1 workflow, Unlimited contacts. Sending costs go straight to AWS — $0.10/1K on à la carte, or $0.16/1K on the new default Essentials plan.",
+      "current_state": "Free forever plan: $0 you pay AWS directly, Unlimited sends, domains & contacts, Broadcasts to all contacts, Unlimited team members, 5,000 custom events/mo, 1 AWS account, 2 workflows, 30-day history.",
+      "impact": "low",
+      "source_url": "https://wraps.dev",
+      "category": "Email",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-18",
+      "restatement": [
+        {
+          "url": "https://wraps.dev",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$0.10",
+            "$0.16"
+          ]
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Undated: wraps.dev (read 2026-11-20) lists 2 workflows and 5,000 custom events a month on Free where our listing said 1 workflow; corrected in this PR."
+    },
+    {
+      "proposal_id": "2026-11-18/apidog/limits_reduced",
+      "proposed_on": "2026-11-18",
+      "vendor": "Apidog",
+      "change_type": "limits_reduced",
+      "date": "2026-11-18",
+      "date_source": "discovered",
+      "summary": "The Free plan now lists a 7-day API change history and up to 4 users.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "API design, debugging, testing, and documentation platform — free tier: up to 4 users, unlimited projects, unlimited APIs, unlimited requests. API mocking included. 7-day change history",
+      "current_state": "Free plan: $0 per user/month, up to 4 users, all core features for up to 4 users, full API client support, all core mocking and testing features, unlimited test/collection runs, basic documentation features with unlimited views, real-time collaboration, unlimited sprint branches/versions per project, SQL database operations, scheduled import every 3 hours, 7-day API change history, 1 comment per resource, 10K cloud mock calls/month, 100MB test reports cloud storage, 5 team projects, <5 team members.",
+      "impact": "medium",
+      "source_url": "https://apidog.com/pricing/",
+      "category": "API Development",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-18",
+      "restatement": [
+        {
+          "url": "https://apidog.com/pricing/",
+          "description": "API design, debugging, testing, and documentation platform — Free plan: $0 per user/month, up to 4 users, all core features for up to 4 users, full API client support, all core mocking and testing features, unlimited test/collection runs, basic documentation features with unlimited views, real-time collaboration, unlimited sprint branches/versions per project, SQL database operations, scheduled import every 3 hours, 7-day API change history, 1 comment per resource, 10K cloud mock calls/month, 100MB test reports cloud storage, 5 team projects, <5 team members."
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Not a change: our listing already states the Free plan's 4 users and 7-day API change history (apidog.com/pricing/, read 2026-11-20)."
+    },
+    {
+      "proposal_id": "2026-11-19/replit/free_tier_removed",
+      "proposed_on": "2026-11-19",
+      "vendor": "Replit",
+      "change_type": "free_tier_removed",
+      "date": "2026-11-19",
+      "date_source": "discovered",
+      "summary": "The pricing page no longer shows a Free/Starter plan; it lists Core at $18/month billed annually ($20 monthly) and Pro at $90/month billed annually, with no free tier or Starter plan mentioned.",
+      "tier": "Starter",
+      "tier_direction": "narrowed",
+      "previous_state": "Cloud IDE with AI agent — The Starter plan includes daily Agent credits up to a monthly cap, and monthly credits for databases, storage and publishing. It uses Lite build only. Starter supports one published app; the link goes down after 30 days and shows a \"Made with Replit\" badge. Full build, Plan Mode, third-party connectors and slide decks require Core ($20 a month).",
+      "current_state": "The page lists Core at $18/month billed annually (up to 30 hours of chat on Free Mode, up to 60 projects on Free Mode, $20 towards more powerful models, unlimited workspaces, AI integrations) and Pro at $90/month billed annually, plus Enterprise custom. No Free or Starter plan is shown.",
+      "impact": "high",
+      "source_url": "https://replit.com/pricing",
+      "category": "IDE & Code Editors",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-19",
+      "restatement": [
+        {
+          "url": "https://replit.com/pricing",
+          "refused": "reading_describes_the_page_not_the_terms"
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Not a change: replit.com/pricing has shown only the paid plans since 2026-09-01, and docs.replit.com/billing/plans/starter-plan (read 2026-11-20) still describes the free Starter plan."
+    },
+    {
+      "proposal_id": "2026-11-20/ocr-space/record_corrected",
+      "proposed_on": "2026-11-20",
+      "vendor": "OCR.Space",
+      "change_type": "record_corrected",
+      "date": "2026-11-20",
+      "date_source": "discovered",
+      "summary": "The page also confirms Engine 1 is retired and redirected to Engine 2, 25,000 requests/month, 1 MB file limit, 3-page PDF limit, 500 requests/day per IP, watermark on free searchable PDFs, and PRO at $30/month for 300,000 requests and 5 MB files.",
+      "tier": "Free",
+      "tier_direction": "unchanged",
+      "previous_state": "Free OCR API that parses image and PDF files and returns the text as JSON: 25,000 requests/month, 1 MB file size limit, 3-page PDF limit, 500 requests/day per IP address, plus 1,000 Engine 3 conversions/month, down from 2,500 in October 2026. Engine 1 is retired; OCR.Space redirects calls to it to Engine 2. Free-tier searchable PDFs carry a watermark. PRO is $30/month for 300,000 requests and 5 MB files. The online OCR web form needs no registration and accepts files up to 5MB.",
+      "current_state": "Free plan: 25,000 requests/month, 1 MB file size limit, 3-page PDF limit, 500 requests/day per IP address, 1,000 Engine 3 conversions/month, searchable PDFs with watermark; Engine 1 retired and calls redirected to Engine 2; PRO is $30/month for 300,000 requests and 5 MB files.",
+      "impact": "low",
+      "source_url": "https://ocr.space/ocrapi",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-20",
+      "restatement": [
+        {
+          "url": "https://ocr.space/ocrapi",
+          "description": "Free plan: 25,000 requests/month, 1 MB file size limit, 3-page PDF limit, 500 requests/day per IP address, 1,000 Engine 3 conversions/month, searchable PDFs with watermark; Engine 1 retired and calls redirected to Engine 2; PRO is $30/month for 300,000 requests and 5 MB files."
+        }
+      ],
+      "dropped_on": "2026-11-20",
+      "drop_reason": "Not a change: the reading restates every term our listing holds (25,000 requests a month, 1 MB files, 3-page PDFs, 500 requests a day per IP, 1,000 Engine 3 conversions, PRO $30 a month)."
     }
   ]
 }

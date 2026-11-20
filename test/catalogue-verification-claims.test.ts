@@ -567,7 +567,7 @@ const A_PER_RECORD_STAMP = new RegExp(
 );
 
 const THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS: AnExemption[] = [
-  { why: "a withholding names the word in order to refuse the claim", sentence: /\b(?:cannot be|could not be|was not|is not|were not|not)\s+(?:re-)?verified\b/i },
+  { why: "a withholding names the word in order to refuse the claim", sentence: /\b(?:cannot(?: yet)? be|could not be|was not|is not|were not|not)\s+(?:[a-z]+ly\s+)?(?:re-)?verified\b/i },
   { why: `the word names one record on one date, the form this repo labels ${CONFIRMED_DATE_LABEL}`, sentence: A_PER_RECORD_STAMP },
   { why: "the sentence is a record we store as the vendor stated it", storedVerbatim: true },
   { why: "the word qualifies whom a vendor checks, not what we list", sentence: /\bverified (?:students|teachers|recipients|paid signups?|compute spend|partners|domains?|accounts?)\b/i },
@@ -661,6 +661,18 @@ function reasonForVerificationWord(route: string, surface: ProseSurface, said: s
     return theWordInContext(said).some((probe) => vendorProse.some((held) => held.includes(probe)));
   })?.why;
 }
+
+describe("verification words in withholding statements", () => {
+  it("recognizes refusals with qualifying adverbs without excusing affirmative claims", () => {
+    for (const said of ["The offer cannot be fully verified.", "The offer could not be independently verified.", "The offer cannot yet be verified."]) {
+      assert.strictEqual(reasonForVerificationWord("/vendor/example", { where: "body", text: said }, said, []),
+        "a withholding names the word in order to refuse the claim");
+    }
+    for (const said of ["Every listing is fully verified.", "All offers are independently verified."]) {
+      assert.strictEqual(reasonForVerificationWord("/vendor/example", { where: "body", text: said }, said, []), undefined);
+    }
+  });
+});
 
 describe("student eligibility checks in the Google plan guide", () => {
   const route = "/google-developer-program-2026";

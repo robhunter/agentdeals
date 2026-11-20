@@ -81,7 +81,8 @@
       "source_url": "https://circleci.com/pricing/",
       "record_date": "2026-09-03",
       "change_type": "limits_increased",
-      "summary": "The free tier still exists. The details have been expanded. The free tier now includes options for different resource classes and concurrency levels. Previously about 30K credits/month (up to 6,000 build minutes on small Docker), 5 users, and 30x concurrency is still accurate as a baseline. The free tier now offers more options."
+      "summary": "The free tier still exists. The details have been expanded. The free tier now includes options for different resource classes and concurrency levels. Previously about 30K credits/month (up to 6,000 build minutes on small Docker), 5 users, and 30x concurrency is still accurate as a baseline. The free tier now offers more options.",
+      "reverted_on": "2026-11-20"
     },
     {
       "vendor": "Grafana Cloud",
@@ -1617,7 +1618,8 @@
       "source_url": "https://wraps.dev",
       "record_date": "2026-08-28",
       "change_type": "new_free_tier",
-      "summary": "The free tier now includes a dashboard and AI template editor, 5K tracked events, 1 workflow, and unlimited contacts."
+      "summary": "The free tier now includes a dashboard and AI template editor, 5K tracked events, 1 workflow, and unlimited contacts.",
+      "reverted_on": "2026-11-20"
     },
     {
       "vendor": "Hypertune",
@@ -2821,7 +2823,8 @@
       "source_url": "https://surrealdb.com/pricing",
       "record_date": "2026-10-04",
       "change_type": "pricing_restructured",
-      "summary": "The free tier now includes a compute instance with 0.25 vCPU and 1 GB memory, but also lists several paid tiers with varying compute and storage options. The free tier is now explicitly a 'Start' plan with hourly billing for additional resources beyond the free limits."
+      "summary": "The free tier now includes a compute instance with 0.25 vCPU and 1 GB memory, but also lists several paid tiers with varying compute and storage options. The free tier is now explicitly a 'Start' plan with hourly billing for additional resources beyond the free limits.",
+      "reverted_on": "2026-11-20"
     },
     {
       "vendor": "Maxim AI",
@@ -2956,6 +2959,19 @@
       "record_date": "2026-08-28",
       "change_type": "limits_reduced",
       "summary": "The free tier still exists, but the description of the limits has changed. The free tier now includes 10MB monthly bandwidth, and 1 recipient."
+    },
+    {
+      "vendor": "Keywords AI",
+      "url": "https://www.respan.ai/pricing",
+      "restated_on": "2026-11-20",
+      "previous_description": "Rebranded to Respan; keywordsai.co redirects to respan.ai. Free plan: full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, 5 prompts. No credit card required.",
+      "description": "Rebranded to Respan; keywordsai.co redirects to respan.ai — Free $0 plan includes Full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, and 10 prompts; no credit card required.",
+      "reading_date": "2026-11-20",
+      "reading_terms": "Free $0 plan includes Full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, and 10 prompts; no credit card required.",
+      "source_url": "https://www.respan.ai/pricing",
+      "record_date": "2026-11-06",
+      "change_type": "limits_increased",
+      "summary": "By November 6, 2026, Respan's Free plan had 10 prompts. It had 5 prompts on October 22, 2026. The 100k logs, 1k scores, 5 datasets and 2 evaluators did not change. Respan is the new name of Keywords AI."
     }
   ]
 }
