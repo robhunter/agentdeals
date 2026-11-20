@@ -915,8 +915,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 147,
-      "table_figures_from_records": 115,
+      "table_figures": 148,
+      "table_figures_from_records": 116,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -950,8 +950,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 23,
-          "from_records": 23
+          "figures": 24,
+          "from_records": 24
         },
         {
           "label": "Upcoming Changes",
@@ -1019,8 +1019,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 169,
-      "table_figures_from_records": 35,
+      "table_figures": 172,
+      "table_figures_from_records": 38,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -1039,8 +1039,8 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 35,
-          "from_records": 34
+          "figures": 38,
+          "from_records": 37
         },
         {
           "label": "Upcoming Changes",
@@ -2345,8 +2345,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 123,
-      "table_figures_from_records": 122,
+      "table_figures": 125,
+      "table_figures_from_records": 124,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2365,8 +2365,8 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 9,
-          "from_records": 9
+          "figures": 11,
+          "from_records": 11
         }
       ],
       "reads_changes": true,
