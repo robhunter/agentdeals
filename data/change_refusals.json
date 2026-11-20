@@ -764,6 +764,18 @@
       "refused_date": "2026-09-12"
     },
     {
+      "vendor": "Augment Code",
+      "change_type": "record_corrected",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The stored info says Augment Code has no free tier and is retired, but the current pricing page shows active Standard ($20/month), Business ($100/month), and Enterprise (custom) plans. The page does not mention a free tier, but the paid plans are still present and match the stored description's pricing and limits. The stored 'Retired' tier is inaccurate because the product is still active with the same paid plans.",
+      "previous_state": "AI coding assistant with deep codebase understanding. No free tier. Standard $20/month flat and Business $100/month flat, each covering up to 50 seats with $20 and $100 of included monthly usage respectively across LLM, Context Engine and compute; top-ups are pay-as-you-go. Enterprise is custom-priced. Flat team pricing with no per-seat charge. Supports VS Code, JetBrains and CLI. SOC 2 Type II certified",
+      "current_state": "Standard is $20/month flat, no per-seat charge, up to 50 seats with $20/mo of usage included across LLM, Context Engine & compute; Business is $100/month flat, no per-seat charge, up to 50 seats with $100/mo of usage included; Enterprise is custom. All paid plans include SOC 2 Type II and no AI training.",
+      "source_url": "https://www.augmentcode.com/pricing",
+      "category": "AI Coding",
+      "refused_date": "2026-11-20"
+    },
+    {
       "vendor": "Auth0",
       "change_type": "limits_increased",
       "reason": "measures_no_change",
@@ -7021,13 +7033,13 @@
       "vendor": "lil'bots",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-05 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The free tier now includes 3,600 seconds of execution credits per month, down from the previously stated 10,000 credits.",
+      "detail": "the reading of this page refused on 2026-10-30 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "Free plan execution credits changed from 10,000 execution credits/month to 3,600s/month",
       "previous_state": "write and run scripts online utilizing free built-in APIs like OpenAI, Anthropic, Firecrawl and others. Great for building AI agents / internal tooling and sharing with team. Free-tier includes full access to APIs, AI coding assistant and 10,000 execution credits / month.",
-      "current_state": "Free Plan $0 / month...Execution Credits: 3,600s / month",
+      "current_state": "Free Plan is $0/month, allows creating unlimited bots, using thousands of prebuilt bots from the bot hub, and includes Execution Credits: 3,600s / month.",
       "source_url": "https://www.lilbots.io/",
       "category": "Low-Code Platforms",
-      "refused_date": "2026-10-30"
+      "refused_date": "2026-11-20"
     },
     {
       "vendor": "lil'bots",
@@ -8472,6 +8484,18 @@
       "source_url": "https://neo4j.com/pricing/",
       "category": "Databases",
       "refused_date": "2026-10-31"
+    },
+    {
+      "vendor": "Neo4j AuraDB",
+      "change_type": "record_corrected",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-31 (repeats_a_refused_claim) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The AuraDB Free tier still exists at $0 with no credit card required, but the page no longer states the specific node/relationship limits (200,000 nodes and 400,000 relationships) from the stored description; it only says 'Limits on node and relationship counts' without giving numbers.",
+      "previous_state": "Graph database cloud service — free tier: single database, up to 200,000 nodes and 400,000 relationships. Full Cypher query language support. No credit card required",
+      "current_state": "AuraDB Free is listed at $0, described as 'Learn and Explore Graphs' and 'Start learning', with no credit card or other payment method required. The plan comparison table lists 'DB Instance Size' and 'DB Instance Storage' as '^Limits on node and relationship counts' without specifying the numeric limits.",
+      "source_url": "https://neo4j.com/pricing/",
+      "category": "Databases",
+      "refused_date": "2026-11-20"
     },
     {
       "vendor": "Neo4j AuraDB",
@@ -9950,15 +9974,15 @@
     },
     {
       "vendor": "PromoProxy",
-      "change_type": "startup_program_expanded",
+      "change_type": "product_deprecated",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-09-13 (same_transition_graded_differently) stated the same 3 figures, so the page showed these terms before the date this record gives",
-      "summary": "PromoProxy is currently paused for a service renewal and new sign-ups are suspended. While a Free plan is still listed, it's unclear if it's currently accessible.",
+      "detail": "the reading of this page refused on 2026-10-30 (repeats_a_refused_reading) stated the same 3 figures, so the page showed these terms before the date this record gives",
+      "summary": "PromoProxy has paused service for a renewal; new sign-ups and use of the service are suspended, so the Free plan cannot currently be obtained.",
       "previous_state": "The Free plan is ¥0 /month, includes up to 5 users, and 3 GB of data per day.",
-      "current_state": "The Free plan is ¥0 /month, includes up to 5 users, and 3 GB of data per day.",
+      "current_state": "PromoProxy is currently paused for a service renewal. New sign-ups and use of the service are suspended. The page still lists a Free plan at ¥0 /month with up to 5 users and 3 GB of data per day, but sign-ups are suspended.",
       "source_url": "https://promoproxy.net/",
       "category": "CDN",
-      "refused_date": "2026-10-30"
+      "refused_date": "2026-11-20"
     },
     {
       "vendor": "PromoProxy",
@@ -12745,6 +12769,18 @@
     {
       "vendor": "Tweek",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-30 (states_no_difference) claimed the same change, limits_reduced, against the same stored description",
+      "summary": "The stored deal says the API is available in the free version, but the pricing page now states the REST API and MCP server work on the free plan only with a lower monthly limit, and that subtasks, reminders and repeating tasks need Premium.",
+      "previous_state": "Simple Weekly To-Do Calendar & Task Management. — Tweek is free for unlimited users. Share your calendars along with all todo lists and tasks with your friends, family or teammates. Collaborate, add new tasks, set reminders, create notes and checklists for your colleagues and family. The API is available in the free version.",
+      "current_state": "Tweek is free for unlimited users, with shared calendars, todo lists and tasks, collaboration, notes and checklists. Everyday task actions work on the free plan too; subtasks, reminders and repeating tasks need Premium. The REST API and the MCP server work on the free plan too, with a lower monthly limit.",
+      "source_url": "https://tweek.so/",
+      "category": "Project Management",
+      "refused_date": "2026-11-20"
+    },
+    {
+      "vendor": "Tweek",
+      "change_type": "limits_reduced",
       "reason": "states_no_difference",
       "detail": "limits_reduced claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
       "summary": "While the free tier still exists and allows unlimited users, the API has a lower monthly limit on the free plan. Premium is required for Google/Outlook calendar sync and Apple Reminders via Siri. Subtasks, checklists, and attachments are now Premium features.",
@@ -14006,15 +14042,15 @@
     },
     {
       "vendor": "Zoho Meeting",
-      "change_type": "limits_reduced",
+      "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-06 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
-      "summary": "The free tier now has a 60-minute meeting limit and supports up to 100 participants, whereas the stored deal info stated unlimited meetings and 3 participants/10 webinar attendees.",
+      "detail": "the reading of this page refused on 2026-10-31 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now lists 100 meeting participants and up to 60 minutes of meetings, while the stored deal info says free meetings are limited to 3 participants and 10 webinar attendees.",
       "previous_state": "Meetings with upto 3 meeting participants & 10 Webinar attendees.",
-      "current_state": "Free plan offers up to 60 minutes of meetings and 100 meeting participants.",
+      "current_state": "Free plan includes up to 60 minutes of meetings, 100 meeting participants, seamless video conferencing, and secure screen sharing.",
       "source_url": "https://zoho.com/meeting",
       "category": "Video",
-      "refused_date": "2026-10-31"
+      "refused_date": "2026-11-20"
     },
     {
       "vendor": "Zoho Projects",
