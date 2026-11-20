@@ -2748,7 +2748,7 @@
       "changed": "2026-11-19"
     },
     "/developers": {
-      "hash": "9307d3272178c9a8",
+      "hash": "49d6826a12d81e1e",
       "changed": "2026-11-19"
     },
     "/digest/2022-w48": {
@@ -3151,8 +3151,8 @@
       "changed": "2026-11-16"
     },
     "/digest/2027-w04": {
-      "hash": "9a7eb783594085dc",
-      "changed": "2026-11-16"
+      "hash": "71aa9b45a2c1c693",
+      "changed": "2026-11-19"
     },
     "/digest/2027-w05": {
       "hash": "1598078fe43cb646",
@@ -3223,12 +3223,16 @@
       "changed": "2026-11-16"
     },
     "/digest/2027-w39": {
-      "hash": "95c66223e3e4fb4e",
-      "changed": "2026-11-16"
+      "hash": "f00408d87a082b83",
+      "changed": "2026-11-19"
+    },
+    "/digest/2027-w43": {
+      "hash": "0c4125d68855d34b",
+      "changed": "2026-11-19"
     },
     "/digest/2027-w44": {
-      "hash": "b463e65c8428157c",
-      "changed": "2026-11-16"
+      "hash": "279341138ad1abe2",
+      "changed": "2026-11-19"
     },
     "/digest/2028-w05": {
       "hash": "f01d96d5ed5989df",
@@ -3247,7 +3251,7 @@
       "changed": "2026-11-16"
     },
     "/digest/archive": {
-      "hash": "3999f32591df0200",
+      "hash": "1e7947b79f6588f7",
       "changed": "2026-11-19"
     },
     "/digitalocean-free-tier-2026": {
@@ -3669,8 +3673,8 @@
       "changed": "2026-11-19"
     },
     "/reports/2027-01": {
-      "hash": "02f82a46fcc7c8d2",
-      "changed": "2026-11-17"
+      "hash": "6a0977ce9332e1f4",
+      "changed": "2026-11-19"
     },
     "/reports/2027-02": {
       "hash": "7338738fa1ecbe94",
@@ -3701,12 +3705,16 @@
       "changed": "2026-11-16"
     },
     "/reports/2027-09": {
-      "hash": "562da825055fdf47",
-      "changed": "2026-11-16"
+      "hash": "71964acb655d99f7",
+      "changed": "2026-11-19"
+    },
+    "/reports/2027-10": {
+      "hash": "601441dcddd0114a",
+      "changed": "2026-11-19"
     },
     "/reports/2027-11": {
-      "hash": "acfaf7444a478339",
-      "changed": "2026-11-16"
+      "hash": "766efa5bd5d3ff61",
+      "changed": "2026-11-19"
     },
     "/reports/2028-01": {
       "hash": "d34689b00942d883",
