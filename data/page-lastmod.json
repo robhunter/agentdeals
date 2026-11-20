@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-19",
+  "generated": "2026-11-20",
   "pages": {
     "/": {
       "daily": true
@@ -3112,7 +3112,8 @@
       "changed": "2026-11-17"
     },
     "/digest/2026-w47": {
-      "daily": true
+      "hash": "aa22c41572328cd2",
+      "changed": "2026-11-20"
     },
     "/digest/2026-w48": {
       "hash": "e20d47609bafea4a",
@@ -3356,7 +3357,8 @@
       "changed": "2026-11-12"
     },
     "/free-tier-risk": {
-      "daily": true
+      "hash": "169feb10fcf9bd40",
+      "changed": "2026-11-20"
     },
     "/free-tier-tracker": {
       "daily": true
@@ -3445,7 +3447,8 @@
       "changed": "2026-11-19"
     },
     "/llm-api-pricing": {
-      "daily": true
+      "hash": "1a9cb30240111c7b",
+      "changed": "2026-11-20"
     },
     "/localstack-alternatives": {
       "hash": "8ae3bd477812402c",
@@ -3535,7 +3538,8 @@
       "changed": "2026-11-12"
     },
     "/reports": {
-      "daily": true
+      "hash": "e7f8a6cfafb6ddb2",
+      "changed": "2026-11-20"
     },
     "/reports/2022-11": {
       "hash": "a484f9037b2afe28",
@@ -3737,7 +3741,8 @@
       "changed": "2026-11-18"
     },
     "/serverless-free-tier-comparison-2026": {
-      "daily": true
+      "hash": "31a5e8fbe76b3dbc",
+      "changed": "2026-11-20"
     },
     "/setup": {
       "hash": "eb646d7d3dfff83f",
@@ -3747,7 +3752,8 @@
       "daily": true
     },
     "/stability": {
-      "daily": true
+      "hash": "c3787e40d8025504",
+      "changed": "2026-11-20"
     },
     "/stack-check": {
       "hash": "9cb5819d91db5236",
@@ -3782,7 +3788,8 @@
       "changed": "2026-11-19"
     },
     "/state-of-free-tiers": {
-      "daily": true
+      "hash": "5e303d52c75c4c9f",
+      "changed": "2026-11-20"
     },
     "/storage-alternatives": {
       "hash": "8b46c2f436727bcf",
