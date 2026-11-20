@@ -83,6 +83,29 @@ async function checkPages(base: string) {
 }
 
 describe("expiring month groups include the deadline tracker's stated dates", () => {
+  it("excludes cancelled same-day records while retaining live same-day records", async () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "expiring-resolution-"));
+    const today = "2030-05-20";
+    const index = JSON.parse(readFileSync(path.join(REPO, "data/index.json"), "utf8"));
+    const changes = JSON.parse(readFileSync(path.join(REPO, "data/deal_changes.json"), "utf8"));
+    index.offers = [];
+    const record = (vendor: string) => ({ vendor, category: "Messaging", change_type: "product_deprecated", impact: "high", date: today, summary: "The product shuts down.", previous_state: "Available", current_state: "Retiring", source_url: "https://fixture.example/end", alternatives: [], recorded_date: "2030-05-01", date_source: "vendor_page", listing_effect: "none" });
+    changes.changes = [record("Live Fixture"), { ...record("Cancelled Fixture"), resolution: { state: "cancelled", date: "2030-05-10", detail: "The shutdown was cancelled.", source_url: "https://fixture.example/cancelled" } }];
+    writeFileSync(path.join(dir, "index.json"), JSON.stringify(index));
+    writeFileSync(path.join(dir, "changes.json"), JSON.stringify(changes));
+    writeFileSync(path.join(dir, "clock.cjs"), `const RealDate = Date; global.Date = class extends RealDate { constructor(...args) { super(...(args.length ? args : ["${today}T12:00:00Z"])); } static now() { return RealDate.parse("${today}T12:00:00Z"); } };`);
+    try {
+      await withServer({ AGENTDEALS_INDEX_PATH: path.join(dir, "index.json"), AGENTDEALS_CHANGES_PATH: path.join(dir, "changes.json"), NODE_OPTIONS: `--require=${path.join(dir, "clock.cjs")}` }, async base => {
+        const html = await fetch(base + "/expiring").then(response => response.text());
+        const upcoming = monthEntries(html);
+        assert.deepEqual(upcoming.map(entry => [entry.vendor, entry.countdown]), [["Live Fixture", "today"]]);
+        for (const label of ["Upcoming", "Within 14 Days"]) assert.match(html, new RegExp(`<div class="stat-value">1</div>\\s*<div class="stat-label">${label}</div>`));
+        assert.match(html, /<p class="page-intro">1 upcoming pricing changes tracked\./);
+        assert.match(html, /<meta name="description" content="1 upcoming pricing changes tracked\./);
+      });
+    } finally { rmSync(dir, { recursive: true, force: true }); }
+  });
+
   it("matches every live future vendor and date, including HiveMQ and Workers Logs", async () => {
     await withServer({}, async base => {
       const { upcoming, discovered } = await checkPages(base);

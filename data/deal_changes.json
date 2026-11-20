@@ -20004,11 +20004,11 @@
     {
       "vendor": "Twilio",
       "change_type": "product_deprecated",
-      "date": "2027-01-31",
-      "summary": "Twilio keeps running. Twilio Notify reaches end of life on January 31, 2027 for existing customers. Twilio stopped selling Notify in 2022, so new customers cannot use it. Twilio has said requests made to the Notify API will fail after its end of life, and has moved the date three times since 2022. Push notifications sent through Twilio Verify, Voice, Conversations or Engage are not affected.",
+      "date": "2027-10-31",
+      "summary": "Twilio keeps running. Twilio Notify reaches end of life on October 31, 2027 for existing customers. Twilio stopped selling Notify in 2022, so new customers cannot use it. Twilio has said requests made to the Notify API will fail after its end of life, and has moved the date four times since 2022. Push notifications sent through Twilio Verify, Voice, Conversations or Engage are not affected.",
       "what_ends": "Twilio Notify",
       "previous_state": "Existing Twilio Notify customers could still send notifications through the Notify API, which Twilio stopped selling in 2022.",
-      "current_state": "Twilio's support article Transitioning off Notify (read 2026-11-14): \"Twilio Notify will reach end of life on January 31, 2027 for existing customers. This EOL doesn’t affect other push notification use cases powered through other Twilio products such as Verify, Voice, Conversations or Engage.\" Twilio's changelog, about an earlier end-of-life date: \"After this date, any requests made to the Notify API will fail.\"",
+      "current_state": "Twilio's changelog post Twilio Notify end of life moves to October 31, 2027 (2026-11-18): \"After October 31, 2027, requests to the Notify API will stop working, and push notifications and SMS sent through Notify won’t reach your users.\" Twilio's support article How to transition off Notify (read 2026-11-19): \"Twilio Notify will reach end of life on October 31, 2027 for existing customers. This EOL doesn’t affect other push notification use cases powered through other Twilio products such as Verify, Voice, Conversations or Engage.\"",
       "impact": "medium",
       "source_url": "https://support.twilio.com/hc/en-us/articles/9198083260571-Transitioning-off-Notify",
       "category": "Communication",
@@ -20016,6 +20016,20 @@
       "recorded_date": "2026-11-14",
       "date_source": "vendor_page",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "Twilio",
+      "change_type": "record_corrected",
+      "date": "2026-11-19",
+      "summary": "Data correction - our Twilio Notify record carried the January 31, 2027 date that Twilio's support article gave when we read it on 2026-11-14. Twilio's changelog of 2026-11-18 and the same article now give October 31, 2027, so the record carries that date.",
+      "previous_state": "Dated 2027-01-31 from Twilio's support article (read 2026-11-14)",
+      "current_state": "Dated 2027-10-31 from Twilio's changelog (2026-11-18) and support article (read 2026-11-19)",
+      "impact": "low",
+      "source_url": "https://www.twilio.com/en-us/changelog/twilio-notify-end-of-life-timing-update",
+      "category": "Communication",
+      "alternatives": [],
+      "recorded_date": "2026-11-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Auth0",
@@ -20757,6 +20771,22 @@
       "alternatives": [],
       "recorded_date": "2026-11-17",
       "announced_on": "2026-01-12"
+    },
+    {
+      "vendor": "Microsoft To Do",
+      "change_type": "product_deprecated",
+      "date": "2027-06-30",
+      "summary": "Microsoft is retiring the Microsoft To Do apps on the web, Windows, Mac, iOS and Android on June 30, 2027, for work or school accounts and for personal Microsoft accounts. Work or school accounts move to Microsoft Planner, but existing To Do tasks and lists do not migrate to it. Planner is not available for personal Microsoft accounts. Microsoft says it will provide a way to export To Do data before the apps retire. The To Do service and its APIs retire later, on dates Microsoft has not announced.",
+      "previous_state": "Microsoft To Do was a free task app on the web, Windows, Mac, iOS and Android, for personal and work or school Microsoft accounts, with no announced end.",
+      "current_state": "Microsoft Support, \"Moving from Microsoft To Do to Microsoft Planner\" (read 2026-11-19): \"Microsoft To Do apps will retire on June 30, 2027. This includes To Do on the web, Windows, Mac, iOS, and Android, for both work or school accounts and personal Microsoft accounts.\" \"The underlying To Do service, APIs, and related synchronization support will retire on separate, later timelines.\" \"Existing To Do tasks and lists will not migrate to Planner.\" For personal Microsoft accounts: \"Planner is not available for these accounts.\"",
+      "impact": "medium",
+      "source_url": "https://support.microsoft.com/en-us/planner/to-do-to-planner",
+      "category": "Productivity & Notes",
+      "alternatives": [],
+      "recorded_date": "2026-11-19",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Microsoft To Do apps"
     }
   ]
 }

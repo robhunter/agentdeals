@@ -2307,6 +2307,18 @@
     {
       "vendor": "CMYK Pantone",
       "change_type": "rebranded",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-11-12 (repeats_a_refused_reading) claimed the same change, rebranded, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored deal describes a free CMYK-to-Pantone converter from 'CMYK Pantone', but the current page is for a different product called 'Color Mapper' with no Pantone conversion feature and no mention of CMYK Pantone.",
+      "previous_state": "Easily convert CMYK values to the closest Pantone colors and other color models in seconds for free.",
+      "current_state": "Color Mapper is a free browser-based color toolkit with 10 color tools, 18 format converters (RGB, CMYK, HEX, HSL, HSV), palette/gradient generators, WCAG contrast checker, print gamut checker, and no signup required. Pantone conversion is not mentioned anywhere on the page.",
+      "source_url": "https://www.cmyktopantone.com/",
+      "category": "Design",
+      "refused_date": "2026-11-19"
+    },
+    {
+      "vendor": "CMYK Pantone",
+      "change_type": "rebranded",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-11-05 (page_does_not_name_vendor) stated the same figure, so the page showed these terms before the date this record gives",
       "summary": "The stored deal describes a free CMYK-to-Pantone converter from 'CMYK Pantone', but the current page is for 'Color Mapper', a different product/brand offering a broader free color toolkit. The specific Pantone conversion feature is not mentioned; the page only lists converters between RGB, CMYK, HEX, HSL, and HSV.",
@@ -3563,15 +3575,15 @@
     },
     {
       "vendor": "Dotenv",
-      "change_type": "pricing_restructured",
+      "change_type": "free_tier_removed",
       "reason": "no_price_signal",
       "detail": "the page read carries no price signal — no amount, named tier or metered rate in 844 characters, so it states no terms to have changed",
-      "summary": "The free tier is no longer explicitly mentioned. The page focuses on 'dotenvx' which adds encryption and is recommended, implying a move towards a paid model for enhanced security. The original 'dotenv Classic' is still mentioned as 'solid' but the focus is on the paid 'dotenvx'.",
+      "summary": "The page no longer describes a free tier for up to 3 teammates; it now presents dotenv (classic), dotenvx (recommended, adds encryption), and dotenv-vault (legacy, paid cloud only), with no free-team plan mentioned.",
       "previous_state": "Sync your .env files, quickly & securely. Stop sharing your .env files over insecure channels like Slack and email, and never lose an important .env file again. Free for up to 3 teammates.",
-      "current_state": "dotenv Classic – still solid. dotenvx Recommended – adds encryption.",
+      "current_state": "dotenv-vault is described as 'Legacy – paid cloud only'; dotenvx is recommended and adds encryption; no free tier for up to 3 teammates is stated.",
       "source_url": "https://dotenv.org/",
       "category": "Security",
-      "refused_date": "2026-10-11"
+      "refused_date": "2026-11-19"
     },
     {
       "vendor": "drawDB",
@@ -5390,6 +5402,18 @@
       "refused_date": "2026-10-11"
     },
     {
+      "vendor": "goreportcard.com",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-11 (no_price_signal) claimed the same change, product_deprecated, against the same stored description",
+      "summary": "Go Report Card has been sunset and is no longer operating as a free hosted service; the project remains free and open source for self-hosting.",
+      "previous_state": "Code Quality for Go projects, free for Open Source",
+      "current_state": "Go Report Card has been sunset after more than a decade; the hosted service is no longer available. The project stays free and open source at github.com/gojp/goreportcard, so users can run their own instance or fork it. golangci-lint is recommended as the go-to alternative for Go code quality.",
+      "source_url": "https://goreportcard.com/",
+      "category": "Code Quality",
+      "refused_date": "2026-11-19"
+    },
+    {
       "vendor": "GPU-Bridge",
       "change_type": "record_corrected",
       "reason": "states_no_terms",
@@ -6703,6 +6727,18 @@
       "refused_date": "2026-10-22"
     },
     {
+      "vendor": "KillBait API",
+      "change_type": "limits_increased",
+      "reason": "measures_the_opposite",
+      "detail": "limits_increased claimed, and every quantity that moved between the two states moved the other way — 1 submission/hour against 10 submission per 24 hours",
+      "summary": "The stored deal info says the free tier allows 1 submission per hour and 10 per day. The current pricing page only states a maximum limit of 10 submissions within a 24-hour period and no longer mentions the 1-per-hour limit.",
+      "previous_state": "KillBait API allows users to submit URLs for content evaluation, detecting potential clickbait and categorizing articles. The API is designed for moderate publishing frequency, with limits of 1 submission per hour and 10 per day. Media partners can request higher limits.",
+      "current_state": "Regular users: €0 (free tier). The API is designed for websites and blogs with a moderate publishing frequency, with a maximum limit of 10 submissions within a 24-hour period, including submissions of URLs that may already be present in the system. Media outlets or news aggregators can contact info@killbait.com to explore increasing these limits.",
+      "source_url": "https://killbait.com/api/doc",
+      "category": "Dev Utilities",
+      "refused_date": "2026-11-19"
+    },
+    {
       "vendor": "Knock",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -6871,6 +6907,18 @@
       "source_url": "https://launchdarkly.com/pricing/",
       "category": "Feature Flags",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "LaunchDarkly",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-30 (states_no_difference) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The Developer free tier no longer includes the experimentation MAU allowance described in the stored info; the page now says 'No limit on experimentation' for A/B tests & multi-armed bandits, and the usage limits list no longer mentions 100K experimentation MAU. The page also adds new free limits (5K AgentControl AI runs, 5K session replays, 5K errors, 10M trace spans, 10M log lines) and states 1K client-side MAU free, while the stored description said 1K client-side MAU/mo.",
+      "previous_state": "Feature management — $0 / mo, forever. Unlimited seats. A/B Tests and Experiments includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. 5K session replays and 5K errors /mo. 5K AI runs/mo included. 1K client-side MAU /mo.",
+      "current_state": "Developer is $0 per mo, forever, with unlimited seats and no per-seat fees, unlimited flags with targeting, Agent configs & LLM-as-judge evals, observability for apps & LLMs, and A/B tests & multi-armed bandits with no limit on experimentation. Free monthly usage includes 5 service connections, 1K client-side MAU, 5K AgentControl AI runs, 5K session replays, 5K errors captured, 10M trace spans, and 10M log lines.",
+      "source_url": "https://launchdarkly.com/pricing/",
+      "category": "Feature Flags",
+      "refused_date": "2026-11-19"
     },
     {
       "vendor": "LaunchDarkly",
@@ -8171,6 +8219,18 @@
       "refused_date": "2026-10-11"
     },
     {
+      "vendor": "Miradore",
+      "change_type": "pricing_model_change",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-11 (no_price_signal) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The page prominently features a 'Get Free 14 Day Trial' and mentions 'Start Free Trial' multiple times, but does not explicitly state a perpetual 'Free' tier with unlimited devices as described in the stored information. It focuses on a trial period and paid plans.",
+      "previous_state": "Device Management service. Stay up-to-date with your device fleet and secure unlimited devices for free. The free plan offers basic features.",
+      "current_state": "The page offers a 'Get Free 14 Day Trial' and promotes paid plans, but does not explicitly detail a perpetual free tier with unlimited devices.",
+      "source_url": "https://miradore.com",
+      "category": "Mobile Development",
+      "refused_date": "2026-11-19"
+    },
+    {
       "vendor": "Miro",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -9032,15 +9092,15 @@
     },
     {
       "vendor": "Outlook.com",
-      "change_type": "limits_reduced",
+      "change_type": "pricing_model_change",
       "reason": "confirmed_unchanged",
-      "detail": "The current page only confirms the 15GB email storage, which was already stated in the stored description. The report highlights a Microsoft 365 Personal subscription, which wasn't part of the stored free tier description.",
-      "summary": "The free tier still exists. The storage limits have changed. Previously 15 GB email storage and 5 GB OneDrive. The current pricing page states 15 GB of mailbox storage for the free tier. A Microsoft 365 Personal subscription offers 100 GB of mailbox storage and 100 GB of OneDrive storage.",
+      "detail": "Same core terms: free Outlook email/calendar, 15 GB mailbox, 5 GB OneDrive; differences are wording and added detail.",
+      "summary": "The free tier description is no longer explicitly listed with the same features and storage.",
       "previous_state": "15 GB email storage. 5 GB OneDrive included. Calendar, contacts, tasks integrated. Focused Inbox. Office for the web access. Custom email aliases. Sweep rules. Ad-supported.",
-      "current_state": "The free tier includes 15 GB of mailbox storage.",
+      "current_state": "Outlook Free allows users to create a free account with Outlook email and calendar on web, desktop, and mobile apps, core security features, 15 GB of mailbox storage, and 5 GB of cloud storage for OneDrive and more apps.",
       "source_url": "https://outlook.live.com",
       "category": "Consumer Email",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-11-19"
     },
     {
       "vendor": "outsystems.com",
