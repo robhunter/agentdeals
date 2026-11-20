@@ -696,6 +696,11 @@
       "vendor": "Google Gemini Embedding 2",
       "tier": "Free",
       "since": "2026-11-11"
+    },
+    {
+      "vendor": "Mailgun",
+      "tier": "Free",
+      "since": "2026-11-21"
     }
   ]
 }
