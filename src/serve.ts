@@ -53397,6 +53397,7 @@ function pagesSitemapLedgerPaths(): string[] {
   paths.push("/alternatives");
   for (const p of ALTERNATIVES_PAGES) paths.push("/" + p.slug);
   paths.push("/x402-services", ...alternativeToSitemapPaths());
+  paths.push(...shutdownPageInventory(utcToday()).pages.keys());
   return paths;
 }
 
@@ -55093,6 +55094,9 @@ ${catList}
     }
     xml += '  <url>\n    <loc>' + BASE_URL + '/x402-services</loc>\n    <lastmod>' + pageLastmod("/x402-services") + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/alternative-to</loc>\n    <lastmod>' + pageLastmod("/alternative-to") + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+    for (const path of shutdownPageInventory(utcToday()).pages.keys()) {
+      xml += '  <url>\n    <loc>' + BASE_URL + path + '</loc>\n    <lastmod>' + pageLastmod(path) + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+    }
     const sitemapChanges = loadDealChanges();
     for (const s of vendorSlugMap.keys()) {
       if (!alternativesPagePublishesSubstitutes(s, sitemapChanges)) continue;
@@ -55912,6 +55916,11 @@ ${catList}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/tenor-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(withVerdictLinks(buildTenorAlternativesPage()));
+  } else if (url.pathname.startsWith("/shutdowns/") && isGetOrHead && shutdownPageInventory(utcToday()).pages.has(url.pathname)) {
+    const entry = shutdownPageInventory(utcToday()).pages.get(url.pathname)!;
+    const content = shutdownPageForEntry(entry, utcToday());
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escHtmlServer(content.title)}</title></head><body><main>${content.body}</main></body></html>`);
   } else if (url.pathname === "/shutdowns" && isGetOrHead) {
     recordApiHit("/shutdowns");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/shutdowns", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
