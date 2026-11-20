@@ -1210,6 +1210,7 @@
         "mailchimp",
         "maileroo",
         "mailersend-com",
+        "mailgun",
         "mailjet",
         "plunk",
         "postmark",
@@ -3061,13 +3062,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 29,
-      "table_figures_from_records": 1,
+      "table_figures": 30,
+      "table_figures_from_records": 2,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 29,
-          "from_records": 1
+          "figures": 30,
+          "from_records": 2
         }
       ],
       "reads_changes": false,

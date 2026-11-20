@@ -1389,14 +1389,6 @@
       "hash": "1be896baa1954535",
       "changed": "2026-11-13"
     },
-    "/compare/10minutemail-vs-emaillabs-io": {
-      "hash": "17a32d3026a228d8",
-      "changed": "2026-11-17"
-    },
-    "/compare/10minutemail-vs-resend": {
-      "hash": "d1171418d6671f9c",
-      "changed": "2026-11-17"
-    },
     "/compare/adapty-io-vs-coinmarketcap": {
       "hash": "6aa4c5b25b433dd7",
       "changed": "2026-11-13"
@@ -1921,13 +1913,21 @@
       "hash": "04bd77324b3f8afb",
       "changed": "2026-11-19"
     },
-    "/compare/emaillabs-io-vs-mail-tester-com": {
-      "hash": "b050930473b7659d",
-      "changed": "2026-10-12"
+    "/compare/emailoctopus-vs-etherealmail": {
+      "hash": "e29fa1946db4f55f",
+      "changed": "2026-11-20"
     },
-    "/compare/emaillabs-io-vs-resend": {
-      "hash": "83ec4977066a002f",
-      "changed": "2026-11-16"
+    "/compare/emailoctopus-vs-mail-tester-com": {
+      "hash": "f9fb98b7f657fe2d",
+      "changed": "2026-11-20"
+    },
+    "/compare/emailoctopus-vs-resend": {
+      "hash": "f9b0e1fc4199a7d0",
+      "changed": "2026-11-20"
+    },
+    "/compare/etherealmail-vs-resend": {
+      "hash": "c5a47efe05b2c11e",
+      "changed": "2026-11-20"
     },
     "/compare/expo-vs-loadly": {
       "hash": "12d70a87ba7cd6eb",
@@ -7104,6 +7104,10 @@
     "/vendor/mailersend-com": {
       "hash": "16de75a470ce06f5",
       "changed": "2026-11-19"
+    },
+    "/vendor/mailgun": {
+      "hash": "49e95fa314c8c958",
+      "changed": "2026-11-20"
     },
     "/vendor/mailinator-com": {
       "hash": "fc0862f8a66a3289",

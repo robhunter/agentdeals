@@ -42089,6 +42089,29 @@
           "read_on": "2026-11-12"
         }
       ]
+    },
+    {
+      "vendor": "Mailgun",
+      "category": "Email",
+      "description": "Free plan, $0 a month: 100 emails a day. It includes one custom sending domain, one day of log retention, one inbound route and one user. The Free plan needs no credit card. Basic is $15 a month for 10,000 emails a month with no daily limit. Foundation is $35 a month for 50,000 emails and Scale is $90 a month for 100,000 emails. Each starts with one free month.",
+      "tier": "Free",
+      "url": "https://www.mailgun.com/pricing/",
+      "tags": [
+        "email",
+        "api",
+        "transactional",
+        "smtp",
+        "free tier"
+      ],
+      "verifiedDate": "2026-11-20",
+      "conditions": [
+        {
+          "text": "On the Free plan with no card on file, Mailgun lets an account send only from its sandbox domain, to at most 5 authorized recipients who have each confirmed by email. Mailgun says adding a card lets the account add custom domains and send to anyone.",
+          "quote": "If you're on the Free plan without credit card information present or using your sandbox domain for testing, you're restricted to sending just to Authorized Recipients.",
+          "url": "https://help.mailgun.com/hc/en-us/articles/217531258-Authorized-Recipients",
+          "read_on": "2026-11-20"
+        }
+      ]
     }
   ],
   "changes": []
