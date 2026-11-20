@@ -50027,7 +50027,7 @@ function buildExpiringPage(): string {
   const thirtyDaysAgo = new Date(todayMs - 30 * 86400000).toISOString().slice(0, 10);
   const records = vendorRecordsDatedAfter(everyRecord, today);
   const stated = deadlinesOurTextStates(everyRecord, records, today);
-  const upcoming = deadlineLinesOf([...records, ...eventDated.filter(c => c.date === today)], stated);
+  const upcoming = deadlineLinesOf([...records, ...recordsStillInForce(eventDated).filter(c => c.date === today)], stated);
   const upcomingRecords = new Set(upcoming.flatMap(line => line.citedRecord ? [line.citedRecord] : []));
   for (const record of undatedChanges) {
     const displayedDeadline = statedDeadlines(deadlineTextsOf([], [record]), [], today)
