@@ -22,12 +22,12 @@
       "changed": "2026-11-19"
     },
     "/ai-free-tiers": {
-      "hash": "01e9712ed4e64d26",
-      "changed": "2026-11-19"
+      "hash": "2106486fc50629af",
+      "changed": "2026-11-20"
     },
     "/ai-ml-alternatives": {
-      "hash": "559d4bb57f2146a6",
-      "changed": "2026-11-19"
+      "hash": "80d38265395554ed",
+      "changed": "2026-11-20"
     },
     "/alternative-to": {
       "hash": "3c1df9bd5231b6d7",
@@ -1111,8 +1111,8 @@
       "changed": "2026-11-19"
     },
     "/category/ai-ml": {
-      "hash": "024b3c779edcf94a",
-      "changed": "2026-11-19"
+      "hash": "23f4c0bdd96730c8",
+      "changed": "2026-11-20"
     },
     "/category/analytics": {
       "hash": "34b347b0dfe03681",
@@ -3004,8 +3004,8 @@
       "changed": "2026-11-16"
     },
     "/digest/2026-w20": {
-      "hash": "c084a0a19419f590",
-      "changed": "2026-11-16"
+      "hash": "85135cd60c8e6991",
+      "changed": "2026-11-20"
     },
     "/digest/2026-w21": {
       "hash": "7afc055d1565ee25",
@@ -3337,8 +3337,8 @@
       "changed": "2026-11-19"
     },
     "/free-llm-apis": {
-      "hash": "c496dd260c87fcdf",
-      "changed": "2026-11-19"
+      "hash": "eb82c03fce50d8b1",
+      "changed": "2026-11-20"
     },
     "/free-nextjs-stack": {
       "hash": "13277066ac61b017",
@@ -3447,7 +3447,7 @@
       "changed": "2026-11-19"
     },
     "/llm-api-pricing": {
-      "hash": "1a9cb30240111c7b",
+      "hash": "1dd9c3d49b71a682",
       "changed": "2026-11-20"
     },
     "/localstack-alternatives": {
@@ -3741,7 +3741,7 @@
       "changed": "2026-11-18"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "31a5e8fbe76b3dbc",
+      "hash": "ddb91e8240842818",
       "changed": "2026-11-20"
     },
     "/setup": {
@@ -3756,8 +3756,8 @@
       "changed": "2026-11-20"
     },
     "/stack-check": {
-      "hash": "9cb5819d91db5236",
-      "changed": "2026-11-19"
+      "hash": "12ffedf6df64b948",
+      "changed": "2026-11-20"
     },
     "/stacks": {
       "hash": "9d72ff64bc961d23",
