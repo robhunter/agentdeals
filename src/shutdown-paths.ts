@@ -31,3 +31,14 @@ export function shutdownPaths<T extends ShutdownPathEntry>(entries: readonly T[]
   }
   return pages;
 }
+
+export function groupedShutdownRedirects<T extends ShutdownPathEntry>(members: readonly T[], group: T | undefined): Map<string, string> {
+  if (!group) {
+    if (members.length) throw new Error("Shutdown group is missing");
+    return new Map();
+  }
+  const target = shutdownPath(group);
+  const paths = shutdownPaths(members);
+  if (!paths.has(target)) throw new Error("Shutdown group is not a member");
+  return new Map([...paths.keys()].filter(path => path !== target).map(path => [path, target]));
+}
