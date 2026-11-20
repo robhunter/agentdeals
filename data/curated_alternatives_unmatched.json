@@ -467,13 +467,6 @@
       ]
     },
     {
-      "name": "Mailgun",
-      "named_by": [
-        "SendGrid",
-        "SendGrid Accelerate"
-      ]
-    },
-    {
       "name": "Mastodon API",
       "named_by": [
         "X (Twitter)",
