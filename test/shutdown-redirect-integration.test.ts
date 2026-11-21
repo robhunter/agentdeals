@@ -6,6 +6,7 @@ import { cpSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync }
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { shutdownPath } from "../dist/shutdown-paths.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 let scratch: string;
@@ -82,6 +83,35 @@ describe("maintained shutdown redirects", () => {
     const updated = JSON.parse(readFileSync(ledgerPath, "utf8"));
     assert.ok(!(old in updated.pages));
     assert.ok(target in updated.pages);
+  });
+
+  it("requires a redirect when a recorded shutdown changes its first date", () => {
+    const ledgerPath = path.join(scratch, "data/page-lastmod.json");
+    const ledgerBefore = readFileSync(ledgerPath, "utf8");
+    const ledger = JSON.parse(ledgerBefore);
+    const oldChroma = Object.keys(ledger.pages).find(key => key.startsWith("/shutdowns/chroma-2026-12-07-chroma-cloud-"));
+    assert.ok(oldChroma);
+    const changesPath = path.join(scratch, "data/deal_changes.json");
+    const changes = JSON.parse(readFileSync(changesPath, "utf8"));
+    const record = changes.changes.find((item: { what_ends?: string }) => item.what_ends === "Chroma Cloud");
+    assert.ok(record);
+    record.shutdown_stages[0].date = "2026-12-08";
+    writeFileSync(changesPath, JSON.stringify(changes));
+    const newChroma = shutdownPath({ vendorSlug: "chroma", service: record.what_ends, identity: record.summary, deadline: record.date, stages: record.shutdown_stages });
+    const run = () => spawnSync("node", [path.join(scratch, "scripts/update-page-lastmod.js")], {
+      cwd: scratch, encoding: "utf8", timeout: 600000,
+      env: { ...process.env, TZ: "UTC", AGENTDEALS_REFERRAL_HEALTH: "off" },
+    });
+    const refused = run();
+    assert.notEqual(refused.status, 0);
+    assert.match(refused.stderr, /Shutdown page needs a direct redirect/);
+    assert.equal(readFileSync(ledgerPath, "utf8"), ledgerBefore);
+    writeFileSync(path.join(scratch, "data/shutdown-redirects.json"), JSON.stringify({ [oldChroma]: newChroma }));
+    const accepted = run();
+    assert.equal(accepted.status, 0, `${accepted.stdout}${accepted.stderr}`);
+    const updated = JSON.parse(readFileSync(ledgerPath, "utf8"));
+    assert.ok(!(oldChroma in updated.pages));
+    assert.ok(newChroma in updated.pages);
   });
 
   it("rejects a map whose target is not a current page", async () => {
