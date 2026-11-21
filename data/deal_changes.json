@@ -20914,6 +20914,38 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "xAI",
+      "change_type": "product_deprecated",
+      "date": "2026-11-19",
+      "date_source": "vendor_page",
+      "summary": "xAI's API keeps running. xAI's release notes say grok-build-0.1 reached end of life on November 19, 2026 and is no longer served on the API. xAI names no replacement. xAI's pricing and models pages still list grok-build-0.1. xAI's May 15 retirement page still says requests to grok-code-fast-1 are routed to grok-build-0.1.",
+      "what_ends": "grok-build-0.1",
+      "listing_effect": "none",
+      "previous_state": "xAI served grok-build-0.1 on its API and routed requests to grok-code-fast-1 to grok-build-0.1.",
+      "current_state": "xAI release notes, \"grok-build-0.1 end of life\" (docs.x.ai/developers/release-notes, read 2026-11-21): \"`grok-build-0.1` reached end of life on November 19, 2026 and is no longer served on the API.\" xAI's pricing page (docs.x.ai/developers/pricing) and models page (docs.x.ai/developers/models), read 2026-11-21, list \"grok-build-0.1 (< 200k prompt tokens)\" with a 500k context window at $1.00 input and $2.00 output per 1M tokens. xAI's May 15 retirement page (docs.x.ai/developers/migration/may-15-retirement, read 2026-11-21): \"After May 15, requests to `grok-code-fast-1` are routed to `grok-build-0.1`.\" OpenRouter's model list (openrouter.ai/api/v1/models, read 2026-11-21) has no grok-build-0.1.",
+      "impact": "low",
+      "source_url": "https://docs.x.ai/developers/release-notes",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-21"
+    },
+    {
+      "vendor": "DigitalOcean",
+      "change_type": "product_deprecated",
+      "date": "2026-11-12",
+      "date_source": "vendor_page",
+      "summary": "DigitalOcean Managed Databases keep running. PostgreSQL 14 reached end of life on DigitalOcean on November 12, 2026. From that date DigitalOcean upgrades the remaining PostgreSQL 14 clusters to a supported version outside each cluster's maintenance window.",
+      "what_ends": "PostgreSQL 14 on DigitalOcean Managed Databases",
+      "listing_effect": "none",
+      "previous_state": "DigitalOcean Managed Databases ran PostgreSQL 14 clusters without forced upgrades.",
+      "current_state": "DigitalOcean release note (docs.digitalocean.com/notes/2026/postgresql-14-eol/, read 2026-11-21): \"PostgreSQL 14 reached end of life on 12 November 2026. Beginning on that date, remaining PostgreSQL 14 database clusters are upgraded to a supported version outside each cluster's maintenance window.\"",
+      "impact": "medium",
+      "source_url": "https://docs.digitalocean.com/notes/2026/postgresql-14-eol/",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-11-21"
     }
   ]
 }
