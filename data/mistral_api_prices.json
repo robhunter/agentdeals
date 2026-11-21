@@ -2,7 +2,7 @@
   "published": "2026-10-11",
   "title": "Mistral API Pricing 2026: Free Tier, Costs and Limits",
   "meta_description": "Mistral API prices run from $0.10 to $7.50 per million tokens. The Free plan has included no API access since about 2026-11-05. The API is for business customers only.",
-  "lead": "Mistral API prices run from $0.10 to $7.50 per million tokens. The Free plan covers Vibe and Studio and, since about 2026-11-05, does not include API access. To call the API you enable billing and pay-as-you-go with prepaid credits, or take Mistral Pro ($14.99 a month, $25.50 of API credits). The API is for business customers only since August 2026, under Mistral's Commercial Terms of Service.",
+  "lead": "Mistral API prices run from $0.10 to $7.50 per million tokens. The Free plan covers Vibe and Studio and, since about 2026-11-05, does not include API access. To call the API you enable billing and pay-as-you-go with prepaid credits, or take Mistral Pro at $14.99 a month, which includes monthly API usage whose amount Mistral no longer states. The API is for business customers only since August 2026, under Mistral's Commercial Terms of Service.",
   "prices": {
     "heading": "What does the Mistral API cost per million tokens?",
     "intro": "The cheapest text model is Ministral 3 3B at $0.10 per million input and output tokens. The most expensive output is Mistral Medium 3.5 at $7.50 per million output tokens. Mistral Large 4's API price is $0.70 input, $0.07 cached input and $2.10 output per million tokens from 2026-10-29. From 2026-10-20 until then, it was $1.36 input, $0.14 cached input and $4.18 output per million tokens. To call Mistral Large 4, use the model name mistral-large-4; mistral-large-latest still points to Mistral Large 3 (mistral-large-2512). Batch requests cost 50% less.",
@@ -115,7 +115,7 @@
   "answers": [
     {
       "heading": "Is the Mistral API free?",
-      "text": "No. Since about 2026-11-05, Free mode covers Vibe and Studio and does not include API access. API keys and API calls require billing activation and pay-as-you-go with prepaid credits. Before then, Free mode let you create API keys with no credit card, and the pricing page listed $10 a month of API credits on the Free plan until 2026-10-07. Mistral Pro at $14.99 a month includes $25.50 a month in API credits. \"labs-\" models are free of charge once you have API access, but experimental and not for production. To use Codestral in a code editor, an editor plugin calls the API and is billed at the API price. Mistral's own editor tool is Vibe Code. Mistral says the Free plan is for getting started with Vibe, and Pro gives full access to coding with Mistral Vibe. NVIDIA's free endpoint for Mistral Large 4 (model ID mistralai/mistral-large-4-1t-a52b) allows free use for testing and evaluation only, not production."
+      "text": "No. Since about 2026-11-05, Free mode covers Vibe and Studio and does not include API access. API keys and API calls require billing activation and pay-as-you-go with prepaid credits. Before then, Free mode let you create API keys with no credit card, and the pricing page listed $10 a month of API credits on the Free plan until 2026-10-07. Mistral Pro at $14.99 a month includes monthly usage shared across the API, Studio and Vibe Code. The pricing page has stated no amount since November 20, 2026. It listed $25.50 a month until then. \"labs-\" models are free of charge once you have API access, but experimental and not for production. To use Codestral in a code editor, an editor plugin calls the API and is billed at the API price. Mistral's own editor tool is Vibe Code. Mistral says the Free plan is for getting started with Vibe, and Pro gives full access to coding with Mistral Vibe. NVIDIA's free endpoint for Mistral Large 4 (model ID mistralai/mistral-large-4-1t-a52b) allows free use for testing and evaluation only, not production."
     },
     {
       "heading": "How does Mistral's pay-as-you-go billing work?",
@@ -127,7 +127,7 @@
     },
     {
       "heading": "Do Mistral Pro and the Education plan include API credits?",
-      "text": "Yes. Mistral Pro costs $14.99 a month and includes $25.50 a month in API credits; it included $30 until 2026-10-07. Verified students who have not used Vibe or Le Chat before can take the Education plan for $5.99 a month, for up to 12 months, with $15 a month in API credits. The credits are shared across the API, Studio and Vibe Code."
+      "text": "Yes, but Mistral no longer states how much. Both plans include monthly usage shared across the API, Studio and Vibe Code, used before prepaid credits. Mistral Pro costs $14.99 a month, and the Education plan $5.99 a month for up to 12 months for verified students who have not used Vibe or Le Chat before. The pricing page listed $25.50 a month for Pro and $15 a month for Education until November 20, 2026, and $30 for Pro until October 7, 2026. Usage beyond the included amount needs pay-as-you-go with prepaid credits, or it can stop until the next billing period."
     },
     {
       "heading": "What are the Mistral API rate limits?",

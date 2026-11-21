@@ -20888,6 +20888,32 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Mistral AI",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-20",
+      "date_source": "hand_written",
+      "summary": "Mistral's pricing page stopped listing API credits on Mistral Pro and the Education plan. It had listed $25.50 a month on Pro and $15 a month on Education. Mistral's docs still say each plan includes monthly usage shared across Studio, the API and Vibe Code, but give no amount.",
+      "previous_state": "Pro card: \"$25.5 /mo in API credits.\" Education card: \"$15 /mo in API credits.\" (mistral.ai/pricing, Internet Archive capture of 2026-11-17 16:14 UTC; our own reading of the page at 2026-11-20 03:06 UTC found both)",
+      "current_state": "Neither card states an amount (Internet Archive capture of 2026-11-20 15:37 UTC; read again 2026-11-21). Mistral's docs (Subscription, read 2026-11-21): \"Each Mistral plan includes monthly usage that is shared across Studio, the API, and Vibe Code.\"",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20261120153738/https://mistral.ai/pricing/",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-21",
+      "archive_check": {
+        "checked": "2026-11-21",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-11-17",
+            "first_new": "2026-11-20",
+            "last_old_capture": "https://web.archive.org/web/20261117161449/https://mistral.ai/pricing/",
+            "first_new_capture": "https://web.archive.org/web/20261120153738/https://mistral.ai/pricing/"
+          }
+        ]
+      }
     }
   ]
 }
