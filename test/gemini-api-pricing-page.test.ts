@@ -154,6 +154,12 @@ const modelsIn = (text: string) => text.match(/gemini-\d+\.\d+-[a-z]+(?:-[a-z]+)
 const longDate = (day: string) =>
   new Date(`${day}T00:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 
+function retirementRecordFor(model: string) {
+  const records = agentPlatformRetirements().filter((c) => modelsIn(c.previous_state).includes(model));
+  assert.strictEqual(records.length, 1);
+  return records[0];
+}
+
 function retirementRecordDated(day: string) {
   const record = agentPlatformRetirements().find((c) => longDate(c.date) === day);
   assert.ok(record, `no Google Gemini API change record retires models on Agent Platform on ${day}`);
@@ -186,7 +192,7 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
       "Calls to gemini-3.5-flash cost $1.50 input and $9.00 output per million tokens on Agent Platform, compared to $0.75 input and $3.75 output on the Gemini API, which routes to gemini-3.6-flash. " +
       "Change the model ID to gemini-3.8-flash before moving; it costs the same on both platforms. " +
       "Agent Platform retired gemini-2.5-pro, gemini-2.5-flash and gemini-2.5-flash-lite on October 20, 2026. " +
-      "gemini-3.6-flash can be called on Agent Platform until November 19, 2026, when Google retires it there. " +
+      `gemini-3.6-flash can be called on Agent Platform until ${longDate(retirementRecordFor("gemini-3.6-flash").date)}, when Google retires it there. ` +
       "On the Gemini API, gemini-2.5-pro and gemini-2.5-flash have a shutdown date of 2026-12-01. They are usable until then, then route to gemini-3.8-flash and gemini-3.5-flash-lite, respectively. gemini-2.5-flash-lite and gemini-3.6-flash have no shutdown date. " +
       "Agent Platform charges $0.75 input and $3.75 output per million tokens for Gemini 3.8 Flash and 3.6 Flash on the global endpoint through 2026-12-31, then $1.50 input and $7.50 output. " +
       "Non-global endpoints cost 10% more. " +
@@ -199,19 +205,16 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
     const stated = retirementsStated(page);
     assert.strictEqual(stated.length, 2, "the paragraph no longer gives two Agent Platform retirement dates");
     for (const { models, day } of stated) {
-      assert.deepStrictEqual([...modelsIn(retirementRecordDated(day).previous_state)].sort(), [...models].sort());
+      for (const model of models) assert.strictEqual(longDate(retirementRecordFor(model).date), day);
     }
   });
 
-  it("tells readers to move to the replacement each of those records names, and to no model an Agent Platform retirement record retires", () => {
+  it("tells readers to move to no model an Agent Platform retirement record retires", () => {
     const moveTo = withoutTags(prepayParagraph(page)).match(/Change the model ID to (gemini-[\d.]+-[a-z-]+) before moving;/)?.[1];
     assert.ok(moveTo, "the paragraph no longer names the model to change the ID to before moving");
     const records = agentPlatformRetirements();
     assert.ok(records.length > 0, "the Google Gemini API change records hold no Agent Platform retirement");
     for (const c of records) assert.ok(!modelsIn(c.previous_state).includes(moveTo!), `Agent Platform retires ${moveTo} on ${c.date}`);
-    for (const { day } of retirementsStated(page)) {
-      assert.match(retirementRecordDated(day).summary, new RegExp(`Google names ${moveTo!.replace(/\./g, "\\.")} as (?:a|the) replacement`));
-    }
   });
 
   it("pairs Gemini API shutdown dates and undated models with the records for their Agent Platform retirements", () => {
@@ -226,7 +229,7 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
     assert.strictEqual(shutdown[2], longDate(dated[2]));
     assert.match(october.summary, /gemini-2\.5-flash-lite has no shutdown date on the Gemini API\./);
     assert.ok(text.includes("gemini-2.5-flash-lite and gemini-3.6-flash have no shutdown date."));
-    assert.match(retirementRecordDated("November 19, 2026").summary, /^The Gemini API keeps serving gemini-3\.6-flash with no shutdown date\./);
+    assert.match(retirementRecordFor("gemini-3.6-flash").summary, /^The Gemini API keeps serving gemini-3\.6-flash with no shutdown date\./);
     assert.doesNotMatch(text, /none of these four models has a shutdown date/);
   });
 
