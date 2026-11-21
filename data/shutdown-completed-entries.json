@@ -226,7 +226,7 @@
   },
   {
     "card_date": "2026-11-30",
-    "card_title": "Claude Sonnet 4.5",
+    "card_title": "Claude Sonnet 4.5 on the Claude API",
     "entry": "Claude Sonnet 4.5 (claude-sonnet-4-5-20250929) on the Claude API (November 30, completed; requests to it fail; claude-sonnet-5-5 is the replacement Anthropic names; Amazon Bedrock and Google Cloud set their own retirement dates)"
   },
   {
