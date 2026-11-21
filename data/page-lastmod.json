@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-20",
+  "generated": "2026-11-21",
   "pages": {
     "/": {
       "daily": true
@@ -3112,8 +3112,7 @@
       "changed": "2026-11-20"
     },
     "/digest/2026-w47": {
-      "hash": "aa22c41572328cd2",
-      "changed": "2026-11-20"
+      "daily": true
     },
     "/digest/2026-w48": {
       "hash": "e20d47609bafea4a",
