@@ -1202,12 +1202,12 @@ function stabilityCellHtml(
     const since = linkUnreachable.last_reachable ? LAST_RESOLVED(linkUnreachable.last_reachable) : "";
     return `<span style="color:var(--text-dim)" title="Link has not resolved${escHtmlServer(since)}">link unreachable</span>`;
   }
+  const published = publishedVendorLevel(level ?? null, cause ?? null);
   const withheld = offer ? levelWithheldReason(offer, null) : null;
-  if (withheld) {
+  if (withheld && (published === null || published === "stable")) {
     const why = withheldLevelClause(withheld, "");
     return `<span style="color:var(--text-dim)" title="${escHtmlServer(why.charAt(0).toUpperCase() + why.slice(1))}">source unconfirmed</span>`;
   }
-  const published = publishedVendorLevel(level ?? null, cause ?? null);
   if (published === null) return `<span style="color:var(--text-dim)">unrated</span>`;
   const color = RISK_COLORS[published] ?? "#8b949e";
   const title = published === "stable" || !cause
