@@ -26955,7 +26955,6 @@ interface ShutdownEntry {
   service: string;
   vendorSlug: string;
   what: string;
-  pathIdentity?: string;
   deadline: string;
   dateSource?: string;
   impact?: string;
@@ -27201,7 +27200,6 @@ function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTy
   ];
 
   for (const entry of handTyped) {
-    entry.pathIdentity = entry.what;
     if (shutdownDateEnd(entry.deadline) >= fullShutdownDetailsSince || !entry.retainedDetails) continue;
     const retained = entry.retainedDetails;
     if (retained.what) {
@@ -27214,7 +27212,6 @@ function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTy
     service: whatEnds(record) ?? (vendorPage === null ? null : recordNamedBySlug(vendorPage)) ?? record.vendor,
     vendorSlug: vendorPage ?? toSlug(record.vendor),
     what: record.summary,
-    pathIdentity: record.summary,
     deadline,
     dateSource: record.source_url,
     stages: record.shutdown_stages,
@@ -27230,7 +27227,6 @@ function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTy
       service: deadline.vendor,
       vendorSlug: servedVendorSlugForName(deadline.vendor) ?? toSlug(deadline.vendor),
       what: deadline.sentence,
-      pathIdentity: deadline.sentence,
       deadline: deadline.date,
       dateSource: deadline.sourceUrl ?? undefined,
       statedDeadline: deadline,
@@ -27251,11 +27247,7 @@ function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTy
 
 function shutdownPageInventory(todayDay: string) {
   const { recordedOnly } = shutdownEntries(todayDay);
-  const withIdentity = (entry: ShutdownEntry) => {
-    if (!entry.pathIdentity) throw new Error(`Shutdown page has no identity: ${entry.service}`);
-    return { ...entry, identity: entry.pathIdentity };
-  };
-  const pages = shutdownPaths(recordedOnly.map(withIdentity));
+  const pages = shutdownPaths(recordedOnly);
   const maintained: Record<string, string> = JSON.parse(readFileSync(join(__dirname, "..", "data", "shutdown-redirects.json"), "utf8"));
   const redirects = reconcileShutdownRedirects([], pages.keys(), maintained);
   return { pages, redirects };

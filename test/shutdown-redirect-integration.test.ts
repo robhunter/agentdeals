@@ -87,31 +87,40 @@ describe("maintained shutdown redirects", () => {
 
   it("requires a redirect when a recorded shutdown changes its first date", () => {
     const ledgerPath = path.join(scratch, "data/page-lastmod.json");
-    const ledgerBefore = readFileSync(ledgerPath, "utf8");
-    const ledger = JSON.parse(ledgerBefore);
-    const oldChroma = Object.keys(ledger.pages).find(key => key.startsWith("/shutdowns/chroma-2026-12-07-chroma-cloud-"));
-    assert.ok(oldChroma);
     const changesPath = path.join(scratch, "data/deal_changes.json");
     const changes = JSON.parse(readFileSync(changesPath, "utf8"));
-    const record = changes.changes.find((item: { what_ends?: string }) => item.what_ends === "Chroma Cloud");
-    assert.ok(record);
-    record.shutdown_stages[0].date = "2026-12-08";
+    const record = {
+      vendor: "Fixture Database", change_type: "product_deprecated", date: "2030-12-22",
+      date_source: "vendor_page", summary: "Fixture Database retires in December 2030.",
+      what_ends: "Fixture Database Cloud", listing_effect: "none", previous_state: "Available",
+      current_state: "Retiring", impact: "high", source_url: "https://example.com/retirement",
+      category: "Databases", alternatives: [], recorded_date: "2026-01-01",
+      shutdown_stages: [{ date: "2030-12-07", label: "read-only" }, { date: "2030-12-22", label: "reads end" }],
+    };
+    changes.changes.push(record);
     writeFileSync(changesPath, JSON.stringify(changes));
-    const newChroma = shutdownPath({ vendorSlug: "chroma", service: record.what_ends, identity: record.summary, deadline: record.date, stages: record.shutdown_stages });
     const run = () => spawnSync("node", [path.join(scratch, "scripts/update-page-lastmod.js")], {
       cwd: scratch, encoding: "utf8", timeout: 600000,
       env: { ...process.env, TZ: "UTC", AGENTDEALS_REFERRAL_HEALTH: "off" },
     });
+    const initial = run();
+    assert.equal(initial.status, 0, `${initial.stdout}${initial.stderr}`);
+    const ledgerBefore = readFileSync(ledgerPath, "utf8");
+    const oldPath = shutdownPath({ vendorSlug: "fixture-database", service: record.what_ends, deadline: record.date, stages: record.shutdown_stages });
+    assert.ok(oldPath in JSON.parse(ledgerBefore).pages);
+    record.shutdown_stages[0].date = "2030-12-08";
+    writeFileSync(changesPath, JSON.stringify(changes));
+    const newPath = shutdownPath({ vendorSlug: "fixture-database", service: record.what_ends, deadline: record.date, stages: record.shutdown_stages });
     const refused = run();
     assert.notEqual(refused.status, 0);
     assert.match(refused.stderr, /Shutdown page needs a direct redirect/);
     assert.equal(readFileSync(ledgerPath, "utf8"), ledgerBefore);
-    writeFileSync(path.join(scratch, "data/shutdown-redirects.json"), JSON.stringify({ [oldChroma]: newChroma }));
+    writeFileSync(path.join(scratch, "data/shutdown-redirects.json"), JSON.stringify({ [oldPath]: newPath }));
     const accepted = run();
     assert.equal(accepted.status, 0, `${accepted.stdout}${accepted.stderr}`);
     const updated = JSON.parse(readFileSync(ledgerPath, "utf8"));
-    assert.ok(!(oldChroma in updated.pages));
-    assert.ok(newChroma in updated.pages);
+    assert.ok(!(oldPath in updated.pages));
+    assert.ok(newPath in updated.pages);
   });
 
   it("rejects a map whose target is not a current page", async () => {

@@ -59,14 +59,15 @@ describe("shutdown page routes", () => {
     }
   });
 
-  it("omits vendor links for records without a served vendor page", async () => {
-    for (const slug of ["cocoapods", "zeabur", "twilio"]) {
-      const matches = paths.filter(route => route.startsWith(`/shutdowns/${slug}-`));
-      assert.ok(matches.length, slug);
-      for (const route of matches) {
-        const document = createDocument(await (await fetch(base + route)).text());
-        assert.ok(!document.querySelector('a[href^="/vendor/"]'), route);
-      }
+  it("links the vendor exactly when its page is served", async () => {
+    for (const route of paths) {
+      const slug = route.match(/^\/shutdowns\/(.+?)-\d{4}-\d{2}/)?.[1];
+      assert.ok(slug, route);
+      const response = await fetch(`${base}/vendor/${slug}`, { redirect: "follow" });
+      const document = createDocument(await (await fetch(base + route)).text());
+      const link = document.querySelector('a[href^="/vendor/"]');
+      assert.equal(Boolean(link), response.status === 200, route);
+      if (link) assert.equal(link.getAttribute("href"), `/vendor/${slug}`, route);
     }
   });
 

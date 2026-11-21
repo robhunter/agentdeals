@@ -19,6 +19,9 @@ describe("shutdown page content", () => {
   });
   it("stays identical before the first date and marks completion after the last", () => {
     assert.deepEqual(shutdownPageContent(entry, "2026-11-20"), shutdownPageContent(entry, "2026-12-06"));
+    assert.doesNotMatch(shutdownPageContent(entry, "2026-12-07").body, /read-only: December 7, 2026 — Completed/);
+    assert.match(shutdownPageContent(entry, "2026-12-08").body, /read-only: December 7, 2026 — Completed/);
+    assert.doesNotMatch(shutdownPageContent(entry, "2026-12-08").body, /stops serving reads: December 22, 2026 — Completed/);
     assert.match(shutdownPageContent(entry, "2026-12-22").body, /Upcoming/);
     assert.match(shutdownPageContent(entry, "2026-12-23").body, /Completed/);
   });

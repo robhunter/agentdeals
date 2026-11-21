@@ -42,6 +42,6 @@ export function shutdownPageContent(entry: ShutdownPageEntry, today: string, opt
   const migration = entry.migrationLink && /^\/(?!\/)/.test(entry.migrationLink)
     ? `<p><a href="${escapeHtml(entry.migrationLink)}">Migration guide</a></p>` : "";
   const vendor = options.vendorPath ? `<a href="${escapeHtml(options.vendorPath)}">Vendor</a> · ` : "";
-  const body = `<h1>${escapeHtml(title)}</h1><p>${completed ? "Completed" : "Upcoming"}</p>${description}<ul>${stages.map(stage => `<li>${escapeHtml(stage.label ? `${stage.label}: ${dateLabel(stage.date)}` : dateLabel(stage.date))}</li>`).join("")}</ul>${source}${details}${migration}<p>${vendor}<a href="/shutdowns">Shutdown tracker</a></p>`;
+  const body = `<h1>${escapeHtml(title)}</h1><p>${completed ? "Completed" : "Upcoming"}</p>${description}<ul>${stages.map(stage => `<li>${escapeHtml(stage.label ? `${stage.label}: ${dateLabel(stage.date)}` : dateLabel(stage.date))}${shutdownDateEnd(stage.date) < today ? " — Completed" : ""}</li>`).join("")}</ul>${source}${details}${migration}<p>${vendor}<a href="/shutdowns">Shutdown tracker</a></p>`;
   return { title, body };
 }
