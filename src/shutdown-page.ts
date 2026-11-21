@@ -1,6 +1,7 @@
 import { shutdownDates, type ShutdownDate } from "./shutdown-deadline.js";
 import { isShutdownMonth, shutdownDateEnd, shutdownMonthLabel } from "./shutdown-date.js";
 import type { StatedDeadline } from "./stated-deadlines.js";
+import type { ChangeResolution } from "./types.js";
 
 export interface ShutdownPageEntry extends ShutdownDate {
   service: string;
@@ -12,6 +13,7 @@ export interface ShutdownPageEntry extends ShutdownDate {
   migrationLink?: string;
   statedDeadline?: StatedDeadline;
   groupedDeadlines?: readonly StatedDeadline[];
+  resolution?: ChangeResolution | null;
 }
 
 function escapeHtml(value: string): string {
@@ -28,6 +30,14 @@ export function shutdownPageContent(entry: ShutdownPageEntry, today: string, opt
   vendorPath: string | null;
 }): { title: string; body: string } {
   const stages = shutdownDates(entry);
+  if (entry.resolution && (entry.resolution.state === "cancelled" || entry.resolution.state === "retracted")) {
+    const resolution = entry.resolution;
+    const title = `${entry.service}: ${resolution.state === "cancelled" ? "shutdown called off" : "shutdown record retracted"}`;
+    const source = resolution.source_url && /^https?:\/\//i.test(resolution.source_url)
+      ? `<p><a href="${escapeHtml(resolution.source_url)}">Source</a></p>` : "";
+    const vendor = options.vendorPath ? `<a href="${escapeHtml(options.vendorPath)}">Vendor</a> · ` : "";
+    return { title, body: `<h1>${escapeHtml(title)}</h1><p>${escapeHtml(dateLabel(resolution.date))}</p>${resolution.detail ? `<p>${escapeHtml(resolution.detail)}</p>` : ""}${source}<p>${vendor}<a href="/shutdowns">Shutdown tracker</a></p>` };
+  }
   const stageText = stages.map(stage => `${stage.label ? `${stage.label} on ` : ""}${dateLabel(stage.date)}`).join(", ");
   const title = `${entry.service}: ${stageText}`;
   const completed = shutdownDateEnd(stages[stages.length - 1].date) < today;

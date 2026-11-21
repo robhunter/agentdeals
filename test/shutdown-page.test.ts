@@ -9,6 +9,16 @@ const shutdownPageContent = (item, today, overrides = {}) => renderShutdownPage(
 const stated = (sentence, sourceUrl) => ({ vendor: "Example", category: "API", date: "2026-12-22", sentence, sourceUrl, statedIn: "description" });
 
 describe("shutdown page content", () => {
+  for (const state of ["cancelled", "retracted"] as const) {
+    it(`shows the ${state} correction instead of the original stages`, () => {
+      const page = shutdownPageContent({ ...entry, what: "It shuts down on December 22.", resolution: { state, date: "2026-11-13", detail: "Correction & detail.", source_url: "https://example.com/correction" } }, "2026-11-20");
+      assert.match(page.title, state === "cancelled" ? /shutdown called off/ : /record retracted/);
+      assert.match(page.body, /November 13, 2026/);
+      assert.match(page.body, /Correction &amp; detail/);
+      assert.match(page.body, /https:\/\/example.com\/correction/);
+      assert.doesNotMatch(page.body, /shuts down on|December 7|December 22|Upcoming|Completed/);
+    });
+  }
   it("includes each ordered stage and preserves the record and source safely", () => {
     const page = shutdownPageContent(entry, "2026-11-20");
     assert.equal(page.title, "Chroma Cloud: read-only on December 7, 2026, stops serving reads on December 22, 2026");

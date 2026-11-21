@@ -85,7 +85,7 @@ describe("maintained shutdown redirects", () => {
     assert.ok(target in updated.pages);
   });
 
-  it("requires a redirect when a recorded shutdown changes its first date", () => {
+  it("requires a redirect when a recorded shutdown changes its first date", async () => {
     const ledgerPath = path.join(scratch, "data/page-lastmod.json");
     const changesPath = path.join(scratch, "data/deal_changes.json");
     const changes = JSON.parse(readFileSync(changesPath, "utf8"));
@@ -121,6 +121,44 @@ describe("maintained shutdown redirects", () => {
     const updated = JSON.parse(readFileSync(ledgerPath, "utf8"));
     assert.ok(!(oldPath in updated.pages));
     assert.ok(newPath in updated.pages);
+    for (const state of ["cancelled", "retracted"]) {
+      record.resolution = { state, date: "2029-01-03", detail: `Fixture ${state} correction.`, source_url: "https://example.com/correction" };
+      writeFileSync(changesPath, JSON.stringify(changes));
+      const result = run();
+      assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
+      assert.ok(newPath in JSON.parse(readFileSync(ledgerPath, "utf8")).pages);
+      const server = spawn("node", [path.join(scratch, "dist/serve.js")], {
+        cwd: scratch, stdio: ["ignore", "ignore", "pipe"],
+        env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off" },
+      });
+      try {
+        const port = await new Promise<string>((resolve, reject) => {
+          const timer = setTimeout(() => reject(new Error("Server startup timeout")), 30000);
+          server.stderr!.on("data", chunk => {
+            const match = String(chunk).match(/running on http:\/\/localhost:(\d+)/);
+            if (match) { clearTimeout(timer); resolve(match[1]); }
+          });
+          server.on("error", reject);
+          server.on("exit", code => { clearTimeout(timer); reject(new Error(`Server exited: ${code}`)); });
+        });
+        const url = `http://localhost:${port}`;
+        const response = await fetch(url + newPath, { redirect: "manual" });
+        assert.equal(response.status, 200);
+        const body = await response.text();
+        assert.match(body, new RegExp(`Fixture ${state} correction`));
+        assert.match(body, /January 3, 2029/);
+        assert.match(body, /https:\/\/example.com\/correction/);
+        assert.doesNotMatch(body, /read-only|reads end|retires in December/);
+        assert.ok((await (await fetch(`${url}/sitemap-pages.xml`)).text()).includes(newPath));
+        assert.ok(!(await (await fetch(`${url}/shutdowns`)).text()).includes("Fixture Database Cloud"));
+      } finally {
+        if (server.exitCode === null && server.signalCode === null) {
+          const exited = once(server, "exit");
+          server.kill();
+          await exited;
+        }
+      }
+    }
   });
 
   it("rejects a map whose target is not a current page", async () => {

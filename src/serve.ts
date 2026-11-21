@@ -26967,6 +26967,7 @@ interface ShutdownEntry {
   statedDeadline?: StatedDeadline;
   groupedDeadlines?: StatedDeadline[];
   stages?: DealChange["shutdown_stages"];
+  resolution?: DealChange["resolution"];
   status: "active" | "imminent" | "completed";
 }
 
@@ -27246,8 +27247,24 @@ function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTy
 }
 
 function shutdownPageInventory(todayDay: string) {
-  const { recordedOnly } = shutdownEntries(todayDay);
-  const pages = shutdownPaths(recordedOnly);
+  const { recordedOnly, handTyped } = shutdownEntries(todayDay);
+  const originals = new Map<DealChange, DealChange>();
+  const candidates = dealChanges.filter(record => record.resolution?.state === "cancelled" || record.resolution?.state === "retracted").map(record => {
+    const candidate = { ...record, resolution: undefined };
+    originals.set(candidate, record);
+    return candidate;
+  });
+  const resolved: ShutdownEntry[] = forecastShutdownsWithoutACard(candidates, handTyped).map(({ record, vendorPage, deadline }) => ({
+    service: whatEnds(record) ?? (vendorPage === null ? null : recordNamedBySlug(vendorPage)) ?? record.vendor,
+    vendorSlug: vendorPage ?? toSlug(record.vendor),
+    what: record.summary,
+    deadline,
+    dateSource: record.source_url,
+    stages: record.shutdown_stages,
+    resolution: originals.get(record)!.resolution,
+    status: "active",
+  }));
+  const pages = shutdownPaths([...recordedOnly, ...resolved]);
   const maintained: Record<string, string> = JSON.parse(readFileSync(join(__dirname, "..", "data", "shutdown-redirects.json"), "utf8"));
   const redirects = reconcileShutdownRedirects([], pages.keys(), maintained);
   return { pages, redirects };
