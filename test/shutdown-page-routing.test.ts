@@ -51,6 +51,22 @@ describe("shutdown page routes", () => {
       assert.ok(document.title, route);
       assert.equal(document.querySelector("h1")?.textContent, document.title, route);
       assert.ok(document.querySelector('a[href="/shutdowns"]'), route);
+      const vendor = document.querySelector('a[href^="/vendor/"]');
+      if (vendor) {
+        const vendorResponse = await fetch(base + vendor.getAttribute("href"), { redirect: "follow" });
+        assert.equal(vendorResponse.status, 200, route);
+      }
+    }
+  });
+
+  it("omits vendor links for records without a served vendor page", async () => {
+    for (const slug of ["cocoapods", "zeabur", "twilio"]) {
+      const matches = paths.filter(route => route.startsWith(`/shutdowns/${slug}-`));
+      assert.ok(matches.length, slug);
+      for (const route of matches) {
+        const document = createDocument(await (await fetch(base + route)).text());
+        assert.ok(!document.querySelector('a[href^="/vendor/"]'), route);
+      }
     }
   });
 
