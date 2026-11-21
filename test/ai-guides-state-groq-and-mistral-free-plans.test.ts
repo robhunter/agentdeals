@@ -94,6 +94,9 @@ const MISTRAL_CREDIT_AS_CURRENT = [
   "$10/month in API credits",
   "$10/mo in API credits",
   "$10/mo API credits",
+  "includes $25.50 a month in API credits",
+  "with $15 a month in API credits",
+  "$25.50 of API credits",
 ];
 
 const WITHDRAWN: Record<string, string[]> = {
@@ -118,6 +121,7 @@ const WITHDRAWN: Record<string, string[]> = {
   "/free-llm-apis": MISTRAL_CREDIT_AS_CURRENT,
   "/ai-free-tiers": MISTRAL_CREDIT_AS_CURRENT,
   [MISTRAL_GUIDE]: MISTRAL_CREDIT_AS_CURRENT,
+  "/vendor/mistral-ai": MISTRAL_CREDIT_AS_CURRENT,
 };
 
 const PAGES = Object.keys(STATED);
@@ -298,7 +302,7 @@ describe("the AI guides state Groq's and Mistral's free plans as the vendors lis
     }
   });
 
-  it("opens the Mistral free API answer with no and preserves Pro's price and credits", () => {
+  it("opens the Mistral free API answer with no and preserves Pro's price", () => {
     const html = served.get(MISTRAL_GUIDE)!;
     const paragraph = html.match(/<h2>Is the Mistral API free\?<\/h2>\s*<p[^>]*>([\s\S]*?)<\/p>/)?.[1];
     assert.ok(paragraph);
@@ -306,17 +310,18 @@ describe("the AI guides state Groq's and Mistral's free plans as the vendors lis
     const article = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)![1]);
     assert.match(article.description, /Free plan has included no API access/);
     assert.match(answer, /^No\. Since about 2026-11-05, Free mode covers Vibe and Studio and does not include API access\./);
-    assert.match(answer, /Mistral Pro at \$14\.99 a month includes \$25\.50 a month in API credits/);
+    assert.match(answer, /Mistral Pro at \$14\.99 a month includes monthly usage/);
     assert.match(answer, /"labs-" models are free of charge once you have API access/);
     assert.match(answer, /free use for testing and evaluation only, not production/);
-    assert.match(textOf(html), /Mistral Pro costs \$14\.99 a month and includes \$25\.50 a month in API credits/);
+    assert.match(textOf(html), /Mistral Pro costs \$14\.99 a month/);
+    assert.match(listedDescription("Mistral AI"), /Mistral Pro costs \$14\.99 a month/);
   });
 
   it("keeps the guide's introduction, business eligibility and rate-limit explanation consistent with paid API access", () => {
     const html = served.get(MISTRAL_GUIDE)!;
     const prose = decode(html.replace(/<[^>]+>/g, "")).replace(/\s+/g, " ");
     assert.match(prose, /The Free plan covers Vibe and Studio and, since about 2026-11-05, does not include API access\./);
-    assert.match(prose, /To call the API you enable billing and pay-as-you-go with prepaid credits, or take Mistral Pro \(\$14\.99 a month, \$25\.50 of API credits\)\./);
+    assert.match(prose, /To call the API you enable billing and pay-as-you-go with prepaid credits, or take Mistral Pro at \$14\.99 a month, which includes monthly API usage whose amount Mistral no longer states\./);
     assert.match(prose, /A business can use Mistral's API in a commercial product; individuals cannot use the API for personal projects\./);
     assert.doesNotMatch(prose, /including the Free plan|Free mode has the lowest limits/);
     assert.match(prose, /Mistral's help center \(2026-08-12\) says enabling pay-as-you-go unlocks Tier 1\./);
