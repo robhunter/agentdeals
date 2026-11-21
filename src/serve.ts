@@ -55927,7 +55927,7 @@ ${catList}
     if (entry) {
       const content = shutdownPageForEntry(entry, today);
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escHtmlServer(content.title)}</title></head><body><main>${content.body}</main>${FOOTER_FOR_PAGES_WITHOUT_ONE}</body></html>`);
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escHtmlServer(content.title)}</title><style>body{margin:0;background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-serif}main{max-width:800px;margin:3rem auto;padding:0 1.5rem}h1{line-height:1.2}a{color:#93c5fd}</style></head><body><main>${content.body}</main>${FOOTER_FOR_PAGES_WITHOUT_ONE}</body></html>`);
     } else if (redirect) {
       res.writeHead(301, { Location: redirect });
       res.end();
