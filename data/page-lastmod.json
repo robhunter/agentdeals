@@ -3951,10 +3951,6 @@
       "hash": "5a7b076623777af7",
       "changed": "2026-11-20"
     },
-    "/shutdowns/google-gemini-api-2026-11-19-gemini-3-6-flash-on-gemini-enterprise-agent-platform-formerly-vertex-ai-1cd19cb2c972f3c7": {
-      "hash": "e26739d275121449",
-      "changed": "2026-11-20"
-    },
     "/shutdowns/google-gemini-api-2026-12-01-gemini-2-5-pro-gemini-2-5-pro-and-gemini-2-5-flash-gemini-2-5-flash-on-the-gemini-api-57abc9f93533a6cd": {
       "hash": "947f9ccad421e010",
       "changed": "2026-11-20"
@@ -3971,9 +3967,13 @@
       "hash": "0a764c1480fd029e",
       "changed": "2026-11-20"
     },
-    "/shutdowns/google-gemini-api-2027-01-28-gemini-3-7-flash-on-gemini-enterprise-agent-platform-formerly-vertex-ai-dfe2431a788ff1f0": {
-      "hash": "b941d6b3f9cac077",
-      "changed": "2026-11-20"
+    "/shutdowns/google-gemini-api-2027-01-28-gemini-3-6-flash-on-gemini-enterprise-agent-platform-formerly-vertex-ai-25abf1762ece5e4e": {
+      "hash": "26257d82acd99356",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2027-01-28-gemini-3-7-flash-on-gemini-enterprise-agent-platform-formerly-vertex-ai-9764792129154e11": {
+      "hash": "17547aad6baedaec",
+      "changed": "2026-11-21"
     },
     "/shutdowns/google-gemini-api-2027-03-15-gemini-2-5-flash-image-9b8791c59f98fc17": {
       "hash": "c02fd2c93737c1eb",
