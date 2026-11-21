@@ -3752,16 +3752,8 @@
     "/shutdowns": {
       "daily": true
     },
-    "/shutdowns/alibaba-cloud-qwen-code-2026-04-15-alibaba-cloud-qwen-code-7855cd505395e2a7": {
-      "hash": "2ac793262700bafe",
-      "changed": "2026-11-20"
-    },
     "/shutdowns/amazon-devops-guru-2027-09-30-amazon-devops-guru-55eab1113ba42743": {
       "hash": "6f6bed6432a71e4e",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/amazon-q-developer-2027-04-30-amazon-q-developer-f0b544edb0ff72a1": {
-      "hash": "36d427765e3ee81d",
       "changed": "2026-11-20"
     },
     "/shutdowns/anthropic-api-2026-11-30-claude-sonnet-4-5-1f895c5f863d46b5": {
@@ -3784,24 +3776,8 @@
       "hash": "bbeb206ed56878d5",
       "changed": "2026-11-20"
     },
-    "/shutdowns/aws-2026-04-30-aws-app-runner-new-customers-12980fb08976a9b0": {
-      "hash": "225d09ee205abd6e",
-      "changed": "2026-11-20"
-    },
     "/shutdowns/aws-2026-04-30-aws-lambda-s-node-js-20-runtime-nodejs20-x-983fb348f2ae87e5": {
       "hash": "7afc33bb03757a52",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/aws-2026-06-30-aws-fargate-platform-version-1-3-0-dac171fabbac8455": {
-      "hash": "31ffa4a3904ebaa0",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/aws-2026-09-30-aws-app-mesh-ebc9e2fd7afb8327": {
-      "hash": "09a0aa0495006250",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/aws-2026-10-07-aws-proton-f144135b09a756f4": {
-      "hash": "b6d46011b02f49fe",
       "changed": "2026-11-20"
     },
     "/shutdowns/aws-2026-12-07-aws-infrastructure-composer-s-standalone-console-1f7223fc6d6c9738": {
@@ -3820,20 +3796,12 @@
       "hash": "6e5b54e7e3a62c39",
       "changed": "2026-11-20"
     },
-    "/shutdowns/aws-2027-03-31-aws-workspaces-thin-client-e7759871c2145d39": {
-      "hash": "23de1b24fd15352b",
-      "changed": "2026-11-20"
-    },
     "/shutdowns/aws-2027-04-08-claude-sonnet-4-5-on-amazon-bedrock-57129c4d99ad60fa": {
       "hash": "786a9766a8f521ae",
       "changed": "2026-11-20"
     },
     "/shutdowns/aws-2027-07-29-aws-lambda-s-deprecated-runtimes-python-3-8-3-9-and-3-10-node-js-16-18-and-20-net-6-and-8-ruby-3-2-and-provided-al2-f6565ffc05012cc3": {
       "hash": "dd82c84fa3d66aa6",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/aws-2027-07-29-node-js-20-aws-lambda-runtime-33c94b9d28cc7f0b": {
-      "hash": "c9a646b490d3894f",
       "changed": "2026-11-20"
     },
     "/shutdowns/aws-2027-11-07-amazon-opensearch-service-domains-on-elasticsearch-1-5-2-3-5-1-5-3-5-5-6-0-6-2-6-3-6-4-6-5-6-7-7-1-7-4-7-7-and-7-8-and-opensearch-1-0-1-1-1-2-2-3-2-5-2-7-and-2-9-541e729079cd4238": {
@@ -3909,7 +3877,8 @@
       "changed": "2026-11-20"
     },
     "/shutdowns/cloudflare-workers-ai-2026-11-20-24-workers-ai-models-including-kimi-k2-6-glm-5-2-llama-3-2-3b-instruct-and-whisper-tiny-en-6743e68b8bf4cdbd": {
-      "daily": true
+      "hash": "e984ccf846c1bc9c",
+      "changed": "2026-11-20"
     },
     "/shutdowns/cocoapods-2026-12-02-publishing-new-pods-and-versions-to-cocoapods-trunk-de02f5b1061026dd": {
       "hash": "dda1867a6ce3c9a4",
@@ -3919,20 +3888,8 @@
       "hash": "8748877e1b053a26",
       "changed": "2026-11-20"
     },
-    "/shutdowns/deepseek-api-2026-07-24-deepseek-api-4d045cf00a65fb4d": {
-      "hash": "b925e677530019f4",
-      "changed": "2026-11-20"
-    },
     "/shutdowns/deno-deploy-2027-04-deno-deploy-a45deb7ca6b2e076": {
       "hash": "9515e7ec304afe8b",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/firebase-2026-06-22-firebase-studio-new-workspaces-ec8f9290c3ccb591": {
-      "hash": "7077dc2eae7be864",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/firebase-2027-03-22-firebase-studio-full-shutdown-73421b8a7f9dd3d1": {
-      "hash": "d42cb6607f29eadb",
       "changed": "2026-11-20"
     },
     "/shutdowns/firebase-2027-03-31-firebase-extensions-90b555e2510d5c6d": {
@@ -3963,10 +3920,6 @@
       "hash": "9412510431409300",
       "changed": "2026-11-20"
     },
-    "/shutdowns/github-models-2026-07-30-github-models-d7c47087dbba9be0": {
-      "hash": "553468a52ca2762f",
-      "changed": "2026-11-20"
-    },
     "/shutdowns/google-antigravity-2026-11-18-claude-4-6-models-and-gpt-oss-120b-on-antigravity-s-free-and-google-ai-plus-plans-ac3e9bbbc55cf224": {
       "hash": "c3c9ad67043a6c0d",
       "changed": "2026-11-20"
@@ -3985,10 +3938,6 @@
     },
     "/shutdowns/google-cloud-video-intelligence-api-2027-09-14-google-cloud-video-intelligence-api-0fb82633fdbe238f": {
       "hash": "d8f4920b76017796",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/google-gemini-api-2026-06-01-gemini-2-0-flash-fba4f92be3d1f6d0": {
-      "hash": "c16fbf3e12e4a21d",
       "changed": "2026-11-20"
     },
     "/shutdowns/google-gemini-api-2026-10-20-gemini-2-5-pro-2-5-flash-and-2-5-flash-lite-on-gemini-enterprise-agent-platform-formerly-vertex-ai-e3d29bd539ffec56": {
@@ -4051,10 +4000,6 @@
       "hash": "d0d9a2ecec978074",
       "changed": "2026-11-20"
     },
-    "/shutdowns/google-maps-2026-05-31-google-maps-platform-client-ids-f8935bc3990e2b08": {
-      "hash": "5abbc90145c66ba9",
-      "changed": "2026-11-20"
-    },
     "/shutdowns/google-programmable-search-engine-2027-01-01-google-s-custom-search-json-api-6373aecb79ff0287": {
       "hash": "102bd7cc4471fdf9",
       "changed": "2026-11-20"
@@ -4079,20 +4024,12 @@
       "hash": "582fe69a0b06cda8",
       "changed": "2026-11-20"
     },
-    "/shutdowns/hubspot-2026-04-30-hubspot-contact-lists-api-v1-6eba739c1d58e0cd": {
-      "hash": "f24bc0209bb0799a",
-      "changed": "2026-11-20"
-    },
     "/shutdowns/hubspot-for-startups-2026-12-04-hubspot-s-pipelines-api-v1-7d63c4fb4e753101": {
       "hash": "c61a07b7dff81dd6",
       "changed": "2026-11-20"
     },
     "/shutdowns/hubspot-for-startups-2027-02-01-hubspot-s-design-manager-serverless-functions-hcms-api-17c46fd1662e6571": {
       "hash": "3901eeb8f99d8038",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/hypertune-2026-08-10-hypertune-be0eedfd35c80724": {
-      "hash": "3c4cb44048a51a0a",
       "changed": "2026-11-20"
     },
     "/shutdowns/inception-2026-12-28-inception-s-mercury-api-60ea4ee7994f79a4": {
@@ -4123,14 +4060,6 @@
       "hash": "c065e2bfd187d8ac",
       "changed": "2026-11-20"
     },
-    "/shutdowns/mistral-ai-2026-05-31-mistral-ai-ca4bf70f5d618cc7": {
-      "hash": "89174cfdbf3f62b5",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/mistral-ai-2026-10-31-mistral-ai-903fb9e505a45ffd": {
-      "hash": "7f3972c5e2b747ac",
-      "changed": "2026-11-20"
-    },
     "/shutdowns/mistral-ai-2027-04-30-mistral-large-3-mistral-medium-3-5-voxtral-tts-voxtral-mini-transcribe-2-and-voxtral-mini-transcribe-realtime-820f113ee9012066": {
       "hash": "125a6a8e9288cabe",
       "changed": "2026-11-20"
@@ -4149,38 +4078,6 @@
     },
     "/shutdowns/nvidia-nim-2026-10-27-free-endpoint-access-to-z-ai-glm-5-3-6161f10f62402c27": {
       "hash": "002909a3fe4fc8b0",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/nvidia-nim-2026-11-18-nvidia-nim-2247b95beefbb8b5": {
-      "hash": "00698d60c9566bcc",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/ona-2026-10-31-ona-6dce79bc655f8918": {
-      "hash": "c5013de7c121e1bf",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/openai-2026-05-12-openai-dall-e-model-snapshots-49876780100c1ff8": {
-      "hash": "b08fe1ad6651adaf",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/openai-2026-05-12-openai-realtime-api-beta-1c16be0ef3b346a1": {
-      "hash": "3ae64540f5a1a3ac",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/openai-2026-08-26-openai-assistants-api-0e7e331a7ea2e3db": {
-      "hash": "60446a59dc152f90",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/openai-2026-09-24-openai-videos-api-sora-af8347ad0f97023b": {
-      "hash": "ff593b85a117c4f4",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/openai-2026-09-28-openai-legacy-gpt-models-september-2026-4d168e1d317c14d4": {
-      "hash": "8b42f305a39f339e",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/openai-2026-10-23-openai-legacy-model-snapshots-6a16aec089974445": {
-      "hash": "10b25e187083d991",
       "changed": "2026-11-20"
     },
     "/shutdowns/openai-2026-11-30-openai-agent-builder-evals-platform-and-reusable-prompts-5467ace4e23407f9": {
@@ -4239,10 +4136,6 @@
       "hash": "ca1d7f3c7b4e106f",
       "changed": "2026-11-20"
     },
-    "/shutdowns/phase-two-2026-07-30-phase-two-cde2c0f2ae6448ee": {
-      "hash": "9c4c6b84ef77fa5a",
-      "changed": "2026-11-20"
-    },
     "/shutdowns/pipedream-2027-03-31-pipedream-workflows-and-string-260f61e08063691c": {
       "hash": "ba2e390ff506ea4d",
       "changed": "2026-11-20"
@@ -4287,10 +4180,6 @@
       "hash": "55800ea30ebd358c",
       "changed": "2026-11-20"
     },
-    "/shutdowns/tenor-2026-06-30-tenor-api-d4f329ef52312b62": {
-      "hash": "b2d98a03a5a8a21d",
-      "changed": "2026-11-20"
-    },
     "/shutdowns/together-ai-2026-10-22-serverless-access-to-meta-llama-llama-3-3-70b-instruct-turbo-and-deepseek-ai-deepseek-v4-flash-0731-042844c70fb1ebcf": {
       "hash": "05b20f0d026b0786",
       "changed": "2026-11-20"
@@ -4299,24 +4188,8 @@
       "hash": "47fefcff9071de5b",
       "changed": "2026-11-20"
     },
-    "/shutdowns/val-town-2026-11-10-val-town-93f6f4151b7d2ddf": {
-      "hash": "901cfac053838e28",
-      "changed": "2026-11-20"
-    },
     "/shutdowns/val-town-2026-12-10-val-town-dcb1946e133e51e5": {
       "hash": "333358f1e84d132a",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/xai-2026-05-15-xai-e206577043de5398": {
-      "hash": "e6bc3522deaf71b7",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/xai-2026-10-02-xai-2e71fc2550ac3d62": {
-      "hash": "e3b805e095f8946d",
-      "changed": "2026-11-20"
-    },
-    "/shutdowns/xai-2026-11-02-xai-98dd34010c1a10c7": {
-      "hash": "563ade31fee159cd",
       "changed": "2026-11-20"
     },
     "/shutdowns/zeabur-2026-12-01-zeabur-5becd215ca059042": {

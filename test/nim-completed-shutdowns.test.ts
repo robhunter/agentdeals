@@ -81,27 +81,22 @@ describe("completed NVIDIA endpoint cards", () => {
     if (scratch) rmSync(scratch, { recursive: true, force: true });
   });
 
-  it("redirects the former NVIDIA group to the merged page after a retirement", async () => {
+  it("lists the recorded endpoint but not listing-only cards through retirement", async () => {
     const beforeBase = bases.get("2026-11-15")!;
     const afterBase = bases.get("2026-11-16")!;
     const pathsAt = async (base: string) => {
       const xml = await (await fetch(`${base}/sitemap-pages.xml`)).text();
-      return [...xml.matchAll(/<loc>http:\/\/localhost(\/shutdowns\/nvidia-nim-[^<]+)<\/loc>/g)].map(match => match[1]);
+      return [...xml.matchAll(/<loc>http:\/\/localhost(\/shutdowns\/[^<]+)<\/loc>/g)].map(match => match[1]);
     };
     const before = await pathsAt(beforeBase);
     const after = await pathsAt(afterBase);
-    assert.equal(before.length, 3);
-    assert.equal(after.length, 2);
-    const disappeared = before.filter(route => !after.includes(route));
-    assert.equal(disappeared.length, 1);
-    const response = await fetch(afterBase + disappeared[0], { redirect: "manual" });
-    assert.equal(response.status, 301);
-    const target = response.headers.get("location");
-    assert.ok(target && after.includes(target));
-    const merged = await fetch(afterBase + target, { redirect: "manual" });
-    assert.equal(merged.status, 200);
-    const html = await merged.text();
-    for (const sentence of [qwen, gemma, future]) assert.ok(html.includes(sentence));
+    assert.equal(before.length, 1);
+    assert.deepEqual(after, before);
+    const response = await fetch(afterBase + after[0], { redirect: "manual" });
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes(recorded.summary));
+    for (const sentence of [qwen, gemma, future]) assert.ok(!html.includes(sentence));
   });
 
   it("prints each completed family sentence once with its model IDs, dates and source", () => {

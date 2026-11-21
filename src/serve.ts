@@ -1,5 +1,5 @@
 import { shutdownIndexNote } from "./shutdown-index-note.js";
-import { shutdownPaths, groupedShutdownRedirects } from "./shutdown-paths.js";
+import { shutdownPaths } from "./shutdown-paths.js";
 import { shutdownPageContent } from "./shutdown-page.js";
 import { reconcileShutdownRedirects } from "./shutdown-redirects.js";
 import { renderUpcomingTimeline, UPCOMING_TIMELINE_END } from "./upcoming-timeline-budget.js";
@@ -26969,7 +26969,7 @@ interface ShutdownEntry {
   status: "active" | "imminent" | "completed";
 }
 
-function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTyped: ShutdownEntry[]; nimCompleted: ShutdownEntry[]; nimGroup: ShutdownEntry | undefined } {
+function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTyped: ShutdownEntry[]; recordedOnly: ShutdownEntry[] } {
   const fullShutdownDetailsSince = new Date(Date.parse(todayDay) - 90 * 86_400_000).toISOString().slice(0, 10);
 
   const handTyped: ShutdownEntry[] = [
@@ -27244,22 +27244,18 @@ function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTy
   }];
   const shutdowns: ShutdownEntry[] = [...covered, ...statedOnly.filter(card => !nimCompleted.includes(card)), ...nimGroup];
 
-  return { shutdowns, handTyped, nimCompleted, nimGroup: nimGroup[0] };
+  return { shutdowns, handTyped, recordedOnly };
 }
 
 function shutdownPageInventory(todayDay: string) {
-  const { shutdowns, nimCompleted, nimGroup } = shutdownEntries(todayDay);
+  const { recordedOnly } = shutdownEntries(todayDay);
   const withIdentity = (entry: ShutdownEntry) => {
     if (!entry.pathIdentity) throw new Error(`Shutdown page has no identity: ${entry.service}`);
     return { ...entry, identity: entry.pathIdentity };
   };
-  const pages = shutdownPaths(shutdowns.map(withIdentity));
+  const pages = shutdownPaths(recordedOnly.map(withIdentity));
   const maintained: Record<string, string> = JSON.parse(readFileSync(join(__dirname, "..", "data", "shutdown-redirects.json"), "utf8"));
-  const derived = groupedShutdownRedirects(nimCompleted.map(withIdentity), nimGroup && withIdentity(nimGroup));
-  for (const path of derived.keys()) {
-    if (Object.hasOwn(maintained, path)) throw new Error(`Duplicate shutdown redirect: ${path}`);
-  }
-  const redirects = reconcileShutdownRedirects([], pages.keys(), { ...maintained, ...Object.fromEntries(derived) });
+  const redirects = reconcileShutdownRedirects([], pages.keys(), maintained);
   return { pages, redirects };
 }
 

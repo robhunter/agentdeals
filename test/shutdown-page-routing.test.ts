@@ -43,7 +43,7 @@ describe("shutdown page routes", () => {
     assert.ok(paths.length > 0);
     assert.equal(new Set(paths).size, paths.length);
     const tracker = createDocument(await (await fetch(`${base}/shutdowns`)).text());
-    assert.equal(paths.length, tracker.querySelectorAll(".shutdown-card").length);
+    assert.ok(paths.length < tracker.querySelectorAll(".shutdown-card").length);
     for (const route of paths) {
       const response = await fetch(base + route, { redirect: "manual" });
       assert.equal(response.status, 200, route);
