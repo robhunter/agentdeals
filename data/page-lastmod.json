@@ -2748,8 +2748,8 @@
       "changed": "2026-11-20"
     },
     "/developers": {
-      "hash": "a503a790dcbdd61f",
-      "changed": "2026-11-20"
+      "hash": "b3f2d167cb276d2a",
+      "changed": "2026-11-21"
     },
     "/digest/2022-w48": {
       "hash": "f298dfd9b93047be",
@@ -3151,8 +3151,8 @@
       "changed": "2026-11-16"
     },
     "/digest/2027-w04": {
-      "hash": "71aa9b45a2c1c693",
-      "changed": "2026-11-19"
+      "hash": "60bdfa9293aec410",
+      "changed": "2026-11-21"
     },
     "/digest/2027-w05": {
       "hash": "1598078fe43cb646",
@@ -3251,8 +3251,8 @@
       "changed": "2026-11-16"
     },
     "/digest/archive": {
-      "hash": "76f3c9d38be90480",
-      "changed": "2026-11-20"
+      "hash": "41b9e2631d1722bd",
+      "changed": "2026-11-21"
     },
     "/digitalocean-free-tier-2026": {
       "hash": "660e9a4c3b22d8a3",
@@ -3287,12 +3287,12 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "hash": "3513e0057a271cc7",
-      "changed": "2026-11-19"
+      "hash": "476a8f884528dc63",
+      "changed": "2026-11-21"
     },
     "/events/google-io-2026": {
-      "hash": "a2a5e0cab554abf4",
-      "changed": "2026-11-19"
+      "hash": "918c2202d9ddffe6",
+      "changed": "2026-11-21"
     },
     "/events/microsoft-build-2026": {
       "hash": "328a17d97dde8c98",
@@ -3302,8 +3302,8 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "64e8d00d28da7d8c",
-      "changed": "2026-11-20"
+      "hash": "f528ca0fac3c07b5",
+      "changed": "2026-11-21"
     },
     "/firebase-alternatives": {
       "hash": "5fc38ebcc6fedc1d",
@@ -3357,8 +3357,8 @@
       "changed": "2026-11-12"
     },
     "/free-tier-risk": {
-      "hash": "0488a4ef7d98399e",
-      "changed": "2026-11-20"
+      "hash": "e2e886fb324b2079",
+      "changed": "2026-11-21"
     },
     "/free-tier-tracker": {
       "daily": true
@@ -3371,12 +3371,12 @@
       "changed": "2026-11-16"
     },
     "/gcp-free-tier-2026": {
-      "hash": "64c0a898d7654fcb",
-      "changed": "2026-11-20"
+      "hash": "800c219ee3494475",
+      "changed": "2026-11-21"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "deadf0cc56f0e50b",
-      "changed": "2026-11-20"
+      "hash": "4b71de881a1fdb75",
+      "changed": "2026-11-21"
     },
     "/github-actions-alternatives": {
       "hash": "bcd2c72260d7f22b",
@@ -3447,8 +3447,8 @@
       "changed": "2026-11-20"
     },
     "/llm-api-pricing": {
-      "hash": "2067d7e888790964",
-      "changed": "2026-11-20"
+      "hash": "60c99d7507e4a401",
+      "changed": "2026-11-21"
     },
     "/localstack-alternatives": {
       "hash": "8ae3bd477812402c",
@@ -3487,8 +3487,8 @@
       "changed": "2026-11-19"
     },
     "/openai-assistants-migration": {
-      "hash": "266e0a5db8e0b1c3",
-      "changed": "2026-11-19"
+      "hash": "4a5fd789019908c1",
+      "changed": "2026-11-21"
     },
     "/openai-assistants-migration-2026": {
       "hash": "e204176392b16c17",
@@ -3538,8 +3538,8 @@
       "changed": "2026-11-12"
     },
     "/reports": {
-      "hash": "a04435c9615fc9bc",
-      "changed": "2026-11-20"
+      "hash": "2c8d874959fee94a",
+      "changed": "2026-11-21"
     },
     "/reports/2022-11": {
       "hash": "a484f9037b2afe28",
@@ -3677,8 +3677,8 @@
       "changed": "2026-11-19"
     },
     "/reports/2027-01": {
-      "hash": "6a0977ce9332e1f4",
-      "changed": "2026-11-19"
+      "hash": "db80f6110d6fb750",
+      "changed": "2026-11-21"
     },
     "/reports/2027-02": {
       "hash": "7338738fa1ecbe94",
@@ -4196,8 +4196,8 @@
       "changed": "2026-11-20"
     },
     "/stability": {
-      "hash": "d29b728965169710",
-      "changed": "2026-11-20"
+      "hash": "86414cb67414ad04",
+      "changed": "2026-11-21"
     },
     "/stack-check": {
       "hash": "d3f07ff7ae25244f",
@@ -4232,8 +4232,8 @@
       "changed": "2026-11-20"
     },
     "/state-of-free-tiers": {
-      "hash": "156bb4b8665b4fc0",
-      "changed": "2026-11-20"
+      "hash": "0642052d20ca235f",
+      "changed": "2026-11-21"
     },
     "/storage-alternatives": {
       "hash": "b7e01aab9d669967",

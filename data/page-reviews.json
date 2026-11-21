@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-20",
+  "measured_on": "2026-11-21",
   "pages": [
     {
       "path": "/agent-payments",
@@ -1959,8 +1959,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 151,
-      "table_figures_from_records": 102,
+      "table_figures": 152,
+      "table_figures_from_records": 103,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1979,8 +1979,8 @@
         },
         {
           "label": "Recent GCP & Google Changes",
-          "figures": 4,
-          "from_records": 4
+          "figures": 5,
+          "from_records": 5
         },
         {
           "label": "Upcoming Changes",
