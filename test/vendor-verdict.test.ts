@@ -713,8 +713,8 @@ describe("vendor verdict — as rendered", () => {
         if (cell.rendered && row.gate && cell.word !== null) {
           wrong.push(`${row.slug}: comparison table rates a gated record ${cell.word}`);
         }
-        if (cell.rendered && !row.withheld && !row.gate && cell.word !== row.expected) {
-          wrong.push(`${row.slug}: comparison table says ${cell.word ?? "nothing"}, heading badge says ${row.expected}`);
+        if (cell.rendered && publishesALevelRatherThanAnEnding(row) && cell.word !== badge) {
+          wrong.push(`${row.slug}: comparison table says ${cell.word ?? "nothing"}, heading badge says ${badge ?? "nothing"}`);
         }
       }
     };

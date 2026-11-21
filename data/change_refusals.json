@@ -8110,6 +8110,18 @@
       "refused_date": "2026-10-12"
     },
     {
+      "vendor": "Microsoft Ajax",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-12 (no_price_signal) claimed the same change, product_deprecated, against the same stored description",
+      "summary": "The Microsoft Ajax CDN is no longer being actively updated and will be decommissioned in the future; consumers are advised to transition to a resource with updated assets.",
+      "previous_state": "The Microsoft Ajax CDN hosts popular third-party JavaScript libraries such as jQuery and enables you to easily add them to your Web application",
+      "current_state": "The Microsoft Ajax CDN is no longer being actively updated. Consumers should transition to a resource with updated assets at their first opportunity. The CDN itself will be decommissioned in the future with notifications posted here as appropriate.",
+      "source_url": "https://docs.microsoft.com/en-us/aspnet/ajax/cdn/overview",
+      "category": "CDN",
+      "refused_date": "2026-11-21"
+    },
+    {
       "vendor": "Microsoft for Startups",
       "change_type": "limits_increased",
       "reason": "same_transition_graded_differently",
@@ -9113,6 +9125,18 @@
       "source_url": "https://www.ory.sh/pricing/",
       "category": "Auth",
       "refused_date": "2026-10-24"
+    },
+    {
+      "vendor": "Othor AI",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 2814 characters, so it states no terms to have changed",
+      "summary": "The stored 'Free' tier with 2 Analytical Agents, 2 Data Sources, 2 Team Members, 2 Dashboards, and 20 requests/day · 50,000 tokens/month no longer appears. The page now offers an 'Open source' free self-hosted option and a 14-day free trial of the 'Hosted' subscription, with no mention of the previously described free-forever plan or its usage limits.",
+      "previous_state": "Free $0 Forever. Including 2 Analytical Agents, 2 Data Sources, Up to 2 Team Members, 2 Dashboards. Usage Limits 20 requests / day · 50,000 tokens / month",
+      "current_state": "The page lists 'Open source' (free, self-hosted on your own server, with Morning Brief, Sweep, Summary, Business Model, one company per install, community support) and 'Hosted' (subscription, 14-day trial, no credit card needed), plus 'Enterprise On-premise' (licence per year). No free-forever hosted tier with agents, data sources, team members, dashboards, or request/token limits is described.",
+      "source_url": "https://othor.ai/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-11-21"
     },
     {
       "vendor": "Outlook.com",
@@ -11459,13 +11483,13 @@
       "vendor": "smartmockups.com",
       "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-11-07 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The stored deal is for smartmockups.com, but the pricing page is now Canva Mockups. The free tier still exists but the free usage limit is now 2,500 mockups, not 200.",
+      "detail": "the reading of this page refused on 2026-11-14 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal info is for smartmockups.com, but the pricing page is now Canva Mockups. The free tier still exists but the free mockup limit is now 2,500 mockups, not 200.",
       "previous_state": "Create product mockups, 200 free mockups.",
       "current_state": "As a Canva Free user, you can create and use up to 2,500 mockups for free. If you exceed this total number of uses, you will need a Canva Pro account to create and use more mockups.",
       "source_url": "https://smartmockups.com/",
       "category": "Design",
-      "refused_date": "2026-11-14"
+      "refused_date": "2026-11-21"
     },
     {
       "vendor": "SmartParse",
@@ -12692,6 +12716,18 @@
       "source_url": "https://toranproxy.com/",
       "category": "CDN",
       "refused_date": "2026-10-12"
+    },
+    {
+      "vendor": "toranproxy.com",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-12 (no_price_signal) claimed the same change, product_deprecated, against the same stored description",
+      "summary": "The page states Toran Proxy is being phased out and directs users to Private Packagist instead; the free personal-use tier terms are no longer described.",
+      "previous_state": "Proxy for Packagist and GitHub. Never fail CD. Free for personal use, one developer, no support",
+      "current_state": "Toran Proxy is being phased out; users are directed to try Private Packagist, the newer improved version available as SaaS and on-premise self-hosted. The page lists features and server requirements but no free personal-use tier or pricing terms.",
+      "source_url": "https://toranproxy.com/",
+      "category": "CDN",
+      "refused_date": "2026-11-21"
     },
     {
       "vendor": "TraceLog",
