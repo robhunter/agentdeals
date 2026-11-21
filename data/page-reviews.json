@@ -915,8 +915,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 148,
-      "table_figures_from_records": 116,
+      "table_figures": 147,
+      "table_figures_from_records": 115,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -950,8 +950,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 24,
-          "from_records": 24
+          "figures": 23,
+          "from_records": 23
         },
         {
           "label": "Upcoming Changes",
