@@ -10365,7 +10365,7 @@
     {
       "vendor": "Brave Search API",
       "category": "AI / ML",
-      "description": "$5 in free credits every month, applied automatically. Brave's \"up to $20\" figure is $5 on each of four plans: Search, Answers, Spellcheck and Autosuggest. Search is $5 per 1,000 requests; Answers is $4 per 1,000 requests plus $5 per million tokens. Web search, news, videos, images, LLM context endpoints. 50 queries/sec. Credit card required. The earlier free plan (2,000 queries/mo) ended Feb 2026. The tools of Brave's MCP server include brave_web_search, brave_news_search, brave_image_search, brave_llm_context and brave_summarizer.",
+      "description": "$5 in free credits every month, applied automatically. Brave's \"up to $20\" figure is $5 on each of four plans: Search, Answers, Spellcheck and Autosuggest. Search is $5 per 1,000 requests; Answers is $4 per 1,000 requests plus $5 per million tokens. Web search, news, videos, images, LLM context endpoints. 50 queries/sec. Credit card required. The earlier free plan (2,000 queries/mo) ended Feb 2026. The tools of Brave's MCP server include brave_web_search, brave_news_search, brave_image_search, brave_llm_context and brave_answers. brave_answers requires an Answers plan. On November 19, 2026, Brave deprecated brave_summarizer. It still works for existing Pro AI subscribers. New integrations should use brave_answers.",
       "tier": "Free",
       "url": "https://brave.com/search/api/",
       "tags": [
@@ -10455,8 +10455,8 @@
           "transport": "stdio, run with npx -y @brave/brave-search-mcp-server",
           "authentication": "the BRAVE_API_KEY environment variable",
           "doc_url": "https://github.com/brave/brave-search-mcp-server",
-          "source_quote": "An MCP server implementation that integrates the Brave Search API, providing comprehensive search capabilities including web search, local business search, place search, image search, video search, news search, LLM context, and AI-powered summarization.",
-          "read_on": "2026-10-20",
+          "source_quote": "An MCP server implementation that integrates the Brave Search API, providing comprehensive search capabilities including web search, local business search, place search, image search, video search, news search, LLM context, grounded Answers, and legacy AI summarization.",
+          "read_on": "2026-11-21",
           "retired_names": [
             {
               "kind": "npm",
