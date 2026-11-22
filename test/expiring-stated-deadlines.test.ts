@@ -90,7 +90,8 @@ describe("expiring month groups include the deadline tracker's stated dates", ()
     const changes = JSON.parse(readFileSync(path.join(REPO, "data/deal_changes.json"), "utf8"));
     index.offers = [];
     const record = (vendor: string) => ({ vendor, category: "Messaging", change_type: "product_deprecated", impact: "high", date: today, summary: "The product shuts down.", previous_state: "Available", current_state: "Retiring", source_url: "https://fixture.example/end", alternatives: [], recorded_date: "2030-05-01", date_source: "vendor_page", listing_effect: "none" });
-    changes.changes = [record("Live Fixture"), { ...record("Cancelled Fixture"), resolution: { state: "cancelled", date: "2030-05-10", detail: "The shutdown was cancelled.", source_url: "https://fixture.example/cancelled" } }];
+    changes.changes = [record("Live Fixture"), { ...record("Cancelled Fixture"), resolution: { state: "cancelled", date: "2030-05-10", detail: "The shutdown was cancelled.", source_url: "https://fixture.example/cancelled" } },
+      ...["cancelled", "reversed", "retracted"].map(state => ({ ...record(`${state} Recent Fixture`), date: "2030-05-19", resolution: { state, date: "2030-05-15", detail: "The change was resolved.", source_url: "https://fixture.example/resolution" } }))];
     writeFileSync(path.join(dir, "index.json"), JSON.stringify(index));
     writeFileSync(path.join(dir, "changes.json"), JSON.stringify(changes));
     writeFileSync(path.join(dir, "clock.cjs"), `const RealDate = Date; global.Date = class extends RealDate { constructor(...args) { super(...(args.length ? args : ["${today}T12:00:00Z"])); } static now() { return RealDate.parse("${today}T12:00:00Z"); } };`);
@@ -102,6 +103,21 @@ describe("expiring month groups include the deadline tracker's stated dates", ()
         for (const label of ["Upcoming", "Within 14 Days"]) assert.match(html, new RegExp(`<div class="stat-value">1</div>\\s*<div class="stat-label">${label}</div>`));
         assert.match(html, /<p class="page-intro">1 upcoming pricing changes tracked\./);
         assert.match(html, /<meta name="description" content="1 upcoming pricing changes tracked\./);
+        const recent = html.split('<div class="recent-section" id="recently-changed">')[1].split('<div class="mcp-cta">')[0];
+        for (const state of ["cancelled", "reversed"]) {
+          const entry = entries(recent, "exp").find(item => item.vendor === `${state} Recent Fixture`);
+          assert.ok(entry);
+          assert.equal(entry.date, "2030-05-15");
+          assert.match(entry.body, new RegExp(`<span class="badge"[^>]*>${state}</span>`));
+          assert.doesNotMatch(entry.body.split('<div class="exp-summary">')[0], /class="exp-impact"/);
+        }
+        assert.ok(!entries(recent, "exp").some(item => item.vendor === "retracted Recent Fixture"));
+        const structured = JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/)![1]);
+        for (const state of ["cancelled", "reversed"]) {
+          const item = structured.itemListElement.find((entry: { item: { headline: string } }) => entry.item.headline === `${state} Recent Fixture: ${state}`)?.item;
+          assert.ok(item);
+          assert.equal(item.datePublished, "2030-05-15");
+        }
       });
     } finally { rmSync(dir, { recursive: true, force: true }); }
   });

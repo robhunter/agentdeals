@@ -50106,22 +50106,23 @@ function buildExpiringPage(): string {
     return { text: `in ${diff} days`, urgent: false };
   }
 
-  function buildEntry(line: DeadlineLine, showCountdown: boolean): string {
+  function buildEntry(line: DeadlineLine, showCountdown: boolean, showResolution = false): string {
     const c = line.citedRecord;
-    const badge = c ? changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" } : null;
+    const resolution = showResolution ? c?.resolution : null;
+    const badge = resolution ? { label: resolution.state, color: "#8b949e" } : c ? changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" } : null;
     const dated = line.datedRecord ? isEventDated(line.datedRecord) : true;
     const countdown = showCountdown && !isShutdownMonth(line.date) ? countdownLabel(line.date) : null;
     const urgentClass = countdown?.urgent ? " entry-urgent" : "";
     return `      <div class="exp-entry${urgentClass}${dated ? "" : " exp-undated"}">
         <div class="exp-left">
           ${countdown ? `<div class="exp-countdown${countdown.urgent ? " exp-countdown-urgent" : ""}">${countdown.text}</div>` : ""}
-          <div class="exp-date${dated ? "" : " exp-date-unknown"}"${isShutdownMonth(line.date) ? ` data-date="${line.date}"` : ""}>${escHtmlServer(line.dateLabel)}</div>
+          <div class="exp-date${dated ? "" : " exp-date-unknown"}"${isShutdownMonth(line.date) && !resolution ? ` data-date="${line.date}"` : ""}>${escHtmlServer(resolution?.date ?? line.dateLabel)}</div>
         </div>
         <div class="exp-right">
           <div class="exp-head">
             ${badge ? `<span class="badge" style="background:${badge.color}">${badge.label}</span>` : ""}
             ${changeVendorLinkHtml(line.vendor, ' class="exp-vendor"')}
-            ${c ? `<span class="exp-impact" style="color:${changeImpactColor(c.impact)}">${c.impact}</span>` : ""}
+            ${c && !resolution ? `<span class="exp-impact" style="color:${changeImpactColor(c.impact)}">${c.impact}</span>` : ""}
           </div>
           <div class="exp-summary">${line.summaryHtml}</div>
         </div>
@@ -50156,18 +50157,18 @@ ${entriesHtml}
     itemListElement: capListSections([
       upcoming.map(line => {
         const deadline = stated.find(s => s.vendor === line.vendor && s.date === line.date);
-        return { line, description: deadline ? statedSentenceWithAnyConditions(deadline) : line.sentence };
+        return { line, description: deadline ? statedSentenceWithAnyConditions(deadline) : line.sentence, resolution: null };
       }),
-      recent.map(c => ({ line: recordDeadlineLine(c), description: c.summary })),
-      recentlyDiscovered.map(c => ({ line: recordDeadlineLine(c), description: c.summary })),
-    ], 50).map(({ line, description }, i) => ({
+      recent.map(c => ({ line: recordDeadlineLine(c), description: c.summary, resolution: c.resolution ?? null })),
+      recentlyDiscovered.map(c => ({ line: recordDeadlineLine(c), description: c.summary, resolution: null })),
+    ], 50).map(({ line, description, resolution }, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
         "@type": "NewsArticle",
-        headline: line.citedRecord ? `${line.vendor}: ${(changeTypeBadge[line.citedRecord.change_type] ?? { label: line.citedRecord.change_type }).label}` : line.vendor,
+        headline: line.citedRecord ? `${line.vendor}: ${resolution?.state ?? (changeTypeBadge[line.citedRecord.change_type] ?? { label: line.citedRecord.change_type }).label}` : line.vendor,
         description,
-        ...(line.datedRecord ? changeDatePublished(line.datedRecord) : { datePublished: line.date }),
+        ...(resolution ? { datePublished: resolution.date } : line.datedRecord ? changeDatePublished(line.datedRecord) : { datePublished: line.date }),
         ...changeVendorUrlField(line.vendor),
         publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
       },
@@ -50283,7 +50284,7 @@ ${recent.length > 0 ? `  <div class="recent-section" id="recently-changed">
     <p class="recent-desc">${recent.length} pricing changes in the last 30 days.</p>
     <button class="recent-toggle" onclick="document.querySelector('.recent-entries').classList.toggle('show');this.textContent=this.textContent==='Show recent changes'?'Hide recent changes':'Show recent changes'">Show recent changes</button>
     <div class="recent-entries">
-${recent.map(c => buildEntry(recordDeadlineLine(c), false)).join("\n")}
+${recent.map(c => buildEntry(recordDeadlineLine(c), false, true)).join("\n")}
     </div>
   </div>` : ""}
 
