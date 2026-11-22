@@ -27265,7 +27265,7 @@ function shutdownPageInventory(todayDay: string) {
     status: "active",
   }));
   const maintained: Record<string, string> = JSON.parse(readFileSync(join(__dirname, "..", "data", "shutdown-redirects.json"), "utf8"));
-  const retained = resolved.filter(entry => entry.resolution?.state !== "retracted" ||
+  const retained = resolved.filter(entry => !theEventNeverHappened(entry) ||
     (Object.hasOwn(pageLastmodLedger.pages, shutdownPath(entry)) && !Object.hasOwn(maintained, shutdownPath(entry))));
   const pages = shutdownPaths([...recordedOnly, ...retained]);
   const redirects = reconcileShutdownRedirects([], pages.keys(), maintained);
