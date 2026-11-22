@@ -7,6 +7,8 @@ import {
   emptyPageLastmod, hashPageBody, pageLastmodPath, parsePageLastmod, serializePageLastmod, updatePageLastmod,
 } from "../dist/page-lastmod.js";
 
+import { guardShutdownLedger } from "./shutdown-ledger-guard.js";
+
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 const HELP = `Keep data/page-lastmod.json in step with what each page renders.
@@ -147,6 +149,9 @@ async function main() {
     const startedAt = Date.now();
     server = await startServer(inventoryOut);
     const paths = JSON.parse(readFileSync(inventoryOut, "utf-8"));
+    const file = pageLastmodPath();
+    const previous = readLedger(file, opts.date);
+    await guardShutdownLedger(Object.keys(previous.pages), paths, server.base);
     const hashes = await hashEveryPage(server.base, paths);
     server.proc.kill();
     server = null;
@@ -158,8 +163,6 @@ async function main() {
     const dailyPaths = paths.filter(p => hashes.get(p) !== tomorrowHashes.get(p));
     const readSeconds = ((Date.now() - startedAt) / 1000).toFixed(1);
 
-    const file = pageLastmodPath();
-    const previous = readLedger(file, opts.date);
     const { ledger, moved, added, dropped, daily } = updatePageLastmod(previous, hashes, opts.date, dailyPaths);
 
     console.log(`Read ${paths.length} pages twice in ${readSeconds}s: ${moved.length} whose output moved, ${added.length} new, ${dropped.length} gone, ${daily.length} dated from the day they are served.`);

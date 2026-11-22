@@ -1,4 +1,7 @@
 import { shutdownIndexNote } from "./shutdown-index-note.js";
+import { shutdownPath, shutdownPaths } from "./shutdown-paths.js";
+import { shutdownPageContent } from "./shutdown-page.js";
+import { reconcileShutdownRedirects } from "./shutdown-redirects.js";
 import { renderUpcomingTimeline, UPCOMING_TIMELINE_END } from "./upcoming-timeline-budget.js";
 import { measuredValue, quantifiedAttributes } from "./quantity-reading.js";
 import { announcementsInWeek, weeklyAnnouncementNote, weeklyAnnouncementHeading, announcementDateLabel, WEEKLY_ANNOUNCEMENTS_INTRO } from "./weekly-announcements.js";
@@ -73,7 +76,7 @@ import { changesToStartupProgrammes } from "./startup-programme-changes.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_COST_OPTIMIZED_PAGE, HETZNER_PRICE_ADJUSTMENT_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableEuPlanForEachMemorySizeSentence, cheapestOrderableHetznerPlan, cheaperVpsInGermanyParagraph, mostRamForTheMoneyParagraph, costOptimizedLineNobodyCanOrder, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
-import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isCancelledAnnouncement, cancelledOn, standingOf as changeStandingOf, isNoLongerInForce, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
+import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isCancelledAnnouncement, theEventNeverHappened, cancelledOn, standingOf as changeStandingOf, isNoLongerInForce, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
 import { trackedChanges, howEachRecordWasRead, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, CORRECTION_TO_OUR_OWN_RECORD_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
@@ -26948,37 +26951,27 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '</body>\n</html>', pubDate);
 }
 
-function buildShutdownTrackerPage(): string {
-  const title = "Developer Tool Shutdown Tracker 2026";
-  const subtitle = "API sunsets, deprecations & migration deadlines \u2014 updated as new shutdowns are announced";
-  const metaDesc = "Track every developer tool API sunset, deprecation, and service shutdown in 2026. Timelines, impact assessments, migration paths, and free alternatives.";
-  const slug = "shutdowns";
-  const pubDate = "2026-04-02";
+interface ShutdownEntry {
+  service: string;
+  vendorSlug: string;
+  what: string;
+  deadline: string;
+  dateSource?: string;
+  impact?: string;
+  whoAffected?: string;
+  retainedDetails?: { what?: string; migrationPath?: string };
+  completedSummary?: string;
+  migrationPath?: string;
+  migrationLink?: string;
+  covers?: RecordACardCovers[];
+  statedDeadline?: StatedDeadline;
+  groupedDeadlines?: StatedDeadline[];
+  stages?: DealChange["shutdown_stages"];
+  resolution?: DealChange["resolution"];
+  status: "active" | "imminent" | "completed";
+}
 
-  const stabilityMap = publishedStabilityIndex();
-
-  interface ShutdownEntry {
-    service: string;
-    vendorSlug: string;
-    what: string;
-    deadline: string;
-    dateSource?: string;
-    impact?: string;
-    whoAffected?: string;
-    retainedDetails?: { what?: string; migrationPath?: string };
-    completedSummary?: string;
-    migrationPath?: string;
-    migrationLink?: string;
-    covers?: RecordACardCovers[];
-    statedDeadline?: StatedDeadline;
-    groupedDeadlines?: StatedDeadline[];
-    stages?: DealChange["shutdown_stages"];
-    status: "active" | "imminent" | "completed";
-  }
-
-  const today = new Date();
-  const todayDay = today.toISOString().slice(0, 10);
-
+function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTyped: ShutdownEntry[]; recordedOnly: ShutdownEntry[] } {
   const fullShutdownDetailsSince = new Date(Date.parse(todayDay) - 90 * 86_400_000).toISOString().slice(0, 10);
 
   const handTyped: ShutdownEntry[] = [
@@ -27249,6 +27242,57 @@ function buildShutdownTrackerPage(): string {
     groupedDeadlines: nimSentences,
   }];
   const shutdowns: ShutdownEntry[] = [...covered, ...statedOnly.filter(card => !nimCompleted.includes(card)), ...nimGroup];
+
+  return { shutdowns, handTyped, recordedOnly };
+}
+
+function shutdownPageInventory(todayDay: string) {
+  const { recordedOnly, handTyped } = shutdownEntries(todayDay);
+  const originals = new Map<DealChange, DealChange>();
+  const candidates = dealChanges.filter(record => isCancelledAnnouncement(record) || theEventNeverHappened(record)).map(record => {
+    const candidate = { ...record, resolution: undefined };
+    originals.set(candidate, record);
+    return candidate;
+  });
+  const resolved: ShutdownEntry[] = forecastShutdownsWithoutACard(candidates, handTyped).map(({ record, vendorPage, deadline }) => ({
+    service: whatEnds(record) ?? (vendorPage === null ? null : recordNamedBySlug(vendorPage)) ?? record.vendor,
+    vendorSlug: vendorPage ?? toSlug(record.vendor),
+    what: record.summary,
+    deadline,
+    dateSource: record.source_url,
+    stages: record.shutdown_stages,
+    resolution: originals.get(record)!.resolution,
+    status: "active",
+  }));
+  const maintained: Record<string, string> = JSON.parse(readFileSync(join(__dirname, "..", "data", "shutdown-redirects.json"), "utf8"));
+  const retained = resolved.filter(entry => !theEventNeverHappened(entry) ||
+    (Object.hasOwn(pageLastmodLedger.pages, shutdownPath(entry)) && !Object.hasOwn(maintained, shutdownPath(entry))));
+  const pages = shutdownPaths([...recordedOnly, ...retained]);
+  const redirects = reconcileShutdownRedirects([], pages.keys(), maintained);
+  return { pages, redirects };
+}
+
+function shutdownPageForEntry(entry: ShutdownEntry, todayDay: string) {
+  const vendorSlug = servedVendorSlug(entry.vendorSlug);
+  return shutdownPageContent(entry, todayDay, {
+    conditionsHtml: conditionsAfterAWholeDescriptionHtml,
+    vendorPath: vendorSlug === null ? null : `/vendor/${vendorSlug}`,
+  });
+}
+
+function buildShutdownTrackerPage(): string {
+  const title = "Developer Tool Shutdown Tracker 2026";
+  const subtitle = "API sunsets, deprecations & migration deadlines \u2014 updated as new shutdowns are announced";
+  const metaDesc = "Track every developer tool API sunset, deprecation, and service shutdown in 2026. Timelines, impact assessments, migration paths, and free alternatives.";
+  const slug = "shutdowns";
+  const pubDate = "2026-04-02";
+
+  const stabilityMap = publishedStabilityIndex();
+
+  const today = new Date();
+  const todayDay = today.toISOString().slice(0, 10);
+  const fullShutdownDetailsSince = new Date(Date.parse(todayDay) - 90 * 86_400_000).toISOString().slice(0, 10);
+  const { shutdowns, handTyped } = shutdownEntries(todayDay);
 
   shutdowns.sort((a, b) => nextShutdownDate(a, todayDay).localeCompare(nextShutdownDate(b, todayDay)));
 
@@ -53367,6 +53411,7 @@ function pagesSitemapLedgerPaths(): string[] {
   paths.push("/alternatives");
   for (const p of ALTERNATIVES_PAGES) paths.push("/" + p.slug);
   paths.push("/x402-services", ...alternativeToSitemapPaths());
+  paths.push(...shutdownPageInventory(utcToday()).pages.keys());
   return paths;
 }
 
@@ -55063,6 +55108,9 @@ ${catList}
     }
     xml += '  <url>\n    <loc>' + BASE_URL + '/x402-services</loc>\n    <lastmod>' + pageLastmod("/x402-services") + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/alternative-to</loc>\n    <lastmod>' + pageLastmod("/alternative-to") + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+    for (const path of shutdownPageInventory(utcToday()).pages.keys()) {
+      xml += '  <url>\n    <loc>' + BASE_URL + path + '</loc>\n    <lastmod>' + pageLastmod(path) + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+    }
     const sitemapChanges = loadDealChanges();
     for (const s of vendorSlugMap.keys()) {
       if (!alternativesPagePublishesSubstitutes(s, sitemapChanges)) continue;
@@ -55882,6 +55930,22 @@ ${catList}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/tenor-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(withVerdictLinks(buildTenorAlternativesPage()));
+  } else if (url.pathname.startsWith("/shutdowns/") && isGetOrHead) {
+    const today = utcToday();
+    const inventory = shutdownPageInventory(today);
+    const entry = inventory.pages.get(url.pathname);
+    const redirect = inventory.redirects.get(url.pathname);
+    if (entry) {
+      const content = shutdownPageForEntry(entry, today);
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escHtmlServer(content.title)}</title><style>body{margin:0;background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-serif}main{max-width:800px;margin:3rem auto;padding:0 1.5rem}h1{line-height:1.2}a{color:#93c5fd}</style></head><body><main>${content.body}</main>${FOOTER_FOR_PAGES_WITHOUT_ONE}</body></html>`);
+    } else if (redirect) {
+      res.writeHead(301, { Location: redirect });
+      res.end();
+    } else {
+      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("Not found");
+    }
   } else if (url.pathname === "/shutdowns" && isGetOrHead) {
     recordApiHit("/shutdowns");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/shutdowns", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

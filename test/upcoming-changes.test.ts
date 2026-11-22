@@ -241,7 +241,7 @@ describe("a copy of the change log with no record dated after the day served", (
 const CENSUS_CHANGE_TYPES = ["pricing_restructured", "limits_reduced", "limits_increased", "product_deprecated"];
 const CENSUS_VENDORS = [...new Set([...shipped.map((c) => c.vendor), "Datadog", "New Relic"])];
 const CENSUS_FIXTURES = CENSUS_VENDORS.flatMap((vendor, index) =>
-  CENSUS_CHANGE_TYPES.map((type) => fixture(vendor, dayOffset(30), type, `Census fixture ${index}-${type} announced for a later day.`)),
+  CENSUS_CHANGE_TYPES.map((type) => ({ ...fixture(vendor, dayOffset(30), type, `Census fixture ${index}-${type} announced for a later day.`), ...(type === "product_deprecated" ? { what_ends: `Census fixture ${index}` } : {}) })),
 );
 const A_CENSUS_FIXTURE = /Census fixture \d+-[a-z_]+ announced for a later day\./;
 const HEADED_RECENT = /(?<![\w-])(recent|recently|latest|newest)(?![\w-])/i;

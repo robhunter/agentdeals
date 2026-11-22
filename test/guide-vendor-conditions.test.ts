@@ -249,6 +249,7 @@ const TEMPLATES_THAT_PRINT_CONDITIONS_THEIR_OWN_WAY = [/^\/vendor\//, /^\/catego
 
 const PAGES_WHOSE_ROWS_ARE_NOT_ABOUT_A_VENDORS_TERMS = [
   /^\/events\//,
+  /^\/shutdowns\//,
   /^\/freshness$/,
   /^\/free-tier-risk$/,
   /^\/free-tier-tracker$/,
@@ -562,6 +563,11 @@ describe("every guide that compares vendors prints each vendor's conditions of u
   before(async () => {
     const published = await everyRouteTheSitemapPublishes(conditioned.base);
     routesCovered = published.filter(coveredByThisTest).sort();
+  });
+
+  it("leaves individual shutdown pages outside the guide comparison", () => {
+    assert.equal(coveredByThisTest("/shutdowns/chroma-2026-12-07-chroma-cloud"), false);
+    assert.equal(coveredByThisTest("/shutdowns"), true);
   });
 
   it("prints every vendor's list once: in its card where the guide has one, else after the first table row that names it", async () => {

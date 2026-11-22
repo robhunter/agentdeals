@@ -3749,6 +3749,454 @@
     "/shutdowns": {
       "daily": true
     },
+    "/shutdowns/amazon-devops-guru-2027-09-30-amazon-devops-guru": {
+      "hash": "ba5125fafcca7c8c",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/anthropic-api-2026-11-30-claude-sonnet-4-5-on-the-claude-api": {
+      "hash": "2cc7b721524eb53f",
+      "changed": "2026-11-22"
+    },
+    "/shutdowns/apiary-io-2026-10-31-apiary-io": {
+      "hash": "ac41a445991ab893",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/auth0-2027-04-30-auth0-hooks": {
+      "hash": "29e7c14114463021",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/auth0-2027-05-10-auth0-s-node-js-18-extensibility-runtime": {
+      "hash": "dabd1e62bd872cd9",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/auth0-2028-01-31-auth0-rules": {
+      "hash": "d5481176162d926d",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/aws-2026-04-30-aws-lambda-s-node-js-20-runtime-nodejs20-x": {
+      "hash": "ed0f5e460a841780",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/aws-2026-12-07-aws-infrastructure-composer-s-standalone-console": {
+      "hash": "76f5f58694cc4b35",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/aws-2027-01-01-aws-support-plans-developer-business-and-enterprise-on-ramp": {
+      "hash": "23d503fdec4179ae",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/aws-2027-01-08-claude-opus-4-1-on-amazon-bedrock": {
+      "hash": "b2f5b1f6b38d7156",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/aws-2027-03-30-26-amazon-bedrock-models-from-deepseek-google-meta-mistral-ai-qwen-and-others": {
+      "hash": "4875f7ff3de9acd2",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/aws-2027-04-08-claude-sonnet-4-5-on-amazon-bedrock": {
+      "hash": "8ca7c64d89aa12c4",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/aws-2027-07-29-aws-lambda-s-deprecated-runtimes-python-3-8-3-9-and-3-10-node-js-16-18-and-20-net-6-and-8-ruby-3-2-and-provided-al2": {
+      "hash": "680e05d40d5e2ddd",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/aws-2027-11-07-amazon-opensearch-service-domains-on-elasticsearch-1-5-2-3-5-1-5-3-5-5-6-0-6-2-6-3-6-4-6-5-6-7-7-1-7-4-7-7-and-7-8-and-opensearch-1-0-1-1-1-2-2-3-2-5-2-7-and-2-9": {
+      "hash": "0bb8aec69ab48bf3",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/azure-2026-11-19-azure-openai-o-series-model-retirement": {
+      "hash": "1233a01be4f46ca7",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/azure-2026-12-15-azure-openai-speech-model-retirement": {
+      "hash": "dfc39b3beeefa056",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/azure-2026-12-15-gpt-realtime-mini-version-2025-12-15-on-azure-openai": {
+      "hash": "ab987f2184ef5e31",
+      "changed": "2026-11-22"
+    },
+    "/shutdowns/azure-2027-01-14-gpt-4o-version-2024-05-13-on-azure-openai": {
+      "hash": "bda4368bc050abbd",
+      "changed": "2026-11-22"
+    },
+    "/shutdowns/azure-2027-02-22-azure-deployment-environments": {
+      "hash": "e5a1940900295492",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/azure-2027-03-31-azure-cache-for-redis-enterprise-and-enterprise-flash-tiers": {
+      "hash": "6d249ca134226f2a",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/azure-2027-04-14-azure-openai-gpt-4o-gpt-4o-mini-and-gpt-4-1-version-retirement": {
+      "hash": "3174446961f6093e",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/azure-2027-06-02-azure-fluid-relay": {
+      "hash": "c3856e812ae9a11e",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/azure-2027-06-16-azure-openai-gpt-image-1-5-retirement": {
+      "hash": "26a9e5374a5f1007",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/azure-2027-09-29-functions-on-azure-container-apps-v1": {
+      "hash": "f3c969b04cf82a53",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/azure-2028-09-30-azure-cache-for-redis-basic-standard-and-premium-tiers": {
+      "hash": "7cbf1501e2f768fb",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/azure-2028-09-30-azure-communication-services-acs-standalone-services": {
+      "hash": "c391ccc14edebd82",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/chroma-2026-12-07-chroma-cloud": {
+      "hash": "d60520d28c4c08ee",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/circleci-2027-01-01-circleci-s-graphql-unstable-api": {
+      "hash": "802cf51dafe67717",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/circleci-2027-02-01-circleci-s-v1-and-v1-1-trigger-and-rerun-api-endpoints": {
+      "hash": "362e8ecc2332b758",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/cloudflare-dns-2026-12-01-cloudflare-s-dns-analytics-and-dns-firewall-analytics-rest-apis": {
+      "hash": "9def5e0c4207bb90",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/cloudflare-dns-2027-03-31-cloudflare-s-zone-settings-batch-api": {
+      "hash": "d72fb3b4655b8905",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/cloudflare-workers-ai-2026-11-20-24-workers-ai-models-including-kimi-k2-6-glm-5-2-llama-3-2-3b-instruct-and-whisper-tiny-en": {
+      "hash": "786408ee8bba5fa6",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/cocoapods-2026-12-02-publishing-new-pods-and-versions-to-cocoapods-trunk": {
+      "hash": "5517719784ffa79e",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/conductor-2026-11-20-conductor-cloud": {
+      "hash": "73088439f78f8075",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/cursor-2026-11-25-openai-s-models-in-cursor": {
+      "hash": "752eaf1c11e83957",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/deno-deploy-2027-04-deno-deploy": {
+      "hash": "d1e25069e595e3f1",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/firebase-2027-03-31-firebase-extensions": {
+      "hash": "60377e9169f77a66",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/firebase-2027-09-30-firebase-test-lab": {
+      "hash": "f6d21f31f071be16",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/firecrawl-2026-12-10-firecrawl-s-v1-api-and-the-extract-endpoint": {
+      "hash": "bcbe28fd99881550",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/gadget-2027-03-31-gadget": {
+      "hash": "a373a49204f752a4",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/github-actions-2026-12-08-arm32-job-execution-on-github-hosted-runners": {
+      "hash": "ce3f766c3000ea0c",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/github-actions-2027-03-23-github-actions-ubuntu-22-04-runner-images-ubuntu-22-04-ubuntu-22-04-arm": {
+      "hash": "f3f2a035b2c23e2b",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/github-copilot-2026-12-14-claude-fable-5-claude-haiku-4-5-gemini-3-8-flash-gemini-4-argon-grok-4-6-and-kimi-k3-in-github-copilot": {
+      "hash": "9bcc72bfa9d434b8",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-antigravity-2026-11-18-claude-4-6-models-and-gpt-oss-120b-on-antigravity-s-free-and-google-ai-plus-plans": {
+      "hash": "b8c1c83316b0be20",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-app-engine-2027-01-31-google-app-engine-standard-python-2-7-java-8-php-5-5-and-go-1-11": {
+      "hash": "2d4bb3c920b44d63",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-cloud-deployment-manager-2027-06-30-google-cloud-deployment-manager": {
+      "hash": "b09343dfb5c30153",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-cloud-run-2027-04-04-python-3-10-on-cloud-functions-for-firebase-and-cloud-run-functions": {
+      "hash": "c32af269b25bfc57",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-cloud-video-intelligence-api-2027-09-14-google-cloud-video-intelligence-api": {
+      "hash": "5a8f7f0158fe5260",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2026-10-20-gemini-2-5-pro-2-5-flash-and-2-5-flash-lite-on-gemini-enterprise-agent-platform-formerly-vertex-ai": {
+      "hash": "0b6ee291efd21537",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2026-10-22-gemini-omni-flash-preview-and-the-veo-3-1-preview-models": {
+      "hash": "6c3e1caf28cd6ecf",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2026-10-23-the-deep-research-pro-preview-12-2025-agent": {
+      "hash": "a679a443aa49e450",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2026-12-01-gemini-2-5-pro-gemini-2-5-pro-and-gemini-2-5-flash-gemini-2-5-flash-on-the-gemini-api": {
+      "hash": "fed20f21a21d7301",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2026-12-03-gemini-omni-1-1-flash-gemini-omni-1-1-flash-on-the-gemini-api": {
+      "hash": "45254dd402f73d79",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2026-12-13-gemini-live-2-5-flash-native-audio-on-gemini-enterprise-agent-platform-formerly-vertex-ai": {
+      "hash": "21b7774014840cad",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2026-12-18-three-gemini-text-to-speech-preview-models": {
+      "hash": "6b483acc8f8c8f00",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2027-01-28-gemini-3-6-flash-on-gemini-enterprise-agent-platform-formerly-vertex-ai": {
+      "hash": "707e85e4512dc3a1",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2027-01-28-gemini-3-7-flash-on-gemini-enterprise-agent-platform-formerly-vertex-ai": {
+      "hash": "1aacb3bb860e63fb",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2027-03-15-gemini-2-5-flash-image": {
+      "hash": "7bbfbdd7fa09692e",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2027-03-31-the-live-api-preview-gemini-2-5-flash-native-audio-preview-12-2025": {
+      "hash": "be1072f843ba46c7",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2027-04-01-text-embedding-005-text-embedding-004-text-multilingual-embedding-002-and-multimodalembedding-001-on-gemini-enterprise-agent-platform-formerly-vertex-ai": {
+      "hash": "450d8630bef366cb",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2027-05-07-gemini-3-1-flash-lite": {
+      "hash": "86e82dda1d7b8c2d",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-gemini-api-2028-05-14-the-gemini-embedding-001-embedding-model": {
+      "hash": "2b0ef84143d5aaa3",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-jules-2026-12-31-google-jules": {
+      "hash": "1de1f6a92c853810",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/google-programmable-search-engine-2027-01-01-google-s-custom-search-json-api": {
+      "hash": "973cdc61239c1f79",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/hcp-vagrant-2026-12-31-hcp-vagrant-and-the-vagrant-public-registry": {
+      "hash": "996aedf4c3264209",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/heroku-2026-11-11-heroku-postgres-15": {
+      "hash": "8edd790b2e214b9d",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/heroku-2027-01-06-python-3-10-on-heroku": {
+      "hash": "0852c88114e9ba0f",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/heroku-2027-05-01-heroku-s-heroku-22-stack": {
+      "hash": "42619f6597c9a3dc",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/hivemq-2026-12-31-hivemq-cloud-serverless": {
+      "hash": "9ed1c273f5b85149",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/hubspot-for-startups-2026-12-04-hubspot-s-pipelines-api-v1": {
+      "hash": "708e501f0206c97a",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/hubspot-for-startups-2027-02-01-hubspot-s-design-manager-serverless-functions-hcms-api": {
+      "hash": "bd89413fef7b2f30",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/inception-2026-12-28-inception-s-mercury-api": {
+      "hash": "fa200a6def14bc7e",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/launchdarkly-2026-12-31-launchdarkly-rest-api-versions-older-than-20240415": {
+      "hash": "20f668fcc86a5fab",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/leancloud-2027-01-12-leancloud": {
+      "hash": "4662e7c8549a426f",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/lemon-squeezy-2027-03-31-lemon-squeezy": {
+      "hash": "18e3c5b00bc82211",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/microsoft-dev-box-2028-09-18-microsoft-dev-box": {
+      "hash": "c882eab3776d5680",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/microsoft-to-do-2027-06-30-microsoft-to-do-apps": {
+      "hash": "9bad1ac1a7c83e0d",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/minimax-2026-11-18-pay-as-you-go-api-access-to-minimax-m2-7-minimax-m2-7-highspeed-minimax-m2-5-and-minimax-m2-5-highspeed": {
+      "hash": "0ea482b3bd5c396a",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/mistral-ai-2027-04-30-mistral-large-3-mistral-medium-3-5-voxtral-tts-voxtral-mini-transcribe-2-and-voxtral-mini-transcribe-realtime": {
+      "hash": "6c09306f61985aef",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/netlify-2027-02-08-netlify-visual-editor": {
+      "hash": "415550fa219fbfa5",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/new-relic-2027-07-31-new-relic-rest-api-v2-and-deployments-v0-api": {
+      "hash": "aaa524f7985dc855",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/nvidia-nim-2026-10-19-free-endpoint-access-to-nvidia-nemotron-3-super-120b-a12b": {
+      "hash": "8a5a2812ddf3161d",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/nvidia-nim-2026-10-27-free-endpoint-access-to-z-ai-glm-5-3": {
+      "hash": "03ecbd7f9551bd06",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-2026-11-30-openai-agent-builder-evals-platform-and-reusable-prompts": {
+      "hash": "97c82d797cbc76e6",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-2026-12-01-gpt-image-1-mini-gpt-image-1-5-and-chatgpt-image-latest": {
+      "hash": "bb14c123098d5f31",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-2026-12-11-custom-gpts-in-chatgpt": {
+      "hash": "a7ba765e78531e71",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-2026-12-11-gpt-5-gpt-5-mini-gpt-5-nano-gpt-5-pro-o3-and-o3-pro": {
+      "hash": "a2f7c2bb107bf68b",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-2027-01-06-creating-fine-tuning-jobs-on-openai-s-self-serve-platform": {
+      "hash": "a3c696b3699e189f",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-2027-01-06-openai-tts-1-tts-1-hd-and-gpt-4o-mini-tts": {
+      "hash": "0e8437d9d8519c48",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-2027-01-14-gpt-4o-gpt-4o-mini-gpt-4-1-and-gpt-4-1-mini": {
+      "hash": "33f4d5913e3ef77a",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-2027-01-20-openai-legacy-realtime-and-audio-models": {
+      "hash": "8767d764f1d50502",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-2027-02-01-gpt-5-5-cyber-preview": {
+      "hash": "71821021ef40a92f",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-2027-02-10-gpt-image-2": {
+      "hash": "c14990cb1acd5103",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-2027-02-26-whisper-1-the-gpt-4o-transcription-models-and-v1-audio-translations": {
+      "hash": "30f48ddf2b15d511",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-2027-04-01-gpt-5-1-gpt-5-3-codex-and-gpt-5-4-nano": {
+      "hash": "01717bba764498bb",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/openai-codex-2026-10-14-gpt-5-5-in-chatgpt-chatgpt-work-and-codex": {
+      "hash": "88f7806fc6d9c18e",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/opsgenie-2027-04-05-opsgenie-atlassian-s-on-call-and-alerting-service": {
+      "hash": "9d60e52de1971420",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/pipedream-2027-03-31-pipedream-workflows-and-string": {
+      "hash": "2616519c4721437d",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/prisma-accelerate-2026-12-01-prisma-accelerate": {
+      "hash": "0d67337456288720",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/railway-2026-12-01-railway-s-config-as-code-railway-json-and-railway-toml": {
+      "hash": "43fac4853fc0a767",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/reddit-2027-01-12-reddit-s-public-data-api": {
+      "hash": "0b63142ba5a4d9a7",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/remove-bg-2026-12-01-remove-bg-s-self-service-api-and-website": {
+      "hash": "3b0088dafd6dcd42",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/runpod-2026-11-15-runpod-s-rest-api-v1": {
+      "hash": "e39692b78b882b1b",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/smartlook-com-2027-09-30-smartlook-com": {
+      "hash": "162234d5877d69f3",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/solo-2026-11-30-solo": {
+      "hash": "f6d2450c014ea9d1",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/sourcegraph-cody-2027-01-31-sourcegraph-cody": {
+      "hash": "bbc14b818263463f",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/stackify-retrace-2027-03-31-stackify-retrace": {
+      "hash": "53086ffba452384f",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/supabase-2026-12-31-supabase-legacy-api-keys": {
+      "hash": "799a936ccc258c9d",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/together-ai-2026-10-22-serverless-access-to-meta-llama-llama-3-3-70b-instruct-turbo-and-deepseek-ai-deepseek-v4-flash-0731": {
+      "hash": "cda9456f04722dd4",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/twilio-2027-10-31-twilio-notify": {
+      "hash": "94aac8c142a4be2e",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/val-town-2026-12-10-val-town": {
+      "hash": "b4793bedff9eb0b0",
+      "changed": "2026-11-21"
+    },
+    "/shutdowns/zeabur-2026-12-01-zeabur": {
+      "hash": "4f19a76d95451c0f",
+      "changed": "2026-11-21"
+    },
     "/stability": {
       "hash": "68e0abfddafb8394",
       "changed": "2026-11-21"
