@@ -91,6 +91,7 @@ describe("expiring month groups include the deadline tracker's stated dates", ()
     index.offers = [];
     const record = (vendor: string) => ({ vendor, category: "Messaging", change_type: "product_deprecated", impact: "high", date: today, summary: "The product shuts down.", previous_state: "Available", current_state: "Retiring", source_url: "https://fixture.example/end", alternatives: [], recorded_date: "2030-05-01", date_source: "vendor_page", listing_effect: "none" });
     changes.changes = [record("Live Fixture"), { ...record("Cancelled Fixture"), resolution: { state: "cancelled", date: "2030-05-10", detail: "The shutdown was cancelled.", source_url: "https://fixture.example/cancelled" } },
+      { ...record("Old Resolution Fixture"), date: "2030-05-19", resolution: { state: "cancelled", date: "2030-04-19", detail: "The shutdown was cancelled.", source_url: "https://fixture.example/cancelled" } },
       ...["cancelled", "reversed", "retracted"].map(state => ({ ...record(`${state} Recent Fixture`), date: "2030-05-19", resolution: { state, date: "2030-05-15", detail: "The change was resolved.", source_url: "https://fixture.example/resolution" } }))];
     writeFileSync(path.join(dir, "index.json"), JSON.stringify(index));
     writeFileSync(path.join(dir, "changes.json"), JSON.stringify(changes));
@@ -104,6 +105,7 @@ describe("expiring month groups include the deadline tracker's stated dates", ()
         assert.match(html, /<p class="page-intro">1 upcoming pricing changes tracked\./);
         assert.match(html, /<meta name="description" content="1 upcoming pricing changes tracked\./);
         const recent = html.split('<div class="recent-section" id="recently-changed">')[1].split('<div class="mcp-cta">')[0];
+        assert.deepEqual(entries(recent, "exp").map(entry => entry.vendor), ["cancelled Recent Fixture", "reversed Recent Fixture", "Cancelled Fixture"]);
         for (const state of ["cancelled", "reversed"]) {
           const entry = entries(recent, "exp").find(item => item.vendor === `${state} Recent Fixture`);
           assert.ok(entry);

@@ -50080,7 +50080,8 @@ function buildExpiringPage(): string {
       .some(deadline => upcoming.some(line => line.vendor === deadline.vendor && line.date === deadline.date));
     if (displayedDeadline) upcomingRecords.add(record);
   }
-  const recent = eventDated.filter(c => c.date < today && c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
+  const recentDate = (c: DealChange) => c.resolution?.date ?? c.date;
+  const recent = eventDated.filter(c => recentDate(c) < today && recentDate(c) >= thirtyDaysAgo).sort((a, b) => recentDate(b).localeCompare(recentDate(a)));
   const recentlyDiscovered = undatedChanges.filter(c => c.date >= thirtyDaysAgo && !upcomingRecords.has(c)).sort((a, b) => b.date.localeCompare(a.date));
 
   const upcomingByMonth = new Map<string, typeof upcoming>();
