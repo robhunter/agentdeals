@@ -148,6 +148,16 @@ describe("the deadline tracker lists every later date our listings and records s
     assert.deepStrictEqual(missing, []);
   });
 
+  it("documents the fields of every live stated deadline", () => {
+    const items = (openapiSpec as any).paths["/api/deadlines"].get.responses["200"].content["application/json"].schema.properties.deadlines.items;
+    const stated = items.oneOf.find((branch: any) => branch.properties?.stated_in);
+    const entries = deadlines.filter((entry) => entry.stated_in !== undefined);
+    const undocumented = [...new Set(entries.flatMap((entry) => Object.keys(entry)))].filter((key) => !(key in stated.properties));
+    assert.deepStrictEqual(undocumented, []);
+    const missing = entries.flatMap((entry) => stated.required.filter((key: string) => !(key in entry)).map((key: string) => `${entry.vendor} ${entry.date}: ${key}`));
+    assert.deepStrictEqual(missing, []);
+  });
+
   it("counts every entry it lists in the page's total", () => {
     const total = Number(html.match(/<p class="page-intro">(\d+) upcoming deadlines/)?.[1]);
     assert.strictEqual(total, deadlines.length);
@@ -206,6 +216,8 @@ describe("a deadline stated in a listing or an earlier record joins the deadline
   before(async () => {
     const catalogue = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8"));
     const changeLog = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf8"));
+    catalogue.offers = [];
+    changeLog.changes = [];
     catalogue.offers.push({
       vendor: VENDOR,
       category: "Cloud Hosting",

@@ -210,6 +210,11 @@
     "entry": "NVIDIA's free endpoints for deepseek-ai/deepseek-v4.1-flash, meta/llama-3.2-90b-vision-instruct and meta/llama-guard-4-12b (November 16, completed) and openai/gpt-oss-20b (November 18, completed; 55 other free endpoints ended between May 12 and November 12, 2026, including openai/gpt-oss-120b on September 3, each named with its date on agentdeals.dev/vendor/nvidia-nim; z-ai/glm-5.3-flash is still a free endpoint)"
   },
   {
+    "card_title": "xAI",
+    "card_date": "2026-11-19",
+    "entry": "xAI's grok-build-0.1 (November 19, completed; no longer served on the API; xAI names no replacement; xAI's pricing and models pages still list it; xAI's retirement page still routes grok-code-fast-1 to it)"
+  },
+  {
     "card_date": "2026-11-30",
     "card_title": "Solo",
     "entry": "Solo's websites, accounts and data (November 30, completed; deleted and cannot be recovered; site owners were sent a ZIP with an HTML export of the site, a CSV of links to its images, and its contact form and newsletter submissions; image source files were not in the ZIP)"
@@ -221,7 +226,7 @@
   },
   {
     "card_date": "2026-11-30",
-    "card_title": "Claude Sonnet 4.5",
+    "card_title": "Claude Sonnet 4.5 on the Claude API",
     "entry": "Claude Sonnet 4.5 (claude-sonnet-4-5-20250929) on the Claude API (November 30, completed; requests to it fail; claude-sonnet-5-5 is the replacement Anthropic names; Amazon Bedrock and Google Cloud set their own retirement dates)"
   },
   {
