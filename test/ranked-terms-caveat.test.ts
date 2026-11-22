@@ -183,6 +183,8 @@ before(async () => {
   const indexPath = path.join(fixtureDir, "index.json");
   const controlIndexPath = path.join(fixtureDir, "index-all-read.json");
   const statePath = path.join(fixtureDir, "verification_state.json");
+  const changesPath = path.join(fixtureDir, "changes.json");
+  writeFileSync(changesPath, JSON.stringify({ changes: [] }));
   writeFileSync(indexPath, JSON.stringify({ offers: CORPUS }, null, 2));
   writeFileSync(controlIndexPath, JSON.stringify({ offers: CORPUS_ALL_READ }, null, 2));
   writeFileSync(statePath, JSON.stringify({
@@ -202,10 +204,12 @@ before(async () => {
 
   unconfirmed = await startServer({
     AGENTDEALS_INDEX_PATH: indexPath,
+    AGENTDEALS_CHANGES_PATH: changesPath,
     AGENTDEALS_VERIFICATION_STATE_PATH: statePath,
   });
   allRead = await startServer({
     AGENTDEALS_INDEX_PATH: controlIndexPath,
+    AGENTDEALS_CHANGES_PATH: changesPath,
     AGENTDEALS_VERIFICATION_STATE_PATH: statePath,
   });
 

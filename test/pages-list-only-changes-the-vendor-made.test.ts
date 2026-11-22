@@ -54,8 +54,8 @@ const aRetractedRemovalBesideEveryVendor = everyVendor.map(vendor => ({
 
 const isOurCorrection = (c: LoggedChange) => c.change_type === "record_corrected";
 
-const logWithARetractedCopyAheadOfEachRecord: LoggedChange[] = liveLog.changes.flatMap((c: LoggedChange) =>
-  isOurCorrection(c) ? [c] : [{ ...c, date: dayBefore(c.date), ...retraction(c.vendor) }, c],
+const logWithARetractedCopyAheadOfEachRecord: LoggedChange[] = liveLog.changes.flatMap((c: LoggedChange, i: number) =>
+  isOurCorrection(c) ? [c] : [{ ...c, what_ends: `Retracted fixture ${i}`, date: dayBefore(c.date), ...retraction(c.vendor) }, c],
 );
 
 const LOGS_THAT_LIST_EVERY_RECORD = new Set(["/changes", "/pricing-changes"]);
