@@ -20946,6 +20946,22 @@
       "category": "Databases",
       "alternatives": [],
       "recorded_date": "2026-11-21"
+    },
+    {
+      "vendor": "Google Vertex AI Extensions",
+      "change_type": "product_deprecated",
+      "date": "2026-11-26",
+      "summary": "Vertex AI Extensions can be used until November 26, 2026. After that date, Google shuts Vertex AI Extensions down and they stop working. This includes Google's prebuilt Code Interpreter and Vertex AI Search extensions and custom extensions. Google's migration guide says to move Code Interpreter to Agent Platform Code Execution Sandbox or the Gemini API code execution tool. Move the Google Search extension to Grounding with Google Search. Move custom extensions built from OpenAPI specifications to function calling. Vertex AI Extensions was a Preview offering, deprecated on May 26, 2026.",
+      "previous_state": "Vertex AI Extensions, a Preview offering deprecated on May 26, 2026, still connected models on Vertex AI to APIs, and Vertex AI ran the extensions automatically.",
+      "current_state": "Google Cloud's \"Extensions overview\" (last updated 2026-11-10, read 2026-11-22): \"Vertex AI Extensions has been deprecated as of May 26, 2026. After November 26, 2026, Vertex AI Extensions will be shut down and no longer function.\" Google's \"Migrate from Vertex AI Extensions to Agent Platform\" (last updated 2026-11-10, read 2026-11-22) moves the Code Interpreter extension to \"Agent Platform Code Execution Sandbox\" (alternative: the Gemini API code execution tool), the Google Search extension to \"Grounding with Google Search\" and custom extensions to \"Function Calling\".",
+      "impact": "medium",
+      "source_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/extensions/overview",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-22",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Vertex AI Extensions"
     }
   ]
 }
