@@ -48,7 +48,7 @@ function startServer(env: Record<string, string>): Promise<{ proc: ChildProcess;
 }
 
 function clockAt(instant: string): Record<string, string> {
-  return { AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(instant) - Date.now()) };
+  return { AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(instant) - Date.now() + Number(process.env.AGENTDEALS_CLOCK_SHIFT_MS ?? 0)) };
 }
 
 function timelineOf(html: string): string {

@@ -483,6 +483,7 @@ function comparisonToolCards(pageHtml: string, comparison: unknown): string[] {
     fetch: (url: string) => Promise.reject(new Error(`unexpected request for ${url}`)),
     URL,
     URLSearchParams,
+    Date,
     console,
     setTimeout,
     clearTimeout,
