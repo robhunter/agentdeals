@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-21",
+  "generated": "2026-11-22",
   "pages": {
     "/": {
       "daily": true
@@ -3115,8 +3115,7 @@
       "daily": true
     },
     "/digest/2026-w48": {
-      "hash": "e20d47609bafea4a",
-      "changed": "2026-11-17"
+      "daily": true
     },
     "/digest/2026-w49": {
       "hash": "4f7935d7d1c80875",
@@ -3302,8 +3301,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "0d71536a93cee895",
-      "changed": "2026-11-21"
+      "daily": true
     },
     "/firebase-alternatives": {
       "hash": "5fc38ebcc6fedc1d",
@@ -3755,9 +3753,9 @@
       "hash": "ba5125fafcca7c8c",
       "changed": "2026-11-21"
     },
-    "/shutdowns/anthropic-api-2026-11-30-claude-sonnet-4-5": {
-      "hash": "2225e92701cf3da3",
-      "changed": "2026-11-21"
+    "/shutdowns/anthropic-api-2026-11-30-claude-sonnet-4-5-on-the-claude-api": {
+      "hash": "2cc7b721524eb53f",
+      "changed": "2026-11-22"
     },
     "/shutdowns/apiary-io-2026-10-31-apiary-io": {
       "hash": "ac41a445991ab893",
@@ -3811,17 +3809,17 @@
       "hash": "1233a01be4f46ca7",
       "changed": "2026-11-21"
     },
-    "/shutdowns/azure-2026-12-15-azure-openai-gpt-realtime-mini-2025-12-15-retirement": {
-      "hash": "a1e0b2ab92939a32",
-      "changed": "2026-11-21"
-    },
     "/shutdowns/azure-2026-12-15-azure-openai-speech-model-retirement": {
       "hash": "dfc39b3beeefa056",
       "changed": "2026-11-21"
     },
-    "/shutdowns/azure-2027-01-14-azure-openai-gpt-4o-2024-05-13-retirement": {
-      "hash": "3c0003835015ad07",
-      "changed": "2026-11-21"
+    "/shutdowns/azure-2026-12-15-gpt-realtime-mini-version-2025-12-15-on-azure-openai": {
+      "hash": "ab987f2184ef5e31",
+      "changed": "2026-11-22"
+    },
+    "/shutdowns/azure-2027-01-14-gpt-4o-version-2024-05-13-on-azure-openai": {
+      "hash": "bda4368bc050abbd",
+      "changed": "2026-11-22"
     },
     "/shutdowns/azure-2027-02-22-azure-deployment-environments": {
       "hash": "e5a1940900295492",
