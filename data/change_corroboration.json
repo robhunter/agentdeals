@@ -1,6 +1,17 @@
 {
   "held": [
     {
+      "vendor": "360username",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "Previously the tool searches a username across 150+ social platforms. The current page consistently states 70+ platforms are checked.",
+      "previous_state": "A free tool to search a username across 150+ social platforms to find matching profiles.",
+      "current_state": "The page describes a free platform with no signup wall that checks username availability across 70+ platforms (Instagram, YouTube, TikTok, GitHub, Twitch, Fiverr and others), generates AI brand names, runs bulk domain/username searches up to 50 names, and offers invisible/Unicode character tools and a PUBG name checker.",
+      "source_url": "https://360username.com/",
+      "category": "Auth",
+      "first_read_date": "2026-11-22"
+    },
+    {
       "vendor": "Harness CI",
       "change_type": "pricing_restructured",
       "impact": "high",
