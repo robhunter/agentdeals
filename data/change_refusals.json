@@ -281,15 +281,15 @@
     },
     {
       "vendor": "Amazon Q Developer",
-      "change_type": "pricing_restructured",
+      "change_type": "product_deprecated",
       "reason": "confirmed_unchanged",
-      "detail": "The report simply rephrases the free tier details already present in the stored description and adds details about the Pro tier which were not previously mentioned.",
-      "summary": "The Amazon Q Developer now offers two tiers: Free and Pro ($19/mo per user). The Free tier includes 50 agentic requests per month and 1,000 lines of code transformation. The Pro tier offers increased limits for agentic requests and code transformation (4,000 lines pooled at the account level, with additional lines at $0.003/line), admin controls, and IP indemnity.",
-      "previous_state": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, 1,000 lines code transformation/month, 50 agentic requests/month, access to latest Claude models. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, IP indemnity)",
-      "current_state": "Amazon Q Developer offers two pricing tiers: Free and Pro ($19/mo per user). The Free tier includes 50 agentic requests per month and 1,000 lines of code transformation.",
+      "detail": "The report restates the same Free and Pro tier terms; the only difference is the stored description's end-of-support/Kiro note, which the report does not claim as a change.",
+      "summary": "The page still describes the Free Tier and Pro Tier ($19/mo per user) with the same limits (50 agentic requests/month, 1,000 LOC/month for Java transformation on Free. 4,000 LOC/month pooled on Pro), so the free tier itself is intact.",
+      "previous_state": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, 1,000 lines code transformation/month, 50 agentic requests/month, access to latest Claude models. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, IP indemnity). AWS will end support for the Amazon Q Developer IDE plugins on April 30, 2027, and points IDE users to Kiro.",
+      "current_state": "The page lists two tiers: Free Tier (50 agentic requests per month, 1,000 lines of code per month for Java upgrades, access to latest Claude models, use in IDE or CLI, AWS Console Q&A) and Pro Tier at $19/mo per user (increased agentic request limits, 4,000 LOC per month per user pooled at account level with $0.003 per LOC overage, admin dashboard, IP indemnity). No end-of-support date for IDE plugins or reference to Kiro appears on the page.",
       "source_url": "https://aws.amazon.com/q/developer/pricing/",
       "category": "AI Coding",
-      "refused_date": "2026-09-12"
+      "refused_date": "2026-11-22"
     },
     {
       "vendor": "Amazon Q Developer",
@@ -1032,6 +1032,18 @@
     },
     {
       "vendor": "bitnami.com",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-18 (same_transition_graded_differently) claimed the same change, pricing_restructured, against the same stored description",
+      "summary": "The stored free tier described managing 1 AWS micro instance via prepared apps on IaaS; the current page describes a free development version of Bitnami Secure Images for non-production use only, with free images limited to the latest tag, and no mention of AWS micro instance management.",
+      "previous_state": "Deploy prepared apps on IaaS. Management of 1 AWS micro instance free",
+      "current_state": "Developers can access a portion of Bitnami Secure Images for non-production use cases; free images are only available in the latest tag, with a list on Dockerhub. Full catalog access requires purchasing Bitnami Secure Images.",
+      "source_url": "https://bitnami.com/",
+      "category": "Server Management",
+      "refused_date": "2026-11-22"
+    },
+    {
+      "vendor": "bitnami.com",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this vendor refused on 2026-10-07 (repeats_a_refused_reading) stated the same current state, word for word",
@@ -1519,13 +1531,13 @@
       "vendor": "Bugsnag",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
-      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 7,500 event/mo against 7.5 event, 1 span/mo against 1 span/mo, 1 user against 1 user",
-      "summary": "The free tier now includes 7.5K events and 1M spans per month, and 1 user. Previously 7,500 events/month and 1M spans/month, 1 user. The free tier is still available. The limits are now tied to the Enterprise plan description.",
-      "previous_state": "Error monitoring — 7,500 events/month and 1M spans/month on free plan, 1 user, unlimited projects, 7-day data retention. 14-day free trial of paid features available. Rebranded as SmartBear Insight Hub",
-      "current_state": "Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications Select plan features, plus: Automatic error prioritization Stability benchmarks Advanced segmentation Custom notifications SAML single sign-on System Metrics (CPU, Memory, Rendering)",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 1 user against 1 user, 7.5 event against 7.5 event, 1 span/mo against 1 span/mo",
+      "summary": "The Free tier's event and span limits are no longer stated on the pricing page; the page now lists Free as 'Solo users and their passion projects' at $0/month without the 7.5K events/1M spans figures, and the 'Includes' block describing 1 user, 7.5K events and 1M spans now appears under the Enterprise section.",
+      "previous_state": "Error monitoring — Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications",
+      "current_state": "Free is listed as 'Solo users and their passion projects' at $0/month with a 'Try Free' option; the page does not state event or span limits for the Free plan. The 'Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications' text appears under the Enterprise plan section.",
       "source_url": "https://www.bugsnag.com/pricing/",
       "category": "Error Tracking",
-      "refused_date": "2026-08-29"
+      "refused_date": "2026-11-22"
     },
     {
       "vendor": "Burnermail",
@@ -2872,13 +2884,13 @@
       "vendor": "Cronitor",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-10-07 (repeats_a_refused_reading) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
-      "summary": "The Hacker plan is still available, but the page explicitly states no SMS alerts are included, whereas the stored information implies they are.",
+      "detail": "the reading of this vendor refused on 2026-11-01 (repeats_a_refused_claim) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The Hacker free plan no longer lists webhook alerts, 12-month data retention, or a 5-minute check frequency as stated; the page now shows Hacker with 5 monitors, email and Slack alerts, basic status page, no SMS alerts, no on-call integrations, and a 5-minute fastest check frequency, while 12-month data retention is listed only under Business.",
       "previous_state": "Cron job and uptime monitoring — free Hacker plan: 5 monitors, 5-minute check frequency, email, Slack, and webhook alerts, 1 status page (50 subscribers), 12-month data retention, single user",
-      "current_state": "No SMS alerts",
+      "current_state": "Hacker is $0 free forever with 5 monitors, email and Slack alerts, basic status page, no SMS alerts, no on-call integrations (PagerDuty, OpsGenie), 1 status page with 50 included subscribers, 1 dashboard user, and a 5-minute fastest check frequency; 12 month data retention is listed under Business.",
       "source_url": "https://cronitor.io/pricing",
       "category": "Monitoring",
-      "refused_date": "2026-11-01"
+      "refused_date": "2026-11-22"
     },
     {
       "vendor": "Cronitor",
@@ -4449,6 +4461,18 @@
     {
       "vendor": "formlets.com",
       "change_type": "limits_increased",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-11-01 (repeats_a_refused_reading) claimed the same change, limits_increased, against the same stored description",
+      "summary": "The stored free tier described 'unlimited single page forms/month, 100 submissions/month, email notifications,' but the current page advertises 'Free Forever Unlimited submits & No signup/creditcard needed,' indicating the submission limit changed from 100/month to unlimited.",
+      "previous_state": "Online forms, unlimited single page forms/month, 100 submissions/month, email notifications.",
+      "current_state": "Free Forever plan with Unlimited submits and no signup/credit card needed.",
+      "source_url": "https://formlets.com/",
+      "category": "Forms",
+      "refused_date": "2026-11-22"
+    },
+    {
+      "vendor": "formlets.com",
+      "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this vendor refused on 2026-10-07 (same_transition_graded_differently) stated the same current state, word for word",
       "summary": "The free tier now offers unlimited submissions, whereas the stored information states 100 submissions/month.",
@@ -4954,6 +4978,18 @@
       "source_url": "https://github.com/features/packages",
       "category": "Container Registry",
       "refused_date": "2026-10-09"
+    },
+    {
+      "vendor": "GitHub Copilot",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-31 (same_transition_graded_differently) stated the same 4 figures, so the page showed these terms before the date this record gives",
+      "summary": "Copilot Free now includes access to Haiku 4.5, GPT-5 mini, and more, plus Copilot Fusion Standard, and the page no longer mentions a limited monthly allowance of GitHub AI Credits for chat/agent features on Free. Paid plan credit allowances have also changed: Pro is now $15 monthly total credits (was 1,500), Pro+ is $70 (was 7,000), and Max is $200 (was 20,000).",
+      "previous_state": "AI coding assistant by GitHub. Copilot Free is $0 with no credit card: 2,000 code completions a month, a limited monthly allowance of GitHub AI Credits for chat and agent features, and models through auto model selection only. Copilot Student is free for verified students. Paid plans include a monthly allowance of AI credits: Pro $10 (1,500 credits), Pro+ $39 (7,000) and Max $100 (20,000); Business $19 (1,900) and Enterprise $39 (3,900) per seat. Code completions are unlimited on paid plans, and usage beyond an allowance costs $0.01 per AI credit.",
+      "current_state": "Free is $0 USD with 2,000 completions per month, access to Haiku 4.5, GPT-5 mini, and more, community support, access to Copilot Fusion Standard, and no credit card required. Verified students have access to the GitHub Copilot Student plan.",
+      "source_url": "https://github.com/features/copilot",
+      "category": "AI Coding",
+      "refused_date": "2026-11-22"
     },
     {
       "vendor": "GitHub Copilot",
@@ -10168,15 +10204,15 @@
     },
     {
       "vendor": "QRME.SH",
-      "change_type": "rebranded",
+      "change_type": "product_deprecated",
       "reason": "page_does_not_name_vendor",
       "detail": "the page read never names QRME.SH and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The domain now hosts an online gambling site called TX88, offering various casino games, sports betting, and promotions. There is no mention of a QR code generator or any free tier related to QR codes.",
+      "summary": "The stored deal info says qrme.sh no longer serves the product and the domain redirects to an unrelated online gambling site. The current page is a Vietnamese-language online gambling/casino site (TX88) with no QR code generator, no free tier, and no mention of qrme.sh or its former bulk QR code export offer.",
       "previous_state": "There is no free tier: qrme.sh no longer serves the product. Checked 2026-09-01, the domain redirects to hz-mobile.de, which serves an online gambling site, so the expired domain has been taken over by an unrelated party. The former offer was a bulk QR code generator with no login and up to 100 URLs per export.",
-      "current_state": "TX88 is an online gambling platform offering games like sports betting, casino, slots, and fishing games. New members can receive a welcome bonus of up to 88K.",
+      "current_state": "The page is an online gambling site (TX88) promoting casino, sports betting, fish shooting, and related games, with registration and deposit promotions; it contains no QR code generator or free tier.",
       "source_url": "https://qrme.sh",
       "category": "Storage",
-      "refused_date": "2026-10-13"
+      "refused_date": "2026-11-22"
     },
     {
       "vendor": "QRtracer",
@@ -11235,6 +11271,18 @@
       "refused_date": "2026-10-11"
     },
     {
+      "vendor": "Sevalla (formerly Kinsta)",
+      "change_type": "record_corrected",
+      "reason": "confirmed_unchanged",
+      "detail": "Same free tier terms; only wording and added detail differ.",
+      "summary": "The free static site tier itself still exists with the same limits (100 sites, 100GB bandwidth/month, 260+ edge locations, $0).",
+      "previous_state": "Deploy up to 100 static sites for free, custom domains with SSL, 100 GB monthly bandwidth, 260+ Cloudflare CDN locations. Rebranded from Kinsta in February 2026.",
+      "current_state": "Static sites are $0 with 100 sites, 600 free build minutes per month, 100GB bandwidth per month per account, 1GB build size limit per site, 1 concurrent build per site, and 260+ global edge locations. Sevalla is described as a Kinsta product, with Kinsta and Sevalla as separate registered trademarks.",
+      "source_url": "https://sevalla.com/static-site-hosting/",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-11-22"
+    },
+    {
       "vendor": "Shadcn Studio",
       "change_type": "free_tier_removed",
       "reason": "no_removal_evidence",
@@ -11526,6 +11574,18 @@
       "source_url": "https://smartparse.io",
       "category": "Dev Utilities",
       "refused_date": "2026-09-26"
+    },
+    {
+      "vendor": "SMSGate",
+      "change_type": "pricing_restructured",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 6430 characters, so it states no terms to have changed",
+      "summary": "The stored deal describes a free cloud service with a recommended notification above 10,000 messages/day, but the current page no longer mentions any free cloud tier, message limits, or the 10,000 messages/day notification. It now presents SMSGate as free and open-source software with Local, Cloud, and Private operating modes, and the Cloud mode is described as a public cloud server with optional end-to-end encryption, without stating that it is free or listing usage limits.",
+      "previous_state": "SMS Gateway for Android™ enables sending and receiving SMS messages through your devices using cloud routing. Completely free cloud service (with recommended notification for usage above 10,000 messages/day to maintain quality for all users).",
+      "current_state": "SMSGate is described as free and open-source software under the Apache License 2.0. It offers Local Mode (data stored only on your device, no external servers needed), Cloud Mode (public cloud server with optional end-to-end encryption, easy access from anywhere, reliable cloud infrastructure), and Private Mode (self-hosted infrastructure, single command deployment). No registration, email, or phone number is required. The page does not state any message-per-day limit or a 10,000 messages/day notification.",
+      "source_url": "https://sms-gate.app",
+      "category": "Messaging",
+      "refused_date": "2026-11-22"
     },
     {
       "vendor": "snappify",
@@ -13967,6 +14027,18 @@
       "category": "Dev Utilities",
       "refused_date": "2026-09-10",
       "collided_with": "Zipcodestack|limits_reduced|2026-08-28|https://zipcodestack.com"
+    },
+    {
+      "vendor": "Zoho Bookings",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "Both describe the same free tier for one user/staff member; the current page just adds more detail without contradicting the stored description.",
+      "summary": "The Free plan now lists 'For one user' with unlimited appointments, one-on-one meeting, one-time booking URL, website integration, time slot sharing, browser extension, mobile app, and Zoho CRM integration.",
+      "previous_state": "Appointment scheduling for 1 staff member, 1 service type, with calendar sync free",
+      "current_state": "Free plan: For one user, ₹0, includes unlimited appointments, one-on-one meeting, one-time booking URL, website integration, time slot sharing, browser extension, mobile app, and Zoho CRM integration.",
+      "source_url": "https://zoho.com/bookings",
+      "category": "Workflow Automation",
+      "refused_date": "2026-11-22"
     },
     {
       "vendor": "Zoho Bookings",
