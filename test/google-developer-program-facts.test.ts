@@ -253,16 +253,21 @@ describe("the Google Developer Program guide states Google's, Microsoft's, Appwr
     assert.strictEqual(readable(timelineCard(served.get(PAGE)!, "June 30, 2026 — Monthly renewals end")), MONTHLY_RENEWALS_ENDED);
   });
 
-  it("follows the free tier reduction and its source with Google's limit on the Gemini 2.5 models since September 18, 2026, linking Google's changelog", () => {
+  it("follows the free tier reduction with Google's current model status and source", () => {
     const box = geminiContextBox(served.get(PAGE)!);
     const text = readable(box);
     const stopped = text.indexOf("Google's rate-limits page stopped listing free-tier limits the same day.");
     assert.ok(stopped >= 0, text);
-    assert.ok(text.endsWith(GEMINI_25_ACCESS), text);
-    assert.ok(text.indexOf(GEMINI_25_ACCESS) > stopped, text);
-    assert.deepStrictEqual(anchors(box).filter((link) => link.endsWith(`-> ${GEMINI_API_CHANGELOG}`)), [`Since September 18, 2026 -> ${GEMINI_API_CHANGELOG}`]);
+    const retired = new Date().toISOString().slice(0, 10) >= "2026-12-01";
+    const expected = retired
+      ? "Google shut down Gemini 2.5 Pro and 2.5 Flash on the Gemini API on 2026-12-01; requests that name them are answered by 3.8 Flash and 3.5 Flash-Lite. Gemini 2.5 Flash-Lite, a separate model, still runs. New projects use 3.5 Flash-Lite or 3.8 Flash. Source &nearr; See our Free LLM APIs comparison for full details."
+      : GEMINI_25_ACCESS;
+    const source = retired ? "https://aistudio.google.com/docs/deprecations" : GEMINI_API_CHANGELOG;
+    assert.ok(text.endsWith(expected), text);
+    assert.ok(text.indexOf(expected) > stopped, text);
+    assert.deepStrictEqual(anchors(box).filter((link) => link.endsWith(`-> ${source}`)), [`${retired ? "Source &nearr;" : "Since September 18, 2026"} -> ${source}`]);
     const recordSource = box.indexOf('class="change-source"');
-    assert.ok(recordSource >= 0 && box.indexOf(GEMINI_API_CHANGELOG) > recordSource, "the record keeps its own source link ahead of the new sentence");
+    assert.ok(recordSource >= 0 && box.indexOf(source) > recordSource);
   });
 
   it("gives the student offer's countries in the Students card and the student verdict, each linking Google One's offer terms", () => {

@@ -57,7 +57,7 @@ function expectedSummary(record: { summary: string; date: string }): string {
 }
 
 const past = { ...extra[0], vendor: "Continuing Past", date: today, discontinued_date: today };
-const records = [...stored.changes, ...extra, ...dateCases, past];
+const records = [past, ...stored.changes, ...extra, ...dateCases];
 const scratch = mkdtempSync(path.join(tmpdir(), "upcoming-continuing-"));
 const pages = new Map<string, string>();
 

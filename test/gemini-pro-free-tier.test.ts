@@ -214,6 +214,8 @@ async function crawl(routes: string[]): Promise<Crawl> {
 const S1 = "The free tier covers the Gemini 3.x Flash and Flash-Lite models. Google publishes no free-tier limits; AI Studio shows each project's.";
 const S2 = "Since 2026-09-18 Google serves the Gemini 2.5 models only to users who used them before. New projects use 3.5 Flash-Lite or 3.8 Flash.";
 const S3 = "On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none.";
+const retired = new Date().toISOString().slice(0, 10) >= "2026-12-01";
+const retirement = "Google shut down Gemini 2.5 Pro and 2.5 Flash on the Gemini API on 2026-12-01; requests that name them are answered by 3.8 Flash and 3.5 Flash-Lite. Gemini 2.5 Flash-Lite, a separate model, still runs. New projects use 3.5 Flash-Lite or 3.8 Flash.";
 
 const STATED: Record<string, string[]> = {
   "/gcp-free-tier-2026": [
@@ -236,7 +238,7 @@ const STATED: Record<string, string[]> = {
   "/ai-free-tiers": [S3],
   "/state-of-free-tiers": [],
   "/free-tier-risk": [
-    "Google cut the free tier on 2025-12-06: 2.5 Flash went from 250 requests a day to about 20, and 2.5 Pro to none. Since 2026-09-18 the 2.5 models are limited to earlier users. The 3.x Flash models are free, with limits Google does not publish.",
+    `Google cut the free tier on 2025-12-06: 2.5 Flash went from 250 requests a day to about 20, and 2.5 Pro to none. ${retired ? retirement : "Since 2026-09-18 the 2.5 models are limited to earlier users."} The 3.x Flash models are free, with limits Google does not publish.`,
   ],
   "/openai-assistants-migration": [
     "Free on Gemini 3.x Flash models",
@@ -255,14 +257,14 @@ const STATED: Record<string, string[]> = {
     "Free Tier Cut",
     S3,
     S1,
-    S2,
+    retired ? retirement : S2,
     "Not published. About 5 RPM and 20 RPD on 2.5 Flash, none on 2.5 Pro (2025-12-06)",
     "92% fewer daily requests on 2.5 Flash",
     "If you built on the free tier before December 2025: on 2025-12-06, 2.5 Flash's daily requests fell from 250 to about 20 and 2.5 Pro's to none. Gemini 3.1 Pro Preview has no free tier.",
     "Not published; shown per project in AI Studio",
     "No free Pro model for new projects.",
     "Gemini 3.1 Pro Preview has no free tier. The free tier covers the 3.x Flash and Flash-Lite models, including 3.8 Flash.",
-    "3. Move to the 3.x models — Gemini 2.0 Flash shut down on 2026-06-01, and new projects cannot use the 2.5 models. Google points new projects to gemini-3.5-flash-lite or gemini-3.8-flash.",
+    `3. Move to the 3.x models — ${retired ? "Gemini 2.0 Flash shut down on 2026-06-01 and Gemini 2.5 Pro and 2.5 Flash on 2026-12-01, and new projects cannot use 2.5 Flash-Lite. Gemini 2.5 Flash-Lite, a separate model, still runs." : "Gemini 2.0 Flash shut down on 2026-06-01, and new projects cannot use the 2.5 models."} Google points new projects to gemini-3.5-flash-lite or gemini-3.8-flash.`,
     "Stay on Gemini Flash. Set budget alerts, and use 3.5 Flash-Lite or 3.8 Flash for new work.",
     "Two additional changes that affect paid and high-usage developers.",
     "Prepaid billing for all paid accounts",
