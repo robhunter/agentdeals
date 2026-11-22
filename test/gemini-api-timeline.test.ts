@@ -204,7 +204,8 @@ describe(`${PAGE}'s timeline`, () => {
     assert.strictEqual(march.heading, "$300 Welcome Credit Excluded");
     assert.strictEqual(march.body, `${asServed("Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API or AI Studio.")} ${sourceLink(GEMINI_BILLING_DOCS)}`);
     assert.strictEqual(september.heading, "2.5 Models Limited to Existing Users");
-    assert.strictEqual(september.body, `${asServed("Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash.")} ${sourceLink(GEMINI_CHANGELOG)}`);
+    const retirement = new Date().toISOString().slice(0, 10) >= "2026-12-01" ? " On 2026-12-01 Google shut down 2.5 Pro and 2.5 Flash on the Gemini API; 2.5 Flash-Lite, a separate model, still runs." : "";
+    assert.strictEqual(september.body, `${asServed("Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash." + retirement)} ${sourceLink(GEMINI_CHANGELOG)}`);
     assert.ok(january.body.endsWith(sourceLink(GEMINI_PRICING_PAGE)), january.body);
   });
 

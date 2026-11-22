@@ -508,7 +508,7 @@ function riskViewRendering(viewHtml: string, data: unknown): string {
       };
     },
   };
-  vm.runInNewContext(`${script}\nrender({ vendors: ["Google Gemini API"] }, data);`, { document, data });
+  vm.runInNewContext(`${script}\nrender({ vendors: ["Google Gemini API"] }, data);`, { document, data, Date });
   return app.innerHTML;
 }
 
