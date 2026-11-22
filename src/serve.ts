@@ -50107,6 +50107,10 @@ function buildExpiringPage(): string {
     return { text: `in ${diff} days`, urgent: false };
   }
 
+  function changeEntryDateLabelForResolution(resolution: NonNullable<DealChange["resolution"]>): string {
+    return `${resolution.state} ${resolution.date}`;
+  }
+
   function buildEntry(line: DeadlineLine, showCountdown: boolean, showResolution = false): string {
     const c = line.citedRecord;
     const resolution = showResolution ? c?.resolution : null;
@@ -50117,7 +50121,7 @@ function buildExpiringPage(): string {
     return `      <div class="exp-entry${urgentClass}${dated ? "" : " exp-undated"}">
         <div class="exp-left">
           ${countdown ? `<div class="exp-countdown${countdown.urgent ? " exp-countdown-urgent" : ""}">${countdown.text}</div>` : ""}
-          <div class="exp-date${dated ? "" : " exp-date-unknown"}"${isShutdownMonth(line.date) && !resolution ? ` data-date="${line.date}"` : ""}>${escHtmlServer(resolution?.date ?? line.dateLabel)}</div>
+          <div class="exp-date${dated ? "" : " exp-date-unknown"}"${isShutdownMonth(line.date) && !resolution ? ` data-date="${line.date}"` : ""}>${escHtmlServer(resolution ? changeEntryDateLabelForResolution(resolution) : line.dateLabel)}</div>
         </div>
         <div class="exp-right">
           <div class="exp-head">

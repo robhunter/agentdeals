@@ -110,6 +110,7 @@ describe("expiring month groups include the deadline tracker's stated dates", ()
           const entry = entries(recent, "exp").find(item => item.vendor === `${state} Recent Fixture`);
           assert.ok(entry);
           assert.equal(entry.date, "2030-05-15");
+          assert.match(entry.body, new RegExp(`class="exp-date">${state} 2030-05-15</div>`));
           assert.match(entry.body, new RegExp(`<span class="badge"[^>]*>${state}</span>`));
           assert.doesNotMatch(entry.body.split('<div class="exp-summary">')[0], /class="exp-impact"/);
         }
