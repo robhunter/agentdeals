@@ -121,6 +121,9 @@ describe("maintained shutdown redirects", () => {
     const updated = JSON.parse(readFileSync(ledgerPath, "utf8"));
     assert.ok(!(oldPath in updated.pages));
     assert.ok(newPath in updated.pages);
+    const unpublished = { ...record, vendor: "Unpublished Fixture", what_ends: "Unpublished Fixture Cloud", resolution: { state: "retracted", date: "2029-01-03", detail: "Record withdrawn." } };
+    const unpublishedPath = shutdownPath({ vendorSlug: "unpublished-fixture", service: unpublished.what_ends, deadline: unpublished.date, stages: unpublished.shutdown_stages });
+    changes.changes.push(unpublished);
     for (const state of ["cancelled", "retracted"]) {
       record.resolution = { state, date: "2029-01-03", detail: `Fixture ${state} correction.`, source_url: "https://example.com/correction" };
       writeFileSync(changesPath, JSON.stringify(changes));
@@ -150,7 +153,16 @@ describe("maintained shutdown redirects", () => {
         assert.match(body, /https:\/\/example.com\/correction/);
         assert.doesNotMatch(body, /read-only|reads end|retires in December/);
         assert.ok((await (await fetch(`${url}/sitemap-pages.xml`)).text()).includes(newPath));
+        assert.equal((await fetch(url + unpublishedPath, { redirect: "manual" })).status, 404);
+        assert.ok(!(await (await fetch(`${url}/sitemap-pages.xml`)).text()).includes(unpublishedPath));
         assert.ok(!(await (await fetch(`${url}/shutdowns`)).text()).includes("Fixture Database Cloud"));
+        if (state === "retracted") {
+          writeFileSync(path.join(scratch, "data/shutdown-redirects.json"), JSON.stringify({ [oldPath]: target, [newPath]: target }));
+          const redirected = await fetch(url + newPath, { redirect: "manual" });
+          assert.equal(redirected.status, 301);
+          assert.equal(redirected.headers.get("location"), target);
+          assert.ok(!(await (await fetch(`${url}/sitemap-pages.xml`)).text()).includes(newPath));
+        }
       } finally {
         if (server.exitCode === null && server.signalCode === null) {
           const exited = once(server, "exit");
@@ -159,6 +171,9 @@ describe("maintained shutdown redirects", () => {
         }
       }
     }
+    const redirectedUpdate = run();
+    assert.equal(redirectedUpdate.status, 0, `${redirectedUpdate.stdout}${redirectedUpdate.stderr}`);
+    assert.ok(!(newPath in JSON.parse(readFileSync(ledgerPath, "utf8")).pages));
   });
 
   it("rejects a map whose target is not a current page", async () => {

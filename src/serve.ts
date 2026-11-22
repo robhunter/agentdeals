@@ -1,5 +1,5 @@
 import { shutdownIndexNote } from "./shutdown-index-note.js";
-import { shutdownPaths } from "./shutdown-paths.js";
+import { shutdownPath, shutdownPaths } from "./shutdown-paths.js";
 import { shutdownPageContent } from "./shutdown-page.js";
 import { reconcileShutdownRedirects } from "./shutdown-redirects.js";
 import { renderUpcomingTimeline, UPCOMING_TIMELINE_END } from "./upcoming-timeline-budget.js";
@@ -27264,8 +27264,10 @@ function shutdownPageInventory(todayDay: string) {
     resolution: originals.get(record)!.resolution,
     status: "active",
   }));
-  const pages = shutdownPaths([...recordedOnly, ...resolved]);
   const maintained: Record<string, string> = JSON.parse(readFileSync(join(__dirname, "..", "data", "shutdown-redirects.json"), "utf8"));
+  const retained = resolved.filter(entry => entry.resolution?.state !== "retracted" ||
+    (Object.hasOwn(pageLastmodLedger.pages, shutdownPath(entry)) && !Object.hasOwn(maintained, shutdownPath(entry))));
+  const pages = shutdownPaths([...recordedOnly, ...retained]);
   const redirects = reconcileShutdownRedirects([], pages.keys(), maintained);
   return { pages, redirects };
 }
