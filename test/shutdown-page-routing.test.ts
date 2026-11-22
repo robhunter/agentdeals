@@ -5,6 +5,7 @@ import { once } from "node:events";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createDocument } from "@mixmark-io/domino";
+import { readPageLastmod } from "../dist/page-lastmod.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 let child: ChildProcess;
@@ -39,6 +40,20 @@ after(async () => {
 });
 
 describe("shutdown page routes", () => {
+  it("serves every ledgered shutdown path or redirects it to a served page", async () => {
+    const ledgered = Object.keys(readPageLastmod().pages).filter(route => route.startsWith("/shutdowns/"));
+    assert.ok(ledgered.length > 0);
+    for (const route of ledgered) {
+      const response = await fetch(base + route, { redirect: "manual" });
+      if (response.status === 200) continue;
+      assert.equal(response.status, 301, route);
+      const target = response.headers.get("location");
+      assert.ok(target && paths.includes(target), route);
+      const destination = await fetch(base + target, { redirect: "manual" });
+      assert.equal(destination.status, 200, route);
+    }
+  });
+
   it("serves each sitemap entry with its title and tracker link", async () => {
     assert.ok(paths.length > 0);
     assert.equal(new Set(paths).size, paths.length);
