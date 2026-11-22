@@ -46,6 +46,10 @@ export function isACorrectionToOurOwnRecord(change: { change_type?: string }): b
 
 type Resolvable = { resolution?: ChangeResolution | null };
 
+export function resolutionOf(change: Resolvable): ChangeResolution | null {
+  return change.resolution ?? null;
+}
+
 export function recordsWeStandBehind<T extends Resolvable>(changes: readonly T[]): T[] {
   return changes.filter((c) => !theEventNeverHappened(c));
 }

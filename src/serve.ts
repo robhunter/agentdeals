@@ -76,7 +76,7 @@ import { changesToStartupProgrammes } from "./startup-programme-changes.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_COST_OPTIMIZED_PAGE, HETZNER_PRICE_ADJUSTMENT_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableEuPlanForEachMemorySizeSentence, cheapestOrderableHetznerPlan, cheaperVpsInGermanyParagraph, mostRamForTheMoneyParagraph, costOptimizedLineNobodyCanOrder, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
-import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isCancelledAnnouncement, theEventNeverHappened, cancelledOn, standingOf as changeStandingOf, isNoLongerInForce, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
+import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isCancelledAnnouncement, theEventNeverHappened, cancelledOn, standingOf as changeStandingOf, isNoLongerInForce, resolutionOf, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
 import { trackedChanges, howEachRecordWasRead, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, CORRECTION_TO_OUR_OWN_RECORD_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
@@ -50080,7 +50080,8 @@ function buildExpiringPage(): string {
       .some(deadline => upcoming.some(line => line.vendor === deadline.vendor && line.date === deadline.date));
     if (displayedDeadline) upcomingRecords.add(record);
   }
-  const recent = eventDated.filter(c => c.date < today && c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
+  const recentDate = (c: DealChange) => resolutionOf(c)?.date ?? c.date;
+  const recent = eventDated.filter(c => recentDate(c) < today && recentDate(c) >= thirtyDaysAgo).sort((a, b) => recentDate(b).localeCompare(recentDate(a)));
   const recentlyDiscovered = undatedChanges.filter(c => c.date >= thirtyDaysAgo && !upcomingRecords.has(c)).sort((a, b) => b.date.localeCompare(a.date));
 
   const upcomingByMonth = new Map<string, typeof upcoming>();
@@ -50106,22 +50107,27 @@ function buildExpiringPage(): string {
     return { text: `in ${diff} days`, urgent: false };
   }
 
-  function buildEntry(line: DeadlineLine, showCountdown: boolean): string {
+  function changeEntryDateLabelForResolution(resolution: NonNullable<DealChange["resolution"]>): string {
+    return `${resolution.state} ${resolution.date}`;
+  }
+
+  function buildEntry(line: DeadlineLine, showCountdown: boolean, showResolution = false): string {
     const c = line.citedRecord;
-    const badge = c ? changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" } : null;
+    const resolution = showResolution && c ? resolutionOf(c) : null;
+    const badge = resolution ? { label: resolution.state, color: "#8b949e" } : c ? changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" } : null;
     const dated = line.datedRecord ? isEventDated(line.datedRecord) : true;
     const countdown = showCountdown && !isShutdownMonth(line.date) ? countdownLabel(line.date) : null;
     const urgentClass = countdown?.urgent ? " entry-urgent" : "";
     return `      <div class="exp-entry${urgentClass}${dated ? "" : " exp-undated"}">
         <div class="exp-left">
           ${countdown ? `<div class="exp-countdown${countdown.urgent ? " exp-countdown-urgent" : ""}">${countdown.text}</div>` : ""}
-          <div class="exp-date${dated ? "" : " exp-date-unknown"}"${isShutdownMonth(line.date) ? ` data-date="${line.date}"` : ""}>${escHtmlServer(line.dateLabel)}</div>
+          <div class="exp-date${dated ? "" : " exp-date-unknown"}"${isShutdownMonth(line.date) && !resolution ? ` data-date="${line.date}"` : ""}>${escHtmlServer(resolution ? changeEntryDateLabelForResolution(resolution) : line.dateLabel)}</div>
         </div>
         <div class="exp-right">
           <div class="exp-head">
             ${badge ? `<span class="badge" style="background:${badge.color}">${badge.label}</span>` : ""}
             ${changeVendorLinkHtml(line.vendor, ' class="exp-vendor"')}
-            ${c ? `<span class="exp-impact" style="color:${changeImpactColor(c.impact)}">${c.impact}</span>` : ""}
+            ${c && !resolution ? `<span class="exp-impact" style="color:${changeImpactColor(c.impact)}">${c.impact}</span>` : ""}
           </div>
           <div class="exp-summary">${line.summaryHtml}</div>
         </div>
@@ -50156,18 +50162,18 @@ ${entriesHtml}
     itemListElement: capListSections([
       upcoming.map(line => {
         const deadline = stated.find(s => s.vendor === line.vendor && s.date === line.date);
-        return { line, description: deadline ? statedSentenceWithAnyConditions(deadline) : line.sentence };
+        return { line, description: deadline ? statedSentenceWithAnyConditions(deadline) : line.sentence, resolution: null };
       }),
-      recent.map(c => ({ line: recordDeadlineLine(c), description: c.summary })),
-      recentlyDiscovered.map(c => ({ line: recordDeadlineLine(c), description: c.summary })),
-    ], 50).map(({ line, description }, i) => ({
+      recent.map(c => ({ line: recordDeadlineLine(c), description: c.summary, resolution: resolutionOf(c) })),
+      recentlyDiscovered.map(c => ({ line: recordDeadlineLine(c), description: c.summary, resolution: null })),
+    ], 50).map(({ line, description, resolution }, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
         "@type": "NewsArticle",
-        headline: line.citedRecord ? `${line.vendor}: ${(changeTypeBadge[line.citedRecord.change_type] ?? { label: line.citedRecord.change_type }).label}` : line.vendor,
+        headline: line.citedRecord ? `${line.vendor}: ${resolution?.state ?? (changeTypeBadge[line.citedRecord.change_type] ?? { label: line.citedRecord.change_type }).label}` : line.vendor,
         description,
-        ...(line.datedRecord ? changeDatePublished(line.datedRecord) : { datePublished: line.date }),
+        ...(resolution ? { datePublished: resolution.date } : line.datedRecord ? changeDatePublished(line.datedRecord) : { datePublished: line.date }),
         ...changeVendorUrlField(line.vendor),
         publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
       },
@@ -50283,7 +50289,7 @@ ${recent.length > 0 ? `  <div class="recent-section" id="recently-changed">
     <p class="recent-desc">${recent.length} pricing changes in the last 30 days.</p>
     <button class="recent-toggle" onclick="document.querySelector('.recent-entries').classList.toggle('show');this.textContent=this.textContent==='Show recent changes'?'Hide recent changes':'Show recent changes'">Show recent changes</button>
     <div class="recent-entries">
-${recent.map(c => buildEntry(recordDeadlineLine(c), false)).join("\n")}
+${recent.map(c => buildEntry(recordDeadlineLine(c), false, true)).join("\n")}
     </div>
   </div>` : ""}
 
