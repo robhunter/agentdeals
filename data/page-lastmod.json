@@ -10227,6 +10227,10 @@
     "/x402-services": {
       "hash": "fc7609330e337fb3",
       "changed": "2026-11-13"
+    },
+    "/shutdowns/google-vertex-ai-extensions-2026-11-26-vertex-ai-extensions": {
+      "hash": "ff1d04757d35a034",
+      "changed": "2026-11-22"
     }
   }
 }
