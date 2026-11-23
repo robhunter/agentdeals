@@ -83,8 +83,12 @@ describe("the serial archive settlement command", () => {
     const scratch = mkdtempSync(path.join(tmpdir(), "archive-settlement-cli-"));
     const script = fileURLToPath(new URL("../scripts/run-archive-settlement.js", import.meta.url));
     const filler = "Pricing, plan limits and other features. ".repeat(30);
-    const original = record();
-    const stored = { ...original, archive_check: { outcome: "no_usable_capture", checked: "2026-10-02" } };
+    const fixtureTime = Date.parse(`${new Date().toISOString().slice(0, 10)}T12:00:00Z`);
+    const day = (offset: number) => new Date(fixtureTime + offset * 86_400_000).toISOString().slice(0, 10);
+    const historicalTimestamp = `${day(-364).replaceAll("-", "")}120000`;
+    const recordTimestamp = `${day(-62).replaceAll("-", "")}120000`;
+    const original = record({ date: day(-54), recorded_date: day(-54) });
+    const stored = { ...original, archive_check: { outcome: "no_usable_capture", checked: day(-1) } };
     const requests: string[] = [];
     const server = createServer(async (request, response) => {
       const url = new URL(request.url!, "http://localhost");
@@ -101,10 +105,10 @@ describe("the serial archive settlement command", () => {
         response.setHeader("Content-Type", "application/json");
         response.end(JSON.stringify({ choices: [{ message: { content: JSON.stringify(answer) } }] }));
       } else if (url.pathname === "/cdx/search/cdx") {
-        response.end(JSON.stringify([["timestamp", "original", "statuscode", "mimetype"], ...["20260101120000", "20260917120000"].map((timestamp) => [timestamp, original.source_url, "200", "text/html"])]));
+        response.end(JSON.stringify([["timestamp", "original", "statuscode", "mimetype"], ...[historicalTimestamp, recordTimestamp].map((timestamp) => [timestamp, original.source_url, "200", "text/html"])]));
       } else {
         response.setHeader("Content-Type", "text/html");
-        const terms = url.pathname.includes("20260101") ? original.previous_state : original.current_state;
+        const terms = url.pathname.includes(historicalTimestamp) ? original.previous_state : original.current_state;
         response.end(`<html><body><p>${terms} ${filler}</p></body></html>`);
       }
     });
@@ -115,14 +119,15 @@ describe("the serial archive settlement command", () => {
       mkdirSync(path.join(scratch, "data"));
       writeFileSync(path.join(scratch, "data/index.json"), JSON.stringify({ offers: [{ vendor: original.vendor, tier: "Free", category: original.category, description: original.previous_state }] }));
       writeFileSync(path.join(scratch, "data/deal_changes.json"), JSON.stringify({ changes: [original] }));
-      const git = (...args: string[]) => execFileSync("git", ["-C", scratch, ...args], { encoding: "utf-8", env: { ...process.env, GIT_AUTHOR_DATE: "2026-09-20T00:00:00Z", GIT_COMMITTER_DATE: "2026-09-20T00:00:00Z" }, stdio: ["ignore", "pipe", "pipe"] });
+      const gitDate = `${day(-59)}T00:00:00Z`;
+      const git = (...args: string[]) => execFileSync("git", ["-C", scratch, ...args], { encoding: "utf-8", env: { ...process.env, GIT_AUTHOR_DATE: gitDate, GIT_COMMITTER_DATE: gitDate }, stdio: ["ignore", "pipe", "pipe"] });
       git("init", "-q"); git("config", "user.name", "Fixture"); git("config", "user.email", "fixture@example.com");
       git("add", "data"); git("commit", "-qm", "Initial data");
       const originalRef = git("rev-parse", "HEAD").trim();
       writeFileSync(path.join(scratch, "data/deal_changes.json"), JSON.stringify({ changes: [stored] }));
       git("add", "data"); git("commit", "-qm", "Archive check");
       const adapter = path.join(scratch, "local-fetch.mjs");
-      writeFileSync(adapter, `const nativeFetch = globalThis.fetch; globalThis.fetch = (input, options) => { const url = new URL(input); return nativeFetch(new URL(url.pathname + url.search, ${JSON.stringify(base)}), options); };`);
+      writeFileSync(adapter, `const RealDate = Date; const now = ${fixtureTime}; globalThis.Date = class extends RealDate { constructor(...args) { super(...(args.length ? args : [now])); } static now() { return now; } }; const nativeFetch = globalThis.fetch; globalThis.fetch = (input, options) => { const url = new URL(input); return nativeFetch(new URL(url.pathname + url.search, ${JSON.stringify(base)}), options); };`);
       const out = path.join(scratch, "report.json");
       const before = readFileSync(path.join(scratch, "data/deal_changes.json"));
       const result = await promisify(execFile)(process.execPath, ["--import", adapter, script, "--out", out, "--audit-ours-from", originalRef], { cwd: scratch, env: { ...process.env, OPENROUTER_API_KEY: "local-fixture", OPENROUTER_BASE_URL: base }, timeout: 50000 });
@@ -133,10 +138,10 @@ describe("the serial archive settlement command", () => {
       assert.strictEqual(readFileSync(`${out}.jsonl`, "utf-8").trim().split("\n").length, 1);
       assert.match(readFileSync(`${out}.md`, "utf-8"), /Example.*no_usable_capture/);
       assert.match(readFileSync(`${out}.review.md`, "utf-8"), /Review records settled as our corrections: 0/);
-      assert.match(result.stdout, /unsettled: Example 2026-09-25 no_usable_capture/);
+      assert.ok(result.stdout.includes(`unsettled: Example ${original.date} no_usable_capture`));
       assert.deepStrictEqual(readFileSync(path.join(scratch, "data/deal_changes.json")), before);
       assert.strictEqual(requests.filter((request) => request === "POST /chat/completions").length, 2);
-      assert.ok(!requests.some((request) => request.includes("/web/20260101120000id_/")));
+      assert.ok(!requests.some((request) => request.includes(`/web/${historicalTimestamp}id_/`)));
     } finally {
       await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
       rmSync(scratch, { recursive: true, force: true });
