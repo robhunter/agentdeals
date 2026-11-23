@@ -9,7 +9,8 @@ import { fileURLToPath } from "node:url";
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const DAY_MS = 86_400_000;
-const dayFromToday = (days: number): string => new Date(Date.now() + days * DAY_MS).toISOString().slice(0, 10);
+const fixtureTime = Date.parse(`${new Date().toISOString().slice(0, 10)}T12:00:00Z`);
+const dayFromToday = (days: number): string => new Date(fixtureTime + days * DAY_MS).toISOString().slice(0, 10);
 const shownDate = (iso: string): string =>
   new Date(iso).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 
@@ -148,31 +149,52 @@ describe("/shutdowns prints a card for each shutdown a record forecast and no ca
   let dir = "";
   let proc: ChildProcess | null = null;
   let page = "";
+  let oneDayPage = "";
   let cards: Card[] = [];
 
   before(async () => {
     dir = mkdtempSync(path.join(tmpdir(), "forecast-shutdowns-"));
     const changesPath = path.join(dir, "deal_changes.json");
     const indexPath = path.join(dir, "index.json");
+    const clockPath = path.join(dir, "clock.mjs");
+    writeFileSync(clockPath, `const RealDate = Date; const now = Number(process.env.FIXTURE_TIME); globalThis.Date = class extends RealDate { constructor(...args) { super(...(args.length ? args : [now])); } static now() { return now; } };`);
     const index = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8"));
     index.offers = index.offers.map((offer: Record<string, unknown>) => ({ ...offer, description: "", conditions: [] }));
     writeFileSync(indexPath, JSON.stringify(index));
     writeFileSync(changesPath, JSON.stringify({ changes: FIXTURES }));
-    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
-      stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changesPath, AGENTDEALS_INDEX_PATH: indexPath },
-    });
-    proc = child;
-    const port = await new Promise<number>((resolve, reject) => {
-      const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 60000);
-      child.stderr!.on("data", (data: Buffer) => {
-        const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
-        if (m) { clearTimeout(timeout); resolve(parseInt(m[1], 10)); }
+    const readPage = async (offset = 0) => {
+      const child = spawn("node", ["--import", clockPath, path.join(REPO, "dist", "serve.js")], {
+        stdio: ["pipe", "pipe", "pipe"],
+        env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changesPath, AGENTDEALS_INDEX_PATH: indexPath, FIXTURE_TIME: String(fixtureTime + offset * DAY_MS) },
       });
-      child.on("error", (err) => { clearTimeout(timeout); reject(err); });
-    });
-    page = await (await fetch(`http://localhost:${port}/shutdowns`)).text();
+      proc = child;
+      const port = await new Promise<number>((resolve, reject) => {
+        const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 60000);
+        child.stderr!.on("data", (data: Buffer) => {
+          const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+          if (m) { clearTimeout(timeout); resolve(parseInt(m[1], 10)); }
+        });
+        child.on("error", (err) => { clearTimeout(timeout); reject(err); });
+      });
+      return (await fetch(`http://localhost:${port}/shutdowns`)).text();
+    };
+    const firstPage = await readPage();
+    const cardDates = new Set([...firstPage.matchAll(/<span class="deadline-icon">[^<]*<\/span>\s*<span>([^<]+)<\/span>/g)]
+      .map(match => new Date(textOf(match[1])).toISOString().slice(0, 10)));
+    const available = Array.from({ length: 200 }, (_, i) => dayFromToday(75 + i)).find(date => !cardDates.has(date));
+    assert.ok(available);
+    AWS_ON_ANOTHER_DATE.date = available;
+    writeFileSync(changesPath, JSON.stringify({ changes: FIXTURES }));
+    const first = proc!;
+    await new Promise<void>(resolve => { first.once("exit", () => resolve()); first.kill(); });
+    page = await readPage();
     cards = cardsOn(page);
+    const offset = Array.from({ length: 200 }, (_, i) => i).find(i => !cardDates.has(dayFromToday(i)) && !cardDates.has(dayFromToday(i + 1)));
+    assert.notStrictEqual(offset, undefined);
+    const second = proc!;
+    await new Promise<void>(resolve => { second.once("exit", () => resolve()); second.kill(); });
+    writeFileSync(changesPath, JSON.stringify({ changes: [forecast("Smartlook.com", offset! + 1, "Fixture closes tomorrow.")] }));
+    oneDayPage = await readPage(offset);
   });
 
   after(() => {
@@ -220,7 +242,8 @@ describe("/shutdowns prints a card for each shutdown a record forecast and no ca
 
   it("gives a next deadline one day away as 1 day", () => {
     assert.deepStrictEqual(cardFor(cards, CLOSES_TOMORROW).map((card) => card.section), ["imminent"]);
-    assert.strictEqual(page.match(/Next deadline in ([^&<]*)&middot;/)?.[1], "1 day ");
+    assert.deepStrictEqual(cardFor(cardsOn(oneDayPage), CLOSES_TOMORROW).map(card => card.section), ["imminent"]);
+    assert.strictEqual(oneDayPage.match(/Next deadline in ([^&<]*)&middot;/)?.[1], "1 day ");
   });
 
   it("prints no affected, impact or migration rows the record does not carry", () => {
