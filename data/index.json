@@ -815,10 +815,22 @@
           "read_on": "2026-10-22"
         },
         {
-          "text": "After 30 days passes or $5 is spent, the free trial reverts to the Free plan, which provides $1 of free credit per month. The credit does not roll over month to month.",
-          "quote": "After 30 days passes or $5 is spent, the free trial reverts to the Free plan, which provides $1 of free credit per month. The credit does not roll over month to month.",
-          "url": "https://docs.railway.com/pricing/free-trial",
-          "read_on": "2026-11-03"
+          "text": "When the 30-day trial ends or its $5 runs out, Railway stops running deployments. Downgrade to the Free plan from the Plans page and redeploy to continue at no cost. Its $1 a month does not roll over.",
+          "quote": "When the trial ends or the credits run out, running deployments are stopped. You can then downgrade to the Free plan from the Plans page and redeploy within its limits, or upgrade to Hobby or Pro.",
+          "url": "https://railway.com/pricing",
+          "read_on": "2026-11-23"
+        },
+        {
+          "text": "Free plan services sleep after 5 to 10 minutes without outbound traffic and wake on the next request; outbound traffic such as a held WebSocket or queue polling keeps a service awake; Hobby and above run always-on.",
+          "quote": "Free plan services are serverless: after 5 to 10 minutes without outbound traffic they sleep, and the next request wakes them. Sleep is based on outbound traffic, so a bot holding a WebSocket or a worker polling a queue keeps itself awake. Hobby and above run always-on.",
+          "url": "https://railway.com/pricing",
+          "read_on": "2026-11-23"
+        },
+        {
+          "text": "When the $1 runs out, your services stop until the next billing cycle or until you upgrade.",
+          "quote": "When the $1 runs out, your services stop until the next billing cycle or until you upgrade. Volumes and bucket files are kept.",
+          "url": "https://docs.railway.com/pricing/free-plan",
+          "read_on": "2026-11-23"
         },
         {
           "text": "Run `ssh railway.new` to get a free Linux VM with no account or credit card. The VM has 2 vCPU, 2 GB RAM, and a preview URL. Claude Code, Codex, OpenCode, and the Railway Agent are preinstalled. Railway identifies you by your SSH key. Each VM can be used for 60 minutes. You can get 3 VMs per IP address per day.",
