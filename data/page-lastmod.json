@@ -1545,6 +1545,14 @@
       "hash": "5d3e81b4c217183c",
       "changed": "2026-11-22"
     },
+    "/compare/autodesk-fusion-360-for-startups-vs-chargebee-launch-programme": {
+      "hash": "f8edd8f923174476",
+      "changed": "2026-11-23"
+    },
+    "/compare/autodesk-fusion-360-for-startups-vs-microsoft-for-startups": {
+      "hash": "bfa767cccf217de1",
+      "changed": "2026-11-23"
+    },
     "/compare/bitrise-vs-appveyor-com": {
       "hash": "ad2e8ac2fac943f9",
       "changed": "2026-11-19"
@@ -1628,6 +1636,14 @@
     "/compare/cerbos-hub-vs-zitadel-cloud": {
       "hash": "c54d407e85df49a9",
       "changed": "2026-11-21"
+    },
+    "/compare/chargebee-launch-programme-vs-microsoft-for-startups": {
+      "hash": "0481beeb622c370e",
+      "changed": "2026-11-23"
+    },
+    "/compare/chargebee-launch-programme-vs-the-intercom-early-stage-program": {
+      "hash": "90f668fdfd587d1c",
+      "changed": "2026-11-23"
     },
     "/compare/circleci-vs-github-actions": {
       "hash": "47c85c32fcbf969f",
@@ -2368,6 +2384,10 @@
     "/compare/make-vs-zoho-sign": {
       "hash": "7198f26bb741373c",
       "changed": "2026-11-22"
+    },
+    "/compare/microsoft-for-startups-vs-the-intercom-early-stage-program": {
+      "hash": "cb3046c3bab6342d",
+      "changed": "2026-11-23"
     },
     "/compare/mintlify-vs-apiary-io": {
       "hash": "e079e01a414775a9",
@@ -6128,6 +6148,10 @@
     },
     "/vendor/exa": {
       "daily": true
+    },
+    "/vendor/exa-for-startups": {
+      "hash": "811b28dc35b4eb73",
+      "changed": "2026-11-23"
     },
     "/vendor/excalidraw": {
       "hash": "2faa622e3b8fad32",

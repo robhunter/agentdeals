@@ -6874,8 +6874,8 @@
     {
       "vendor": "Mintlify",
       "category": "API Development",
-      "description": "Developer documentation platform — The Starter plan is $0/month and includes 5 editor seats, a web editor, and API playground.",
-      "tier": "Hobby",
+      "description": "Developer documentation platform. The Free plan includes the full platform, 5 editors, custom domain, web editor, authentication, MCP server and API playground. New accounts get a 14-day Pro trial with 5,000 AI credits, no card required. Docs stay live on Free after the trial.",
+      "tier": "Free",
       "url": "https://mintlify.com/pricing",
       "tags": [
         "docs",
@@ -6883,7 +6883,7 @@
         "api-docs",
         "developer-portal"
       ],
-      "verifiedDate": "2026-11-03",
+      "verifiedDate": "2026-11-23",
       "source_check": {
         "checked": "2026-11-03",
         "outcome": "ok",
@@ -6895,11 +6895,6 @@
         "record_date": "2026-09-07",
         "change_type": "new_tier",
         "restated_on": "2026-09-20"
-      },
-      "free_plan_excerpt": {
-        "text": "Starter $ 0 /mo For individuals and small teams 5 editor seats Full platform Custom domain Web editor Authentication MCP server API playground",
-        "url": "https://mintlify.com/pricing",
-        "read_on": "2026-11-03"
       }
     },
     {
@@ -18669,14 +18664,14 @@
     {
       "vendor": "coderabbit.ai",
       "category": "Code Quality",
-      "description": "AI-powered code review tool for GitHub/GitLab/Bitbucket. Free tier: basic PR summarization and reviews in IDE on unlimited public and private repositories, with a 14-day Pro trial included (no credit card). Paid Pro is $24/user/month billed annually and adds detailed reviews with 5 reviews/hour; Pro Plus adds 10 reviews/hour. Free-for-open-source may still apply but is no longer prominently featured on the pricing page.",
+      "description": "AI code review for GitHub, GitLab, Azure DevOps and Bitbucket. The Free plan includes unlimited public and private repositories, PR summarization, and 3 code reviews per hour each per developer through the VS Code extension and the CLI. Public open-source repositories get free Team features. New organizations start with a 14-day Advanced trial. Organizations that do not subscribe revert to Free. Essentials is $24 billed annually or $30 monthly, with 5 PR reviews per developer per hour. Team is $48 or $60, with 8.",
       "tier": "Free",
-      "url": "https://www.coderabbit.ai/pricing",
+      "url": "https://docs.coderabbit.ai/management/plans",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-11-23",
       "source_check": {
         "checked": "2026-11-11",
         "outcome": "ok",
@@ -26684,14 +26679,14 @@
     {
       "vendor": "BudiBase",
       "category": "Low-Code Platforms",
-      "description": "Budibase is an open-source low-code platform for creating internal apps in minutes. Supports PostgreSQL, MySQL, MSSQL, MongoDB, Rest API, Docker, K8s",
+      "description": "Open-source low-code platform for internal apps, automations and AI agents. The self-hosted Community plan is the free one, with unlimited users, unlimited apps, agents, automations and requests, and standard SSO. Budibase Cloud has no free plan. It starts at $299 a month and includes 2 creators, 20 end users, 250,000 actions a month and 50,000 AI credits a month. A free cloud trial is available on request.",
       "tier": "Free",
-      "url": "https://budibase.com/",
+      "url": "https://budibase.com/pricing/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-23",
+      "verifiedDate": "2026-11-23",
       "source_check": {
         "checked": "2026-11-13",
         "outcome": "ok",
@@ -42226,6 +42221,32 @@
           "read_on": "2026-11-12"
         }
       ]
+    },
+    {
+      "vendor": "Exa for Startups",
+      "category": "Startup Perks",
+      "description": "Exa for Startups offers up to $15,000 in Exa credits to eligible startups. Startups get $2,500 on approval, with Exa matching every dollar reloaded up to $5,000. With a partner code, startups get $5,000 on approval, with Exa matching reloads up to $10,000. Starting credits expire 6 months after issue. Matched credits must be unlocked within 12 months of enrollment and expire 12 months after enrollment. Eligible startups are pre-seed through Series A, building with AI and new to Exa's paid plans. Credits cover Exa API usage at list price.",
+      "tier": "Startup Credits",
+      "url": "https://exa.ai/startups",
+      "tags": [
+        "startup credits",
+        "search api",
+        "web search",
+        "ai",
+        "agents",
+        "exa"
+      ],
+      "verifiedDate": "2026-11-23",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Pre-seed through Series A",
+          "Building with AI",
+          "New to Exa's paid plans",
+          "One per company"
+        ],
+        "program": "Exa for Startups"
+      }
     }
   ],
   "changes": []
