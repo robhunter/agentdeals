@@ -4785,7 +4785,27 @@
         "checked": "2026-11-05",
         "outcome": "ok",
         "detail": "the page names Stripe as \"stripe\" and states \"$0.30\""
-      }
+      },
+      "official_mcp_servers": [
+        {
+          "kind": "remote",
+          "target": "https://mcp.stripe.com",
+          "transport": "HTTP",
+          "authentication": "OAuth for interactive clients, or an agent API key as the bearer token in the Authorization header; an agent API key is a restricted key tagged for autonomous agents",
+          "doc_url": "https://docs.stripe.com/mcp",
+          "source_quote": "Starting January 11, 2027, Stripe MCP will no longer accept full-access secret keys or non-agent restricted API keys.",
+          "read_on": "2026-11-23",
+          "retired_names": [
+            {
+              "kind": "npm",
+              "target": "@stripe/mcp",
+              "notice": "No longer maintained; no further updates, including security fixes.",
+              "url": "https://www.npmjs.com/package/@stripe/mcp",
+              "read_on": "2026-11-23"
+            }
+          ]
+        }
+      ]
     },
     {
       "vendor": "Contentful",
