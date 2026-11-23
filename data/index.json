@@ -2607,7 +2607,27 @@
         "text": "$ 0 per user/month, No credit card required Get started AI features can be accessed via the purchase of GitLab Credits add-on. Features include: 5 users per top-level group 400 compute minutes per month Source Code Management & CI/CD 10 GiB adjustable storage Static Application Security Testing Add-ons: GitLab Credits",
         "url": "https://about.gitlab.com/pricing/",
         "read_on": "2026-11-05"
-      }
+      },
+      "official_mcp_servers": [
+        {
+          "kind": "remote",
+          "target": "https://gitlab.com/api/v4/mcp",
+          "transport": "HTTP",
+          "authentication": "OAuth through the client's sign-in, or a fine-grained personal access token with the MCP tool resource and Execute permission; legacy personal, project and group access tokens are rejected",
+          "doc_url": "https://docs.gitlab.com/user/model_context_protocol/mcp_server/",
+          "source_quote": "Changed to a separate setting and moved from GitLab Premium to GitLab Free in GitLab 19.2.",
+          "read_on": "2026-11-23",
+          "retired_names": [
+            {
+              "kind": "npm",
+              "target": "@modelcontextprotocol/server-gitlab",
+              "notice": "Package no longer supported.",
+              "url": "https://www.npmjs.com/package/@modelcontextprotocol/server-gitlab",
+              "read_on": "2026-11-23"
+            }
+          ]
+        }
+      ]
     },
     {
       "vendor": "CircleCI",
