@@ -804,15 +804,15 @@
       "conditions": [
         {
           "text": "After the 30-day trial, the Free plan allows 1 project, 3 services per project and no custom domains. Cron jobs are available during the trial only.",
-          "quote": "Services per project: 5 during trial, then 3. Custom domains: 1 trial, then 0. Cron jobs per project: Free Trial only.",
+          "quote": "You get 1 project with up to 3 services, up to 1 vCPU and 0.5 GB of RAM per service, 0.5 GB of volume storage, and one-click Postgres, Redis, MySQL and MongoDB. … Cron jobs per project: Trial only. … Custom domains: Trial only.",
           "url": "https://railway.com/pricing",
-          "read_on": "2026-10-12"
+          "read_on": "2026-11-23"
         },
         {
-          "text": "Railway's trial, with a one-time $5 credit, needs no credit card.",
-          "quote": "Can I try Railway without a credit card? Yes. As a new Railway user, you can sign up for a free Trial. You will receive a one-time grant of $5 to use on resources.",
+          "text": "Neither the trial nor the Free plan requires a credit card.",
+          "quote": "Yes. Neither the trial nor the Free plan requires a credit card. You only need to add a card to upgrade to Hobby or Pro.",
           "url": "https://railway.com/pricing",
-          "read_on": "2026-10-22"
+          "read_on": "2026-11-23"
         },
         {
           "text": "When the 30-day trial ends or its $5 runs out, Railway stops running deployments. Downgrade to the Free plan from the Plans page and redeploy to continue at no cost. Its $1 a month does not roll over.",
@@ -827,7 +827,7 @@
           "read_on": "2026-11-23"
         },
         {
-          "text": "When the $1 runs out, your services stop until the next billing cycle or until you upgrade.",
+          "text": "When the $1 runs out, your services stop until the next billing cycle or until you upgrade. Volumes and bucket files are kept.",
           "quote": "When the $1 runs out, your services stop until the next billing cycle or until you upgrade. Volumes and bucket files are kept.",
           "url": "https://docs.railway.com/pricing/free-plan",
           "read_on": "2026-11-23"
@@ -835,14 +835,14 @@
         {
           "text": "Run `ssh railway.new` to get a free Linux VM with no account or credit card. The VM has 2 vCPU, 2 GB RAM, and a preview URL. Claude Code, Codex, OpenCode, and the Railway Agent are preinstalled. Railway identifies you by your SSH key. Each VM can be used for 60 minutes. You can get 3 VMs per IP address per day.",
           "quote": "Run ssh railway.new to get a free Linux VM with coding agents preinstalled and a preview URL, with no account or credit card.",
-          "url": "https://docs.railway.com/pricing/free-trial",
-          "read_on": "2026-11-02"
+          "url": "https://docs.railway.com/pricing/free-plan",
+          "read_on": "2026-11-23"
         },
         {
           "text": "Open the claim link from the welcome message and sign up within 24 hours to keep the VM. The VM, files, and URL move into your account. Unclaimed VMs are deleted with their files. Railway caps free VMs at high demand.",
           "quote": "To keep it, open the claim link from the welcome message and sign up; the box moves into your account with the same VM, files, and URL. Unclaimed boxes are deleted with their files.",
-          "url": "https://docs.railway.com/pricing/free-trial",
-          "read_on": "2026-11-02"
+          "url": "https://docs.railway.com/pricing/free-plan",
+          "read_on": "2026-11-23"
         },
         {
           "text": "Railway Sandboxes are available on every plan. Usage draws from the plan's included credit. Free plan limits are 10 sandboxes per environment, 2 vCPU and 2 GB each, and an idle timeout of at most 5 minutes.",
@@ -865,14 +865,14 @@
         {
           "text": "The Limited Trial for trial accounts not verified through GitHub has restricted outbound network access and only a limited set of ports. Verification is an automated process at railway.com/verify. Railway does not respond to requests for verification. The Hobby plan unlocks the full experience.",
           "quote": "Specifically, services on the Limited Trial have restricted outbound network access and only a limited set of ports are available.",
-          "url": "https://docs.railway.com/pricing/free-trial",
-          "read_on": "2026-11-07"
+          "url": "https://docs.railway.com/pricing/free-plan",
+          "read_on": "2026-11-23"
         },
         {
           "text": "Railway deletes stateful volumes created by Trial accounts 30 days after the expiration of the trial credits. An upgrade retains the data.",
           "quote": "Railway deletes stateful volumes created by Trial accounts 30 days after the expiration of your credits.",
-          "url": "https://docs.railway.com/pricing/free-trial",
-          "read_on": "2026-11-07"
+          "url": "https://docs.railway.com/pricing/free-plan",
+          "read_on": "2026-11-23"
         }
       ],
       "restatement_reverted": {
