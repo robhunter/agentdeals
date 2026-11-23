@@ -5,9 +5,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { once } from "node:events";
 import { getDealChanges, loadDealChanges } from "../dist/data.js";
+import { servedWindowOpens } from "../dist/change-window.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const TODAY = new Date().toISOString().slice(0, 10);
 const DEFAULT_BUDGET_BYTES = 40000;
 const wholeWindowQuery = `?limit=${loadDealChanges().length}`;
 
@@ -63,9 +65,9 @@ describe("/api/changes answers one shape and pages", () => {
   before(async () => {
     const serverPath = path.join(__dirname, "..", "dist", "serve.js");
     const started = await new Promise<{ proc: ChildProcess; port: number }>((resolve, reject) => {
-      const child = spawn("node", [serverPath], {
+      const child = spawn("node", ["--import", path.join(__dirname, "..", "scripts", "shifted-clock.mjs"), serverPath], {
         stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: "0", BASE_URL: "http://127.0.0.1" },
+        env: { ...process.env, PORT: "0", BASE_URL: "http://127.0.0.1", AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${TODAY}T12:00:00Z`) - Date.now()) },
       });
       const timer = setTimeout(() => { child.kill("SIGKILL"); reject(new Error("startup timeout")); }, 60000);
       child.stderr?.on("data", (b: Buffer) => {
@@ -148,7 +150,7 @@ describe("/api/changes answers one shape and pages", () => {
   });
 
   it("reaches the whole window by asking rather than by omitting a parameter", async () => {
-    const windowSize = getDealChanges().changes.length;
+    const windowSize = getDealChanges(servedWindowOpens(Date.parse(`${TODAY}T12:00:00Z`))).changes.length;
     const { json } = await get(wholeWindowQuery);
     assert.strictEqual((json.changes as unknown[]).length, windowSize);
     assert.strictEqual(json.total, windowSize);
