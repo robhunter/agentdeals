@@ -130,9 +130,9 @@ describe("the rolling CLI with a dated read-first list", () => {
     writeFileSync(list, JSON.stringify({ listings: [entry(marked, { since: today }), { vendor: "Ghost", tier: "Free", since: today }] }));
     for (const file of [state, holds, corroboration, health]) writeFileSync(file, "{}");
     const listBytes = readFileSync(list, "utf8");
-    const execute = async () => promisify(execFile)(process.execPath, [join(REPO, "scripts/reverify-rolling.js"), "--limit", "1"], {
+    const execute = async () => promisify(execFile)(process.execPath, ["--import", join(REPO, "scripts/shifted-clock.mjs"), join(REPO, "scripts/reverify-rolling.js"), "--limit", "1"], {
       cwd: REPO,
-      env: { ...process.env, AGENTDEALS_INDEX_PATH: index, AGENTDEALS_READ_FIRST_PATH: list,
+      env: { ...process.env, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${today}T12:00:00Z`) - Date.now()), AGENTDEALS_INDEX_PATH: index, AGENTDEALS_READ_FIRST_PATH: list,
         AGENTDEALS_VERIFICATION_STATE_PATH: state, AGENTDEALS_REFUSALS_PATH: holds,
         AGENTDEALS_CORROBORATION_PATH: corroboration, AGENTDEALS_LINK_HEALTH_PATH: health },
       timeout: 30000,
