@@ -22,11 +22,11 @@
       "changed": "2026-11-22"
     },
     "/ai-free-tiers": {
-      "hash": "19859f6ec7a1cce4",
+      "hash": "04d99f236975fbd7",
       "changed": "2026-11-23"
     },
     "/ai-ml-alternatives": {
-      "hash": "0604f7482271629e",
+      "hash": "9f66affbfd28b964",
       "changed": "2026-11-23"
     },
     "/alternative-to": {
@@ -1111,7 +1111,7 @@
       "changed": "2026-11-22"
     },
     "/category/ai-ml": {
-      "hash": "16df5e5738b12c6a",
+      "hash": "3d0cb0f8d7d4df36",
       "changed": "2026-11-23"
     },
     "/category/analytics": {
@@ -3108,8 +3108,8 @@
       "changed": "2026-11-20"
     },
     "/digest/2026-w46": {
-      "hash": "4a4ec188e7b55d4c",
-      "changed": "2026-11-21"
+      "hash": "270086ec7d31327a",
+      "changed": "2026-11-23"
     },
     "/digest/2026-w47": {
       "hash": "52ace8f6eccb9258",
@@ -3337,7 +3337,7 @@
       "changed": "2026-11-22"
     },
     "/free-llm-apis": {
-      "hash": "6a10b10828aa4391",
+      "hash": "88344c33dd43c9e3",
       "changed": "2026-11-23"
     },
     "/free-nextjs-stack": {
@@ -4208,7 +4208,7 @@
       "changed": "2026-11-22"
     },
     "/stack-check": {
-      "hash": "56e8623fa72e04da",
+      "hash": "d197250f9a3ec6ae",
       "changed": "2026-11-23"
     },
     "/stacks": {
