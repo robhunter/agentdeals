@@ -12,6 +12,7 @@ const { openapiSpec } = await import("../dist/openapi.js");
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const A_DAY_IN_MS = 86400000;
+const TODAY = new Date().toISOString().slice(0, 10);
 
 type Condition = { text: string; quote: string; url: string; read_on: string };
 type Listing = { vendor: string; category: string; description?: string; conditions?: Condition[] } & Record<string, unknown>;
@@ -53,7 +54,7 @@ function daysApart(a: string, b: string): number {
 }
 
 function dayFromToday(days: number): string {
-  return new Date(Date.parse(`${new Date().toISOString().slice(0, 10)}T00:00:00Z`) + days * A_DAY_IN_MS).toISOString().slice(0, 10);
+  return new Date(Date.parse(`${TODAY}T00:00:00Z`) + days * A_DAY_IN_MS).toISOString().slice(0, 10);
 }
 
 function decode(text: string): string {
@@ -74,9 +75,9 @@ function cardsOf(html: string): { badge: string | null; date: string; summary: s
 }
 
 function startServer(env: Record<string, string>): Promise<{ server: ChildProcess; base: string }> {
-  const server = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+  const server = spawn("node", ["--import", path.join(REPO, "scripts", "shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
     stdio: ["pipe", "pipe", "pipe"],
-    env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", ...env },
+    env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${TODAY}T12:00:00Z`) - Date.now()), ...env },
   });
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject(new Error("Server startup timeout")), 30000);
