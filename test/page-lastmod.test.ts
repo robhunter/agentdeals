@@ -5,7 +5,7 @@ import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   daysBetween, emptyPageLastmod, entryDay, fallbackDay, hashPageBody, httpDate, isDailyEntry, lastmodFor, newestLastmod,
   parsePageLastmod, readPageLastmod, serializePageLastmod, updatePageLastmod, type PageLastmodLedger,
@@ -21,11 +21,15 @@ let base = "";
 let inventory: string[] = [];
 let scratch = "";
 
-function startServer(inventoryOut: string): Promise<ChildProcess> {
+function startServer(inventoryOut: string, today: string): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const proc = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_PAGE_INVENTORY_OUT: inventoryOut },
+      env: {
+        ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_PAGE_INVENTORY_OUT: inventoryOut,
+        NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --import=${pathToFileURL(path.join(REPO, "test/fixed-instant-clock.mjs")).href}`,
+        TEST_FIXED_INSTANT_MS: String(Date.parse(`${today}T12:00:00Z`)),
+      },
     });
     const timeout = setTimeout(() => {
       proc.kill();
@@ -430,9 +434,12 @@ describe("a page keeps the day it changed, whenever that was", () => {
 });
 
 describe("what the sitemaps say about when a page changed", () => {
+  let serverDay = "";
+
   before(async () => {
     scratch = mkdtempSync(path.join(tmpdir(), "page-lastmod-test-"));
-    server = await startServer(path.join(scratch, "inventory.json"));
+    serverDay = new Date().toISOString().slice(0, 10);
+    server = await startServer(path.join(scratch, "inventory.json"), serverDay);
     inventory = JSON.parse(readFileSync(path.join(scratch, "inventory.json"), "utf-8"));
   });
 
@@ -443,7 +450,7 @@ describe("what the sitemaps say about when a page changed", () => {
 
   it("takes every lastmod from the ledger for the pages the ledger covers", async () => {
     const ledger = readPageLastmod();
-    const today = new Date().toISOString().slice(0, 10);
+    const today = serverDay;
     const seen = new Set<string>();
     for (const name of SITEMAPS) {
       for (const { loc, lastmod } of await sitemapEntries(name)) {
@@ -474,7 +481,7 @@ describe("what the sitemaps say about when a page changed", () => {
 
   it("dates a page it has no record of no earlier than the day the ledger was written", async () => {
     const ledger = readPageLastmod();
-    const today = new Date().toISOString().slice(0, 10);
+    const today = serverDay;
     const known = new Set(inventory);
     assertPopulationFloor(known.size, 1500, "URLs the ledger is asked to date");
     const entries = new Map<string, string>();
@@ -564,7 +571,7 @@ describe("what the sitemaps say about when a page changed", () => {
   });
 
   it("publishes a well-formed day, never one in the future, on every URL in every sitemap", async () => {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = serverDay;
     let counted = 0;
     for (const name of SITEMAPS) {
       for (const { loc, lastmod } of await sitemapEntries(name)) {
@@ -629,7 +636,7 @@ describe("what the sitemaps say about when a page changed", () => {
 
   it("answers a revalidation on every page whose day was read from its own rendered body", async () => {
     const ledger = readPageLastmod();
-    const today = new Date().toISOString().slice(0, 10);
+    const today = serverDay;
     const read = ["/", ...RETITLED, REPRICED].filter(page => ledger.pages[page]);
     assert.ok(read.length >= 4, `only ${read.length} of the pages named here are in the ledger`);
     for (const page of read) {
@@ -669,7 +676,7 @@ describe("what the sitemaps say about when a page changed", () => {
 
   it("dates a vendor page from the ledger rather than from the record it renders", async () => {
     const ledger = readPageLastmod();
-    const today = new Date().toISOString().slice(0, 10);
+    const today = serverDay;
     const offers = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers as Array<{ vendor: string; verifiedDate?: string }>;
     const listed = (await sitemapEntries("vendors")).filter(e => e.loc.startsWith("/vendor/"));
     const stride = Math.max(1, Math.ceil(listed.length / 24));
