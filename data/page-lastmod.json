@@ -832,16 +832,16 @@
       "changed": "2026-11-22"
     },
     "/aws-app-runner-migration": {
-      "hash": "c6859c315cccc822",
-      "changed": "2026-11-16"
+      "hash": "d172d86f88b4f280",
+      "changed": "2026-11-23"
     },
     "/aws-free-tier-2026": {
-      "hash": "89c88a4e1da292bd",
-      "changed": "2026-11-22"
+      "hash": "e9adbcabc36e8d59",
+      "changed": "2026-11-23"
     },
     "/azure-free-tier-2026": {
-      "hash": "d9b1a42dc2144305",
-      "changed": "2026-11-22"
+      "hash": "2ab2a8281681a0aa",
+      "changed": "2026-11-23"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
       "hash": "a53ae0bb735b5c08",
@@ -1147,8 +1147,8 @@
       "changed": "2026-11-22"
     },
     "/category/cloud-hosting": {
-      "hash": "99971bf589839f6e",
-      "changed": "2026-11-22"
+      "hash": "c6fcc0788ad2f9ab",
+      "changed": "2026-11-23"
     },
     "/category/cloud-iaas": {
       "hash": "6f1c46cc103de244",
@@ -2410,8 +2410,8 @@
       "changed": "2026-11-16"
     },
     "/compare/netlify-vs-railway": {
-      "hash": "55114bbdc31aaa05",
-      "changed": "2026-11-17"
+      "hash": "7f531eaebe2c935b",
+      "changed": "2026-11-23"
     },
     "/compare/netlify-vs-render": {
       "hash": "42c2916bd195ac73",
@@ -2538,12 +2538,12 @@
       "changed": "2026-11-16"
     },
     "/compare/railway-vs-render": {
-      "hash": "9edc1dd2a1b6e3e5",
-      "changed": "2026-11-16"
+      "hash": "92127815c2437303",
+      "changed": "2026-11-23"
     },
     "/compare/railway-vs-supabase": {
-      "hash": "f067cd6c4f0c7597",
-      "changed": "2026-11-16"
+      "hash": "f6c2e55439943e53",
+      "changed": "2026-11-23"
     },
     "/compare/rapidapi-vs-treblle": {
       "hash": "f338789699fd794b",
@@ -3256,8 +3256,8 @@
       "changed": "2026-11-22"
     },
     "/digitalocean-free-tier-2026": {
-      "hash": "4d6e5cd40289f6b4",
-      "changed": "2026-11-22"
+      "hash": "b680588ad1cdb035",
+      "changed": "2026-11-23"
     },
     "/disclosure": {
       "hash": "8e75318537a8ac26",
@@ -3280,8 +3280,8 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "e38a89df2645b6c7",
-      "changed": "2026-11-20"
+      "hash": "0a56f4b585ba3a2a",
+      "changed": "2026-11-23"
     },
     "/events": {
       "hash": "10c036e7bfb60e32",
@@ -3303,7 +3303,8 @@
       "daily": true
     },
     "/feed.xml": {
-      "daily": true
+      "hash": "8a4ba3fe264c7316",
+      "changed": "2026-11-23"
     },
     "/firebase-alternatives": {
       "hash": "5fc38ebcc6fedc1d",
@@ -3371,8 +3372,8 @@
       "changed": "2026-11-22"
     },
     "/gcp-free-tier-2026": {
-      "hash": "5d09620b86f933cc",
-      "changed": "2026-11-22"
+      "hash": "60a1219d7c647e02",
+      "changed": "2026-11-23"
     },
     "/gemini-api-pricing-2026": {
       "hash": "501da9def97ed90d",
@@ -3387,8 +3388,8 @@
       "changed": "2026-11-16"
     },
     "/google-developer-program-2026": {
-      "hash": "de413290180d6b06",
-      "changed": "2026-11-22"
+      "hash": "4df1c78982b41aa8",
+      "changed": "2026-11-23"
     },
     "/groq-vs-hugging-face": {
       "hash": "2acf2c5f1cee0c79",
@@ -3419,28 +3420,28 @@
       "changed": "2026-11-13"
     },
     "/heroku-alternatives": {
-      "hash": "7a23e54a8ff6581a",
-      "changed": "2026-11-16"
+      "hash": "35e79f9b053d44cf",
+      "changed": "2026-11-23"
     },
     "/hetzner-alternatives": {
-      "hash": "4385e9dcaecc2084",
-      "changed": "2026-11-22"
+      "hash": "eac4be9ffbc26e9b",
+      "changed": "2026-11-23"
     },
     "/hetzner-pricing-2026": {
-      "hash": "2a179b50460e3779",
-      "changed": "2026-11-22"
+      "hash": "9d314e91510a2a75",
+      "changed": "2026-11-23"
     },
     "/hosting-alternatives": {
-      "hash": "2759a0dcb254e0a3",
-      "changed": "2026-11-22"
+      "hash": "479c26cff706f1ce",
+      "changed": "2026-11-23"
     },
     "/hosting-free-tier-comparison-2026": {
-      "hash": "ed255d4c786bc66d",
-      "changed": "2026-11-22"
+      "hash": "109bb13c5f86391b",
+      "changed": "2026-11-23"
     },
     "/hosting-pricing": {
-      "hash": "6e70e2d73340f3ff",
-      "changed": "2026-11-22"
+      "hash": "04435ecaafa20b2a",
+      "changed": "2026-11-23"
     },
     "/ide-code-editors-alternatives": {
       "hash": "dea5ac6da406d088",
@@ -3526,8 +3527,8 @@
       "changed": "2026-11-22"
     },
     "/railway-vs-render": {
-      "hash": "089ec9b8d1fbf0c4",
-      "changed": "2026-11-22"
+      "hash": "c1d7cc168012643b",
+      "changed": "2026-11-23"
     },
     "/redis-alternatives": {
       "hash": "5223056c0e29315c",
@@ -4208,7 +4209,7 @@
       "changed": "2026-11-22"
     },
     "/stack-check": {
-      "hash": "568434d2ff834092",
+      "hash": "d9e78eada3c608bf",
       "changed": "2026-11-23"
     },
     "/stacks": {
@@ -10219,12 +10220,12 @@
       "changed": "2026-11-22"
     },
     "/vercel-alternatives": {
-      "hash": "28dcf23d90c16590",
-      "changed": "2026-11-16"
+      "hash": "fedb87476d06eba0",
+      "changed": "2026-11-23"
     },
     "/vercel-vs-netlify": {
-      "hash": "1207aade38af32c2",
-      "changed": "2026-11-22"
+      "hash": "8e4c523234b3c971",
+      "changed": "2026-11-23"
     },
     "/whatsapp-business-api-pricing-2026": {
       "hash": "29f8d26fad136ffe",
