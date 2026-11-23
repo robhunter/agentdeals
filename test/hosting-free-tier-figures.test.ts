@@ -247,7 +247,7 @@ const RETIRED_FIGURES: Retired[] = [
   },
   {
     what: "Fly.io described as having no free tier for new accounts",
-    pattern: /Fly\.io(?:'s)?[^.]{0,120}(?:has no free (?:tier|plan) for new accounts|offers no free (?:tier|plan) for new accounts|has offered no plans to new customers|stopped offering plans to new customers|free tier is effectively gone for new accounts|is paid-only for new accounts|no free tier \(legacy|2 hrs runtime|2 hours runtime|2 machine hours|7-day trial)/i,
+    pattern: /Fly\.io(?:'s)?(?:\s+no free (?:tier|plan) for new accounts|[^.]{0,120}(?:has no free (?:tier|plan) for new accounts|offers no free (?:tier|plan) for new accounts|does not (?:have|offer) a free (?:tier|plan) for new accounts|has offered no plans to new customers|stopped offering plans to new customers|free tier is effectively gone for new accounts|is paid-only for new accounts|no free tier \(legacy|2 hrs runtime|2 hours runtime|2 machine hours|7-day trial))/i,
     replacedBy: /Free plan/i,
     vendorRecord: () => recordFor("Fly.io", "Cloud Hosting").description,
   },
@@ -537,7 +537,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
 
   it("detects Fly.io's withdrawn terms without rejecting its historical account", () => {
     const retired = RETIRED_FIGURES.find((r) => r.what === "Fly.io described as having no free tier for new accounts")!;
-    for (const text of ["Fly.io has no free tier for new accounts", "Fly.io offers no free plan for new accounts", "Fly.io has offered no plans to new customers since October 2024", "Fly.io stopped offering plans to new customers on 2024-10-07", "Fly.io free tier is effectively gone for new accounts", "Fly.io is paid-only for new accounts", "Fly.io No free tier (legacy: 3 VMs)", "Fly.io 2 hrs runtime or 7-day trial"]) {
+    for (const text of ["Fly.io has no free tier for new accounts", "Fly.io offers no free plan for new accounts", "Fly.io No free plan for new accounts", "Fly.io does not offer a free plan for new accounts", "Fly.io has offered no plans to new customers since October 2024", "Fly.io stopped offering plans to new customers on 2024-10-07", "Fly.io free tier is effectively gone for new accounts", "Fly.io is paid-only for new accounts", "Fly.io No free tier (legacy: 3 VMs)", "Fly.io 2 hrs runtime or 7-day trial"]) {
       assert.ok(retired.pattern.test(text), text);
     }
     assert.ok(!retired.pattern.test("Fly.io had no free tier for new accounts then; it launched a Free plan on November 23, 2026."));
