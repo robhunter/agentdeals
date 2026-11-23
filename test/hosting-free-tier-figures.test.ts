@@ -246,9 +246,9 @@ const RETIRED_FIGURES: Retired[] = [
     vendorRecord: () => recordFor("Google Gemini Code Assist", "IDE & Code Editors").description,
   },
   {
-    what: "a Fly.io free tier for new accounts",
-    pattern: /Fly\.io(?:'s)?[^.]{0,70}(?:free tier includes|gives 3 shared|3 shared-cpu VMs)|3 shared-cpu-1x VMs, 160 ?GB|3 shared VMs free|3 shared VMs, 160 ?GB/i,
-    replacedBy: /no free tier for new accounts|2 hrs? runtime|2 hours runtime|7-day trial/i,
+    what: "Fly.io described as having no free tier for new accounts",
+    pattern: /Fly\.io(?:'s)?[^.]{0,120}(?:has no free (?:tier|plan) for new accounts|offers no free (?:tier|plan) for new accounts|is paid-only for new accounts|no free tier \(legacy|2 hrs runtime|2 hours runtime|2 machine hours|7-day trial)/i,
+    replacedBy: /Free plan/i,
     vendorRecord: () => recordFor("Fly.io", "Cloud Hosting").description,
   },
   {
@@ -535,6 +535,15 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
     }
   });
 
+  it("detects Fly.io's withdrawn terms without rejecting its historical account", () => {
+    const retired = RETIRED_FIGURES.find((r) => r.what === "Fly.io described as having no free tier for new accounts")!;
+    for (const text of ["Fly.io has no free tier for new accounts", "Fly.io offers no free plan for new accounts", "Fly.io is paid-only for new accounts", "Fly.io No free tier (legacy: 3 VMs)", "Fly.io 2 hrs runtime or 7-day trial"]) {
+      assert.ok(retired.pattern.test(text), text);
+    }
+    assert.ok(!retired.pattern.test("Fly.io had no free tier for new accounts then; it launched a Free plan on November 23, 2026."));
+    assert.ok(!retired.pattern.test("Fly.io Free plan: $5 a month with a card, $1 for 7 days without."));
+  });
+
   it("publishes no free-tier figure the vendor has retired", () => {
     const published = hits
       .map((h) => `${h.route} (${h.surface}) states ${h.what}: ${h.excerpt}`)
@@ -598,7 +607,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       "Supabase free egress of 2 GB": ["/database-free-tier-comparison-2026"],
       "Gemini Code Assist listed among Google Cloud's free AI coding options": ["/gcp-free-tier-2026"],
       "Gemini Code Assist Standard's annual-commitment price given as its monthly price": ["/ai-coding-tools-pricing"],
-      "a Fly.io free tier for new accounts": ["/hetzner-pricing-2026", "/free-django-stack", "/railway-vs-render", "/aws-app-runner-migration", "/free-tier-risk"],
+      "Fly.io described as having no free tier for new accounts": ["/hetzner-pricing-2026", "/free-django-stack", "/railway-vs-render", "/aws-app-runner-migration", "/free-tier-risk"],
       "a Sentry free session-replay allowance of 10K": ["/monitoring-comparison-2026"],
       "Sentry's free data retention as 90 days": ["/monitoring-comparison-2026"],
       "a Better Stack free log allowance of 1 GB": ["/monitoring-comparison-2026"],
@@ -740,11 +749,12 @@ describe("the prose-record cross-check attributes a figure before comparing it (
   });
 
   it("still flags a figure the record does not state, on a page that renders that record", () => {
-    const flyio = recordFor("Fly.io", "Cloud Hosting");
+    const fixtureRecords = new Map(records);
+    fixtureRecords.set("fly.io", { tier: "Free", description: "Bandwidth is 100 GB transfer/month." });
     const table = `
       <table><thead><tr><th>Provider</th><th>Tier</th><th>Free Tier Details</th></tr></thead>
-      <tbody><tr><td>Fly.io</td><td>Legacy Free</td><td>${flyio.description} Bandwidth is 500 GB transfer/month.</td></tr></tbody></table>`;
-    const found = disagreements("/railway-vs-render", figuresInTables(table, vendors), records);
+      <tbody><tr><td>Fly.io</td><td>Free</td><td>Bandwidth is 500 GB transfer/month.</td></tr></tbody></table>`;
+    const found = disagreements("/railway-vs-render", figuresInTables(table, vendors), fixtureRecords);
     assert.deepStrictEqual(found.map((f) => f.publishedFigure), ["500 GB"]);
   });
 
