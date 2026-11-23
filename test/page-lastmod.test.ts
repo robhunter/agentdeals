@@ -21,14 +21,16 @@ let base = "";
 let inventory: string[] = [];
 let scratch = "";
 
-function startServer(inventoryOut: string, today: string): Promise<ChildProcess> {
+function startServer(inventoryOut: string, today?: string): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const proc = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
       env: {
         ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_PAGE_INVENTORY_OUT: inventoryOut,
-        NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --import=${pathToFileURL(path.join(REPO, "test/fixed-instant-clock.mjs")).href}`,
-        TEST_FIXED_INSTANT_MS: String(Date.parse(`${today}T12:00:00Z`)),
+        ...(today ? {
+          NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --import=${pathToFileURL(path.join(REPO, "test/fixed-instant-clock.mjs")).href}`,
+          TEST_FIXED_INSTANT_MS: String(Date.parse(`${today}T12:00:00Z`)),
+        } : {}),
       },
     });
     const timeout = setTimeout(() => {
