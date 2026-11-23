@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-22",
+  "measured_on": "2026-11-23",
   "pages": [
     {
       "path": "/agent-payments",
@@ -421,8 +421,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 104,
-      "table_figures_from_records": 66,
+      "table_figures": 105,
+      "table_figures_from_records": 67,
       "tables": [
         {
           "label": "Deprecation Timeline",
@@ -431,8 +431,8 @@
         },
         {
           "label": "Container Deployment Alternatives",
-          "figures": 66,
-          "from_records": 37
+          "figures": 67,
+          "from_records": 38
         },
         {
           "label": "Pricing Comparison",
@@ -490,8 +490,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 109,
-      "table_figures_from_records": 80,
+      "table_figures": 110,
+      "table_figures_from_records": 81,
       "tables": [
         {
           "label": "Always Free Services",
@@ -505,8 +505,8 @@
         },
         {
           "label": "AWS vs Alternatives",
-          "figures": 70,
-          "from_records": 52
+          "figures": 71,
+          "from_records": 53
         },
         {
           "label": "Recent AWS Changes",
@@ -550,8 +550,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 98,
-      "table_figures_from_records": 57,
+      "table_figures": 99,
+      "table_figures_from_records": 58,
       "tables": [
         {
           "label": "Always Free Services",
@@ -570,8 +570,8 @@
         },
         {
           "label": "Azure vs Alternatives",
-          "figures": 65,
-          "from_records": 53
+          "figures": 66,
+          "from_records": 54
         },
         {
           "label": "Recent Azure Changes",
@@ -1129,8 +1129,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 162,
-      "table_figures_from_records": 115,
+      "table_figures": 163,
+      "table_figures_from_records": 116,
       "tables": [
         {
           "label": "Free Services (Permanent)",
@@ -1144,8 +1144,8 @@
         },
         {
           "label": "DigitalOcean vs Alternatives",
-          "figures": 123,
-          "from_records": 107
+          "figures": 124,
+          "from_records": 108
         },
         {
           "label": "Recent DigitalOcean Changes",
@@ -1959,8 +1959,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 152,
-      "table_figures_from_records": 103,
+      "table_figures": 153,
+      "table_figures_from_records": 104,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1974,8 +1974,8 @@
         },
         {
           "label": "GCP vs AWS vs Others",
-          "figures": 71,
-          "from_records": 55
+          "figures": 72,
+          "from_records": 56
         },
         {
           "label": "Recent GCP & Google Changes",
@@ -2080,8 +2080,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 88,
-      "table_figures_from_records": 48,
+      "table_figures": 89,
+      "table_figures_from_records": 49,
       "tables": [
         {
           "label": "2. Price Comparison Table",
@@ -2090,8 +2090,8 @@
         },
         {
           "label": "5. Free Cloud Credit Alternatives",
-          "figures": 42,
-          "from_records": 23
+          "figures": 43,
+          "from_records": 24
         },
         {
           "label": "6. Free AI/LLM API Alternatives",
@@ -2137,8 +2137,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 151,
-      "table_figures_from_records": 32,
+      "table_figures": 152,
+      "table_figures_from_records": 33,
       "tables": [
         {
           "label": "1. Every Cloud Plan, Priced Today",
@@ -2152,8 +2152,8 @@
         },
         {
           "label": "6. Alternatives Comparison",
-          "figures": 63,
-          "from_records": 32
+          "figures": 64,
+          "from_records": 33
         }
       ],
       "reads_changes": true,
@@ -3570,8 +3570,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 76,
-      "table_figures_from_records": 55,
+      "table_figures": 77,
+      "table_figures_from_records": 56,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -3585,8 +3585,8 @@
         },
         {
           "label": "5. Other Hosting Alternatives",
-          "figures": 55,
-          "from_records": 55
+          "figures": 56,
+          "from_records": 56
         }
       ],
       "reads_changes": true,
