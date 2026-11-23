@@ -1,5 +1,26 @@
 {
-  "proposals": [],
+  "proposals": [
+    {
+      "proposal_id": "2026-11-23/fly-io/new_free_tier",
+      "proposed_on": "2026-11-23",
+      "vendor": "Fly.io",
+      "change_type": "new_free_tier",
+      "date": "2026-11-23",
+      "date_source": "discovered",
+      "summary": "The pricing page now states every new account starts on a Free plan with $1 credit (no card) and $5 of usage every month once a card is added, limited to up to 3 Machines.",
+      "tier": "Free plan",
+      "tier_direction": "widened",
+      "previous_state": "Pay-as-you-go only — no free tier for new accounts (since Oct 2024). Legacy accounts (Hobby/Launch/Scale plans) retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
+      "current_state": "Every new account starts on the Free plan: $1 of credit with no credit card, and $5 of usage every month once a card is added, for Machines, volumes, data transfer, Sprites and the $4 Managed Postgres Developer plan. The Free plan has limits, such as up to 3 Machines. Organizations on plans discontinued in October 2024 keep the free allowances included with those plans.",
+      "impact": "high",
+      "source_url": "https://fly.io/docs/about/pricing/",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-23",
+      "restatement": []
+    }
+  ],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
