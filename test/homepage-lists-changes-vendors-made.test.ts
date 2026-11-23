@@ -9,6 +9,7 @@ import { assertPopulationFloor } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
+const TODAY = new Date().toISOString().slice(0, 10);
 const LOG: Record<string, unknown>[] = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf8")).changes;
 const CATALOGUE: { vendor: string; category: string }[] = JSON.parse(
   readFileSync(path.join(REPO, "data", "index.json"), "utf8"),
@@ -16,10 +17,11 @@ const CATALOGUE: { vendor: string; category: string }[] = JSON.parse(
 
 function startServer(changesPath: string | null): Promise<{ proc: ChildProcess; base: string }> {
   return new Promise((resolve, reject) => {
-    const proc = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+    const proc = spawn("node", ["--import", path.join(REPO, "scripts/shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
       env: {
         ...process.env,
+        AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${TODAY}T12:00:00Z`) - Date.now()),
         PORT: "0",
         BASE_URL: "http://localhost:3000",
         ...(changesPath ? { AGENTDEALS_CHANGES_PATH: changesPath } : {}),
@@ -44,7 +46,7 @@ function startServer(changesPath: string | null): Promise<{ proc: ChildProcess; 
 }
 
 function dayOffset(days: number): string {
-  return new Date(Date.now() + days * 86_400_000).toISOString().slice(0, 10);
+  return new Date(Date.parse(TODAY) + days * 86_400_000).toISOString().slice(0, 10);
 }
 
 function section(home: string, id: string, { required = true } = {}): string {
