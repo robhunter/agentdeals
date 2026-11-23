@@ -883,7 +883,7 @@
     {
       "vendor": "Fly.io",
       "category": "Cloud Hosting",
-      "description": "$5 of usage every month with a card. A one-time $1 credit for 7 days without a card. Every new Fly.io account starts on the Free plan. Limits: 1 member, up to 3 Machines, volumes up to 5GB each, one Developer Managed Postgres cluster.",
+      "description": "$5 of usage every month with a card. A one-time $1 credit for 7 days without a card. Every new Fly.io account starts on the Free plan. Limits: 1 member, up to 3 Machines, volumes up to 5GB each, one Developer Managed Postgres cluster. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
       "tier": "Free",
       "url": "https://fly.io/docs/about/pricing/",
       "tags": [
