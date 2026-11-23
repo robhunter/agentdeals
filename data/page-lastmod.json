@@ -22,12 +22,12 @@
       "changed": "2026-11-22"
     },
     "/ai-free-tiers": {
-      "hash": "eede7c2466a4582f",
-      "changed": "2026-11-22"
+      "hash": "19859f6ec7a1cce4",
+      "changed": "2026-11-23"
     },
     "/ai-ml-alternatives": {
-      "hash": "e26a09b129a58d97",
-      "changed": "2026-11-22"
+      "hash": "0604f7482271629e",
+      "changed": "2026-11-23"
     },
     "/alternative-to": {
       "hash": "3c139d20b404ed3f",
@@ -1111,8 +1111,8 @@
       "changed": "2026-11-22"
     },
     "/category/ai-ml": {
-      "hash": "60cb307147644ff6",
-      "changed": "2026-11-22"
+      "hash": "16df5e5738b12c6a",
+      "changed": "2026-11-23"
     },
     "/category/analytics": {
       "hash": "9c0b31a219330a65",
@@ -3088,8 +3088,8 @@
       "changed": "2026-11-16"
     },
     "/digest/2026-w41": {
-      "hash": "781069008af63e14",
-      "changed": "2026-11-16"
+      "hash": "7c4cee8237ad2d5f",
+      "changed": "2026-11-23"
     },
     "/digest/2026-w42": {
       "hash": "35fec84d39f4b5b9",
@@ -3337,8 +3337,8 @@
       "changed": "2026-11-22"
     },
     "/free-llm-apis": {
-      "hash": "4ff4cd811b184f95",
-      "changed": "2026-11-22"
+      "hash": "6a10b10828aa4391",
+      "changed": "2026-11-23"
     },
     "/free-nextjs-stack": {
       "hash": "aa8ba1cb8de90af8",
@@ -3375,8 +3375,8 @@
       "changed": "2026-11-22"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "659379f32299d907",
-      "changed": "2026-11-22"
+      "hash": "501da9def97ed90d",
+      "changed": "2026-11-23"
     },
     "/github-actions-alternatives": {
       "hash": "bcd2c72260d7f22b",
@@ -3447,8 +3447,8 @@
       "changed": "2026-11-22"
     },
     "/llm-api-pricing": {
-      "hash": "546e4bbb06c44564",
-      "changed": "2026-11-22"
+      "hash": "732ffa25b0b59804",
+      "changed": "2026-11-23"
     },
     "/localstack-alternatives": {
       "hash": "8ae3bd477812402c",
@@ -4208,8 +4208,8 @@
       "changed": "2026-11-22"
     },
     "/stack-check": {
-      "hash": "54d44b4eec39ba35",
-      "changed": "2026-11-22"
+      "hash": "56e8623fa72e04da",
+      "changed": "2026-11-23"
     },
     "/stacks": {
       "hash": "d8186579b5876c46",
