@@ -883,8 +883,8 @@
     {
       "vendor": "Fly.io",
       "category": "Cloud Hosting",
-      "description": "Pay-as-you-go only — no free tier for new accounts (since Oct 2024). Legacy accounts (Hobby/Launch/Scale plans) retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
-      "tier": "Legacy Free",
+      "description": "Every new Fly.io account starts on the Free plan. Without a card, you get a $1 one-time credit for 7 days. With a card, you get $5 of usage every month. Limits: 1 member, up to 3 Machines, volumes up to 5GB each, one Developer Managed Postgres cluster.",
+      "tier": "Free",
       "url": "https://fly.io/docs/about/pricing/",
       "tags": [
         "hosting",
@@ -924,22 +924,28 @@
       },
       "conditions": [
         {
-          "text": "Fly.io's trial needs no credit card; after the trial, a credit card is needed to keep using billable resources.",
-          "quote": "You don’t need a credit card to start the trial. After the trial ends, you’ll need to add a credit card to keep using billable resources.",
-          "url": "https://docs.fly.io/about/pricing",
-          "read_on": "2026-10-22"
+          "text": "Without a card, the $1 credit expires after 7 days. Once it is used up or expires, you cannot create new resources until you add a card, which gives $5 of usage every month.",
+          "quote": "When the $1 is used up, or after 7 days, you can’t create new resources, and we email you to let you know.",
+          "url": "https://docs.fly.io/about/free-plan",
+          "read_on": "2026-11-23"
         },
         {
-          "text": "Fly.io's free trial lasts 2 hours of machine runtime or 7 days, whichever comes first. Trial machines stop automatically after 5 minutes of running. The trial allows 10 machines, 20 GB of volume storage, and up to 2 vCPUs and 4 GB of memory per machine. Dedicated IPv4 addresses and performance-optimized vCPUs are not included.",
-          "quote": "A free trial on Fly.io includes 2 hours of machine runtime or 7 days of access, whichever comes first.",
-          "url": "https://docs.fly.io/about/free-trial",
-          "read_on": "2026-11-03"
+          "text": "With a card, you stay on the Free plan. You get $5 of usage on the 1st of every month, the full $5 in the first month. It covers Machines, volumes, data transfer, Sprites and one $4 Developer Postgres cluster.",
+          "quote": "With a card, you get the full $5 in your first month, and a new $5 on the 1st of every month.",
+          "url": "https://docs.fly.io/about/free-plan",
+          "read_on": "2026-11-23"
         },
         {
-          "text": "If you use up the trial's resources, or do not add a payment method within 7 days, your apps stop running and you cannot launch new machines, attach volumes or deploy changes until billing is set up. Adding a card ends the free trial and starts billing.",
-          "quote": "You won’t be able to launch new machines, attach volumes, or deploy changes until billing is set up.",
-          "url": "https://docs.fly.io/about/free-trial",
-          "read_on": "2026-11-03"
+          "text": "The Free plan is for your personal organization only, with 1 member; up to 3 Machines, no performance Machines, volumes up to 5GB each; no extensions such as Tigris, Supabase or Upstash Redis, and no dedicated IPv4.",
+          "quote": "The Free plan is for your personal organization, the one we create when you sign up.",
+          "url": "https://docs.fly.io/about/free-plan",
+          "read_on": "2026-11-23"
+        },
+        {
+          "text": "When usage passes $5, the organization moves to Pay As You Go automatically and keeps running. The whole month is billed at standard rates from the first cent, not only the usage above $5.",
+          "quote": "The month’s $5 is removed, and the whole month’s usage is billed at standard rates from the first cent, not just the usage above $5.",
+          "url": "https://docs.fly.io/about/free-plan",
+          "read_on": "2026-11-23"
         },
         {
           "text": "Fly.io offers Sprites, its Linux VMs for AI agents, with a one-time $30 trial credit.",
