@@ -1,17 +1,6 @@
 {
   "held": [
     {
-      "vendor": "Amazon CloudFront",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The page now shows flat-rate plans with different allowances: the Free plan includes 1M requests, 100GB data transfer, and 5GB S3 storage. The Pro plan is $15/month with 10M requests and 50TB data transfer.",
-      "previous_state": "1 TB of data transfer out to the internet per month, 10,000,000 HTTP or HTTPS Requests per month, 2,000,000 CloudFront Function invocations per month, 2,000,000 CloudFront KeyValueStore reads per month, and free SSL certificates, always free under pay-as-you-go pricing. The flat-rate Free plan is $0/month per distribution. It includes 1 million requests, 100 GB of data transfer, and 5 GB of S3 storage a month, with no overage charges. An AWS account can have up to 3 Free plans. Pay-as-you-go data transfer in the USA is $0.085 per GB after the first TB. The flat-rate Pro plan is $15/month.",
-      "current_state": "The Free plan is $0/month per distribution with no overage charges and includes 1M requests, 100GB data transfer, and 5GB S3 storage per month. The Pro plan is $15/month with no overage charges and includes 10M requests and 50TB data transfer.",
-      "source_url": "https://aws.amazon.com/cloudfront/pricing/",
-      "category": "CDN",
-      "first_read_date": "2026-11-23"
-    },
-    {
       "vendor": "Harness CI",
       "change_type": "pricing_restructured",
       "impact": "high",
@@ -21,39 +10,6 @@
       "source_url": "https://www.harness.io/pricing",
       "category": "CI/CD",
       "first_read_date": "2026-11-01"
-    },
-    {
-      "vendor": "Koyeb",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "Previously new organizations must subscribe to Pro ($29/mo) since February 2026 with no free plan.",
-      "previous_state": "Serverless platform for web services, workers and Postgres databases. No free plan for new users since February 2026: new organizations must subscribe to Pro ($29 a month plus compute, with $10 of compute included) or a higher plan. Every plan can run one small Postgres instance (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hours of compute a month) at no extra charge. Organizations already on the Starter plan keep it.",
-      "current_state": "The page lists a Free Postgres instance at $0/hr and $0/mo with 5h compute, 0.25 vCPU, 1 GB RAM, and 1GB storage, alongside paid Postgres tiers (Small $29.76/mo, Medium $59.52/mo, etc.). Plans shown are Pro ($29/mo + compute, $10 included compute), Scale ($299/mo + compute, $100 included compute), and Enterprise (custom, starting at $1000/mo). No mention of a February 2026 free-plan removal or a retained Starter plan.",
-      "source_url": "https://www.koyeb.com/pricing",
-      "category": "Cloud Hosting",
-      "first_read_date": "2026-11-23"
-    },
-    {
-      "vendor": "Railway",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "Free plan now includes $1 monthly usage credits and no longer expires. Trial terms and free-tier limits largely match. The page states 1 project with up to 3 services and 1 replica per service. Previously 5 projects during trial then 1, and 2 replicas during trial then 1.",
-      "previous_state": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 of free credit per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. Projects: 5 during trial, then 1",
-      "current_state": "Free costs $0 per month, includes $1 of usage credits every month with no credit card required, does not expire, and services sleep after a few minutes without outbound traffic and wake on request. It includes 1 project with up to 3 services, up to 1 vCPU and 0.5 GB RAM per service, 0.5 GB volume storage, and one-click Postgres, Redis, MySQL and MongoDB. The comparison table lists 1 replica per service for Free. New accounts start with a 30-day trial including a one-time $5 credit grant.",
-      "source_url": "https://railway.com/pricing",
-      "category": "Cloud Hosting",
-      "first_read_date": "2026-11-23"
-    },
-    {
-      "vendor": "xAI",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The current pricing page now lists grok-build-0.1 with its own pricing row (500k context, $1.00/$0.20/$2.00 short context, $2.00/$0.40/$4.00 long context), and previously's claim that grok-build-0.1 reached end of life on November 19, 2026.",
-      "previous_state": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-4.6 and grok-4.5 cost the same as grok-4.7 ($2.00 input and $6.00 output per 1M tokens under 200k prompt tokens), and grok-4.20 (0309 reasoning, non-reasoning and multi-agent) the same as grok-4.3 ($1.25 input and $2.50 output). A request whose prompt reaches 200k tokens is billed at the long-context rate for all its tokens, twice the standard rate: grok-4.7 and grok-4.6 go from $2.00 input and $6.00 output per 1M tokens to $4.00 and $12.00; grok-4.3 and grok-4.20 from $1.25 and $2.50 to $2.50 and $5.00. Cached input costs $0.50 on grok-4.7 and grok-4.6, $0.30 on grok-4.5, and $0.20 on grok-4.3 and grok-4.20. These cached rates also double from 200k prompt tokens. Context windows: 500k tokens for grok-4.7, grok-4.6 and grok-4.5; 1M for grok-4.3 and grok-4.20. The US endpoint costs 10% more than the global endpoint. Priority Processing (service_tier \"priority\" on Chat Completions and the Responses API) bills text requests at 2x standard rates. A request xAI's system finds in violation of its usage guidelines is still charged for its generation; one caught before generation in the Responses API costs a $0.05 violation fee. On 2026-05-15 xAI retired eight model names, which still resolve, so code that calls them keeps working: requests to Grok 4.1 Fast (grok-4-1-fast-reasoning, grok-4-1-fast-non-reasoning), Grok 4 Fast (grok-4-fast-reasoning, grok-4-fast-non-reasoning), grok-4-0709 and grok-3 are served by grok-4.3 (low reasoning effort for the reasoning names and grok-4-0709, none for the non-reasoning names and grok-3) and billed at grok-4.3 rates; grok-imagine-image-pro is served by grok-imagine-image-2.0 at low quality; and xAI's retirement page routes grok-code-fast-1 to grok-build-0.1. xAI's release notes say grok-build-0.1 reached end of life on November 19, 2026 and is no longer served on the API. xAI's pricing and models pages still list grok-build-0.1. OpenRouter no longer offers it. grok-voice-transcribe-1.0 reached end of life on 2026-10-02; its requests are served by grok-voice-transcribe-2.0 at the same price. Image generation: grok-imagine-image $0.02 per image; grok-imagine-image-2.0 $0.04 per image at 1K resolution and low quality, up to $0.08 per image at 2K resolution and medium quality; $0.01 per input image when editing. grok-imagine-image-quality was retired on 2026-11-02, and its requests are served by grok-imagine-image-2.0 at low quality. Voice API: speech-to-text costs $0.10 per hour of audio (REST) or $0.20 per hour (streaming), text-to-speech $15.00 per 1M characters, and speech-to-speech with grok-voice-3.0 $0.08 a minute ($4.80 an hour). grok-voice-3.0 replaced grok-voice-2.0 on 2026-10-14 at the same price; grok-voice-2.0 is deprecated, and the grok-voice-latest alias now points to grok-voice-3.0. Video generation: grok-imagine-video-1.5 $0.08 per second at 480p, $0.14 at 720p, $0.25 at 1080p. grok-imagine-video-1.5-lite $0.02 per second at 480p, $0.03 at 720p, $0.14 at 1080p. grok-imagine-video $0.05 per second at 480p, $0.07 at 720p. Batch API discounts: 20% off input, cached input, output and reasoning tokens on grok-4.7, grok-4.6, grok-4.5, grok-4.3, grok-4.20-0309-reasoning, grok-4.20-0309-non-reasoning and grok-4.20-multi-agent-0309. grok-4.7 under 200k prompt tokens: $1.60 input, $0.40 cached input, $4.80 output per 1M tokens. Image and video generation in Batch API are at standard rates. Server-side tools cost extra, per call, on top of tokens: web_search, code_execution and attachment_search $5 per 1,000 calls, collections_search $2.50 per 1,000, and x_search $5 per 1,000 posts and $10 per 1,000 profiles it returns. view_image, view_x_video and remote MCP tools are billed for their tokens only.",
-      "current_state": "The pricing page lists grok-build-0.1 with 500k context at $1.00 input / $0.20 cached / $2.00 output short context and $2.00 / $0.40 / $4.00 long context; grok-imagine-image-2.0 at $0.01/img input and output tiers from $0.04/img (1K Low) to $0.08/img (2K Medium); grok-imagine-image at $0.002/img 1K and $0.02/img 2K.",
-      "source_url": "https://docs.x.ai/developers/pricing",
-      "category": "AI / ML",
-      "first_read_date": "2026-11-23"
     }
   ],
   "resolved": [
@@ -3889,6 +3845,54 @@
       "first_read_date": "2026-11-23",
       "outcome": "baseline_moved",
       "detail": "the terms it was read against are no longer the terms we publish",
+      "resolved_date": "2026-11-24"
+    },
+    {
+      "vendor": "Amazon CloudFront",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The page now shows flat-rate plans with different allowances: the Free plan includes 1M requests, 100GB data transfer, and 5GB S3 storage. The Pro plan is $15/month with 10M requests and 50TB data transfer.",
+      "previous_state": "1 TB of data transfer out to the internet per month, 10,000,000 HTTP or HTTPS Requests per month, 2,000,000 CloudFront Function invocations per month, 2,000,000 CloudFront KeyValueStore reads per month, and free SSL certificates, always free under pay-as-you-go pricing. The flat-rate Free plan is $0/month per distribution. It includes 1 million requests, 100 GB of data transfer, and 5 GB of S3 storage a month, with no overage charges. An AWS account can have up to 3 Free plans. Pay-as-you-go data transfer in the USA is $0.085 per GB after the first TB. The flat-rate Pro plan is $15/month.",
+      "source_url": "https://aws.amazon.com/cloudfront/pricing/",
+      "first_read_date": "2026-11-23",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-24 read it as pricing_restructured too",
+      "resolved_date": "2026-11-24"
+    },
+    {
+      "vendor": "Koyeb",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "Previously new organizations must subscribe to Pro ($29/mo) since February 2026 with no free plan.",
+      "previous_state": "Serverless platform for web services, workers and Postgres databases. No free plan for new users since February 2026: new organizations must subscribe to Pro ($29 a month plus compute, with $10 of compute included) or a higher plan. Every plan can run one small Postgres instance (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hours of compute a month) at no extra charge. Organizations already on the Starter plan keep it.",
+      "source_url": "https://www.koyeb.com/pricing",
+      "first_read_date": "2026-11-23",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-24 read it as new_free_tier",
+      "resolved_date": "2026-11-24"
+    },
+    {
+      "vendor": "Railway",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "Free plan now includes $1 monthly usage credits and no longer expires. Trial terms and free-tier limits largely match. The page states 1 project with up to 3 services and 1 replica per service. Previously 5 projects during trial then 1, and 2 replicas during trial then 1.",
+      "previous_state": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 of free credit per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. Projects: 5 during trial, then 1",
+      "source_url": "https://railway.com/pricing",
+      "first_read_date": "2026-11-23",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-24 read it as limits_reduced too",
+      "resolved_date": "2026-11-24"
+    },
+    {
+      "vendor": "xAI",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The current pricing page now lists grok-build-0.1 with its own pricing row (500k context, $1.00/$0.20/$2.00 short context, $2.00/$0.40/$4.00 long context), and previously's claim that grok-build-0.1 reached end of life on November 19, 2026.",
+      "previous_state": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-4.6 and grok-4.5 cost the same as grok-4.7 ($2.00 input and $6.00 output per 1M tokens under 200k prompt tokens), and grok-4.20 (0309 reasoning, non-reasoning and multi-agent) the same as grok-4.3 ($1.25 input and $2.50 output). A request whose prompt reaches 200k tokens is billed at the long-context rate for all its tokens, twice the standard rate: grok-4.7 and grok-4.6 go from $2.00 input and $6.00 output per 1M tokens to $4.00 and $12.00; grok-4.3 and grok-4.20 from $1.25 and $2.50 to $2.50 and $5.00. Cached input costs $0.50 on grok-4.7 and grok-4.6, $0.30 on grok-4.5, and $0.20 on grok-4.3 and grok-4.20. These cached rates also double from 200k prompt tokens. Context windows: 500k tokens for grok-4.7, grok-4.6 and grok-4.5; 1M for grok-4.3 and grok-4.20. The US endpoint costs 10% more than the global endpoint. Priority Processing (service_tier \"priority\" on Chat Completions and the Responses API) bills text requests at 2x standard rates. A request xAI's system finds in violation of its usage guidelines is still charged for its generation; one caught before generation in the Responses API costs a $0.05 violation fee. On 2026-05-15 xAI retired eight model names, which still resolve, so code that calls them keeps working: requests to Grok 4.1 Fast (grok-4-1-fast-reasoning, grok-4-1-fast-non-reasoning), Grok 4 Fast (grok-4-fast-reasoning, grok-4-fast-non-reasoning), grok-4-0709 and grok-3 are served by grok-4.3 (low reasoning effort for the reasoning names and grok-4-0709, none for the non-reasoning names and grok-3) and billed at grok-4.3 rates; grok-imagine-image-pro is served by grok-imagine-image-2.0 at low quality; and xAI's retirement page routes grok-code-fast-1 to grok-build-0.1. xAI's release notes say grok-build-0.1 reached end of life on November 19, 2026 and is no longer served on the API. xAI's pricing and models pages still list grok-build-0.1. OpenRouter no longer offers it. grok-voice-transcribe-1.0 reached end of life on 2026-10-02; its requests are served by grok-voice-transcribe-2.0 at the same price. Image generation: grok-imagine-image $0.02 per image; grok-imagine-image-2.0 $0.04 per image at 1K resolution and low quality, up to $0.08 per image at 2K resolution and medium quality; $0.01 per input image when editing. grok-imagine-image-quality was retired on 2026-11-02, and its requests are served by grok-imagine-image-2.0 at low quality. Voice API: speech-to-text costs $0.10 per hour of audio (REST) or $0.20 per hour (streaming), text-to-speech $15.00 per 1M characters, and speech-to-speech with grok-voice-3.0 $0.08 a minute ($4.80 an hour). grok-voice-3.0 replaced grok-voice-2.0 on 2026-10-14 at the same price; grok-voice-2.0 is deprecated, and the grok-voice-latest alias now points to grok-voice-3.0. Video generation: grok-imagine-video-1.5 $0.08 per second at 480p, $0.14 at 720p, $0.25 at 1080p. grok-imagine-video-1.5-lite $0.02 per second at 480p, $0.03 at 720p, $0.14 at 1080p. grok-imagine-video $0.05 per second at 480p, $0.07 at 720p. Batch API discounts: 20% off input, cached input, output and reasoning tokens on grok-4.7, grok-4.6, grok-4.5, grok-4.3, grok-4.20-0309-reasoning, grok-4.20-0309-non-reasoning and grok-4.20-multi-agent-0309. grok-4.7 under 200k prompt tokens: $1.60 input, $0.40 cached input, $4.80 output per 1M tokens. Image and video generation in Batch API are at standard rates. Server-side tools cost extra, per call, on top of tokens: web_search, code_execution and attachment_search $5 per 1,000 calls, collections_search $2.50 per 1,000, and x_search $5 per 1,000 posts and $10 per 1,000 profiles it returns. view_image, view_x_video and remote MCP tools are billed for their tokens only.",
+      "source_url": "https://docs.x.ai/developers/pricing",
+      "first_read_date": "2026-11-23",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-24 read the page as unchanged",
       "resolved_date": "2026-11-24"
     }
   ]
