@@ -3919,9 +3919,13 @@
       "hash": "9bcc72bfa9d434b8",
       "changed": "2026-11-21"
     },
-    "/shutdowns/google-antigravity-2026-11-18-claude-4-6-models-and-gpt-oss-120b-on-antigravity-s-free-and-google-ai-plus-plans": {
-      "hash": "b8c1c83316b0be20",
-      "changed": "2026-11-21"
+    "/shutdowns/google-antigravity-2026-11-30-claude-4-6-models-and-gpt-oss-120b-on-antigravity-s-free-and-google-ai-plus-plans": {
+      "hash": "1dc1179ae1015f86",
+      "changed": "2026-11-24"
+    },
+    "/shutdowns/google-antigravity-2026-11-30-gemini-4-argon-and-gemini-3-8-flash-in-google-antigravity": {
+      "hash": "7f2d28518c334df4",
+      "changed": "2026-11-24"
     },
     "/shutdowns/google-app-engine-2027-01-31-google-app-engine-standard-python-2-7-java-8-php-5-5-and-go-1-11": {
       "hash": "2d4bb3c920b44d63",
