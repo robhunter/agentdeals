@@ -10247,6 +10247,26 @@
     "/x402-services": {
       "hash": "fc7609330e337fb3",
       "changed": "2026-11-13"
+    },
+    "/compare/amazon-kiro-vs-jetbrains-ai": {
+      "hash": "15295f76c8c85fb8",
+      "changed": "2026-11-24"
+    },
+    "/compare/jetbrains-ai-vs-openai-codex": {
+      "hash": "18547d11a124e831",
+      "changed": "2026-11-24"
+    },
+    "/compare/jetbrains-ai-vs-windsurf": {
+      "hash": "f1bf780f2ba5a51f",
+      "changed": "2026-11-24"
+    },
+    "/shutdowns/jetbrains-ai-2026-12-03-the-junie-plugin-in-jetbrains-ides": {
+      "hash": "e157a81e9d5e7678",
+      "changed": "2026-11-24"
+    },
+    "/vendor/jetbrains-ai": {
+      "hash": "ffcec9270d0392a5",
+      "changed": "2026-11-24"
     }
   }
 }
