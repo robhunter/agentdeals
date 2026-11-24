@@ -1,3 +1,4 @@
+import { pricingGuideTitle } from "./pricing-guide-title.js";
 import { shutdownIndexNote } from "./shutdown-index-note.js";
 import { shutdownPath, shutdownPaths } from "./shutdown-paths.js";
 import { shutdownPageContent } from "./shutdown-page.js";
@@ -8771,7 +8772,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   },
   {
     slug: ACCOUNTING_PRICES_SLUG,
-    title: accountingPrices.title,
+    title: pricingGuideTitle(ACCOUNTING_PRICES_SLUG, accountingPrices.title),
     metaDesc: accountingPrices.meta_description,
     contextHtml: "",
     tag: "accounting-software",
@@ -8779,7 +8780,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   },
   {
     slug: BANKING_FEES_SLUG,
-    title: bankingFees.title,
+    title: pricingGuideTitle(BANKING_FEES_SLUG, bankingFees.title),
     metaDesc: bankingFees.meta_description,
     contextHtml: "",
     tag: "business-banking",
@@ -8787,7 +8788,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   },
   {
     slug: COMPANY_FORMATION_SLUG,
-    title: companyFormationPrices.title,
+    title: pricingGuideTitle(COMPANY_FORMATION_SLUG, companyFormationPrices.title),
     metaDesc: companyFormationPrices.meta_description,
     contextHtml: "",
     tag: "company-formation",
@@ -19914,7 +19915,7 @@ function guideLinkedWordsHtml(text: string, links: readonly { text: string; url:
 }
 
 function buildAccountingSoftwarePricingPage(prices: AccountingPrices = accountingPrices): string {
-  const title = prices.title;
+  const title = pricingGuideTitle(ACCOUNTING_PRICES_SLUG, prices.title);
   const metaDesc = prices.meta_description;
   const slug = ACCOUNTING_PRICES_SLUG;
   const pubDate = prices.published;
@@ -20093,7 +20094,7 @@ function guideSourcesItemHtml(party: { name: string; read_on: string; sources: r
 }
 
 function buildBusinessBankAccountFeesPage(fees: BankingFees = bankingFees): string {
-  const title = fees.title;
+  const title = pricingGuideTitle(BANKING_FEES_SLUG, fees.title);
   const metaDesc = fees.meta_description;
   const slug = BANKING_FEES_SLUG;
   const pubDate = fees.published;
@@ -20219,7 +20220,7 @@ ${globalNavCss()}
 }
 
 function buildCompanyFormationPricingPage(prices: CompanyFormationPrices = companyFormationPrices): string {
-  const title = prices.title;
+  const title = pricingGuideTitle(COMPANY_FORMATION_SLUG, prices.title);
   const metaDesc = prices.meta_description;
   const slug = COMPANY_FORMATION_SLUG;
   const pubDate = prices.published;
@@ -54906,9 +54907,9 @@ ${MCP_TOOLS.map(t => `- **${t.name}**: ${t.brief}`).join("\n")}
 - [Browse Categories](${BASE_URL}/category)
 - [Pricing Changes Feed](${BASE_URL}/feed.xml)
 - [Expiring Deals](${BASE_URL}/expiring)
-- [${accountingPrices.title}](${BASE_URL}${ACCOUNTING_PRICES_PATH})
-- [${bankingFees.title}](${BASE_URL}${BANKING_FEES_PATH})
-- [${companyFormationPrices.title}](${BASE_URL}${COMPANY_FORMATION_PATH})
+- [${pricingGuideTitle(ACCOUNTING_PRICES_SLUG, accountingPrices.title)}](${BASE_URL}${ACCOUNTING_PRICES_PATH})
+- [${pricingGuideTitle(BANKING_FEES_SLUG, bankingFees.title)}](${BASE_URL}${BANKING_FEES_PATH})
+- [${pricingGuideTitle(COMPANY_FORMATION_SLUG, companyFormationPrices.title)}](${BASE_URL}${COMPANY_FORMATION_PATH})
 - [${whatsAppPrices.title}](${BASE_URL}${WHATSAPP_PRICES_PATH})
 - [${mistralPrices.title}](${BASE_URL}${MISTRAL_PRICES_PATH})
 - [Full details for LLMs](${BASE_URL}/llms-full.txt)
