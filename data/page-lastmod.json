@@ -1146,7 +1146,7 @@
       "changed": "2026-11-22"
     },
     "/category/cloud-hosting": {
-      "hash": "9e387f0598754edf",
+      "hash": "b899ccc03efe3c08",
       "changed": "2026-11-24"
     },
     "/category/cloud-iaas": {
@@ -1677,12 +1677,12 @@
       "changed": "2026-11-07"
     },
     "/compare/cloudflare-workers-vs-duolingo": {
-      "hash": "51c99107a88a9238",
-      "changed": "2026-11-23"
+      "hash": "1309748e7d63311e",
+      "changed": "2026-11-24"
     },
     "/compare/cloudflare-workers-vs-mit-opencourseware": {
-      "hash": "75c021541f81627e",
-      "changed": "2026-11-23"
+      "hash": "1bf716ee0a8da31c",
+      "changed": "2026-11-24"
     },
     "/compare/cockroachdb-vs-neon": {
       "hash": "20f903e20ba05c92",
@@ -3278,7 +3278,7 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "25b170fe03d36f16",
+      "hash": "3a0391bee08bd4bf",
       "changed": "2026-11-24"
     },
     "/events": {
@@ -3416,11 +3416,11 @@
       "changed": "2026-11-13"
     },
     "/heroku-alternatives": {
-      "hash": "342adec2ca41e245",
+      "hash": "83ead5b87ab37201",
       "changed": "2026-11-24"
     },
     "/hetzner-alternatives": {
-      "hash": "703b30d47bb58336",
+      "hash": "fc549ec4c00e6ed3",
       "changed": "2026-11-24"
     },
     "/hetzner-pricing-2026": {
@@ -3428,7 +3428,7 @@
       "changed": "2026-11-24"
     },
     "/hosting-alternatives": {
-      "hash": "c00d78b0efb4cf35",
+      "hash": "cf8faf7665d0ce03",
       "changed": "2026-11-24"
     },
     "/hosting-free-tier-comparison-2026": {
@@ -4215,15 +4215,15 @@
       "changed": "2026-11-24"
     },
     "/stacks": {
-      "hash": "42f1498f17c1246c",
-      "changed": "2026-11-23"
+      "hash": "f8a1e08cc702daa7",
+      "changed": "2026-11-24"
     },
     "/stacks/ai-startup": {
       "hash": "0b2fd2a678e339d3",
       "changed": "2026-11-23"
     },
     "/stacks/api-first": {
-      "hash": "e560ed0af01c6ab5",
+      "hash": "136b93b0ca029506",
       "changed": "2026-11-24"
     },
     "/stacks/open-source": {
@@ -10221,7 +10221,7 @@
       "changed": "2026-11-24"
     },
     "/vercel-alternatives": {
-      "hash": "0393014b99ea76c7",
+      "hash": "c971c42e522c4e13",
       "changed": "2026-11-24"
     },
     "/vercel-vs-netlify": {
