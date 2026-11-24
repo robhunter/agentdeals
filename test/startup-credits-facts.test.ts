@@ -122,7 +122,7 @@ const CREDITS_ENDING_WITHOUT_CHARGES: [string, RegExp][] = [
 
 const STATED_ON_THE_GUIDE = [
   "$350K Largest Published Offer",
-  "Startup credits in 2026: 16 programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.",
+  "Startup credits: 16 programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.",
   "Key insight: Stacking Google Scale (up to $200K) + AWS Activate Portfolio (up to $200K) + Cloudflare Tier 2 ($100K) can reach $500K; each needs VC funding or an affiliated partner. AWS credits from Brex and Stripe Atlas overlap: a later award pays only the difference.",
   "Major cloud providers offering $200–$350K in compute",
   "Credit Expiry Timelines AWS Activate credits expire on a date shown in the AWS Billing console.",

@@ -7282,7 +7282,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     slug: "firebase-alternatives",
     title: "Firebase Alternatives \u2014 Free Backend-as-a-Service Options for 2026",
     metaDesc: "Firebase's free Spark plan lost Cloud Storage in February 2026, and Firebase Studio shuts down on March 22, 2027. Compare free alternatives with exact tier limits: Supabase, Appwrite, PocketBase, Nhost, Convex, Back4App, Hasura.",
-    contextHtml: `<p><strong>Firebase</strong> \u2014 Google's all-in-one Backend-as-a-Service \u2014 is facing developer trust issues in 2026. Google announced on March 19, 2026 that <strong>Firebase Studio will shut down</strong>: it has taken no new workspaces since June 22, 2026, and it closes, deleting all remaining data, on March 22, 2027. Since February 3, 2026, <strong>Cloud Storage for Firebase requires the pay-as-you-go Blaze plan</strong>, and a Spark project has no access to any bucket, including its default one.</p>
+    contextHtml: `<p><strong>Firebase</strong> \u2014 Google's all-in-one Backend-as-a-Service \u2014 is facing developer trust issues. Google announced on March 19, 2026 that <strong>Firebase Studio will shut down</strong>: it has taken no new workspaces since June 22, 2026, and it closes, deleting all remaining data, on March 22, 2027. Since February 3, 2026, <strong>Cloud Storage for Firebase requires the pay-as-you-go Blaze plan</strong>, and a Spark project has no access to any bucket, including its default one.</p>
       <p>Developer sentiment is increasingly negative: "building on Google products is always a gamble." The Spark free tier still exists for new projects, but the pattern of forced migrations and product shutdowns is driving developers to open-source, self-hostable alternatives.</p>
       <p>Below are the best free Firebase alternatives, compared by <strong>what you actually get for free</strong> \u2014 exact storage, MAU, bandwidth, and function limits. Not marketing copy.</p>`,
     tag: "firebase-alternative",
@@ -7440,7 +7440,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     title: "Cursor Alternatives — Best Free AI Code Editors for 2026",
     metaDesc: "Cursor moved to credit-based pricing in 2025. Compare AI coding alternatives and their free tiers: GitHub Copilot, Cline, Aider, Windsurf, Augment Code, Amazon Q Developer and Gemini CLI, beside paid Claude Code. [[freshness]]",
     contextHtml: `<p><strong>Cursor</strong> — the AI-powered code editor built on VS Code — shifted to <strong>credit-based pricing</strong> in mid-2025, plus a new <strong>$200/month Ultra tier</strong>. The free tier still exists (Free, with limited Agent and Chat usage), but the credit model makes costs less predictable for heavy users. Developers are actively evaluating alternatives.</p>
-      <p>The AI coding tool landscape has exploded in 2026. Terminal-based agents (Claude Code, Aider, Gemini CLI), IDE extensions (GitHub Copilot, Windsurf, Augment Code), and open-source autonomous agents (Cline) each offer different trade-offs between cost, flexibility, and capability.</p>
+      <p>The AI coding tool landscape has expanded. Terminal-based agents (Claude Code, Aider, Gemini CLI), IDE extensions (GitHub Copilot, Windsurf, Augment Code), and open-source autonomous agents (Cline) each offer different trade-offs between cost, flexibility, and capability.</p>
       <p>Below are the best free alternatives to Cursor, compared by <strong>what you actually get for free</strong> — exact limits, open-source status, and what each tool is best at.</p>`,
     tag: "cursor-alternative",
     primaryVendor: "Cursor",
@@ -7533,7 +7533,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: "Datadog bills are unpredictable. Compare free observability alternatives: Grafana Cloud, New Relic, Sentry, Axiom, Prometheus, BetterStack, and more. [[freshness]]",
     contextHtml: `<p><strong>Datadog</strong> is a powerful, full-stack observability platform — but it's notorious for <strong>unpredictable pricing</strong>. Teams routinely discover their bill is 3–5× what they expected after a traffic spike, log volume increase, or custom metrics growth. "Datadog alternatives" is one of the most searched developer tools queries for good reason.</p>
     <p>The free tier (5 hosts, 1-day metric retention, 1 custom metric per host) is extremely limited — most teams outgrow it within weeks. And once you're on a paid plan, costs scale with hosts, containers, custom metrics, log volume, APM spans, and synthetics — each billed separately.</p>
-    <p>The good news: the monitoring landscape in 2026 offers strong free tiers across every observability need. Full-platform alternatives (Grafana Cloud, New Relic, Middleware.io), specialized tools (Sentry for errors, Axiom for logs), and battle-tested open-source options (Prometheus, Jaeger) can replace parts or all of a Datadog setup — often at zero cost for small-to-medium workloads.</p>`,
+    <p>The good news: the monitoring landscape offers strong free tiers across every observability need. Full-platform alternatives (Grafana Cloud, New Relic, Middleware.io), specialized tools (Sentry for errors, Axiom for logs), and battle-tested open-source options (Prometheus, Jaeger) can replace parts or all of a Datadog setup — often at zero cost for small-to-medium workloads.</p>`,
     tag: "datadog-alternative",
     primaryVendor: "Datadog",
     serviceMatrixHtml: `
@@ -7653,7 +7653,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: "Vercel hobby plan too limited? Compare free deployment alternatives: Cloudflare Pages, Netlify, Render, Railway, Coolify, and more. [[freshness]]",
     contextHtml: `<p><strong>Vercel</strong> set the standard for frontend developer experience — instant preview deployments, edge functions, and seamless framework integration. But its pricing is a recurring pain point. The Hobby plan (100 GB bandwidth, 1M function invocations, 4 hrs CPU) works for small projects, but the jump to Pro at <strong>$20/seat/month</strong> is steep for small teams and indie developers.</p>
     <p>The core issue isn't quality — Vercel is excellent. It's <strong>cost scaling</strong>. Teams discover that hobby limits are too restrictive for real traffic, bandwidth overages add up fast, and serverless function costs at scale can surprise. "Vercel alternatives" is one of the most searched hosting queries as developers look for more generous free tiers or predictable pricing.</p>
-    <p>The good news: the deployment landscape in 2026 is competitive. Full-featured platforms (Cloudflare Pages, Netlify) offer unlimited bandwidth or generous credits. Container-based platforms (Railway, Render, Fly.io) give you more control. Edge-first options such as Cloudflare Workers optimize for performance. And self-hosted tools (Coolify) eliminate hosting costs entirely if you have your own server.</p>`,
+    <p>The good news: the deployment landscape is competitive. Full-featured platforms (Cloudflare Pages, Netlify) offer unlimited bandwidth or generous credits. Container-based platforms (Railway, Render, Fly.io) give you more control. Edge-first options such as Cloudflare Workers optimize for performance. And self-hosted tools (Coolify) eliminate hosting costs entirely if you have your own server.</p>`,
     tag: "vercel-alternative",
     primaryVendor: "Vercel",
     serviceMatrixHtml: `
@@ -7759,7 +7759,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: "Auth0 free tier too limited? Compare free authentication alternatives: Clerk, WorkOS, Supabase Auth, Firebase Auth, Logto, FusionAuth, Keycloak, and more. [[freshness]]",
     contextHtml: `<p><strong>Auth0</strong> is a powerful identity platform, but its pricing is one of the steepest cliffs in developer tools. The free tier gives you <strong>25K MAU</strong> — generous for prototyping. But the moment you outgrow it, B2C paid plans start with Essentials at $35 a month for 500 MAU, and Professional at $240 a month; B2B plans start at $150.</p>
     <p>The pricing pain is compounded by complexity. Auth0's tenant model, rule/action system, and connection limits create billing surprises. Teams regularly discover they need features (SSO, MFA customization, branding removal) that are locked behind higher tiers. "Auth0 alternatives" remains one of the most consistently searched developer queries.</p>
-    <p>The authentication landscape in 2026 offers real competition. Managed platforms (Clerk, WorkOS, Stytch) provide modern DX with generous free tiers. Open-source solutions (Keycloak, FusionAuth, Ory, Logto) give you unlimited users when self-hosted. And BaaS platforms (Supabase, Firebase) include auth as part of a broader free tier. The right choice depends on whether you prioritize DX, cost, or control.</p>`,
+    <p>The authentication landscape offers real competition. Managed platforms (Clerk, WorkOS, Stytch) provide modern DX with generous free tiers. Open-source solutions (Keycloak, FusionAuth, Ory, Logto) give you unlimited users when self-hosted. And BaaS platforms (Supabase, Firebase) include auth as part of a broader free tier. The right choice depends on whether you prioritize DX, cost, or control.</p>`,
     tag: "auth0-alternative",
     primaryVendor: "Auth0",
     serviceMatrixHtml: `
@@ -7877,7 +7877,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: "MongoDB Atlas free tier too small? Compare free database alternatives: Supabase, Neon, CockroachDB, Turso, Xata, PocketBase, Convex, and more. [[freshness]]",
     contextHtml: `<p><strong>MongoDB Atlas</strong> is the most popular hosted document database, but its free tier comes with hard limits: <strong>512 MB storage</strong> on a shared M0 cluster, no backups, limited connections, and no Atlas Search on free clusters. Developers building side projects hit these limits fast — a modest collection of user data and logs can fill 512 MB in weeks.</p>
     <p>The bigger issue is the <strong>SSPL license</strong>. MongoDB switched from AGPL to the Server Side Public License in 2018, which effectively prevents cloud providers and many companies from offering MongoDB-as-a-service. This has accelerated the shift toward Postgres-based alternatives (Supabase, Neon, Xata) and edge-native databases (Turso, Cloudflare D1) that offer more generous free tiers with truly open-source licenses.</p>
-    <p>The database landscape in 2026 offers compelling alternatives across every use case: serverless Postgres with branching (Neon), distributed SQL (CockroachDB), edge SQLite (Turso, D1), reactive backends (Convex), and full BaaS platforms (Supabase, Firebase, Appwrite). Most offer significantly more free storage than MongoDB Atlas.</p>`,
+    <p>The database landscape offers compelling alternatives across every use case: serverless Postgres with branching (Neon), distributed SQL (CockroachDB), edge SQLite (Turso, D1), reactive backends (Convex), and full BaaS platforms (Supabase, Firebase, Appwrite). Most offer significantly more free storage than MongoDB Atlas.</p>`,
     tag: "mongodb-alternative",
     primaryVendor: "MongoDB Atlas",
     serviceMatrixHtml: `
@@ -7987,7 +7987,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: "Redis changed its licence? Compare free alternatives: Upstash, Valkey, DragonflyDB, KeyDB, Momento, Garnet, Memcached, Aiven. Protocol-compatible options. [[freshness]]",
     contextHtml: `<p><strong>Redis</strong> changed everything in March 2024 when it switched from BSD to a <strong>dual RSALv2/SSPLv1 licence</strong> (Redis 8 added AGPLv3 as a third option). The move restricts cloud providers from offering Redis-as-a-service without a commercial agreement — and triggered the Linux Foundation to fork Redis as <strong>Valkey</strong>, backed by AWS, Google Cloud, Oracle, and Ericsson.</p>
     <p>For developers, the practical impact depends on your use case. If you're using Redis Cloud's free tier, you get just <strong>30 MB of memory</strong> on a single shared database — barely enough for a cache layer. Self-hosting Redis is still free. RSALv2 bars offering it as a managed service; SSPLv1 allows that only if you publish your service's source code under SSPL, but the license uncertainty has pushed many teams toward truly open-source alternatives.</p>
-    <p>The 2026 landscape offers strong options: <strong>Upstash</strong> provides serverless Redis-compatible caching with 500K commands/month free. <strong>Valkey</strong> is a drop-in BSD-3 fork maintained by the Linux Foundation. <strong>DragonflyDB</strong> claims 25x better throughput. <strong>Momento</strong> offers zero-infrastructure serverless caching. And established options like <strong>Memcached</strong> and <strong>KeyDB</strong> remain fully open-source.</p>`,
+    <p>The landscape offers strong options: <strong>Upstash</strong> provides serverless Redis-compatible caching with 500K commands/month free. <strong>Valkey</strong> is a drop-in BSD-3 fork maintained by the Linux Foundation. <strong>DragonflyDB</strong> claims 25x better throughput. <strong>Momento</strong> offers zero-infrastructure serverless caching. And established options like <strong>Memcached</strong> and <strong>KeyDB</strong> remain fully open-source.</p>`,
     tag: "redis-alternative",
     primaryVendor: "Redis Cloud",
     serviceMatrixHtml: `
@@ -8121,7 +8121,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: "SendGrid retired its free plan in 2025. Compare free alternatives: Resend (3K/mo), Mailjet (6K/mo), Brevo (300/day), Postmark, Loops, AhaSend. [[freshness]]",
     contextHtml: `<p><strong>Transactional email</strong> — password resets, order confirmations, verification codes — is non-negotiable infrastructure for any app. SendGrid retired its free plan in 2025; new accounts get a 60-day trial at 100 emails a day. Mailgun still has a free plan with 100 emails a day.</p>
     <p>The good news: several developer-focused alternatives now offer generous free tiers. <strong>Resend</strong> gives you 3,000 emails/month with a modern React Email integration. <strong>Mailjet</strong> offers 6,000/month (200/day cap). <strong>Brevo</strong> provides 300/day and up to 100,000 contacts. And newer entrants like <strong>Loops</strong> and <strong>AhaSend</strong> are competing hard on developer experience and pricing.</p>
-    <p>Below are the best free email services for developers in 2026, compared by volume limits, API quality, and what you actually get for free.</p>`,
+    <p>Below are the best free email services for developers, compared by volume limits, API quality, and what you actually get for free.</p>`,
     tag: "email-service-alternative",
     primaryVendor: "SendGrid",
     serviceMatrixHtml: `
@@ -11072,7 +11072,7 @@ ${globalNavCss()}
   <h1>Best Free Hosting for Developers</h1>
 
   <div class="context">
-    <p>Finding free hosting in 2026 is both easier and harder than ever. Easier because there are <strong>${hostingOffers.length} options</strong> across PaaS, static hosting, serverless functions, containers, and traditional VPS. Harder because the landscape keeps shifting — <strong>Heroku killed its free tier</strong> in 2022, <strong>Render now spins down free services</strong> after 15 minutes, <strong>Vercel moved to credit-based pricing</strong>, and <strong>Hetzner raised prices twice in 2026</strong> and now lists every Cost-Optimized plan as unavailable.</p>
+    <p>Finding free hosting is both easier and harder than ever. Easier because there are <strong>${hostingOffers.length} options</strong> across PaaS, static hosting, serverless functions, containers, and traditional VPS. Harder because the landscape keeps shifting — <strong>Heroku killed its free tier</strong> in 2022, <strong>Render now spins down free services</strong> after 15 minutes, <strong>Vercel moved to credit-based pricing</strong>, and <strong>Hetzner raised prices twice in 2026</strong> and now lists every Cost-Optimized plan as unavailable.</p>
     <p>This page compares every free hosting option in our index, organized by type, with exact limits read from live pricing pages. Whether you need a PaaS for a full-stack app, static hosting for a portfolio, serverless functions for an API, or a VPS for full control — we have the comparison.</p>
   </div>
 
@@ -11413,7 +11413,7 @@ ${globalNavCss()}
   <h1>Best Free Database Hosting for Developers</h1>
 
   <div class="context">
-    <p>Choosing a database is one of the most consequential infrastructure decisions for any project. The good news: in 2026, there are <strong>${dbOffers.length} free database options</strong> across every category — relational, document, key-value, edge, graph, vector, and time-series. The bad news: free tiers vary wildly, from <strong>MongoDB Atlas's cramped 512 MB</strong> to <strong>Turso's generous 5 GB</strong>.</p>
+    <p>Choosing a database is one of the most consequential infrastructure decisions for any project. The good news: there are <strong>${dbOffers.length} free database options</strong> across every category — relational, document, key-value, edge, graph, vector, and time-series. The bad news: free tiers vary wildly, from <strong>MongoDB Atlas's cramped 512 MB</strong> to <strong>Turso's generous 5 GB</strong>.</p>
     <p>This page compares every free database in our index, organized by type, with exact limits read from live pricing pages. Whether you need a Postgres database, a Redis cache, an edge SQLite store, or a vector database for RAG — we've got the comparison.</p>
     <p><strong>New:</strong> See our <a href="/database-free-tier-comparison-2026">Database Free Tier Comparison 2026</a> for a focused side-by-side matrix of the top 10 databases with use-case recommendations and the story of PlanetScale&rsquo;s free tier removal.</p>
   </div>
@@ -11445,7 +11445,7 @@ ${buildCards(edge)}
 ${buildCards(graph)}
 
   <h2>Vector Databases</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">Essential for AI/RAG pipelines, semantic search, and embeddings. The fastest-growing database category in 2026.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Essential for AI/RAG pipelines, semantic search, and embeddings. The fastest-growing database category.</p>
 ${buildCards(vector)}
 
 ${timeSeries.length > 0 ? `
@@ -28366,7 +28366,7 @@ function buildStartupCreditsPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>Startup credits in 2026:</strong> ' + STARTUP_PROGRAMS.length + ' programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.</p>\n' +
+    '    <p><strong>Startup credits:</strong> ' + STARTUP_PROGRAMS.length + ' programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.</p>\n' +
     '    <p><strong>Key insight:</strong> Stacking Google Scale (up to $200K) + AWS Activate Portfolio (up to $200K) + Cloudflare Tier 2 ($100K) can reach $500K; each needs VC funding or an affiliated partner. AWS credits from Brex and Stripe Atlas overlap: a later award pays only the difference.</p>\n' +
     '    <p><strong>This guide covers:</strong> credit values, eligibility requirements, vesting schedules, hidden constraints, application difficulty, and optimal stacking strategies \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
@@ -30412,7 +30412,7 @@ function buildDatabasePricingPage(): string {
   };
 
   const categoryDescs: Record<string, string> = {
-    "managed-postgres": "Fully managed PostgreSQL services with serverless scaling, branching, and modern DX. The default choice for most applications in 2026.",
+    "managed-postgres": "Fully managed PostgreSQL services with serverless scaling, branching, and modern DX. The default choice for most applications.",
     "serverless-edge": "Databases designed for serverless and edge computing. No connection management, scale to zero, and global distribution.",
     "document-nosql": "Document-oriented databases for flexible schemas. Best for rapid prototyping, mobile apps, and content management.",
     "cloud-provider": "Database services from major cloud platforms. Best when you are already invested in that ecosystem.",
@@ -36981,7 +36981,7 @@ ${globalNavCss()}
   </div>
 
   <h2 id="vector">Vector Databases</h2>
-  <p class="section-intro">Essential for AI/ML workloads — similarity search, RAG pipelines, and embedding storage. The fastest-growing database category in 2026.</p>
+  <p class="section-intro">Essential for AI/ML workloads — similarity search, RAG pipelines, and embedding storage. The fastest-growing database category.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -37285,7 +37285,7 @@ ${globalNavCss()}
 
   <div class="executive-summary">
     <p><strong>Quick verdict:</strong> On public repositories, GitHub Actions' standard runners are free with no minute limit. For private repositories, GitHub Free includes 2,000 minutes a month. GitLab Free includes 400 compute minutes a month and a container registry. CircleCI Free gives 30,000 credits a month (up to 6,000 minutes on a small Docker resource class) and 30 concurrent jobs. Buildkite's Free plan includes 5 users, 10 concurrent jobs and 2,000 Linux vCPU minutes a month (1,000 minutes on its 2-vCPU agent).</p>
-    <p><strong>The CI/CD landscape in 2026:</strong> GitHub announced a charge for self-hosted runners on 2025-12-16 and postponed it the next day, with no new date. GitLab Free has included 400 compute minutes a month since October 2020. Drone's free open-source edition runs on a single machine; Woodpecker CI is a community fork of Drone. For mobile CI, Bitrise's free Hobby plan gives 500 build minutes a month and Codemagic 500 macOS M2 build minutes.</p>
+    <p><strong>The CI/CD landscape:</strong> GitHub announced a charge for self-hosted runners on 2025-12-16 and postponed it the next day, with no new date. GitLab Free has included 400 compute minutes a month since October 2020. Drone's free open-source edition runs on a single machine; Woodpecker CI is a community fork of Drone. For mobile CI, Bitrise's free Hobby plan gives 500 build minutes a month and Codemagic 500 macOS M2 build minutes.</p>
   </div>
 
   <div class="toc">
@@ -44432,7 +44432,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Let&rsquo;s Encrypt &mdash; free SSL certificates</h3>
-    <div class="diff-desc">Free, automated SSL/TLS certificates trusted by all major browsers. ACME protocol for automated renewal. No limit on certificates. The default choice for any web service that needs HTTPS. Integration via certbot, Caddy, Traefik, nginx, and most cloud providers. There is no reason to pay for basic SSL certificates in 2026.</div>
+    <div class="diff-desc">Free, automated SSL/TLS certificates trusted by all major browsers. ACME protocol for automated renewal. No limit on certificates. The default choice for any web service that needs HTTPS. Integration via certbot, Caddy, Traefik, nginx, and most cloud providers. There is no reason to pay for basic SSL certificates.</div>
   </div>
   <div class="diff-card">
     <h3>Tailscale &mdash; free mesh VPN</h3>
