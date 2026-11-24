@@ -37059,7 +37059,7 @@
     {
       "vendor": "Google Antigravity",
       "category": "AI Coding",
-      "description": "Agentic development platform by Google, generally available: a desktop app to manage multiple local agents in parallel, an agentic IDE, a CLI and an SDK, for macOS, Windows and Linux. Its agents can open and drive a local Chrome browser. The individual plan is $0/month. It includes a baseline agent quota refreshed weekly and unlimited Tab completions. The $0 plan includes Gemini 4 Hydrogen as its default model. Until November 30 it also includes Gemini 3.8 Flash, Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b, which Google removes that day. Google AI Pro ($19.99/month) adds \"More rate limits\" and Google AI Ultra (from $99.99/month) \"Even more rate limits\", each with a \"Flexible AI credit pool\", and organizations can use it through Google Cloud. Announced November 2025.",
+      "description": "Agentic development platform by Google, generally available: a desktop app to manage multiple local agents in parallel, an agentic IDE, a CLI and an SDK, for macOS, Windows and Linux. Its agents can open and drive a local Chrome browser. The individual plan is $0/month. It includes a baseline agent quota refreshed weekly and unlimited Tab completions. The $0 plan includes Gemini 4 Hydrogen as its default model. Until November 30, 2026 it also includes Gemini 3.8 Flash, Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b, which Google removes that day. Google AI Pro ($19.99/month) adds \"More rate limits\" and Google AI Ultra (from $99.99/month) \"Even more rate limits\", each with a \"Flexible AI credit pool\", and organizations can use it through Google Cloud. Announced November 2025.",
       "tier": "Free",
       "url": "https://antigravity.google/pricing",
       "tags": [
@@ -37078,7 +37078,7 @@
       },
       "conditions": [
         {
-          "text": "Both the Free and Google AI Plus plans include Gemini 4 Hydrogen, their default model. Until November 30, they also include Gemini 3.8 Flash, Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b. After November 30, Gemini 4 Hydrogen is the only model on these plans.",
+          "text": "Both the Free and Google AI Plus plans include Gemini 4 Hydrogen, their default model. Until November 30, 2026, they also include Gemini 3.8 Flash, Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b. After November 30, Gemini 4 Hydrogen is the only model on these plans.",
           "quote": "Will be removed on November 30, 2026.",
           "url": "https://antigravity.google/docs/models",
           "read_on": "2026-11-24"
