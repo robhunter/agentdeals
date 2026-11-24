@@ -42247,6 +42247,32 @@
         ],
         "program": "Exa for Startups"
       }
+    },
+    {
+      "vendor": "Render for Startups",
+      "category": "Startup Perks",
+      "description": "Render for Startups has four tiers. Prototype gives $500 with at least $25K seed funding. Build gives $2,500 or $5,000 from select partners through an enrolled partner. Scale gives $10,000 under $1M raised or $25,000 at $1M or more from an enrolled top-tier VC. AI gives $100,000 to AI-native, data-heavy or agent products with at least $2.5M from an enrolled top-tier VC. All tiers are for new customers at Series A or earlier with under $50M raised. Credits are applied on approval and must be used within one year of the confirmation email. Migration credits of up to $10,000 are for production workloads moving to Render, issued only after migration; pre-seed and seed startups are not eligible.",
+      "tier": "Startup Credits",
+      "url": "https://render.com/startups",
+      "tags": [
+        "startup credits",
+        "cloud",
+        "paas",
+        "hosting",
+        "render"
+      ],
+      "verifiedDate": "2026-11-24",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "New Render customer",
+          "Series A or earlier, under $50M raised",
+          "Under 4 years in operation (Scale tier: under 5)",
+          "Prototype ($500): at least $25K seed funding",
+          "Build, Scale and AI: apply through an enrolled accelerator or VC partner"
+        ],
+        "program": "Render for Startups"
+      }
     }
   ],
   "changes": []
