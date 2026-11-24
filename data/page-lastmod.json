@@ -1404,14 +1404,6 @@
       "hash": "4538469ee7969c3b",
       "changed": "2026-11-14"
     },
-    "/compare/aider-vs-amazon-kiro": {
-      "hash": "89de688c6afc337f",
-      "changed": "2026-11-16"
-    },
-    "/compare/aider-vs-openai-codex": {
-      "hash": "5d633067c33e13ca",
-      "changed": "2026-11-16"
-    },
     "/compare/airtop-vs-hyperbrowser": {
       "hash": "be3a9dfc16a2f74f",
       "changed": "2026-11-12"
@@ -1459,10 +1451,6 @@
     "/compare/amazon-kiro-vs-openai-codex": {
       "hash": "57664c4e963c2d45",
       "changed": "2026-11-16"
-    },
-    "/compare/amazon-kiro-vs-windsurf": {
-      "hash": "58cf392cae1f5889",
-      "changed": "2026-11-20"
     },
     "/compare/amazon-q-developer-vs-github-copilot": {
       "hash": "4df71c2299f0bcf6",
@@ -10247,6 +10235,26 @@
     "/x402-services": {
       "hash": "fc7609330e337fb3",
       "changed": "2026-11-13"
+    },
+    "/compare/amazon-kiro-vs-jetbrains-ai": {
+      "hash": "5e423e3189f53921",
+      "changed": "2026-11-24"
+    },
+    "/compare/jetbrains-ai-vs-openai-codex": {
+      "hash": "279ef4cbd82f6067",
+      "changed": "2026-11-24"
+    },
+    "/compare/jetbrains-ai-vs-windsurf": {
+      "hash": "b4daaeb16ef285c4",
+      "changed": "2026-11-24"
+    },
+    "/shutdowns/jetbrains-ai-2026-12-03-the-junie-plugin-in-jetbrains-ides": {
+      "hash": "e157a81e9d5e7678",
+      "changed": "2026-11-24"
+    },
+    "/vendor/jetbrains-ai": {
+      "hash": "31772618910baaa3",
+      "changed": "2026-11-24"
     }
   }
 }

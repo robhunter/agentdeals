@@ -21058,6 +21058,22 @@
       "recorded_date": "2026-11-24",
       "listing_effect": "none",
       "announced_on": "2026-11-23"
+    },
+    {
+      "vendor": "JetBrains AI",
+      "change_type": "product_deprecated",
+      "date": "2026-12-03",
+      "date_source": "vendor_page",
+      "summary": "JetBrains IDEs and Junie keep running. The Junie plugin stops working in JetBrains IDEs version 2026.2 on December 3, 2026, and is already off in version 2026.3. Junie moves into JetBrains Air; the account, AI plan and .junie/ files come with it. Junie also runs in Junie CLI.",
+      "what_ends": "The Junie plugin in JetBrains IDEs",
+      "previous_state": "Junie available as a plugin in JetBrains IDEs",
+      "current_state": "\"It’s retiring. On 2026.3 it’s already off, and on 2026.2 it stops working on December 3, 2026. Junie moves into Air, and your account, AI plan and .junie/ files come with it.\" (junie.jetbrains.com, FAQ 'What happens to the Junie plugin?', read 2026-11-24)",
+      "impact": "low",
+      "source_url": "https://junie.jetbrains.com/",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-11-24",
+      "listing_effect": "none"
     }
   ]
 }

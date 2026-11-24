@@ -42259,6 +42259,49 @@
           "read_on": "2026-11-12"
         }
       ]
+    },
+    {
+      "vendor": "JetBrains AI",
+      "category": "AI Coding",
+      "description": "AI Assistant and the Junie coding agent in JetBrains IDEs, from JetBrains. Junie Lite is free on every JetBrains account with no card, available in JetBrains Air and Junie CLI, not in AI Assistant. Junie Lite has no published quota, is virtually unlimited for normal use, and its requests stop at the model's capacity limit. AI Free is $0 with 3 AI credits per 30 days and cannot buy more. Each AI credit is $1. AI Pro is $10 with 10 AI credits per 30 days, AI Ultimate $30 with 35 for individuals; $20 with 20, $60 with 70 per user for organizations. Junie can use your own provider API key at the provider's rate.",
+      "tier": "Free",
+      "url": "https://www.jetbrains.com/help/ai-assistant/licensing-and-subscriptions.html",
+      "tags": [
+        "ai",
+        "coding",
+        "ide",
+        "developer tools",
+        "cursor-alternative",
+        "free tier"
+      ],
+      "verifiedDate": "2026-11-24",
+      "conditions": [
+        {
+          "text": "JetBrains' Junie page says the Junie Lite offer is valid until December 31, 2026 and terms and models may change.",
+          "quote": "Junie Lite is a free model on every JetBrains account, no card needed. … Terms and available models may change. Offer is valid until 31 Dec 2026.",
+          "url": "https://junie.jetbrains.com/",
+          "read_on": "2026-11-24"
+        },
+        {
+          "text": "JetBrains' Junie Lite docs call the tier free with no expiry.",
+          "quote": "Junie Lite is a free baseline model tier for Junie, JetBrains' coding agent. It is not a trial, not a limited-time sample, and it does not expire or count down.",
+          "url": "https://junie.jetbrains.com/docs/junie-lite.html",
+          "read_on": "2026-11-24"
+        },
+        {
+          "text": "Junie Lite currently runs on OpenAI GPT-6 Luna on JetBrains servers, and JetBrains may change the model without notice.",
+          "quote": "The model currently powering Junie Lite is OpenAI GPT-6 Luna. This is an implementation detail, not a commitment: JetBrains may change the underlying model over time without notice.",
+          "url": "https://junie.jetbrains.com/docs/junie-lite.html",
+          "read_on": "2026-11-24",
+          "operating_detail": true
+        },
+        {
+          "text": "AI Free is not available in Android Studio, in the Community Editions of PyCharm and IntelliJ IDEA, in PyCharm used for free, or with an IDE licence obtained through a License Server. AI Free and AI Ultimate are available only in JetBrains AI's service territories. The JetBrains AI service is not available in China.",
+          "quote": "The AI Free license tier is not available in Android Studio. … The AI Free license tier is not available in Community Editions of PyCharm and IntelliJ IDEA, as well as in PyCharm Unified when used for free.",
+          "url": "https://www.jetbrains.com/help/ai-assistant/licensing-and-subscriptions.html",
+          "read_on": "2026-11-24"
+        }
+      ]
     }
   ],
   "changes": []
