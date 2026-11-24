@@ -42263,7 +42263,7 @@
     {
       "vendor": "JetBrains AI",
       "category": "AI Coding",
-      "description": "AI Assistant and the Junie coding agent in JetBrains IDEs, from JetBrains. Junie Lite is free on every JetBrains account with no card, available in JetBrains Air and Junie CLI, not in AI Assistant. Junie Lite has no published quota, is virtually unlimited for normal use, and its requests stop at the model's capacity limit. AI Free is $0 with 3 AI credits per 30 days and cannot buy more. Each AI credit is $1. AI Pro is $10 with 10 AI credits per 30 days, AI Ultimate $30 with 35 for individuals; $20 with 20, $60 with 70 for organizations. Junie can use your own provider API key at the provider's rate.",
+      "description": "AI Assistant and the Junie coding agent in JetBrains IDEs, from JetBrains. Junie Lite is free on every JetBrains account with no card, available in JetBrains Air and Junie CLI, not in AI Assistant. Junie Lite has no published quota, is virtually unlimited for normal use, and its requests stop at the model's capacity limit. AI Free is $0 with 3 AI credits per 30 days and cannot buy more. Each AI credit is $1. AI Pro is $10 with 10 AI credits per 30 days, AI Ultimate $30 with 35 for individuals; $20 with 20, $60 with 70 per user for organizations. Junie can use your own provider API key at the provider's rate.",
       "tier": "Free",
       "url": "https://www.jetbrains.com/help/ai-assistant/licensing-and-subscriptions.html",
       "tags": [
