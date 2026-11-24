@@ -12,17 +12,6 @@
       "first_read_date": "2026-11-23"
     },
     {
-      "vendor": "Cloudflare Workers",
-      "change_type": "free_tier_removed",
-      "impact": "medium",
-      "summary": "Previously info describes Vectorize as having a free tier (30M queried vector dimensions/month, 5M stored vector dimensions). The current pricing page states Vectorize is only available on the Workers Paid plan, with no free tier.",
-      "previous_state": "Edge compute with 100K requests/day, 10ms CPU time per invocation, 5 cron triggers/account. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day. R2 (Standard storage): 10 GB-month/month, 1M Class A ops/month, 10M Class B ops/month. Durable Objects (SQLite-backed only): 100K requests/day. Queues: 10K operations/day. Vectorize: 30M queried vector dimensions/month, 5M stored vector dimensions. Dynamic Workers are paid only. US students 18+ with a verified .edu billing email: Workers Paid (10M requests/month), $5/mo fee waived for 12 months. Workers Paid has a minimum charge of $5 per month per account. It includes 10 million requests and 30 million CPU milliseconds monthly. Each additional million requests costs $0.30. Each additional million CPU milliseconds costs $0.02. Duration is not charged.",
-      "current_state": "Vectorize is currently only available on the Workers paid plan. Workers Free has no Vectorize allocation. Workers Paid includes first 50 million queried vector dimensions/month and first 10 million stored vector dimensions, with overage at $0.01 per million queried dimensions and $0.05 per 100 million stored dimensions.",
-      "source_url": "https://developers.cloudflare.com/workers/platform/pricing/",
-      "category": "Cloud Hosting",
-      "first_read_date": "2026-11-23"
-    },
-    {
       "vendor": "Harness CI",
       "change_type": "pricing_restructured",
       "impact": "high",
@@ -3889,6 +3878,18 @@
       "outcome": "contradicted",
       "detail": "a reading on 2026-11-23 read the page as unchanged",
       "resolved_date": "2026-11-23"
+    },
+    {
+      "vendor": "Cloudflare Workers",
+      "change_type": "free_tier_removed",
+      "impact": "medium",
+      "summary": "Previously info describes Vectorize as having a free tier (30M queried vector dimensions/month, 5M stored vector dimensions). The current pricing page states Vectorize is only available on the Workers Paid plan, with no free tier.",
+      "previous_state": "Edge compute with 100K requests/day, 10ms CPU time per invocation, 5 cron triggers/account. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day. R2 (Standard storage): 10 GB-month/month, 1M Class A ops/month, 10M Class B ops/month. Durable Objects (SQLite-backed only): 100K requests/day. Queues: 10K operations/day. Vectorize: 30M queried vector dimensions/month, 5M stored vector dimensions. Dynamic Workers are paid only. US students 18+ with a verified .edu billing email: Workers Paid (10M requests/month), $5/mo fee waived for 12 months. Workers Paid has a minimum charge of $5 per month per account. It includes 10 million requests and 30 million CPU milliseconds monthly. Each additional million requests costs $0.30. Each additional million CPU milliseconds costs $0.02. Duration is not charged.",
+      "source_url": "https://developers.cloudflare.com/workers/platform/pricing/",
+      "first_read_date": "2026-11-23",
+      "outcome": "baseline_moved",
+      "detail": "the terms it was read against are no longer the terms we publish",
+      "resolved_date": "2026-11-24"
     }
   ]
 }
