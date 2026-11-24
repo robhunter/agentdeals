@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 import type { DealChange } from "../src/types.ts";
-import { FREE_TIER_CUT_TYPES, cutsByQuarterNewestFirst, cutsWindow, freeTierCutsIn, quarterOf } from "../dist/free-tier-cuts.js";
+import { FREE_TIER_CUT_TYPES, cutsByQuarterNewestFirst, cutsByYearAndQuarterNewestFirst, cutsWindow, freeTierCutsIn, freeTierCutsWithin, quarterOf, rollingCutsWindow } from "../dist/free-tier-cuts.js";
 import { CUT_KIND_NOUNS, changeTypesAmong, cutsThisYearSummary } from "../dist/free-tier-tracker.js";
 
 const TODAY = "2026-10-06";
@@ -25,6 +25,23 @@ function record(vendor: string, date: string, over: Record<string, unknown> = {}
 }
 
 const vendorsOf = (records: readonly DealChange[]) => records.map((r) => r.vendor);
+
+describe("rolling free tier cuts", () => {
+  it("covers the previous twelve months through today, including leap-day boundaries", () => {
+    assert.deepStrictEqual(rollingCutsWindow("2027-01-01"), { start: "2026-01-02", end: "2027-01-01" });
+    assert.deepStrictEqual(rollingCutsWindow("2028-02-29"), { start: "2027-03-01", end: "2028-02-29" });
+    assert.deepStrictEqual(rollingCutsWindow("2029-02-28"), { start: "2028-02-29", end: "2029-02-28" });
+  });
+
+  it("keeps boundary dates and groups records across years newest first", () => {
+    const changes = [record("Old Fixture", "2026-01-01"), record("First Fixture", "2026-01-02"), record("December Fixture", "2026-12-31"), record("Today Fixture", "2027-01-01"), record("Future Fixture", "2027-01-02")];
+    const cuts = freeTierCutsWithin(rollingCutsWindow("2027-01-01"), changes);
+    assert.deepStrictEqual(vendorsOf(cuts), ["Today Fixture", "December Fixture", "First Fixture"]);
+    assert.deepStrictEqual(cutsByYearAndQuarterNewestFirst(cuts).map((group) => [group.year, group.quarter, vendorsOf(group.records)]), [
+      [2027, 1, ["Today Fixture"]], [2026, 4, ["December Fixture"]], [2026, 1, ["First Fixture"]],
+    ]);
+  });
+});
 
 describe("free tiers removed and cut in a year, computed from the change records", () => {
   it("lists a removal, a limit cut and a deprecation that ends a listed product, each dated by the vendor", () => {
