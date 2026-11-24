@@ -153,7 +153,7 @@ describe("a hosting or cloud free tier typed into a page states what the vendor'
   it("starts the wall where each vendor with no free plan actually starts charging", () => {
     const [koyebPro] = listingFigures("Koyeb", /Pro \(\$(\d+) a month/);
     const walls = tableRows(html[HOSTING], "When You Hit the Wall");
-    assert.strictEqual(rowStarting(walls, "Fly.io")[4], "Immediately (pay-as-you-go after a trial of 2 machine hours or 7 days)");
+    assert.strictEqual(rowStarting(walls, "Fly.io")[4], "You pay once usage passes $5 a month, then the whole month is billed.");
     assert.strictEqual(rowStarting(walls, "Koyeb")[4], `Immediately ($${koyebPro}/mo Pro minimum)`);
     assert.strictEqual(rowStarting(walls, "Heroku")[4], "Immediately ($5/mo minimum)");
   });
@@ -244,7 +244,7 @@ describe("a hosting or cloud free tier typed into a page states what the vendor'
     const expected: Record<string, string> = {
       "Railway": "The $5 trial credit is one-time — once the 30 days end the Free plan provides $1 of free credit per month. Hobby's $5 credit resets monthly but is what the $5 subscription buys, not a free allowance, and usage can exceed it. Service egress is billed at $0.05/GB from the first GB on every plan.",
       "Render": "Free web services spin down after 15 minutes without traffic and take about one minute to spin back up. Free Postgres expires after 30 days.",
-      "Fly.io": "No free plan for new accounts: a trial of 2 machine hours or 7 days, whichever comes first, then pay-as-you-go. Legacy free allowances only for pre-Oct-2024 accounts on deprecated plans. Volume snapshots billed at $0.08/GB-month (first 10 GB free).",
+      "Fly.io": "Free plan: $5 a month with a card, $1 for 7 days without. Legacy free allowances only for pre-Oct-2024 accounts on deprecated plans. Volume snapshots billed at $0.08/GB-month (first 10 GB free).",
       "Koyeb": "No free plan for new users since February 2026; Pro is $29 a month plus compute.",
       "Northflank": "2 services, 2 jobs, 1 database; up to $20/mo on Northflank Cloud; always on. Scaling beyond free resources is usage-based.",
       "Cloudflare Workers": "10ms CPU time limit is restrictive for compute-heavy tasks. Daily (not monthly) request quota means bursts get throttled. KV eventual consistency — not suitable for real-time state.",

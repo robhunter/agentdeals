@@ -17906,10 +17906,10 @@
     {
       "vendor": "Google Antigravity",
       "change_type": "product_deprecated",
-      "date": "2026-11-18",
-      "summary": "Google Antigravity's Free and Google AI Plus plans keep running. Until November 18, 2026, they include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b; Google removes these models on that date. After November 18, 2026, the $0 plan includes only Gemini 3.8 Flash. Gemini 4 Hydrogen is not on the Free and Google AI Plus plans.",
+      "date": "2026-11-30",
+      "summary": "Google Antigravity's Free and Google AI Plus plans keep running. Until November 30, 2026, these plans include Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b, which Google removes on that date. Google moved the removal from an earlier date in November. Gemini 4 Hydrogen, the default model on these plans, stays, and after November 30 it is the only model on them.",
       "previous_state": "On 2026-10-17, Google Antigravity's Free and Google AI Plus plans offered Claude Sonnet 4.6, Claude Opus 4.6, GPT-OSS-120b and Gemini 3.8 Flash.",
-      "current_state": "The $0 plan keeps Gemini 3.8 Flash. Google removes Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b on November 18, 2026, as stated on antigravity.google/pricing (2026-11-17).",
+      "current_state": "On 2026-11-24, Google's Antigravity models page says Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b will be removed on November 30, 2026. Until 2026-11-20 the page gave November 18, 2026.",
       "impact": "low",
       "source_url": "https://antigravity.google/docs/models",
       "category": "AI Coding",
@@ -17918,6 +17918,36 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "what_ends": "Claude 4.6 models and GPT-OSS-120b on Antigravity's Free and Google AI Plus plans"
+    },
+    {
+      "vendor": "Google Antigravity",
+      "change_type": "product_deprecated",
+      "date": "2026-11-30",
+      "summary": "Google Antigravity keeps running. Gemini 4 Argon and Gemini 3.8 Flash can be used in Antigravity until November 30, 2026, when Google removes them from every plan. On the Gemini API, Gemini 4 Argon has no shutdown date. In Antigravity, Gemini 4 Carbon is on paid Google AI Pro (and Pro trials with eligible premium devices), Google AI Ultra and Gemini Enterprise, and Gemini 4 Hydrogen is on every plan.",
+      "previous_state": "On 2026-11-23 Antigravity listed Gemini 4 Argon on Google AI Pro, Google AI Ultra and Enterprise, and Gemini 3.8 Flash on every plan, with no removal date for either.",
+      "current_state": "Google's Antigravity models page (read 2026-11-24): \"Gemini 4 Argon, Gemini 3.8 Flash, GPT-OSS-120b, and Claude 4.6 models are leaving on November 30, 2026.\" Google's Gemini API deprecations page (read 2026-11-24) gives gemini-4-argon no shutdown date.",
+      "impact": "low",
+      "source_url": "https://antigravity.google/docs/models#select-a-model",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-11-24",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Gemini 4 Argon and Gemini 3.8 Flash in Google Antigravity"
+    },
+    {
+      "vendor": "Google Antigravity",
+      "change_type": "record_corrected",
+      "date": "2026-11-24",
+      "summary": "Data correction - our record of Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b on Antigravity's Free and Google AI Plus plans carried the November 18, 2026 date that Google's Antigravity models page gave when we read it on 2026-11-17; by 2026-11-21 the same page gave November 30, 2026, so the record carries that date.",
+      "previous_state": "Dated 2026-11-18 from Google's Antigravity models page (read 2026-11-17)",
+      "current_state": "Dated 2026-11-30 from the same page (read 2026-11-24)",
+      "impact": "low",
+      "source_url": "https://antigravity.google/docs/models",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-11-24",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Socket.dev",
@@ -20962,6 +20992,22 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "what_ends": "Vertex AI Extensions"
+    },
+    {
+      "vendor": "Fly.io",
+      "change_type": "new_free_tier",
+      "date": "2026-11-23",
+      "date_source": "vendor_page",
+      "summary": "On November 23, 2026, Fly.io announced a Free plan. Every new account starts on it, with $1 of credit without a card and $5 of usage every month with a card. It replaces the waiver of monthly bills under $5 for new organizations.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Fly.io said it had no free tier. New accounts got a one-time $1 trial credit, and monthly bills under $5 were waived for a personal organization with a card on file.",
+      "current_state": "Fly.io's forum post \"Introducing the Free plan\" (Fresh Produce, 2026-11-23, by a Fly.io employee): \"Fly.io now has a Free plan, with $5 of usage every month.\" Fly.io's docs (docs.fly.io/about/free-plan, read 2026-11-23): \"Every new Fly.io account starts on the Free plan. You get $1 of credit with no credit card, and $5 of usage every month once you add a card.\" \"The Free plan replaces the waiver for new organizations.\" The Internet Archive's captures of fly.io/pricing show the Free plan on 2026-11-22 and not on 2026-11-20.",
+      "impact": "medium",
+      "source_url": "https://community.fly.io/t/introducing-the-free-plan/29145",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-23"
     }
   ]
 }
