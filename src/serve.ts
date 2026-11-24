@@ -2,6 +2,7 @@ import { shutdownIndexNote } from "./shutdown-index-note.js";
 import { shutdownPath, shutdownPaths } from "./shutdown-paths.js";
 import { shutdownPageContent } from "./shutdown-page.js";
 import { reconcileShutdownRedirects } from "./shutdown-redirects.js";
+import { yearGuideRedirect } from "./year-guide-redirect.js";
 import { renderUpcomingTimeline, UPCOMING_TIMELINE_END } from "./upcoming-timeline-budget.js";
 import { measuredValue, quantifiedAttributes } from "./quantity-reading.js";
 import { announcementsInWeek, weeklyAnnouncementNote, weeklyAnnouncementHeading, announcementDateLabel, WEEKLY_ANNOUNCEMENTS_INTRO } from "./weekly-announcements.js";
@@ -53790,6 +53791,13 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         return;
       }
     }
+  }
+
+  const guideYearTarget = isGetOrHead ? yearGuideRedirect(url.pathname) : null;
+  if (guideYearTarget) {
+    res.writeHead(301, { Location: guideYearTarget });
+    res.end();
+    return;
   }
 
   if ((url.pathname === "/rss" || url.pathname === "/feed" || url.pathname === "/atom") && isGetOrHead) {
