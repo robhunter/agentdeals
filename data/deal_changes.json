@@ -21024,6 +21024,40 @@
       "date_source": "vendor_page",
       "listing_effect": "narrows",
       "what_ends": "Free Hetzner Inference API experiment"
+    },
+    {
+      "vendor": "Anthropic API",
+      "change_type": "product_deprecated",
+      "date": "2027-01-22",
+      "date_source": "vendor_page",
+      "summary": "The Claude API keeps running. Claude Opus 4.5 (claude-opus-4-5-20251101) can be called until January 22, 2027, when Anthropic retires it, and requests to it fail after that date. Anthropic deprecated it on November 23, 2026 and names claude-opus-5-5 as the replacement. The claude-opus-4-5 alias retires too. The date applies to Claude Code. Amazon Bedrock removes it later, on May 23, 2027.",
+      "what_ends": "Claude Opus 4.5 on the Claude API",
+      "previous_state": "claude-opus-4-5-20251101 callable in the Claude API at pay-as-you-go rates, with no retirement date",
+      "current_state": "\"claude-opus-4-5-20251101 | Deprecated | November 23, 2026 | January 22, 2027\" (Model status table). \"On November 23, 2026, Anthropic notified developers using Claude Opus 4.5 of its upcoming retirement on the Claude API.\" Recommended replacement: claude-opus-5-5. \"This retirement includes claude-opus-4-5, the same model's ID without a date.\" \"Claude Code uses the Claude API, including when you sign in with a Claude plan, so this page's dates apply.\" \"Once the model is retired, requests to it fail.\" (platform.claude.com/docs/en/about-claude/model-deprecations, read 2026-11-24)",
+      "impact": "medium",
+      "source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-24",
+      "listing_effect": "none",
+      "announced_on": "2026-11-23"
+    },
+    {
+      "vendor": "AWS",
+      "change_type": "product_deprecated",
+      "date": "2027-05-23",
+      "date_source": "vendor_page",
+      "summary": "Amazon Bedrock removes Claude Opus 4.5 on May 23, 2027, and requests to it on Bedrock fail after that date. It has been Legacy on Bedrock since November 23, 2026. New customers cannot use it. Existing customers may lose access after 15 days of inactivity. Public extended access starts February 23, 2027; Bedrock says to expect higher prices set by Anthropic. Anthropic's own Claude API retires it on January 22, 2027. Bedrock's dates apply only to Bedrock.",
+      "what_ends": "Claude Opus 4.5 on Amazon Bedrock",
+      "previous_state": "Claude Opus 4.5 can be called on Amazon Bedrock as a Legacy model, closed to new customers.",
+      "current_state": "Amazon Bedrock User Guide, \"Model lifecycle (Legacy)\" (read 2026-11-24): Claude Opus 4.5, anthropic.claude-opus-4-5-20251101-v1:0, in 33 Regions including us-east-1, us-west-2 and eu-west-1: Legacy date November 23, 2026, EOL date May 23, 2027, public extended access from February 23, 2027. \"Model lifecycle dates on this page are specific to Amazon Bedrock and may differ from dates published by model providers (such as Anthropic or Cohere). For Amazon Bedrock usage, only the dates on this page apply.\" \"New customers can't use Legacy models and existing customers may lose access to Legacy models after 15 days of inactivity.\" \"During this public extended access period, active users of a Legacy model can continue to use it until the EOL date (for a minimum of 3 months), but you should expect higher pricing, which will be set by the model provider.\" \"On, or soon after the EOL date, the model is no longer available for use in all AWS Regions and requests made to this version will fail, unless there is a private arrangement between you and the provider for continued access.\" Anthropic's model deprecations page (read 2026-11-24) retires claude-opus-4-5-20251101 on the Claude API on January 22, 2027.",
+      "impact": "medium",
+      "source_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-24",
+      "listing_effect": "none",
+      "announced_on": "2026-11-23"
     }
   ]
 }
