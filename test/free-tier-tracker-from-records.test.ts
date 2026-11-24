@@ -23,7 +23,8 @@ import {
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const DAY_MS = 86_400_000;
-const dayFromToday = (days: number): string => new Date(Date.now() + days * DAY_MS).toISOString().slice(0, 10);
+const TODAY = new Date().toISOString().slice(0, 10);
+const dayFromToday = (days: number): string => new Date(Date.parse(TODAY) + days * DAY_MS).toISOString().slice(0, 10);
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -128,9 +129,9 @@ describe("/free-tier-tracker lists the year's free tier removals and cuts from t
     dir = mkdtempSync(path.join(tmpdir(), "free-tier-tracker-"));
     const changesPath = path.join(dir, "deal_changes.json");
     writeFileSync(changesPath, JSON.stringify({ changes: [...LISTED, ...LEFT_OUT] }));
-    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+    const child = spawn("node", ["--import", path.join(REPO, "scripts/shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changesPath },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changesPath, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${TODAY}T12:00:00Z`) - Date.now()) },
     });
     proc = child;
     const port = await new Promise<number>((resolve, reject) => {

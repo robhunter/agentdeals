@@ -280,12 +280,13 @@ describe("reverting a run from the command line reads a check again when the res
       const restatedPath = path.join(dir, "restated_terms.json");
       writeFileSync(indexPath, JSON.stringify(data));
       writeFileSync(restatedPath, JSON.stringify({ restatements: entries }));
-      const { stdout } = await promisify(execFile)("node", [path.join(REPO, "scripts", "restate-superseded-terms.js"), "--revert-run", RUN_DAY], {
-        env: { ...process.env, AGENTDEALS_INDEX_PATH: indexPath, AGENTDEALS_RESTATED_PATH: restatedPath, TZ: "UTC" },
+      const today = new Date().toISOString().slice(0, 10);
+      const { stdout } = await promisify(execFile)("node", ["--import", path.join(REPO, "scripts/shifted-clock.mjs"), path.join(REPO, "scripts", "restate-superseded-terms.js"), "--revert-run", RUN_DAY], {
+        env: { ...process.env, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${today}T12:00:00Z`) - Date.now()), AGENTDEALS_INDEX_PATH: indexPath, AGENTDEALS_RESTATED_PATH: restatedPath, TZ: "UTC" },
       });
       const after = JSON.parse(readFileSync(indexPath, "utf-8")).offers[0];
       assert.strictEqual(after.description, SURREALDB.stored);
-      assert.strictEqual(after.source_check.checked, new Date().toISOString().slice(0, 10));
+      assert.strictEqual(after.source_check.checked, today);
       assert.strictEqual(after.source_check.outcome, "ok");
       assert.ok(!after.source_check.detail.includes("$0.021/hr"), after.source_check.detail);
       assert.match(stdout, /SurrealDB Cloud's source check read again against the restored terms/);

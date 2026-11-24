@@ -40,7 +40,7 @@ async function readPages(name: string, offset = 0, fixture = false) {
   if (fixture) writeFileSync(file, JSON.stringify({ changes: fixtures }));
   const child = spawn("node", ["--import", path.join(ROOT, "scripts/shifted-clock.mjs"), path.join(ROOT, "dist/serve.js")], {
     cwd: ROOT, stdio: ["ignore", "ignore", "pipe"],
-    env: { ...process.env, TZ: "UTC", PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off", AGENTDEALS_CLOCK_SHIFT_MS: String(offset * 86_400_000), ...(fixture ? { AGENTDEALS_CHANGES_PATH: file } : {}) },
+    env: { ...process.env, TZ: "UTC", PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off", AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${today}T12:00:00Z`) + offset * 86_400_000 - Date.now()), ...(fixture ? { AGENTDEALS_CHANGES_PATH: file } : {}) },
   });
   children.push(child);
   const port = await new Promise<string>((resolve, reject) => {

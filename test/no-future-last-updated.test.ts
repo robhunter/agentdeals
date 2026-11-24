@@ -9,6 +9,9 @@ import type { DealChange } from "../dist/types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
+const TODAY = new Date().toISOString().slice(0, 10);
+const servedAt = Date.parse(`${TODAY}T12:00:00Z`);
+const serverClock = () => String(servedAt - Date.now());
 
 const { vendorPageLastUpdated, newestChangeInEffect, latestEventDate } = await import("../dist/change-dates.js");
 const { loadDealChanges, freeTierLongevityStart } = await import("../dist/data.js");
@@ -86,7 +89,7 @@ describe("a free tier's age and the latest event date count only changes that ha
 });
 
 describe("a record that has not taken effect is not a listing's recent change, does not restart its free tier's age, and does not date the change log", () => {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = TODAY;
   const dayOffset = (days: number) => new Date(Date.parse(today) + days * 86400000).toISOString().slice(0, 10);
   const DAY_MS = 86400000;
   let proc: ChildProcess | null = null;
@@ -137,9 +140,9 @@ describe("a record that has not taken effect is not a listing's recent change, d
         change("Pipitstore", dayOffset(-400), "free_tier_removed"),
       ],
     }));
-    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+    const child = spawn("node", ["--import", path.join(REPO, "scripts", "shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_INDEX_PATH: indexPath, AGENTDEALS_CHANGES_PATH: changesPath },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CLOCK_SHIFT_MS: serverClock(), AGENTDEALS_INDEX_PATH: indexPath, AGENTDEALS_CHANGES_PATH: changesPath },
     });
     proc = child;
     const port = await new Promise<number>((resolve, reject) => {
@@ -180,7 +183,7 @@ describe("a record that has not taken effect is not a listing's recent change, d
   });
 
   it("counts a free tier's age from the narrowing in effect, not from tomorrow's", async () => {
-    const expected = Math.floor((Date.now() - Date.parse(dayOffset(-30))) / DAY_MS);
+    const expected = Math.floor((servedAt - Date.parse(dayOffset(-30))) / DAY_MS);
     const served = (await (await fetch(`${base}/api/vendor-risk/larkspurdb`)).json()).free_tier_longevity_days;
     assert.ok(Math.abs(served - expected) <= 1, `Larkspurdb's free tier is ${served} days old where ${expected} were expected`);
   });
@@ -217,9 +220,9 @@ describe("served vendor and alternatives pages print no date after the serve dat
   let port = 0;
 
   before(async () => {
-    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+    const child = spawn("node", ["--import", path.join(REPO, "scripts", "shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CLOCK_SHIFT_MS: serverClock() },
     });
     proc = child;
     port = await new Promise<number>((resolve, reject) => {
@@ -234,7 +237,7 @@ describe("served vendor and alternatives pages print no date after the serve dat
   after(() => { proc?.kill(); });
 
   it("keeps Last updated, dateModified and the most recent change on or before today, and still lists what is ahead", async () => {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = TODAY;
     const ahead = new Map<string, DealChange[]>();
     for (const c of loadDealChanges() as DealChange[]) {
       if (c.date <= today || isNoLongerInForce(c)) continue;

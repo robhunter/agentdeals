@@ -55,7 +55,7 @@ async function start(changes: unknown[], offset = 0): Promise<string> {
   writeFileSync(file, JSON.stringify({ changes }));
   const child = spawn(process.execPath, ["--import", path.join(ROOT, "scripts/shifted-clock.mjs"), path.join(ROOT, "dist/serve.js")], {
     cwd: ROOT, stdio: ["ignore", "ignore", "pipe"],
-    env: { ...process.env, TZ: "UTC", PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off", AGENTDEALS_CHANGES_PATH: file, AGENTDEALS_CLOCK_SHIFT_MS: String(offset * 86_400_000) },
+    env: { ...process.env, TZ: "UTC", PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off", AGENTDEALS_CHANGES_PATH: file, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${TODAY}T12:00:00Z`) + offset * 86_400_000 - Date.now()) },
   });
   children.push(child);
   return new Promise((resolve, reject) => {
