@@ -2,6 +2,8 @@ import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
+import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 
 import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
@@ -59,11 +61,11 @@ let port = 0;
 let proc: ChildProcess | null = null;
 let verdicts: Map<string, SiteFreeTierVerdict> = new Map();
 
-function startServer(): Promise<ChildProcess> {
+function startServer(env: NodeJS.ProcessEnv = {}): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", ...env },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 60000);
     child.stderr!.on("data", (data: Buffer) => {
@@ -252,7 +254,6 @@ describe("a category description counts the terms it could not confirm", () => {
 
   it("counts no row whose read confirmed the price and left nothing else unsettled", () => {
     let confirming = 0;
-    let alsoHoldingAReason = 0;
     const counted: string[] = [];
     const doubled: string[] = [];
     for (const page of pages) {
@@ -267,7 +268,7 @@ describe("a category description counts the terms it could not confirm", () => {
         if (row.reasons.includes("listing-terms-unconfirmed")) {
           doubled.push(`/category/${page.slug} ${row.slug}`);
         }
-        if (row.reasons.length > 0) { alsoHoldingAReason++; continue; }
+        if (row.reasons.length > 0) continue;
         if (row.counted !== null) counted.push(`/category/${page.slug} ${row.slug}`);
       }
     }
@@ -276,10 +277,6 @@ describe("a category description counts the terms it could not confirm", () => {
       doubled,
       [],
       `a row says the read confirmed the price and that we could not confirm the terms: ${doubled.join("; ")}`,
-    );
-    assert.ok(
-      alsoHoldingAReason > 0,
-      "no row holds a confirmed price beside another reason, so the narrower rule is read on nothing",
     );
     assertPopulationFloor(confirming, 20, "listed rows whose read confirmed the price");
   });
@@ -340,5 +337,50 @@ describe("the lapse clause in a category description", () => {
   it("gives the short lapse clause in the singular for one offer", () => {
     assert.strictEqual(gateClauseList(["verification_lapsed"], "short"), "1 unconfirmed in 180 days");
     assert.strictEqual(gateClauseList(["verification_lapsed"]), "1 we have not been able to confirm in the last 180 days");
+  });
+});
+
+
+describe("a confirmed price beside a contradictory read", () => {
+  let scratch: string;
+  let fixtureProc: ChildProcess;
+
+  before(async () => {
+    scratch = mkdtempSync(path.join(tmpdir(), "category-count-"));
+    const date = new Date().toISOString().slice(0, 10);
+    const vendor = "Fixture Price";
+    const url = "https://fixture-price.example/pricing";
+    const files = {
+      "index.json": { offers: [{ vendor, category: "Databases", description: "A hosted database with 1 GB storage.", tier: "Free", url, tags: ["database"], verifiedDate: "2026-01-01", source_check: { checked: date, outcome: "states_a_free_price", detail: "The page states a free price." } }] },
+      "state.json": { records: [{ vendor, url, last_attempt_at: date, last_outcome: "changed", last_error: null, failure_category: null, consecutive_failures: 0, last_success: null, last_read_at: date, quarantined_since: null }] },
+      "changes.json": { changes: [] },
+      "refusals.json": { refusals: [] },
+      "health.json": { checks: [] },
+    };
+    for (const [name, data] of Object.entries(files)) writeFileSync(path.join(scratch, name), JSON.stringify(data));
+    fixtureProc = await startServer({
+      AGENTDEALS_INDEX_PATH: path.join(scratch, "index.json"),
+      AGENTDEALS_VERIFICATION_STATE_PATH: path.join(scratch, "state.json"),
+      AGENTDEALS_CHANGES_PATH: path.join(scratch, "changes.json"),
+      AGENTDEALS_REFUSALS_PATH: path.join(scratch, "refusals.json"),
+      AGENTDEALS_LINK_HEALTH_PATH: path.join(scratch, "health.json"),
+    });
+  });
+
+  after(() => {
+    fixtureProc?.kill();
+    if (scratch) rmSync(scratch, { recursive: true, force: true });
+  });
+
+  it("counts the contradictory read even when the source confirms the price", async () => {
+    const response = await fetch(`http://localhost:${port}/category/databases`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    const row = rowsOn(html).find((item) => item.slug === "fixture-price");
+    assert.ok(row);
+    assert.strictEqual(row.saysTheReadConfirmedThePrice, true);
+    assert.ok(row.reasons.includes("listing-read-contradicts"));
+    assert.strictEqual(row.counted, "our_read_did_not_confirm");
+    assert.match(descriptionOf(html), /on all 1 our own read did not confirm them/);
   });
 });
