@@ -8,6 +8,13 @@ const guides = [
   ["company-formation-pricing-2026", "Forming a US Company in 2026: Costs and Changes", "Forming a US Company in YEAR: Costs and Recent Changes"],
 ];
 
+const alternatives = [
+  "localstack-alternatives", "postman-alternatives", "freshping-alternatives",
+  "firebase-alternatives", "github-actions-alternatives", "cursor-alternatives",
+  "datadog-alternatives", "vercel-alternatives", "auth0-alternatives",
+  "mongodb-alternatives", "redis-alternatives",
+];
+
 describe("pricing guide titles", () => {
   it("rolls over on December 10 and adopts recent-change wording in 2027", () => {
     for (const [slug, original, future] of guides) {
@@ -92,6 +99,12 @@ it("updates guide metadata when a running server crosses the year boundaries", a
         const page = await (await fetch(`${base}/${slug}`)).text();
         assert.ok(page.includes(`<h1>${expected}</h1>`), `${instant}: ${slug} heading`);
         assert.ok(list.includes(expected), `${instant}: ${slug} guide metadata`);
+      }
+      for (const slug of alternatives) {
+        const page = await (await fetch(`${base}/${slug}`)).text();
+        const title = page.match(/<title>(.*?) — AgentDeals<\/title>/)?.[1];
+        assert.ok(title?.includes(label), `${instant}: ${slug} page title`);
+        assert.ok(list.includes(title.replaceAll("&amp;", "&")), `${instant}: ${slug} guide metadata`);
       }
     }
   } finally {
