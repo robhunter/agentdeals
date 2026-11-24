@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-23",
+  "measured_on": "2026-11-24",
   "pages": [
     {
       "path": "/agent-payments",
@@ -14,6 +14,7 @@
       "vendors_tabulated": [
         "browserbase",
         "exa",
+        "fly-io",
         "hyperbrowser",
         "pinata-ipfs",
         "strale",

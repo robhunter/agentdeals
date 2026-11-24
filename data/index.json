@@ -947,6 +947,17 @@
           "url": "https://fly.io/sprites/",
           "read_on": "2026-11-03"
         }
+      ],
+      "payment_protocols": [
+        {
+          "protocol": "stripe-mpp",
+          "settlement": "Link wallet",
+          "pricing_model": "prepaid credit; the human approves each charge in the Link app",
+          "example_cost": "5, 10, 25, 50 or 100 USD",
+          "source_url": "https://fly.io/agent-ready.md",
+          "source_quote": "When the human wants to prepay credit for an org from their Link wallet, POST {\"org_slug\": \"personal\", \"amount\": \"25\"} to https://fly.io/api/v1/mpp/credits with a Fly API token for that org … The amount is 5, 10, 25, 50 or 100 USD. Fly.io answers 402 with an MPP challenge: pay it with link-cli mpp pay, and the human approves the payment in the Link app.",
+          "read_on": "2026-11-24"
+        }
       ]
     },
     {
