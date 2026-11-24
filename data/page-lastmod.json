@@ -4171,6 +4171,10 @@
       "hash": "0d67337456288720",
       "changed": "2026-11-21"
     },
+    "/shutdowns/rackspace-spot-2026-12-08-rackspace-spot": {
+      "hash": "c0d853765366f087",
+      "changed": "2026-11-24"
+    },
     "/shutdowns/railway-2026-12-01-railway-s-config-as-code-railway-json-and-railway-toml": {
       "hash": "43fac4853fc0a767",
       "changed": "2026-11-21"

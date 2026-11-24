@@ -21074,6 +21074,23 @@
       "alternatives": [],
       "recorded_date": "2026-11-24",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "Rackspace Spot",
+      "change_type": "product_deprecated",
+      "date": "2026-12-08",
+      "summary": "Rackspace Spot is shutting down after a security incident. On December 8, 2026 at 5pm CT, any workloads still running are terminated. After that date, customers can no longer access their data. Rackspace is sending customers notices with instructions for retrieving their data, steps to secure their environments and a data-retrieval deadline. Customers should complete the actions in their notice before that deadline.",
+      "previous_state": "Rackspace Spot sold managed Kubernetes clusters (Cloudspaces) with Spot servers bought by hourly auction bids or On-Demand servers at fixed monthly prices, with no announced end.",
+      "current_state": "Rackspace Spot's status page, \"Rackspace Spot – Service Wind-Down Notice\", November 24, 2026 (read 2026-11-24): \"Following the recent security incident affecting Rackspace Spot, Rackspace has made the decision to wind down the service.\" \"Service wind-down date: Tuesday, December 8, 2026 at 5pm CT.\" \"On the wind-down date, any workloads still running will be terminated. After that date, data will no longer be accessible to customers. Customers should review their notices and complete the required actions before the data-retrieval deadline stated in those notices.\"",
+      "impact": "high",
+      "source_url": "https://status.spot.rackspace.com/status/uptime",
+      "category": "Cloud IaaS",
+      "alternatives": [],
+      "recorded_date": "2026-11-24",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Rackspace Spot",
+      "announced_on": "2026-11-24"
     }
   ]
 }
