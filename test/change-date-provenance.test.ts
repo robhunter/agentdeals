@@ -353,12 +353,13 @@ describe("no surface renders a discovery date as the date the vendor changed som
 
   function start(changesPath: string): Promise<{ proc: ChildProcess; port: number }> {
     return new Promise((resolve, reject) => {
-      const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+      const child = spawn("node", ["--import", path.join(REPO, "scripts", "shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
         stdio: ["pipe", "pipe", "pipe"],
         env: {
           ...process.env,
           PORT: "0",
           BASE_URL: "http://localhost:3000",
+          AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${TODAY}T12:00:00Z`) - Date.now()),
           AGENTDEALS_CHANGES_PATH: changesPath,
         },
       });

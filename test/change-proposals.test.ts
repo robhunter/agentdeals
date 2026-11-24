@@ -578,15 +578,15 @@ describe("#2497: the staleness alarm counts what the detector proposed", () => {
   it("is what the alarm script reads, so a fresh proposal clears it and a stale one does not", () => {
     const dir = mkdtempSync(path.join(SCRATCH, "alarm-"));
     const changesPath = writeJson(path.join(dir, "deal_changes.json"), { changes: [{ ...recordOf("LLM7.io"), recorded_date: "2026-01-01" }] });
+    const today = new Date().toISOString().slice(0, 10);
     const alarm = (recorded: string) => {
       const proposalsPath = writeJson(path.join(dir, "change_proposals.json"), proposedOn(recorded));
-      return spawnSync("node", [path.join(REPO, "scripts", "check-change-log-staleness.js")], {
+      return spawnSync("node", ["--import", path.join(REPO, "scripts/shifted-clock.mjs"), path.join(REPO, "scripts", "check-change-log-staleness.js")], {
         cwd: REPO,
         encoding: "utf-8",
-        env: { ...process.env, AGENTDEALS_CHANGES_PATH: changesPath, AGENTDEALS_PROPOSALS_PATH: proposalsPath },
+        env: { ...process.env, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${today}T12:00:00Z`) - Date.now()), AGENTDEALS_CHANGES_PATH: changesPath, AGENTDEALS_PROPOSALS_PATH: proposalsPath },
       });
     };
-    const today = new Date().toISOString().slice(0, 10);
     const fresh = alarm(today);
     assert.strictEqual(fresh.status, 0, fresh.stdout);
     assert.match(fresh.stdout, new RegExp(`Proposed by the detector, pending review or dropped: 1 \\(last ${today}, 0 days ago\\)`));

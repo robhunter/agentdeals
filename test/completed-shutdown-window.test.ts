@@ -28,9 +28,9 @@ const pages = new Map<string, string>();
 async function readPages(name: string, records: unknown[], indexPath?: string) {
   const filename = path.join(scratch, `${name}.json`);
   writeFileSync(filename, JSON.stringify({ ...stored, changes: records }, null, 2) + "\n");
-  const child = spawn("node", [path.join(ROOT, "dist/serve.js")], {
+  const child = spawn("node", ["--import", path.join(ROOT, "scripts/shifted-clock.mjs"), path.join(ROOT, "dist/serve.js")], {
     cwd: ROOT, stdio: ["ignore", "ignore", "pipe"],
-    env: { ...process.env, TZ: "UTC", PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off", AGENTDEALS_CHANGES_PATH: filename, ...(indexPath ? { AGENTDEALS_INDEX_PATH: indexPath } : {}) },
+    env: { ...process.env, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${today}T12:00:00Z`) - Date.now()), TZ: "UTC", PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off", AGENTDEALS_CHANGES_PATH: filename, ...(indexPath ? { AGENTDEALS_INDEX_PATH: indexPath } : {}) },
   });
   try {
     const port = await new Promise<string>((resolve, reject) => {
