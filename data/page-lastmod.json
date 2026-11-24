@@ -4027,6 +4027,10 @@
       "hash": "42619f6597c9a3dc",
       "changed": "2026-11-21"
     },
+    "/shutdowns/hetzner-inference-api-2026-12-08-free-hetzner-inference-api-experiment": {
+      "hash": "48ddacb07858c97d",
+      "changed": "2026-11-24"
+    },
     "/shutdowns/hivemq-2026-12-31-hivemq-cloud-serverless": {
       "hash": "9ed1c273f5b85149",
       "changed": "2026-11-21"

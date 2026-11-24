@@ -21008,6 +21008,22 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "recorded_date": "2026-11-23"
+    },
+    {
+      "vendor": "Hetzner Inference API",
+      "change_type": "product_deprecated",
+      "date": "2026-12-08",
+      "summary": "Hetzner Cloud and Hetzner's other products keep running. Hetzner says its Inference API experiment ends on December 8, 2026. Until then the API is free of charge. Hetzner's docs do not say whether the API stays available after that date, or at what price. Hetzner says it will email users before the API's free status changes.",
+      "previous_state": "On 2026-11-14, the same page called the API free of charge while it is an experiment, and gave no end date.",
+      "current_state": "On 2026-11-24, Hetzner's Inference API docs page says \"This Experiment will end on 8 December 2026.\" and that the API is free of charge while it is an experiment.",
+      "impact": "medium",
+      "source_url": "https://docs.hetzner.com/general/company-and-policy/experiments/inference/",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-24",
+      "date_source": "vendor_page",
+      "listing_effect": "ends",
+      "what_ends": "Free Hetzner Inference API experiment"
     }
   ]
 }
