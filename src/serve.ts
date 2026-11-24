@@ -27246,7 +27246,7 @@ function shutdownEntries(todayDay: string): { shutdowns: ShutdownEntry[]; handTy
   return { shutdowns, handTyped, recordedOnly };
 }
 
-function shutdownPageInventory(todayDay: string) {
+function shutdownPageInventory(todayDay: string, strictRedirects = false) {
   const { recordedOnly, handTyped } = shutdownEntries(todayDay);
   const originals = new Map<DealChange, DealChange>();
   const candidates = dealChanges.filter(record => isCancelledAnnouncement(record) || theEventNeverHappened(record)).map(record => {
@@ -27268,7 +27268,10 @@ function shutdownPageInventory(todayDay: string) {
   const retained = resolved.filter(entry => !theEventNeverHappened(entry) ||
     (Object.hasOwn(pageLastmodLedger.pages, shutdownPath(entry)) && !Object.hasOwn(maintained, shutdownPath(entry))));
   const pages = shutdownPaths([...recordedOnly, ...retained]);
-  const redirects = reconcileShutdownRedirects([], pages.keys(), maintained);
+  const applicable = strictRedirects ? maintained : Object.fromEntries(
+    Object.entries(maintained).filter(([, target]) => pages.has(target)),
+  );
+  const redirects = reconcileShutdownRedirects([], pages.keys(), applicable);
   return { pages, redirects };
 }
 
@@ -53462,6 +53465,7 @@ function ledgerPagePaths(): string[] {
 const PAGE_INVENTORY_OUT = process.env.AGENTDEALS_PAGE_INVENTORY_OUT ?? "";
 if (PAGE_INVENTORY_OUT) {
   try {
+    shutdownPageInventory(utcToday(), true);
     writeFileSync(PAGE_INVENTORY_OUT, JSON.stringify(ledgerPagePaths(), null, 2) + "\n");
   } catch (err) {
     console.error(`Could not write the page inventory to ${PAGE_INVENTORY_OUT}: ${(err as Error).message}`);
