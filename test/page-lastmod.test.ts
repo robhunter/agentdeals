@@ -2,7 +2,7 @@ import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, spawnSync, type ChildProcess } from "node:child_process";
-import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -252,11 +252,12 @@ describe("a page keeps the day it changed, whenever that was", () => {
 
   it("falls back to the day the build shipped for a page it has no record of", async () => {
     const listed = await entries("pages");
-    const today = new Date().toISOString().slice(0, 10);
+    const build = statSync(path.join(REPO, "dist", "serve.js")).mtime.toISOString().slice(0, 10);
+    const expected = [build, FIXTURE.generated].sort().at(-1);
     for (const loc of ["/press", "/setup", "/badges", "/guides"]) {
       const day = listed.get(loc);
       assert.ok(day, `${loc} is missing from the pages sitemap`);
-      assert.ok(day! > FIXTURE.generated && day! <= today, `${loc} fell back to ${day}`);
+      assert.equal(day, expected, `${loc} fell back to ${day}`);
     }
   });
 
