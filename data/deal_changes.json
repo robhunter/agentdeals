@@ -20962,6 +20962,22 @@
       "date_source": "vendor_page",
       "listing_effect": "none",
       "what_ends": "Vertex AI Extensions"
+    },
+    {
+      "vendor": "Fly.io",
+      "change_type": "new_free_tier",
+      "date": "2026-11-23",
+      "date_source": "vendor_page",
+      "summary": "On November 23, 2026, Fly.io announced a Free plan. Every new account starts on it, with $1 of credit without a card and $5 of usage every month with a card. It replaces the waiver of monthly bills under $5 for new organizations.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Fly.io said it had no free tier. New accounts got a one-time $1 trial credit, and monthly bills under $5 were waived for a personal organization with a card on file.",
+      "current_state": "Fly.io's forum post \"Introducing the Free plan\" (Fresh Produce, 2026-11-23, by a Fly.io employee): \"Fly.io now has a Free plan, with $5 of usage every month.\" Fly.io's docs (docs.fly.io/about/free-plan, read 2026-11-23): \"Every new Fly.io account starts on the Free plan. You get $1 of credit with no credit card, and $5 of usage every month once you add a card.\" \"The Free plan replaces the waiver for new organizations.\" The Internet Archive's captures of fly.io/pricing show the Free plan on 2026-11-22 and not on 2026-11-20.",
+      "impact": "medium",
+      "source_url": "https://community.fly.io/t/introducing-the-free-plan/29145",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-11-23"
     }
   ]
 }
