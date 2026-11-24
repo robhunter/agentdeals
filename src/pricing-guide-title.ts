@@ -8,7 +8,13 @@ const currentYearAlternatives = new Set([
   "localstack-alternatives", "postman-alternatives", "freshping-alternatives",
   "firebase-alternatives", "github-actions-alternatives", "cursor-alternatives",
   "datadog-alternatives", "vercel-alternatives", "auth0-alternatives",
-  "mongodb-alternatives", "redis-alternatives",
+  "mongodb-alternatives", "redis-alternatives", "email-service-alternatives",
+  "ai-free-tiers", "database-alternatives", "hosting-alternatives",
+  "monitoring-alternatives", "ci-cd-alternatives", "security-alternatives",
+  "storage-alternatives", "testing-alternatives", "analytics-alternatives",
+  "ai-ml-alternatives", "design-alternatives", "email-alternatives",
+  "project-management-alternatives", "ide-code-editors-alternatives",
+  "free-llm-apis", "api-development-alternatives", "team-collaboration-alternatives",
 ]);
 
 export function pricingGuideTitle(slug: string, title: string, now: Date = new Date()): string {

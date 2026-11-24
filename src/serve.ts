@@ -10711,7 +10711,7 @@ ${globalNavCss()}
 }
 
 function buildAiFreeTiersPage(): string {
-  const title = "Best Free AI APIs and Coding Tools in 2026";
+  const title = pricingGuideTitle("ai-free-tiers", "Best Free AI APIs and Coding Tools in 2026");
   const metaDesc = "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Gemini, Cursor, GitHub Copilot, and 50+ more. [[freshness]]";
   const slug = "ai-free-tiers";
 
@@ -10923,7 +10923,7 @@ ${buildCards(enrichedCoding)}
 }
 
 function buildHostingAlternativesPage(): string {
-  const title = "Best Free Hosting for Developers in 2026 — PaaS, Static, Serverless, Containers & VPS";
+  const title = pricingGuideTitle("hosting-alternatives", "Best Free Hosting for Developers in 2026 — PaaS, Static, Serverless, Containers & VPS");
   const metaDesc = "Compare 30+ free hosting options — Railway, Render, Vercel, Netlify, Cloudflare, Fly.io, Oracle Cloud, and more. Exact free tier limits by hosting type. [[freshness]]";
   const slug = "hosting-alternatives";
 
@@ -11273,7 +11273,7 @@ ${buildCards(startupCredits)}
 }
 
 function buildDatabaseAlternativesPage(): string {
-  const title = "Best Free Database Hosting for Developers in 2026";
+  const title = pricingGuideTitle("database-alternatives", "Best Free Database Hosting for Developers in 2026");
   const metaDesc = "Compare 30+ free database hosting options — Postgres, MongoDB, Redis, SQLite, graph, vector, and time-series. Exact free tier limits for Supabase, Neon, Turso, Upstash, and more. [[freshness]]";
   const slug = "database-alternatives";
 
@@ -11603,7 +11603,7 @@ ${buildCards(timeSeries)}
 }
 
 function buildMonitoringAlternativesPage(): string {
-  const title = "Best Free Monitoring Tools for Developers in 2026 — APM, Uptime, Logs & Error Tracking";
+  const title = pricingGuideTitle("monitoring-alternatives", "Best Free Monitoring Tools for Developers in 2026 — APM, Uptime, Logs & Error Tracking");
   const metaDesc = "Compare 70+ free monitoring tools — New Relic, Grafana Cloud, Datadog, Sentry, BetterStack, UptimeRobot, and more. Exact free tier limits by monitoring type. [[freshness]]";
   const slug = "monitoring-alternatives";
 
@@ -11941,7 +11941,7 @@ ${buildCards(startupPrograms)}
 }
 
 function buildCiCdAlternativesPage(): string {
-  const title = "Best Free CI/CD Tools for Developers in 2026 — Build Minutes, Runners & Pipelines Compared";
+  const title = pricingGuideTitle("ci-cd-alternatives", "Best Free CI/CD Tools for Developers in 2026 — Build Minutes, Runners & Pipelines Compared");
   const metaDesc = "Compare 35+ free CI/CD tools — GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Drone CI, and more. Exact free tier limits by CI/CD type. [[freshness]]";
   const slug = "ci-cd-alternatives";
 
@@ -12245,7 +12245,7 @@ ${buildCards(specialized)}
 }
 
 function buildSecurityAlternativesPage(): string {
-  const title = "Best Free Security Tools for Developers in 2026 — SAST, Secrets, Auth & Container Security";
+  const title = pricingGuideTitle("security-alternatives", "Best Free Security Tools for Developers in 2026 — SAST, Secrets, Auth & Container Security");
   const metaDesc = "Compare 100+ free security tools — Snyk, Semgrep, CodeQL, GitGuardian, Trivy, Auth0, Clerk, and more. Exact free tier limits by security domain. [[freshness]]";
   const slug = "security-alternatives";
 
@@ -12579,7 +12579,7 @@ ${buildCards(other)}
 }
 
 function buildTestingAlternativesPage(): string {
-  const title = "Best Free Testing Tools for Developers in 2026 — Browser, Visual, Load, E2E & API Testing Compared";
+  const title = pricingGuideTitle("testing-alternatives", "Best Free Testing Tools for Developers in 2026 — Browser, Visual, Load, E2E & API Testing Compared");
   const metaDesc = "Compare 45+ free testing tools — Cypress, BrowserStack, Playwright, k6, Percy, Chromatic, Postman, Selenium, and more. Exact free tier limits by testing domain. [[freshness]]";
   const slug = "testing-alternatives";
 
@@ -12910,7 +12910,7 @@ ${buildCards(other)}
 const SELF_HOSTED_S3_STORAGE_ANSWER = "MinIO&rsquo;s open-source edition is no longer maintained, and its free AIStor edition runs on one node under a commercial licence. <strong>SeaweedFS</strong> (Apache 2.0) and <strong>Garage</strong> (AGPLv3) are maintained open-source, S3-compatible options.";
 
 function buildStorageAlternativesPage(): string {
-  const title = "Best Free Cloud Storage for Developers in 2026 — Object Storage, Media CDN & File Hosting Compared";
+  const title = pricingGuideTitle("storage-alternatives", "Best Free Cloud Storage for Developers in 2026 — Object Storage, Media CDN & File Hosting Compared");
   const metaDesc = "Compare 55+ free cloud storage tools — Cloudflare R2, Backblaze B2, Tigris, Cloudinary, ImageKit, Google Cloud Storage, and more. Exact free tier limits by storage type. [[freshness]]";
   const slug = "storage-alternatives";
 
@@ -13217,7 +13217,7 @@ ${buildCards(other)}
 }
 
 function buildAnalyticsAlternativesPage(): string {
-  const title = "Best Free Analytics Tools for Developers in 2026 — Product, Web, Event & Data Analytics Compared";
+  const title = pricingGuideTitle("analytics-alternatives", "Best Free Analytics Tools for Developers in 2026 — Product, Web, Event & Data Analytics Compared");
   const metaDesc = "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, and more. Exact free tier limits by analytics domain. [[freshness]]";
   const slug = "analytics-alternatives";
 
@@ -13524,7 +13524,7 @@ ${buildCards(other)}
 }
 
 function buildAiMlAlternativesPage(): string {
-  const title = "Best Free AI & ML Tools for Developers in 2026 — LLM APIs, AI Coding, Training & Observability Compared";
+  const title = pricingGuideTitle("ai-ml-alternatives", "Best Free AI & ML Tools for Developers in 2026 — LLM APIs, AI Coding, Training & Observability Compared");
   const metaDesc = "Compare 65+ AI/ML tools and their free tiers — Groq, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. [[freshness]]";
   const slug = "ai-ml-alternatives";
 
@@ -13832,7 +13832,7 @@ ${buildCards(other)}
 }
 
 function buildEmailAlternativesPage(): string {
-  const title = "Best Free Email Tools for Developers in 2026 — Transactional APIs, Marketing Platforms & Email Infrastructure Compared";
+  const title = pricingGuideTitle("email-alternatives", "Best Free Email Tools for Developers in 2026 — Transactional APIs, Marketing Platforms & Email Infrastructure Compared");
   const metaDesc = "Compare 59+ free email tools — Resend, Brevo, Mailjet, SendGrid, Mailchimp, SimpleLogin, Proton Mail, and more. Exact free tier limits by email domain. [[freshness]]";
   const slug = "email-alternatives";
 
@@ -14160,7 +14160,7 @@ ${buildCards(other)}
 }
 
 function buildDesignAlternativesPage(): string {
-  const title = "Best Free Design Tools for Developers in 2026 — UI Kits, Prototyping, Icons & Assets Compared";
+  const title = pricingGuideTitle("design-alternatives", "Best Free Design Tools for Developers in 2026 — UI Kits, Prototyping, Icons & Assets Compared");
   const metaDesc = "Compare 100+ free design tools — Figma, Penpot, Canva, ShadcnUI, Lucide, Unsplash, Coolors, and more. Exact free tier limits by design domain. [[freshness]]";
   const slug = "design-alternatives";
 
@@ -14495,7 +14495,7 @@ ${buildCards(other)}
 }
 
 function buildProjectManagementAlternativesPage(): string {
-  const title = "Best Free Project Management & Collaboration Tools in 2026 — PM, Chat, Scheduling & Productivity Compared";
+  const title = pricingGuideTitle("project-management-alternatives", "Best Free Project Management & Collaboration Tools in 2026 — PM, Chat, Scheduling & Productivity Compared");
   const metaDesc = "Compare 93+ free project management tools — Linear, Asana, Trello, ClickUp, Notion, Slack alternatives, Cal.com, and more. Exact free tier limits. [[freshness]]";
   const slug = "project-management-alternatives";
 
@@ -14830,7 +14830,7 @@ ${buildCards(other)}
 }
 
 function buildIdeCodeEditorsAlternativesPage(): string {
-  const title = "Best Free IDEs, Code Editors & AI Coding Tools in 2026 — Desktop, Cloud & AI Assistants Compared";
+  const title = pricingGuideTitle("ide-code-editors-alternatives", "Best Free IDEs, Code Editors & AI Coding Tools in 2026 — Desktop, Cloud & AI Assistants Compared");
   const metaDesc = "Compare 59+ free IDEs and coding tools — VS Code, Cursor, GitHub Copilot, Zed, Replit, Windsurf, Devin, and more. Exact free tier limits. [[freshness]]";
   const slug = "ide-code-editors-alternatives";
 
@@ -15144,7 +15144,7 @@ ${buildCards(other)}
 }
 
 function buildFreeLlmApisPage(): string {
-  const title = "Best Free LLM APIs in 2026 — Compare Free Inference Tiers, Rate Limits & Models";
+  const title = pricingGuideTitle("free-llm-apis", "Best Free LLM APIs in 2026 — Compare Free Inference Tiers, Rate Limits & Models");
   const metaDesc = "Compare 25+ LLM API providers and their free tiers — Groq, OpenRouter, Gemini, NVIDIA NIM, and more, beside paid APIs from OpenAI, Anthropic, Mistral and Cerebras. Exact rate limits and token quotas. [[freshness]]";
   const slug = "free-llm-apis";
 
@@ -15392,7 +15392,7 @@ ${buildCards(aiGateways)}
 }
 
 function buildApiDevelopmentAlternativesPage(): string {
-  const title = "Best Free API Development Tools in 2026 — REST, GraphQL, Mocking & Documentation Compared";
+  const title = pricingGuideTitle("api-development-alternatives", "Best Free API Development Tools in 2026 — REST, GraphQL, Mocking & Documentation Compared");
   const metaDesc = "Compare 39+ free API development tools — Postman, Hoppscotch, Insomnia, Bruno, Mintlify, Swagger, RapidAPI, Nango, and more. Exact free tier limits. [[freshness]]";
   const slug = "api-development-alternatives";
 
@@ -15703,7 +15703,7 @@ ${buildCards(apiIntegration)}
 }
 
 function buildTeamCollaborationAlternativesPage(): string {
-  const title = "Best Free Team Collaboration Tools in 2026 — Chat, Video, Docs & Scheduling Compared";
+  const title = pricingGuideTitle("team-collaboration-alternatives", "Best Free Team Collaboration Tools in 2026 — Chat, Video, Docs & Scheduling Compared");
   const metaDesc = "Compare 60+ free team collaboration tools — Slack, Discord, Zoom, Jitsi, Notion, Cal.com, Rocket.Chat, and more. Exact free tier limits. [[freshness]]";
   const slug = "team-collaboration-alternatives";
 
