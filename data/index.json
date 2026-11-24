@@ -4544,7 +4544,7 @@
           "read_on": "2026-11-03"
         },
         {
-          "text": "Hetzner's experimental Inference API is free of charge while it is an experiment. Hetzner says the experiment ends on December 8, 2026. Hetzner says not to use it for production.",
+          "text": "Hetzner's experimental Inference API is free of charge while it is an experiment. Hetzner says the Inference API experiment ends on December 8. Hetzner says not to use it for production.",
           "quote": "This Experiment will end on 8 December 2026.",
           "url": "https://docs.hetzner.com/general/company-and-policy/experiments/inference/",
           "read_on": "2026-11-24"
