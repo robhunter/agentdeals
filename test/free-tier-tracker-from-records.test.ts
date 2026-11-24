@@ -22,14 +22,10 @@ import {
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-const DAY_MS = 86_400_000;
-const TODAY = new Date().toISOString().slice(0, 10);
-const dayFromToday = (days: number): string => new Date(Date.parse(TODAY) + days * DAY_MS).toISOString().slice(0, 10);
-
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 function lastDayTheYearsListCovers(): string {
-  const end = dayFromToday(0) < "2026-12-31" ? dayFromToday(0) : "2026-12-31";
+  const end = "2026-11-24";
   return `${MONTHS[Number(end.slice(5, 7)) - 1]} ${Number(end.slice(8, 10))}`;
 }
 
@@ -76,7 +72,7 @@ const RETRACTED = cut("Postman", "2026-06-06", "Fixture withdrawn as our error."
 });
 const MEDIUM = cut("LocalStack", "2026-04-04", "Medium-impact fixture.", { impact: "medium" });
 const LAST_YEAR = cut("Neon", "2025-11-11", "Fixture from last year.");
-const NOT_YET = cut("Basecamp", dayFromToday(1), "Fixture whose date has not arrived.");
+const NOT_YET = cut("Basecamp", "2026-11-25", "Fixture whose date has not arrived.");
 
 const LISTED = [SEPTEMBER, AUGUST_LIMIT, BRACKETED, MAY, FEBRUARY];
 const LEFT_OUT = [DISCOVERED, BRACKET_OPENS_LAST_YEAR, RETRACTED, MEDIUM, LAST_YEAR, NOT_YET];
@@ -131,7 +127,7 @@ describe("/free-tier-tracker lists the year's free tier removals and cuts from t
     writeFileSync(changesPath, JSON.stringify({ changes: [...LISTED, ...LEFT_OUT] }));
     const child = spawn("node", ["--import", path.join(REPO, "scripts/shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changesPath, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${TODAY}T12:00:00Z`) - Date.now()) },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changesPath, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse("2026-11-24T12:00:00Z") - Date.now()) },
     });
     proc = child;
     const port = await new Promise<number>((resolve, reject) => {
@@ -205,6 +201,54 @@ describe("/free-tier-tracker lists the year's free tier removals and cuts from t
     assert.ok(page.includes(`<meta name="description" content="${FREE_TIER_TRACKER_META_DESCRIPTION}">`), "the meta description is not the year's");
     assert.ok(page.includes(`<h1>${FREE_TIER_TRACKER_HEADING}</h1>`), "the heading is not the year's");
     assert.ok(page.includes(`href="#${CUTS_THIS_YEAR_ANCHOR}">${CUTS_THIS_YEAR_HEADING}</a>`), "the contents do not list the year's cuts");
+  });
+});
+
+
+describe("/free-tier-tracker at the year boundary", () => {
+  let dir = "";
+  let proc: ChildProcess | null = null;
+  let page = "";
+
+  before(async () => {
+    dir = mkdtempSync(path.join(tmpdir(), "free-tier-rolling-"));
+    const changesPath = path.join(dir, "deal_changes.json");
+    const january = cut("Basecamp", "2027-01-01", "January fixture removal.");
+    const old = cut("Neon", "2026-01-01", "Outside rolling window.");
+    writeFileSync(changesPath, JSON.stringify({ changes: [january, SEPTEMBER, FEBRUARY, old] }));
+    const child = spawn("node", ["--import", path.join(REPO, "scripts/shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
+      stdio: ["pipe", "pipe", "pipe"],
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changesPath, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse("2027-01-01T12:00:00Z") - Date.now()) },
+    });
+    proc = child;
+    const port = await new Promise<number>((resolve, reject) => {
+      const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 60000);
+      child.stderr!.on("data", (data: Buffer) => {
+        const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (m) { clearTimeout(timeout); resolve(parseInt(m[1], 10)); }
+      });
+      child.on("error", (err) => { clearTimeout(timeout); reject(err); });
+    });
+    page = await (await fetch(`http://localhost:${port}/free-tier-tracker`)).text();
+  });
+
+  after(() => {
+    proc?.kill();
+    if (dir) rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("shows the rolling window across years and excludes its previous day", () => {
+    const section = cutsSectionOf(page);
+    assert.match(textOf(section), /Free Tiers Removed and Cut in the Last 12 Months/);
+    assert.match(textOf(section), /from January 2, 2026 to January 1, 2027/);
+    assert.deepStrictEqual(quartersOf(section).map(q => [q.heading, q.summaries]), [
+      ["Q1 2027", ["January fixture removal."]],
+      ["Q3 2026", [SEPTEMBER.summary]],
+      ["Q1 2026", [FEBRUARY.summary]],
+    ]);
+    assert.doesNotMatch(section, /Outside rolling window/);
+    assert.match(textOf(page), /This tracker covers the last 12 months\./);
+    assert.match(page, /href="#cuts-2026">Free Tiers Removed and Cut in the Last 12 Months/);
   });
 });
 

@@ -84,7 +84,7 @@ import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, lastChangeShown, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageAnswer, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
-import { cutsByQuarterNewestFirst, cutsWindow, freeTierCutsIn } from "./free-tier-cuts.js";
+import { cutsByYearAndQuarterNewestFirst, cutsWindow, freeTierCutsWithin, rollingCutsWindow } from "./free-tier-cuts.js";
 import { STARTUP_CREDITS_META_DESCRIPTION, STARTUP_PROGRAMS, type DatedTerms, type StartupProgram } from "./startup-programmes.js";
 import { CHANGE_TIMELINE_LINK_TEXT, CHANGE_TIMELINE_PATH, CUTS_THIS_YEAR_ANCHOR, CUTS_THIS_YEAR_HEADING, CUTS_THIS_YEAR_SUMMARY_CLASS, FIGURES_AS_OF_CLASS, FREE_TIER_TRACKER_HEADING, FREE_TIER_TRACKER_META_DESCRIPTION, FREE_TIER_TRACKER_TITLE, FREE_TIER_TRACKER_YEAR, NO_KNOWN_EFFECTIVE_DATE_LEFT_OUT, UNTIL_ITS_DATE_ARRIVES, changeTypesAmong, cutsThisYearSummary, figuresAsOfTheChangeHtml, isAFirstQuarterCard, quarterAnchor, quarterHeading } from "./free-tier-tracker.js";
 import { changeCitesASource, citationLabel, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, CITATION_REL, listingSourceLinkHtml, type CitableChangeRow } from "./change-citation.js";
@@ -27647,8 +27647,12 @@ function buildFreeTierTrackerPage(): string {
   const slug = "free-tier-tracker";
   const pubDate = "2026-03-27";
   const servedOn = new Date().toISOString().slice(0, 10);
-  const cutsThisYear = cutsByQuarterNewestFirst(FREE_TIER_TRACKER_YEAR, freeTierCutsIn(FREE_TIER_TRACKER_YEAR, dealChanges, servedOn));
-  const cutsSummary = cutsThisYearSummary(cutsWindow(FREE_TIER_TRACKER_YEAR, servedOn), cutsThisYear.flatMap((group) => group.records));
+  const rollingCuts = servedOn >= "2027-01-01";
+  const cutsHeading = rollingCuts ? "Free Tiers Removed and Cut in the Last 12 Months" : CUTS_THIS_YEAR_HEADING;
+  const cutsCoverage = rollingCuts ? "the last 12 months" : String(FREE_TIER_TRACKER_YEAR);
+  const window = rollingCuts ? rollingCutsWindow(servedOn) : cutsWindow(FREE_TIER_TRACKER_YEAR, servedOn);
+  const cutsThisYear = cutsByYearAndQuarterNewestFirst(freeTierCutsWithin(window, dealChanges));
+  const cutsSummary = cutsThisYearSummary(window, cutsThisYear.flatMap((group) => group.records));
 
   const q1Changes = q1TrackedChanges;
 
@@ -28004,7 +28008,7 @@ ${globalNavCss()}
   <div class="toc">
     <h3>Contents</h3>
     <ol>
-      <li><a href="#${CUTS_THIS_YEAR_ANCHOR}">${escHtmlServer(CUTS_THIS_YEAR_HEADING)}</a></li>
+      <li><a href="#${CUTS_THIS_YEAR_ANCHOR}">${escHtmlServer(cutsHeading)}</a></li>
       <li><a href="#removed">Free Tiers Removed &amp; Reduced</a></li>
       <li><a href="#expanded">Free Tiers Expanded &amp; New</a></li>
       <li><a href="#patterns">Trend Analysis</a></li>
@@ -28013,7 +28017,7 @@ ${globalNavCss()}
     </ol>
   </div>
 
-  <h2 id="${CUTS_THIS_YEAR_ANCHOR}">${escHtmlServer(CUTS_THIS_YEAR_HEADING)}</h2>
+  <h2 id="${CUTS_THIS_YEAR_ANCHOR}">${escHtmlServer(cutsHeading)}</h2>
   ${cutsSummary ? `<p class="section-intro ${CUTS_THIS_YEAR_SUMMARY_CLASS}">${escHtmlServer(cutsSummary)}</p>` : ""}
   ${datedSectionNoticeHtml(
     namedFromItsDate("A change", servedOn),
@@ -28087,7 +28091,7 @@ ${globalNavCss()}
   </div>
 
   <div class="search-cta">
-    <p>This tracker covers ${FREE_TIER_TRACKER_YEAR}. For real-time tracking of all ${trackedChangeCount}+ pricing changes, use our <a href="/changes">Changes Timeline</a> or subscribe to the <a href="/feed.xml">Atom Feed</a>.</p>
+    <p>This tracker covers ${cutsCoverage}. For real-time tracking of all ${trackedChangeCount}+ pricing changes, use our <a href="/changes">Changes Timeline</a> or subscribe to the <a href="/feed.xml">Atom Feed</a>.</p>
     <p style="margin-top:.5rem;font-size:.85rem;color:var(--text-dim)">For risk scores on specific vendors, see the <a href="/free-tier-risk">Free Tier Risk Index</a>.</p>
   </div>
 

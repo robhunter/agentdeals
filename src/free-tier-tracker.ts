@@ -33,7 +33,10 @@ export function cutsThisYearSummary(window: Required<DateWindow>, records: reado
     .filter(({ count }) => count > 0)
     .map(({ noun, count }) => `${count} ${count === 1 ? noun.one : noun.many}`);
   if (counts.length === 0) return null;
-  const span = `from ${monthAndDay(window.start)} to ${monthAndDay(window.end)}, ${window.end.slice(0, 4)}`;
+  const startYear = window.start.slice(0, 4);
+  const endYear = window.end.slice(0, 4);
+  const start = `${monthAndDay(window.start)}${startYear === endYear ? "" : `, ${startYear}`}`;
+  const span = `from ${start} to ${monthAndDay(window.end)}, ${endYear}`;
   return `This list holds high-impact changes ${span}. It includes ${joinedWithAnd(counts)}.`;
 }
 
