@@ -55,3 +55,47 @@ it("renders the same title in the page and guide list across the boundary", asyn
     }
   }
 });
+
+it("updates guide metadata when a running server crosses the year boundaries", async () => {
+  const { spawn } = await import("node:child_process");
+  const { mkdtempSync, writeFileSync, rmSync } = await import("node:fs");
+  const { tmpdir } = await import("node:os");
+  const { join } = await import("node:path");
+  const dir = mkdtempSync(join(tmpdir(), "guide-clock-"));
+  const clock = join(dir, "clock");
+  const setClock = (instant: string) => writeFileSync(clock, String(Date.parse(instant)));
+  setClock("2026-12-09T23:59:59Z");
+  const server = spawn("node", ["--import", "./test/fixtures/file-clock.mjs", "dist/serve.js"], {
+    env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", TEST_CLOCK_FILE: clock },
+    stdio: ["ignore", "ignore", "pipe"],
+  });
+  try {
+    const base = await new Promise<string>((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error("Server startup timeout")), 20000);
+      server.stderr!.on("data", (data: Buffer) => {
+        const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (match) { clearTimeout(timer); resolve(`http://localhost:${match[1]}`); }
+      });
+      server.on("error", reject);
+      server.on("exit", (code) => { clearTimeout(timer); reject(new Error(`Server exited: ${code}`)); });
+    });
+    for (const [instant, label, recent] of [
+      ["2026-12-09T23:59:59Z", "2026", false],
+      ["2026-12-10T00:00:00Z", "2026–2027", false],
+      ["2027-01-01T00:00:00Z", "2027", true],
+      ["2027-12-15T00:00:00Z", "2027–2028", true],
+    ] as const) {
+      setClock(instant);
+      const list = await (await fetch(`${base}/guides`)).text();
+      for (const [slug, original, future] of guides) {
+        const expected = recent ? future.replace("YEAR", label) : original.replace("2026", label);
+        const page = await (await fetch(`${base}/${slug}`)).text();
+        assert.ok(page.includes(`<h1>${expected}</h1>`), `${instant}: ${slug} heading`);
+        assert.ok(list.includes(expected), `${instant}: ${slug} guide metadata`);
+      }
+    }
+  } finally {
+    server.kill();
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

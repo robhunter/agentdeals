@@ -8772,7 +8772,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   },
   {
     slug: ACCOUNTING_PRICES_SLUG,
-    title: pricingGuideTitle(ACCOUNTING_PRICES_SLUG, accountingPrices.title),
+    title: accountingPrices.title,
     metaDesc: accountingPrices.meta_description,
     contextHtml: "",
     tag: "accounting-software",
@@ -8780,7 +8780,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   },
   {
     slug: BANKING_FEES_SLUG,
-    title: pricingGuideTitle(BANKING_FEES_SLUG, bankingFees.title),
+    title: bankingFees.title,
     metaDesc: bankingFees.meta_description,
     contextHtml: "",
     tag: "business-banking",
@@ -8788,7 +8788,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   },
   {
     slug: COMPANY_FORMATION_SLUG,
-    title: pricingGuideTitle(COMPANY_FORMATION_SLUG, companyFormationPrices.title),
+    title: companyFormationPrices.title,
     metaDesc: companyFormationPrices.meta_description,
     contextHtml: "",
     tag: "company-formation",
@@ -8813,7 +8813,11 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   },
 ];
 
-const ALTERNATIVES_PAGES: AlternativesPageConfig[] = ALTERNATIVES_PAGE_CONTENT.map(page => ({ ...page, hubDesc: guideBlurb(page.slug) }));
+const ALTERNATIVES_PAGES: AlternativesPageConfig[] = ALTERNATIVES_PAGE_CONTENT.map(page => ({
+  ...page,
+  get title() { return pricingGuideTitle(page.slug, page.title); },
+  hubDesc: guideBlurb(page.slug),
+}));
 const ALTERNATIVES_GUIDES = ALTERNATIVES_PAGES.filter(page => !page.notAnAlternativesGuide);
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
