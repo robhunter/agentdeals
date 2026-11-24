@@ -21022,7 +21022,7 @@
       "alternatives": [],
       "recorded_date": "2026-11-24",
       "date_source": "vendor_page",
-      "listing_effect": "ends",
+      "listing_effect": "narrows",
       "what_ends": "Free Hetzner Inference API experiment"
     }
   ]
