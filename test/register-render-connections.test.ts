@@ -55,15 +55,13 @@ function run(failure = "", measuredOnly = false) {
   writeFileSync(out, "unchanged output\n");
   const source = readFileSync(fixture.file, "utf8");
   const measuredOn = JSON.parse(source).measured_on;
-  const today = new Date().toISOString().slice(0, 10);
-  const clockShift = Number(process.env.AGENTDEALS_CLOCK_SHIFT_MS ?? 0) + Date.parse(measuredOn) - Date.parse(today);
   const result = spawnSync(process.execPath, [join(REPO, "scripts/sync-page-reviews.js"), "--out", out, ...(measuredOnly ? ["--measured-only"] : [])], {
     cwd: REPO,
     encoding: "utf8",
     env: {
       ...process.env,
-      NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --import=${pathToFileURL(join(REPO, "scripts/shifted-clock.mjs")).href} --import=${pathToFileURL(preload).href}`,
-      AGENTDEALS_CLOCK_SHIFT_MS: String(clockShift),
+      NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --import=${pathToFileURL(join(REPO, "test/fixed-instant-clock.mjs")).href} --import=${pathToFileURL(preload).href}`,
+      TEST_FIXED_INSTANT_MS: String(Date.parse(`${measuredOn}T12:00:00Z`)),
       AGENTDEALS_PAGE_REVIEWS_PATH: fixture.file,
       REGISTER_TRANSPORT_LOG: log,
       REGISTER_TRANSPORT_FAILURE: failure,

@@ -83,9 +83,13 @@ describe("#1327 a budget over its ceiling is reported rather than asserted", () 
 
 describe("#1327 the reporter measures the data the site ships", () => {
   it("reads every budget in the file, and none of them decides its exit status", () => {
-    const printed = execFileSync("node", [REPORTER, "--json"], { cwd: REPO, encoding: "utf-8" });
+    const today = utcToday();
+    const printed = execFileSync("node", ["--import", path.join(REPO, "scripts", "shifted-clock.mjs"), REPORTER, "--json"], {
+      cwd: REPO, encoding: "utf-8",
+      env: { ...process.env, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${today}T12:00:00Z`) - Date.now()) },
+    });
     const report = JSON.parse(printed);
-    assert.strictEqual(report.measured_for, utcToday());
+    assert.strictEqual(report.measured_for, today);
     for (const name of QUALITY_BUDGET_NAMES) {
       assert.ok(typeof report.measured[name] === "number", `${name} was not measured`);
       assert.strictEqual(report.budgets[name], readQualityBudgets().budgets[name]);

@@ -7,6 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+const TODAY = new Date().toISOString().slice(0, 10);
 const PAGE = "/auth-comparison-2026";
 const RETIRED = "Stack Auth";
 const SURVIVOR = "Hexclave";
@@ -38,7 +39,7 @@ function changesWithOneUnderEachName() {
   const changes: Change[] = log.changes;
   const template = changes.find((change) => change.vendor === "Clerk" && change.change_type === "limits_increased" && !change.resolution)
     ?? changes.find((change) => change.vendor === "Clerk" && !change.resolution)!;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = TODAY;
   const tomorrow = new Date(Date.parse(today) + 86_400_000).toISOString().slice(0, 10);
   const filed = (vendor: string, summary: string, date: string): Change => ({ ...template, vendor, summary, date, date_source: "vendor_page", recorded_date: today });
   log.changes = [filed(RETIRED, FILED_UNDER_RETIRED, today), filed(SURVIVOR, FILED_UNDER_SURVIVOR, tomorrow), ...changes];
@@ -47,9 +48,9 @@ function changesWithOneUnderEachName() {
 
 function startServer(env: NodeJS.ProcessEnv): Promise<{ proc: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
-    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+    const child = spawn("node", ["--import", path.join(REPO, "scripts/shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost:3000", ...env },
+      env: { ...process.env, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${TODAY}T12:00:00Z`) - Date.now()), PORT: "0", BASE_URL: "http://localhost:3000", ...env },
     });
     const timeout = setTimeout(() => {
       child.kill();

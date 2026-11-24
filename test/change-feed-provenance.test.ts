@@ -28,6 +28,7 @@ const FEED_ROUTES = ["/pricing-changes/feed.xml", "/feed.xml", "/api/feed"];
 const FEED_ALIASES = ["/rss", "/feed", "/atom"];
 
 const TODAY = new Date().toISOString().slice(0, 10);
+const SERVED_AT = `${TODAY}T12:00:00.000Z`;
 const dayOffset = (days: number) =>
   new Date(Date.parse(TODAY) + days * 86400000).toISOString().slice(0, 10);
 
@@ -121,13 +122,14 @@ function fixtureChange(vendor: string, date: string, dateSource: string, recorde
 
 function startServer(changesPath?: string): Promise<{ proc: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
-    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+    const child = spawn("node", ["--import", path.join(REPO, "test", "fixed-instant-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
       env: {
         ...process.env,
         PORT: "0",
         BASE_URL: "http://localhost:3000",
         TZ: "UTC",
+        TEST_FIXED_INSTANT_MS: String(Date.parse(SERVED_AT)),
         ...(changesPath ? { AGENTDEALS_CHANGES_PATH: changesPath } : {}),
       },
     });
@@ -163,7 +165,7 @@ describe("the change feeds date every entry by when we recorded it and say what 
     const live = await startServer();
     servers.push(live.proc);
     port = live.port;
-    startedAt = new Date().toISOString();
+    startedAt = SERVED_AT;
     perChange = await (await fetch(`http://localhost:${port}${PER_CHANGE_FEED.path}`)).text();
     weekly = await (await fetch(`http://localhost:${port}${WEEKLY_DIGEST_FEED.path}`)).text();
     entries = parseEntries(perChange);
@@ -323,7 +325,7 @@ describe("the change feeds date every entry by when we recorded it and say what 
   });
 
   it("never stamps a feed as generated later than it was generated", async () => {
-    const now = new Date().toISOString();
+    const now = SERVED_AT;
     for (const route of FEED_ROUTES) {
       const doc = await (await fetch(`http://localhost:${port}${route}`)).text();
       const channel = doc.slice(0, doc.indexOf("<entry>"));
@@ -457,7 +459,7 @@ describe("the change feeds date every entry by when we recorded it and say what 
     const recordedToday = fixtureEntries.findIndex((e) => e.title.startsWith("Fixture Recorded Today"));
     assert.notStrictEqual(recordedToday, -1, "a change recorded today did not reach the feed");
     const channel = doc.slice(0, doc.indexOf("<entry>"));
-    assert.ok((tag(channel, "updated") ?? "") <= new Date().toISOString(), "the injected future date reached the channel stamp");
+    assert.ok((tag(channel, "updated") ?? "") <= SERVED_AT, "the injected future date reached the channel stamp");
   });
 });
 
