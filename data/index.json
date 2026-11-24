@@ -287,7 +287,7 @@
     {
       "vendor": "Cloudflare Workers",
       "category": "Cloud Hosting",
-      "description": "Edge compute with 100K requests/day, 10ms CPU time per invocation, 5 cron triggers/account. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day. R2 (Standard storage): 10 GB-month/month, 1M Class A ops/month, 10M Class B ops/month. Durable Objects (SQLite-backed only): 100K requests/day. Queues: 10K operations/day. Vectorize: 30M queried vector dimensions/month, 5M stored vector dimensions. Dynamic Workers are paid only. US students 18+ with a verified .edu billing email: Workers Paid (10M requests/month), $5/mo fee waived for 12 months. Workers Paid has a minimum charge of $5 per month per account. It includes 10 million requests and 30 million CPU milliseconds monthly. Each additional million requests costs $0.30. Each additional million CPU milliseconds costs $0.02. Duration is not charged.",
+      "description": "Edge compute with 100K requests/day, 10ms CPU time per invocation. Static assets: free, unlimited requests. KV: 1 GB storage, 100K reads/day, 1K writes/day, 1K deletes/day, 1K list requests/day. Hyperdrive: 100K database queries/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day, 10 databases. R2 Standard storage: 10 GB-month/month, 1M Class A operations/month, 10M Class B operations/month, free egress. Durable Objects: SQLite backend only, 100K requests/day, 13K GB-s duration/day, 5 GB SQL storage. Queues: 10K operations/day, 24-hour message retention. Workflows: 3K steps/day, 1 GB-month storage, requests count against Workers limit. Workers Logs: 200K events/day, 3-day retention. Daily limits reset at 00:00 UTC. Containers and Logpush are not on Free. Workers Paid: $5 minimum/month, includes 10M requests and 30M CPU milliseconds/month, $0.30 per additional million requests, $0.02 per additional million CPU milliseconds. Duration is not charged.",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers/platform/pricing/",
       "tags": [
@@ -300,7 +300,7 @@
         "vercel-alternative",
         "student-upgrade"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-24",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -361,6 +361,27 @@
           "quote": "Workers per account | 100 | 500",
           "url": "https://developers.cloudflare.com/workers/platform/limits/",
           "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
+          "text": "Workers Free allows 5 Cron Triggers per account. Workers Paid allows 1,000.",
+          "quote": "Number of Cron Triggers per account | 5 | 1,000",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/",
+          "read_on": "2026-11-24",
+          "operating_detail": true
+        },
+        {
+          "text": "Workers Free includes Vectorize with 30M queried vector dimensions/month, 5M stored vector dimensions, and 100 indexes. Cloudflare says the Workers free tier will always include Vectorize for prototyping.",
+          "quote": "Yes, the Workers free tier will always include the ability to prototype and experiment with Vectorize for free.",
+          "url": "https://developers.cloudflare.com/vectorize/platform/pricing/",
+          "read_on": "2026-11-24",
+          "operating_detail": true
+        },
+        {
+          "text": "Dynamic Workers are available only on the Workers Paid plan.",
+          "quote": "Dynamic Workers are currently only available on the Workers Paid plan.",
+          "url": "https://developers.cloudflare.com/dynamic-workers/pricing/",
+          "read_on": "2026-11-24",
           "operating_detail": true
         },
         {
