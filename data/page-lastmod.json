@@ -3197,6 +3197,10 @@
       "hash": "72c3a3963d033440",
       "changed": "2026-11-16"
     },
+    "/digest/2027-w20": {
+      "hash": "2531d441158fef1c",
+      "changed": "2026-11-24"
+    },
     "/digest/2027-w22": {
       "hash": "c99d39d693d7e817",
       "changed": "2026-11-19"
@@ -3755,6 +3759,10 @@
       "hash": "2cc7b721524eb53f",
       "changed": "2026-11-22"
     },
+    "/shutdowns/anthropic-api-2027-01-22-claude-opus-4-5-on-the-claude-api": {
+      "hash": "cc3d9e9e07065504",
+      "changed": "2026-11-24"
+    },
     "/shutdowns/apiary-io-2026-10-31-apiary-io": {
       "hash": "ac41a445991ab893",
       "changed": "2026-11-21"
@@ -3794,6 +3802,10 @@
     "/shutdowns/aws-2027-04-08-claude-sonnet-4-5-on-amazon-bedrock": {
       "hash": "8ca7c64d89aa12c4",
       "changed": "2026-11-21"
+    },
+    "/shutdowns/aws-2027-05-23-claude-opus-4-5-on-amazon-bedrock": {
+      "hash": "314fbd528e180e7b",
+      "changed": "2026-11-24"
     },
     "/shutdowns/aws-2027-07-29-aws-lambda-s-deprecated-runtimes-python-3-8-3-9-and-3-10-node-js-16-18-and-20-net-6-and-8-ruby-3-2-and-provided-al2": {
       "hash": "680e05d40d5e2ddd",
