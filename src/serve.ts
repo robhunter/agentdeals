@@ -23313,7 +23313,7 @@ function geminiFlashPriceStepEntry(servedOn: string): GeminiTimelineEntry | null
 }
 
 function buildGeminiApiPricing2026Page(): string {
-  const title = "Gemini API Pricing 2026 — Free Tier Changes, Spend Caps & Alternatives";
+  const title = pricingGuideTitle("gemini-api-pricing-2026", "Gemini API Pricing 2026 — Free Tier Changes, Spend Caps & Alternatives");
   const metaDesc = "Gemini API billing changes in March and April 2026: spend caps by tier ($250 to $100K+ a month, enforced from April 1), prepay for new users and, from a cutover reported as October 12, 2026, for existing Postpay accounts, and Gemini 3.1 Pro Preview paid only. The free tier covers the Gemini 3.x Flash and Flash-Lite models.";
   const slug = "gemini-api-pricing-2026";
   const pubDate = "2026-03-26";
@@ -23447,8 +23447,8 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("changes")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Gemini API Pricing 2026</div>
-  <h1>Gemini API Pricing 2026 — Free Tier Changes, Spend Caps &amp; Alternatives</h1>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Gemini API Pricing ${currentYearLabel()}</div>
+  <h1>Gemini API Pricing ${currentYearLabel()} — Free Tier Changes, Spend Caps &amp; Alternatives</h1>
   <p class="pub-date">Published ${pubDate} &middot; Spend caps enforced April 1 &middot; 3.1 Pro paid-only &middot; Prepaid billing live &middot; ${pageDataProvenance("/gemini-api-pricing-2026", offers.length)}</p>
 
   <div class="summary-stats">
@@ -28158,7 +28158,7 @@ function upcomingChangesNamingTheVendorHtml(upcomingRows: string[]): string {
 }
 
 function buildStartupCreditsPage(): string {
-  const title = "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints";
+  const title = pricingGuideTitle("startup-credits", "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints");
   const metaDesc = STARTUP_CREDITS_META_DESCRIPTION;
   const slug = "startup-credits";
   const pubDate = "2026-03-27";
@@ -28368,7 +28368,7 @@ function buildStartupCreditsPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("alternatives") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Startup Programs</a> &rsaquo; Credits Comparison</div>\n' +
-    '  <h1>Startup Credits Comparison \u2014 The 2026 Guide</h1>\n' +
+    '  <h1>Startup Credits Comparison \u2014 The ' + currentYearLabel() + ' Guide</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + STARTUP_PROGRAMS.length + ' programs compared &middot; ' + pageDataProvenance("/startup-credits", offers.length) + '</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -45265,7 +45265,7 @@ const STRUCTURALLY_FREE_CARDS = [
 
 function buildStateOfFreeTiersPage(): string {
   const changesInForce = recordsStillInForce(dealChanges);
-  const title = "State of Developer Free Tiers (2026) — Data from " + offers.length.toLocaleString() + "+ Tools | AgentDeals";
+  const title = `State of Developer Free Tiers (${currentYearLabel()}) — Data from ${offers.length.toLocaleString()}+ Tools | AgentDeals`;
   const metaDesc = `${trackedChanges(changesInForce).length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${categories.length} categories analyzed. The authoritative data on developer free tier trends, erosion patterns, and which vendors are still expanding.`;
   const now = new Date().toISOString().split("T")[0];
 
@@ -45440,8 +45440,8 @@ function buildStateOfFreeTiersPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Report",
-    headline: "State of Developer Free Tiers (2026)",
-    name: "State of Developer Free Tiers (2026)",
+    headline: `State of Developer Free Tiers (${currentYearLabel()})`,
+    name: `State of Developer Free Tiers (${currentYearLabel()})`,
     description: metaDesc,
     url: `${BASE_URL}/state-of-free-tiers`,
     datePublished: "2026-04-05",
@@ -45465,7 +45465,7 @@ function buildStateOfFreeTiersPage(): string {
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
 <link rel="canonical" href="${BASE_URL}/state-of-free-tiers">
-<meta property="og:title" content="State of Developer Free Tiers (2026) — Data from ${offers.length.toLocaleString()}+ Tools">
+<meta property="og:title" content="State of Developer Free Tiers (${currentYearLabel()}) — Data from ${offers.length.toLocaleString()}+ Tools">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="article">
 <meta property="og:url" content="${BASE_URL}/state-of-free-tiers">
@@ -45515,7 +45515,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("report")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; State of Free Tiers</div>
-  <h1>State of Developer Free Tiers (2026)</h1>
+  <h1>State of Developer Free Tiers (${currentYearLabel()})</h1>
   <p class="page-meta">${changeCountPhrase("tracked", changesInForce)} across ${offers.length.toLocaleString()} developer tools, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>. ${negativeChanges.length} negative vs ${positiveChanges.length} positive. The ratio tells the story.${dataChangesSegment(changesInForce)}</p>
 
   <h2>Executive Summary</h2>

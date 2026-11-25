@@ -15,11 +15,13 @@ const currentYearAlternatives = new Set([
   "ai-ml-alternatives", "design-alternatives", "email-alternatives",
   "project-management-alternatives", "ide-code-editors-alternatives",
   "free-llm-apis", "api-development-alternatives", "team-collaboration-alternatives",
+  "gemini-api-pricing-2026", "startup-credits",
   "free-startup-stack", "free-ai-stack", "free-devops-stack", "free-frontend-stack",
   "free-nextjs-stack", "free-django-stack", "free-fastapi-stack", "free-go-stack", "free-saas-stack",
 ]);
 
 const currentYearComparisons = new Set([
+  "state-of-free-tiers",
   "google-developer-program-2026", "aws-free-tier-2026", "gcp-free-tier-2026",
   "azure-free-tier-2026", "digitalocean-free-tier-2026",
   "ai-coding-tools-pricing", "ci-cd-pricing", "database-pricing",

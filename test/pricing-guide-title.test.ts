@@ -179,6 +179,19 @@ it("updates guide metadata when a running server crosses the year boundaries", a
           .map(match => JSON.parse(match[1])).find(value => value["@type"] === "Article");
         assert.ok(article?.headline.includes(label), `${instant}: ${slug} structured title`);
       }
+      for (const slug of ["gemini-api-pricing-2026", "startup-credits", "state-of-free-tiers"]) {
+        const page = await (await fetch(`${base}/${slug}`)).text();
+        assert.ok(page.match(/<title>(.*?)<\/title>/)?.[1].includes(label), `${instant}: ${slug} title`);
+        assert.ok(page.match(/<h1>(.*?)<\/h1>/)?.[1].includes(label), `${instant}: ${slug} heading`);
+        const structured = [...page.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+          .map(match => JSON.parse(match[1])).find(value => value["@type"] === "Article" || value["@type"] === "Report");
+        assert.ok(structured?.headline.includes(label), `${instant}: ${slug} structured title`);
+        const entries = [...list.matchAll(new RegExp(String.raw`<a[^>]+href="/${slug}"[\s\S]*?</a>`, "g"))];
+        assert.ok(entries.some(entry => entry[0].includes(label)), `${instant}: ${slug} guide title`);
+        if (slug === "gemini-api-pricing-2026") {
+          assert.ok(page.includes("billing changes in March and April 2026"), `${instant}: historical Gemini dates`);
+        }
+      }
       const llm = await (await fetch(`${base}/llm-api-pricing`)).text();
       assert.ok(llm.match(/<title>(.*?)<\/title>/)?.[1].includes(label), `${instant}: LLM title`);
       assert.ok(llm.match(/<h1>(.*?)<\/h1>/)?.[1].includes(label), `${instant}: LLM heading`);
