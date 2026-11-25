@@ -1,15 +1,26 @@
 {
   "held": [
     {
-      "vendor": "Harness CI",
+      "vendor": "MiniMax",
       "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The current pricing page confirms pay-as-you-go billing and lists the same LLM prices (M3.1-Flash $0.15/$0.60, cached $0.015. M3 $0.30/$1.20 with permanent 50% off). It also shows a much broader and partly different product lineup: H3 video models with new tiers and provider-hosted variants, H3-Image models replacing image-01 as the headline image offering, speech-2.8 models, and audio packages.",
+      "previous_state": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3.1-Flash $0.15/$0.60 (per 1M tokens; cached input $0.015), on pay-as-you-go since its release on 2026-10-19 and the cheapest text model there; MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount). MiniMax retired the M2.5 and M2.7 models on 2026-11-18. Pay-as-you-go API requests to them no longer work. On M Plan and Token Plan, requests that name these models go to M3.1 Flash and the old model names still work. Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Subscriptions: M Plan Go $22, Explore $55 and Build $132 a month, with the first month half price on monthly billing during the M Plan launch; annual billing charges 10 months for 12. The Token Plan no longer takes new purchases.",
+      "current_state": "Pay-as-you-go billing remains available: users add funds to their account and pay per usage in USD, with charges based on tokens, characters, duration, images, voices, or requests depending on the service. LLM pricing lists MiniMax-M3.1-Flash at $0.15 input / $0.60 output / $0.015 cached read per M tokens, and MiniMax-M3 at $0.30/$1.20 (≤512k input) and $0.60/$2.40 (>512k input) with a permanent 50% discount, plus Priority tier at 1.5x standard. Video, image, audio, MCP, and server tool pricing are listed separately, and Audio Packages are offered as an alternative billing option for speech models.",
+      "source_url": "https://platform.minimax.io/docs/guides/pricing-paygo",
+      "category": "AI / ML",
+      "first_read_date": "2026-11-25"
+    },
+    {
+      "vendor": "twist.com",
+      "change_type": "product_deprecated",
       "impact": "high",
-      "summary": "The free plan now includes Harness Open Source and Litmus Chaos, and community support. It has limits of 60 concurrent pipeline executions, 250GB storage, and up to 5 users.",
-      "previous_state": "CI/CD platform — free plan: 2,000 Harness Cloud credits a month that expire monthly, 2,000 minutes on the 2-core Linux machine and 1,000 on the 4-core one. Harness Cloud on the Free plan needs a business email address and credit card validation. Builds on your own machine with the local runner have no limits. Paid plans have no published price.",
-      "current_state": "The Free Plan includes Harness Open Source, Litmus Chaos, and Community support. It allows up to 5 users, 250GB of storage, and 60 concurrent pipeline executions.",
-      "source_url": "https://www.harness.io/pricing",
-      "category": "CI/CD",
-      "first_read_date": "2026-11-01"
+      "summary": "Twist's free plan now caps internal member accounts at 500 and external guest accounts at 500, and the product is being replaced by Todoist Comms with a shutdown date of March 1, 2027.",
+      "previous_state": "An asynchronous-friendly team communication app where conversations stay organized and on-topic. Free and Unlimited plans are available. Discounts are provided for eligible teams.",
+      "current_state": "Free plan at US$0 per user per month includes access up to 1 month of comments and messages, up to 5 integrations, up to 5 GB file storage, standard support, up to 500 internal member accounts, and up to 500 external guest accounts. The page also states Twist is being replaced by Todoist Comms and will close on March 1, 2027.",
+      "source_url": "https://twist.com/pricing",
+      "category": "Team Collaboration",
+      "first_read_date": "2026-11-25"
     }
   ],
   "resolved": [
@@ -3894,6 +3905,18 @@
       "outcome": "contradicted",
       "detail": "a reading on 2026-11-24 read the page as unchanged",
       "resolved_date": "2026-11-24"
+    },
+    {
+      "vendor": "Harness CI",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free plan now includes Harness Open Source and Litmus Chaos, and community support. It has limits of 60 concurrent pipeline executions, 250GB storage, and up to 5 users.",
+      "previous_state": "CI/CD platform — free plan: 2,000 Harness Cloud credits a month that expire monthly, 2,000 minutes on the 2-core Linux machine and 1,000 on the 4-core one. Harness Cloud on the Free plan needs a business email address and credit card validation. Builds on your own machine with the local runner have no limits. Paid plans have no published price.",
+      "source_url": "https://www.harness.io/pricing",
+      "first_read_date": "2026-11-01",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-25 read it as pricing_restructured too",
+      "resolved_date": "2026-11-25"
     }
   ]
 }

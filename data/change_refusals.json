@@ -341,6 +341,18 @@
     },
     {
       "vendor": "Amplitude",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description never claimed Experiments, Guides, Surveys, or their limits; unlimited feature flags remain, so no stored term is contradicted.",
+      "summary": "The Free plan no longer includes unlimited feature flags as described. The page now lists 'Limited Experiments, Guides & Surveys' and shows Free with 1 active experiment, 1 guide/survey, and 1 web experiment. Unlimited feature flags remain. The broader experimentation/guides limits are now explicitly capped.",
+      "previous_state": "Product analytics — Free plan: 2M events a month, 10K session replays a month (1-month replay retention), unlimited feature flags, 1-year data access, 10 saved charts, unlimited team members. No credit card required.",
+      "current_state": "Free plan: 2M events/month forever, no credit card required; includes AI Agents and MCP, Product Analytics, Agent Analytics, cohort syncs (one time), 2000 AI feedback records, 10K monthly session replays, limited Experiments, Guides & Surveys, 1 active experiment, 1 guide/survey, 1 web experiment, unlimited feature flags, 10 saved charts per org, 1 space, 1-year data access, unlimited team members.",
+      "source_url": "https://amplitude.com/pricing",
+      "category": "Analytics",
+      "refused_date": "2026-11-25"
+    },
+    {
+      "vendor": "Amplitude",
       "change_type": "new_tier",
       "reason": "dangling_reference",
       "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
@@ -568,6 +580,18 @@
       "source_url": "https://appetize.io/pricing",
       "category": "Testing",
       "refused_date": "2026-10-09"
+    },
+    {
+      "vendor": "Appetize",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-11-03 (states_no_narrowing) stated the same 4 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier's session limit changed from 30 minutes of usage per month to a 3-minute session limit, and the free tier now lists 2 active devices maximum with 30 minutes refilled monthly.",
+      "previous_state": "Test your Android & iOS apps on this Cloud Based Android Phone / Tablets emulator and iPhone/iPad simulators directly in your browser. The free tier includes two concurrent session with 30 minutes of usage per month. No limit on app size.",
+      "current_state": "Free plan is $0/mo for a single user with 2 active devices maximum and 30 minutes refilled monthly; the comparison table lists a 3-minute session limit for the Free plan.",
+      "source_url": "https://appetize.io/pricing",
+      "category": "Testing",
+      "refused_date": "2026-11-25"
     },
     {
       "vendor": "Appetize",
@@ -2451,6 +2475,18 @@
     {
       "vendor": "CodeFactor",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-11-03 (zero_allowance) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free Community tier now lists 0 private repositories, whereas the stored deal info says the free version includes one private repo.",
+      "previous_state": "Automated Code Review for Git. The free version includes unlimited users, public repositories, and one private repo.",
+      "current_state": "Community is $0 / per month with 0 private repositories, unlimited users, and unlimited public repos.",
+      "source_url": "https://www.codefactor.io/pricing",
+      "category": "Code Quality",
+      "refused_date": "2026-11-25"
+    },
+    {
+      "vendor": "CodeFactor",
+      "change_type": "limits_reduced",
       "reason": "zero_allowance",
       "detail": "limits_reduced claimed on a state that grants zero of a resource — \"0 private repositories\". A vendor states a withdrawn allowance by dropping the row, not by publishing a zero, so a literal zero reads as a widget or plan configurator that had not populated when the page was fetched",
       "summary": "The free Community plan now lists 0 private repositories, whereas the stored deal info says the free version includes one private repo.",
@@ -2543,6 +2579,18 @@
       "source_url": "https://www.coderabbit.ai/pricing",
       "category": "Code Quality",
       "refused_date": "2026-11-11"
+    },
+    {
+      "vendor": "CodSpeed",
+      "change_type": "pricing_restructured",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The stored deal describes a 'Free' tier that is 'Free forever for Open Source projects.' The current pricing page no longer presents a free-forever open source tier as the main free offering; instead the free entry point is a 'Hobby' plan at $0/month with limits (up to 5 active contributors, 3-month performance history, $50 in free monthly credits), and open source is now a separate 'Open Source program' requiring an application for non-commercial OSI-licensed projects.",
+      "previous_state": "Automate performance tracking in your CI pipelines. Catch performance regressions before deployment, thanks to precise and consistent metrics. Free forever for Open Source projects.",
+      "current_state": "Hobby is $0/month, free with no credit card required, for side projects and small teams, with $50 in free monthly credits, up to 5 active contributors, 3-month performance history, performance checks on pull requests, CPU/walltime/memory instruments, agentic performance review, and proactive optimizations. A separate Open Source program offers free credits every month for non-commercial projects under OSI-approved licenses, with no contributor cap and unlimited history, by application.",
+      "source_url": "https://codspeed.io/pricing",
+      "category": "Code Quality",
+      "refused_date": "2026-11-25"
     },
     {
       "vendor": "Cohere",
@@ -2988,6 +3036,18 @@
       "category": "Headless CMS",
       "refused_date": "2026-09-18",
       "collided_with": "Crystallize|limits_reduced|2026-09-02|https://crystallize.com/pricing"
+    },
+    {
+      "vendor": "Cube",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-11-03 (states_no_terms) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier no longer advertises the 1,000 queries per day limit; the comparison table now lists a 'Compute Request limit daily' of 1,000 for Free, and the Free plan is described as 'Free forever' with features like workbooks (up to 5), semantic layer IDE, agents, and MCP server. The stored description's specific '1,000 queries per day' phrasing is not present, but the daily request limit of 1,000 remains.",
+      "previous_state": "Cube helps data engineers and application developers access data from modern data stores, organize it into consistent definitions, and deliver it to every application. The fastest way to use Cube is with Cube Cloud, which has a free tier limited to 1,000 queries per day.",
+      "current_state": "Free is 'Free forever' for hobbyists; features include connecting any data source, modeling in semantic layer IDE, exploring data in workbooks (up to 5), publishing workbooks as dashboards, semantic model agent, workbooks and dashboards agent, analytics chat, and MCP server for AI agents. The comparison table lists a daily compute request limit of 1,000 for Free.",
+      "source_url": "https://cube.dev/pricing",
+      "category": "Notebooks & Data Science",
+      "refused_date": "2026-11-25"
     },
     {
       "vendor": "Cube",
@@ -5509,6 +5569,18 @@
       "category": "Monitoring",
       "refused_date": "2026-09-17",
       "collided_with": "Grafana Cloud|pricing_restructured|2026-09-02|https://grafana.com/pricing/"
+    },
+    {
+      "vendor": "Grafana Cloud",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The stored description says the Pro plan includes 10k active series and 50 GB each of logs and traces, but the current page shows Pro's platform fee includes 10k active series for metrics, 50 GB ingested for logs, 50 GB ingested for traces, and 50 GB ingested for profiles, with metrics retention of 13 months and 30 days for logs, traces, profiles, and k6 tests. The free tier limits and retention remain consistent with the stored info.",
+      "previous_state": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. Pro costs $19 a month plus usage, includes 10k active series and 50 GB each of logs and traces, and bills usage above them. Pro keeps metrics for 13 months and logs, traces, profiles and k6 tests for 30 days.",
+      "current_state": "Pro is self-serve from $19/month + usage. The platform fee includes 10k active series per month for metrics, 50 GB ingested per month for logs, 50 GB ingested per month for traces, and 50 GB ingested per month for profiles, then pay as you go. Pro includes 13 months retention for metrics and 30 days retention for logs, traces, profiles, and k6 performance tests, plus 8x5 email support.",
+      "source_url": "https://grafana.com/pricing/",
+      "category": "Monitoring",
+      "refused_date": "2026-11-25"
     },
     {
       "vendor": "Grafana k6 Cloud",
@@ -12764,6 +12836,18 @@
       "refused_date": "2026-10-14"
     },
     {
+      "vendor": "Todoist",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-14 (no_price_signal) claimed the same change, limits_increased, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier is now called 'Beginner' and its limits differ from the stored description: it now includes 5 personal projects, Quick Add, Task reminders, flexible list & board layouts, 3 filter views, 1 week reporting history, and integrations. Notably, task reminders and labels are now available on the free tier (stored info said no reminders and no labels), and file uploads remain 5 MB.",
+      "previous_state": "Up to 5 active projects. Up to 5 collaborators per project. 5 MB file upload limit. Basic priority levels. No reminders, no labels, no filters, no calendar view on free tier. One week of activity history.",
+      "current_state": "Beginner is US $0 and includes 5 personal projects, Quick Add, Task reminders, flexible list & board layouts, 3 filter views, 1 week reporting history, and integrations with email and calendar. Labels are listed as Available on Beginner. File uploads are 5 MB.",
+      "source_url": "https://todoist.com/pricing",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-11-25"
+    },
+    {
       "vendor": "Together AI",
       "change_type": "free_tier_removed",
       "reason": "states_no_terms",
@@ -13605,15 +13689,15 @@
     },
     {
       "vendor": "Weights & Biases",
-      "change_type": "limits_increased",
+      "change_type": "rebranded",
       "reason": "confirmed_unchanged",
-      "detail": "The report details features already present in the stored description, just worded differently. The storage and ingestion limits are also unchanged.",
-      "summary": "The free tier now includes AI application evaluations, tracing, scoring, model experiment tracking, and a registry. It also includes 5 GB/mo of storage and 1 GB/mo of Weave data ingestion. The Pro plan starts at $60/month and includes unlimited teams, team-based access controls, service accounts, priority support, and CI/CD automations. The page also details Enterprise plans with custom pricing.",
+      "detail": "The stored description already states the service is sold as CoreWeave Forge; the report only restates that rebranding, and the free-tier terms are unchanged.",
+      "summary": "The product has been rebranded from Weights & Biases to CoreWeave Forge.",
       "previous_state": "ML experiment tracking, model registry, and LLM app tracing and evaluation (Weave). W&B's hosted service is now sold as CoreWeave Forge. Its Free plan is $0/mo and designed for personal development, with up to 5 model seats, 5 GB/mo of storage and 1 GB/mo of Weave data ingestion. Pro starts at $60/month with a 30-day free trial and is for teams with fewer than 50 employees. Self-managed W&B Server needs a license; W&B's docs offer a free trial license, and CoreWeave's pricing page lists no free self-hosted plan.",
-      "current_state": "Free: Designed for personal development of AI applications and models $0/mo. Features includes: AI application evaluations, AI application tracing, AI application scorers, AI model experiment tracking, AI assets registry & lineage tracking, Community Support. 5 GB/mo storage, 1 GB/mo Weave data ingestion. Pro: Starts at $60/month, billed monthly. All features from Free, plus: Unlimited teams for collaboration, Team-based access controls, Service Accounts, Priority email & chat support, CI/CD automations, Slack and email alerts.",
+      "current_state": "CoreWeave Forge Free is $0/mo, designed for personal development of AI applications and models, with up to 5 model seats, 5 GB/mo storage, and 1 GB/mo Weave data ingestion. Pro starts at $60/month billed monthly with a 30-day free trial for early-stage teams fewer than 50 employees.",
       "source_url": "https://coreweave.com/forge-pricing",
       "category": "AI / ML",
-      "refused_date": "2026-10-08"
+      "refused_date": "2026-11-25"
     },
     {
       "vendor": "Weights & Biases",
@@ -13715,6 +13799,18 @@
     },
     {
       "vendor": "wistia.com",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-11-03 (unquantified_limit) stated the same 4 figures, so the page showed these terms before the date this record gives",
+      "summary": "The Free plan's terms have changed: the stored description says 25 videos, but the current page lists 25 GB of storage, 1 user, 3,000+ lifetime credits, basic video analytics, and Wistia branding. The video-count limit is no longer stated; storage is now the limiting metric.",
+      "previous_state": "Video hosting with viewer analytics, HD video delivery, and marketing tools to help understand your visitors, 25 videos, and Wistia branded player",
+      "current_state": "Free $0/mo: 25 GB of storage, max 1 user, 3,000+ lifetime credits, basic video analytics, Wistia branding included, AI editing and motion graphics with Mochine.",
+      "source_url": "https://wistia.com/pricing",
+      "category": "Video",
+      "refused_date": "2026-11-25"
+    },
+    {
+      "vendor": "wistia.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (25 video)",
@@ -13736,6 +13832,18 @@
       "source_url": "https://workos.com/pricing",
       "category": "Auth",
       "refused_date": "2026-10-10"
+    },
+    {
+      "vendor": "WorkOS",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-10 (confirmed_unchanged) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored deal info says Audit Logs are free with paid options for log streaming and event retention, but the pricing page now lists Audit Logs with a $0/month base plus paid add-ons: Log streaming at $125/mo per SIEM connection and Event Retention at $99/mo per million events stored. The free tier for Audit Logs still exists, but the paid add-on pricing is now specified.",
+      "previous_state": "User Management is free for up to 1 million users. Single Sign-On starts at $125/connection. Directory Sync starts at $125/connection. Audit Logs are free with paid options for log streaming and event retention. Radar is free for the first 1,000 checks.",
+      "current_state": "Audit Logs: $0/month base; Log streaming $125/mo per SIEM connection; Event Retention $99/mo per million events stored.",
+      "source_url": "https://workos.com/pricing",
+      "category": "Auth",
+      "refused_date": "2026-11-25"
     },
     {
       "vendor": "Wraps",
