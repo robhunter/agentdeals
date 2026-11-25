@@ -422,7 +422,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 105,
+      "table_figures": 107,
       "table_figures_from_records": 67,
       "tables": [
         {
@@ -432,7 +432,7 @@
         },
         {
           "label": "Container Deployment Alternatives",
-          "figures": 66,
+          "figures": 68,
           "from_records": 37
         },
         {
@@ -1772,7 +1772,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 58,
+      "table_figures": 54,
       "table_figures_from_records": 0,
       "tables": [
         {
@@ -1787,7 +1787,7 @@
         },
         {
           "label": "4. 🔴 High Risk — Plan Your Exit",
-          "figures": 5,
+          "figures": 3,
           "from_records": 0
         },
         {
@@ -1802,7 +1802,7 @@
         },
         {
           "label": "7. Full Scoring Table",
-          "figures": 29,
+          "figures": 27,
           "from_records": 0
         }
       ],
@@ -2138,7 +2138,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 151,
+      "table_figures": 153,
       "table_figures_from_records": 32,
       "tables": [
         {
@@ -2153,7 +2153,7 @@
         },
         {
           "label": "6. Alternatives Comparison",
-          "figures": 63,
+          "figures": 65,
           "from_records": 32
         }
       ],
@@ -2199,12 +2199,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 111,
+      "table_figures": 108,
       "table_figures_from_records": 34,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 37,
+          "figures": 34,
           "from_records": 0
         },
         {
@@ -2267,12 +2267,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 159,
+      "table_figures": 162,
       "table_figures_from_records": 53,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 36,
+          "figures": 37,
           "from_records": 0
         },
         {
@@ -2282,7 +2282,7 @@
         },
         {
           "label": "Cost Comparison by Use Case",
-          "figures": 56,
+          "figures": 58,
           "from_records": 0
         },
         {
