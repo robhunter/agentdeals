@@ -763,7 +763,7 @@
     {
       "vendor": "Railway",
       "category": "Cloud Hosting",
-      "description": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 of free credit per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. The Free plan allows 1 project with up to 3 services; the trial allows up to 5 services per project.",
+      "description": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 of free credit per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. The Free plan allows one project with up to 3 services; the trial allows up to 5 services per project.",
       "tier": "Free",
       "url": "https://railway.com/pricing",
       "tags": [
