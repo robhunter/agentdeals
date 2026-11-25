@@ -36,6 +36,18 @@ const comparisonQuestions = [
   ["hosting-free-tier-comparison-2026", "cloud hosting"],
 ];
 
+const otherQuestions = [
+  ["free-django-stack", "Can I host Django for free in YEAR?", false],
+  ["free-fastapi-stack", "Can I host FastAPI for free in YEAR?", false],
+  ["free-go-stack", "Can I host Go for free in YEAR?", false],
+  ["free-saas-stack", "What's the cheapest way to launch a SaaS in YEAR?", false],
+  ["free-tier-risk", "Which free tiers are safest to build on in YEAR?", true],
+  ["ai-coding-tools-pricing", "Which AI coding tools are free in YEAR?", true],
+  ["database-pricing", "Which database has the best free tier in YEAR?", true],
+  ["hosting-pricing", "What is the best free cloud hosting platform in YEAR?", true],
+  ["llm-api-pricing", "Which LLM API has the best free tier in YEAR?", true],
+] as const;
+
 describe("pricing guide titles", () => {
   it("rolls over on December 10 and adopts recent-change wording in 2027", () => {
     for (const [slug, original, future] of guides) {
@@ -126,6 +138,17 @@ it("updates guide metadata when a running server crosses the year boundaries", a
         const title = page.match(/<title>(.*?) — AgentDeals<\/title>/)?.[1];
         assert.ok(title?.includes(label), `${instant}: ${slug} page title`);
         assert.ok(list.includes(title.replaceAll("&amp;", "&")), `${instant}: ${slug} guide metadata`);
+      }
+      for (const [slug, template, visible] of otherQuestions) {
+        const response = await fetch(`${base}/${slug}`);
+        assert.equal(response.status, 200, `${instant}: ${slug} status`);
+        const page = await response.text();
+        const question = template.replace("YEAR", label);
+        assert.ok(page.includes(`"name":${JSON.stringify(question)}`), `${instant}: ${slug} structured question`);
+        if (visible) {
+          const body = page.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, "");
+          assert.ok(body.includes(question), `${instant}: ${slug} visible question`);
+        }
       }
       for (const [slug, noun] of comparisonQuestions) {
         const page = await (await fetch(`${base}/${slug}`)).text();
