@@ -1444,15 +1444,15 @@
     },
     {
       "vendor": "BrowserStack",
-      "change_type": "limits_reduced",
+      "change_type": "limits_increased",
       "reason": "no_price_signal",
-      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 7728 characters, so it states no terms to have changed",
-      "summary": "The open source program now offers unlimited testing on 3500+ browsers and devices, 5 users, and 5 parallels. The number of browsers/devices has decreased from 3000+ to 3500+.",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 9381 characters, so it states no terms to have changed",
+      "summary": "The open source program now offers lifetime access to 3500+ browsers and devices with 5 users and 5 parallels, and lists Live, Automate, and Percy as included products; the stored description said 3,000+ browsers/devices and included App Live and App Automate, which the page no longer lists for the open source program.",
       "previous_state": "Free for open source projects: unlimited testing on 3,000+ real browsers and devices, 5 users, 5 parallel sessions. Includes Live, Automate, App Live, and App Automate.",
-      "current_state": "With this program, you get: All products Unlimited testing on desktop and mobile: Live , Automate and Percy Lifetime access Program membership lasts for the duration of your projects. Fast releases Speed up testing and ship faster with access to 5 users and 5 parallels.",
+      "current_state": "Lifetime access to test open source projects on 3500+ browsers and devices, with all products, unlimited testing on desktop and mobile via Live, Automate and Percy, and access to 5 users and 5 parallels.",
       "source_url": "https://www.browserstack.com/open-source",
       "category": "Testing",
-      "refused_date": "2026-10-14"
+      "refused_date": "2026-11-24"
     },
     {
       "vendor": "Bubble",
@@ -2507,6 +2507,18 @@
       "source_url": "https://codeql.github.com/",
       "category": "Security",
       "refused_date": "2026-10-14"
+    },
+    {
+      "vendor": "CodeQL",
+      "change_type": "restriction",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-14 (no_price_signal) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The page no longer states that CodeQL is free for all public repositories with no scan limits; it now says CodeQL is free for research and open source, and that it can only be used on OSI-approved open source codebases, for academic research, or for automated analysis/CI/CD in limited cases (on open source codebases hosted and maintained on GitHub.com, or to test OSI-licensed queries), with other automated analysis/CI/CD uses requiring contact with sales.",
+      "previous_state": "GitHub semantic code analysis engine. Free for all public repositories with no scan limits. Supports JS/TS, Python, Java, C#, C/C++, Go, Ruby. Integrated into GitHub Actions.",
+      "current_state": "CodeQL is free for research and open source. It can only be used on codebases released under an OSI-approved open source license, or to perform academic research, or to generate CodeQL databases for or during automated analysis, CI or CD in the following cases: (1) on any open source codebase hosted and maintained on GitHub.com, and (2) to test CodeQL queries released under an OSI-approved open source software license. It can't be used for automated analysis, CI or CD except in those express cases; for these uses, contact the sales team.",
+      "source_url": "https://codeql.github.com/",
+      "category": "Security",
+      "refused_date": "2026-11-24"
     },
     {
       "vendor": "coderabbit.ai",
@@ -5066,15 +5078,15 @@
     },
     {
       "vendor": "Gitleaks",
-      "change_type": "restriction",
+      "change_type": "product_deprecated",
       "reason": "no_price_signal",
-      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 26544 characters, so it states no terms to have changed",
-      "summary": "The page does not explicitly state the free tier for the CLI tool or GitHub Actions. It mentions GitHub Advanced Security and Copilot as paid add-ons, and focuses on enterprise solutions. The stored information about the free CLI and GitHub Action for personal/org repos is not confirmed.",
-      "previous_state": "Open source (MIT) secret scanner for git repositories, files, and directories. CLI tool is free with no limits. GitHub Action free for personal repos and 1 org repo.",
-      "current_state": "The page highlights GitHub Advanced Security and Copilot as paid add-ons, and does not detail any free tiers for Gitleaks itself. It mentions Gitleaks-Action as an option, but doesn't specify its pricing.",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 26357 characters, so it states no terms to have changed",
+      "summary": "The Gitleaks repository README now states the project is feature complete and will only receive security patches going forward, with the maintainer shifting focus to a new project called Betterleaks. The stored deal info describes an actively maintained open source secret scanner, but the page indicates the product is being deprecated in favor of a successor.",
+      "previous_state": "Open source (MIT) secret scanner for git repositories, files, and directories. CLI tool is free with no limits. The GitHub Action needs no license key on personal accounts; repositories owned by a GitHub organization need a free license key from gitleaks.io.",
+      "current_state": "The README states: 'Gitleaks is feature complete. I'm not merging new features into Gitleaks. Future releases will be security patches only. I'm shifting my focus to Betterleaks.' The repository remains MIT licensed and the CLI tool is still described as free and open source with no license key requirements mentioned for the CLI.",
       "source_url": "https://github.com/gitleaks/gitleaks",
       "category": "Security",
-      "refused_date": "2026-10-14"
+      "refused_date": "2026-11-24"
     },
     {
       "vendor": "Glauca",
@@ -5998,6 +6010,18 @@
       "source_url": "https://httpsms.com",
       "category": "Messaging",
       "refused_date": "2026-10-05"
+    },
+    {
+      "vendor": "HubSpot for Startups",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored description says the startup discount has two bands: 90%/50%/25% off for eligible startups and 30%/15% off for those meeting neither condition. The current page only states that Seed and Series A founders get 90% off Year 1, with no mention of the 50%/25% year-two/year-three bands or the 30%/15% band for ineligible startups.",
+      "previous_state": "Two discount bands: startups meeting both conditions get 90% off in year one, then 50% off in year two and 25% off in year three. Startups meeting neither get 30% off in year one and 15% off in year two. Eligibility is checked against 4,000+ approved partners, or against funding verified through Pitchbook or Crunchbase.",
+      "current_state": "HubSpot for Startups gives Seed and Series A founders 90% off Year 1, discounts on AI credits as you grow, and agents priced on results, not seats.",
+      "source_url": "https://www.hubspot.com/startups",
+      "category": "Startup Perks",
+      "refused_date": "2026-11-24"
     },
     {
       "vendor": "Hugging Face",
@@ -9030,6 +9054,18 @@
       "refused_date": "2026-10-08"
     },
     {
+      "vendor": "OneCompiler",
+      "change_type": "limits_increased",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 3020 characters, so it states no terms to have changed",
+      "summary": "The stored description says OneCompiler's free tier supports 70+ languages, but the current page states it is free to use in 150+ languages and databases.",
+      "previous_state": "Free online compiler supporting 70+ languages including Java, Python, C++, JavaScript.",
+      "current_state": "Free to use, in 150+ languages; free online compiler with 150+ languages and databases.",
+      "source_url": "https://onecompiler.com/",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-11-24"
+    },
+    {
       "vendor": "OneDrive",
       "change_type": "free_tier_removed",
       "reason": "no_removal_evidence",
@@ -9776,6 +9812,18 @@
       "source_url": "https://labs.play-with-docker.com/",
       "category": "Container Registry",
       "refused_date": "2026-10-14"
+    },
+    {
+      "vendor": "Play with Docker",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-14 (no_price_signal) claimed the same change, product_deprecated, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "Play with Docker is being deprecated and will be unavailable starting March 1, 2026.",
+      "previous_state": "A simple, interactive, fun playground to learn Docker.",
+      "current_state": "Play with Docker will be unavailable starting March 1, 2026; users are directed to Docker Docs for supported labs and guides.",
+      "source_url": "https://labs.play-with-docker.com/",
+      "category": "Container Registry",
+      "refused_date": "2026-11-24"
     },
     {
       "vendor": "ploi.io",
@@ -13422,6 +13470,18 @@
       "refused_date": "2026-10-08"
     },
     {
+      "vendor": "Wave Terminal",
+      "change_type": "limits_increased",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 3383 characters, so it states no terms to have changed",
+      "summary": "Stored description says Wave is available for MacOS and Linux only, but the current page states it is available for MacOS, Linux, and Windows.",
+      "previous_state": "Wave is an open-source, cross-platform terminal for seamless workflows. Render anything inline. Save sessions and history. Powered by open web standards. MacOS and Linux.",
+      "current_state": "Wave is an open-source terminal available for MacOS, Linux, and Windows, with features including file previews, file editing, AI, web browsing, workspace organization, SSH connection manager with WSL support, screen splitting and layouts, remote file navigation and editing, built-in web browser, graphical widgets, local data storage with no login or account required, inline file previews, and pre-built dashboards.",
+      "source_url": "https://waveterm.dev/",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-11-24"
+    },
+    {
       "vendor": "We.Team",
       "change_type": "rebranded",
       "reason": "no_price_signal",
@@ -13456,6 +13516,18 @@
       "source_url": "https://webcomponents.dev/",
       "category": "IDE & Code Editors",
       "refused_date": "2026-10-14"
+    },
+    {
+      "vendor": "WebComponents.dev",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-14 (no_price_signal) claimed the same change, product_deprecated, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "WebComponents.dev is shutting down June 1st 2025, so the free in-browser IDE will no longer be available.",
+      "previous_state": "In-browser IDE to code web components in isolation with 58 templates available, supporting stories, and tests.",
+      "current_state": "The page states WebComponents.dev is shutting down June 1st 2025 and directs users to contact hello@divriots.com for more information.",
+      "source_url": "https://webcomponents.dev/",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-11-24"
     },
     {
       "vendor": "webhook.site",

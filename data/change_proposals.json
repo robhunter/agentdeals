@@ -2918,6 +2918,104 @@
       "restatement": [],
       "dropped_on": "2026-11-23",
       "drop_reason": "Recorded by hand: the 2026-11-23 new_free_tier record added with the Fly.io listing, from Fly.io's announcement (https://community.fly.io/t/introducing-the-free-plan/29145) and https://docs.fly.io/about/free-plan."
+    },
+    {
+      "proposal_id": "2026-11-24/koyeb/new_free_tier",
+      "proposed_on": "2026-11-24",
+      "vendor": "Koyeb",
+      "change_type": "new_free_tier",
+      "date": "2026-11-24",
+      "date_source": "discovered",
+      "summary": "The page also no longer shows a Starter plan.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Serverless platform for web services, workers and Postgres databases. No free plan for new users since February 2026: new organizations must subscribe to Pro ($29 a month plus compute, with $10 of compute included) or a higher plan. Every plan can run one small Postgres instance (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hours of compute a month) at no extra charge. Organizations already on the Starter plan keep it.",
+      "current_state": "The page lists a Free Postgres instance type at $0/hr and $0/mo with 0.25 vCPU, 1 GB RAM, 1GB storage, and 5h compute. Paid plans shown are Pro ($29/mo +compute, $10 included compute), Scale ($299/mo +compute, $100 included compute), and Enterprise (Custom +compute, starting at $1000/mo). No Starter plan is listed, and no statement appears that new users must subscribe to Pro or higher.",
+      "impact": "medium",
+      "source_url": "https://www.koyeb.com/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-24",
+      "restatement": [],
+      "dropped_on": "2026-11-24",
+      "drop_reason": "Not a change: koyeb.com/pricing (read 2026-11-24) lists Pro ($29/mo +compute, 'The best way to start') as its lowest plan and the Free Postgres instance (0.25 vCPU, 1 GB RAM, 1 GB storage, 5h), as our listing says. The page states no new free plan; it shows no Starter plan because Starter is closed to new organizations, which the listing already says."
+    },
+    {
+      "proposal_id": "2026-11-24/storyblok/limits_increased",
+      "proposed_on": "2026-11-24",
+      "vendor": "Storyblok",
+      "change_type": "limits_increased",
+      "date": "2026-11-24",
+      "date_source": "discovered",
+      "summary": "The page now lists Starter as '1 seat (up to 2)' with 'Costs per additional seat $15.00' and 'Users/Seats Maximum max 2'.",
+      "tier": "Starter",
+      "tier_direction": "widened",
+      "previous_state": "Headless CMS with visual editor for developers and marketers — Starter plan is free and includes 1 space, 1 user seat (with an additional seat available for $15/month), 100GB traffic/month, 100k API requests/month, 2 locales, 25k AI credits, 200 components, 20,000 stories, 2,000 assets, 1 day content versioning retention, 500MB max asset size, and 3 webhooks.",
+      "current_state": "Starter is Free (monthly and annually) and includes 1 space, 1 seat (up to 2), 100GB traffic, 100k API requests, 2 locales, 25k AI credits, 200 components, 20,000 stories, 2,000 assets, 1 day content versioning retention, 500MB max asset size, and 3 webhooks; additional seats cost $15.00 and the maximum is 2.",
+      "impact": "low",
+      "source_url": "https://www.storyblok.com/pricing",
+      "category": "Headless CMS",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-24",
+      "restatement": [],
+      "dropped_on": "2026-11-24",
+      "drop_reason": "Not a change: storyblok.com/pricing (read 2026-11-24) gives Starter '1 seat (up to 2)', 'Costs per additional seat $15.00' and 'Users/Seats Maximum max 2', the same terms our listing states (1 user seat, an additional seat for $15/month)."
+    },
+    {
+      "proposal_id": "2026-11-24/amazon-cloudfront/pricing_restructured",
+      "proposed_on": "2026-11-24",
+      "vendor": "Amazon CloudFront",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-24",
+      "date_source": "discovered",
+      "summary": "The page now shows flat-rate plans with different included allowances: Free $0/month includes 1M requests and 100GB data transfer (matching stored). Pro is $15/month with 10M requests and 50TB data transfer (stored said Pro is $15/month but did not state its limits), and the page no longer mentions the 1 TB/month pay-as-you-go free tier, 10,000,000 HTTP/HTTPS requests, 2,000,000 CloudFront Function invocations, 2,000,000 KeyValueStore reads, or the $0.085/GB USA data transfer rate.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "1 TB of data transfer out to the internet per month, 10,000,000 HTTP or HTTPS Requests per month, 2,000,000 CloudFront Function invocations per month, 2,000,000 CloudFront KeyValueStore reads per month, and free SSL certificates, always free under pay-as-you-go pricing. The flat-rate Free plan is $0/month per distribution. It includes 1 million requests, 100 GB of data transfer, and 5 GB of S3 storage a month, with no overage charges. An AWS account can have up to 3 Free plans. Pay-as-you-go data transfer in the USA is $0.085 per GB after the first TB. The flat-rate Pro plan is $15/month.",
+      "current_state": "Flat-rate plans: Free $0/month per distribution with 1M requests, 100GB data transfer, 5GB S3 storage, no overage charges; Pro $15/month with 10M requests and 50TB data transfer; Business $200/month with 125M requests and 50TB data transfer; Premium $1,000/month with 500M requests and 50TB data transfer. An AWS account can have up to 3 Free plans.",
+      "impact": "medium",
+      "source_url": "https://aws.amazon.com/cloudfront/pricing/",
+      "category": "CDN",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-24",
+      "restatement": [
+        {
+          "url": "https://aws.amazon.com/cloudfront/pricing/",
+          "description": "Flat-rate plans: Free $0/month per distribution with 1M requests, 100GB data transfer, 5GB S3 storage, no overage charges; Pro $15/month with 10M requests and 50TB data transfer; Business $200/month with 125M requests and 50TB data transfer; Premium $1,000/month with 500M requests and 50TB data transfer. An AWS account can have up to 3 Free plans."
+        }
+      ],
+      "dropped_on": "2026-11-24",
+      "drop_reason": "Not a change: AWS moved pay-as-you-go pricing to aws.amazon.com/cloudfront/pricing/pay-as-you-go/ (read 2026-11-24), which still lists 'Included in Always Free Tier: 1 TB of data transfer out to the internet per month, 10,000,000 HTTP or HTTPS Requests per month, 2,000,000 CloudFront Function invocations per month, 2,000,000 CloudFront KeyValueStore reads per month' and $0.085 per GB. The flat-rate page links to it ('Pay-as-you-go pricing')."
+    },
+    {
+      "proposal_id": "2026-11-24/railway/limits_reduced",
+      "proposed_on": "2026-11-24",
+      "vendor": "Railway",
+      "change_type": "limits_reduced",
+      "date": "2026-11-24",
+      "date_source": "discovered",
+      "summary": "The page's comparison table now lists Projects as 1 for Free (with no trial-based 5-project allowance), and the FAQ says 'You get 1 project with up to 3 services.'.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 of free credit per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. Projects: 5 during trial, then 1",
+      "current_state": "Free is $0 per month with $1 of monthly usage credits, no credit card required. It includes 1 project with up to 3 services, up to 1 vCPU and 0.5 GB RAM per service, 0.5 GB volume storage, 1 volume per project, 1 replica per service, 1 GB ephemeral disk, 3-day log retention, and services sleep after 5–10 minutes without outbound traffic and wake on request. New accounts start with a 30-day trial granting $5 in credits.",
+      "impact": "medium",
+      "source_url": "https://railway.com/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-24",
+      "restatement": [
+        {
+          "url": "https://railway.com/pricing",
+          "description": "Free is $0 per month with $1 of monthly usage credits, no credit card required. It includes 1 project with up to 3 services, up to 1 vCPU and 0.5 GB RAM per service, 0.5 GB volume storage, 1 volume per project, 1 replica per service, 1 GB ephemeral disk, 3-day log retention, and services sleep after 5–10 minutes without outbound traffic and wake on request. New accounts start with a 30-day trial granting $5 in credits."
+        }
+      ],
+      "dropped_on": "2026-11-24",
+      "drop_reason": "Not a change: the Free plan is unchanged. railway.com/pricing (read 2026-11-24) gives Free 1 project and 3 services per project, and its trial line says only 'Trial: higher limits and $5 in credits for your first 30 days'; the table no longer prints trial figures. docs.railway.com/pricing/plans (read 2026-11-24) still gives Trial 2 replicas and Free 1."
     }
   ]
 }

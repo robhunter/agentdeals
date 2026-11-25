@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-24",
+  "measured_on": "2026-11-25",
   "pages": [
     {
       "path": "/agent-payments",
@@ -421,8 +421,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 106,
-      "table_figures_from_records": 66,
+      "table_figures": 107,
+      "table_figures_from_records": 67,
       "tables": [
         {
           "label": "Deprecation Timeline",
@@ -446,8 +446,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 15,
-          "from_records": 15
+          "figures": 16,
+          "from_records": 16
         }
       ],
       "reads_changes": true,
@@ -490,8 +490,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 110,
-      "table_figures_from_records": 81,
+      "table_figures": 111,
+      "table_figures_from_records": 82,
       "tables": [
         {
           "label": "Always Free Services",
@@ -515,8 +515,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 15,
-          "from_records": 15
+          "figures": 16,
+          "from_records": 16
         }
       ],
       "reads_changes": true,
@@ -803,8 +803,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 97,
-      "table_figures_from_records": 43,
+      "table_figures": 98,
+      "table_figures_from_records": 44,
       "tables": [
         {
           "label": "Free Trial Credits",
@@ -843,8 +843,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 23,
-          "from_records": 23
+          "figures": 24,
+          "from_records": 24
         }
       ],
       "reads_changes": true,
@@ -2916,8 +2916,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 103,
-      "table_figures_from_records": 68,
+      "table_figures": 104,
+      "table_figures_from_records": 69,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2951,8 +2951,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 23,
-          "from_records": 23
+          "figures": 24,
+          "from_records": 24
         }
       ],
       "reads_changes": true,
@@ -2974,8 +2974,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 57,
-      "table_figures_from_records": 57,
+      "table_figures": 58,
+      "table_figures_from_records": 58,
       "tables": [
         {
           "label": "Related Pricing Changes",
@@ -2984,8 +2984,8 @@
         },
         {
           "label": "Upcoming Changes",
-          "figures": 53,
-          "from_records": 53
+          "figures": 54,
+          "from_records": 54
         }
       ],
       "reads_changes": true,
@@ -3570,8 +3570,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 73,
-      "table_figures_from_records": 52,
+      "table_figures": 74,
+      "table_figures_from_records": 53,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -3585,8 +3585,8 @@
         },
         {
           "label": "5. Other Hosting Alternatives",
-          "figures": 52,
-          "from_records": 52
+          "figures": 53,
+          "from_records": 53
         }
       ],
       "reads_changes": true,
