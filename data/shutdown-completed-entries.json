@@ -215,6 +215,11 @@
     "entry": "xAI's grok-build-0.1 (November 19, completed; no longer served on the API; xAI names no replacement; xAI's pricing and models pages still list it; xAI's retirement page still routes grok-code-fast-1 to it)"
   },
   {
+    "card_date": "2026-11-25",
+    "card_title": "OpenAI's models in Cursor",
+    "entry": "OpenAI's models in Cursor (November 25, completed; November 25 was the last day of OpenAI's extension; neither company has said whether OpenAI's models left Cursor)"
+  },
+  {
     "card_title": "Vertex AI Extensions",
     "card_date": "2026-11-26",
     "entry": "Vertex AI Extensions (November 26, completed; Google shut Vertex AI Extensions down and they stopped working, including prebuilt Code Interpreter and Vertex AI Search extensions and custom extensions; Google's migration guide says to move Code Interpreter to Agent Platform Code Execution Sandbox or the Gemini API code execution tool, move the Google Search extension to Grounding with Google Search, and move custom extensions built from OpenAPI specifications to function calling)"
