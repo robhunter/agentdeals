@@ -154,8 +154,25 @@ it("updates guide metadata when a running server crosses the year boundaries", a
           assert.ok(body.includes(question), `${instant}: ${slug} visible question`);
         }
       }
+      const serverless = await (await fetch(`${base}/serverless-free-tier-comparison-2026`)).text();
+      assert.ok(serverless.match(/<title>(.*?)<\/title>/)?.[1].includes(label), `${instant}: serverless title`);
+      assert.ok(serverless.match(/<h1>(.*?)<\/h1>/)?.[1].includes(label), `${instant}: serverless heading`);
+      assert.ok(serverless.match(/<meta name="description" content="([^"]*)"/)?.[1].includes(label), `${instant}: serverless description`);
       for (const [slug, noun] of comparisonQuestions) {
         const page = await (await fetch(`${base}/${slug}`)).text();
+        if (slug !== "monitoring-comparison-2026") {
+          const title = page.match(/<title>(.*?)<\/title>/)?.[1].replace(/ (?:—|&mdash;) AgentDeals$/, "");
+          const heading = page.match(/<h1>(.*?)<\/h1>/)?.[1];
+          const description = page.match(/<meta name="description" content="([^"]*)"/)?.[1];
+          assert.ok(title?.includes(label), `${instant}: ${slug} title`);
+          assert.ok(heading?.includes(label), `${instant}: ${slug} heading`);
+          assert.ok(description?.includes(label), `${instant}: ${slug} description`);
+          const article = [...page.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+            .map(match => JSON.parse(match[1])).find(value => value["@type"] === "Article");
+          assert.ok(article?.headline.includes(label), `${instant}: ${slug} structured title`);
+          assert.ok(article?.description.includes(label), `${instant}: ${slug} structured description`);
+          assert.ok(list.includes(title.replaceAll("&amp;", "&")), `${instant}: ${slug} guide title`);
+        }
         const question = `What is the best free ${noun} service in ${label}?`;
         assert.ok(page.includes(`<h3 style="margin:0 0 .5rem;font-size:1rem;color:var(--text)">${question}</h3>`), `${instant}: ${slug} visible question`);
         assert.ok(page.includes(`"name":"${question}"`), `${instant}: ${slug} structured question`);

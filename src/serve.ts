@@ -1,4 +1,4 @@
-import { currentYearLabel, pricingGuideTitle } from "./pricing-guide-title.js";
+import { currentYearLabel, pricingGuideDescription, pricingGuideTitle } from "./pricing-guide-title.js";
 import { shutdownIndexNote } from "./shutdown-index-note.js";
 import { shutdownPath, shutdownPaths } from "./shutdown-paths.js";
 import { shutdownPageContent } from "./shutdown-page.js";
@@ -8816,6 +8816,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
 const ALTERNATIVES_PAGES: AlternativesPageConfig[] = ALTERNATIVES_PAGE_CONTENT.map(page => ({
   ...page,
   get title() { return pricingGuideTitle(page.slug, page.title); },
+  get metaDesc() { return pricingGuideDescription(page.slug, page.metaDesc); },
   hubDesc: guideBlurb(page.slug),
 }));
 const ALTERNATIVES_GUIDES = ALTERNATIVES_PAGES.filter(page => !page.notAnAlternativesGuide);
@@ -35839,8 +35840,8 @@ function buildComparisonBreadcrumbJsonLd(slug: string, title: string): string {
 }
 
 function buildCloudFreeTierComparison2026Page(): string {
-  const title = "Cloud Free Tier Comparison 2026 — AWS vs GCP vs Azure vs DigitalOcean";
-  const metaDescComp = "Side-by-side comparison of AWS, GCP, Azure, and DigitalOcean free tiers in 2026. Compare always-free compute, databases, serverless, storage, startup credits, and hidden costs across all 4 major clouds.";
+  const title = pricingGuideTitle("cloud-free-tier-comparison-2026", "Cloud Free Tier Comparison 2026 — AWS vs GCP vs Azure vs DigitalOcean");
+  const metaDescComp = `Side-by-side comparison of AWS, GCP, Azure, and DigitalOcean free tiers in ${currentYearLabel()}. Compare always-free compute, databases, serverless, storage, startup credits, and hidden costs across all 4 major clouds.`;
   const slug = "cloud-free-tier-comparison-2026";
   const pubDate = "2026-03-31";
 
@@ -35961,7 +35962,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/cloud-hosting">Cloud Hosting</a> &rsaquo; Cloud Free Tier Comparison</div>
-  <h1>Cloud Free Tier Comparison 2026</h1>
+  <h1>Cloud Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/cloud-free-tier-comparison-2026", offers.length)} &middot; 4 cloud providers compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -36481,8 +36482,8 @@ function withNoLongerFreeSentence(html: string, declaredByThePage: (vendor: stri
 }
 
 function buildDatabaseFreeTierComparison2026Page(): string {
-  const title = "Database Free Tier Comparison 2026 — Supabase vs Neon vs Firebase vs Turso vs PlanetScale";
-  const metaDescDb = "Side-by-side comparison of 10+ database free tiers in 2026. Compare Supabase, Neon, Firebase, Turso, MongoDB, CockroachDB, Upstash, Cloudflare D1, and more — storage, compute, connections, and lock-in risk.";
+  const title = pricingGuideTitle("database-free-tier-comparison-2026", "Database Free Tier Comparison 2026 — Supabase vs Neon vs Firebase vs Turso vs PlanetScale");
+  const metaDescDb = `Side-by-side comparison of 10+ database free tiers in ${currentYearLabel()}. Compare Supabase, Neon, Firebase, Turso, MongoDB, CockroachDB, Upstash, Cloudflare D1, and more — storage, compute, connections, and lock-in risk.`;
   const slug = "database-free-tier-comparison-2026";
   const pubDate = "2026-03-31";
 
@@ -36628,7 +36629,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Database Free Tier Comparison</div>
-  <h1>Database Free Tier Comparison 2026</h1>
+  <h1>Database Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/database-free-tier-comparison-2026", offers.length)} &middot; ${COMPARED_SERVICES_PLACEHOLDER} database services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -37143,8 +37144,8 @@ ${globalNavCss()}
 }
 
 function buildCicdFreeTierComparison2026Page(): string {
-  const title = "CI/CD Free Tier Comparison 2026 — GitHub Actions vs GitLab CI vs CircleCI vs Buildkite";
-  const metaDescCicd = "Side-by-side comparison of 10+ CI/CD free tiers in 2026. Compare GitHub Actions, GitLab CI, CircleCI, Buildkite, Bitrise, Codemagic, Drone CI, and more — build minutes, concurrency, runners, and hidden costs.";
+  const title = pricingGuideTitle("cicd-free-tier-comparison-2026", "CI/CD Free Tier Comparison 2026 — GitHub Actions vs GitLab CI vs CircleCI vs Buildkite");
+  const metaDescCicd = `Side-by-side comparison of 10+ CI/CD free tiers in ${currentYearLabel()}. Compare GitHub Actions, GitLab CI, CircleCI, Buildkite, Bitrise, Codemagic, Drone CI, and more — build minutes, concurrency, runners, and hidden costs.`;
   const slug = "cicd-free-tier-comparison-2026";
   const pubDate = "2026-03-31";
 
@@ -37288,7 +37289,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/ci-cd">CI/CD</a> &rsaquo; CI/CD Free Tier Comparison</div>
-  <h1>CI/CD Free Tier Comparison 2026</h1>
+  <h1>CI/CD Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/cicd-free-tier-comparison-2026", offers.length)} &middot; 37 CI/CD services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -37800,8 +37801,8 @@ ${globalNavCss()}
 }
 
 function buildServerlessFreeTierComparison2026Page(): string {
-  const title = "Serverless Free Tier Comparison 2026 — AWS Lambda vs Cloud Functions vs Azure Functions vs Workers";
-  const metaDescServerless = "Side-by-side comparison of 10+ serverless free tiers in 2026. Compare AWS Lambda, Google Cloud Functions, Azure Functions, Cloudflare Workers, Deno Deploy, Cloud Run, Val Town, and more — invocations, compute, cold starts, and billing models.";
+  const title = pricingGuideTitle("serverless-free-tier-comparison-2026", "Serverless Free Tier Comparison 2026 — AWS Lambda vs Cloud Functions vs Azure Functions vs Workers");
+  const metaDescServerless = `Side-by-side comparison of 10+ serverless free tiers in ${currentYearLabel()}. Compare AWS Lambda, Google Cloud Functions, Azure Functions, Cloudflare Workers, Deno Deploy, Cloud Run, Val Town, and more — invocations, compute, cold starts, and billing models.`;
   const slug = "serverless-free-tier-comparison-2026";
   const workers = offers.find(offer => offer.vendor === "Cloudflare Workers" && offer.tier === "Free");
   const workersRequests = quantifiedAttributes(workers?.description.split(/\.\s|;/, 1)[0]).find(quantity =>
@@ -37951,7 +37952,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Serverless Free Tier Comparison</div>
-  <h1>Serverless Free Tier Comparison 2026</h1>
+  <h1>Serverless Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/serverless-free-tier-comparison-2026", offers.length)} &middot; 10+ serverless platforms compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -38449,8 +38450,8 @@ ${globalNavCss()}
 export const AUTH_COMPARISON_LISTINGS = ["Auth0", "Clerk", "Kinde", "PropelAuth", "Stytch", "Descope", "WorkOS", "Keycloak", "authentik", "FusionAuth", "SuperTokens", "Hanko", "Ory", "Authgear", "MojoAuth", "Stack Auth", "Permit.io", "Cerbos Hub", "Authress"];
 
 function buildAuthComparison2026Page(): string {
-  const title = "Auth & Identity Comparison 2026 — Auth0 vs Clerk vs Supabase Auth vs Firebase Auth";
-  const metaDescAuth = "Comprehensive comparison of 20+ auth free tiers in 2026. Compare Auth0, Clerk, Supabase Auth, Firebase Auth, PropelAuth, Kinde, Keycloak, Authentik, Authelia, Appwrite, and more — MAU/MRU limits, overage costs, MFA, SSO, agentic AI support, and growth pricing.";
+  const title = pricingGuideTitle("auth-comparison-2026", "Auth & Identity Comparison 2026 — Auth0 vs Clerk vs Supabase Auth vs Firebase Auth");
+  const metaDescAuth = `Comprehensive comparison of 20+ auth free tiers in ${currentYearLabel()}. Compare Auth0, Clerk, Supabase Auth, Firebase Auth, PropelAuth, Kinde, Keycloak, Authentik, Authelia, Appwrite, and more — MAU/MRU limits, overage costs, MFA, SSO, agentic AI support, and growth pricing.`;
   const slug = "auth-comparison-2026";
   const pubDate = "2026-04-03";
 
@@ -38603,7 +38604,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/auth">Auth</a> &rsaquo; Auth &amp; Identity Comparison</div>
-  <h1>Auth &amp; Identity Comparison 2026</h1>
+  <h1>Auth &amp; Identity Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/auth-comparison-2026", offers.length)} &middot; 20+ auth services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -39278,8 +39279,8 @@ ${upcomingChangesHtml}
 }
 
 function buildEmailComparison2026Page(): string {
-  const title = "Email & Transactional Messaging Comparison 2026 — SendGrid Alternatives After Free Tier Death";
-  const metaDescEmail = "Comprehensive comparison of 20+ email service free tiers in 2026. Resend, Postmark, Amazon SES, Brevo, Mailtrap, Loops, MailerSend, Mailjet, Maileroo, SMTP2GO, Mailchimp, MailerLite, EmailOctopus — SendGrid exodus migration guide, growth cost analysis at 10K/50K/100K/500K emails, deliverability traps.";
+  const title = pricingGuideTitle("email-comparison-2026", "Email & Transactional Messaging Comparison 2026 — SendGrid Alternatives After Free Tier Death");
+  const metaDescEmail = `Comprehensive comparison of 20+ email service free tiers in ${currentYearLabel()}. Resend, Postmark, Amazon SES, Brevo, Mailtrap, Loops, MailerSend, Mailjet, Maileroo, SMTP2GO, Mailchimp, MailerLite, EmailOctopus — SendGrid exodus migration guide, growth cost analysis at 10K/50K/100K/500K emails, deliverability traps.`;
   const slug = "email-comparison-2026";
   const pubDate = "2026-04-03";
 
@@ -39426,7 +39427,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/email">Email</a> &rsaquo; Email Comparison</div>
-  <h1>Email &amp; Transactional Messaging Comparison 2026</h1>
+  <h1>Email &amp; Transactional Messaging Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/email-comparison-2026", offers.length)} &middot; 20+ email services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -41222,8 +41223,8 @@ function storageScaleSpreadClause(): string {
 }
 
 function buildStorageComparison2026Page(): string {
-  const title = "Storage & CDN Comparison 2026 — S3 vs R2 vs B2 vs Supabase Storage vs Cloudinary";
-  const metaDescStorage = "Comprehensive comparison of 15+ storage and CDN free tiers in 2026. AWS S3, Cloudflare R2, Backblaze B2, Tigris, Storj, Supabase Storage, Cloudinary, ImageKit, BunnyCDN, MinIO — storage limits, egress fees, S3 compatibility, CDN, and the S3 egress tax at scale.";
+  const title = pricingGuideTitle("storage-comparison-2026", "Storage & CDN Comparison 2026 — S3 vs R2 vs B2 vs Supabase Storage vs Cloudinary");
+  const metaDescStorage = `Comprehensive comparison of 15+ storage and CDN free tiers in ${currentYearLabel()}. AWS S3, Cloudflare R2, Backblaze B2, Tigris, Storj, Supabase Storage, Cloudinary, ImageKit, BunnyCDN, MinIO — storage limits, egress fees, S3 compatibility, CDN, and the S3 egress tax at scale.`;
   const slug = "storage-comparison-2026";
   const pubDate = "2026-04-03";
 
@@ -41370,7 +41371,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/storage">Storage</a> &rsaquo; Storage &amp; CDN Comparison</div>
-  <h1>Storage &amp; CDN Comparison 2026</h1>
+  <h1>Storage &amp; CDN Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/storage-comparison-2026", offers.length)} &middot; 15+ storage &amp; CDN services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -41997,8 +41998,8 @@ ${globalNavCss()}
 }
 
 function buildTestingFreeTierComparison2026Page(): string {
-  const title = "Testing & QA Tools Free Tier Comparison 2026 — Cypress vs Playwright vs BrowserStack vs k6";
-  const metaDescTesting = "Side-by-side comparison of 15+ testing free tiers in 2026. Compare Playwright, Cypress Cloud, BrowserStack, Chromatic, k6, Checkly, Codecov, and more — test runs, minutes, snapshots, and scaling costs.";
+  const title = pricingGuideTitle("testing-free-tier-comparison-2026", "Testing & QA Tools Free Tier Comparison 2026 — Cypress vs Playwright vs BrowserStack vs k6");
+  const metaDescTesting = `Side-by-side comparison of 15+ testing free tiers in ${currentYearLabel()}. Compare Playwright, Cypress Cloud, BrowserStack, Chromatic, k6, Checkly, Codecov, and more — test runs, minutes, snapshots, and scaling costs.`;
   const slug = "testing-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
 
@@ -42148,7 +42149,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/testing">Testing</a> &rsaquo; Testing Free Tier Comparison</div>
-  <h1>Testing &amp; QA Tools Free Tier Comparison 2026</h1>
+  <h1>Testing &amp; QA Tools Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/testing-free-tier-comparison-2026", offers.length)} &middot; 15+ testing services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -42657,8 +42658,8 @@ ${globalNavCss()}
 }
 
 function buildAnalyticsFreeTierComparison2026Page(): string {
-  const title = "Analytics & Product Analytics Free Tier Comparison 2026 — PostHog vs Mixpanel vs Amplitude vs Plausible";
-  const metaDescAnalytics = "Side-by-side comparison of 15+ analytics free tiers in 2026. Compare PostHog, Mixpanel, Amplitude, Plausible, Google Analytics, Umami, and more — event limits, session replays, feature flags, and scaling costs.";
+  const title = pricingGuideTitle("analytics-free-tier-comparison-2026", "Analytics & Product Analytics Free Tier Comparison 2026 — PostHog vs Mixpanel vs Amplitude vs Plausible");
+  const metaDescAnalytics = `Side-by-side comparison of 15+ analytics free tiers in ${currentYearLabel()}. Compare PostHog, Mixpanel, Amplitude, Plausible, Google Analytics, Umami, and more — event limits, session replays, feature flags, and scaling costs.`;
   const slug = "analytics-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
   const GA4_SAMPLING_DOC = { url: "https://support.google.com/analytics/answer/13331292", readOn: "2026-10-07" };
@@ -42810,7 +42811,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/analytics">Analytics</a> &rsaquo; Analytics Free Tier Comparison</div>
-  <h1>Analytics &amp; Product Analytics Free Tier Comparison 2026</h1>
+  <h1>Analytics &amp; Product Analytics Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/analytics-free-tier-comparison-2026", offers.length)} &middot; 15+ analytics services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -43325,8 +43326,8 @@ ${globalNavCss()}
 }
 
 function buildApiDevelopmentFreeTierComparison2026Page(): string {
-  const title = "API Development Tools Free Tier Comparison 2026 — Postman vs Bruno vs Hoppscotch vs Insomnia";
-  const metaDescApi = "Side-by-side comparison of 12+ API development tool free tiers in 2026. Compare Postman, Bruno, Hoppscotch, Insomnia, Thunder Client, Apidog, and more — users, collections, requests, mock servers, and migration costs.";
+  const title = pricingGuideTitle("api-development-free-tier-comparison-2026", "API Development Tools Free Tier Comparison 2026 — Postman vs Bruno vs Hoppscotch vs Insomnia");
+  const metaDescApi = `Side-by-side comparison of 12+ API development tool free tiers in ${currentYearLabel()}. Compare Postman, Bruno, Hoppscotch, Insomnia, Thunder Client, Apidog, and more — users, collections, requests, mock servers, and migration costs.`;
   const slug = "api-development-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
 
@@ -43476,7 +43477,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/api-development">API Development</a> &rsaquo; API Development Free Tier Comparison</div>
-  <h1>API Development Tools Free Tier Comparison 2026</h1>
+  <h1>API Development Tools Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/api-development-free-tier-comparison-2026", offers.length)} &middot; 12+ API development tools compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -43918,8 +43919,8 @@ ${globalNavCss()}
 }
 
 function buildSecurityFreeTierComparison2026Page(): string {
-  const title = "Developer Security Tools Free Tier Comparison 2026 — Snyk vs Semgrep vs GitGuardian vs Trivy";
-  const metaDescSec = "Side-by-side comparison of 20+ developer security tool free tiers in 2026. Compare Snyk, Semgrep, SonarCloud, GitGuardian, Trivy, CodeQL, OWASP ZAP, and more — scans, repos, contributors, and security cost traps.";
+  const title = pricingGuideTitle("security-free-tier-comparison-2026", "Developer Security Tools Free Tier Comparison 2026 — Snyk vs Semgrep vs GitGuardian vs Trivy");
+  const metaDescSec = `Side-by-side comparison of 20+ developer security tool free tiers in ${currentYearLabel()}. Compare Snyk, Semgrep, SonarCloud, GitGuardian, Trivy, CodeQL, OWASP ZAP, and more — scans, repos, contributors, and security cost traps.`;
   const slug = "security-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
 
@@ -44069,7 +44070,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/security">Security</a> &rsaquo; Security Free Tier Comparison</div>
-  <h1>Developer Security Tools Free Tier Comparison 2026</h1>
+  <h1>Developer Security Tools Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/security-free-tier-comparison-2026", offers.length)} &middot; 20+ security tools compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -44632,8 +44633,8 @@ ${globalNavCss()}
 }
 
 function buildHostingFreeTierComparison2026Page(): string {
-  const title = "Hosting & PaaS Free Tier Comparison 2026 — Vercel vs Netlify vs Render vs Cloudflare vs Railway";
-  const metaDescHosting = "Side-by-side comparison of 12+ developer hosting free tiers in 2026. Compare Vercel, Netlify, Render, Railway, Cloudflare Pages, Fly.io, Koyeb, Deno Deploy, GitHub Pages, and more — bandwidth, compute, build minutes, cold starts, and scaling costs.";
+  const title = pricingGuideTitle("hosting-free-tier-comparison-2026", "Hosting & PaaS Free Tier Comparison 2026 — Vercel vs Netlify vs Render vs Cloudflare vs Railway");
+  const metaDescHosting = `Side-by-side comparison of 12+ developer hosting free tiers in ${currentYearLabel()}. Compare Vercel, Netlify, Render, Railway, Cloudflare Pages, Fly.io, Koyeb, Deno Deploy, GitHub Pages, and more — bandwidth, compute, build minutes, cold starts, and scaling costs.`;
   const slug = "hosting-free-tier-comparison-2026";
   const pubDate = "2026-04-03";
 
@@ -44783,7 +44784,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/cloud-hosting">Cloud Hosting</a> &rsaquo; Hosting Free Tier Comparison</div>
-  <h1>Hosting &amp; PaaS Free Tier Comparison 2026</h1>
+  <h1>Hosting &amp; PaaS Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/hosting-free-tier-comparison-2026", offers.length)} &middot; 12+ hosting platforms compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
