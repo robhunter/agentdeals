@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-24",
+  "measured_on": "2026-11-25",
   "pages": [
     {
       "path": "/agent-payments",
@@ -3570,8 +3570,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 73,
-      "table_figures_from_records": 52,
+      "table_figures": 74,
+      "table_figures_from_records": 53,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -3585,8 +3585,8 @@
         },
         {
           "label": "5. Other Hosting Alternatives",
-          "figures": 52,
-          "from_records": 52
+          "figures": 53,
+          "from_records": 53
         }
       ],
       "reads_changes": true,
