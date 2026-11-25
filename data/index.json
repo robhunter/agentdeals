@@ -6912,7 +6912,7 @@
     {
       "vendor": "Mintlify",
       "category": "API Development",
-      "description": "Developer documentation platform. The Free plan includes the full platform, 5 editors, custom domain, web editor, authentication, MCP server and API playground. New accounts get a 14-day Pro trial with 5,000 AI credits, no card required. Docs stay live on Free after the trial.",
+      "description": "Developer documentation platform. The Free plan includes hosting, search, a custom domain, Git sync, the web editor, authentication, an MCP server, and the API playground. It has 5 editors, with no time limit. Starter is the cheapest paid plan at $150 a month billed annually or $180 monthly, with 10 editors, the writing agent and Autopilot. New accounts get a 14-day Pro trial with 5,000 AI credits and no card, and docs stay live on Free after it. Non-commercial open source projects can apply for Pro free.",
       "tier": "Free",
       "url": "https://mintlify.com/pricing",
       "tags": [
@@ -6921,7 +6921,7 @@
         "api-docs",
         "developer-portal"
       ],
-      "verifiedDate": "2026-11-23",
+      "verifiedDate": "2026-11-25",
       "source_check": {
         "checked": "2026-11-03",
         "outcome": "ok",
@@ -8353,7 +8353,7 @@
         "cloudflare",
         "infrastructure"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-25",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18709,7 +18709,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-11-23",
+      "verifiedDate": "2026-11-25",
       "source_check": {
         "checked": "2026-11-11",
         "outcome": "ok",
@@ -26724,7 +26724,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-11-23",
+      "verifiedDate": "2026-11-25",
       "source_check": {
         "checked": "2026-11-13",
         "outcome": "ok",
@@ -42285,7 +42285,7 @@
         "agents",
         "exa"
       ],
-      "verifiedDate": "2026-11-23",
+      "verifiedDate": "2026-11-25",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -42310,7 +42310,7 @@
         "hosting",
         "render"
       ],
-      "verifiedDate": "2026-11-24",
+      "verifiedDate": "2026-11-25",
       "eligibility": {
         "type": "startup",
         "conditions": [
