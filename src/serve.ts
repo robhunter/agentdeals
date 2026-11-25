@@ -21269,7 +21269,7 @@ ${globalNavCss()}
 }
 
 function buildGoogleDeveloperProgram2026Page(): string {
-  const title = "Google Developer Program 2026 — What Replaced Premium, Prices & Alternatives";
+  const title = pricingGuideTitle("google-developer-program-2026", "Google Developer Program 2026 — What Replaced Premium, Prices & Alternatives");
   const metaDesc = "Standalone Google Developer Program Premium ($299/year) no longer takes sign-ups. Current plans, Cloud credits and free alternatives. [[freshness]]";
   const slug = "google-developer-program-2026";
   const pubDate = "2026-03-26";
@@ -21456,7 +21456,7 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("changes")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Google Developer Program 2026</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Google Developer Program ${currentYearLabel()}</div>
   <h1>Google Developer Program Premium — What Replaced It</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/google-developer-program-2026", offers.length)}</p>
 
@@ -34026,7 +34026,7 @@ function cloudGuideUpcomingChangesHtml(upcoming: readonly DealChange[]): string 
 }
 
 function buildAwsFreeTier2026Page(): string {
-  const title = AWS_FREE_TIER_TITLE;
+  const title = pricingGuideTitle("aws-free-tier-2026", AWS_FREE_TIER_TITLE);
   const metaDesc = "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.";
   const slug = "aws-free-tier-2026";
   const pubDate = "2026-03-27";
@@ -34225,8 +34225,8 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; AWS Free Tier 2026</div>
-  <h1>AWS Free Tier 2026</h1>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; AWS Free Tier ${currentYearLabel()}</div>
+  <h1>AWS Free Tier ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/aws-free-tier-2026", offers.length)} &middot; ${awsOffers.length} AWS entries tracked</p>
 
   <div class="summary-stats">
@@ -34405,8 +34405,8 @@ ${globalNavCss()}
 }
 
 function buildGcpFreeTier2026Page(): string {
-  const title = "GCP Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
-  const metaDescGcp = "Comprehensive guide to every Google Cloud free tier service in 2026. 20+ free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.";
+  const title = pricingGuideTitle("gcp-free-tier-2026", "GCP Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs");
+  const metaDescGcp = pricingGuideDescription("gcp-free-tier-2026", "Comprehensive guide to every Google Cloud free tier service in 2026. 20+ free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.");
   const slug = "gcp-free-tier-2026";
   const pubDate = "2026-03-27";
 
@@ -34642,8 +34642,8 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; GCP Free Tier 2026</div>
-  <h1>GCP Free Tier Complete Guide 2026</h1>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; GCP Free Tier ${currentYearLabel()}</div>
+  <h1>GCP Free Tier Complete Guide ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/gcp-free-tier-2026", offers.length)} &middot; ${gcpOffers.length} Google and Firebase entries tracked</p>
 
   <div class="summary-stats">
@@ -34814,7 +34814,7 @@ ${globalNavCss()}
 }
 
 function buildAzureFreeTier2026Page(): string {
-  const title = AZURE_FREE_TIER_TITLE;
+  const title = pricingGuideTitle("azure-free-tier-2026", AZURE_FREE_TIER_TITLE);
   const metaDescAzure = AZURE_FREE_TIER_META_DESC;
   const slug = "azure-free-tier-2026";
   const pubDate = "2026-03-31";
@@ -35061,8 +35061,8 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Azure Free Tier 2026</div>
-  <h1>Azure Free Tier 2026</h1>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Azure Free Tier ${currentYearLabel()}</div>
+  <h1>Azure Free Tier ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/azure-free-tier-2026", offers.length)} &middot; ${azureOffers.length} Azure entries tracked</p>
 
   <div class="summary-stats">
@@ -35279,8 +35279,8 @@ ${globalNavCss()}
 }
 
 function buildDigitalOceanFreeTier2026Page(): string {
-  const title = "DigitalOcean Free Tier Complete Guide 2026 — Pricing, Free Credits, and Hidden Costs";
-  const metaDescDO = "Complete guide to DigitalOcean pricing and free tier in 2026. $5 free credits for 90 days, App Platform free static sites, per-second billing, Functions serverless, and comparison with AWS, GCP, and Azure.";
+  const title = pricingGuideTitle("digitalocean-free-tier-2026", "DigitalOcean Free Tier Complete Guide 2026 — Pricing, Free Credits, and Hidden Costs");
+  const metaDescDO = pricingGuideDescription("digitalocean-free-tier-2026", "Complete guide to DigitalOcean pricing and free tier in 2026. $5 free credits for 90 days, App Platform free static sites, per-second billing, Functions serverless, and comparison with AWS, GCP, and Azure.");
   const slug = "digitalocean-free-tier-2026";
   const pubDate = "2026-03-31";
 
@@ -35485,8 +35485,8 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; DigitalOcean Free Tier 2026</div>
-  <h1>DigitalOcean Free Tier Complete Guide 2026</h1>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; DigitalOcean Free Tier ${currentYearLabel()}</div>
+  <h1>DigitalOcean Free Tier Complete Guide ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/digitalocean-free-tier-2026", offers.length)} &middot; ${doOffers.length} DigitalOcean entries tracked</p>
 
   <div class="summary-stats">

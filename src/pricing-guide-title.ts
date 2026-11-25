@@ -20,6 +20,8 @@ const currentYearAlternatives = new Set([
 ]);
 
 const currentYearComparisons = new Set([
+  "google-developer-program-2026", "aws-free-tier-2026", "gcp-free-tier-2026",
+  "azure-free-tier-2026", "digitalocean-free-tier-2026",
   "ai-coding-tools-pricing", "ci-cd-pricing", "database-pricing",
   "vector-database-pricing", "hosting-pricing",
   "monitoring-comparison-2026",
