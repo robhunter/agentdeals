@@ -352,7 +352,8 @@
       "source_url": "https://mintlify.com/pricing",
       "record_date": "2026-09-07",
       "change_type": "new_tier",
-      "summary": "The 'Hobby' tier is no longer available. The lowest tier is now 'Starter' at $0/month. Includes 5 editor seats, a web editor, and API playground."
+      "summary": "The 'Hobby' tier is no longer available. The lowest tier is now 'Starter' at $0/month. Includes 5 editor seats, a web editor, and API playground.",
+      "reverted_on": "2026-11-25"
     },
     {
       "vendor": "OneSignal",
