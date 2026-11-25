@@ -1509,14 +1509,6 @@
       "hash": "3cc1618644afa11b",
       "changed": "2026-11-16"
     },
-    "/compare/atlassian-for-startups-vs-help-scout-for-startups": {
-      "hash": "d4c3e3a9f9d3ed9a",
-      "changed": "2026-11-15"
-    },
-    "/compare/atlassian-for-startups-vs-stripe-atlas": {
-      "hash": "cc8c203b6f13c228",
-      "changed": "2026-11-14"
-    },
     "/compare/atlassian-statuspage-vs-instatus": {
       "hash": "f477b54a8ba492cc",
       "changed": "2026-11-09"
@@ -2197,14 +2189,6 @@
       "hash": "f80dde959c3a4521",
       "changed": "2026-11-16"
     },
-    "/compare/help-scout-for-startups-vs-knowlarity-for-startups": {
-      "hash": "4a8ec1b49f54c0a6",
-      "changed": "2026-11-19"
-    },
-    "/compare/help-scout-for-startups-vs-stripe-atlas": {
-      "hash": "f4b6eba13372a762",
-      "changed": "2026-11-15"
-    },
     "/compare/highlight-io-vs-logz-io": {
       "hash": "3490f2a1ee8ca744",
       "changed": "2026-11-16"
@@ -2288,10 +2272,6 @@
     "/compare/khan-academy-vs-mit-opencourseware": {
       "hash": "dbac49793eca4863",
       "changed": "2026-11-13"
-    },
-    "/compare/knowlarity-for-startups-vs-stripe-atlas": {
-      "hash": "3de002123ff1839e",
-      "changed": "2026-11-19"
     },
     "/compare/kong-vs-unkey": {
       "hash": "2002c855ce2815cb",
@@ -10256,6 +10236,34 @@
     "/x402-services": {
       "hash": "1ca6d6478cb987c4",
       "changed": "2026-11-24"
+    },
+    "/compare/amplitude-vs-matlab-and-simulink-for-startups": {
+      "hash": "62d356b637d92d3c",
+      "changed": "2026-11-25"
+    },
+    "/compare/amplitude-vs-remote-for-startups": {
+      "hash": "815dddd278c53087",
+      "changed": "2026-11-25"
+    },
+    "/compare/chargebee-launch-programme-vs-matlab-and-simulink-for-startups": {
+      "hash": "996b1d10bbe4194d",
+      "changed": "2026-11-25"
+    },
+    "/compare/chargebee-launch-programme-vs-remote-for-startups": {
+      "hash": "0fa0559b55d73b8e",
+      "changed": "2026-11-25"
+    },
+    "/compare/matlab-and-simulink-for-startups-vs-remote-for-startups": {
+      "hash": "d24620f276d269a7",
+      "changed": "2026-11-25"
+    },
+    "/vendor/exa-for-startups": {
+      "hash": "83b3b46dee1908d1",
+      "changed": "2026-11-25"
+    },
+    "/vendor/render-for-startups": {
+      "hash": "df51f6f0ff2dc2a9",
+      "changed": "2026-11-25"
     }
   }
 }
