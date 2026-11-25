@@ -2617,7 +2617,7 @@
     {
       "vendor": "GitLab CI",
       "category": "CI/CD",
-      "description": "400 compute minutes/month, 10 GiB storage, 5 users. New accounts limited to 3 top-level groups",
+      "description": "400 compute minutes/month, 10 GiB storage, 5 users. New accounts limited to 3 top-level groups.",
       "tier": "Free",
       "url": "https://about.gitlab.com/pricing/",
       "tags": [
@@ -4866,7 +4866,7 @@
     {
       "vendor": "Stripe",
       "category": "Payments",
-      "description": "Payment processing — no monthly fees, 2.9% + $0.30 per transaction. Full API, dashboard, and test mode free. Pay only when processing live payments",
+      "description": "Payment processing — no monthly fees, 2.9% + $0.30 per transaction. Full API, dashboard, and test mode free. Pay only when processing live payments.",
       "tier": "Pay-as-you-go",
       "url": "https://stripe.com/pricing",
       "tags": [
