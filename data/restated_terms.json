@@ -1949,7 +1949,8 @@
       "source_url": "https://www.file.io",
       "record_date": "2026-09-18",
       "change_type": "limits_increased",
-      "summary": "The free tier now offers 4 GB of storage instead of 2 GB."
+      "summary": "The free tier now offers 4 GB of storage instead of 2 GB.",
+      "reverted_on": "2026-11-25"
     },
     {
       "vendor": "packagecloud.io",

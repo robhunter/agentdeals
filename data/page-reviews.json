@@ -266,8 +266,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 30,
-      "table_figures_from_records": 10,
+      "table_figures": 31,
+      "table_figures_from_records": 11,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -281,8 +281,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 10,
-          "from_records": 10
+          "figures": 11,
+          "from_records": 11
         }
       ],
       "reads_changes": true,
@@ -658,8 +658,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 110,
-      "table_figures_from_records": 7,
+      "table_figures": 111,
+      "table_figures_from_records": 8,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -678,8 +678,8 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 6,
-          "from_records": 6
+          "figures": 7,
+          "from_records": 7
         },
         {
           "label": "Upcoming Changes",
@@ -732,8 +732,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 69,
-      "table_figures_from_records": 19,
+      "table_figures": 70,
+      "table_figures_from_records": 20,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -767,8 +767,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 8,
-          "from_records": 8
+          "figures": 9,
+          "from_records": 9
         },
         {
           "label": "Upcoming Changes",
@@ -3283,8 +3283,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 91,
-      "table_figures_from_records": 30,
+      "table_figures": 93,
+      "table_figures_from_records": 32,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -3303,8 +3303,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 13,
-          "from_records": 13
+          "figures": 15,
+          "from_records": 15
         }
       ],
       "reads_changes": true,

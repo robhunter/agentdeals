@@ -5456,8 +5456,8 @@
           "transport": "Streamable HTTP",
           "authentication": "the header \"Authorization: Bearer <MISTRAL_API_KEY>\"",
           "doc_url": "https://docs.mistral.ai/resources/mcp",
-          "source_quote": "The Mistral MCP server connects an AI agent to your Studio workspace over the Model Context Protocol.",
-          "read_on": "2026-10-20"
+          "source_quote": "It exposes your workspace as MCP tools and authenticates each request with your Mistral API key.",
+          "read_on": "2026-11-25"
         }
       ]
     },
@@ -12912,7 +12912,7 @@
     {
       "vendor": "Thunder Client",
       "category": "API Development",
-      "description": "Thunder Client is a lightweight REST API client. The Free plan is $0 per user/month, no credit card required. It includes the extension for VS Code, JetBrains, Cursor, Antigravity, Kiro and Devin; CLI and CI/CD; WebSocket, SSE and gRPC; MCP Server. Free limits include 3 collections, 50 requests per collection, 5 collection imports per month, 30 local collection runs per month per user. There is no limit for collection runs in CI/CD. Paid plans are billed annually: Starter is $3 per user/month, Business is $7, and Enterprise is $16. Local run limits are 250, 500, and unlimited respectively.",
+      "description": "Thunder Client is a lightweight REST API client. The Free plan is $0 per user/month, no credit card required. It includes the extension for VS Code, JetBrains, Cursor, Antigravity, Kiro and Devin; CLI and CI/CD; WebSocket, SSE and gRPC; MCP Server. Free limits include unlimited collections, 50 requests per collection, unlimited collection imports and 50 local collection runs per month per user. There is no limit for collection runs in CI/CD. Paid plans are billed annually: Starter is $3 per user/month, Business is $7, and Enterprise is $16. Local run limits are 250, 500, and unlimited respectively.",
       "tier": "Free",
       "url": "https://www.thunderclient.com/pricing",
       "tags": [
@@ -12922,7 +12922,7 @@
         "testing",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-11-25",
       "source_check": {
         "checked": "2026-11-25",
         "outcome": "ok",
@@ -13709,7 +13709,7 @@
     {
       "vendor": "Harness CI",
       "category": "CI/CD",
-      "description": "CI/CD platform — free plan: 2,000 Harness Cloud credits a month that expire monthly, 2,000 minutes on the 2-core Linux machine and 1,000 on the 4-core one. Harness Cloud on the Free plan needs a business email address and credit card validation. Builds on your own machine with the local runner have no limits. Paid plans have no published price.",
+      "description": "CI/CD platform — free plan: $0 a month with no credit card, for up to 25 users, with 1,000 Harness Subscription Units a month shared across every Harness product; free units reset each month and do not carry over. Builds use 60 units per repository built each month, up to 250,000 lines of code, plus build minutes charged by machine size; builds on your own infrastructure carry no compute charge. Enterprise is priced by sales.",
       "tier": "Free",
       "url": "https://www.harness.io/pricing",
       "tags": [
@@ -13721,11 +13721,11 @@
         "devops",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-11-25",
       "source_check": {
         "checked": "2026-11-25",
         "outcome": "ok",
-        "detail": "the page names Harness CI as \"harness\" and states \"$0\""
+        "detail": "the page names Harness CI as \"harness\" and states \"$0\" and \"1,000 units / month\""
       },
       "restatement_reverted": {
         "record_date": "2026-08-28",
@@ -13735,7 +13735,16 @@
         "text": "Free $0 / month Start for free No credit card needed Up to 25 users Includes 1,000 units / month Community support",
         "url": "https://www.harness.io/pricing",
         "read_on": "2026-11-25"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Harness's CI documentation still says Free plans get 2,000 Harness Cloud credits a month and need credit card validation to use Harness Cloud.",
+          "quote": "Free plans get 2000 free Harness Cloud credits each month.",
+          "url": "https://developer.harness.io/continuous-integration/use-harness-ci/use-harness-ci/set-up-build-infrastructure/use-harness-cloud-build-infrastructure",
+          "read_on": "2026-11-25",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "Google Colab",
@@ -29633,7 +29642,7 @@
     {
       "vendor": "file.io",
       "category": "Storage",
-      "description": "File.io is free to use with no gotchas and no hidden fees. Simply upload your files and share the link. You can upload as many files as you like up to 4 GB and get a link to share.",
+      "description": "file.io is free with no account: you can upload up to 20 files a day, up to 10 GB per transfer, and get a link to share. Files are deleted 3 days after upload, whether or not anyone downloaded them, and each file can be downloaded up to 10 times a day. A free LimeWire account keeps links for 7 days and gives up to 20 GB per transfer, 40 GB of storage and up to 20 downloads per file a day. file.io's own API has been retired; for uploads from an AI agent or an automation, file.io points to the LimeWire MCP server.",
       "tier": "Free",
       "url": "https://www.file.io",
       "tags": [
@@ -29641,18 +29650,11 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-11-03",
+      "verifiedDate": "2026-11-25",
       "source_check": {
         "checked": "2026-11-25",
         "outcome": "ok",
-        "detail": "the page names file.io as \"file io\" and states amounts, none of which we matched to the terms we publish"
-      },
-      "restated_from": {
-        "reading_date": "2026-09-18",
-        "source_url": "https://www.file.io",
-        "record_date": "2026-09-18",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-20"
+        "detail": "the page names file.io as \"file io\" and states \"20 files a day\" and \"10 times a day\" and \"20 downloads per file a day\""
       }
     },
     {

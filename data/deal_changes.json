@@ -21091,6 +21091,121 @@
       "listing_effect": "none",
       "what_ends": "Rackspace Spot",
       "announced_on": "2026-11-24"
+    },
+    {
+      "vendor": "Thunder Client",
+      "change_type": "limits_increased",
+      "date": "2026-11-25",
+      "date_source": "hand_written",
+      "summary": "By November 25, 2026, Thunder Client's Free plan allowed unlimited collections. It allowed 10 collections on November 16, 2026. Its other Free limits did not change: 50 requests per collection, unlimited collection imports and 50 local collection runs a month per user.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Compare table, Free column: \"Collections 10\", \"Requests per Collection 50\", \"Import Collections Unlimited\", \"Collection Runner 50 per user\" (thunderclient.com/pricing, Internet Archive capture of 2026-11-16 05:14 UTC).",
+      "current_state": "Compare table, Free column: \"Collections Unlimited\", \"Requests per Collection 50\", \"Import Collections Unlimited\", \"Collection Runner 50 per user\" (thunderclient.com/pricing, read 2026-11-25; Internet Archive capture of 2026-11-25 19:17 UTC).",
+      "impact": "low",
+      "source_url": "https://www.thunderclient.com/pricing",
+      "category": "API Development",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-25",
+      "archive_check": {
+        "checked": "2026-11-25",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-11-16",
+            "first_new": "2026-11-25",
+            "last_old_capture": "https://web.archive.org/web/20261116051443/https://www.thunderclient.com/pricing?utm_source=ext_pricing",
+            "first_new_capture": "https://web.archive.org/web/20261125191719/https://www.thunderclient.com/pricing"
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "file.io",
+      "change_type": "limits_reduced",
+      "date": "2026-11-13",
+      "date_source": "hand_written",
+      "summary": "By November 13, 2026, file.io limited uploads to 20 files a day, up to 4 GB each. On November 6, 2026, its page said you could upload as many files as you like up to 4 GB.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "\"Upload as many files as you like up to 4 GB and get a link to share.\" (file.io, Internet Archive capture of 2026-11-06 21:06 UTC)",
+      "current_state": "\"Upload up to 20 files a day, up to 4 GB and get a link to share.\" (file.io, Internet Archive capture of 2026-11-13 00:14 UTC)",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20261113001407/https://www.file.io/",
+      "category": "Storage",
+      "alternatives": [],
+      "recorded_date": "2026-11-25",
+      "archive_check": {
+        "checked": "2026-11-25",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-11-06",
+            "first_new": "2026-11-13",
+            "last_old_capture": "https://web.archive.org/web/20261106210630/https://www.file.io/",
+            "first_new_capture": "https://web.archive.org/web/20261113001407/https://www.file.io/"
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "file.io",
+      "change_type": "limits_increased",
+      "date": "2026-11-23",
+      "date_source": "hand_written",
+      "summary": "By November 23, 2026, file.io raised its upload limit without an account from 4 GB to 10 GB per transfer. The limit of 20 files a day did not change.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "\"Upload up to 20 files a day, up to 4 GB and get a link to share.\" (file.io, Internet Archive capture of 2026-11-18 18:46 UTC)",
+      "current_state": "\"Upload up to 20 files a day, up to 10 GB and get a link to share.\" (file.io, Internet Archive capture of 2026-11-23 04:30 UTC; read 2026-11-25)",
+      "impact": "low",
+      "source_url": "https://www.file.io",
+      "category": "Storage",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-25",
+      "archive_check": {
+        "checked": "2026-11-25",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-11-18",
+            "first_new": "2026-11-23",
+            "last_old_capture": "https://web.archive.org/web/20261118184659/https://www.file.io/",
+            "first_new_capture": "https://web.archive.org/web/20261123043033/https://www.file.io/"
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "Harness CI",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-25",
+      "date_source": "hand_written",
+      "summary": "On November 25, 2026, Harness moved its Free plan to usage units: up to 25 users get 1,000 Harness Subscription Units a month, shared across every Harness product, with no credit card. A build costs 60 units per repository built each month, plus build minutes charged by machine size. Harness's CI docs still give Free plans 2,000 Harness Cloud credits a month.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Pricing page, Free Plan: \"For individual developers and small teams. Includes Harness Open Source, Litmus Chaos and community support.\" (harness.io/pricing, Internet Archive capture of 2026-11-25 05:58 UTC). CI docs: \"Free plans get 2000 free Harness Cloud credits each month.\" and \"Free plans require credit card validation to use Harness Cloud.\"",
+      "current_state": "Pricing page, Free: \"$0 / month\", \"No credit card needed\", \"Up to 25 users\", \"Includes 1,000 units / month\"; \"Free tier units (1,000 per month) reset monthly and do not carry over.\" Builds: \"60 units per Repo Built per month, up to 250K lines of code\"; Build Minutes: \"Per Build Minute, by resource class\" (harness.io/pricing, read 2026-11-25; Internet Archive capture of 2026-11-25 19:16 UTC).",
+      "impact": "medium",
+      "source_url": "https://www.harness.io/pricing",
+      "category": "CI/CD",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-25",
+      "archive_check": {
+        "checked": "2026-11-25",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-11-25",
+            "first_new": "2026-11-25",
+            "last_old_capture": "https://web.archive.org/web/20261125055837/https://www.harness.io/pricing",
+            "first_new_capture": "https://web.archive.org/web/20261125191657/https://www.harness.io/pricing"
+          }
+        ]
+      }
     }
   ]
 }
