@@ -20,6 +20,8 @@ const currentYearAlternatives = new Set([
 ]);
 
 const currentYearComparisons = new Set([
+  "ai-coding-tools-pricing", "ci-cd-pricing", "database-pricing",
+  "vector-database-pricing", "hosting-pricing",
   "monitoring-comparison-2026",
   "llm-api-pricing",
   "cloud-free-tier-comparison-2026",

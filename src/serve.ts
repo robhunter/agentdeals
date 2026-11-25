@@ -28489,7 +28489,7 @@ function buildStartupCreditsPage(): string {
 }
 
 function buildAiCodingToolsPricingPage(): string {
-  const title = "AI Coding Tools Pricing Comparison 2026 — The Definitive Free Tier Breakdown";
+  const title = pricingGuideTitle("ai-coding-tools-pricing", "AI Coding Tools Pricing Comparison 2026 — The Definitive Free Tier Breakdown");
   const metaDesc = "Compare 17 AI coding tools: Cursor, Windsurf, Amazon Kiro, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. [[freshness]]";
   const slug = "ai-coding-tools-pricing";
   const pubDate = "2026-04-08";
@@ -29018,7 +29018,7 @@ function buildAiCodingToolsPricingPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ide-code-editors-alternatives">AI Coding</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
-    '  <h1>AI Coding Tools Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
+    '  <h1>AI Coding Tools Pricing \u2014 The Definitive ' + currentYearLabel() + ' Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + tools.length + ' tools compared &middot; ' + pageDataProvenance("/ai-coding-tools-pricing", offers.length) + ' &middot; ' + aiCodingChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -29256,7 +29256,7 @@ function keyCostFactorCell(row: { hiddenCosts?: string; keyCostFactor?: string }
 }
 
 function buildCiCdPricingPage(): string {
-  const title = "CI/CD Tools Pricing Comparison 2026 — Build Minutes, Runners & Costs Compared";
+  const title = pricingGuideTitle("ci-cd-pricing", "CI/CD Tools Pricing Comparison 2026 — Build Minutes, Runners & Costs Compared");
   const metaDesc = "Compare 17+ CI/CD tools: GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Google Cloud Build, Bitrise and more. Free tiers, build minutes, concurrent jobs, pricing models, and hidden costs. [[freshness]]";
   const slug = "ci-cd-pricing";
   const pubDate = "2026-04-09";
@@ -29748,7 +29748,7 @@ function buildCiCdPricingPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ci-cd-alternatives">CI/CD</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
-    '  <h1>CI/CD Tools Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
+    '  <h1>CI/CD Tools Pricing \u2014 The Definitive ' + currentYearLabel() + ' Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + tools.length + ' tools compared &middot; ' + pageDataProvenance("/ci-cd-pricing", offers.length) + ' &middot; ' + cicdChanges.length + ' pricing change' + (cicdChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -29975,7 +29975,7 @@ function buildCiCdPricingPage(): string {
 }
 
 function buildDatabasePricingPage(): string {
-  const title = "Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs Compared";
+  const title = pricingGuideTitle("database-pricing", "Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs Compared");
   const metaDesc = "Compare 25+ database services: Supabase, Neon, PlanetScale, MongoDB Atlas, Firebase, CockroachDB, Turso, Upstash, Redis Cloud, DynamoDB and more. Free tiers, storage limits, connections, pricing models, and hidden costs. [[freshness]]";
   const slug = "database-pricing";
   const pubDate = "2026-04-09";
@@ -30616,7 +30616,7 @@ function buildDatabasePricingPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
-    '  <h1>Database Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
+    '  <h1>Database Pricing \u2014 The Definitive ' + currentYearLabel() + ' Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + services.length + ' services compared &middot; ' + pageDataProvenance("/database-pricing", offers.length) + ' &middot; ' + dbChanges.length + ' pricing change' + (dbChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -30846,7 +30846,7 @@ function buildDatabasePricingPage(): string {
 }
 
 function buildVectorDatabasePricingPage(): string {
-  const title = "Vector Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs for RAG/AI";
+  const title = pricingGuideTitle("vector-database-pricing", "Vector Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs for RAG/AI");
   const slug = "vector-database-pricing";
   const pubDate = "2026-04-10";
 
@@ -31278,7 +31278,7 @@ function buildVectorDatabasePricingPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Vector Database Pricing</div>\n' +
-    '  <h1>Vector Database Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
+    '  <h1>Vector Database Pricing \u2014 The Definitive ' + currentYearLabel() + ' Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + services.length + ' services compared &middot; ' + pageDataProvenance("/vector-database-pricing", offers.length) + ' &middot; ' + vectorChanges.length + ' pricing change' + (vectorChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -31512,7 +31512,7 @@ function buildVectorDatabasePricingPage(): string {
 }
 
 function buildHostingPricingPage(): string {
-  const title = "Cloud Hosting & PaaS Pricing Comparison 2026 — Free Tiers, Limits & Hidden Costs";
+  const title = pricingGuideTitle("hosting-pricing", "Cloud Hosting & PaaS Pricing Comparison 2026 — Free Tiers, Limits & Hidden Costs");
   const metaDesc = "Compare 15+ cloud hosting and PaaS services: Railway, Vercel, Render, Netlify, Fly.io, Cloudflare Workers/Pages, Deno Deploy, Koyeb, Val Town, Google Cloud Run and more. Free tiers, bandwidth limits, build minutes, and pricing gotchas. [[freshness]]";
   const slug = "hosting-pricing";
   const pubDate = "2026-04-13";
@@ -31977,7 +31977,7 @@ function buildHostingPricingPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/hosting-alternatives">Cloud Hosting</a> &rsaquo; Pricing Comparison</div>\n' +
-    '  <h1>Cloud Hosting &amp; PaaS Pricing \u2014 The 2026 Comparison</h1>\n' +
+    '  <h1>Cloud Hosting &amp; PaaS Pricing \u2014 The ' + currentYearLabel() + ' Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + services.length + ' platforms compared &middot; ' + pageDataProvenance("/hosting-pricing", offers.length) + ' &middot; ' + hostingChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +

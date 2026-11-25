@@ -154,6 +154,16 @@ it("updates guide metadata when a running server crosses the year boundaries", a
           assert.ok(body.includes(question), `${instant}: ${slug} visible question`);
         }
       }
+      for (const slug of ["ai-coding-tools-pricing", "ci-cd-pricing", "database-pricing", "vector-database-pricing", "hosting-pricing"]) {
+        const page = await (await fetch(`${base}/${slug}`)).text();
+        const title = page.match(/<title>(.*?)<\/title>/)?.[1].replace(/ (?:—|&mdash;) AgentDeals$/, "");
+        assert.ok(title?.includes(label), `${instant}: ${slug} title`);
+        assert.ok(page.match(/<h1>(.*?)<\/h1>/)?.[1].includes(label), `${instant}: ${slug} heading`);
+        assert.ok(list.includes(title.replaceAll("&amp;", "&")), `${instant}: ${slug} guide title`);
+        const article = [...page.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+          .map(match => JSON.parse(match[1])).find(value => value["@type"] === "Article");
+        assert.ok(article?.headline.includes(label), `${instant}: ${slug} structured title`);
+      }
       const llm = await (await fetch(`${base}/llm-api-pricing`)).text();
       assert.ok(llm.match(/<title>(.*?)<\/title>/)?.[1].includes(label), `${instant}: LLM title`);
       assert.ok(llm.match(/<h1>(.*?)<\/h1>/)?.[1].includes(label), `${instant}: LLM heading`);
