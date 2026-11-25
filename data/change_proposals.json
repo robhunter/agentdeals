@@ -1,5 +1,114 @@
 {
-  "proposals": [],
+  "proposals": [
+    {
+      "proposal_id": "2026-11-25/thunder-client/limits_increased",
+      "proposed_on": "2026-11-25",
+      "vendor": "Thunder Client",
+      "change_type": "limits_increased",
+      "date": "2026-11-25",
+      "date_source": "discovered",
+      "summary": "The page shows Collections Unlimited, Import Collections Unlimited, and Collection Runner 1 (local monthly limit).",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Thunder Client is a lightweight REST API client. The Free plan is $0 per user/month, no credit card required. It includes the extension for VS Code, JetBrains, Cursor, Antigravity, Kiro and Devin; CLI and CI/CD; WebSocket, SSE and gRPC; MCP Server. Free limits include 3 collections, 50 requests per collection, 5 collection imports per month, 30 local collection runs per month per user. There is no limit for collection runs in CI/CD. Paid plans are billed annually: Starter is $3 per user/month, Business is $7, and Enterprise is $16. Local run limits are 250, 500, and unlimited respectively.",
+      "current_state": "Free is $0/user/month, no credit card required, includes Extension (VS Code, JetBrains, Cursor, Antigravity, Kiro, Devin), CLI & CI/CD, WebSocket/SSE/gRPC, and MCP Server (AI). Compare table shows Collections Unlimited, Requests per Collection 50, Import Collections Unlimited, and Collection Runner 1 (local monthly limit; no limit for CI/CD runs).",
+      "impact": "medium",
+      "source_url": "https://www.thunderclient.com/pricing",
+      "category": "API Development",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-25",
+      "restatement": [
+        {
+          "url": "https://www.thunderclient.com/pricing",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$3",
+            "$7",
+            "$16"
+          ]
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-25/qase-io/limits_increased",
+      "proposed_on": "2026-11-25",
+      "vendor": "qase.io",
+      "change_type": "limits_increased",
+      "date": "2026-11-25",
+      "date_source": "discovered",
+      "summary": "The Free plan no longer includes 4 full seats. The page now lists 'Up to 4' full seats for Free, and the Teams plan is now $35/user/month billed yearly (or $42 monthly) with 5+ seats.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Qase is a test management system for Dev and QA teams. The Free plan is $0 per user/month, free forever. It is for \"students, hobbyists, educators, and non-profits to learn the basics of a TMS.\" Free limits include up to 2 projects, 500 MB storage, 30-day test history, 5,000 API results a month, 4 full seats, 2 active test runs. Free does not include custom fields, test case review, integrations, webhooks, requirements traceability, dashboards, SSO or audit logs. Teams is $35 per user/month billed annually, from 5 seats.",
+      "current_state": "Free is $0/user/month, free forever, for students, hobbyists, educators, and non-profits. Includes up to 2 projects, 500 MB storage, 30-day test history, 5k/mo API results, MCP Server, Quality Supervisor (Limited), up to 4 full seats, 2 active test runs, 150/min API rate limit. Does not include custom fields, test case review, integrations, webhooks, requirements management, requirement traceability matrix, dashboards & reports, Qase query language, role-based access control, SSO, audit logs, AI credits, AI test case generation, hosted MCP server, collaborator seats, credit card payment, or priority queue.",
+      "impact": "low",
+      "source_url": "https://qase.io/pricing",
+      "category": "Testing",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-25",
+      "restatement": [
+        {
+          "url": "https://qase.io/pricing",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$35"
+          ]
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-25/file-io/limits_increased",
+      "proposed_on": "2026-11-25",
+      "vendor": "file.io",
+      "change_type": "limits_increased",
+      "date": "2026-11-25",
+      "date_source": "discovered",
+      "summary": "Previously free users can upload as many files as they like up to 4 GB. The page now says uploads without an account are limited to 20 files a day and up to 10 GB per transfer, with links expiring after 3 days and each file downloadable up to 10 times a day.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "File.io is free to use with no gotchas and no hidden fees. Simply upload your files and share the link. You can upload as many files as you like up to 4 GB and get a link to share.",
+      "current_state": "Free without an account: upload up to 20 files a day, up to 10 GB per transfer, no account needed; links work for 3 days and each file can be downloaded up to 10 times a day. A free LimeWire account gives 7-day links, up to 20 GB per transfer, 40 GB of storage and up to 20 downloads per file a day.",
+      "impact": "low",
+      "source_url": "https://www.file.io",
+      "category": "Storage",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-25",
+      "restatement": [
+        {
+          "url": "https://www.file.io",
+          "description": "Free without an account: upload up to 20 files a day, up to 10 GB per transfer, no account needed; links work for 3 days and each file can be downloaded up to 10 times a day. A free LimeWire account gives 7-day links, up to 20 GB per transfer, 40 GB of storage and up to 20 downloads per file a day."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-25/harness-ci/pricing_restructured",
+      "proposed_on": "2026-11-25",
+      "vendor": "Harness CI",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-25",
+      "date_source": "discovered",
+      "summary": "The stored free-tier description for Harness CI no longer matches the pricing page. The page now describes a single Free plan priced at $0/month with up to 25 users, 1,000 fungible Harness Subscription Units per month, no credit card needed, and community support. The old details about 2,000 Harness Cloud credits, 2,000/1,000 build minutes on 2-core/4-core Linux machines, business email and credit card validation, and unlimited local runner builds are not present.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "CI/CD platform — free plan: 2,000 Harness Cloud credits a month that expire monthly, 2,000 minutes on the 2-core Linux machine and 1,000 on the 4-core one. Harness Cloud on the Free plan needs a business email address and credit card validation. Builds on your own machine with the local runner have no limits. Paid plans have no published price.",
+      "current_state": "Free plan is $0/month, no credit card needed, up to 25 users, includes 1,000 units/month, community support. Units are fungible across capabilities and free tier units reset monthly and do not carry over.",
+      "impact": "high",
+      "source_url": "https://www.harness.io/pricing",
+      "category": "CI/CD",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-25",
+      "restatement": [
+        {
+          "url": "https://www.harness.io/pricing",
+          "description": "CI/CD platform — Free plan is $0/month, no credit card needed, up to 25 users, includes 1,000 units/month, community support. Units are fungible across capabilities and free tier units reset monthly and do not carry over."
+        }
+      ]
+    }
+  ],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
