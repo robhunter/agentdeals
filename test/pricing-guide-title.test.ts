@@ -19,6 +19,8 @@ const alternatives = [
   "ai-ml-alternatives", "design-alternatives", "email-alternatives",
   "project-management-alternatives", "ide-code-editors-alternatives",
   "free-llm-apis", "api-development-alternatives", "team-collaboration-alternatives",
+  "free-startup-stack", "free-ai-stack", "free-devops-stack", "free-frontend-stack",
+  "free-nextjs-stack", "free-django-stack", "free-fastapi-stack", "free-go-stack", "free-saas-stack",
 ];
 
 const comparisonQuestions = [
@@ -139,6 +141,8 @@ it("updates guide metadata when a running server crosses the year boundaries", a
         assert.ok(title?.includes(label), `${instant}: ${slug} page title`);
         assert.ok(list.includes(title.replaceAll("&amp;", "&")), `${instant}: ${slug} guide metadata`);
       }
+      const saas = await (await fetch(`${base}/free-saas-stack`)).text();
+      assert.ok(saas.includes(`<h1>The Complete Free SaaS Starter Stack for ${label}</h1>`), `${instant}: SaaS heading`);
       for (const [slug, template, visible] of otherQuestions) {
         const response = await fetch(`${base}/${slug}`);
         assert.equal(response.status, 200, `${instant}: ${slug} status`);

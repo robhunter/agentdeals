@@ -15,6 +15,8 @@ const currentYearAlternatives = new Set([
   "ai-ml-alternatives", "design-alternatives", "email-alternatives",
   "project-management-alternatives", "ide-code-editors-alternatives",
   "free-llm-apis", "api-development-alternatives", "team-collaboration-alternatives",
+  "free-startup-stack", "free-ai-stack", "free-devops-stack", "free-frontend-stack",
+  "free-nextjs-stack", "free-django-stack", "free-fastapi-stack", "free-go-stack", "free-saas-stack",
 ]);
 
 export function currentYearLabel(now: Date = new Date()): string {

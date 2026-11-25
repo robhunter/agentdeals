@@ -16022,7 +16022,7 @@ ${buildCards(other)}
 }
 
 function buildFreeStartupStackPage(): string {
-  const title = "The Complete Free Startup Stack for 2026 — $0/Month SaaS Infrastructure Guide";
+  const title = pricingGuideTitle("free-startup-stack", "The Complete Free Startup Stack for 2026 — $0/Month SaaS Infrastructure Guide");
   const metaDesc = "Build a complete SaaS startup on free tiers. 10 infrastructure categories with recommended picks, exact limits, scaling guidance, and stability notes.";
   const slug = "free-startup-stack";
 
@@ -16311,7 +16311,7 @@ ${stabilityNotes}
 }
 
 function buildFreeAiStackPage(): string {
-  const title = "The Complete Free AI/ML Stack for 2026 — $0/Month AI Development Infrastructure";
+  const title = pricingGuideTitle("free-ai-stack", "The Complete Free AI/ML Stack for 2026 — $0/Month AI Development Infrastructure");
   const metaDesc = "Build AI apps on free tiers. 10 AI/ML infrastructure categories — LLM APIs, vector databases, experiment tracking, observability, and more. Exact limits, scaling guidance.";
   const slug = "free-ai-stack";
 
@@ -16636,7 +16636,7 @@ ${ossAlternatives.map(oss => `      <tr>
 }
 
 function buildFreeDevopsStackPage(): string {
-  const title = "The Complete Free DevOps Stack for 2026 — $0/Month Infrastructure Ops";
+  const title = pricingGuideTitle("free-devops-stack", "The Complete Free DevOps Stack for 2026 — $0/Month Infrastructure Ops");
   const metaDesc = "Build and run infrastructure on free tiers. 10 DevOps categories — CI/CD, monitoring, logging, container registries, secrets management, and more. Exact limits, scaling guidance.";
   const slug = "free-devops-stack";
 
@@ -16962,7 +16962,7 @@ ${ossAlternatives.map(oss => `      <tr>
 }
 
 function buildFreeFrontendStackPage(): string {
-  const title = "The Complete Free Frontend Stack for 2026 — $0/Month Jamstack & Web Development";
+  const title = pricingGuideTitle("free-frontend-stack", "The Complete Free Frontend Stack for 2026 — $0/Month Jamstack & Web Development");
   const metaDesc = "Build and ship frontend projects on free tiers. 10 categories — hosting, CDN, CMS, forms, analytics, error tracking, image optimization, and more. Exact limits, scaling guidance.";
   const slug = "free-frontend-stack";
 
@@ -17288,7 +17288,7 @@ ${ossAlternatives.map(oss => `      <tr>
 }
 
 function buildFreeNextjsStackPage(): string {
-  const title = "The Complete Free Next.js Stack for 2026 — $0/Month Full-Stack Infrastructure";
+  const title = pricingGuideTitle("free-nextjs-stack", "The Complete Free Next.js Stack for 2026 — $0/Month Full-Stack Infrastructure");
   const metaDesc = "Build a complete Next.js app on free tiers. 10 infrastructure layers — hosting, database, auth, storage, email, monitoring, CI/CD, analytics, search, and background jobs. Exact limits, growth costs.";
   const slug = "free-nextjs-stack";
 
@@ -17648,7 +17648,7 @@ GitHub → GitHub Actions (CI: tests + lint) → Vercel (CD: auto-deploy)</div>
 }
 
 function buildFreeDjangoStackPage(): string {
-  const title = "The Complete Free Django/Python Stack for 2026 — $0/Month Full-Stack Infrastructure";
+  const title = pricingGuideTitle("free-django-stack", "The Complete Free Django/Python Stack for 2026 — $0/Month Full-Stack Infrastructure");
   const metaDesc = "Build a complete Django app on free tiers. 10 infrastructure layers — WSGI hosting, Postgres, Redis/cache, auth, storage, email, monitoring, CI/CD, task queue, and search. Exact limits, growth costs.";
   const slug = "free-django-stack";
 
@@ -18055,7 +18055,7 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
 }
 
 function buildFreeFastapiStackPage(): string {
-  const title = "The Complete Free FastAPI/Python Stack for 2026 — $0/Month Full-Stack Infrastructure";
+  const title = pricingGuideTitle("free-fastapi-stack", "The Complete Free FastAPI/Python Stack for 2026 — $0/Month Full-Stack Infrastructure");
   const metaDesc = "Build a complete FastAPI app on free tiers. 10 infrastructure layers — ASGI hosting, async Postgres, Redis, auth, storage, email, monitoring, CI/CD, background tasks, and API docs. Exact limits, growth costs.";
   const slug = "free-fastapi-stack";
 
@@ -18477,7 +18477,7 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
 }
 
 function buildFreeGoStackPage(): string {
-  const title = "The Complete Free Go/Golang Stack for 2026 — $0/Month Full-Stack Infrastructure";
+  const title = pricingGuideTitle("free-go-stack", "The Complete Free Go/Golang Stack for 2026 — $0/Month Full-Stack Infrastructure");
   const metaDesc = "Build a complete Go app on free tiers. 10 infrastructure layers — single binary hosting, Postgres via pgx, Redis, auth, storage, email, monitoring, CI/CD, background jobs, and API docs. Exact limits, growth costs.";
   const slug = "free-go-stack";
 
@@ -18890,7 +18890,7 @@ GitHub → GitHub Actions (CI: go test + golangci-lint) → Railway (CD: auto-de
 }
 
 function buildFreeSaasStackPage(): string {
-  const title = "The Complete Free SaaS Starter Stack for 2026 — Build and Launch for $0/Month";
+  const title = pricingGuideTitle("free-saas-stack", "The Complete Free SaaS Starter Stack for 2026 — Build and Launch for $0/Month");
   const metaDesc = "Build a complete SaaS product on free tiers. 12 infrastructure categories — hosting, database, auth, payments, email, storage, monitoring, CI/CD, analytics. Exact limits, growth costs at 1K/10K/100K users.";
   const slug = "free-saas-stack";
 
@@ -19317,7 +19317,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free SaaS Stack</div>
-  <h1>The Complete Free SaaS Starter Stack for 2026</h1>
+  <h1>The Complete Free SaaS Starter Stack for ${currentYearLabel()}</h1>
 
   <div class="context">
     <p>You can build and launch a complete SaaS product without spending a dollar on infrastructure. This guide gives you the <strong>opinionated "just tell me what to use" answer</strong> \u2014 the best free tier for each layer of a SaaS stack, with exact limits for each. ${pageFigureSource("/free-saas-stack", offers.length)}</p>
