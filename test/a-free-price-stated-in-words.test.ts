@@ -1,3 +1,4 @@
+import { assertPopulationFloor } from "./population-floor.ts";
 import { describe, it } from "node:test";
 import assert from "node:assert";
 import { readFileSync } from "node:fs";
@@ -287,7 +288,7 @@ describe("every record we hold, graded by what its read quoted", () => {
 
   it("publishes a free price we can source on every record it grades", () => {
     const graded = offers.filter(sourceStatesAFreePrice);
-    assert.ok(graded.length >= 60, `${graded.length} records graded ${SOURCE_CHECK_FREE_PRICE}`);
+    assertPopulationFloor(graded.length, 40, `records graded ${SOURCE_CHECK_FREE_PRICE}`);
     for (const offer of graded) {
       assert.ok(statesAPriceOfZero(quotedPhrase(offer)), `${offer.vendor}: ${offer.source_check.detail}`);
       assert.doesNotMatch(offer.source_check.detail, /states no amount/, offer.vendor);

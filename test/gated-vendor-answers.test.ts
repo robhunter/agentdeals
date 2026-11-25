@@ -68,7 +68,7 @@ const restrictedSubjectWithAPricingHistory = [...vendorSlugMap.entries()]
     ["caution", "risky"].includes(publishedRisk(records[0], dealChanges.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase()), TODAY).risk_level ?? ""),
   ) ?? null;
 if (restrictedSubjectWithAPricingHistory) restrictedSubjectWithAPricingHistory.records[0].eligibility = RESTRICTION_GIVEN_TO_A_RECORD_WITH_A_PRICING_HISTORY;
-for (const [vendor, outcome] of [["Stripe", "unreadable"], ["Turbopuffer", "states_a_free_price"]] as const) {
+for (const [vendor, outcome] of [["Stripe", "unreadable"], ["Turbopuffer", "states_a_free_price"], ["Claude Code", "states_no_amount"]] as const) {
   const subject = offers.find(offer => offer.vendor === vendor);
   assert.ok(subject);
   subject.source_check = { checked: "2026-01-01", outcome, detail: "Fixture source check" };
@@ -333,11 +333,14 @@ describe("the page a gated record renders does not answer the free-tier question
       p => p.gate!.code === "not_a_free_offer" && p.primary.source_check && p.primary.source_check.outcome !== "ok" && p.primary.source_check.outcome !== "states_a_free_price",
     );
     assert.ok(withheld.some(p => p.vendor === "Stripe"));
+    assert.ok(withheld.some(p => p.vendor === "Claude Code" && p.primary.source_check?.outcome === "states_no_amount"));
     for (const p of withheld) {
       const answer = freeAnswer(p);
       assert.ok(answer.startsWith(p.gate!.reason), `/vendor/${p.slug} leads with our reading rather than the tier`);
       assert.ok(
-        answer.includes("treat them as unverified"),
+        answer.includes(p.primary.source_check!.outcome === "states_no_amount"
+          ? `The page we cite for ${p.vendor} names a plan but states no amount, so these limits come from our own record rather than from that page.`
+          : "treat them as unverified"),
         `/vendor/${p.slug} drops the caveat: ${answer.slice(0, 120)}`,
       );
       assert.ok(
