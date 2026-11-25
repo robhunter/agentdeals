@@ -38394,7 +38394,7 @@
     {
       "vendor": "LLM7.io",
       "category": "AI / ML",
-      "description": "LLM inference gateway with an OpenAI-compatible API. Its live models list (api.llm7.io/v1/models, read 2026-11-25) puts three models in the turbo tier: codestral-latest, gpt-oss:20b and mistral-Nemo-Instruct-2407. The other models, GLM-5.3-Flash included, are pro tier, which LLM7's docs call paid, and nearly all are marked usage-based only. On 2026-11-25 a request with no token to codestral-latest worked, and one to glm-5.3-flash was refused with \"Missing API key\". LLM7 no longer publishes its free limits: the limits page, which gave 1 request a second, 60 a minute, 250 an hour and 100,000 tokens per 24 hours with a free token from dash.llm7.io, has answered 404 since about 2026-11-22.",
+      "description": "LLM inference gateway with an OpenAI-compatible API. Its live models list (api.llm7.io/v1/models, read 2026-11-25) puts three models in the turbo tier: codestral-latest, gpt-oss:20b and mistral-Nemo-Instruct-2407. The other models, GLM-5.3-Flash included, are pro tier, which LLM7's docs call paid, and nearly all are marked usage-based only. On 2026-11-25 a request with no token to codestral-latest worked, and one to glm-5.3-flash was refused with \"Missing API key\". LLM7 no longer publishes its free limits: the limits page, which gave 1 request a second, 60 a minute, 250 an hour and 100,000 tokens per 24 hours with a free token from dash.llm7.io, now answers 404.",
       "tier": "Free",
       "url": "https://docs.llm7.io/guides/models",
       "tags": [
