@@ -951,10 +951,10 @@
           "read_on": "2026-11-23"
         },
         {
-          "text": "With a card, you stay on the Free plan. You get $5 of usage on the 1st of every month, the full $5 in the first month. It covers Machines, volumes, data transfer, Sprites and one $4 Developer Postgres cluster.",
+          "text": "With a card, you stay on the Free plan. The card is charged nothing for a month whose usage stays within the $5, so there is no monthly minimum. You get $5 of usage on the 1st of every month, the full $5 in the first month. It covers Machines, volumes, data transfer, Sprites and one $4 Developer Postgres cluster.",
           "quote": "With a card, you get the full $5 in your first month, and a new $5 on the 1st of every month.",
           "url": "https://docs.fly.io/about/free-plan",
-          "read_on": "2026-11-23"
+          "read_on": "2026-11-25"
         },
         {
           "text": "The Free plan is for your personal organization only, with 1 member; up to 3 Machines, no performance Machines, volumes up to 5GB each; no extensions such as Tigris, Supabase or Upstash Redis, and no dedicated IPv4.",
