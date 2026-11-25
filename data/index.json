@@ -103,7 +103,7 @@
     {
       "vendor": "Render",
       "category": "Cloud Hosting",
-      "description": "Hobby plan, $0 a month plus compute. Free web services (512 MB RAM, 0.1 CPU) spin down after 15 minutes without traffic, with 750 free instance hours per workspace a month. One free Postgres database (256 MB RAM, 1 GB storage, 30-day expiry) and one free Key Value instance (25 MB, not continuously persisted to disk) per workspace. 5 GB bandwidth/month included then $0.15/GB; without a payment method on file, Render suspends Free services for the rest of the month instead. 500 build minutes/month. Up to 25 services, unlimited projects with 2 environments each. Pro is $25 a month plus compute.",
+      "description": "Hobby plan, $0 a month plus compute. Free web services (512 MB RAM, 0.1 CPU) spin down after 15 minutes without traffic, with 750 free instance hours per workspace a month. One free Postgres database (256 MB RAM, 1 GB storage, 30-day expiry) and one free Key Value instance (25 MB, not continuously persisted to disk) per workspace. 5 GB bandwidth/month included then $0.15/GB; without a payment method on file, Render suspends Free services for the rest of the month instead. 500 build minutes/month. Up to 25 services, unlimited projects with 2 environments each. Pro is $25 a month plus compute. New Render customers at Series A or earlier can apply to Render for Startups for credits from $500 to $100,000 by funding stage and investor; credits last one year.",
       "tier": "Hobby",
       "url": "https://render.com/pricing",
       "tags": [

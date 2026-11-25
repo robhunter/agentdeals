@@ -3571,8 +3571,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 74,
-      "table_figures_from_records": 53,
+      "table_figures": 76,
+      "table_figures_from_records": 55,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -3586,8 +3586,8 @@
         },
         {
           "label": "5. Other Hosting Alternatives",
-          "figures": 53,
-          "from_records": 53
+          "figures": 55,
+          "from_records": 55
         }
       ],
       "reads_changes": true,
