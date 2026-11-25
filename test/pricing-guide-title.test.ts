@@ -21,6 +21,21 @@ const alternatives = [
   "free-llm-apis", "api-development-alternatives", "team-collaboration-alternatives",
 ];
 
+const comparisonQuestions = [
+  ["cloud-free-tier-comparison-2026", "cloud IaaS"],
+  ["database-free-tier-comparison-2026", "database"],
+  ["cicd-free-tier-comparison-2026", "CI/CD"],
+  ["auth-comparison-2026", "auth"],
+  ["email-comparison-2026", "email"],
+  ["monitoring-comparison-2026", "monitoring"],
+  ["storage-comparison-2026", "storage"],
+  ["testing-free-tier-comparison-2026", "testing"],
+  ["analytics-free-tier-comparison-2026", "analytics"],
+  ["api-development-free-tier-comparison-2026", "API development"],
+  ["security-free-tier-comparison-2026", "security"],
+  ["hosting-free-tier-comparison-2026", "cloud hosting"],
+];
+
 describe("pricing guide titles", () => {
   it("rolls over on December 10 and adopts recent-change wording in 2027", () => {
     for (const [slug, original, future] of guides) {
@@ -111,6 +126,12 @@ it("updates guide metadata when a running server crosses the year boundaries", a
         const title = page.match(/<title>(.*?) — AgentDeals<\/title>/)?.[1];
         assert.ok(title?.includes(label), `${instant}: ${slug} page title`);
         assert.ok(list.includes(title.replaceAll("&amp;", "&")), `${instant}: ${slug} guide metadata`);
+      }
+      for (const [slug, noun] of comparisonQuestions) {
+        const page = await (await fetch(`${base}/${slug}`)).text();
+        const question = `What is the best free ${noun} service in ${label}?`;
+        assert.ok(page.includes(`<h3 style="margin:0 0 .5rem;font-size:1rem;color:var(--text)">${question}</h3>`), `${instant}: ${slug} visible question`);
+        assert.ok(page.includes(`"name":"${question}"`), `${instant}: ${slug} structured question`);
       }
     }
   } finally {

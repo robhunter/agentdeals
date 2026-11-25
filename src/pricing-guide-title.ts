@@ -17,11 +17,15 @@ const currentYearAlternatives = new Set([
   "free-llm-apis", "api-development-alternatives", "team-collaboration-alternatives",
 ]);
 
+export function currentYearLabel(now: Date = new Date()): string {
+  const year = now.getUTCFullYear();
+  return now.getUTCMonth() === 11 && now.getUTCDate() >= 10 ? `${year}–${year + 1}` : `${year}`;
+}
+
 export function pricingGuideTitle(slug: string, title: string, now: Date = new Date()): string {
   const wording = recentChanges[slug];
   if (!wording && !currentYearAlternatives.has(slug)) return title;
+  const dated = title.replace("2026", currentYearLabel(now));
   const year = now.getUTCFullYear();
-  const label = now.getUTCMonth() === 11 && now.getUTCDate() >= 10 ? `${year}–${year + 1}` : `${year}`;
-  const dated = title.replace("2026", label);
   return wording && year >= 2027 ? dated.replace(wording[0], wording[1]) : dated;
 }

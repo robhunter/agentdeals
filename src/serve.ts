@@ -1,4 +1,4 @@
-import { pricingGuideTitle } from "./pricing-guide-title.js";
+import { currentYearLabel, pricingGuideTitle } from "./pricing-guide-title.js";
 import { shutdownIndexNote } from "./shutdown-index-note.js";
 import { shutdownPath, shutdownPaths } from "./shutdown-paths.js";
 import { shutdownPageContent } from "./shutdown-page.js";
@@ -35783,7 +35783,7 @@ export function comparisonFaqItems(slug: string, forJsonLd = false): FaqItem[] {
   const noun = meta.questionNoun;
   return [
     ...(noBest === null ? [] : [{
-      q: `What is the best free ${noun} service in 2026?`,
+      q: `What is the best free ${noun} service in ${currentYearLabel()}?`,
       a: noBest,
     }]),
     {
