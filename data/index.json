@@ -287,7 +287,7 @@
     {
       "vendor": "Cloudflare Workers",
       "category": "Cloud Hosting",
-      "description": "Edge compute with 100K requests/day, 10ms CPU time per invocation, 5 cron triggers/account. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day. R2 (Standard storage): 10 GB-month/month, 1M Class A ops/month, 10M Class B ops/month. Durable Objects (SQLite-backed only): 100K requests/day. Queues: 10K operations/day. Vectorize: 30M queried vector dimensions/month, 5M stored vector dimensions. Dynamic Workers are paid only. US students 18+ with a verified .edu billing email: Workers Paid (10M requests/month), $5/mo fee waived for 12 months. Workers Paid has a minimum charge of $5 per month per account. It includes 10 million requests and 30 million CPU milliseconds monthly. Each additional million requests costs $0.30. Each additional million CPU milliseconds costs $0.02. Duration is not charged.",
+      "description": "Edge compute with 100K requests/day, 10ms CPU time per invocation. Static assets: free, unlimited requests. KV: 1 GB storage, 100K reads/day, 1K writes/day, 1K deletes/day, 1K list requests/day. Hyperdrive: 100K database queries/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day, 10 databases. R2 Standard storage: 10 GB-month/month, 1M Class A operations/month, 10M Class B operations/month, free egress. Durable Objects: SQLite backend only, 100K requests/day, 13K GB-s duration/day, 5 GB SQL storage. Queues: 10K operations/day, 24-hour message retention. Workflows: 3K steps/day, 1 GB-month storage, requests count against Workers limit. Workers Logs: 200K events/day, 3-day retention. Daily limits reset at 00:00 UTC. Containers and Logpush are not on Free. Workers Paid: $5 minimum/month, includes 10M requests and 30M CPU milliseconds/month, $0.30 per additional million requests, $0.02 per additional million CPU milliseconds. Duration is not charged.",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers/platform/pricing/",
       "tags": [
@@ -300,7 +300,7 @@
         "vercel-alternative",
         "student-upgrade"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-24",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -310,7 +310,7 @@
         "notes": "Channel partner program (PowerUP) for resellers/MSPs only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names Cloudflare Workers as \"cloudflare workers\" and states \"$5\" and \"$0.30\" and \"$0.02\" and \"$5.00\""
       },
@@ -361,6 +361,27 @@
           "quote": "Workers per account | 100 | 500",
           "url": "https://developers.cloudflare.com/workers/platform/limits/",
           "read_on": "2026-11-08",
+          "operating_detail": true
+        },
+        {
+          "text": "Workers Free allows 5 Cron Triggers per account. Workers Paid allows 1,000.",
+          "quote": "Number of Cron Triggers per account | 5 | 1,000",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/",
+          "read_on": "2026-11-24",
+          "operating_detail": true
+        },
+        {
+          "text": "Workers Free includes Vectorize with 30M queried vector dimensions/month, 5M stored vector dimensions, and 100 indexes. Cloudflare says the Workers free tier will always include Vectorize for prototyping.",
+          "quote": "Yes, the Workers free tier will always include the ability to prototype and experiment with Vectorize for free.",
+          "url": "https://developers.cloudflare.com/vectorize/platform/pricing/",
+          "read_on": "2026-11-24",
+          "operating_detail": true
+        },
+        {
+          "text": "Dynamic Workers are available only on the Workers Paid plan.",
+          "quote": "Dynamic Workers are currently only available on the Workers Paid plan.",
+          "url": "https://developers.cloudflare.com/dynamic-workers/pricing/",
+          "read_on": "2026-11-24",
           "operating_detail": true
         },
         {
@@ -416,7 +437,7 @@
       "free_plan_excerpt": {
         "text": "Free 100,000 per day No charge for duration 10 milliseconds of CPU time per invocation",
         "url": "https://developers.cloudflare.com/workers/platform/pricing/",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-23"
       }
     },
     {
@@ -781,9 +802,9 @@
         "read_on": "2026-10-05"
       },
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-24",
         "outcome": "ok",
-        "detail": "the page names Railway as \"railway\" and states \"$ 0\" and \"$5\" and \"$1\" and \"$ 5\""
+        "detail": "the page names Railway as \"railway\" and states \"$ 0\" and \"$ 5\" and \"$1\" and \"$5\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -797,9 +818,9 @@
         "reviewed": "2026-08-31"
       },
       "free_plan_excerpt": {
-        "text": "Free $ 0 per month Perfect for getting started and deploying small apps on Railway Start with a 30-day free trial with $5 credits, then $1 per month Up to 1 vCPU / 0.5 GB RAM per service 0.5 GB of volume storage Community support Deploy a new project No credit card required",
+        "text": "Free $ 0 per month Perfect for getting started and deploying small apps on Railway Trial: higher limits and $ 5 in credits for your first 30 days $1 of monthly usage credits, services wake on request",
         "url": "https://railway.com/pricing",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-24"
       },
       "conditions": [
         {
@@ -903,8 +924,8 @@
     {
       "vendor": "Fly.io",
       "category": "Cloud Hosting",
-      "description": "Pay-as-you-go only — no free tier for new accounts (since Oct 2024). Legacy accounts (Hobby/Launch/Scale plans) retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
-      "tier": "Legacy Free",
+      "description": "$5 of usage every month with a card. A one-time $1 credit for 7 days without a card. Every new Fly.io account starts on the Free plan. Limits: 1 member, up to 3 Machines, volumes up to 5GB each, one Developer Managed Postgres cluster. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
+      "tier": "Free",
       "url": "https://fly.io/docs/about/pricing/",
       "tags": [
         "hosting",
@@ -927,7 +948,7 @@
         "notes": "Confirmed no affiliate program. Extensions partner program exists for service integrations."
       },
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names Fly.io as \"fly io\" and states \"$0.08\""
       },
@@ -944,22 +965,28 @@
       },
       "conditions": [
         {
-          "text": "Fly.io's trial needs no credit card; after the trial, a credit card is needed to keep using billable resources.",
-          "quote": "You don’t need a credit card to start the trial. After the trial ends, you’ll need to add a credit card to keep using billable resources.",
-          "url": "https://docs.fly.io/about/pricing",
-          "read_on": "2026-10-22"
+          "text": "Without a card, the $1 credit expires after 7 days. Once it is used up or expires, you cannot create new resources until you add a card, which gives $5 of usage every month.",
+          "quote": "When the $1 is used up, or after 7 days, you can’t create new resources, and we email you to let you know.",
+          "url": "https://docs.fly.io/about/free-plan",
+          "read_on": "2026-11-23"
         },
         {
-          "text": "Fly.io's free trial lasts 2 hours of machine runtime or 7 days, whichever comes first. Trial machines stop automatically after 5 minutes of running. The trial allows 10 machines, 20 GB of volume storage, and up to 2 vCPUs and 4 GB of memory per machine. Dedicated IPv4 addresses and performance-optimized vCPUs are not included.",
-          "quote": "A free trial on Fly.io includes 2 hours of machine runtime or 7 days of access, whichever comes first.",
-          "url": "https://docs.fly.io/about/free-trial",
-          "read_on": "2026-11-03"
+          "text": "With a card, you stay on the Free plan. The card is charged nothing for a month whose usage stays within the $5, so there is no monthly minimum. You get $5 of usage on the 1st of every month, the full $5 in the first month. It covers Machines, volumes, data transfer, Sprites and one $4 Developer Postgres cluster.",
+          "quote": "With a card, you get the full $5 in your first month, and a new $5 on the 1st of every month.",
+          "url": "https://docs.fly.io/about/free-plan",
+          "read_on": "2026-11-25"
         },
         {
-          "text": "If you use up the trial's resources, or do not add a payment method within 7 days, your apps stop running and you cannot launch new machines, attach volumes or deploy changes until billing is set up. Adding a card ends the free trial and starts billing.",
-          "quote": "You won’t be able to launch new machines, attach volumes, or deploy changes until billing is set up.",
-          "url": "https://docs.fly.io/about/free-trial",
-          "read_on": "2026-11-03"
+          "text": "The Free plan is for your personal organization only, with 1 member; up to 3 Machines, no performance Machines, volumes up to 5GB each; no extensions such as Tigris, Supabase or Upstash Redis, and no dedicated IPv4.",
+          "quote": "The Free plan is for your personal organization, the one we create when you sign up.",
+          "url": "https://docs.fly.io/about/free-plan",
+          "read_on": "2026-11-23"
+        },
+        {
+          "text": "When usage passes $5, the organization moves to Pay As You Go automatically and keeps running. The whole month is billed at standard rates from the first cent, not only the usage above $5.",
+          "quote": "The month’s $5 is removed, and the whole month’s usage is billed at standard rates from the first cent, not just the usage above $5.",
+          "url": "https://docs.fly.io/about/free-plan",
+          "read_on": "2026-11-23"
         },
         {
           "text": "Fly.io offers Sprites, its Linux VMs for AI agents, with a one-time $30 trial credit.",
@@ -1074,7 +1101,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names Koyeb as \"koyeb\" and states \"$ 29\" and \"$10\" and \"$ 10.0\""
       },
@@ -1439,7 +1466,7 @@
         "mongodb-alternative",
         "vector-database"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-23",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1449,9 +1476,9 @@
         "notes": "No referral/affiliate program. Partner program for integrations only. SupaSquad advocate program exists."
       },
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
-        "detail": "the page names Supabase as \"supabase\" and states \"$ 0\" and \"$ 25\" and \"$10\" and \"$ 10\""
+        "detail": "the page names Supabase as \"supabase\" and states \"$ 0\" and \"$ 25\" and \"$10\" and \"$25\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -1479,9 +1506,9 @@
         "reverted_on": "2026-10-04"
       },
       "free_plan_excerpt": {
-        "text": "Free Perfect for passion projects & simple websites. Start for Free $ 0 / month Get started with: Unlimited API requests 50,000 monthly active users 500 MB database size Shared CPU • 500 MB RAM 5 GB egress 5 GB cached egress 1 GB file storage Community support Free projects are paused after 1 week of inactivity. Limit of 2 active projects.",
+        "text": "Free Perfect for passion projects & simple websites. $ 0 / month Start for Free Free projects are paused after 1 week of inactivity. Limit of 2 active projects.",
         "url": "https://supabase.com/pricing",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-23"
       },
       "conditions": [
         {
@@ -2178,7 +2205,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names Appwrite Cloud as \"appwrite cloud\" and states \"$0\"",
         "unrendered_prices": [
@@ -2331,9 +2358,9 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-23",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names Xata as \"xata\" and states \"$0.012\" and \"$0.28\" and \"$ 0.012\" and \"$ 0.28\""
       },
@@ -2354,7 +2381,7 @@
       "free_plan_excerpt": {
         "text": "Free Self-host on your own infrastructure. Branching badge 13 Included Scale-to-zero badge 13 Included Wake-up time ~10s Storage OpenEBS/Mayastor Anonymization Standard Provisioning Self-managed Support Community Observability Not included Compliance Not included Multi-region Not included GitHub",
         "url": "https://xata.io/pricing",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-23"
       },
       "official_mcp_servers": [
         {
@@ -2762,7 +2789,7 @@
         "notes": "No affiliate/referral program for Sentry.io error monitoring. Sponsored account program available for open source."
       },
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names Sentry as \"sentry\" and states \"$0\"",
         "unrendered_prices": [
@@ -2805,7 +2832,7 @@
       "free_plan_excerpt": {
         "text": "For solo devs working on small projects Free $0 Limited to one user One user Error Monitoring and Tracing Alerts and notifications via email 10 custom dashboards MCP access",
         "url": "https://sentry.io/pricing/",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-23"
       }
     },
     {
@@ -3357,9 +3384,14 @@
       ],
       "verifiedDate": "2026-11-02",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names Resend as \"resend\" and states \"3,000 emails sent per day\" and \"3,000 emails / mo\""
+      },
+      "free_plan_excerpt": {
+        "text": "Free Recommended $0 / mo 3,000 emails / mo 100 emails a day 3 domains 3 inboxes Ticket support 10,000 automation runs 30-day data retention Single Sign-On",
+        "url": "https://resend.com/pricing",
+        "read_on": "2026-11-23"
       }
     },
     {
@@ -3840,16 +3872,16 @@
         "amqp",
         "free tier"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-23",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names CloudAMQP as \"cloudamqp\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_plan_excerpt": {
         "text": "Little Lemur For Development Shared RabbitMQ broker Max 100 queues Max 10 000 queued messages Max idle queue time 28 days Message quota/month 1 M Connection limit 20 Free",
         "url": "https://www.cloudamqp.com/plans.html",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-23"
       }
     },
     {
@@ -3948,7 +3980,7 @@
         "free tier",
         "facets"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-23",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -3958,7 +3990,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names Cloudflare Durable Objects as \"cloudflare durable objects\" and states \"13,000 GB-s / day\""
       },
@@ -4593,10 +4625,10 @@
           "read_on": "2026-11-03"
         },
         {
-          "text": "Hetzner's experimental Inference API is free while it stays experimental. Hetzner says not to use it for production.",
-          "quote": "As long as the Inference API remains in experimental status, it is free of charge.",
+          "text": "Hetzner's experimental Inference API is free of charge while it is an experiment. Hetzner says the Inference API experiment ends on December 8. Hetzner says not to use it for production.",
+          "quote": "This Experiment will end on 8 December 2026.",
           "url": "https://docs.hetzner.com/general/company-and-policy/experiments/inference/",
-          "read_on": "2026-11-03"
+          "read_on": "2026-11-24"
         }
       ]
     },
@@ -5132,7 +5164,7 @@
     {
       "vendor": "Google Gemini API",
       "category": "AI / ML",
-      "description": "Free tier: Gemini 4 Hydrogen, the only Gemini 4 model on the free tier, Gemini 3.8 Flash, 3.6 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Gemini 4 Carbon, Gemini 4 Argon and Gemini 4 Neon are paid only. Also free of charge are Gemini 3.8 Live (real-time voice), Gemini 3.5 Live Translate (translation), Gemini 3.5 Transcribe (speech-to-text), Gemini 3.8 Flash TTS and Gemini 3.8 Flash-Lite TTS (text-to-speech). Gemini Decision (gemini-decision-1), released 2026-11-11, is a multimodal decision model available through the Decisions API. It answers yes/no, choice and rubric questions with probabilities and generates zero output tokens, so it has no output price; input is free of charge on the free tier with 10,000 requests per day, and $0.10 per million input tokens on the paid tier. Gemini 4 Hydrogen (gemini-4-hydrogen), released 2026-11-12, is free of charge on the Gemini API free tier for input, output and context caching. On the paid tier, Gemini 4 Hydrogen costs $1.50 per million input tokens and $7.50 per million output tokens (output includes thinking tokens), with context caching at $0.075 (implicit caching only); on the Batch API, Gemini 4 Hydrogen is $0.75 input and $3.75 output. The other Gemini 4 models, Gemini 4 Carbon (gemini-4-carbon), Gemini 4 Argon (gemini-4-argon) and Gemini 4 Neon (gemini-4-neon), are paid only, as are Gemini 3.1 Pro Preview and Gemini Omni 1.2 Flash (gemini-omni-1.2-flash). Gemini 4 Carbon, which Google calls its most capable reasoning model, has been generally available since 2026-11-10 and is not available on the Gemini API free tier. Gemini 4 Argon, generally available since 2026-10-13, is not available on the Gemini API free tier. Gemini 4 Neon (gemini-4-neon) has been generally available since 2026-11-18, is not available on the Gemini API free tier, and costs $3.00 per 1M input tokens and $15.00 per 1M output tokens on the paid tier, and $1.50 per 1M input tokens and $7.50 per 1M output tokens on the Batch API. In Google AI Studio, Google's AI plans page (read 2026-11-22) lists Gemini 4 Hydrogen on every plan, including Free, and Gemini 4 Neon on Google AI Pro and Google AI Ultra. Gemini 4 Carbon requires Google AI Ultra in AI Studio, or a paid Gemini API key. The page no longer names a plan for Gemini 4 Argon. On 2026-11-18 it listed Gemini 4 Argon on Google AI Pro and Google AI Ultra. Gemini 4 Argon is available through the Gemini API on the paid tier. Google AI plans in AI Studio are separate from Gemini API usage tiers, which set API rate limits and spend caps. Gemini 4 Argon is in Antigravity on Google AI Ultra and paid Google AI Pro. In Antigravity, Gemini 4 Carbon is available on Google AI Ultra and Enterprise only (antigravity.google/docs/models). On a Google AI Pro trial, Argon is only available \"on trial with eligible premium devices\" (antigravity.google/docs/models). Claude Opus 5.5 and Claude Sonnet 5.5 are not included on Google AI Pro trials; trial users and those with memberships through third-party partners, Pixel Pass or Google Fi manage subscriptions through Google One. Google AI Pro via partner offers like Jio's does not include Gemini 4 Argon, Claude Sonnet 5.5 or Claude Opus 5.5 in Antigravity. Per a Google staff member on discuss.ai.google.dev (2026-10-21), \"Those frontier models are restricted to directly billed (non-trial/non-promotional) Google AI Pro, Google AI Ultra and Enterprise plans.\" No Gemini image model has a free tier in the API. Nano Banana 2.1 (gemini-nano-banana-2.1) became generally available on 2026-10-06. It costs $0.0336 per 1K image, $0.0504 per 2K image and $0.113 per 4K image. The Batch API halves those prices. Nano Banana Pro costs $0.134 per 1K or 2K image and $0.24 per 4K image. Except for Gemini Decision, Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Developers report 429 errors showing 20 requests per day for Gemini 3.x Flash models and 500 requests per day for 3.x Flash-Lite models as of September 2026. Rate limits apply per project, not per API key. Daily request quotas reset at midnight Pacific time, per Google's rate-limits page. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. Google deprecated gemini-3.5-flash and gemini-3.7-flash on 2026-10-08. Both endpoints keep running. Requests to gemini-3.5-flash are routed automatically to gemini-3.6-flash. Requests to gemini-3.7-flash are routed automatically to gemini-3.8-flash. Google says to move gemini-3.5-flash to gemini-3.6-flash or gemini-3.8-flash. Move gemini-3.7-flash to gemini-3.8-flash. Existing users can call gemini-2.5-pro and gemini-2.5-flash until 2026-12-01, when Google shuts both down. From that date, requests to gemini-2.5-pro route to gemini-3.8-flash and are billed at its rates. Requests to gemini-2.5-flash route to gemini-3.5-flash-lite and are billed at its rates. Update your model string before 2026-12-01 and review Google’s migration guides for breaking API changes. gemini-2.5-flash-lite is not deprecated. Google shut down Gemini Omni Flash Preview (gemini-omni-flash-preview) on 2026-10-22. Google's replacement is gemini-omni-1.2-flash. Google shuts down Gemini Omni 1.1 Flash (gemini-omni-1.1-flash) on December 3, 2026; after that, requests that name gemini-omni-1.1-flash are answered by gemini-omni-1.2-flash at Gemini Omni 1.2 Flash rates. Gemini 3.1 Flash-Lite (gemini-3.1-flash-lite) can be called until 2027-05-07, when Google shuts it down. Google's replacement is gemini-3.5-flash-lite. Paid, per million tokens (input/output; output prices include thinking tokens): Gemini 4 Carbon $2/$10 through 2026-11-30 (context caching $0.10, then $0.20, implicit caching only); Gemini 4 Argon $2/$10 through 2026-11-30 (context caching $0.10, then $0.20, implicit caching only); Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.6 Flash: the same prices and dates); Gemini 3.5 Flash-Lite (not gemini-3.5-flash) $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens; prompts over 200K tokens cost $4 input and $18 output). Through 2026-11-30, Gemini 4 Argon's Standard output price is below Gemini 3.1 Pro Preview's for prompts up to 200K tokens, with the same input price; from 2026-12-01 Argon's is higher. From December 1, 2026, Gemini 4 Argon will cost $4 per million input tokens and $20 per million output tokens for Standard, $2 input and $10 output for Batch API, $2 input and $10 output for Flex, and $7.20 input and $36 output for Priority. From December 1, 2026, Gemini 4 Carbon will also cost $4 per million input tokens and $20 per million output tokens for Standard, $2 input and $10 output for Batch API and Flex, and $7.20 input and $36 output for Priority. The Batch API costs half the standard price; Gemini 3.8 Flash is $0.375 input and $1.875 output per million tokens through 2026-12-31. Gemini 4 Carbon and Gemini 4 Argon on the Batch API are $1 input and $5 output through 2026-11-30. Google also sells two tiers, Flex and Priority, both in Preview. A request picks one with the service_tier field (\"flex\" or \"priority\"); without it the request is Standard. Gemini 4 Carbon and Gemini 4 Argon on Flex are $1 input and $5 output through 2026-11-30; on Priority they are $3.60 input and $18 output through 2026-11-30. \"The Gemini Flex API is an inference tier that offers a 50% cost reduction compared to standard rates, in exchange for variable latency and best-effort availability\" (ai.google.dev/gemini-api/docs/flex-inference). \"Priority inference is priced at 75-100% more than the standard API and billed per token\" (ai.google.dev/gemini-api/docs/priority-inference). The Gemini API Contributor Tier is an invite-only private preview. Eligible users will be invited by email. It offers up to 50% off token costs for Gemini 4 Argon and Gemini 4 Hydrogen. Google uses the data from those models to improve its products. \"Please don't submit sensitive or personal information\" (ai.google.dev/gemini-api/docs/logs-policy). Grounding with Google Search is supported on the free tier for Gemini 3.8 Live, Gemini 3.8 Live Extended Thinking and Gemini 3.1 Flash Live Preview. It is not available on the free tier for Gemini 4 Hydrogen, Gemini 4 Argon or the Gemini 3.x Flash, Flash-Lite and Pro models. On the paid tier, 5,000 search requests a month are free, shared across Gemini 3 and newer models, then $14 per 1,000. Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API.",
+      "description": "Free tier: Gemini 4 Hydrogen, the only Gemini 4 model on the free tier, Gemini 3.8 Flash, 3.6 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Gemini 4 Carbon, Gemini 4 Argon and Gemini 4 Neon are paid only. Also free of charge are Gemini 3.8 Live (real-time voice), Gemini 3.5 Live Translate (translation), Gemini 3.5 Transcribe (speech-to-text), Gemini 3.8 Flash TTS and Gemini 3.8 Flash-Lite TTS (text-to-speech). Gemini Decision (gemini-decision-1), released 2026-11-11, is a multimodal decision model available through the Decisions API. It answers yes/no, choice and rubric questions with probabilities and generates zero output tokens, so it has no output price; input is free of charge on the free tier with 10,000 requests per day, and $0.10 per million input tokens on the paid tier. Gemini 4 Hydrogen (gemini-4-hydrogen), released 2026-11-12, is free of charge on the Gemini API free tier for input, output and context caching. On the paid tier, Gemini 4 Hydrogen costs $1.50 per million input tokens and $7.50 per million output tokens (output includes thinking tokens), with context caching at $0.075 (implicit caching only); on the Batch API, Gemini 4 Hydrogen is $0.75 input and $3.75 output. The other Gemini 4 models, Gemini 4 Carbon (gemini-4-carbon), Gemini 4 Argon (gemini-4-argon) and Gemini 4 Neon (gemini-4-neon), are paid only, as are Gemini 3.1 Pro Preview and Gemini Omni 1.2 Flash (gemini-omni-1.2-flash). Gemini 4 Carbon, which Google calls its most capable reasoning model, has been generally available since 2026-11-10 and is not available on the Gemini API free tier. Gemini 4 Argon, generally available since 2026-10-13, is not available on the Gemini API free tier. Gemini 4 Neon (gemini-4-neon) has been generally available since 2026-11-18, is not available on the Gemini API free tier, and costs $3.00 per 1M input tokens and $15.00 per 1M output tokens on the paid tier, and $1.50 per 1M input tokens and $7.50 per 1M output tokens on the Batch API. In Google AI Studio, Google's AI plans page (read 2026-11-22) lists Gemini 4 Hydrogen on every plan, including Free, and Gemini 4 Neon on Google AI Pro and Google AI Ultra. Gemini 4 Carbon requires Google AI Ultra in AI Studio, or a paid Gemini API key. The page no longer names a plan for Gemini 4 Argon. On 2026-11-18 it listed Gemini 4 Argon on Google AI Pro and Google AI Ultra. Gemini 4 Argon is available through the Gemini API on the paid tier. Google AI plans in AI Studio are separate from Gemini API usage tiers, which set API rate limits and spend caps. Gemini 4 Argon is in Antigravity on Google AI Ultra and paid Google AI Pro until November 30, when Google removes it from Antigravity. On the Gemini API, Gemini 4 Argon has no shutdown date. In Antigravity, Gemini 4 Carbon is on paid Google AI Pro (and trials with eligible premium devices), Google AI Ultra and Gemini Enterprise (antigravity.google/docs/models). On a Google AI Pro trial, Argon is only available \"on trial with eligible premium devices\" (antigravity.google/docs/models). Claude Opus 5.5 and Claude Sonnet 5.5 are not included on Google AI Pro trials; trial users and those with memberships through third-party partners, Pixel Pass or Google Fi manage subscriptions through Google One. Google AI Pro via partner offers like Jio's does not include Gemini 4 Argon, Claude Sonnet 5.5 or Claude Opus 5.5 in Antigravity. Per a Google staff member on discuss.ai.google.dev (2026-10-21), \"Those frontier models are restricted to directly billed (non-trial/non-promotional) Google AI Pro, Google AI Ultra and Enterprise plans.\" No Gemini image model has a free tier in the API. Nano Banana 2.1 (gemini-nano-banana-2.1) became generally available on 2026-10-06. It costs $0.0336 per 1K image, $0.0504 per 2K image and $0.113 per 4K image. The Batch API halves those prices. Nano Banana Pro costs $0.134 per 1K or 2K image and $0.24 per 4K image. Except for Gemini Decision, Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Developers report 429 errors showing 20 requests per day for Gemini 3.x Flash models and 500 requests per day for 3.x Flash-Lite models as of September 2026. Rate limits apply per project, not per API key. Daily request quotas reset at midnight Pacific time, per Google's rate-limits page. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. Google deprecated gemini-3.5-flash and gemini-3.7-flash on 2026-10-08. Both endpoints keep running. Requests to gemini-3.5-flash are routed automatically to gemini-3.6-flash. Requests to gemini-3.7-flash are routed automatically to gemini-3.8-flash. Google says to move gemini-3.5-flash to gemini-3.6-flash or gemini-3.8-flash. Move gemini-3.7-flash to gemini-3.8-flash. Existing users can call gemini-2.5-pro and gemini-2.5-flash until 2026-12-01, when Google shuts both down. From that date, requests to gemini-2.5-pro route to gemini-3.8-flash and are billed at its rates. Requests to gemini-2.5-flash route to gemini-3.5-flash-lite and are billed at its rates. Update your model string before 2026-12-01 and review Google’s migration guides for breaking API changes. gemini-2.5-flash-lite is not deprecated. Google shut down Gemini Omni Flash Preview (gemini-omni-flash-preview) on 2026-10-22. Google's replacement is gemini-omni-1.2-flash. Google shuts down Gemini Omni 1.1 Flash (gemini-omni-1.1-flash) on December 3, 2026; after that, requests that name gemini-omni-1.1-flash are answered by gemini-omni-1.2-flash at Gemini Omni 1.2 Flash rates. Gemini 3.1 Flash-Lite (gemini-3.1-flash-lite) can be called until 2027-05-07, when Google shuts it down. Google's replacement is gemini-3.5-flash-lite. Paid, per million tokens (input/output; output prices include thinking tokens): Gemini 4 Carbon $2/$10 through 2026-11-30 (context caching $0.10, then $0.20, implicit caching only); Gemini 4 Argon $2/$10 through 2026-11-30 (context caching $0.10, then $0.20, implicit caching only); Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.6 Flash: the same prices and dates); Gemini 3.5 Flash-Lite (not gemini-3.5-flash) $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens; prompts over 200K tokens cost $4 input and $18 output). Through 2026-11-30, Gemini 4 Argon's Standard output price is below Gemini 3.1 Pro Preview's for prompts up to 200K tokens, with the same input price; from 2026-12-01 Argon's is higher. From December 1, 2026, Gemini 4 Argon will cost $4 per million input tokens and $20 per million output tokens for Standard, $2 input and $10 output for Batch API, $2 input and $10 output for Flex, and $7.20 input and $36 output for Priority. From December 1, 2026, Gemini 4 Carbon will also cost $4 per million input tokens and $20 per million output tokens for Standard, $2 input and $10 output for Batch API and Flex, and $7.20 input and $36 output for Priority. The Batch API costs half the standard price; Gemini 3.8 Flash is $0.375 input and $1.875 output per million tokens through 2026-12-31. Gemini 4 Carbon and Gemini 4 Argon on the Batch API are $1 input and $5 output through 2026-11-30. Google also sells two tiers, Flex and Priority, both in Preview. A request picks one with the service_tier field (\"flex\" or \"priority\"); without it the request is Standard. Gemini 4 Carbon and Gemini 4 Argon on Flex are $1 input and $5 output through 2026-11-30; on Priority they are $3.60 input and $18 output through 2026-11-30. \"The Gemini Flex API is an inference tier that offers a 50% cost reduction compared to standard rates, in exchange for variable latency and best-effort availability\" (ai.google.dev/gemini-api/docs/flex-inference). \"Priority inference is priced at 75-100% more than the standard API and billed per token\" (ai.google.dev/gemini-api/docs/priority-inference). The Gemini API Contributor Tier is an invite-only private preview. Eligible users will be invited by email. It offers up to 50% off token costs for Gemini 4 Argon and Gemini 4 Hydrogen. Google uses the data from those models to improve its products. \"Please don't submit sensitive or personal information\" (ai.google.dev/gemini-api/docs/logs-policy). Grounding with Google Search is supported on the free tier for Gemini 3.8 Live, Gemini 3.8 Live Extended Thinking and Gemini 3.1 Flash Live Preview. It is not available on the free tier for Gemini 4 Hydrogen, Gemini 4 Argon or the Gemini 3.x Flash, Flash-Lite and Pro models. On the paid tier, 5,000 search requests a month are free, shared across Gemini 3 and newer models, then $14 per 1,000. Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API.",
       "tier": "Free (Reduced)",
       "url": "https://ai.google.dev/pricing",
       "tags": [
@@ -5304,9 +5336,9 @@
       ],
       "verifiedDate": "2026-10-01",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
-        "detail": "the page names Mistral AI as \"mistral ai\" and states \"$14.99\" and \"$25.5\" and \"$15\" and \"$0.5\""
+        "detail": "the page names Mistral AI as \"mistral ai\" and states \"$14.99\" and \"$0.5\" and \"$1.5\" and \"$5.99\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -5406,11 +5438,6 @@
           "operating_detail": true
         }
       ],
-      "free_plan_excerpt": {
-        "text": "Free Your personal AI agent for everyday tasks. Test out Vibe’s capabilities. Access on web and mobile. Limited messages and web searches. Limited coding sessions. Basic image generation and editing. 100+ connectors. Start now",
-        "url": "https://mistral.ai/pricing",
-        "read_on": "2026-11-02"
-      },
       "official_mcp_servers": [
         {
           "kind": "remote",
@@ -5792,7 +5819,7 @@
         "yc",
         "startup credits"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-23",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -5804,14 +5831,14 @@
         "program": "PostHog for Y Combinator"
       },
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names PostHog as \"posthog\" and states \"$50,000\""
       },
       "free_plan_excerpt": {
-        "text": "$50,000 for 12 months",
+        "text": "$50,000 in PostHog credits (valid for 12 months)",
         "url": "https://posthog.com/handbook/marketing/startups",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-23"
       }
     },
     {
@@ -5827,7 +5854,7 @@
         "feature flags",
         "startup credits"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-23",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -5838,14 +5865,14 @@
         "program": "PostHog for Startups"
       },
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names PostHog as \"posthog\" and states \"$50,000\" and \"$12,000\""
       },
       "free_plan_excerpt": {
-        "text": "$50,000 in PostHog credits for 12 months $12,000 in benefits from partners we like Exclusive PostHog merch Apply now You'll need a PostHog account first",
+        "text": "$50,000 in PostHog credits for 12 months",
         "url": "https://posthog.com/startups",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-23"
       }
     },
     {
@@ -7122,16 +7149,16 @@
         "background-jobs",
         "automation"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-23",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names Cron-job.org as \"cron job org\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_plan_excerpt": {
         "text": "Free cronjobs - from minutely to once a year.",
         "url": "https://cron-job.org/en/",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-23"
       }
     },
     {
@@ -7146,9 +7173,9 @@
         "mobile",
         "web-push"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-24",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names OneSignal as \"onesignal\" and states \"$0\" and \"$0.00\" and \"10,000 sends / month\""
       },
@@ -7162,7 +7189,7 @@
       "free_plan_excerpt": {
         "text": "Free $0/mo For individuals and organizations just starting out Get started now Access to: All channels Basic automation & analytics OneSignal AI & MCP Basic personalization",
         "url": "https://onesignal.com/pricing",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-24"
       },
       "conditions": [
         {
@@ -8234,7 +8261,7 @@
       ],
       "verifiedDate": "2026-11-02",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names Mux as \"mux\" and states \"$0.00\""
       },
@@ -8411,9 +8438,9 @@
         "program": "Cloudflare for Startups"
       },
       "source_check": {
-        "checked": "2026-11-02",
-        "outcome": "ok",
-        "detail": "the page names Cloudflare for Startups as \"cloudflare for startups\" and states \"$350,000\" and \"$50,000\" and \"$10,000\" and \"$2,500\""
+        "checked": "2026-11-24",
+        "outcome": "unreadable",
+        "detail": "fetch failed"
       },
       "free_plan_excerpt": {
         "text": "Tier 3 $10k Get started with $10k in credits to build and launch your product, no minimum funding required. Criteria Bootstrapped or self-funded Under $1M raised Benefits Credits: $10k",
@@ -9361,7 +9388,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 285 characters",
         "rendered": true
@@ -10186,7 +10213,7 @@
         "serverless",
         "deal-change"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-24",
       "product_role": {
         "deployment_model": "local_dev_only",
         "is_addon": false,
@@ -10195,14 +10222,14 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names LocalStack as \"localstack\" and states \"$39\" and \"$45\" and \"$89\""
       },
       "free_plan_excerpt": {
-        "text": "Hobby For hobbyists & other non-commercial usage. Free",
+        "text": "Hobby For hobbyists & other non-commercial usage. Free Create Your Account Create Your Account Create Your Account LocalStack for AWS Emulator 30+ emulated services 1 personal sandbox Run tests in CI Extensions Marketplace Integration: VS Code Basic support",
         "url": "https://www.localstack.cloud/pricing",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-24"
       },
       "restatement_reverted": {
         "record_date": "2026-09-07",
@@ -10689,9 +10716,10 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 498 characters",
+        "rendered": true
       }
     },
     {
@@ -10788,9 +10816,9 @@
         "web-app",
         "paas"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-24",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names PythonAnywhere as \"pythonanywhere\" and states \"$ 0\""
       },
@@ -10897,7 +10925,7 @@
       "free_plan_excerpt": {
         "text": "Explore PythonAnywhere with a limited free account . You'll get one web app at your-username .pythonanywhere.com and two consoles with restricted outbound Internet access.",
         "url": "https://www.pythonanywhere.com/pricing/",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-24"
       }
     },
     {
@@ -12016,7 +12044,7 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 64 characters",
         "rendered": true
@@ -12137,11 +12165,11 @@
         "object-detection",
         "model-training"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-24",
       "source_check": {
-        "checked": "2026-11-02",
-        "outcome": "states_a_free_price",
-        "detail": "the page names Roboflow and states its price in words as \"Free Tier\", and its markup carries no structured data"
+        "checked": "2026-11-24",
+        "outcome": "ok",
+        "detail": "the page names Roboflow as \"roboflow\" and states amounts, none of which we matched to the terms we publish"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -12166,7 +12194,7 @@
       "free_plan_excerpt": {
         "text": "Core starts with the Free Tier, which costs nothing, needs no credit card, and includes 10 credits that refresh every month.",
         "url": "https://docs.roboflow.com/platform/billing-and-plans/plans",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-24"
       }
     },
     {
@@ -14875,7 +14903,7 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names CurrencyScoop and is not served from its domain"
       }
@@ -17725,7 +17753,7 @@
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Revolt.chat and is not served from its domain"
       }
@@ -18054,7 +18082,7 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 205 characters",
         "rendered": true
@@ -18265,7 +18293,7 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 171 characters",
         "rendered": true
@@ -18494,7 +18522,7 @@
       ],
       "verifiedDate": "2026-11-02",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names Storyblok as \"storyblok\" and states \"$15.00\""
       },
@@ -18505,7 +18533,7 @@
       "free_plan_excerpt": {
         "text": "Starter Monthly price if billed monthly: Free Monthly price if billed annually: Free Limited plan for testing and personal projects. Start Free Trial Start with: 1 space 1 seat (up to 2) 100GB traffic 100k API requests 2 locales 25k AI credits",
         "url": "https://www.storyblok.com/pricing",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-24"
       }
     },
     {
@@ -18873,7 +18901,7 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 138 characters",
         "rendered": true
@@ -19022,9 +19050,9 @@
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 449 characters",
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 433 characters",
         "rendered": true
       }
     },
@@ -19097,7 +19125,7 @@
       ],
       "verifiedDate": "2026-04-23",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -19172,7 +19200,7 @@
       ],
       "verifiedDate": "2026-04-12",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -19310,7 +19338,7 @@
       ],
       "verifiedDate": "2026-08-28",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names RunMyJob and is not served from its domain"
       }
@@ -20097,7 +20125,7 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -20318,7 +20346,7 @@
       ],
       "verifiedDate": "2026-11-02",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "unreadable",
         "detail": "HTTP 410"
       }
@@ -20420,16 +20448,16 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-11-01",
+      "verifiedDate": "2026-11-23",
       "source_check": {
-        "checked": "2026-11-22",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names 360username as \"360username\" and states \"$0\""
       },
       "free_plan_excerpt": {
         "text": "Free tools, no strings attached No signup wall, no trial that expires, no “upgrade to see your results”. Every tool on this site works anonymously and returns the full result, which also means there is no account database here to leak. The site is paid for by advertising, and that is the whole business model. 70+ Platforms checked 50 Names per bulk search $0 Cost, and no account",
         "url": "https://360username.com/",
-        "read_on": "2026-11-22"
+        "read_on": "2026-11-23"
       }
     },
     {
@@ -21069,7 +21097,7 @@
       ],
       "verifiedDate": "2026-04-13",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -21252,7 +21280,7 @@
       ],
       "verifiedDate": "2026-08-07",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -21286,17 +21314,17 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-24",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names httpSMS as \"httpsms\" and states \"$0\"",
         "rendered": true
       },
       "free_plan_excerpt": {
-        "text": "10K Free Try sending and receiving SMS on your hobby websites and experiments. $0 No credit card required Get Started Send or receive up to 200 SMS/month",
+        "text": "10K Free Try sending and receiving SMS on your hobby websites and experiments. $0 No credit card required Get Started Send or receive up to 200 SMS/month Offline notifications for your phone Forward received messages via webhook Basic email support",
         "url": "https://httpsms.com",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-24"
       }
     },
     {
@@ -21362,7 +21390,7 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names pubnub.com as \"pubnub\" and states \"$0\""
       }
@@ -21690,7 +21718,7 @@
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 264 characters",
         "rendered": true
@@ -23236,7 +23264,7 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -23741,7 +23769,7 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 174 characters",
         "rendered": true
@@ -25496,9 +25524,9 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-31",
+      "verifiedDate": "2026-11-24",
       "source_check": {
-        "checked": "2026-11-23",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names Pollinations.AI as \"pollinations ai\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -26280,7 +26308,7 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names gigalixir.com, renders \"free of charge\" and no amount, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -27187,9 +27215,9 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-11-22",
+      "verifiedDate": "2026-11-24",
       "source_check": {
-        "checked": "2026-11-22",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names Neocities as \"neocities\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -27857,7 +27885,7 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-11-22",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names DigitalPlat but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
@@ -27913,7 +27941,7 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names pp.ua and is not served from its domain"
       }
@@ -27967,16 +27995,16 @@
         "storage",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-24",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names Filebase as \"filebase\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_plan_excerpt": {
         "text": "Test it on the 5 GB free tier.",
         "url": "https://filebase.com/",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-24"
       }
     },
     {
@@ -28197,7 +28225,7 @@
       ],
       "verifiedDate": "2026-07-14",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names skyvia.com as \"skyvia com\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -29003,7 +29031,7 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names Lucidchart, renders no terms we can read, and its markup states 1 typed price (USD 0.00)",
         "read": "markup"
@@ -29021,7 +29049,7 @@
       ],
       "verifiedDate": "2026-07-14",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names MeisterTask, renders no terms we can read, and its markup states 3 typed prices (Basic USD 0, Pro USD 13, Business USD 25)",
         "read": "markup",
@@ -29655,7 +29683,7 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names GoFile.io as \"gofile io\" and states \"$0\"",
         "rendered": true
@@ -29663,7 +29691,7 @@
       "free_plan_excerpt": {
         "text": "Free $0 no account required Gofile is free to use — upload and share files instantly, no account required. Files are kept temporarily, perfect for quick shares.",
         "url": "https://gofile.io/",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-23"
       },
       "restatement_reverted": {
         "record_date": "2026-10-06",
@@ -29683,7 +29711,7 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-11-17",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names gumlet.com, renders no terms we can read, and its markup states 1 typed price (USD 6)",
         "read": "markup",
@@ -30826,7 +30854,7 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names HyperUI but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price",
         "rendered": true
@@ -30875,7 +30903,7 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names iconify.design but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -31021,7 +31049,7 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Lorem Picsum but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -31057,7 +31085,7 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Lucide but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -31075,7 +31103,7 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names MagicPattern but states no amount, tier or rate we can read, and the 3 structured-data blocks in its markup state no price"
       }
@@ -31147,7 +31175,7 @@
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Mindmup.com but states no amount, tier or rate we can read, and the 4 structured-data blocks in its markup state no price"
       }
@@ -31214,7 +31242,7 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Mossaik but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -31232,9 +31260,9 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-10-13",
-        "outcome": "states_no_terms",
-        "detail": "the page names Nappy but states no amount, tier or rate we can read, and its markup carries no structured data"
+        "checked": "2026-11-23",
+        "outcome": "unreadable",
+        "detail": "HTTP 403"
       }
     },
     {
@@ -31286,9 +31314,9 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-10-13",
-        "outcome": "states_no_terms",
-        "detail": "the page names Octopus.do but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
+        "checked": "2026-11-23",
+        "outcome": "ok",
+        "detail": "the page names Octopus.do as \"octopus do\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -31304,7 +31332,7 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names OKLCH but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -31426,14 +31454,14 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Proto.io but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price"
       },
       "free_plan_excerpt": {
         "text": "Try Proto.io for free for 15 days.",
         "url": "https://www.proto.io",
-        "read_on": "2026-10-13"
+        "read_on": "2026-11-23"
       }
     },
     {
@@ -31449,7 +31477,7 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Quant Ux but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -31467,9 +31495,9 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-10-13",
-        "outcome": "states_no_terms",
-        "detail": "the page names resizeappicon.com but states no amount, tier or rate we can read, and its markup carries no structured data"
+        "checked": "2026-11-23",
+        "outcome": "unreadable",
+        "detail": "HTTP 525"
       }
     },
     {
@@ -31485,7 +31513,7 @@
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Responsively App but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -31644,7 +31672,7 @@
       ],
       "verifiedDate": "2026-07-22",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names storyset.com but states no amount, tier or rate we can read, and the 32 structured-data blocks in its markup state no price"
       }
@@ -31747,7 +31775,7 @@
       ],
       "verifiedDate": "2026-07-23",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Tailcolors but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -31763,11 +31791,11 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-23",
+      "verifiedDate": "2026-11-23",
       "source_check": {
-        "checked": "2026-10-13",
-        "outcome": "states_no_terms",
-        "detail": "the page names Tailkits but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
+        "checked": "2026-11-23",
+        "outcome": "ok",
+        "detail": "the page names Tailkits as \"tailkits\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -31806,14 +31834,14 @@
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names TW Elements but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "free_plan_excerpt": {
         "text": "500+ UI components Super simple, 1 minute installation Easy theming and customization Free hosting",
         "url": "https://tw-elements.com/",
-        "read_on": "2026-10-13"
+        "read_on": "2026-11-23"
       }
     },
     {
@@ -31886,7 +31914,7 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Unicorn Platform but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -31941,7 +31969,7 @@
       ],
       "verifiedDate": "2026-07-24",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names vector.express but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -31959,7 +31987,7 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names vectr.com but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -31977,7 +32005,7 @@
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Vertopal but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -31995,7 +32023,7 @@
       ],
       "verifiedDate": "2026-07-22",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Volume but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32119,7 +32147,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Clockwork Micro but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32135,9 +32163,9 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-11-02",
+      "verifiedDate": "2026-11-24",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names Foursquare as \"foursquare\" and states \"$0\" and \"$0.00\" and \"$15.00\" and \"$12.00\""
       },
@@ -32174,7 +32202,7 @@
       "free_plan_excerpt": {
         "text": "Free 30-day trial for $0 + usage Free trial for 30 days with no subscription fee – only pay for the compute and storage you use.",
         "url": "https://foursquare.com/pricing/",
-        "read_on": "2026-11-02"
+        "read_on": "2026-11-24"
       }
     },
     {
@@ -32311,7 +32339,7 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names maps.stamen.com but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32329,7 +32357,7 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names maptiler.com but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32493,7 +32521,7 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Android Studio but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
       }
@@ -32510,7 +32538,7 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names AndroidIDE but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32527,7 +32555,7 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names Apache Netbeans but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32544,7 +32572,7 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names apiary.io but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32561,7 +32589,7 @@
       ],
       "verifiedDate": "2026-08-10",
       "source_check": {
-        "checked": "2026-10-13",
+        "checked": "2026-11-23",
         "outcome": "states_no_terms",
         "detail": "the page names BBEdit but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32596,7 +32624,7 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names BlueJ but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32687,7 +32715,7 @@
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names code.cs50.io but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32704,9 +32732,9 @@
       ],
       "verifiedDate": "2026-08-10",
       "source_check": {
-        "checked": "2026-10-14",
-        "outcome": "states_no_terms",
-        "detail": "the page names Code::Blocks but states no amount, tier or rate we can read, and its markup carries no structured data"
+        "checked": "2026-11-24",
+        "outcome": "unreadable",
+        "detail": "fetch failed"
       }
     },
     {
@@ -32755,7 +32783,7 @@
       ],
       "verifiedDate": "2026-08-10",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Eclipse Che but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32841,7 +32869,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names MarsCode but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32904,7 +32932,7 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names OneCompiler but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -32998,7 +33026,7 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names SoloLearn but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price"
       }
@@ -33015,7 +33043,7 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names stackblitz.com but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -33032,7 +33060,7 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Sublime Text but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -33084,7 +33112,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names VSCodium but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -33123,7 +33151,7 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Wave Terminal but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -33140,7 +33168,7 @@
       ],
       "verifiedDate": "2026-08-10",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names WebComponents.dev but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -33175,7 +33203,7 @@
       ],
       "verifiedDate": "2026-07-04",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       },
@@ -33291,7 +33319,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Clicky but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -33309,7 +33337,7 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names counter.dev but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -33550,9 +33578,9 @@
       ],
       "verifiedDate": "2026-07-22",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
-        "detail": "the page names Hightouch but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
+        "detail": "the page names Hightouch but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -33616,7 +33644,7 @@
       ],
       "verifiedDate": "2026-07-26",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names MetricsWave but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
       }
@@ -33634,9 +33662,9 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-10-14",
-        "outcome": "states_no_terms",
-        "detail": "the page names Moesif but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
+        "checked": "2026-11-24",
+        "outcome": "ok",
+        "detail": "the page names Moesif as \"moesif\" and states \"$0.00000\""
       }
     },
     {
@@ -33652,7 +33680,7 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Repohistory but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -33720,14 +33748,14 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names StatCounter but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "free_plan_excerpt": {
         "text": "Try all features in Statcounter free for 30 days Free 30 day trial No credit card required Plans from €9 / month",
         "url": "https://statcounter.com/",
-        "read_on": "2026-10-14"
+        "read_on": "2026-11-24"
       }
     },
     {
@@ -33875,7 +33903,7 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names inspectlet.com as \"inspectlet com\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -34190,9 +34218,9 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-10-14",
-        "outcome": "states_no_terms",
-        "detail": "the page names Moesif API Monetization but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
+        "checked": "2026-11-24",
+        "outcome": "ok",
+        "detail": "the page names Moesif API Monetization as \"monetization\" and states \"$0.00000\""
       }
     },
     {
@@ -34303,7 +34331,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Container Registry Service but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -34321,7 +34349,7 @@
       ],
       "verifiedDate": "2026-07-22",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Play with Docker but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -34373,7 +34401,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names IntenseDebate but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -34412,7 +34440,7 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Utterances but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -34499,7 +34527,7 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names screenshotmachine.com but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -34558,14 +34586,14 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-10-14",
-        "outcome": "states_no_terms",
-        "detail": "the page names thumbnail.ws but states no amount, tier or rate we can read, and its markup carries no structured data"
+        "checked": "2026-11-24",
+        "outcome": "ok",
+        "detail": "the page names thumbnail.ws as \"thumbnail ws\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_plan_excerpt": {
-        "text": "Free service There is no thing as a free service! Well there is but we limit the total available resources for free accounts.",
+        "text": "There is no such thing as a free service! Well there is but we limit the total available resources for free accounts.",
         "url": "https://thumbnail.ws",
-        "read_on": "2026-10-14"
+        "read_on": "2026-11-24"
       }
     },
     {
@@ -34580,7 +34608,7 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names FlutLab but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -34597,7 +34625,7 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Bearer but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -34660,7 +34688,7 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-23",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names BackgroundStyler.com, on a domain that carries its name",
         "unrendered_prices": [
@@ -34680,7 +34708,7 @@
       ],
       "verifiedDate": "2026-07-22",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Base64 decoder/encoder but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -34802,7 +34830,7 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Codepng but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -34859,7 +34887,7 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-23",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names datelist.io, on a domain that carries its name"
       }
@@ -34916,7 +34944,7 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Format Express but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -34972,7 +35000,7 @@
       ],
       "verifiedDate": "2026-07-23",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names newreleases.io but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -35041,7 +35069,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names QuickType.io but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -35253,7 +35281,7 @@
       ],
       "verifiedDate": "2026-07-22",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names superfeedr.com but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -35270,7 +35298,7 @@
       ],
       "verifiedDate": "2026-07-23",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names SurveyMonkey.com but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
       }
@@ -35334,7 +35362,7 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names videoinu but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -35843,9 +35871,9 @@
         "program": "HubSpot for Startups Startup Program"
       },
       "source_check": {
-        "checked": "2026-10-14",
-        "outcome": "states_no_terms",
-        "detail": "the page names HubSpot for Startups but states no amount, tier or rate we can read, and the 5 structured-data blocks in its markup state no price"
+        "checked": "2026-11-24",
+        "outcome": "ok",
+        "detail": "the page names HubSpot for Startups as \"hubspot for startups\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -35869,9 +35897,9 @@
         "program": "Shotstack Startup Program"
       },
       "source_check": {
-        "checked": "2026-10-14",
-        "outcome": "states_no_terms",
-        "detail": "the page names Shotstack Startup Program but states no amount, tier or rate we can read, and its markup carries no structured data"
+        "checked": "2026-11-24",
+        "outcome": "ok",
+        "detail": "the page names Shotstack Startup Program as \"program\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -36032,7 +36060,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Selenium Grid but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
@@ -36062,9 +36090,14 @@
         "program": "BrowserStack Open Source"
       },
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names BrowserStack but states no amount, tier or rate we can read, and its markup carries no structured data"
+      },
+      "free_plan_excerpt": {
+        "text": "All products Unlimited testing on desktop and mobile: Live , Automate and Percy Lifetime access Program membership lasts for the duration of your projects. Fast releases Speed up testing and ship faster with access to 5 users and 5 parallels .",
+        "url": "https://www.browserstack.com/open-source",
+        "read_on": "2026-11-24"
       }
     },
     {
@@ -36219,7 +36252,7 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Locust but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
@@ -36262,7 +36295,7 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Gitleaks but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
@@ -36284,7 +36317,7 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names TruffleHog but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
@@ -36309,7 +36342,7 @@
       ],
       "verifiedDate": "2026-07-29",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Checkov but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
@@ -36332,7 +36365,7 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Trivy but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
@@ -36355,7 +36388,7 @@
       ],
       "verifiedDate": "2026-07-25",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names Grype but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
@@ -36378,7 +36411,7 @@
       ],
       "verifiedDate": "2026-07-25",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-23",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names OWASP ZAP and is not served from its domain"
       },
@@ -36428,7 +36461,7 @@
       ],
       "verifiedDate": "2026-07-25",
       "source_check": {
-        "checked": "2026-10-14",
+        "checked": "2026-11-24",
         "outcome": "states_no_terms",
         "detail": "the page names CodeQL but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -36691,9 +36724,9 @@
         "inference",
         "api"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-11-24",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names xAI as \"xai\" and states \"$2.00\" and \"$0.50\" and \"$6.00\" and \"$4.00\""
       },
@@ -37132,7 +37165,7 @@
     {
       "vendor": "Google Antigravity",
       "category": "AI Coding",
-      "description": "Agentic development platform by Google, generally available: a desktop app to manage multiple local agents in parallel, an agentic IDE, a CLI and an SDK, for macOS, Windows and Linux. Its agents can open and drive a local Chrome browser. The individual plan is $0/month. It includes a baseline agent quota refreshed weekly and unlimited Tab completions. On November 18, 2026, Google removed Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b from the $0 plan, leaving only Gemini 3.8 Flash. Google AI Pro ($19.99/month) adds \"More rate limits\" and Google AI Ultra (from $99.99/month) \"Even more rate limits\", each with a \"Flexible AI credit pool\", and organizations can use it through Google Cloud. Announced November 2025.",
+      "description": "Agentic development platform by Google, generally available: a desktop app to manage multiple local agents in parallel, an agentic IDE, a CLI and an SDK, for macOS, Windows and Linux. Its agents can open and drive a local Chrome browser. The individual plan is $0/month. It includes a baseline agent quota refreshed weekly and unlimited Tab completions. The $0 plan includes Gemini 4 Hydrogen as its default model. Until November 30, 2026 it also includes Gemini 3.8 Flash, Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b, which Google removes that day. Google AI Pro ($19.99/month) adds \"More rate limits\" and Google AI Ultra (from $99.99/month) \"Even more rate limits\", each with a \"Flexible AI credit pool\", and organizations can use it through Google Cloud. Announced November 2025.",
       "tier": "Free",
       "url": "https://antigravity.google/pricing",
       "tags": [
@@ -37143,7 +37176,7 @@
         "google",
         "developer tools"
       ],
-      "verifiedDate": "2026-11-05",
+      "verifiedDate": "2026-11-24",
       "source_check": {
         "checked": "2026-11-05",
         "outcome": "ok",
@@ -37151,34 +37184,34 @@
       },
       "conditions": [
         {
-          "text": "Since November 18, 2026, the $0 plan includes only Gemini 3.8 Flash. Google removed Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b from the Free and Google AI Plus plans on that date. Gemini 4 Hydrogen is not on the Free and Google AI Plus plans.",
-          "quote": "Will be removed on November 18, 2026.",
+          "text": "Both the Free and Google AI Plus plans include Gemini 4 Hydrogen, their default model. Until November 30, 2026, they also include Gemini 3.8 Flash, Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b. After November 30, Gemini 4 Hydrogen is the only model on these plans.",
+          "quote": "Will be removed on November 30, 2026.",
           "url": "https://antigravity.google/docs/models",
-          "read_on": "2026-11-17"
+          "read_on": "2026-11-24"
         },
         {
-          "text": "Google AI Pro and Ultra include Gemini 4 Argon, Claude Sonnet 5.5 and Claude Opus 5.5. On a Google AI Pro trial, Claude Sonnet 5.5 and Claude Opus 5.5 are not included and Gemini 4 Argon is included only on trials with eligible premium devices.",
+          "text": "Google AI Pro and Google AI Ultra include Claude Sonnet 5.5 and Claude Opus 5.5, and Gemini 4 Argon until November 30. On a Google AI Pro trial, Claude Sonnet 5.5 and Claude Opus 5.5 are not included. Until November 30, a Google AI Pro trial includes Gemini 4 Argon only with eligible premium devices.",
           "quote": "Available with paid Google AI Pro plans or on trial with eligible premium devices.",
           "url": "https://antigravity.google/docs/models",
-          "read_on": "2026-10-28"
+          "read_on": "2026-11-24"
         },
         {
-          "text": "Since November 10, 2026, Gemini 4 Carbon is in Antigravity on Google AI Ultra and Enterprise only, in the Antigravity app, CLI and IDE extensions. The Free, Google AI Plus and Google AI Pro plans do not include it.",
-          "quote": "Starting today, Google AI Ultra subscribers can build with Gemini 4 Carbon in the Antigravity App, the Antigravity CLI, and Antigravity IDE extensions",
-          "url": "https://antigravity.google/blog/gemini-4-carbon-in-google-antigravity",
-          "read_on": "2026-11-11"
+          "text": "Gemini 4 Carbon is on paid Google AI Pro plans, Google AI Pro trials with eligible premium devices, Google AI Ultra and Gemini Enterprise. The Free and Google AI Plus plans do not include it.",
+          "quote": "Gemini 4 Carbon is included on paid Google AI Pro plans (and trials with eligible premium devices), Google AI Ultra, and Gemini Enterprise within the shared Gemini quota.",
+          "url": "https://antigravity.google/docs/models",
+          "read_on": "2026-11-24"
         },
         {
-          "text": "Gemini 4 Hydrogen has been in Antigravity since November 12, 2026 on paid Google AI Pro (non-trial), Google AI Ultra and Enterprise. The Free and Google AI Plus plans do not include it. Orchestrator (Argon) is on paid Google AI Pro and Google AI Ultra, Orchestrator (Carbon) on Google AI Ultra only. Each pairs a planner (Gemini 4 Argon or Gemini 4 Carbon) with Gemini 4 Hydrogen.",
-          "quote": "Starting today, Gemini 4 Hydrogen is rolling out across paid Google AI Pro and Ultra subscribers.",
-          "url": "https://antigravity.google/blog/gemini-4-hydrogen-in-google-antigravity",
-          "read_on": "2026-11-17"
+          "text": "Gemini 4 Hydrogen is on every plan and is the default model on Free, Google AI Plus and standard Google AI Pro trials. Orchestrator pairs a planner model with an executor model. On Google AI Pro and Google AI Ultra, Orchestrator's planner can be Gemini 4 Neon (the default), Gemini 4 Carbon or Claude Opus 5.5, and Gemini 4 Argon until November 30. In Gemini Enterprise, Orchestrator runs only Gemini 4 Carbon with Gemini 4 Hydrogen.",
+          "quote": "Gemini 4 Hydrogen is available on all plans and is the default model for Free, Google AI Plus, and standard Google AI Pro trial accounts.",
+          "url": "https://antigravity.google/docs/models",
+          "read_on": "2026-11-24"
         },
         {
-          "text": "Since November 18, 2026, Gemini 4 Neon is in Antigravity on paid Google AI Pro, Google AI Pro trials with eligible premium devices, Google AI Ultra, and Enterprise. It is in the app, CLI, and IDE extensions. The Free and Google AI Plus plans do not include it. On every plan that includes it, Gemini 4 Neon is the default model for new conversations unless the user chose another model. Orchestrator (Neon) pairs Gemini 4 Neon with Gemini 4 Hydrogen on Google AI Pro and Google AI Ultra, not Enterprise.",
+          "text": "Since November 18, 2026, Gemini 4 Neon is in Antigravity on paid Google AI Pro, Google AI Pro trials with eligible premium devices, Google AI Ultra, and Enterprise. It is in the app, CLI, and IDE extensions. The Free and Google AI Plus plans do not include it. On every plan that includes it, Gemini 4 Neon is the default model for new conversations unless the user chose another model.",
           "quote": "Availability: Google AI Ultra, Google AI Pro (paid plans, or trials with eligible premium devices), and Gemini Enterprise. Gemini 4 Neon isn’t available on Free and Plus plans.",
           "url": "https://antigravity.google/docs/models",
-          "read_on": "2026-11-19"
+          "read_on": "2026-11-24"
         },
         {
           "text": "Google's FAQ says some models \"are not included in free trials\" and directs memberships through third-party partners, Pixel Pass, or Google Fi to Google One help for subscription management.",
@@ -37197,7 +37230,7 @@
     {
       "vendor": "Gemini CLI",
       "category": "AI Coding",
-      "description": "Open-source terminal AI coding agent by Google, Apache 2.0 licensed. Since 2026-06-18, Login with Google no longer works for personal accounts, according to Google's Gemini Code Assist deprecation notice. The README advertised 60 requests a minute and 1,000 a day with a personal Google account until October 16, 2026, when Google removed it. For unpaid-tier and Google One users, Google says Gemini CLI was replaced by Antigravity CLI on June 18, 2026. Google says Gemini CLI has not been optimized for Gemini 4 Argon and to use Antigravity for Gemini 4 Argon. With a Gemini API key, use counts against the Gemini API's own free tier and pricing. Google stopped selling new Gemini Code Assist Standard and Enterprise subscriptions on 2026-10-09, so a team cannot buy one now to use Gemini CLI. Subscriptions bought before then still work with Gemini CLI. Annual Gemini Code Assist Standard and Enterprise subscriptions can be renewed until 2027-01-31 and monthly ones until 2027-12-31. Google points personal users to its Antigravity products, including Antigravity CLI. Supports MCP tools, shell commands and file editing.",
+      "description": "Open-source terminal AI coding agent by Google, Apache 2.0 licensed. Since 2026-06-18, Login with Google no longer works for personal accounts, according to Google's Gemini Code Assist deprecation notice. The README advertised 60 requests a minute and 1,000 a day with a personal Google account until October 16, 2026, when Google removed it. For unpaid-tier and Google One users, Google says Gemini CLI was replaced by Antigravity CLI on June 18, 2026. Google says Gemini CLI is not tuned for the Gemini 4 series and points users to Antigravity CLI for Gemini 4 models. With a Gemini API key, use counts against the Gemini API's own free tier and pricing. Google stopped selling new Gemini Code Assist Standard and Enterprise subscriptions on 2026-10-09, so a team cannot buy one now to use Gemini CLI. Subscriptions bought before then still work with Gemini CLI. Annual Gemini Code Assist Standard and Enterprise subscriptions can be renewed until 2027-01-31 and monthly ones until 2027-12-31. Google points personal users to its Antigravity products, including Antigravity CLI. Supports MCP tools, shell commands and file editing.",
       "tier": "Free",
       "url": "https://github.com/google-gemini/gemini-cli",
       "tags": [
@@ -38101,7 +38134,7 @@
     {
       "vendor": "NVIDIA NIM",
       "category": "AI / ML",
-      "description": "Free inference endpoints on build.nvidia.com: models marked Free Endpoint, including GLM 5.3 Flash, Gemma 4 31B and NVIDIA Nemotron 3 Ultra, can be called at no cost. Their model IDs are z-ai/glm-5.3-flash, google/gemma-4-31b-it and nvidia/nemotron-3-ultra-550b-a55b. Mistral Large 4 (mistralai/mistral-large-4-1t-a52b) is a Free Endpoint on build.nvidia.com as of 2026-10-29. NVIDIA's free embedding models are nvidia/nemotron-3.5-embed-1b and nvidia/nemotron-3.5-embed-8b. The free reranking model is nvidia/nemotron-3.5-rerank-8b. The 3.5 models handle text and document images and were added on 2026-10-20. Up to 40 requests per minute; limits may vary by model, and traffic from other users may cause throttling. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production. NVIDIA posts an end-of-life date on each hosted model's page on build.nvidia.com; after that date, requests for the model return HTTP 410 Gone. NVIDIA stopped supporting NVIDIA Nemotron 3 Super (nvidia/nemotron-3-super-120b-a12b) after 2026-10-19, and its catalogue no longer lists the model (checked 2026-10-21). Nemotron 3.5 Super VL (nvidia/nemotron-3.5-super-vl-120b-a12b), an early-access model, is a Free Endpoint. NVIDIA retired Kimi K3 (moonshotai/kimi-k3) on 2026-10-15. NVIDIA no longer serves OpenAI's gpt-oss models as free endpoints: openai/gpt-oss-20b retired 2026-11-18, openai/gpt-oss-120b retired 2026-09-03. Other model IDs NVIDIA retired in 2026 include these. DeepSeek: deepseek-ai/deepseek-v4.1-flash on 2026-11-16, deepseek-ai/deepseek-v4-pro and deepseek-ai/deepseek-v4-flash on 2026-08-07, deepseek-ai/deepseek-v4-pro-0813 on 2026-09-14 and deepseek-ai/deepseek-v4-flash-0731 on 2026-09-21. Kimi: moonshotai/kimi-k2-instruct and moonshotai/kimi-k2-thinking on 2026-05-12. Others: stepfun-ai/step-3.5-flash, bytedance/seed-oss-36b-instruct, sarvamai/sarvam-m and abacusai/dracarys-llama-3.1-70b-instruct on 2026-07-27. GLM: z-ai/glm4.7 on 2026-05-14, z-ai/glm-5.1 on 2026-07-02, z-ai/glm-5.2 on 2026-08-21 and z-ai/glm-5.3 on 2026-10-27 (GLM 5.3 Flash, z-ai/glm-5.3-flash, is still a Free Endpoint). Qwen: qwen/qwen2.5-coder-32b-instruct on 2026-05-12, qwen/qwen3-next-80b-a3b-thinking on 2026-05-21, qwen/qwen3-coder-480b-a35b-instruct on 2026-06-11, qwen/qwen3.5-122b-a10b on 2026-07-20, and qwen/qwen3.5-397b-a17b and qwen/qwen3-next-80b-a3b-instruct on 2026-07-27. MiniMax: minimaxai/minimax-m2.5 on 2026-05-12, minimaxai/minimax-m2.7 on 2026-07-27 and minimaxai/minimax-m3 on 2026-09-09. Llama: meta/llama-3.2-90b-vision-instruct and meta/llama-guard-4-12b on 2026-11-16, meta/llama-3.2-11b-vision-instruct on 2026-11-05, meta/llama-4-maverick-17b-128e-instruct on 2026-07-27, and meta/llama-3.3-70b-instruct, meta/llama-3.1-8b-instruct, meta/llama-3.1-70b-instruct, meta/llama-3.2-1b-instruct and meta/llama-3.2-3b-instruct on 2026-08-26. Nemotron: nvidia/llama-3.3-nemotron-super-49b-v1, nvidia/llama-3.3-nemotron-super-49b-v1.5, nvidia/llama-3.1-nemotron-nano-8b-v1, nvidia/llama-3.1-nemotron-nano-vl-8b-v1, nvidia/nvidia-nemotron-nano-9b-v2, nvidia/nemotron-nano-12b-v2-vl and nvidia/nemotron-mini-4b-instruct on 2026-08-26, and nvidia/nemotron-3-nano-30b-a3b on 2026-09-01. Mistral: mistralai/mistral-large-3-675b-instruct-2512 on 2026-07-23, mistralai/mixtral-8x7b-instruct-v0.1 on 2026-07-27 and mistralai/mistral-nemotron on 2026-09-28. Gemma: google/diffusiongemma-26b-a4b-it on 2026-11-12, google/gemma-3-27b-it on 2026-05-12, and google/gemma-3n-e4b-it and google/gemma-3n-e2b-it on 2026-07-27. Phi: microsoft/phi-4-mini-instruct and microsoft/phi-4-multimodal-instruct on 2026-07-15. Embedding models: nvidia/nemotron-3-embed-1b on 2026-11-22, nvidia/llama-3.2-nv-embedqa-1b-v2 and nvidia/llama-3.2-nemoretriever-300m-embed-v1 on 2026-05-18, and nvidia/nv-embedqa-e5-v5, nvidia/nv-embed-v1, nvidia/llama-nemotron-embed-1b-v2 and baai/bge-m3 on 2026-08-25.",
+      "description": "Free inference endpoints on build.nvidia.com: models marked Free Endpoint, including GLM 5.3 Flash, Gemma 4 31B and NVIDIA Nemotron 3 Ultra, can be called at no cost. Their model IDs are z-ai/glm-5.3-flash, google/gemma-4-31b-it and nvidia/nemotron-3-ultra-550b-a55b. Mistral Large 4 (mistralai/mistral-large-4-1t-a52b) is a Free Endpoint on build.nvidia.com as of 2026-10-29. NVIDIA's free embedding models are nvidia/nemotron-3.5-embed-1b and nvidia/nemotron-3.5-embed-8b. The free reranking model is nvidia/nemotron-3.5-rerank-8b. The 3.5 models handle text and document images and were added on 2026-10-20. Up to 40 requests per minute; limits may vary by model, and traffic from other users may cause throttling. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production. NVIDIA posts an end-of-life date on each hosted model's page on build.nvidia.com; after that date, requests for the model return HTTP 410 Gone. NVIDIA stopped supporting NVIDIA Nemotron 3 Super (nvidia/nemotron-3-super-120b-a12b) after 2026-10-19, and its catalogue no longer lists the model (checked 2026-10-21). Nemotron 3.5 Super VL (nvidia/nemotron-3.5-super-vl-120b-a12b), an early-access model, is a Free Endpoint. NVIDIA retired Kimi K3 (moonshotai/kimi-k3) on 2026-10-15. Kimi K3.1 Pro (moonshotai/kimi-k3.1-pro) is a Free Endpoint. NVIDIA no longer serves OpenAI's gpt-oss models as free endpoints: openai/gpt-oss-20b retired 2026-11-18, openai/gpt-oss-120b retired 2026-09-03. Other model IDs NVIDIA retired in 2026 include these. DeepSeek: deepseek-ai/deepseek-v4.1-flash on 2026-11-16, deepseek-ai/deepseek-v4-pro and deepseek-ai/deepseek-v4-flash on 2026-08-07, deepseek-ai/deepseek-v4-pro-0813 on 2026-09-14 and deepseek-ai/deepseek-v4-flash-0731 on 2026-09-21. Kimi: moonshotai/kimi-k2-instruct and moonshotai/kimi-k2-thinking on 2026-05-12. Others: stepfun-ai/step-3.5-flash, bytedance/seed-oss-36b-instruct, sarvamai/sarvam-m and abacusai/dracarys-llama-3.1-70b-instruct on 2026-07-27. GLM: z-ai/glm4.7 on 2026-05-14, z-ai/glm-5.1 on 2026-07-02, z-ai/glm-5.2 on 2026-08-21 and z-ai/glm-5.3 on 2026-10-27 (GLM 5.3 Flash, z-ai/glm-5.3-flash, is still a Free Endpoint). Qwen: qwen/qwen2.5-coder-32b-instruct on 2026-05-12, qwen/qwen3-next-80b-a3b-thinking on 2026-05-21, qwen/qwen3-coder-480b-a35b-instruct on 2026-06-11, qwen/qwen3.5-122b-a10b on 2026-07-20, and qwen/qwen3.5-397b-a17b and qwen/qwen3-next-80b-a3b-instruct on 2026-07-27. MiniMax: minimaxai/minimax-m2.5 on 2026-05-12, minimaxai/minimax-m2.7 on 2026-07-27 and minimaxai/minimax-m3 on 2026-09-09. Llama: meta/llama-3.2-90b-vision-instruct and meta/llama-guard-4-12b on 2026-11-16, meta/llama-3.2-11b-vision-instruct on 2026-11-05, meta/llama-4-maverick-17b-128e-instruct on 2026-07-27, and meta/llama-3.3-70b-instruct, meta/llama-3.1-8b-instruct, meta/llama-3.1-70b-instruct, meta/llama-3.2-1b-instruct and meta/llama-3.2-3b-instruct on 2026-08-26. Nemotron: nvidia/llama-3.3-nemotron-super-49b-v1, nvidia/llama-3.3-nemotron-super-49b-v1.5, nvidia/llama-3.1-nemotron-nano-8b-v1, nvidia/llama-3.1-nemotron-nano-vl-8b-v1, nvidia/nvidia-nemotron-nano-9b-v2, nvidia/nemotron-nano-12b-v2-vl and nvidia/nemotron-mini-4b-instruct on 2026-08-26, and nvidia/nemotron-3-nano-30b-a3b on 2026-09-01. Mistral: mistralai/mistral-large-3-675b-instruct-2512 on 2026-07-23, mistralai/mixtral-8x7b-instruct-v0.1 on 2026-07-27 and mistralai/mistral-nemotron on 2026-09-28. Gemma: google/diffusiongemma-26b-a4b-it on 2026-11-12, google/gemma-3-27b-it on 2026-05-12, and google/gemma-3n-e4b-it and google/gemma-3n-e2b-it on 2026-07-27. Phi: microsoft/phi-4-mini-instruct and microsoft/phi-4-multimodal-instruct on 2026-07-15. Embedding models: nvidia/nemotron-3-embed-1b on 2026-11-22, nvidia/llama-3.2-nv-embedqa-1b-v2 and nvidia/llama-3.2-nemoretriever-300m-embed-v1 on 2026-05-18, and nvidia/nv-embedqa-e5-v5, nvidia/nv-embed-v1, nvidia/llama-nemotron-embed-1b-v2 and baai/bge-m3 on 2026-08-25.",
       "tier": "Free",
       "url": "https://build.nvidia.com/api/runtime/content/help-center-faq.yaml",
       "tags": [
@@ -38399,7 +38432,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names SiliconFlow as \"siliconflow\" and states \"¥ 0.04\" and \"¥ 1.00\" and \"¥ 0.15\" and \"¥ 0.60\""
       },
@@ -38484,7 +38517,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-11-02",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names DeepSeek API as \"deepseek api\" and states \"$0.006\" and \"$0.044\" and \"$0.3\" and \"$1.32\""
       },
@@ -40060,7 +40093,7 @@
         "budget",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-08-20",
+      "verifiedDate": "2026-11-23",
       "free_tier_limits": {
         "credits": "€200 (US$200 on the international site), valid for one month after activation",
         "vps_from": "€4.49/month ex-VAT without commitment (VPS-1 2027: 2 vCores, 4 GB RAM, 40 GB NVMe)",
@@ -40068,9 +40101,14 @@
         "kubernetes_control_plane": "Free (pay for workers only)"
       },
       "source_check": {
-        "checked": "2026-11-01",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names OVHcloud as \"ovhcloud\" and states \"$ 200\""
+      },
+      "free_plan_excerpt": {
+        "text": "Public Cloud free trial : Launch your first project today with US$ 200 free credit [*].",
+        "url": "https://www.ovhcloud.com/en/public-cloud/",
+        "read_on": "2026-11-23"
       }
     },
     {
@@ -40239,7 +40277,7 @@
       ],
       "verifiedDate": "2026-10-07",
       "source_check": {
-        "checked": "2026-11-16",
+        "checked": "2026-11-24",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -40261,17 +40299,9 @@
       ],
       "verifiedDate": "2026-10-07",
       "source_check": {
-        "checked": "2026-11-01",
-        "outcome": "ok",
-        "detail": "the page names GPU-Bridge as \"gpu bridge\" and states amounts, none of which we matched to the terms we publish",
-        "unrendered_prices": [
-          "Speech-to-Text USD 0.01",
-          "Text-to-Speech USD 0.02",
-          "Embeddings USD 0.01",
-          "Vision & OCR USD 0.01",
-          "Document Parsing USD 0.05",
-          "Video Enhancement USD 0.50"
-        ]
+        "checked": "2026-11-23",
+        "outcome": "unreadable",
+        "detail": "fetch failed"
       }
     },
     {
@@ -40302,7 +40332,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-11-01",
+        "checked": "2026-11-23",
         "outcome": "states_a_free_price",
         "detail": "the page names Strale and states its price in words as \"Free Tier\", and its markup carries no structured data"
       }
@@ -40322,9 +40352,9 @@
         "self-hosted",
         "free tier"
       ],
-      "verifiedDate": "2026-11-01",
+      "verifiedDate": "2026-11-23",
       "source_check": {
-        "checked": "2026-11-01",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names tollbooth as \"tollbooth\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -41864,9 +41894,14 @@
         }
       ],
       "source_check": {
-        "checked": "2026-11-01",
+        "checked": "2026-11-24",
         "outcome": "ok",
         "detail": "the page names Amazon CloudFront as \"amazon cloudfront\" and states \"$0\" and \"$15\""
+      },
+      "free_plan_excerpt": {
+        "text": "Monthly price per distribution $0/month No overage charges",
+        "url": "https://aws.amazon.com/cloudfront/pricing/",
+        "read_on": "2026-11-24"
       }
     },
     {
@@ -41988,7 +42023,7 @@
         "hetzner-alternative",
         "digitalocean-alternative"
       ],
-      "verifiedDate": "2026-11-01",
+      "verifiedDate": "2026-11-23",
       "conditions": [
         {
           "text": "Lightsail's own free trials are closed to new customers. A trial started before AWS removed them runs to the end of its period, and the resources then bill monthly.",
@@ -42010,7 +42045,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-11-01",
+        "checked": "2026-11-23",
         "outcome": "ok",
         "detail": "the page names Amazon Lightsail as \"amazon lightsail\" and states \"$5\" and \"$7\" and \"$12\" and \"$9.50\""
       }
@@ -42018,7 +42053,7 @@
     {
       "vendor": "Hetzner Inference API",
       "category": "AI / ML",
-      "description": "Hetzner's experimental Inference API: an OpenAI-compatible API for open-weight models, free while it stays experimental. Base URL: https://inference.hetzner.com/api/v1. Models listed on 2026-10-15, with the IDs Hetzner's docs give: Qwen/Qwen3.6-35B-A3B-FP8 and Qwen3.8-27B, each with a 262,144-token context and image input. Hetzner says the list will change while the API is experimental; GET /v1/models returns the current one. Limits per API key, per minute: 4M input tokens, 100k output tokens and 10 requests. Needs a Hetzner account; keys are created at experiments.hetzner.com. Hetzner says it does not store the content of requests or responses.",
+      "description": "The Inference API provides access to open-weight models via an OpenAI-compatible REST API. It is free of charge while it is an experiment, and Hetzner says the experiment ends on December 8, 2026. The base URL is https://inference.hetzner.com/v1. Models listed on 2026-10-15, with the IDs Hetzner's docs give: Qwen/Qwen3.6-35B-A3B-FP8 and Qwen3.8-27B, each with a 262,144-token context and image input. Hetzner says the list will change while the API is experimental; GET /v1/models returns the current one. Limits per API key, per minute: 4M input tokens, 100k output tokens and 10 requests. Needs a Hetzner account; keys are created at experiments.hetzner.com. Hetzner says it does not store the content of requests or responses.",
       "tier": "Free",
       "url": "https://docs.hetzner.com/general/company-and-policy/experiments/inference/",
       "tags": [
@@ -42029,7 +42064,7 @@
         "openai-compatible",
         "free tier"
       ],
-      "verifiedDate": "2026-11-22",
+      "verifiedDate": "2026-11-24",
       "product_subtypes": {
         "taxonomy": "AI / ML",
         "labels": [
@@ -42042,6 +42077,12 @@
         "reviewed": "2026-10-09"
       },
       "conditions": [
+        {
+          "text": "Hetzner says the Inference API experiment ends on December 8, 2026. Hetzner's docs do not say whether the API stays available after that date, or at what price.",
+          "quote": "This Experiment will end on 8 December 2026.",
+          "url": "https://docs.hetzner.com/general/company-and-policy/experiments/inference/",
+          "read_on": "2026-11-24"
+        },
         {
           "text": "Hetzner says not to use the Inference API for production: it is experimental and offered as is, with no guarantee of performance or availability.",
           "quote": "should not use the platform for production environments",
@@ -42301,6 +42342,49 @@
           "quote": "Your free credits reset each month. Unused free credits don’t roll over.",
           "url": "https://docs.valyu.ai/pricing",
           "read_on": "2026-11-12"
+        }
+      ]
+    },
+    {
+      "vendor": "JetBrains AI",
+      "category": "AI Coding",
+      "description": "AI Assistant and the Junie coding agent in JetBrains IDEs, from JetBrains. Junie Lite is free on every JetBrains account with no card, available in JetBrains Air and Junie CLI, not in AI Assistant. Junie Lite has no published quota, is virtually unlimited for normal use, and its requests stop at the model's capacity limit. AI Free is $0 with 3 AI credits per 30 days and cannot buy more. Each AI credit is $1. AI Pro is $10 with 10 AI credits per 30 days, AI Ultimate $30 with 35 for individuals; $20 with 20, $60 with 70 per user for organizations. Junie can use your own provider API key at the provider's rate.",
+      "tier": "Free",
+      "url": "https://www.jetbrains.com/help/ai-assistant/licensing-and-subscriptions.html",
+      "tags": [
+        "ai",
+        "coding",
+        "ide",
+        "developer tools",
+        "cursor-alternative",
+        "free tier"
+      ],
+      "verifiedDate": "2026-11-24",
+      "conditions": [
+        {
+          "text": "JetBrains' Junie page says the Junie Lite offer is valid until December 31, 2026 and terms and models may change.",
+          "quote": "Junie Lite is a free model on every JetBrains account, no card needed. … Terms and available models may change. Offer is valid until 31 Dec 2026.",
+          "url": "https://junie.jetbrains.com/",
+          "read_on": "2026-11-24"
+        },
+        {
+          "text": "JetBrains' Junie Lite docs call the tier free with no expiry.",
+          "quote": "Junie Lite is a free baseline model tier for Junie, JetBrains' coding agent. It is not a trial, not a limited-time sample, and it does not expire or count down.",
+          "url": "https://junie.jetbrains.com/docs/junie-lite.html",
+          "read_on": "2026-11-24"
+        },
+        {
+          "text": "Junie Lite currently runs on OpenAI GPT-6 Luna on JetBrains servers, and JetBrains may change the model without notice.",
+          "quote": "The model currently powering Junie Lite is OpenAI GPT-6 Luna. This is an implementation detail, not a commitment: JetBrains may change the underlying model over time without notice.",
+          "url": "https://junie.jetbrains.com/docs/junie-lite.html",
+          "read_on": "2026-11-24",
+          "operating_detail": true
+        },
+        {
+          "text": "AI Free is not available in Android Studio, in the Community Editions of PyCharm and IntelliJ IDEA, in PyCharm used for free, or with an IDE licence obtained through a License Server. AI Free and AI Ultimate are available only in JetBrains AI's service territories. The JetBrains AI service is not available in China.",
+          "quote": "The AI Free license tier is not available in Android Studio. … The AI Free license tier is not available in Community Editions of PyCharm and IntelliJ IDEA, as well as in PyCharm Unified when used for free.",
+          "url": "https://www.jetbrains.com/help/ai-assistant/licensing-and-subscriptions.html",
+          "read_on": "2026-11-24"
         }
       ]
     }

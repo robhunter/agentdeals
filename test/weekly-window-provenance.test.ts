@@ -20,6 +20,12 @@ import { assertFutureChangesInDigestWindow } from "./weekly-deadline-window.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
+const fixedClock = pathToFileURL(path.join(REPO, "test", "fixed-instant-clock.mjs")).href;
+const noonOn = (instant: number) => Date.parse(`${new Date(instant).toISOString().slice(0, 10)}T12:00:00Z`);
+const fixedClockEnv = (instant: number) => ({
+  NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --import=${fixedClock}`,
+  TEST_FIXED_INSTANT_MS: String(instant),
+});
 
 const publishedChanges = JSON.parse(
   readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")
@@ -60,7 +66,7 @@ function weeksHoldingOurCorrections(): string[] {
   return [...new Set(corrections.map((c) => weekStartOf(c.date)))].sort();
 }
 
-function digestAndWeeklyDigestOver(changesPath: string) {
+function digestAndWeeklyDigestOver(changesPath: string, instant: number) {
   const dataModule = pathToFileURL(path.join(REPO, "dist", "data.js")).href;
   const run = spawnSync(
     "node",
@@ -68,7 +74,7 @@ function digestAndWeeklyDigestOver(changesPath: string) {
       "-e",
       `import(${JSON.stringify(dataModule)}).then((m) => process.stdout.write(JSON.stringify({ weekly: m.getWeeklyDigest(), formatted: m.getFormattedWeeklyDigest(0, 200) })))`,
     ],
-    { env: { ...process.env, AGENTDEALS_CHANGES_PATH: changesPath, TZ: "UTC" }, encoding: "utf-8" }
+    { env: { ...process.env, ...fixedClockEnv(instant), AGENTDEALS_CHANGES_PATH: changesPath, TZ: "UTC" }, encoding: "utf-8" }
   );
   assert.strictEqual(run.status, 0, run.stderr);
   return JSON.parse(run.stdout);
@@ -138,7 +144,7 @@ async function mostRecentWeekWithADiscoveryBatch() {
   );
 }
 
-function digestOver(changesPath: string) {
+function digestOver(changesPath: string, instant: number) {
   const dataModule = pathToFileURL(path.join(REPO, "dist", "data.js")).href;
   const run = spawnSync(
     "node",
@@ -146,7 +152,7 @@ function digestOver(changesPath: string) {
       "-e",
       `import(${JSON.stringify(dataModule)}).then((m) => process.stdout.write(JSON.stringify(m.getFormattedWeeklyDigest(0, 200))))`,
     ],
-    { env: { ...process.env, AGENTDEALS_CHANGES_PATH: changesPath, TZ: "UTC" }, encoding: "utf-8" }
+    { env: { ...process.env, ...fixedClockEnv(instant), AGENTDEALS_CHANGES_PATH: changesPath, TZ: "UTC" }, encoding: "utf-8" }
   );
   assert.strictEqual(run.status, 0, run.stderr);
   return JSON.parse(run.stdout);
@@ -297,7 +303,8 @@ describe("a weekly digest counts only changes with an effective date", () => {
   });
 
   it("leaves a record we have withdrawn out of the week its date falls in", () => {
-    const week = isoWeekWindow(new Date());
+    const instant = noonOn(Date.now());
+    const week = isoWeekWindow(new Date(instant));
     const template = publishedChanges.find((c) => c.date_source === "discovered")!;
     const standingRecord = { ...template, vendor: "Weekly Window Control", date: week.start, resolution: null };
     const withdrawnRecord = {
@@ -314,7 +321,7 @@ describe("a weekly digest counts only changes with an effective date", () => {
     writeFileSync(changesPath, JSON.stringify(file));
 
     try {
-      const digest = digestOver(changesPath);
+      const digest = digestOver(changesPath, instant);
       const discoveredInWeek = (records: typeof file.changes) =>
         records.filter((c: { date: string }) => !eventDated(c) && withinWindow(c.date, week)).length;
 
@@ -388,8 +395,9 @@ describe("a weekly digest counts only changes with an effective date", () => {
 
 describe("a weekly digest counts only changes the vendor made", () => {
   it("keeps a correction of ours out of the week and the deadlines, and keeps the vendor's change in both", () => {
-    const today = new Date().toISOString().slice(0, 10);
-    const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+    const instant = noonOn(Date.now());
+    const today = new Date(instant).toISOString().slice(0, 10);
+    const tomorrow = new Date(instant + 86400000).toISOString().slice(0, 10);
     const template = publishedChanges.find((c) => c.change_type === CORRECTION_TO_OUR_OWN_RECORD);
     assert.ok(template, "the change log holds no correction of ours to model the control on");
     const correction = {
@@ -424,7 +432,7 @@ describe("a weekly digest counts only changes the vendor made", () => {
     writeFileSync(changesPath, JSON.stringify(file));
 
     try {
-      const { weekly, formatted } = digestAndWeeklyDigestOver(changesPath);
+      const { weekly, formatted } = digestAndWeeklyDigestOver(changesPath, instant);
       const week = { start: formatted.week_of, end: formatted.week_ending };
       const vendors = (list: Array<{ vendor: string }>) => list.map((c) => c.vendor);
 
@@ -646,14 +654,16 @@ describe("the feed corrects a published week with an entry of its own", () => {
 
 describe("every weekly surface reports the same week", () => {
   let serverPort = 0;
+  let serverInstant = 0;
   let proc: ChildProcess | null = null;
 
-  function startHttpServer(timeZone = "UTC"): Promise<ChildProcess> {
+  function startHttpServer(timeZone = "UTC", instant = noonOn(Date.now())): Promise<ChildProcess> {
+    serverInstant = instant;
     return new Promise((resolve, reject) => {
       const serverPath = path.join(REPO, "dist", "serve.js");
       const p = spawn("node", [serverPath], {
         stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: "0", BASE_URL: "http://127.0.0.1", TZ: timeZone },
+        env: { ...process.env, ...fixedClockEnv(instant), PORT: "0", BASE_URL: "http://127.0.0.1", TZ: timeZone },
       });
       const timeout = setTimeout(() => { p.kill("SIGKILL"); reject(new Error("Server startup timeout")); }, 20000);
       p.stderr!.on("data", (data: Buffer) => {
@@ -726,13 +736,13 @@ describe("every weekly surface reports the same week", () => {
     proc = await startHttpServer();
     const base = `http://127.0.0.1:${serverPort}`;
     const feed = await (await fetch(`${base}/feed.xml`)).text();
-    const { getFormattedWeeklyDigest } = await import("../dist/data.js");
-
-    const expected: string[] = [];
-    for (let weeksAgo = 0; weeksAgo < FEED_WEEKS; weeksAgo++) {
-      const digest = getFormattedWeeklyDigest(weeksAgo, 50);
-      if (digest.top_changes.length > 0) expected.push(`urn:agentdeals:weekly-digest:${digest.week_of}`);
-    }
+    const dataModule = pathToFileURL(path.join(REPO, "dist", "data.js")).href;
+    const run = spawnSync("node", ["-e", `import(${JSON.stringify(dataModule)}).then(m => process.stdout.write(JSON.stringify(Array.from({length: ${FEED_WEEKS}}, (_, i) => m.getFormattedWeeklyDigest(i, 50)))))`], {
+      env: { ...process.env, ...fixedClockEnv(serverInstant), TZ: "UTC" }, encoding: "utf-8",
+    });
+    assert.strictEqual(run.status, 0, run.stderr);
+    const digests = JSON.parse(run.stdout) as Array<{ week_of: string; top_changes: unknown[] }>;
+    const expected = digests.filter(digest => digest.top_changes.length > 0).map(digest => `urn:agentdeals:weekly-digest:${digest.week_of}`);
     const served = [...feed.matchAll(/<id>(urn:agentdeals:weekly-digest:[^<]+)<\/id>/g)].map((m) => m[1]);
     assert.deepStrictEqual(served, expected);
   });
@@ -741,7 +751,7 @@ describe("every weekly surface reports the same week", () => {
     proc = await startHttpServer();
     const base = `http://127.0.0.1:${serverPort}`;
     const changesPage = await (await fetch(`${base}/changes`)).text();
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+    const thirtyDaysAgo = new Date(serverInstant - 30 * 86400000).toISOString().slice(0, 10);
     const expected = changesInWindow(vendorChangesStillInForce(publishedChanges) as never[], { start: thirtyDaysAgo }).dated.length;
     const rendered = changesPage.match(/<div class="stat-value">(\d+)<\/div>\s*<div class="stat-label">Last 30 Days<\/div>/);
     assert.ok(rendered, "/changes should publish a Last 30 Days count");
@@ -798,10 +808,12 @@ describe("every weekly surface reports the same week", () => {
   });
 
   it("files a change in the same week whatever zone the server clock is set to", async () => {
-    proc = await startHttpServer("UTC");
+    const day = new Date().toISOString().slice(0, 10);
+    const instant = Date.parse(`${day}T00:30:00Z`);
+    proc = await startHttpServer("UTC", instant);
     const utc = await (await fetch(`http://127.0.0.1:${serverPort}/digest/archive`)).text();
     proc.kill("SIGKILL");
-    proc = await startHttpServer("America/Los_Angeles");
+    proc = await startHttpServer("America/Los_Angeles", instant);
     const behindUtc = await (await fetch(`http://127.0.0.1:${serverPort}/digest/archive`)).text();
     assert.strictEqual(behindUtc, utc);
   });

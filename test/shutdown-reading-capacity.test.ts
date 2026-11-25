@@ -32,10 +32,10 @@ const pages = new Map<string, string>();
 async function readPages(name: string, records: unknown[], atDay?: string) {
   const filename = path.join(scratch, `${name}.json`);
   writeFileSync(filename, JSON.stringify({ ...stored, changes: records }, null, 2) + "\n");
-  const child = spawn("node", [...(atDay ? ["--import", path.join(ROOT, "scripts/shifted-clock.mjs")] : []), path.join(ROOT, "dist/serve.js")], {
+  const child = spawn("node", ["--import", path.join(ROOT, "scripts/shifted-clock.mjs"), path.join(ROOT, "dist/serve.js")], {
     cwd: ROOT, stdio: ["ignore", "ignore", "pipe"],
     env: { ...process.env, TZ: "UTC", PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REFERRAL_HEALTH: "off", AGENTDEALS_CHANGES_PATH: filename,
-      ...(atDay ? { AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(atDay + "T12:00:00Z") - Date.now()) } : {}) },
+      AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse((atDay ?? today) + "T12:00:00Z") - Date.now()) },
   });
   try {
     const port = await new Promise<string>((resolve, reject) => {
@@ -88,7 +88,34 @@ function markdownOf(document: Document) {
   return new TurndownService().turndown(document.body);
 }
 
+function deadlineOf(card: Element) {
+  return [...card.querySelectorAll(".shutdown-deadline")].map(node => {
+    const text = node.querySelectorAll("span")[1].textContent!;
+    const start = new Date(Date.parse(`${text.replace(/ \(no day is given\)$/, "")} UTC`));
+    const monthOnly = text.includes("no day is given");
+    const end = monthOnly ? Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 0) : start.getTime();
+    const key = start.toISOString().slice(0, monthOnly ? 7 : 10);
+    const formatted = start.toLocaleDateString("en-US", monthOnly
+      ? { month: "long", year: "numeric", timeZone: "UTC" }
+      : { month: "long", day: "numeric", timeZone: "UTC" });
+    return { end, key, formatted };
+  }).sort((a, b) => b.end - a.end)[0];
+}
+
+function keyedEntryFor(title: string, deadline: { key: string }, entries: typeof keyedEntries) {
+  return entries.find(entry => entry.card_title === title && entry.card_date === deadline.key);
+}
+
 describe("shutdown reading capacity", () => {
+  it("matches month-only keyed entries at month precision", () => {
+    const card = createDocument('<div class="shutdown-deadline"><span>Deadline</span><span>April 2027 (no day is given)</span></div>');
+    const deadline = deadlineOf(card.documentElement);
+    const entries = [{ card_title: "Example", card_date: "2027-04", entry: "Example (April 2027, completed)" }];
+    assert.equal(deadline.end, Date.parse("2027-04-30T00:00:00Z"));
+    assert.equal(deadline.formatted, "April 2027");
+    assert.equal(keyedEntryFor("Example", deadline, entries)?.entry, entries[0].entry);
+  });
+
   it("retains every detail for ninety calendar days and every migration paragraph afterwards", () => {
     const cards = ["ninety", "ninety-one"].map(name => cardsOf(pages.get(`${name} /shutdowns`)!).cards.find(card => card.node.querySelector("h3")!.textContent === "AWS App Runner (New Customers)")!.node);
     const rows = cards.map(card => Array.from(card.querySelectorAll(".detail-row")));
@@ -127,9 +154,8 @@ describe("shutdown reading capacity", () => {
     let visible = 0;
     for (const card of completed) {
       assert.ok(card.node.querySelector("a.figure-source, a.record-source"), card.node.querySelector("h3")!.textContent!);
-      const dates = [...card.node.querySelectorAll(".shutdown-deadline")].map(node => Date.parse(node.querySelectorAll("span")[1].textContent!));
-      const date = Math.max(...dates);
-      const age = Math.round((atDay - date) / 86_400_000);
+      const deadline = deadlineOf(card.node);
+      const age = Math.round((atDay - deadline.end) / 86_400_000);
       const line = lines.find(node => node.getAttribute("data-card") === card.node.id);
       const cardStart = markdown.indexOf(converter.turndown(card.node));
       if (age <= 30) {
@@ -140,19 +166,18 @@ describe("shutdown reading capacity", () => {
         assert.equal(card.section, "completed-history");
         assert.ok(cardStart > markdown.indexOf(converter.turndown(document.querySelector("#later")!)));
       }
-      const keyed = keyedEntries.find(entry => entry.card_title === card.node.querySelector("h3")!.textContent && Date.parse(entry.card_date) === date);
+      const keyed = keyedEntryFor(card.node.querySelector("h3")!.textContent!, deadline, keyedEntries);
       if (age <= 183 || keyed) {
         assert.ok(line, card.node.querySelector("h3")!.textContent!);
         if (keyed) assert.equal(line.textContent, keyed.entry);
-        const formatted = new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
-        assert.ok(line.textContent!.includes(formatted));
+        assert.ok(line.textContent!.includes(deadline.formatted));
         assert.ok(line.textContent!.includes("completed"));
         const content = converter.turndown(line);
         const start = markdown.indexOf(content);
         assert.ok(start >= 0 && start + content.length <= 100_000, card.node.querySelector("h3")!.textContent!);
         visible++;
       } else {
-        assert.equal(line, undefined);
+        assert.equal(line?.textContent, undefined, card.node.querySelector("h3")!.textContent!);
       }
     }
     assert.ok(visible > 10);

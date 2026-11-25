@@ -95,10 +95,11 @@ function serveHomePage(changes: unknown[]): Promise<{ proc: ChildProcess; tmp: s
   const indexPath = path.join(tmp, "index.json");
   writeFileSync(indexPath, JSON.stringify({ offers: [] }));
   return new Promise<{ proc: ChildProcess; port: number }>((resolve, reject) => {
-    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+    const child = spawn("node", ["--import", path.join(REPO, "scripts", "shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
       env: {
         ...process.env,
+        AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${TODAY}T12:00:00Z`) - Date.now()),
         PORT: "0",
         BASE_URL: "http://localhost",
         AGENTDEALS_INDEX_PATH: indexPath, AGENTDEALS_CHANGES_PATH: changesPath,

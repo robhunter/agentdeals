@@ -400,6 +400,18 @@
       "refused_date": "2026-10-13"
     },
     {
+      "vendor": "AndroidIDE",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-13 (no_price_signal) claimed the same change, product_deprecated, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "AndroidIDE has been archived and is no longer maintained; the project has closed and a successor (Code on the Go) has taken over.",
+      "previous_state": "An Open Source IDE to develop real, Gradle-based Android applications on Android devices.",
+      "current_state": "AndroidIDE is archived and no longer maintained (2021 to 2024, archived December 2024). The project is closing; a successor called Code on the Go, built by the nonprofit App Dev for All, continues the work, and community forks remain available.",
+      "source_url": "https://m.androidide.com/",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-11-23"
+    },
+    {
       "vendor": "Anthropic API",
       "change_type": "new_free_tier",
       "reason": "states_no_terms",
@@ -1432,15 +1444,15 @@
     },
     {
       "vendor": "BrowserStack",
-      "change_type": "limits_reduced",
+      "change_type": "limits_increased",
       "reason": "no_price_signal",
-      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 7728 characters, so it states no terms to have changed",
-      "summary": "The open source program now offers unlimited testing on 3500+ browsers and devices, 5 users, and 5 parallels. The number of browsers/devices has decreased from 3000+ to 3500+.",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 9381 characters, so it states no terms to have changed",
+      "summary": "The open source program now offers lifetime access to 3500+ browsers and devices with 5 users and 5 parallels, and lists Live, Automate, and Percy as included products; the stored description said 3,000+ browsers/devices and included App Live and App Automate, which the page no longer lists for the open source program.",
       "previous_state": "Free for open source projects: unlimited testing on 3,000+ real browsers and devices, 5 users, 5 parallel sessions. Includes Live, Automate, App Live, and App Automate.",
-      "current_state": "With this program, you get: All products Unlimited testing on desktop and mobile: Live , Automate and Percy Lifetime access Program membership lasts for the duration of your projects. Fast releases Speed up testing and ship faster with access to 5 users and 5 parallels.",
+      "current_state": "Lifetime access to test open source projects on 3500+ browsers and devices, with all products, unlimited testing on desktop and mobile via Live, Automate and Percy, and access to 5 users and 5 parallels.",
       "source_url": "https://www.browserstack.com/open-source",
       "category": "Testing",
-      "refused_date": "2026-10-14"
+      "refused_date": "2026-11-24"
     },
     {
       "vendor": "Bubble",
@@ -2497,6 +2509,18 @@
       "refused_date": "2026-10-14"
     },
     {
+      "vendor": "CodeQL",
+      "change_type": "restriction",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-14 (no_price_signal) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The page no longer states that CodeQL is free for all public repositories with no scan limits; it now says CodeQL is free for research and open source, and that it can only be used on OSI-approved open source codebases, for academic research, or for automated analysis/CI/CD in limited cases (on open source codebases hosted and maintained on GitHub.com, or to test OSI-licensed queries), with other automated analysis/CI/CD uses requiring contact with sales.",
+      "previous_state": "GitHub semantic code analysis engine. Free for all public repositories with no scan limits. Supports JS/TS, Python, Java, C#, C/C++, Go, Ruby. Integrated into GitHub Actions.",
+      "current_state": "CodeQL is free for research and open source. It can only be used on codebases released under an OSI-approved open source license, or to perform academic research, or to generate CodeQL databases for or during automated analysis, CI or CD in the following cases: (1) on any open source codebase hosted and maintained on GitHub.com, and (2) to test CodeQL queries released under an OSI-approved open source software license. It can't be used for automated analysis, CI or CD except in those express cases; for these uses, contact the sales team.",
+      "source_url": "https://codeql.github.com/",
+      "category": "Security",
+      "refused_date": "2026-11-24"
+    },
+    {
       "vendor": "coderabbit.ai",
       "change_type": "free_tier_removed",
       "reason": "no_baseline",
@@ -3054,13 +3078,13 @@
       "vendor": "CurrencyScoop",
       "change_type": "rebranded",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-11-09 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
-      "summary": "The stored deal info names the vendor 'CurrencyScoop', but the pricing page is for 'CurrencyBeacon' (HATCHSQUARE Technologies LLC). The free tier itself still exists with 5,000 requests/month, but the vendor has been rebranded.",
+      "detail": "the reading of this page refused on 2026-11-16 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal is for 'CurrencyScoop' but the pricing page is for 'CurrencyBeacon' (HATCHSQUARE Technologies LLC). The free tier still exists with 5,000 requests/month, but the vendor name/branding differs from the stored info.",
       "previous_state": "Realtime currency data API for fintech apps. The free plan includes 5,000 calls per month.",
       "current_state": "Free 'Developer sandbox' plan at $0/month with 5,000 API requests per month, hourly updates, REST and MCP calls sharing the quota, latest/historical/conversion rates, and community support.",
       "source_url": "https://currencybeacon.com/",
       "category": "Dev Utilities",
-      "refused_date": "2026-11-16"
+      "refused_date": "2026-11-23"
     },
     {
       "vendor": "Cursor",
@@ -5054,15 +5078,15 @@
     },
     {
       "vendor": "Gitleaks",
-      "change_type": "restriction",
+      "change_type": "product_deprecated",
       "reason": "no_price_signal",
-      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 26544 characters, so it states no terms to have changed",
-      "summary": "The page does not explicitly state the free tier for the CLI tool or GitHub Actions. It mentions GitHub Advanced Security and Copilot as paid add-ons, and focuses on enterprise solutions. The stored information about the free CLI and GitHub Action for personal/org repos is not confirmed.",
-      "previous_state": "Open source (MIT) secret scanner for git repositories, files, and directories. CLI tool is free with no limits. GitHub Action free for personal repos and 1 org repo.",
-      "current_state": "The page highlights GitHub Advanced Security and Copilot as paid add-ons, and does not detail any free tiers for Gitleaks itself. It mentions Gitleaks-Action as an option, but doesn't specify its pricing.",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 26357 characters, so it states no terms to have changed",
+      "summary": "The Gitleaks repository README now states the project is feature complete and will only receive security patches going forward, with the maintainer shifting focus to a new project called Betterleaks. The stored deal info describes an actively maintained open source secret scanner, but the page indicates the product is being deprecated in favor of a successor.",
+      "previous_state": "Open source (MIT) secret scanner for git repositories, files, and directories. CLI tool is free with no limits. The GitHub Action needs no license key on personal accounts; repositories owned by a GitHub organization need a free license key from gitleaks.io.",
+      "current_state": "The README states: 'Gitleaks is feature complete. I'm not merging new features into Gitleaks. Future releases will be security patches only. I'm shifting my focus to Betterleaks.' The repository remains MIT licensed and the CLI tool is still described as free and open source with no license key requirements mentioned for the CLI.",
       "source_url": "https://github.com/gitleaks/gitleaks",
       "category": "Security",
-      "refused_date": "2026-10-14"
+      "refused_date": "2026-11-24"
     },
     {
       "vendor": "Glauca",
@@ -5986,6 +6010,18 @@
       "source_url": "https://httpsms.com",
       "category": "Messaging",
       "refused_date": "2026-10-05"
+    },
+    {
+      "vendor": "HubSpot for Startups",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored description says the startup discount has two bands: 90%/50%/25% off for eligible startups and 30%/15% off for those meeting neither condition. The current page only states that Seed and Series A founders get 90% off Year 1, with no mention of the 50%/25% year-two/year-three bands or the 30%/15% band for ineligible startups.",
+      "previous_state": "Two discount bands: startups meeting both conditions get 90% off in year one, then 50% off in year two and 25% off in year three. Startups meeting neither get 30% off in year one and 15% off in year two. Eligibility is checked against 4,000+ approved partners, or against funding verified through Pitchbook or Crunchbase.",
+      "current_state": "HubSpot for Startups gives Seed and Series A founders 90% off Year 1, discounts on AI credits as you grow, and agents priced on results, not seats.",
+      "source_url": "https://www.hubspot.com/startups",
+      "category": "Startup Perks",
+      "refused_date": "2026-11-24"
     },
     {
       "vendor": "Hugging Face",
@@ -7880,15 +7916,15 @@
     },
     {
       "vendor": "maps.stamen.com",
-      "change_type": "rebranded",
+      "change_type": "pricing_model_change",
       "reason": "no_price_signal",
       "detail": "the page read carries no price signal — no amount, named tier or metered rate in 1705 characters, so it states no terms to have changed",
-      "summary": "The page states that as of July 31, 2023, Stamen Map Tiles are served by Stadia Maps. While map tiles are still available, the underlying provider has changed.",
+      "summary": "Stamen map tiles are now served by Stadia Maps as of July 31, 2023, and the page no longer describes free map tiles or tile hosting; it only provides attribution and points to Stadia Maps.",
       "previous_state": "Free map tiles and tile hosting.",
-      "current_state": "Stamen Map Tiles are served by Stadia Maps. Attribution is required: &copy; Stadia Maps &copy; Stamen Design &copy; OpenMapTiles &copy; OpenStreetMap contributors.",
+      "current_state": "As of July 31, 2023, Stamen Map Tiles are served by Stadia Maps; the page lists Toner, Terrain, and Watercolor styles with attribution to Stadia Maps, Stamen Design, OpenMapTiles, and OpenStreetMap contributors, and refers users to Stadia Maps' attribution page.",
       "source_url": "http://maps.stamen.com/",
       "category": "Maps/Geolocation",
-      "refused_date": "2026-10-13"
+      "refused_date": "2026-11-23"
     },
     {
       "vendor": "Market Data API",
@@ -8313,6 +8349,18 @@
       "source_url": "https://mistral.ai/pricing",
       "category": "AI / ML",
       "refused_date": "2026-11-02"
+    },
+    {
+      "vendor": "Mistral AI",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-11-02 (confirmed_unchanged) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal info describes Mistral's Free plan as covering Vibe and Studio without API access, requiring billing activation and prepaid credits for API keys. The current pricing page confirms the Free plan exists and provides limited access to Vibe and Studio, but it does not mention API access restrictions, billing activation, or prepaid credits. The page also does not list the API credit amounts ($10/month, $25.50/month, $30/month, $15/month) that the stored info references. Additionally, the page states the Education plan is $5.99/month for verified students, matching the stored info, but does not mention API credits for it. The page's FAQ says the Free plan provides limited access to Vibe and Studio, consistent with the stored description, but the stored info's specific API access and credit details are not present on the page.",
+      "previous_state": "Since about 2026-11-05, Mistral's Free plan covers Vibe and Studio and does not include API access. Creating API keys and calling the API require billing activation and pay-as-you-go with prepaid credits. Before then, Free mode let anyone create API keys with no credit card. The pricing page listed $10 a month of API credits on the Free plan until 2026-10-07. Mistral Pro costs $14.99 a month and includes monthly usage shared across the API, Studio and Vibe Code. Mistral's pricing page has not stated the amount since November 20, 2026. Until then it listed $25.50 a month in API credits. It included $30 a month until 2026-10-07. Verified students who have not used Vibe or Le Chat before can take the Education plan for $5.99 a month, for up to 12 months. The pricing page listed $15 a month in API credits for it until November 20, 2026 and now states no amount. The Free plan has limited messages, web searches and coding sessions in Vibe. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Large 4 (mistral-large-4; public preview since 2026-10-06, 1M-token context) $0.7/$2.1 (per 1M tokens); this price started on 2026-10-29; from 2026-10-20 until then, it was $1.36/$4.18; Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens); Codestral $0.3/$0.9 (per 1M tokens). To call Mistral Large 4, use the model name mistral-large-4; mistral-large-latest still points to Mistral Large 3 (mistral-large-2512). Mistral Embed is $0.1 per 1M input tokens, and Codestral Embed is $0.15 per 1M input tokens. OCR 3 (mistral-ocr-2512) costs $2 per 1,000 pages and $3 per 1,000 annotated pages. OCR 4.1 (mistral-ocr-4-1) costs $4 per 1,000 pages and $5 per 1,000 annotated pages. OCR 3 remains available. Mistral Moderation 2 is free. Speech: Voxtral 3 models, released 2026-10-20: Voxtral Mini Transcribe 3 (batch) costs $0.0035 per minute of audio, Voxtral Small Transcribe 3 $0.004 per minute, Voxtral Mini Transcribe Realtime 3 $0.008 per minute, and Voxtral Speech 3 (text-to-speech) $13 per 1M characters. The earlier models are still offered: Voxtral Mini Transcribe 2 $0.003 per minute, Voxtral Mini Transcribe Realtime $0.006 per minute, and Voxtral TTS (text-to-speech) $16 per 1M characters. Mistral's voice agent API costs $0.04 per minute with Mistral Small 4 for reasoning, and $0.08 per minute with any other reasoning model. Mistral retired these models in 2026, and a request to a retired model fails with a 404 error: Mistral Large 2.1 (mistral-large-2411), Pixtral Large (pixtral-large-2411) and Devstral Medium 1.0 (devstral-medium-2507) on 2026-05-31, replaced by Mistral Medium 3.5; Devstral Small 1.1 (devstral-small-2507) on 2026-05-31, replaced by Mistral Small 4; Voxtral Mini and Voxtral Mini Transcribe (voxtral-mini-2507) on 2026-05-31, replaced by Voxtral Mini Transcribe 2; OCR 2 (mistral-ocr-2505) on 2026-05-31 and OCR 4.0 (mistral-ocr-4-0) on 2026-09-30, replaced by OCR 4.1; Mistral Moderation (mistral-moderation-2411) on 2026-06-30, replaced by Mistral Moderation 2; Mistral Small 3.2 (mistral-small-2506) and Magistral Small 1.2 (magistral-small-2509) on 2026-07-31, replaced by Mistral Small 4; Mistral Nemo 12B (open-mistral-nemo-2407) on 2026-07-31, replaced by Ministral 3 8B; Devstral 2 (devstral-2512) and Magistral Medium 1.2 (magistral-medium-2509) on 2026-07-31, and Mistral Medium 3 and 3.1 (mistral-medium-2505, mistral-medium-2508) on 2026-08-31, replaced by Mistral Medium 3.5. Mistral's table at docs.mistral.ai/models also lists the Labs models it retired. Z.ai GLM 5.2 (zai-glm-5-2) retired on 2026-10-31, replaced by GLM 5.3. Mistral deprecated Mistral Large 3 (mistral-large-2512), Mistral Medium 3.5 (mistral-medium-3-5), Voxtral TTS (voxtral-mini-tts-2603), Voxtral Mini Transcribe 2 (voxtral-mini-2602) and Voxtral Mini Transcribe Realtime (voxtral-mini-transcribe-realtime-2602) on 2026-10-31; all five retire on 2027-04-30, replaced by Mistral Large 4 for the two text models, Voxtral TTS 3 for Voxtral TTS, Voxtral Mini Transcribe 3 for Voxtral Mini Transcribe 2 and Voxtral Mini Transcribe Realtime 3 for Voxtral Mini Transcribe Realtime. Batch processing is half price, and cached input tokens cost up to 90% less. Mistral publishes no rate-limit figures. Each organization's per-model limits (tokens per minute, requests per second) appear in Admin Panel > API > Limits. The tools of Mistral's MCP server are grouped by Studio capability: Skills, Workflows, Connectors, Observability, Evaluations, Organization and Apps.",
+      "current_state": "The Free plan provides limited access to Vibe, including latest models, chat, search, creation, and Vibe for code, plus access to Mistral Studio. It has limited messages and web searches, limited coding sessions, basic image generation and editing, and 100+ connectors. The page does not mention API access, billing activation, prepaid credits, or any monthly API credit amounts for the Free plan.",
+      "source_url": "https://mistral.ai/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-11-23"
     },
     {
       "vendor": "mockaroo",
@@ -9004,6 +9052,18 @@
       "source_url": "https://ona.com/pricing",
       "category": "IDE & Code Editors",
       "refused_date": "2026-10-08"
+    },
+    {
+      "vendor": "OneCompiler",
+      "change_type": "limits_increased",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 3020 characters, so it states no terms to have changed",
+      "summary": "The stored description says OneCompiler's free tier supports 70+ languages, but the current page states it is free to use in 150+ languages and databases.",
+      "previous_state": "Free online compiler supporting 70+ languages including Java, Python, C++, JavaScript.",
+      "current_state": "Free to use, in 150+ languages; free online compiler with 150+ languages and databases.",
+      "source_url": "https://onecompiler.com/",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-11-24"
     },
     {
       "vendor": "OneDrive",
@@ -9752,6 +9812,18 @@
       "source_url": "https://labs.play-with-docker.com/",
       "category": "Container Registry",
       "refused_date": "2026-10-14"
+    },
+    {
+      "vendor": "Play with Docker",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-14 (no_price_signal) claimed the same change, product_deprecated, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "Play with Docker is being deprecated and will be unavailable starting March 1, 2026.",
+      "previous_state": "A simple, interactive, fun playground to learn Docker.",
+      "current_state": "Play with Docker will be unavailable starting March 1, 2026; users are directed to Docker Docs for supported labs and guides.",
+      "source_url": "https://labs.play-with-docker.com/",
+      "category": "Container Registry",
+      "refused_date": "2026-11-24"
     },
     {
       "vendor": "ploi.io",
@@ -10659,6 +10731,18 @@
       "source_url": "https://resend.com/pricing",
       "category": "Email",
       "refused_date": "2026-09-22"
+    },
+    {
+      "vendor": "Resend",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-22 (confirmed_unchanged) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "Free plan now includes 3 inboxes and 10,000 automation runs, but the stored description's '1K marketing contacts/month' and '5 AI credits' are not stated on the page; the page lists 5 AI credits/mo for Free, and no marketing contacts figure is given.",
+      "previous_state": "Developer-first email API — 3K emails/month free (100/day cap), 3 domains, 1K marketing contacts/month, 5 AI credits, 30-day data retention",
+      "current_state": "Free plan: $0/mo, 3,000 emails/mo, 100 emails a day, 3 domains, 3 inboxes, ticket support, 10,000 automation runs, 30-day data retention, 5 AI credits/mo, Single Sign-On.",
+      "source_url": "https://resend.com/pricing",
+      "category": "Email",
+      "refused_date": "2026-11-23"
     },
     {
       "vendor": "resmush.it",
@@ -13386,6 +13470,18 @@
       "refused_date": "2026-10-08"
     },
     {
+      "vendor": "Wave Terminal",
+      "change_type": "limits_increased",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 3383 characters, so it states no terms to have changed",
+      "summary": "Stored description says Wave is available for MacOS and Linux only, but the current page states it is available for MacOS, Linux, and Windows.",
+      "previous_state": "Wave is an open-source, cross-platform terminal for seamless workflows. Render anything inline. Save sessions and history. Powered by open web standards. MacOS and Linux.",
+      "current_state": "Wave is an open-source terminal available for MacOS, Linux, and Windows, with features including file previews, file editing, AI, web browsing, workspace organization, SSH connection manager with WSL support, screen splitting and layouts, remote file navigation and editing, built-in web browser, graphical widgets, local data storage with no login or account required, inline file previews, and pre-built dashboards.",
+      "source_url": "https://waveterm.dev/",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-11-24"
+    },
+    {
       "vendor": "We.Team",
       "change_type": "rebranded",
       "reason": "no_price_signal",
@@ -13420,6 +13516,18 @@
       "source_url": "https://webcomponents.dev/",
       "category": "IDE & Code Editors",
       "refused_date": "2026-10-14"
+    },
+    {
+      "vendor": "WebComponents.dev",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-14 (no_price_signal) claimed the same change, product_deprecated, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "WebComponents.dev is shutting down June 1st 2025, so the free in-browser IDE will no longer be available.",
+      "previous_state": "In-browser IDE to code web components in isolation with 58 templates available, supporting stories, and tests.",
+      "current_state": "The page states WebComponents.dev is shutting down June 1st 2025 and directs users to contact hello@divriots.com for more information.",
+      "source_url": "https://webcomponents.dev/",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-11-24"
     },
     {
       "vendor": "webhook.site",

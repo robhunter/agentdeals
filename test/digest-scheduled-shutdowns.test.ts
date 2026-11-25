@@ -123,9 +123,9 @@ before(async () => {
     }
     pages.set(instant, served);
   }
-  const { proc, base } = await startServer({});
-  servers.push(proc);
   today = new Date().toISOString().slice(0, 10);
+  const { proc, base } = await startServer({ AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${today}T12:00:00Z`) - Date.now()) });
+  servers.push(proc);
   const archive = await (await fetch(`${base}/digest/archive`)).text();
   for (const [route] of archive.matchAll(/\/digest\/\d{4}-w\d{2}/g)) {
     if (weeksServedToday.has(route)) continue;
