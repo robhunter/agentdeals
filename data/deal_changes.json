@@ -21099,7 +21099,7 @@
       "date_source": "vendor_page",
       "summary": "AWS ends support for the Amazon Q Developer IDE plugins and paid subscriptions on April 30, 2027, and points IDE users to Kiro. New Free Tier accounts and new subscriptions have been blocked since May 15, 2026, while existing subscriptions can still add users. Amazon Q Developer in the AWS Console, the documentation site, the mobile app and chat apps continues.",
       "what_ends": "Amazon Q Developer IDE plugins and paid subscriptions",
-      "listing_effect": "none",
+      "listing_effect": "narrows",
       "previous_state": "Amazon Q Developer was open to new users with a Free Tier and a $19 Pro Tier in the IDE plugins and CLI, with no announced end.",
       "current_state": "AWS DevOps blog, \"Amazon Q Developer end of support announcement\" (published 2026-04-30, read 2026-11-25): \"Amazon Q Developer IDE plugins and paid Subscriptions will reach end of support on April 30, 2027, giving customers 12 months to transition to Kiro.\" \"New signups will no longer available starting May 15, 2026. New Q Developer Free Tier account creation (via Builder ID in IDE plugins) and new Q Developer subscription creation (via the AWS Console) will be blocked.\" \"Existing subscriptions can add new users.\"",
       "impact": "high",
