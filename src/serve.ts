@@ -32213,8 +32213,8 @@ function buildHostingPricingPage(): string {
 }
 
 function buildLlmApiPricingPage(): string {
-  const title = LLM_API_PRICING_TITLE;
-  const metaDesc = LLM_API_PRICING_META_DESC;
+  const title = pricingGuideTitle("llm-api-pricing", LLM_API_PRICING_TITLE);
+  const metaDesc = pricingGuideDescription("llm-api-pricing", LLM_API_PRICING_META_DESC);
   const slug = "llm-api-pricing";
   const pubDate = "2026-04-13";
 
@@ -32722,7 +32722,7 @@ function buildLlmApiPricingPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ai-ml-alternatives">AI / ML</a> &rsaquo; LLM API Pricing</div>\n' +
-    '  <h1>LLM API Free Tiers and Free Credits &mdash; The 2026 Comparison</h1>\n' +
+    '  <h1>LLM API Free Tiers and Free Credits &mdash; The ' + currentYearLabel() + ' Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + providers.length + ' providers compared &middot; ' + pageDataProvenance("/llm-api-pricing", offers.length) + ' &middot; ' + llmChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -40247,8 +40247,8 @@ ${globalNavCss()}
 }
 
 function buildMonitoringComparison2026Page(): string {
-  const title = MONITORING_COMPARISON_TITLE;
-  const metaDescMonitoring = MONITORING_COMPARISON_META_DESC;
+  const title = pricingGuideTitle("monitoring-comparison-2026", MONITORING_COMPARISON_TITLE);
+  const metaDescMonitoring = pricingGuideDescription("monitoring-comparison-2026", MONITORING_COMPARISON_META_DESC);
   const slug = "monitoring-comparison-2026";
   const pubDate = "2026-04-03";
 
@@ -40395,7 +40395,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/monitoring">Monitoring</a> &rsaquo; Monitoring &amp; Observability Comparison</div>
-  <h1>Free Tiers for Error Tracking, Monitoring &amp; Observability 2026</h1>
+  <h1>Free Tiers for Error Tracking, Monitoring &amp; Observability ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/monitoring-comparison-2026", offers.length)} &middot; 25+ monitoring services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}

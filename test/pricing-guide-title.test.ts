@@ -154,13 +154,18 @@ it("updates guide metadata when a running server crosses the year boundaries", a
           assert.ok(body.includes(question), `${instant}: ${slug} visible question`);
         }
       }
+      const llm = await (await fetch(`${base}/llm-api-pricing`)).text();
+      assert.ok(llm.match(/<title>(.*?)<\/title>/)?.[1].includes(label), `${instant}: LLM title`);
+      assert.ok(llm.match(/<h1>(.*?)<\/h1>/)?.[1].includes(label), `${instant}: LLM heading`);
+      assert.ok(llm.match(/<meta name="description" content="([^"]*)"/)?.[1].includes(label), `${instant}: LLM description`);
+      assert.ok(list.includes(`LLM API Free Tiers & Free Credits ${label}`), `${instant}: LLM guide title`);
       const serverless = await (await fetch(`${base}/serverless-free-tier-comparison-2026`)).text();
       assert.ok(serverless.match(/<title>(.*?)<\/title>/)?.[1].includes(label), `${instant}: serverless title`);
       assert.ok(serverless.match(/<h1>(.*?)<\/h1>/)?.[1].includes(label), `${instant}: serverless heading`);
       assert.ok(serverless.match(/<meta name="description" content="([^"]*)"/)?.[1].includes(label), `${instant}: serverless description`);
       for (const [slug, noun] of comparisonQuestions) {
         const page = await (await fetch(`${base}/${slug}`)).text();
-        if (slug !== "monitoring-comparison-2026") {
+        {
           const title = page.match(/<title>(.*?)<\/title>/)?.[1].replace(/ (?:—|&mdash;) AgentDeals$/, "");
           const heading = page.match(/<h1>(.*?)<\/h1>/)?.[1];
           const description = page.match(/<meta name="description" content="([^"]*)"/)?.[1];
