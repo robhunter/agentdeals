@@ -298,14 +298,16 @@ describe("the queue of curated names we do not carry", () => {
   });
 });
 
+const TODAY = new Date().toISOString().slice(0, 10);
+
 let serverPort = 0;
 let proc: ChildProcess | null = null;
 
 function startServer(): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
-    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+    const child = spawn("node", ["--import", path.join(REPO, "scripts/shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
+      env: { ...process.env, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${TODAY}T12:00:00Z`) - Date.now()), PORT: "0", BASE_URL: "http://localhost" },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 20000);
     child.stderr!.on("data", (data: Buffer) => {
@@ -415,7 +417,7 @@ describe("curated alternatives on the published pages", () => {
       resolveCuratedAlternatives("Postman", changes, offers).matched,
       offers.filter(o => o.vendor === "Postman"),
     ).kept;
-    const ranking = rankForListing(kept, { queryKey: "curated-alternatives:Postman", changes });
+    const ranking = rankForListing(kept, { queryKey: "curated-alternatives:Postman", changes, date: TODAY });
     assert.deepStrictEqual(rendered, ranking.entries.map(e => e.offer.vendor));
 
     const block = body.slice(start).match(/<div class="audit-block">[\s\S]*?<\/div>/)![0];

@@ -15,8 +15,8 @@ const servers: Server[] = [];
 
 async function startServer(changes: string): Promise<Server> {
   return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, [path.join(root, "dist/serve.js")], {
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changes, AGENTDEALS_REFERRAL_HEALTH: "off" },
+    const child = spawn(process.execPath, ["--import", path.join(root, "scripts/shifted-clock.mjs"), path.join(root, "dist/serve.js")], {
+      env: { ...process.env, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${today}T12:00:00Z`) - Date.now()), PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changes, AGENTDEALS_REFERRAL_HEALTH: "off" },
       stdio: ["ignore", "ignore", "pipe"],
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 40000);

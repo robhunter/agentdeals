@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const SERVED_AT = `${new Date().toISOString().slice(0, 10)}T12:00:00.000Z`;
 
 describe("/feed.xml weekly digest feed", () => {
   let serverPort = 0;
@@ -13,9 +14,9 @@ describe("/feed.xml weekly digest feed", () => {
   function startHttpServer(): Promise<ChildProcess> {
     return new Promise((resolve, reject) => {
       const serverPath = path.join(__dirname, "..", "dist", "serve.js");
-      const p = spawn("node", [serverPath], {
+      const p = spawn("node", ["--import", path.join(__dirname, "fixed-instant-clock.mjs"), serverPath], {
         stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
+        env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TEST_FIXED_INSTANT_MS: String(Date.parse(SERVED_AT)) },
       });
       const timeout = setTimeout(() => { p.kill(); reject(new Error("Server startup timeout")); }, 10000);
       p.stderr!.on("data", (data: Buffer) => {
@@ -110,7 +111,7 @@ describe("/feed.xml weekly digest feed", () => {
     proc = await startHttpServer();
     const res = await fetch(`http://localhost:${serverPort}/feed.xml`);
     const xml = await res.text();
-    const now = new Date();
+    const now = new Date(SERVED_AT);
     const updatedDates = [...xml.matchAll(/<updated>([^<]+)<\/updated>/g)].map(m => new Date(m[1]));
     for (const d of updatedDates) {
       assert.ok(d <= now, `Date ${d.toISOString()} should not be in the future`);

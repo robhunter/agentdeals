@@ -27,8 +27,8 @@ function monthEntries(html: string) {
 }
 
 async function withServer(env: Record<string, string>, check: (base: string) => Promise<void>) {
-  const server = spawn("node", [path.join(REPO, "dist/serve.js")], {
-    env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_REFERRAL_HEALTH: "off", ...env },
+  const server = spawn("node", ["--import", path.join(REPO, "scripts/shifted-clock.mjs"), path.join(REPO, "dist/serve.js")], {
+    env: { ...process.env, AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(`${TODAY}T12:00:00Z`) - Date.now()), PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_REFERRAL_HEALTH: "off", ...env },
     stdio: ["ignore", "pipe", "pipe"],
   });
   try {

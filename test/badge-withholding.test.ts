@@ -8,15 +8,17 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
+const TODAY = new Date().toISOString().slice(0, 10);
+const NOW = Date.parse(`${TODAY}T12:00:00Z`);
 
 let serverPort = 0;
 let proc: ChildProcess | null = null;
 
 function startHttpServer(): Promise<{ child: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
-    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+    const child = spawn("node", ["--import", path.join(REPO, "scripts/shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
+      env: { ...process.env, AGENTDEALS_CLOCK_SHIFT_MS: String(NOW - Date.now()), PORT: "0", BASE_URL: "http://localhost" },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 30000);
     child.stderr!.on("data", (data: Buffer) => {
@@ -96,7 +98,7 @@ before(async () => {
   const { vendorBadge, freeTierClaim } = await import("../dist/vendor-verdict.js");
   const { endingTheListingConfirms } = await import("../dist/vendor-verdict-input.js");
   const { offerEnded } = await import("../dist/retirement.js");
-  const { gateFor, utcDate, classifyTier } = await import("../dist/ranking.js");
+  const { gateFor, classifyTier } = await import("../dist/ranking.js");
   const { reverificationIntervalDays, verificationAgeDays } = await import("../dist/badge-staleness.js");
 
   const offers = loadOffers();
@@ -104,8 +106,8 @@ before(async () => {
   const enriched = enrichOffers(offers);
   const enrichedOf = new Map<object, Record<string, never>>();
   offers.forEach((o: object, i: number) => enrichedOf.set(o, enriched[i]));
-  const servedOn = utcDate();
-  const nowMs = Date.now();
+  const servedOn = TODAY;
+  const nowMs = NOW;
   staleAfter = reverificationIntervalDays(offers.map((o: { verifiedDate: string }) => o.verifiedDate), nowMs);
 
   subjects = [...vendorSlugMap.entries()].flatMap(([slug, vendor]: [string, string]) => {
