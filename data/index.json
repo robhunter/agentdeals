@@ -763,7 +763,7 @@
     {
       "vendor": "Railway",
       "category": "Cloud Hosting",
-      "description": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 of free credit per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. Projects: 5 during trial, then 1",
+      "description": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 of free credit per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. The Free plan allows one project with up to 3 services; the trial allows up to 5 services per project.",
       "tier": "Free",
       "url": "https://railway.com/pricing",
       "tags": [
@@ -825,15 +825,15 @@
       "conditions": [
         {
           "text": "After the 30-day trial, the Free plan allows 1 project, 3 services per project and no custom domains. Cron jobs are available during the trial only.",
-          "quote": "Services per project: 5 during trial, then 3. Custom domains: 1 trial, then 0. Cron jobs per project: Free Trial only.",
+          "quote": "You get 1 project with up to 3 services, up to 1 vCPU and 0.5 GB of RAM per service, 0.5 GB of volume storage, and one-click Postgres, Redis, MySQL and MongoDB. … Cron jobs per project: Trial only. … Custom domains: Trial only.",
           "url": "https://railway.com/pricing",
-          "read_on": "2026-10-12"
+          "read_on": "2026-11-23"
         },
         {
-          "text": "Railway's trial, with a one-time $5 credit, needs no credit card.",
-          "quote": "Can I try Railway without a credit card? Yes. As a new Railway user, you can sign up for a free Trial. You will receive a one-time grant of $5 to use on resources.",
+          "text": "Neither the trial nor the Free plan requires a credit card.",
+          "quote": "Yes. Neither the trial nor the Free plan requires a credit card. You only need to add a card to upgrade to Hobby or Pro.",
           "url": "https://railway.com/pricing",
-          "read_on": "2026-10-22"
+          "read_on": "2026-11-23"
         },
         {
           "text": "When the 30-day trial ends or its $5 runs out, Railway stops running deployments. Downgrade to the Free plan from the Plans page and redeploy to continue at no cost. Its $1 a month does not roll over.",
@@ -848,7 +848,7 @@
           "read_on": "2026-11-23"
         },
         {
-          "text": "When the $1 runs out, your services stop until the next billing cycle or until you upgrade.",
+          "text": "When the $1 runs out, your services stop until the next billing cycle or until you upgrade. Volumes and bucket files are kept.",
           "quote": "When the $1 runs out, your services stop until the next billing cycle or until you upgrade. Volumes and bucket files are kept.",
           "url": "https://docs.railway.com/pricing/free-plan",
           "read_on": "2026-11-23"
@@ -856,14 +856,14 @@
         {
           "text": "Run `ssh railway.new` to get a free Linux VM with no account or credit card. The VM has 2 vCPU, 2 GB RAM, and a preview URL. Claude Code, Codex, OpenCode, and the Railway Agent are preinstalled. Railway identifies you by your SSH key. Each VM can be used for 60 minutes. You can get 3 VMs per IP address per day.",
           "quote": "Run ssh railway.new to get a free Linux VM with coding agents preinstalled and a preview URL, with no account or credit card.",
-          "url": "https://docs.railway.com/pricing/free-trial",
-          "read_on": "2026-11-02"
+          "url": "https://docs.railway.com/pricing/free-plan",
+          "read_on": "2026-11-23"
         },
         {
           "text": "Open the claim link from the welcome message and sign up within 24 hours to keep the VM. The VM, files, and URL move into your account. Unclaimed VMs are deleted with their files. Railway caps free VMs at high demand.",
           "quote": "To keep it, open the claim link from the welcome message and sign up; the box moves into your account with the same VM, files, and URL. Unclaimed boxes are deleted with their files.",
-          "url": "https://docs.railway.com/pricing/free-trial",
-          "read_on": "2026-11-02"
+          "url": "https://docs.railway.com/pricing/free-plan",
+          "read_on": "2026-11-23"
         },
         {
           "text": "Railway Sandboxes are available on every plan. Usage draws from the plan's included credit. Free plan limits are 10 sandboxes per environment, 2 vCPU and 2 GB each, and an idle timeout of at most 5 minutes.",
@@ -886,20 +886,40 @@
         {
           "text": "The Limited Trial for trial accounts not verified through GitHub has restricted outbound network access and only a limited set of ports. Verification is an automated process at railway.com/verify. Railway does not respond to requests for verification. The Hobby plan unlocks the full experience.",
           "quote": "Specifically, services on the Limited Trial have restricted outbound network access and only a limited set of ports are available.",
-          "url": "https://docs.railway.com/pricing/free-trial",
-          "read_on": "2026-11-07"
+          "url": "https://docs.railway.com/pricing/free-plan",
+          "read_on": "2026-11-23"
         },
         {
           "text": "Railway deletes stateful volumes created by Trial accounts 30 days after the expiration of the trial credits. An upgrade retains the data.",
           "quote": "Railway deletes stateful volumes created by Trial accounts 30 days after the expiration of your credits.",
-          "url": "https://docs.railway.com/pricing/free-trial",
-          "read_on": "2026-11-07"
+          "url": "https://docs.railway.com/pricing/free-plan",
+          "read_on": "2026-11-23"
         }
       ],
       "restatement_reverted": {
         "record_date": "2026-09-03",
         "reverted_on": "2026-11-03"
-      }
+      },
+      "official_mcp_servers": [
+        {
+          "kind": "remote",
+          "target": "https://mcp.railway.com",
+          "transport": "Streamable HTTP",
+          "authentication": "OAuth, or the railway login session through the command railway mcp (CLI 5.44.0 or later)",
+          "doc_url": "https://docs.railway.com/ai/mcp-server",
+          "source_quote": "Project tokens are not accepted. The server requires a user identity for billing and audit trails.",
+          "read_on": "2026-11-25",
+          "retired_names": [
+            {
+              "kind": "npm",
+              "target": "@railway/mcp-server",
+              "notice": "Deprecated: Railway MCP is now bundled into the Railway CLI. Use 'railway mcp'.",
+              "url": "https://www.npmjs.com/package/@railway/mcp-server",
+              "read_on": "2026-11-25"
+            }
+          ]
+        }
+      ]
     },
     {
       "vendor": "Fly.io",
@@ -2608,7 +2628,7 @@
     {
       "vendor": "GitLab CI",
       "category": "CI/CD",
-      "description": "400 compute minutes/month, 10 GiB storage, 5 users. New accounts limited to 3 top-level groups",
+      "description": "400 compute minutes/month, 10 GiB storage, 5 users. New accounts limited to 3 top-level groups.",
       "tier": "Free",
       "url": "https://about.gitlab.com/pricing/",
       "tags": [
@@ -2637,7 +2657,27 @@
         "text": "$ 0 per user/month, No credit card required Get started AI features can be accessed via the purchase of GitLab Credits add-on. Features include: 5 users per top-level group 400 compute minutes per month Source Code Management & CI/CD 10 GiB adjustable storage Static Application Security Testing Add-ons: GitLab Credits",
         "url": "https://about.gitlab.com/pricing/",
         "read_on": "2026-11-05"
-      }
+      },
+      "official_mcp_servers": [
+        {
+          "kind": "remote",
+          "target": "https://gitlab.com/api/v4/mcp",
+          "transport": "HTTP",
+          "authentication": "OAuth through the client's sign-in, or a fine-grained personal access token with the MCP tool resource and Execute permission; legacy personal, project and group access tokens are rejected",
+          "doc_url": "https://docs.gitlab.com/user/model_context_protocol/mcp_server/",
+          "source_quote": "Changed to a separate setting and moved from GitLab Premium to GitLab Free in GitLab 19.2.",
+          "read_on": "2026-11-25",
+          "retired_names": [
+            {
+              "kind": "npm",
+              "target": "@modelcontextprotocol/server-gitlab",
+              "notice": "Package no longer supported.",
+              "url": "https://www.npmjs.com/package/@modelcontextprotocol/server-gitlab",
+              "read_on": "2026-11-25"
+            }
+          ]
+        }
+      ]
     },
     {
       "vendor": "CircleCI",
@@ -2661,7 +2701,27 @@
       "restatement_reverted": {
         "record_date": "2026-09-03",
         "reverted_on": "2026-11-20"
-      }
+      },
+      "official_mcp_servers": [
+        {
+          "kind": "remote",
+          "target": "https://mcp.circleci.com/v1/mcp",
+          "transport": "Streamable HTTP",
+          "authentication": "OAuth2, or a personal API token as the bearer token in the Authorization header when the client cannot complete OAuth2 or runs headless",
+          "doc_url": "https://circleci.com/docs/guides/toolkit/connecting-to-the-circleci-mcp-server/",
+          "source_quote": "CircleCI previously offered a local MCP server that you installed with npx and configured with a personal API token. That server is deprecated.",
+          "read_on": "2026-11-25",
+          "retired_names": [
+            {
+              "kind": "npm",
+              "target": "@circleci/mcp-server-circleci",
+              "notice": "Deprecated: use CircleCI's hosted MCP server or CircleCI CLI MCP instead.",
+              "url": "https://www.npmjs.com/package/@circleci/mcp-server-circleci",
+              "read_on": "2026-11-25"
+            }
+          ]
+        }
+      ]
     },
     {
       "vendor": "Buildkite",
@@ -4817,7 +4877,7 @@
     {
       "vendor": "Stripe",
       "category": "Payments",
-      "description": "Payment processing — no monthly fees, 2.9% + $0.30 per transaction. Full API, dashboard, and test mode free. Pay only when processing live payments",
+      "description": "Payment processing — no monthly fees, 2.9% + $0.30 per transaction. Full API, dashboard, and test mode free. Pay only when processing live payments.",
       "tier": "Pay-as-you-go",
       "url": "https://stripe.com/pricing",
       "tags": [
@@ -4840,7 +4900,27 @@
         "checked": "2026-11-05",
         "outcome": "ok",
         "detail": "the page names Stripe as \"stripe\" and states \"$0.30\""
-      }
+      },
+      "official_mcp_servers": [
+        {
+          "kind": "remote",
+          "target": "https://mcp.stripe.com",
+          "transport": "HTTP",
+          "authentication": "OAuth for interactive clients, or an agent API key as the bearer token in the Authorization header; an agent API key is a restricted key tagged for autonomous agents",
+          "doc_url": "https://docs.stripe.com/mcp",
+          "source_quote": "Starting January 11, 2027, Stripe MCP will no longer accept full-access secret keys or non-agent restricted API keys.",
+          "read_on": "2026-11-25",
+          "retired_names": [
+            {
+              "kind": "npm",
+              "target": "@stripe/mcp",
+              "notice": "No longer maintained; no further updates, including security fixes.",
+              "url": "https://www.npmjs.com/package/@stripe/mcp",
+              "read_on": "2026-11-25"
+            }
+          ]
+        }
+      ]
     },
     {
       "vendor": "Contentful",
@@ -38060,7 +38140,7 @@
     {
       "vendor": "NVIDIA NIM",
       "category": "AI / ML",
-      "description": "Free inference endpoints on build.nvidia.com: models marked Free Endpoint, including GLM 5.3 Flash, Gemma 4 31B and NVIDIA Nemotron 3 Ultra, can be called at no cost. Their model IDs are z-ai/glm-5.3-flash, google/gemma-4-31b-it and nvidia/nemotron-3-ultra-550b-a55b. Mistral Large 4 (mistralai/mistral-large-4-1t-a52b) is a Free Endpoint on build.nvidia.com as of 2026-10-29. NVIDIA's free embedding models are nvidia/nemotron-3.5-embed-1b and nvidia/nemotron-3.5-embed-8b. The free reranking model is nvidia/nemotron-3.5-rerank-8b. The 3.5 models handle text and document images and were added on 2026-10-20. Up to 40 requests per minute; limits may vary by model, and traffic from other users may cause throttling. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production. NVIDIA posts an end-of-life date on each hosted model's page on build.nvidia.com; after that date, requests for the model return HTTP 410 Gone. NVIDIA stopped supporting NVIDIA Nemotron 3 Super (nvidia/nemotron-3-super-120b-a12b) after 2026-10-19, and its catalogue no longer lists the model (checked 2026-10-21). Nemotron 3.5 Super VL (nvidia/nemotron-3.5-super-vl-120b-a12b), an early-access model, is a Free Endpoint. NVIDIA retired Kimi K3 (moonshotai/kimi-k3) on 2026-10-15. Kimi K3.1 Pro (moonshotai/kimi-k3.1-pro) is a Free Endpoint. NVIDIA no longer serves OpenAI's gpt-oss models as free endpoints: openai/gpt-oss-20b retired 2026-11-18, openai/gpt-oss-120b retired 2026-09-03. Other model IDs NVIDIA retired in 2026 include these. DeepSeek: deepseek-ai/deepseek-v4.1-flash on 2026-11-16, deepseek-ai/deepseek-v4-pro and deepseek-ai/deepseek-v4-flash on 2026-08-07, deepseek-ai/deepseek-v4-pro-0813 on 2026-09-14 and deepseek-ai/deepseek-v4-flash-0731 on 2026-09-21. Kimi: moonshotai/kimi-k2-instruct and moonshotai/kimi-k2-thinking on 2026-05-12. Others: stepfun-ai/step-3.5-flash, bytedance/seed-oss-36b-instruct, sarvamai/sarvam-m and abacusai/dracarys-llama-3.1-70b-instruct on 2026-07-27. GLM: z-ai/glm4.7 on 2026-05-14, z-ai/glm-5.1 on 2026-07-02, z-ai/glm-5.2 on 2026-08-21 and z-ai/glm-5.3 on 2026-10-27 (GLM 5.3 Flash, z-ai/glm-5.3-flash, is still a Free Endpoint). Qwen: qwen/qwen2.5-coder-32b-instruct on 2026-05-12, qwen/qwen3-next-80b-a3b-thinking on 2026-05-21, qwen/qwen3-coder-480b-a35b-instruct on 2026-06-11, qwen/qwen3.5-122b-a10b on 2026-07-20, and qwen/qwen3.5-397b-a17b and qwen/qwen3-next-80b-a3b-instruct on 2026-07-27. MiniMax: minimaxai/minimax-m2.5 on 2026-05-12, minimaxai/minimax-m2.7 on 2026-07-27 and minimaxai/minimax-m3 on 2026-09-09. Llama: meta/llama-3.2-90b-vision-instruct and meta/llama-guard-4-12b on 2026-11-16, meta/llama-3.2-11b-vision-instruct on 2026-11-05, meta/llama-4-maverick-17b-128e-instruct on 2026-07-27, and meta/llama-3.3-70b-instruct, meta/llama-3.1-8b-instruct, meta/llama-3.1-70b-instruct, meta/llama-3.2-1b-instruct and meta/llama-3.2-3b-instruct on 2026-08-26. Nemotron: nvidia/llama-3.3-nemotron-super-49b-v1, nvidia/llama-3.3-nemotron-super-49b-v1.5, nvidia/llama-3.1-nemotron-nano-8b-v1, nvidia/llama-3.1-nemotron-nano-vl-8b-v1, nvidia/nvidia-nemotron-nano-9b-v2, nvidia/nemotron-nano-12b-v2-vl and nvidia/nemotron-mini-4b-instruct on 2026-08-26, and nvidia/nemotron-3-nano-30b-a3b on 2026-09-01. Mistral: mistralai/mistral-large-3-675b-instruct-2512 on 2026-07-23, mistralai/mixtral-8x7b-instruct-v0.1 on 2026-07-27 and mistralai/mistral-nemotron on 2026-09-28. Gemma: google/diffusiongemma-26b-a4b-it on 2026-11-12, google/gemma-3-27b-it on 2026-05-12, and google/gemma-3n-e4b-it and google/gemma-3n-e2b-it on 2026-07-27. Phi: microsoft/phi-4-mini-instruct and microsoft/phi-4-multimodal-instruct on 2026-07-15. Embedding models: nvidia/nemotron-3-embed-1b on 2026-11-22, nvidia/llama-3.2-nv-embedqa-1b-v2 and nvidia/llama-3.2-nemoretriever-300m-embed-v1 on 2026-05-18, and nvidia/nv-embedqa-e5-v5, nvidia/nv-embed-v1, nvidia/llama-nemotron-embed-1b-v2 and baai/bge-m3 on 2026-08-25.",
+      "description": "Free inference endpoints on build.nvidia.com: models marked Free Endpoint, including GLM 5.3 Flash, MiniMax M3.1 Flash, Step 5 Preview, Poolside's Laguna XS 2.1 and NVIDIA Nemotron 3 Ultra, can be called at no cost. Their model IDs are z-ai/glm-5.3-flash, minimaxai/minimax-m3.1-flash, stepfun-ai/step-5-preview, poolside/laguna-xs-2.1 and nvidia/nemotron-3-ultra-550b-a55b. Mistral Large 4 (mistralai/mistral-large-4-1t-a52b) is a Free Endpoint on build.nvidia.com as of 2026-10-29. NVIDIA's free embedding models are nvidia/nemotron-3.5-embed-1b and nvidia/nemotron-3.5-embed-8b. The free reranking model is nvidia/nemotron-3.5-rerank-8b. The 3.5 models handle text and document images and were added on 2026-10-20. Up to 40 requests per minute; limits may vary by model, and traffic from other users may cause throttling. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production. NVIDIA posts an end-of-life date on each hosted model's page on build.nvidia.com; after that date, requests for the model return HTTP 410 Gone. NVIDIA stopped supporting NVIDIA Nemotron 3 Super (nvidia/nemotron-3-super-120b-a12b) after 2026-10-19, and its catalogue no longer lists the model (checked 2026-10-21). Nemotron 3.5 Super VL (nvidia/nemotron-3.5-super-vl-120b-a12b), an early-access model, is a Free Endpoint. NVIDIA retired Kimi K3 (moonshotai/kimi-k3) on 2026-10-15. Kimi K3.1 Pro (moonshotai/kimi-k3.1-pro) is a Free Endpoint. NVIDIA no longer serves OpenAI's gpt-oss models as free endpoints: openai/gpt-oss-20b retired 2026-11-18, openai/gpt-oss-120b retired 2026-09-03. Other model IDs NVIDIA retired in 2026 include these. DeepSeek: deepseek-ai/deepseek-v4.1-flash on 2026-11-16, deepseek-ai/deepseek-v4-pro and deepseek-ai/deepseek-v4-flash on 2026-08-07, deepseek-ai/deepseek-v4-pro-0813 on 2026-09-14 and deepseek-ai/deepseek-v4-flash-0731 on 2026-09-21. Kimi: moonshotai/kimi-k2-instruct and moonshotai/kimi-k2-thinking on 2026-05-12. Others: stepfun-ai/step-3.5-flash, bytedance/seed-oss-36b-instruct, sarvamai/sarvam-m and abacusai/dracarys-llama-3.1-70b-instruct on 2026-07-27 (StepFun's Step 5 Preview, stepfun-ai/step-5-preview, is a Free Endpoint). GLM: z-ai/glm4.7 on 2026-05-14, z-ai/glm-5.1 on 2026-07-02, z-ai/glm-5.2 on 2026-08-21 and z-ai/glm-5.3 on 2026-10-27 (GLM 5.3 Flash, z-ai/glm-5.3-flash, is still a Free Endpoint). Qwen: qwen/qwen2.5-coder-32b-instruct on 2026-05-12, qwen/qwen3-next-80b-a3b-thinking on 2026-05-21, qwen/qwen3-coder-480b-a35b-instruct on 2026-06-11, qwen/qwen3.5-122b-a10b on 2026-07-20, and qwen/qwen3.5-397b-a17b and qwen/qwen3-next-80b-a3b-instruct on 2026-07-27. MiniMax: minimaxai/minimax-m2.5 on 2026-05-12, minimaxai/minimax-m2.7 on 2026-07-27 and minimaxai/minimax-m3 on 2026-09-09. Llama: meta/llama-3.2-90b-vision-instruct and meta/llama-guard-4-12b on 2026-11-16, meta/llama-3.2-11b-vision-instruct on 2026-11-05, meta/llama-4-maverick-17b-128e-instruct on 2026-07-27, and meta/llama-3.3-70b-instruct, meta/llama-3.1-8b-instruct, meta/llama-3.1-70b-instruct, meta/llama-3.2-1b-instruct and meta/llama-3.2-3b-instruct on 2026-08-26. Nemotron: nvidia/llama-3.3-nemotron-super-49b-v1, nvidia/llama-3.3-nemotron-super-49b-v1.5, nvidia/llama-3.1-nemotron-nano-8b-v1, nvidia/llama-3.1-nemotron-nano-vl-8b-v1, nvidia/nvidia-nemotron-nano-9b-v2, nvidia/nemotron-nano-12b-v2-vl and nvidia/nemotron-mini-4b-instruct on 2026-08-26, and nvidia/nemotron-3-nano-30b-a3b on 2026-09-01 (Nemotron 3 Nano Omni, nvidia/nemotron-3-nano-omni-30b-a3b-reasoning, is a Free Endpoint). Mistral: mistralai/mistral-large-3-675b-instruct-2512 on 2026-07-23, mistralai/mixtral-8x7b-instruct-v0.1 on 2026-07-27 and mistralai/mistral-nemotron on 2026-09-28. Gemma: google/gemma-4-31b-it on 2026-11-24, google/diffusiongemma-26b-a4b-it on 2026-11-12, google/gemma-3-27b-it on 2026-05-12, and google/gemma-3n-e4b-it and google/gemma-3n-e2b-it on 2026-07-27. Phi: microsoft/phi-4-mini-instruct and microsoft/phi-4-multimodal-instruct on 2026-07-15. Embedding models: nvidia/nemotron-3-embed-1b on 2026-11-22, nvidia/llama-3.2-nv-embedqa-1b-v2 and nvidia/llama-3.2-nemoretriever-300m-embed-v1 on 2026-05-18, and nvidia/nv-embedqa-e5-v5, nvidia/nv-embed-v1, nvidia/llama-nemotron-embed-1b-v2 and baai/bge-m3 on 2026-08-25.",
       "tier": "Free",
       "url": "https://build.nvidia.com/api/runtime/content/help-center-faq.yaml",
       "tags": [
