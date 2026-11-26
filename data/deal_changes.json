@@ -1016,8 +1016,6 @@
       "source_url": "https://www.isumsoft.com/internet/gemini-2-flash-deprecation-migration-guide.html",
       "category": "AI/ML",
       "alternatives": [
-        "Google Gemini 2.5 Flash",
-        "Google Gemini 2.5 Pro",
         "OpenRouter",
         "Groq"
       ],
@@ -19511,7 +19509,7 @@
       "date_source": "vendor_page",
       "summary": "Solo can be used until November 30, 2026, when all Solo websites and data are deleted, with no way to recover a site, account or data afterwards. Solo announced on 2026-10-01 that it is shutting down. Solo sends each site's owner a ZIP with an HTML export of the site, a CSV of links to its images, and its contact form and newsletter submissions; image source files are not in the ZIP and must be downloaded one by one. Pro and Grow subscriptions get a prorated refund calculated as of October 1, 2026, and do not renew.",
       "what_ends": "Solo",
-      "listing_effect": "none",
+      "listing_effect": "ends",
       "previous_state": "Solo offered a free AI website builder with a free custom domain and no card needed, with no announced end.",
       "current_state": "Solo Shutdown FAQ, initial notice October 1, 2026 (support.soloist.ai, read 2026-11-12): \"All Solo websites and data will be deleted on November 30, 2026. There will be no way to recover your site, account, or data after that date.\"",
       "impact": "high",
