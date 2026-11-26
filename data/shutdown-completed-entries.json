@@ -240,6 +240,16 @@
     "entry": "Claude Sonnet 4.5 (claude-sonnet-4-5-20250929) on the Claude API (November 30, completed; requests to it fail; claude-sonnet-5-5 is the replacement Anthropic names; Amazon Bedrock and Google Cloud set their own retirement dates)"
   },
   {
+    "card_date": "2026-11-30",
+    "card_title": "Gemini 4 Argon and Gemini 3.8 Flash in Google Antigravity",
+    "entry": "Gemini 4 Argon and Gemini 3.8 Flash in Google Antigravity (November 30, completed; Google removed both from every Antigravity plan; Google Antigravity keeps running; Gemini 4 Argon and Gemini 3.8 Flash still run on the Gemini API; in Antigravity, Gemini 4 Carbon is on paid Google AI Pro, Pro trials with eligible premium devices, Google AI Ultra and Gemini Enterprise, and Gemini 4 Hydrogen is on every plan)"
+  },
+  {
+    "card_date": "2026-11-30",
+    "card_title": "Claude 4.6 models and GPT-OSS-120b on Antigravity's Free and Google AI Plus plans",
+    "entry": "Claude 4.6 models and GPT-OSS-120b on Antigravity's Free and Google AI Plus plans (November 30, completed; Google removed Claude Sonnet 4.6, Claude Opus 4.6 and GPT-OSS-120b from these two plans; the Free and Google AI Plus plans keep running; Gemini 4 Hydrogen is now the only model on them)"
+  },
+  {
     "card_date": "2026-12-01",
     "card_title": "Cloudflare's DNS Analytics and DNS Firewall Analytics REST APIs",
     "entry": "Cloudflare's DNS Analytics API and DNS Firewall Analytics API (December 1, completed; their endpoints GET /zones/{zone_id}/dns_analytics/ and GET /accounts/{account_id}/dns_firewall/{dns_firewall_id}/dns_analytics/report retired; integrations move to GraphQL Analytics API; Cloudflare DNS keeps running)"
@@ -278,5 +288,10 @@
     "card_date": "2026-12-03",
     "card_title": "Gemini Omni 1.1 Flash (gemini-omni-1.1-flash) on the Gemini API",
     "entry": "Gemini Omni 1.1 Flash (gemini-omni-1.1-flash) on the Gemini API (December 3, completed; it shut down; requests that still name gemini-omni-1.1-flash are answered by gemini-omni-1.2-flash, billed at Gemini Omni 1.2 Flash rates; the Gemini API keeps running)"
+  },
+  {
+    "card_date": "2026-12-03",
+    "card_title": "The Junie plugin in JetBrains IDEs",
+    "entry": "The Junie plugin in JetBrains IDEs (December 3, completed; the Junie plugin stopped working in JetBrains IDEs version 2026.2 and was already off in version 2026.3; JetBrains IDEs and Junie keep running; Junie moved into JetBrains Air with its account, AI plan and .junie/ files, and also runs in Junie CLI)"
   }
 ]

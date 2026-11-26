@@ -443,7 +443,7 @@
     {
       "vendor": "Netlify",
       "category": "Cloud Hosting",
-      "description": "The Free plan is $0 with a limit of 300 credits per month, covering production deploys (15 credits each), compute (10 credits per GB-hour), bandwidth (20 credits per GB) and web requests (2 credits per 10k requests). Netlify says the Free plan is always free, with hard monthly limits that cannot be exceeded or incur costs; extra credits need a paid plan. Personal is $9 a month with 1,000 credits.",
+      "description": "The Free plan is $0 with a limit of 300 credits per month, covering production deploys (15 credits each), compute (10 credits per GB-hour), bandwidth (20 credits per GB) and web requests (2 credits per 10k requests). Netlify's Free plan allows 1.5 million web requests a month if no other feature uses credits. Netlify says the Free plan is always free, with hard monthly limits that cannot be exceeded or incur costs; extra credits need a paid plan. Personal is $9 a month with 1,000 credits.",
       "tier": "Free",
       "url": "https://www.netlify.com/pricing/",
       "tags": [
