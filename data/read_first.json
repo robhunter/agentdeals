@@ -510,7 +510,7 @@
     {
       "vendor": "Thunder Client",
       "tier": "Free",
-      "since": "2026-11-02"
+      "since": "2026-11-26"
     },
     {
       "vendor": "Stream",
@@ -696,6 +696,16 @@
       "vendor": "Google Gemini Embedding 2",
       "tier": "Free",
       "since": "2026-11-11"
+    },
+    {
+      "vendor": "file.io",
+      "tier": "Free",
+      "since": "2026-11-26"
+    },
+    {
+      "vendor": "Harness CI",
+      "tier": "Free",
+      "since": "2026-11-26"
     }
   ]
 }
