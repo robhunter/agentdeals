@@ -21424,6 +21424,26 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-11-26"
+    },
+    {
+      "vendor": "Hetzner",
+      "change_type": "pricing_restructured",
+      "date": "2026-11-10",
+      "date_source": "hand_written",
+      "summary": "On November 10, 2026, Hetzner cut CPX and CCX cloud server prices in Helsinki by 15% for new orders and rescales. Servers already running keep their prices. Prices in Falkenstein, Nuremberg and Singapore did not change. CPX02 is €5.49 a month in Helsinki against €6.49 in Falkenstein and Nuremberg, and CCX13 is €36.99 against €43.49, with the primary IPv4.",
+      "tier": "Paid",
+      "tier_direction": "unchanged",
+      "previous_state": "From Hetzner's June increase until this cut, a CPX or CCX plan had one EU price in Falkenstein, Nuremberg and Helsinki: CPX02 €6.49 a month and CCX13 €43.49, with the primary IPv4.",
+      "current_state": "\"Starting 10 November 2026, we are reducing prices for cloud servers at our Helsinki (HEL1) location by 15 percent for new orders and rescales.\" \"Nothing changes for existing servers, including those at our German locations.\" (hetzner.com press release, read 2026-11-26.) Helsinki prices with the primary IPv4, from hetzner.com's price API, read 2026-11-26: CPX02 €5.49, CPX12 €9.99, CPX22 €16.99, CPX32 €30.49, CPX42 €59.49, CPX52 €85.49, CPX62 €110.99, CCX13 €36.99, CCX23 €73.49, CCX33 €117.99, CCX43 €234.99, CCX53 €453.49, CCX63 €725.49.",
+      "impact": "medium",
+      "source_url": "https://www.hetzner.com/pressroom/price-reduction-cloud-servers-in-helsinki-now-15-percent-cheaper/",
+      "category": "Cloud Hosting",
+      "alternatives": [
+        "DigitalOcean",
+        "Vultr",
+        "OVHcloud"
+      ],
+      "recorded_date": "2026-11-26"
     }
   ]
 }
