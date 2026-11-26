@@ -9920,7 +9920,7 @@
     {
       "vendor": "Strapi",
       "category": "Headless CMS",
-      "description": "Free OSS (MIT). Self-hosted headless CMS with REST and GraphQL APIs. Content types builder, RBAC, webhooks, i18n, media library. 200K+ active projects",
+      "description": "Free OSS (MIT). Self-hosted headless CMS with REST and GraphQL APIs. Content types builder, RBAC, webhooks, i18n, media library. 200K+ active projects. Strapi Cloud has no free plan. Its Starter plan costs $35 per project a month or $348 a year.",
       "tier": "Free OSS",
       "url": "https://strapi.io/",
       "tags": [
@@ -37028,7 +37028,7 @@
     {
       "vendor": "GitHub Copilot",
       "category": "AI Coding",
-      "description": "AI coding assistant by GitHub. Copilot Free is $0 with no credit card: 2,000 code completions a month, a limited monthly allowance of GitHub AI Credits for chat and agent features, and models through auto model selection only. Copilot Student is free for verified students. Paid plans include a monthly allowance of AI credits: Pro $10 (1,500 credits), Pro+ $39 (7,000) and Max $100 (20,000); Business $19 (1,900) and Enterprise $39 (3,900) per seat. Code completions are unlimited on paid plans, and usage beyond an allowance costs $0.01 per AI credit.",
+      "description": "AI coding assistant by GitHub. Copilot Free is $0 with no credit card: 2,000 code completions a month, a limited monthly allowance of GitHub AI Credits for chat and agent features, and models through auto model selection only. Copilot Student is free for verified students. Paid plans include a monthly allowance of AI credits: Pro $10 (1,500 credits), Pro+ $39 (7,000) and Max $100 (20,000); Business $19 (1,900) and Enterprise $39 (3,900) per seat. GitHub says each paid individual plan's monthly AI credits are base credits, which never change, plus a flex allotment, which can vary: Pro has 1,000 base and 500 flex, Pro+ 3,900 base and 3,100 flex, and Max 10,000 base and 10,000 flex. Code completions are unlimited on paid plans, and usage beyond an allowance costs $0.01 per AI credit.",
       "tier": "Free",
       "url": "https://github.com/features/copilot",
       "tags": [
