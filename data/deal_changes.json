@@ -21374,6 +21374,39 @@
       "listing_effect": "none",
       "what_ends": "serverless access to deepseek-ai/DeepSeek-V4-Pro-0813, thinkingmachines/Inkling, openai/gpt-oss-120b and together/Tev1-4B-experimental",
       "announced_on": "2026-11-25"
+    },
+    {
+      "vendor": "Google Gemini Code Assist",
+      "change_type": "product_deprecated",
+      "date": "2026-07-17",
+      "summary": "The consumer version of Gemini Code Assist on GitHub shut down on July 17, 2026, and its code reviews ended. No new installations were possible from June 18, 2026. The enterprise version, installed through Google Cloud, is not affected.",
+      "previous_state": "It was a GitHub app that reviewed pull requests under Google's terms of service. It reviewed up to 33 pull requests a day.",
+      "current_state": "Google's \"Sunset of the Consumer version of Gemini Code Assist on GitHub\" (last updated 2026-10-09, read 2026-11-26): \"Starting June 18, 2026, the consumer version is deprecated, and you can't complete installations of the consumer version of the app.\" \"Starting July 17, 2026, the consumer version is shut down, and all code review activities performed by the app end.\" \"The enterprise version of Gemini Code Assist on GitHub is not affected by these changes.\"",
+      "impact": "medium",
+      "source_url": "https://developers.google.com/gemini-code-assist/docs/deprecations/consumer-code-review",
+      "category": "IDE & Code Editors",
+      "alternatives": [],
+      "recorded_date": "2026-11-26",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "Gemini Code Assist on GitHub (consumer version)"
+    },
+    {
+      "vendor": "Google Cloud BigQuery",
+      "change_type": "product_deprecated",
+      "date": "2027-08-31",
+      "summary": "BigQuery keeps running. The BigQuery Storage API v1beta1 shuts down on August 31, 2027. Since November 20, only projects that used v1beta1 from March through August 2026 can call it. After the shutdown, calls to v1beta1 fail with NOT_FOUND. The BigQuery Storage API v1 is the backward-compatible replacement.",
+      "previous_state": "Before November 20, any Google Cloud project could call the BigQuery Storage API v1beta1, with no announced shutdown date.",
+      "current_state": "BigQuery release notes, November 25, 2026, \"Deprecated\" (read 2026-11-26): \"The BigQuery Storage API v1beta1 is deprecated and will be shut down on August 31, 2027.\" Its first milestone restricts access to projects that recorded active usage from March through August 2026. \"After this date, calls to the v1beta1 endpoint will fail with a NOT_FOUND error.\" \"The v1 API is backward-compatible with v1beta1.\"",
+      "impact": "low",
+      "source_url": "https://docs.cloud.google.com/bigquery/docs/release-notes#November_25_2026",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-11-26",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "BigQuery Storage API v1beta1",
+      "announced_on": "2026-11-25"
     }
   ]
 }

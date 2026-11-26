@@ -10283,6 +10283,10 @@
     "/x402-services": {
       "hash": "68bde120be2c312f",
       "changed": "2026-11-25"
+    },
+    "/shutdowns/google-cloud-bigquery-2027-08-31-bigquery-storage-api-v1beta1": {
+      "hash": "e05bcb860c7ddc19",
+      "changed": "2026-11-26"
     }
   }
 }
