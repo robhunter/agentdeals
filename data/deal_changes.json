@@ -21413,7 +21413,7 @@
       "change_type": "product_deprecated",
       "date": "2027-03-01",
       "date_source": "vendor_page",
-      "summary": "Twist can be used until March 1, 2027, when it closes. Doist replaces it with Todoist Comms, part of Todoist. A workspace admin chooses when to move, and the move is one-way. Bots, integrations and scheduled threads do not move. Twist has no export tool, but the Twist CLI or the Twist MCP server can save threads and messages. Remaining workspace data is deleted two months later, on May 1.",
+      "summary": "Twist can be used until March 1, 2027, when it closes. Doist replaces it with Todoist Comms, part of Todoist. A workspace admin chooses when to move before then, and the move is one-way. Bots, integrations and scheduled threads do not move. Twist has no export tool, but the Twist CLI or the Twist MCP server can save threads and messages. Remaining workspace data is deleted two months later, on May 1.",
       "what_ends": "Twist",
       "listing_effect": "none",
       "previous_state": "Twist had a Free plan and an Unlimited plan at US$6 per user a month, with no announced end.",
