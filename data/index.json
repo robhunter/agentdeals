@@ -8441,9 +8441,9 @@
         "program": "Cloudflare for Startups"
       },
       "source_check": {
-        "checked": "2026-11-24",
-        "outcome": "unreadable",
-        "detail": "fetch failed"
+        "checked": "2026-11-25",
+        "outcome": "ok",
+        "detail": "the page names Cloudflare for Startups as \"cloudflare for startups\" and states \"$350,000\" and \"$10,000\" and \"$2,500\" and \"$5,000\""
       },
       "free_plan_excerpt": {
         "text": "Tier 3 $10k Get started with $10k in credits to build and launch your product, no minimum funding required. Criteria Bootstrapped or self-funded Under $1M raised Benefits Credits: $10k",
@@ -10620,7 +10620,7 @@
     {
       "vendor": "OpenAI",
       "category": "AI / ML",
-      "description": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. No GPT model is priced free. GPT prices per 1M tokens (Standard, short context): gpt-6.2-astra $8.00/$40.00; gpt-6.2-sol $2.00/$10.00; gpt-6-astra $10.00/$50.00; gpt-6.1-sol $2.00/$10.00; gpt-6.1-terra $1.00/$5.00; gpt-6-sol $2.00/$10.00; gpt-6-luna $0.10/$0.50; gpt-5.6-sol $4.00/$20.00; gpt-5.6-terra $2.00/$12.00; gpt-5.6-luna $0.20/$1.20. OpenAI's promotional pricing for gpt-5.6-sol is available until November 30, 2026. OpenAI still serves four older models until January 14, 2027, when it shuts them down: gpt-4o ($2.50 input and $10.00 output per 1M tokens), gpt-4o-mini ($0.15 input and $0.60 output), gpt-4.1 ($2.00 input and $8.00 output) and gpt-4.1-mini ($0.40 input and $1.60 output); gpt-6-luna is the named replacement for all four. Batch processing halves these prices. Flex processing halves them for all these models except gpt-6.2-astra and gpt-6.2-sol. Flex processing is in beta with limited model availability. gpt-6.2-astra cached input $0.40 per 1M tokens, against $8.00 uncached. gpt-6.2-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6-astra cached input $1.00 per 1M tokens, against $10.00 uncached. gpt-6.1-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6.1-terra cached input $0.05 per 1M tokens, against $1.00 uncached. gpt-6-luna cached input $0.01 per 1M tokens, against $0.10 uncached. Prompt caching is on by default. Cache writes cost 1.25× the input price for 30 minutes or 2.5× for 12 hours. Embeddings from $0.02 per 1M tokens. Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models. Since 2026-10-28, OpenAI's API docs say: \"Eligible ChatGPT Pro and Business subscriptions can claim free API credits as part of their subscription benefits.\" ChatGPT Plus, Go and Free plans do not get API credits. ChatGPT Pro gets monthly API credits: Pro ($100 tier) $100 a month, Pro ($200 tier) $200, Pro ($500 tier) $500. No API payment method is required with active free credits. Business gets $20 per paid Standard seat and $100 per paid Premium seat, pooled and capped at $500 per workspace a month.",
+      "description": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. No GPT model is priced free. GPT prices per 1M tokens (Standard, short context): gpt-6.2-astra $8.00/$40.00; gpt-6.2-sol $2.00/$10.00; gpt-6-astra $10.00/$50.00; gpt-6.1-sol $2.00/$10.00; gpt-6.1-terra $1.00/$5.00; gpt-6-sol $2.00/$10.00; gpt-6-luna $0.10/$0.50; gpt-5.6-terra $2.00/$12.00; gpt-5.6-luna $0.20/$1.20. Until November 30, 2026, gpt-5.6-sol is $4.00 per million input tokens and $20.00 per million output tokens, a promotional price; OpenAI has not said what gpt-5.6-sol costs from December 1, 2026. OpenAI still serves four older models until January 14, 2027, when it shuts them down: gpt-4o ($2.50 input and $10.00 output per 1M tokens), gpt-4o-mini ($0.15 input and $0.60 output), gpt-4.1 ($2.00 input and $8.00 output) and gpt-4.1-mini ($0.40 input and $1.60 output); gpt-6-luna is the named replacement for all four. Batch processing halves these prices. Flex processing halves them for all these models except gpt-6.2-astra and gpt-6.2-sol. Flex processing is in beta with limited model availability. gpt-6.2-astra cached input $0.40 per 1M tokens, against $8.00 uncached. gpt-6.2-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6-astra cached input $1.00 per 1M tokens, against $10.00 uncached. gpt-6.1-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6.1-terra cached input $0.05 per 1M tokens, against $1.00 uncached. gpt-6-luna cached input $0.01 per 1M tokens, against $0.10 uncached. Prompt caching is on by default. Cache writes cost 1.25× the input price for 30 minutes or 2.5× for 12 hours. Embeddings from $0.02 per 1M tokens. Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models. Since 2026-10-28, OpenAI's API docs say: \"Eligible ChatGPT Pro and Business subscriptions can claim free API credits as part of their subscription benefits.\" ChatGPT Plus, Go and Free plans do not get API credits. ChatGPT Pro gets monthly API credits: Pro ($100 tier) $100 a month, Pro ($200 tier) $200, Pro ($500 tier) $500. No API payment method is required with active free credits. Business gets $20 per paid Standard seat and $100 per paid Premium seat, pooled and capped at $500 per workspace a month.",
       "conditions": [
         {
           "text": "OpenAI does not use data sent to the API to train its models unless you opt in to share data.",
@@ -11551,7 +11551,7 @@
     {
       "vendor": "Cronitor",
       "category": "Monitoring",
-      "description": "Cron job and uptime monitoring — free Hacker plan: 5 monitors, 5-minute check frequency, email, Slack, and webhook alerts, 1 status page (50 subscribers), 12-month data retention, single user",
+      "description": "Cron job and uptime monitoring — free Hacker plan: 5 monitors, 5-minute check frequency, email and chat alerts (Slack, Discord, Teams, webhooks), 1 status page with 50 subscribers, 1 user, 100,000 web analytics and error events. No SMS or on-call integrations. 12-month data retention is a Business feature.",
       "tier": "Hacker",
       "url": "https://cronitor.io/pricing",
       "tags": [
@@ -11562,7 +11562,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-08-18",
+      "verifiedDate": "2026-11-25",
       "source_check": {
         "checked": "2026-11-22",
         "outcome": "ok",
@@ -19460,7 +19460,7 @@
     {
       "vendor": "Appetize",
       "category": "Testing",
-      "description": "Test your Android & iOS apps on this Cloud Based Android Phone / Tablets emulator and iPhone/iPad simulators directly in your browser. The free tier includes two concurrent session with 30 minutes of usage per month. No limit on app size.",
+      "description": "Appetize streams Android and iOS apps in the browser. Free: 1 user, 2 active devices, 30 minutes monthly, 3-minute session limit, throttled capacity. Starter is $59 a month billed annually ($708 a year): 3 active devices, 500 minutes then $0.06 a minute, no session limit.",
       "tier": "Free",
       "url": "https://appetize.io/pricing",
       "tags": [
@@ -19468,7 +19468,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-05",
+      "verifiedDate": "2026-11-25",
       "product_role": {
         "deployment_model": "hosted",
         "is_addon": false,
@@ -32371,20 +32371,38 @@
     {
       "vendor": "maptiler.com",
       "category": "Maps/Geolocation",
-      "description": "Vector maps, map services and SDKs for map visualization. Free vector tiles with weekly updates and four map styles.",
+      "description": "MapTiler Cloud's Free plan is $0 with no credit card, for testing, proofs of concept, prototypes, personal or non-commercial use. It includes 5,000 map sessions, 1,000 search sessions and 100,000 API requests a month, 5 custom map styles, one API key, and 5 GB of storage in one file. Maps on Free show the MapTiler logo. Flex, the first paid plan, is $30 a month.",
       "tier": "Free",
-      "url": "https://www.maptiler.com/cloud/",
+      "url": "https://www.maptiler.com/cloud/pricing/",
       "tags": [
         "maps",
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-12",
+      "verifiedDate": "2026-11-25",
       "source_check": {
-        "checked": "2026-11-23",
-        "outcome": "states_no_terms",
-        "detail": "the page names maptiler.com but states no amount, tier or rate we can read, and its markup carries no structured data"
-      }
+        "checked": "2026-11-25",
+        "outcome": "ok",
+        "detail": "the page names maptiler.com as \"maptiler\" and states \"$0\" and \"$30\" and \"$ 0\" and \"1 File Sessions 5k/month\""
+      },
+      "conditions": [
+        {
+          "text": "MapTiler offers its Free plan for testing, proofs of concept, prototypes, personal or non-commercial use.",
+          "quote": "Suitable for testing, PoC, prototyping, personal, or non-commercial use.",
+          "url": "https://www.maptiler.com/cloud/pricing/",
+          "read_on": "2026-11-25",
+          "rules_out": [
+            "commercial use"
+          ]
+        },
+        {
+          "text": "Maps served on the Free plan show the MapTiler logo.",
+          "quote": "MapTiler logo on the map",
+          "url": "https://www.maptiler.com/cloud/pricing/",
+          "read_on": "2026-11-25",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "nominatim.org",
@@ -33735,7 +33753,7 @@
     {
       "vendor": "Rybbit",
       "category": "Analytics",
-      "description": "Open-source and cookieless alternative to Google Analytics that is 10x more intuitive. Free plans has 3,000 monthly events.",
+      "description": "Open-source, cookieless web analytics. Self-hosting is free under AGPL v3.0 for personal or business use. Rybbit Cloud has no free plan, only a 7-day trial. Standard is $13 a month billed annually at 100,000 pageviews: up to 5 websites, 3 team members, custom events, funnels, goals, journeys, web vitals.",
       "tier": "Free",
       "url": "https://rybbit.com/",
       "tags": [
@@ -33743,7 +33761,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-22",
+      "verifiedDate": "2026-11-25",
       "source_check": {
         "checked": "2026-11-18",
         "outcome": "ok",
@@ -33752,12 +33770,7 @@
       "free_grounds": [
         "licence",
         "plan"
-      ],
-      "free_plan_excerpt": {
-        "text": "Start free trial for $0 Up to 5 websites Up to 3 team members Custom events Funnels Goals Journeys Web vitals",
-        "url": "https://rybbit.com/",
-        "read_on": "2026-11-18"
-      }
+      ]
     },
     {
       "vendor": "StatCounter",
@@ -37062,7 +37075,7 @@
     {
       "vendor": "Amazon Q Developer",
       "category": "AI Coding",
-      "description": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, 1,000 lines code transformation/month, 50 agentic requests/month, access to latest Claude models. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, IP indemnity). AWS will end support for the Amazon Q Developer IDE plugins on April 30, 2027, and points IDE users to Kiro.",
+      "description": "AWS blocked new Free Tier accounts and new subscriptions on May 15, 2026, and ends support for the Amazon Q Developer IDE plugins and paid subscriptions on April 30, 2027, pointing IDE users to Kiro. Existing Pro subscriptions, at $19 a user a month, keep the IDE plugins until then and can still add users. Amazon Q Developer in the AWS Console, documentation, mobile app and chat apps continues.",
       "tier": "Free",
       "url": "https://aws.amazon.com/q/developer/pricing/",
       "tags": [
@@ -37073,11 +37086,11 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-07-30",
+      "verifiedDate": "2026-11-25",
       "source_check": {
         "checked": "2026-11-22",
         "outcome": "ok",
-        "detail": "the page names Amazon Q Developer as \"amazon q developer\" and states \"$19\" and \"50 agentic requests per month\" and \"1,000 lines of code per month\""
+        "detail": "the page names Amazon Q Developer as \"amazon q developer\" and states \"$19\""
       },
       "conditions": [
         {
@@ -37086,12 +37099,7 @@
           "url": "https://aws.amazon.com/blogs/devops/amazon-q-developer-end-of-support-announcement/",
           "read_on": "2026-10-11"
         }
-      ],
-      "free_plan_excerpt": {
-        "text": "Free Tier: Advanced capabilities at zero cost Pro Tier: Expanded limits $19/mo. per user Summary Limited agentic requests per month Access latest Claude models Use in the IDE or CLI Everything included in the Free tier, with Increased limits of agentic requests Increased limits for Java and .NET app transformation Identity center support with admin dashboards and controls IP indemnity",
-        "url": "https://aws.amazon.com/q/developer/pricing/",
-        "read_on": "2026-11-22"
-      }
+      ]
     },
     {
       "vendor": "Cline",
@@ -38397,9 +38405,9 @@
     {
       "vendor": "LLM7.io",
       "category": "AI / ML",
-      "description": "LLM inference gateway. With a free token from dash.llm7.io: 1 request a second, 60 a minute, 250 an hour and 100,000 tokens per 24 hours, counting input and output tokens; LLM7 says free quotas may be reduced without notice. Free access covers turbo-tier models not marked usage-only, such as GLM-5.3-Flash and codestral-latest. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance. LLM7's limits page no longer lists limits for requests without a token. A text request without a token still worked on 2026-10-19.",
+      "description": "LLM inference gateway with an OpenAI-compatible API. Its live models list (api.llm7.io/v1/models, read 2026-11-25) puts three models in the turbo tier: codestral-latest, gpt-oss:20b and mistral-Nemo-Instruct-2407. The other models, GLM-5.3-Flash included, are pro tier, which LLM7's docs call paid, and nearly all are marked usage-based only. On 2026-11-25 a request with no token to codestral-latest worked, and one to glm-5.3-flash was refused with \"Missing API key\". LLM7 no longer publishes its free limits: the limits page, which gave 1 request a second, 60 a minute, 250 an hour and 100,000 tokens per 24 hours with a free token from dash.llm7.io, now answers 404.",
       "tier": "Free",
-      "url": "https://docs.llm7.io/limits",
+      "url": "https://docs.llm7.io/guides/models",
       "tags": [
         "ai",
         "ml",
@@ -38408,11 +38416,11 @@
         "gateway",
         "free tier"
       ],
-      "verifiedDate": "2026-10-31",
+      "verifiedDate": "2026-11-25",
       "source_check": {
-        "checked": "2026-11-22",
-        "outcome": "unreadable",
-        "detail": "HTTP 404"
+        "checked": "2026-11-25",
+        "outcome": "states_no_terms",
+        "detail": "the page names LLM7.io but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -39217,7 +39225,7 @@
     {
       "vendor": "Proton Pass",
       "category": "Password Managers",
-      "description": "Unlimited logins, notes, and devices. 10 hide-my-email aliases. Integrated 2FA/TOTP. Passkey support. Vault sharing. End-to-end encrypted. Web, browser extension, mobile, and desktop apps. No credit card storage or unlimited aliases on free.",
+      "description": "Proton Free costs $0 a month, no credit card required: unlimited logins, notes and credit cards; unlimited devices; 10 hide-my-email aliases; 1 GB storage; 1 user; 2 vaults shared with up to 2 people. Not included: integrated 2FA authenticator, sharing individual items, unlimited aliases.",
       "tier": "Free",
       "url": "https://proton.me/pass/pricing",
       "tags": [
@@ -39228,7 +39236,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-08-21",
+      "verifiedDate": "2026-11-25",
       "referral_program": {
         "available": true,
         "referrer_benefit": "$20 in Proton credit when they subscribe to a paid plan",

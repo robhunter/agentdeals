@@ -2346,8 +2346,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 127,
-      "table_figures_from_records": 126,
+      "table_figures": 125,
+      "table_figures_from_records": 124,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2356,8 +2356,8 @@
         },
         {
           "label": "What You Actually Get for Free",
-          "figures": 29,
-          "from_records": 28
+          "figures": 27,
+          "from_records": 26
         },
         {
           "label": "Upcoming Changes",

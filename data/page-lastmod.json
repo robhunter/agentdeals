@@ -10264,6 +10264,17 @@
     "/x402-services": {
       "hash": "68bde120be2c312f",
       "changed": "2026-11-25"
+    },
+    "/alternative-to/amazon-q-developer": {
+      "daily": true
+    },
+    "/shutdowns/amazon-q-developer-2027-04-30-amazon-q-developer-ide-plugins-and-paid-subscriptions": {
+      "hash": "f8cc0cebf88da3d9",
+      "changed": "2026-11-25"
+    },
+    "/shutdowns/instantdb-2027-08-31-instant-cloud": {
+      "hash": "9750cf1335da1215",
+      "changed": "2026-11-25"
     }
   }
 }
