@@ -21312,7 +21312,7 @@
       "vendor": "GitHub Copilot",
       "change_type": "product_deprecated",
       "date": "2026-11-16",
-      "summary": "GitHub Copilot keeps running. On November 16, 2026, GitHub deprecated three models across most Copilot experiences: Claude Opus 4.8 (GitHub's suggested alternative is Claude Opus 5.5), Claude Opus 5 (Claude Opus 5.5) and GPT-5.6 Terra (GPT-6.1 Sol or GPT-6 Luna). Claude Opus 4.8 stays available to individual Copilot subscribers on annual plans.",
+      "summary": "GitHub Copilot keeps running. On November 16, 2026, GitHub deprecated Claude Opus 4.8 (Claude Opus 5.5), Claude Opus 5 (Claude Opus 5.5) and GPT-5.6 Terra (GPT-6.1 Sol or GPT-6 Luna) across most Copilot experiences. Claude Opus 4.8 stays available to individual Copilot subscribers on annual plans.",
       "previous_state": "GitHub Copilot offered Claude Opus 4.8, Claude Opus 5 and GPT-5.6 Terra with no announced end.",
       "current_state": "GitHub's changelog (posted 2026-11-16, read 2026-11-26): \"As of today, November 16, 2026, we have deprecated the following models across most GitHub Copilot experiences (including Copilot Chat, inline edits, ask and agent modes, and code completions). Note that Claude Opus 4.8 is still available to individual GitHub Copilot subscribers on annual plans.\" \"Claude Opus 5 has been removed from the model picker but remains available for runtime refusal fallback through existing authorized access.\"",
       "impact": "low",
