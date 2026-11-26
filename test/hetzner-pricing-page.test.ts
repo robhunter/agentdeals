@@ -533,7 +533,7 @@ describe("every page that states a Hetzner entry price states the same one", () 
         assert.doesNotMatch(text, asEntry, `${page} offers ${plan.sku} as an entry price`);
       }
       if (/cheapest plan you can order|cheapest orderable plan/.test(text)) {
-        assert.match(text, new RegExp(`${cheapest.sku}[^.]{0,40}€${cheapest.eur.toFixed(2)}`), page);
+        assert.match(text, new RegExp(`${cheapest.sku}[^.]{0,40}€${cheapest.helsinki!.eur.toFixed(2)}`), page);
       }
     });
   }
@@ -555,7 +555,7 @@ describe("every page that states a Hetzner entry price states the same one", () 
 
   it("composes that price from the plan table rather than from a literal", () => {
     const cheapest = cheapestOrderableHetznerPlan();
-    assert.equal(hetznerEntryPriceClause(), `${cheapest.sku} at €${cheapest.eur.toFixed(2)}/mo (${cheapest.vcpu} vCPU, ${cheapest.ram} GB)`);
+    assert.equal(hetznerEntryPriceClause(), `${cheapest.sku} at €${cheapest.helsinki!.eur.toFixed(2)}/mo in Helsinki (€${cheapest.eur.toFixed(2)}/mo in Falkenstein and Nuremberg; ${cheapest.vcpu} vCPU, ${cheapest.ram} GB)`);
   });
 });
 

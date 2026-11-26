@@ -1,6 +1,7 @@
 import { HETZNER_PLAN_AVAILABILITY_READ_ON, HETZNER_PLAN_TABLE_READ_ON } from "./page-reviews.js";
 
 export const HETZNER_PRICES_READ = HETZNER_PLAN_TABLE_READ_ON;
+export const HETZNER_HELSINKI_PRICES_READ = "2026-11-26";
 export const HETZNER_AVAILABILITY_READ = HETZNER_PLAN_AVAILABILITY_READ_ON;
 export const HETZNER_PRICE_SOURCE = "https://www.hetzner.com/cloud/";
 export const HETZNER_PROMO_CODE_PAGE = "https://www.hetzner.com/promo-code/";
@@ -240,7 +241,10 @@ export function mostRamForTheMoneyParagraph(cheaper: CheaperVpsInGermany = CHEAP
 
 export function hetznerEntryPriceClause(): string {
   const p = cheapestOrderableHetznerPlan();
-  return `${p.sku} at €${p.eur.toFixed(2)}/mo (${p.vcpu} vCPU, ${p.ram} GB)`;
+  const helsinki = p.helsinki;
+  return helsinki && helsinki.eur < p.eur
+    ? `${p.sku} at €${helsinki.eur.toFixed(2)}/mo in Helsinki (€${p.eur.toFixed(2)}/mo in Falkenstein and Nuremberg; ${p.vcpu} vCPU, ${p.ram} GB)`
+    : `${p.sku} at €${p.eur.toFixed(2)}/mo (${p.vcpu} vCPU, ${p.ram} GB)`;
 }
 
 export function unorderableHetznerPlans(): HetznerPlan[] {

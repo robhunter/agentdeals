@@ -73,7 +73,7 @@ import { MISTRAL_PRICES_PATH, MISTRAL_PRICES_SLUG, readMistralPrices, type Mistr
 import { archiveCaptureDate, archivedAddress, type ColumnTable } from "./guide-data.js";
 import { MODEL_BELIEFS_CLOSING, MODEL_BELIEFS_HEADING, MODEL_BELIEFS_PATH, MODEL_BELIEFS_RERUN_SENTENCE, MODEL_BELIEFS_SLUG, MODEL_BELIEFS_TITLE, MOSTLY_OLD_ANSWERS, QUOTED_MODEL_BELIEFS_CLASS, answersFor, answersPerFact, answersPerModel, changedLabel, factsByOldAnswers, findingOf, introOf, metaDescriptionOf, methodOf, modelsByOldAnswers, modelsMostlyOld, numberWord, oldAnswersFrom, readModelBeliefs, testedOnOf, type ModelBeliefs } from "./model-beliefs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
-import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_COST_OPTIMIZED_PAGE, HETZNER_PRICE_ADJUSTMENT_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableEuPlanForEachMemorySizeSentence, cheapestOrderableHetznerPlan, cheaperVpsInGermanyParagraph, mostRamForTheMoneyParagraph, costOptimizedLineNobodyCanOrder, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
+import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_HELSINKI_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_COST_OPTIMIZED_PAGE, HETZNER_PRICE_ADJUSTMENT_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableEuPlanForEachMemorySizeSentence, cheapestOrderableHetznerPlan, cheaperVpsInGermanyParagraph, mostRamForTheMoneyParagraph, costOptimizedLineNobodyCanOrder, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isCancelledAnnouncement, theEventNeverHappened, cancelledOn, standingOf as changeStandingOf, isNoLongerInForce, resolutionOf, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
@@ -7132,7 +7132,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     slug: "hetzner-alternatives",
     title: "Hetzner Alternatives After April 2026 Price Increase — Budget Cloud Options",
     metaDesc: "Hetzner raised prices twice in 2026 and its whole Cost-Optimized line is unavailable. Compare free-tier alternatives: DigitalOcean, Oracle Cloud, Render, Railway, Fly.io, Cloudflare Workers, Google Cloud.",
-    contextHtml: `<p>Hetzner raised prices twice in 2026. The April 1 round applied to <strong>all regions and all customers</strong>; the June 15 round applies to <strong>new orders and rescales only</strong>. All ${unorderableHetznerPlans().length} Cost-Optimized plans are now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from hetzner.com on ${HETZNER_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a>.</p>
+    contextHtml: `<p>Hetzner raised prices twice in 2026. The April 1 round applied to <strong>all regions and all customers</strong>; the June 15 round applies to <strong>new orders and rescales only</strong>. All ${unorderableHetznerPlans().length} Cost-Optimized plans are now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from Hetzner’s price API on ${HETZNER_HELSINKI_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a>.</p>
       <p>If you're looking for budget-friendly alternatives with generous free tiers or credits, here are the best options across VPS/cloud providers, managed platforms, and serverless offerings.</p>`,
     tag: "hetzner-alternative",
     primaryVendor: "Hetzner",
@@ -11222,7 +11222,7 @@ ${buildCards(startupCredits)}
 
   <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
     <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.5rem">Hetzner raised prices twice in 2026, and its cheapest line is unavailable</div>
-    <p style="margin:0;font-size:.9rem">Hetzner Cloud prices rose on April 1 for all customers and again on June 15 for new orders and rescales. Every Cost-Optimized plan is now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from hetzner.com on ${HETZNER_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a> or the <a href="/hetzner-alternatives">Hetzner Alternatives</a> guide.</p>
+    <p style="margin:0;font-size:.9rem">Hetzner Cloud prices rose on April 1 for all customers and again on June 15 for new orders and rescales. Every Cost-Optimized plan is now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from Hetzner’s price API on ${HETZNER_HELSINKI_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a> or the <a href="/hetzner-alternatives">Hetzner Alternatives</a> guide.</p>
   </div>
 
   <h2>Which Free Hosting Should I Use?</h2>
@@ -19384,7 +19384,7 @@ ${upgradeTable}
 
 function buildHetznerPricing2026Page(): string {
   const title = "Hetzner Cloud Pricing After the April and June 2026 Adjustments";
-  const metaDesc = `Hetzner raised cloud prices twice in 2026 — April 1 for all customers, June 15 for new orders and rescales. Current prices for every CX, CAX, CPX and CCX plan, read from Hetzner's price API on ${HETZNER_PRICES_READ}, with the Cost-Optimized line marked unavailable.`;
+  const metaDesc = `Hetzner raised cloud prices twice in 2026 — April 1 for all customers, June 15 for new orders and rescales. CX, CAX, CPX and CCX prices from Hetzner's API, including Helsinki's November reduction, with the Cost-Optimized line marked unavailable.`;
   const slug = "hetzner-pricing-2026";
   const pubDate = "2026-03-25";
 
@@ -19552,7 +19552,7 @@ ${globalNavCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Hetzner 2026</div>
   <h1>Hetzner Cloud Pricing After the April and June 2026 Adjustments</h1>
-  <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/hetzner-pricing-2026", offers.length)} &middot; Plan prices read from Hetzner's price API on ${HETZNER_PRICES_READ}</p>
+  <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/hetzner-pricing-2026", offers.length)} &middot; Plan prices read from Hetzner's price API on ${HETZNER_PRICES_READ}; Helsinki CPX and CCX prices read ${HETZNER_HELSINKI_PRICES_READ}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${eur(helsinkiEntry.eur)}</div><div class="stat-label">Cheapest plan you can order (${escHtmlServer(cheapestOrderable.sku)}, Helsinki; ${eur(cheapestOrderable.eur)} in Falkenstein and Nuremberg)</div></div>

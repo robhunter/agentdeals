@@ -1130,7 +1130,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 163,
+      "table_figures": 164,
       "table_figures_from_records": 116,
       "tables": [
         {
@@ -1145,7 +1145,7 @@
         },
         {
           "label": "DigitalOcean vs Alternatives",
-          "figures": 124,
+          "figures": 125,
           "from_records": 108
         },
         {
@@ -2128,7 +2128,7 @@
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [
-        "CPX02",
+        "CPX02, Helsinki; €6.49 in Falkenstein and Nuremberg",
         "CX23, unavailable"
       ],
       "reviewed_at": "2026-10-31",
@@ -2138,12 +2138,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 153,
+      "table_figures": 180,
       "table_figures_from_records": 32,
       "tables": [
         {
           "label": "1. Every Cloud Plan, Priced Today",
-          "figures": 78,
+          "figures": 104,
           "from_records": 0
         },
         {
@@ -2153,7 +2153,7 @@
         },
         {
           "label": "6. Alternatives Comparison",
-          "figures": 65,
+          "figures": 66,
           "from_records": 32
         }
       ],
