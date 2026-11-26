@@ -22,11 +22,11 @@
       "changed": "2026-11-26"
     },
     "/ai-free-tiers": {
-      "hash": "5b9662826ae87649",
+      "hash": "0b8afa43423a7bc4",
       "changed": "2026-11-26"
     },
     "/ai-ml-alternatives": {
-      "hash": "23fe0a5d0268a148",
+      "hash": "5decefee608bc467",
       "changed": "2026-11-26"
     },
     "/alternative-to": {
@@ -1114,7 +1114,7 @@
       "changed": "2026-11-26"
     },
     "/category/ai-ml": {
-      "hash": "5be1b15aa7ba9ac8",
+      "hash": "44c8bc24e5dd5b99",
       "changed": "2026-11-26"
     },
     "/category/analytics": {
@@ -2748,7 +2748,7 @@
       "changed": "2026-11-25"
     },
     "/developers": {
-      "hash": "48893b68944bea97",
+      "hash": "18bf665410108014",
       "changed": "2026-11-26"
     },
     "/digest/2022-w48": {
@@ -3000,8 +3000,8 @@
       "changed": "2026-11-26"
     },
     "/digest/2026-w19": {
-      "hash": "a701f37f006cf31b",
-      "changed": "2026-11-16"
+      "hash": "1c7fce734da62381",
+      "changed": "2026-11-26"
     },
     "/digest/2026-w20": {
       "hash": "484b3fa4f3b8ac69",
@@ -3116,7 +3116,7 @@
       "changed": "2026-11-26"
     },
     "/digest/2026-w48": {
-      "hash": "0f418915f822ff48",
+      "hash": "21b68ca575783e4d",
       "changed": "2026-11-26"
     },
     "/digest/2026-w49": {
@@ -3128,8 +3128,8 @@
       "changed": "2026-11-25"
     },
     "/digest/2026-w51": {
-      "hash": "45625d762124aa83",
-      "changed": "2026-11-19"
+      "hash": "26d8b055413a36c2",
+      "changed": "2026-11-26"
     },
     "/digest/2026-w52": {
       "hash": "53101d2d2c774c1b",
@@ -3140,8 +3140,8 @@
       "changed": "2026-11-26"
     },
     "/digest/2027-w01": {
-      "hash": "0de5e4a3c84720b5",
-      "changed": "2026-11-16"
+      "hash": "449a7553f94c2add",
+      "changed": "2026-11-26"
     },
     "/digest/2027-w02": {
       "hash": "2e32e1ebd2fbfe40",
@@ -3256,7 +3256,7 @@
       "changed": "2026-11-16"
     },
     "/digest/archive": {
-      "hash": "6fe1673422725f1e",
+      "hash": "b7aa9506b17120a5",
       "changed": "2026-11-26"
     },
     "/digitalocean-free-tier-2026": {
@@ -3341,7 +3341,7 @@
       "changed": "2026-11-26"
     },
     "/free-llm-apis": {
-      "hash": "9444238767622ab2",
+      "hash": "97d15c42024164f6",
       "changed": "2026-11-26"
     },
     "/free-nextjs-stack": {
@@ -3361,7 +3361,7 @@
       "changed": "2026-11-12"
     },
     "/free-tier-risk": {
-      "hash": "9c2577ef77b95874",
+      "hash": "d09ca4f614884410",
       "changed": "2026-11-26"
     },
     "/free-tier-tracker": {
@@ -3399,8 +3399,8 @@
       "changed": "2026-11-19"
     },
     "/groq-vs-mistral-ai": {
-      "hash": "42dc72b731225342",
-      "changed": "2026-11-23"
+      "hash": "fc294bfc3f946167",
+      "changed": "2026-11-26"
     },
     "/guides": {
       "hash": "9920f95c11e72fdd",
@@ -3451,7 +3451,7 @@
       "changed": "2026-11-26"
     },
     "/llm-api-pricing": {
-      "hash": "a2c858e028a45d99",
+      "hash": "d8011978100b446f",
       "changed": "2026-11-26"
     },
     "/localstack-alternatives": {
@@ -3459,8 +3459,8 @@
       "changed": "2026-11-25"
     },
     "/mistral-api-pricing-2026": {
-      "hash": "61eba5b848bb82eb",
-      "changed": "2026-11-21"
+      "hash": "9e81a356b7c88f48",
+      "changed": "2026-11-26"
     },
     "/mongodb-alternatives": {
       "hash": "2bfc527f7c9c41e2",
@@ -3487,16 +3487,16 @@
       "changed": "2026-11-26"
     },
     "/openai-assistants-alternatives": {
-      "hash": "eed0d6ff3eb555bd",
-      "changed": "2026-11-25"
+      "hash": "172eb0cffec315ee",
+      "changed": "2026-11-26"
     },
     "/openai-assistants-migration": {
-      "hash": "93a0ec3a0eef95ac",
-      "changed": "2026-11-25"
+      "hash": "1f346c4373fd1c27",
+      "changed": "2026-11-26"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "dc577108b4cf66c9",
-      "changed": "2026-11-25"
+      "hash": "916f62a381d91d5f",
+      "changed": "2026-11-26"
     },
     "/postman-alternatives": {
       "hash": "85f7d3216b98334d",
@@ -3542,7 +3542,7 @@
       "changed": "2026-11-12"
     },
     "/reports": {
-      "hash": "c0f46d0f00dc1b86",
+      "hash": "c3a4051fe8d59e89",
       "changed": "2026-11-26"
     },
     "/reports/2022-11": {
@@ -3677,11 +3677,11 @@
       "daily": true
     },
     "/reports/2026-12": {
-      "hash": "16078def2f0294fd",
-      "changed": "2026-11-25"
+      "hash": "43cabb10b3fbe7df",
+      "changed": "2026-11-26"
     },
     "/reports/2027-01": {
-      "hash": "76d03f12c020d6be",
+      "hash": "6216bfb389e5aae4",
       "changed": "2026-11-26"
     },
     "/reports/2027-02": {
@@ -4239,11 +4239,11 @@
       "changed": "2026-11-21"
     },
     "/stability": {
-      "hash": "ece7c76fa3ee69f8",
+      "hash": "e7ebc4efe2bb6070",
       "changed": "2026-11-26"
     },
     "/stack-check": {
-      "hash": "65d32e9d2859fd1e",
+      "hash": "21a6505e71ff6138",
       "changed": "2026-11-26"
     },
     "/stacks": {
@@ -4275,7 +4275,7 @@
       "changed": "2026-11-26"
     },
     "/state-of-free-tiers": {
-      "hash": "e0594bf4bdfb1180",
+      "hash": "3b285a1c8aa5f897",
       "changed": "2026-11-26"
     },
     "/storage-alternatives": {
