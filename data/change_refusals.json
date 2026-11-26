@@ -2380,13 +2380,13 @@
       "vendor": "CMYK Pantone",
       "change_type": "rebranded",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-11-05 (page_does_not_name_vendor) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The stored deal describes a free CMYK-to-Pantone converter from 'CMYK Pantone', but the current page is for 'Color Mapper', a different product/brand offering a broader free color toolkit. The specific Pantone conversion feature is not mentioned; the page only lists converters between RGB, CMYK, HEX, HSL, and HSV.",
+      "detail": "the reading of this page refused on 2026-11-12 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal is for 'CMYK Pantone' but the current page is for 'Color Mapper', a different product/brand offering a free browser-based color toolkit with no signup. The specific CMYK-to-Pantone conversion tool described in the stored deal is not present; the page instead offers an 'RGB to Spot Color Converter' that finds closest colors in its own spot-color reference set.",
       "previous_state": "Easily convert CMYK values to the closest Pantone colors and other color models in seconds for free.",
-      "current_state": "Color Mapper is a free, no-signup browser-based color toolkit including a random color generator, palette generator, color wheel, gradient generator, WCAG contrast checker, print gamut checker, color comparator, tint and shade scale builder, image palette extractor, color blindness simulator, and 18 converters between RGB, CMYK, HEX, HSL, and HSV. Pantone conversion is not mentioned.",
+      "current_state": "Color Mapper is a free color toolkit with no signup required; all tools run in the browser, including 18 format converters between RGB, CMYK, HEX, HSL, and HSV, plus an RGB to Spot Color Converter that finds closest colors in the site's own spot-color reference set.",
       "source_url": "https://www.cmyktopantone.com/",
       "category": "Design",
-      "refused_date": "2026-11-12"
+      "refused_date": "2026-11-26"
     },
     {
       "vendor": "cocalc.com",
@@ -2999,6 +2999,18 @@
       "source_url": "https://www.crypteron.com/pricing",
       "category": "Security",
       "refused_date": "2026-11-04"
+    },
+    {
+      "vendor": "crypteron.com",
+      "change_type": "restriction",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-11-04 (no_terms_to_narrow) stated the same 7 figures, so the page showed these terms before the date this record gives",
+      "summary": "The Community plan is now described as free encryption and key management for only 3 months, rather than an ongoing free tier.",
+      "previous_state": "Cloud-first, developer-friendly security platform prevents data breaches in .NET and Java applications",
+      "current_state": "Community is FREE encryption and key management for 3 months, Development Only, with AES-128 Encryption, No Support, 1 Security Partition, 1 Access Control Rule, and 1 App per plan at $0 per month or $0 per year.",
+      "source_url": "https://www.crypteron.com/pricing",
+      "category": "Security",
+      "refused_date": "2026-11-26"
     },
     {
       "vendor": "Crystallize",
@@ -5366,6 +5378,18 @@
       "refused_date": "2026-10-15"
     },
     {
+      "vendor": "Google Content API for Shopping",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-15 (no_price_signal) claimed the same change, product_deprecated, against the same stored description",
+      "summary": "The page confirms the Content API for Shopping was sunset on August 18, 2026, with progressive errors starting September 1, 2026, and directs developers to migrate to the Merchant API. The stored info's sunset date matches, but the page adds that requests will experience progressive errors starting September 1, 2026, and offers an extension request form.",
+      "previous_state": "Product data management API for Google Merchant Center. Sunset on 2026-08-18. Its successor, Merchant API, has been generally available since July 2025. Free to use with a Google Merchant Center account. Provided product listing, inventory management, and order management endpoints. Developers must migrate to Merchant API before the sunset date.",
+      "current_state": "Content API for Shopping was sunset on August 18, 2026. Starting September 1, 2026, requests will experience progressive errors. Users should review the Content API Sunset guide and follow the Merchant API migration guide; those needing more time can request an extension via the Content API for Shopping extension request form.",
+      "source_url": "https://developers.google.com/shopping-content/guides/quickstart",
+      "category": "API Development",
+      "refused_date": "2026-11-26"
+    },
+    {
       "vendor": "Google Drive",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -6821,6 +6845,18 @@
       "source_url": "https://katalon.com",
       "category": "Testing",
       "refused_date": "2026-10-11"
+    },
+    {
+      "vendor": "KeePassXC",
+      "change_type": "record_corrected",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "Stored info says GPLv2+ license, but the current page states the source code is under GPLv3.",
+      "previous_state": "Fully free and open-source (GPLv2+). Unlimited entries. Local encrypted database (AES-256, ChaCha20). TOTP support. Browser integration. SSH agent. YubiKey support. No built-in cloud sync. Cross-platform.",
+      "current_state": "Free and open source; source code is completely open source under the GPLv3 license; no cloud, no ads, no subscriptions; offline encrypted file stored locally.",
+      "source_url": "https://keepassxc.org",
+      "category": "Password Managers",
+      "refused_date": "2026-11-26"
     },
     {
       "vendor": "Keploy",
@@ -12145,6 +12181,18 @@
       "collided_with": "Stream|pricing_restructured|2026-09-12|https://getstream.io/maker-account/"
     },
     {
+      "vendor": "StreamBackdrops",
+      "change_type": "rebranded",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names StreamBackdrops and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The vendor has been rebranded from StreamBackdrops to MeetBackdrops; the free sample offer (no signup) and HD editions from $4.99 remain, but the brand name and site identity changed.",
+      "previous_state": "HD editions are available from $4.99. Free samples are available with no signup.",
+      "current_state": "MeetBackdrops offers free samples with no signup, and HD editions from $4.99 (2912×1632, built for recordings, editing & wallpaper).",
+      "source_url": "https://meetbackdrops.com/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-11-26"
+    },
+    {
       "vendor": "Stripe Atlas",
       "change_type": "record_corrected",
       "reason": "confirmed_unchanged",
@@ -12241,6 +12289,18 @@
       "source_url": "https://supportivekoala.com/",
       "category": "Dev Utilities",
       "refused_date": "2026-10-16"
+    },
+    {
+      "vendor": "Supportivekoala",
+      "change_type": "product_deprecated",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-16 (page_does_not_name_vendor) claimed the same change, product_deprecated, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The domain now serves an unrelated Indonesian online gambling site (QQEMAS) instead of Supportivekoala; the product is gone and no free tier or image-generation service exists.",
+      "previous_state": "There is no free tier: supportivekoala.com no longer serves the product. Checked 2026-09-01, the domain redirects to buyingpropertysingapore.com, which serves an online gambling site, so the expired domain has been taken over by an unrelated party. The former offer was template-based image autogeneration with 50 images per month on the free plan.",
+      "current_state": "The page is an Indonesian online gambling site called QQEMAS selling a 'QQEMAS - Gerai Situs QQ Online Permainan Penuh Jackpot Hari Ini' product for Rp. 10.000, with login/register links and no mention of Supportivekoala or any image-generation service.",
+      "source_url": "https://supportivekoala.com/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-11-26"
     },
     {
       "vendor": "SuprSend",
@@ -12487,6 +12547,18 @@
     {
       "vendor": "teamwork.com",
       "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-08 (repeats_a_refused_reading) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free plan is no longer shown on the pricing page; the page now lists paid plans starting at €9.99/user/month (Basics), €24.99/user/month (Accelerate), and custom pricing for Optimize and Enterprise, with a 14-day free trial instead of a free tier.",
+      "previous_state": "Project management — 5 users, 2 projects on free plan. Task lists, milestones, time tracking, file storage, messages, Gantt chart view, board view",
+      "current_state": "Pricing page lists Basics at €9.99/user/month billed yearly, Accelerate at €24.99/user/month billed yearly, Optimize with custom pricing, and Enterprise with custom pricing; a 14-day free trial with no credit card required is offered.",
+      "source_url": "https://teamwork.com/",
+      "category": "Project Management",
+      "refused_date": "2026-11-26"
+    },
+    {
+      "vendor": "teamwork.com",
+      "change_type": "free_tier_removed",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-09-20 (no_price_signal) stated the same figure, so the page showed these terms before the date this record gives",
       "summary": "The page no longer mentions a free plan with 5 users and 2 projects. It focuses on a 14-day free trial and emphasizes paid plans with features like AI-powered automation, resourcing, and profitability tracking.",
@@ -12592,6 +12664,18 @@
       "source_url": "https://testingbot.com/",
       "category": "Testing",
       "refused_date": "2026-09-17"
+    },
+    {
+      "vendor": "Testspace.com",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-11-04 (unquantified_limit) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now specifies 200 sessions and unlimited public projects for open source GitHub personal accounts, whereas the stored deal info said it accounts for 450 monthly results.",
+      "previous_state": "A Dashboard for publishing automated test results and a Framework for implementing manual tests as code using GitHub. The service is [free for Open Source](https://github.com/marketplace/testspace-com) and accounts for 450 monthly results.",
+      "current_state": "Free $0/month for open source GitHub personal accounts with unlimited public projects and 200 sessions.",
+      "source_url": "https://testspace.com/pricing",
+      "category": "Testing",
+      "refused_date": "2026-11-26"
     },
     {
       "vendor": "Testspace.com",
@@ -14038,6 +14122,18 @@
       "source_url": "https://you.com/pricing",
       "category": "AI / ML",
       "refused_date": "2026-10-21"
+    },
+    {
+      "vendor": "You.com",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-21 (confirmed_unchanged) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier's keyless MCP access is still described as 100 queries/day with no API key or account, but the page no longer mentions the $100 sign-up credit for new API accounts; instead it advertises a $10 free credit (2,000 searches) on the Web Search API. The stored description's $100 credit and the 'no page says it renews or expires' detail are not supported by the current page.",
+      "previous_state": "Web Search API for AI agents. 100 free queries a day with no API key or account through the keyless MCP profile (api.you.com/mcp?profile=free), limited to the you-search and you-discover tools. New API accounts also get a $100 sign-up credit with no credit card required; no page says it renews or expires. Then pay as you go with no minimums: Web Search API $5.00 per 1,000 calls with up to 100 results per call, live page extraction $1.00 per 1,000 pages, at 10 requests a second on self-serve accounts.",
+      "current_state": "Free tier: no API key, no account, no credit card, 100 Web Search API queries/day via MCP. Pay-as-you-go Web Search API is $5/1k calls with no minimums; the page advertises a $10 free credit = 2,000 searches. Extract API is $0.90/1k URLs (Lite) plus $0.50/1k PDF pages for Standard.",
+      "source_url": "https://you.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-11-26"
     },
     {
       "vendor": "Zapier",
