@@ -1169,7 +1169,7 @@ describe("the day /hetzner-pricing-2026 says Hetzner's prices were read", () => 
     const text = visible(page);
     const description = page.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "";
     assert.ok(text.includes(`Plan prices read from Hetzner's price API on ${SCRATCH_DAY}`), "byline");
-    assert.ok(description.includes(`read from Hetzner's price API on ${SCRATCH_DAY}`), description);
+    assert.ok(description.includes(`Plan prices from Hetzner's API, read ${SCRATCH_DAY}; Helsinki CPX and CCX prices read 2026-11-26`), description);
     assert.ok(text.includes(`with the monthly price read from Hetzner's price API on ${SCRATCH_DAY} (Helsinki CPX and CCX prices read on 2026-11-26) and the availability hetzner.com showed on ${HETZNER_AVAILABILITY_READ}.`), "section 1");
     assert.ok(text.includes(`These prices were read from Hetzner's price API on ${SCRATCH_DAY}.`), "section 1's dedicated-server prices");
     assert.ok(text.includes(`Plan prices in section 1 were read from Hetzner's price API on ${SCRATCH_DAY}`), "methodology");

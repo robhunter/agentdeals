@@ -19384,7 +19384,7 @@ ${upgradeTable}
 
 function buildHetznerPricing2026Page(): string {
   const title = "Hetzner Cloud Pricing After the April and June 2026 Adjustments";
-  const metaDesc = `Hetzner raised cloud prices twice in 2026 — April 1 for all customers, June 15 for new orders and rescales. CX, CAX, CPX and CCX prices from Hetzner's API, including Helsinki's November reduction, with the Cost-Optimized line marked unavailable.`;
+  const metaDesc = `Hetzner raised cloud prices twice in 2026 — April 1 for all customers, June 15 for new orders and rescales. Plan prices from Hetzner's API, read ${HETZNER_PRICES_READ}; Helsinki CPX and CCX prices read ${HETZNER_HELSINKI_PRICES_READ}. Cost-Optimized plans are unavailable.`;
   const slug = "hetzner-pricing-2026";
   const pubDate = "2026-03-25";
 
