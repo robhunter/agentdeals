@@ -21357,6 +21357,23 @@
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-11-26"
+    },
+    {
+      "vendor": "Together AI",
+      "change_type": "product_deprecated",
+      "date": "2026-12-09",
+      "summary": "The Together AI API keeps running. deepseek-ai/DeepSeek-V4-Pro-0813, thinkingmachines/Inkling, openai/gpt-oss-120b and together/Tev1-4B-experimental can be called on serverless inference until December 9, 2026, when Together removes them. Together recommends deepseek-ai/DeepSeek-V4.1-Flash-1017 for DeepSeek-V4-Pro-0813, thinkingmachines/Inkling-2-Small for Inkling, and zai-org/GLM-5.3-Flash for gpt-oss-120b. Tev1-4B-experimental has no listed replacement. DeepSeek-V4-Pro-0813, Inkling and gpt-oss-120b also run on dedicated endpoints.",
+      "previous_state": "The four models could be called on Together's serverless inference at per-token rates. On 2026-11-11 Together's deprecations page listed thinkingmachines/Inkling for removal on 2026-11-06, with meta-models/Muse-Spark-Open-816B-A42B as the replacement.",
+      "current_state": "Together's deprecations page (\"Scheduled deprecations\", read 2026-11-26): \"The following models are deprecated and will be removed from serverless inference on the date listed.\" It lists 2026-12-09 for all four models, with recommended replacements for three. The rows were added between our reads of 2026-11-25 and 2026-11-26.",
+      "impact": "low",
+      "source_url": "https://docs.together.ai/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-26",
+      "date_source": "vendor_page",
+      "listing_effect": "none",
+      "what_ends": "serverless access to deepseek-ai/DeepSeek-V4-Pro-0813, thinkingmachines/Inkling, openai/gpt-oss-120b and together/Tev1-4B-experimental",
+      "announced_on": "2026-11-25"
     }
   ]
 }
