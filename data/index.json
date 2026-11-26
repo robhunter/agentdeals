@@ -10620,7 +10620,7 @@
     {
       "vendor": "OpenAI",
       "category": "AI / ML",
-      "description": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. No GPT model is priced free. GPT prices per 1M tokens (Standard, short context): gpt-6.2-astra $8.00/$40.00; gpt-6.2-sol $2.00/$10.00; gpt-6-astra $10.00/$50.00; gpt-6.1-sol $2.00/$10.00; gpt-6.1-terra $1.00/$5.00; gpt-6-sol $2.00/$10.00; gpt-6-luna $0.10/$0.50; gpt-5.6-sol $4.00/$20.00; gpt-5.6-terra $2.00/$12.00; gpt-5.6-luna $0.20/$1.20. OpenAI's promotional pricing for gpt-5.6-sol is available until November 30, 2026. OpenAI still serves four older models until January 14, 2027, when it shuts them down: gpt-4o ($2.50 input and $10.00 output per 1M tokens), gpt-4o-mini ($0.15 input and $0.60 output), gpt-4.1 ($2.00 input and $8.00 output) and gpt-4.1-mini ($0.40 input and $1.60 output); gpt-6-luna is the named replacement for all four. Batch processing halves these prices. Flex processing halves them for all these models except gpt-6.2-astra and gpt-6.2-sol. Flex processing is in beta with limited model availability. gpt-6.2-astra cached input $0.40 per 1M tokens, against $8.00 uncached. gpt-6.2-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6-astra cached input $1.00 per 1M tokens, against $10.00 uncached. gpt-6.1-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6.1-terra cached input $0.05 per 1M tokens, against $1.00 uncached. gpt-6-luna cached input $0.01 per 1M tokens, against $0.10 uncached. Prompt caching is on by default. Cache writes cost 1.25× the input price for 30 minutes or 2.5× for 12 hours. Embeddings from $0.02 per 1M tokens. Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models. Since 2026-10-28, OpenAI's API docs say: \"Eligible ChatGPT Pro and Business subscriptions can claim free API credits as part of their subscription benefits.\" ChatGPT Plus, Go and Free plans do not get API credits. ChatGPT Pro gets monthly API credits: Pro ($100 tier) $100 a month, Pro ($200 tier) $200, Pro ($500 tier) $500. No API payment method is required with active free credits. Business gets $20 per paid Standard seat and $100 per paid Premium seat, pooled and capped at $500 per workspace a month.",
+      "description": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. No GPT model is priced free. GPT prices per 1M tokens (Standard, short context): gpt-6.2-astra $8.00/$40.00; gpt-6.2-sol $2.00/$10.00; gpt-6-astra $10.00/$50.00; gpt-6.1-sol $2.00/$10.00; gpt-6.1-terra $1.00/$5.00; gpt-6-sol $2.00/$10.00; gpt-6-luna $0.10/$0.50; gpt-5.6-terra $2.00/$12.00; gpt-5.6-luna $0.20/$1.20. Until November 30, 2026, gpt-5.6-sol is $4.00 per million input tokens and $20.00 per million output tokens, a promotional price; OpenAI has not said what gpt-5.6-sol costs from December 1, 2026. OpenAI still serves four older models until January 14, 2027, when it shuts them down: gpt-4o ($2.50 input and $10.00 output per 1M tokens), gpt-4o-mini ($0.15 input and $0.60 output), gpt-4.1 ($2.00 input and $8.00 output) and gpt-4.1-mini ($0.40 input and $1.60 output); gpt-6-luna is the named replacement for all four. Batch processing halves these prices. Flex processing halves them for all these models except gpt-6.2-astra and gpt-6.2-sol. Flex processing is in beta with limited model availability. gpt-6.2-astra cached input $0.40 per 1M tokens, against $8.00 uncached. gpt-6.2-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6-astra cached input $1.00 per 1M tokens, against $10.00 uncached. gpt-6.1-sol cached input $0.10 per 1M tokens, against $2.00 uncached. gpt-6.1-terra cached input $0.05 per 1M tokens, against $1.00 uncached. gpt-6-luna cached input $0.01 per 1M tokens, against $0.10 uncached. Prompt caching is on by default. Cache writes cost 1.25× the input price for 30 minutes or 2.5× for 12 hours. Embeddings from $0.02 per 1M tokens. Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models. Since 2026-10-28, OpenAI's API docs say: \"Eligible ChatGPT Pro and Business subscriptions can claim free API credits as part of their subscription benefits.\" ChatGPT Plus, Go and Free plans do not get API credits. ChatGPT Pro gets monthly API credits: Pro ($100 tier) $100 a month, Pro ($200 tier) $200, Pro ($500 tier) $500. No API payment method is required with active free credits. Business gets $20 per paid Standard seat and $100 per paid Premium seat, pooled and capped at $500 per workspace a month.",
       "conditions": [
         {
           "text": "OpenAI does not use data sent to the API to train its models unless you opt in to share data.",
@@ -32369,20 +32369,38 @@
     {
       "vendor": "maptiler.com",
       "category": "Maps/Geolocation",
-      "description": "Vector maps, map services and SDKs for map visualization. Free vector tiles with weekly updates and four map styles.",
+      "description": "MapTiler Cloud's Free plan is $0 with no credit card, for testing, proofs of concept, prototypes, personal or non-commercial use. It includes 5,000 map sessions, 1,000 search sessions and 100,000 API requests a month, 5 custom map styles, one API key, and 5 GB of storage in one file. Maps on Free show the MapTiler logo. Flex, the first paid plan, is $30 a month.",
       "tier": "Free",
-      "url": "https://www.maptiler.com/cloud/",
+      "url": "https://www.maptiler.com/cloud/pricing/",
       "tags": [
         "maps",
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-12",
+      "verifiedDate": "2026-11-25",
       "source_check": {
-        "checked": "2026-11-23",
-        "outcome": "states_no_terms",
-        "detail": "the page names maptiler.com but states no amount, tier or rate we can read, and its markup carries no structured data"
-      }
+        "checked": "2026-11-25",
+        "outcome": "ok",
+        "detail": "the page names maptiler.com as \"maptiler\" and states \"$0\" and \"$30\" and \"$ 0\" and \"1 File Sessions 5k/month\""
+      },
+      "conditions": [
+        {
+          "text": "MapTiler offers its Free plan for testing, proofs of concept, prototypes, personal or non-commercial use.",
+          "quote": "Suitable for testing, PoC, prototyping, personal, or non-commercial use.",
+          "url": "https://www.maptiler.com/cloud/pricing/",
+          "read_on": "2026-11-25",
+          "rules_out": [
+            "commercial use"
+          ]
+        },
+        {
+          "text": "Maps served on the Free plan show the MapTiler logo.",
+          "quote": "MapTiler logo on the map",
+          "url": "https://www.maptiler.com/cloud/pricing/",
+          "read_on": "2026-11-25",
+          "operating_detail": true
+        }
+      ]
     },
     {
       "vendor": "nominatim.org",
@@ -38385,9 +38403,9 @@
     {
       "vendor": "LLM7.io",
       "category": "AI / ML",
-      "description": "LLM inference gateway. With a free token from dash.llm7.io: 1 request a second, 60 a minute, 250 an hour and 100,000 tokens per 24 hours, counting input and output tokens; LLM7 says free quotas may be reduced without notice. Free access covers turbo-tier models not marked usage-only, such as GLM-5.3-Flash and codestral-latest. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance. LLM7's limits page no longer lists limits for requests without a token. A text request without a token still worked on 2026-10-19.",
+      "description": "LLM inference gateway with an OpenAI-compatible API. Its live models list (api.llm7.io/v1/models, read 2026-11-25) puts three models in the turbo tier: codestral-latest, gpt-oss:20b and mistral-Nemo-Instruct-2407. The other models, GLM-5.3-Flash included, are pro tier, which LLM7's docs call paid, and nearly all are marked usage-based only. On 2026-11-25 a request with no token to codestral-latest worked, and one to glm-5.3-flash was refused with \"Missing API key\". LLM7 no longer publishes its free limits: the limits page, which gave 1 request a second, 60 a minute, 250 an hour and 100,000 tokens per 24 hours with a free token from dash.llm7.io, now answers 404.",
       "tier": "Free",
-      "url": "https://docs.llm7.io/limits",
+      "url": "https://docs.llm7.io/guides/models",
       "tags": [
         "ai",
         "ml",
@@ -38396,11 +38414,11 @@
         "gateway",
         "free tier"
       ],
-      "verifiedDate": "2026-10-31",
+      "verifiedDate": "2026-11-25",
       "source_check": {
-        "checked": "2026-11-22",
-        "outcome": "unreadable",
-        "detail": "HTTP 404"
+        "checked": "2026-11-25",
+        "outcome": "states_no_terms",
+        "detail": "the page names LLM7.io but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
