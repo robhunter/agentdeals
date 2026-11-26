@@ -18155,14 +18155,14 @@
     {
       "vendor": "twist.com",
       "category": "Team Collaboration",
-      "description": "An asynchronous-friendly team communication app where conversations stay organized and on-topic. Free and Unlimited plans are available. Discounts are provided for eligible teams.",
+      "description": "Team chat app, shutting down on March 1, 2027, being replaced by Todoist Comms. Free plan: 1 month of comments and messages, up to 5 integrations, 5 GB file storage, up to 500 members and 500 guests. Unlimited: US$6 per user a month.",
       "tier": "Free",
       "url": "https://twist.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-11-03",
+      "verifiedDate": "2026-11-26",
       "source_check": {
         "checked": "2026-11-26",
         "outcome": "ok",
@@ -18172,7 +18172,15 @@
         "text": "Free plan US$ 0 per user per month Access up to 1 month of comments and messages Up to 5 integrations Up to 5 GB file storage Standard support Up to 500 internal member accounts Up to 500 external guest accounts",
         "url": "https://twist.com/pricing",
         "read_on": "2026-11-26"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Twist closes on March 1, 2027. Moving to Todoist Comms is one-way and does not carry bots, integrations or scheduled threads.",
+          "quote": "Twist stays available until March 1, 2027. The move is one-way, so check what moves, what doesn't, and how sign-in changes before you schedule it.",
+          "url": "https://twist.com/help/articles/move-your-team-from-twist-to-todoist-comms-cAhB9a6GO",
+          "read_on": "2026-11-26"
+        }
+      ]
     },
     {
       "vendor": "userforge.com",

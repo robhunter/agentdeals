@@ -1,31 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-11-26/twist-com/product_deprecated",
-      "proposed_on": "2026-11-26",
-      "vendor": "twist.com",
-      "change_type": "product_deprecated",
-      "date": "2027-03-01",
-      "date_source": "vendor_page",
-      "summary": "Twist is being replaced by Todoist Comms and will close on March 1, 2027; the Free plan now caps internal member accounts at 500 and external guest accounts at 500, and limits access to 1 month of comments/messages, 5 integrations, and 5 GB file storage.",
-      "tier": "Free plan",
-      "tier_direction": "narrowed",
-      "previous_state": "An asynchronous-friendly team communication app where conversations stay organized and on-topic. Free and Unlimited plans are available. Discounts are provided for eligible teams.",
-      "current_state": "Free plan at US$0 per user per month: access up to 1 month of comments and messages, up to 5 integrations, up to 5 GB file storage, standard support, up to 500 internal member accounts, up to 500 external guest accounts. Twist is being replaced by Todoist Comms and will close on March 1, 2027.",
-      "impact": "high",
-      "source_url": "https://twist.com/pricing",
-      "category": "Team Collaboration",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-26",
-      "restatement": [
-        {
-          "url": "https://twist.com/pricing",
-          "description": "An asynchronous-friendly team communication app where conversations stay organized and on-topic — Free plan at US$0 per user per month: access up to 1 month of comments and messages, up to 5 integrations, up to 5 GB file storage, standard support, up to 500 internal member accounts, up to 500 external guest accounts. Twist is being replaced by Todoist Comms and will close on March 1, 2027."
-        }
-      ]
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
