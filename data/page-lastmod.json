@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-11-26",
+  "generated": "2026-11-27",
   "pages": {
     "/": {
       "daily": true
@@ -1150,7 +1150,8 @@
       "changed": "2026-11-26"
     },
     "/category/cloud-hosting": {
-      "daily": true
+      "hash": "d77d6a260da08beb",
+      "changed": "2026-11-27"
     },
     "/category/cloud-iaas": {
       "hash": "4c161f94e3eef221",
@@ -1185,8 +1186,7 @@
       "changed": "2026-11-26"
     },
     "/category/design": {
-      "hash": "dbaabf5f9566d257",
-      "changed": "2026-11-26"
+      "daily": true
     },
     "/category/design-creative": {
       "hash": "cf5d981641368262",
@@ -1261,7 +1261,8 @@
       "changed": "2026-11-26"
     },
     "/category/mobile-development": {
-      "daily": true
+      "hash": "2d86cf751bb6878c",
+      "changed": "2026-11-27"
     },
     "/category/monitoring": {
       "hash": "518f6b17ca0f6a0a",
@@ -1284,7 +1285,8 @@
       "changed": "2026-11-26"
     },
     "/category/project-management": {
-      "daily": true
+      "hash": "e42c97db7e9fbaea",
+      "changed": "2026-11-27"
     },
     "/category/search": {
       "hash": "e6c3a1d002aeb63c",
@@ -3116,8 +3118,7 @@
       "changed": "2026-11-26"
     },
     "/digest/2026-w48": {
-      "hash": "13288f8ebac5f2e8",
-      "changed": "2026-11-26"
+      "daily": true
     },
     "/digest/2026-w49": {
       "hash": "b508287d190645d0",
@@ -3260,8 +3261,8 @@
       "changed": "2026-11-26"
     },
     "/digitalocean-free-tier-2026": {
-      "hash": "2e6b1eb343feeb5d",
-      "changed": "2026-11-26"
+      "hash": "47a4ae731524ca34",
+      "changed": "2026-11-27"
     },
     "/disclosure": {
       "hash": "af73a4b12da4b734",
@@ -3428,16 +3429,16 @@
       "changed": "2026-11-25"
     },
     "/hetzner-alternatives": {
-      "hash": "600129d47a918a87",
-      "changed": "2026-11-25"
+      "hash": "7de724c698ce8f32",
+      "changed": "2026-11-27"
     },
     "/hetzner-pricing-2026": {
-      "hash": "a321983621cff1c1",
-      "changed": "2026-11-26"
+      "hash": "6d6cbfcccb3b5794",
+      "changed": "2026-11-27"
     },
     "/hosting-alternatives": {
-      "hash": "6d226228cb69a446",
-      "changed": "2026-11-26"
+      "hash": "65e8a1afe1de7a95",
+      "changed": "2026-11-27"
     },
     "/hosting-free-tier-comparison-2026": {
       "hash": "01b83463547f1fff",
@@ -4037,7 +4038,8 @@
       "changed": "2026-11-21"
     },
     "/shutdowns/google-vertex-ai-extensions-2026-11-26-vertex-ai-extensions": {
-      "daily": true
+      "hash": "1d931ed8b4c3e5a9",
+      "changed": "2026-11-27"
     },
     "/shutdowns/hcp-vagrant-2026-12-31-hcp-vagrant-and-the-vagrant-public-registry": {
       "hash": "996aedf4c3264209",
@@ -4260,8 +4262,7 @@
       "changed": "2026-11-26"
     },
     "/stack-check": {
-      "hash": "067b4ca73ddddab5",
-      "changed": "2026-11-26"
+      "daily": true
     },
     "/stacks": {
       "hash": "f8a1e08cc702daa7",
@@ -4341,14 +4342,16 @@
       "daily": true
     },
     "/trends/analytics": {
-      "daily": true
+      "hash": "84ff743a263d5835",
+      "changed": "2026-11-27"
     },
     "/trends/api-development": {
       "hash": "fcd7728ea971d0f6",
       "changed": "2026-11-26"
     },
     "/trends/api-gateway": {
-      "daily": true
+      "hash": "da14687ce220ad55",
+      "changed": "2026-11-27"
     },
     "/trends/auth": {
       "daily": true
@@ -4501,10 +4504,12 @@
       "changed": "2026-11-16"
     },
     "/trends/security": {
-      "daily": true
+      "hash": "e24035826850e0db",
+      "changed": "2026-11-27"
     },
     "/trends/server-management": {
-      "daily": true
+      "hash": "75948c870bc82c9a",
+      "changed": "2026-11-27"
     },
     "/trends/source-control": {
       "hash": "6915eedc52d53af6",
@@ -8005,8 +8010,7 @@
       "changed": "2026-11-26"
     },
     "/vendor/nspolygon": {
-      "hash": "9724932805a08224",
-      "changed": "2026-11-26"
+      "daily": true
     },
     "/vendor/ntask": {
       "hash": "b6672bd471663a0a",
