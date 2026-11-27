@@ -293,5 +293,10 @@
     "card_date": "2026-12-03",
     "card_title": "The Junie plugin in JetBrains IDEs",
     "entry": "The Junie plugin in JetBrains IDEs (December 3, completed; the Junie plugin stopped working in JetBrains IDEs version 2026.2 and was already off in version 2026.3; JetBrains IDEs and Junie keep running; Junie moved into JetBrains Air with its account, AI plan and .junie/ files, and also runs in Junie CLI)"
+  },
+  {
+    "card_title": "HubSpot's Pipelines API v1",
+    "card_date": "2026-12-04",
+    "entry": "HubSpot's Pipelines API v1 (December 4, completed; calls to v1 endpoints no longer work; migrate to Pipelines API 2026-09 or any 2026-03 or newer version)"
   }
 ]
