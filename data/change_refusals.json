@@ -933,6 +933,18 @@
       "refused_date": "2026-11-05"
     },
     {
+      "vendor": "AWS",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-11-05 (confirmed_unchanged) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored description says the always-free tier includes Lambda (1M invocations/mo), DynamoDB (25 GB), and CloudWatch, and that new accounts get $100 credit at sign-up plus up to $100 more via activities with a free plan for 6 months. The current page describes a Free plan with up to $200 in credits ($100 immediately plus up to $100 more), a 6-month account life, and states that 30+ AWS services are always free within monthly usage limits, but it no longer lists Lambda, DynamoDB, or CloudWatch among the featured offers and does not confirm the specific always-free limits in the stored description.",
+      "previous_state": "Always-free tier includes Lambda (1M invocations/mo), DynamoDB (25 GB), CloudWatch. New accounts get $100 credit at sign-up + up to $100 more via activities, free plan for 6 months",
+      "current_state": "The page describes a Free plan giving new customers up to $200 in credits ($100 immediately plus up to $100 more earned by exploring key services) over 6 months, with the account closing 6 months after opening or when credits run out, whichever comes first, and no charges unless converting to a Paid plan. It also states that 30+ AWS services are always free within monthly usage limits on both the Free and Paid plans, and that the Paid plan offers access to all AWS services with pay-as-you-go pricing and eligibility for up to $200 in credits for new customers.",
+      "source_url": "https://aws.amazon.com/free/",
+      "category": "Cloud IaaS",
+      "refused_date": "2026-11-27"
+    },
+    {
       "vendor": "Axiom",
       "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
@@ -4422,6 +4434,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Flutter Flow",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the stored description's claim of 'limited AI generation (5 lifetime requests)' is not supported; the page now describes the free plan as having 'A free AI allowance' and 'A free allowance' for AI usage, with no mention of 5 lifetime requests. The page also does not mention 'UI Builder' by that name (now 'FlutterFlow Studio' / 'visual development environment') and does not state the 2-project limit is unchanged beyond confirming '2 projects'.",
+      "previous_state": "Build your Flutter App UI without writing a single line of code. Also has a Firebase integration. The free plan includes 2 projects, access to 1,000+ templates, and the UI Builder with limited AI generation (5 lifetime requests). No code download or APK export on free tier.",
+      "current_state": "Free plan is $0 a month, includes 2 projects, 1K+ prebuilt templates, drag & drop visual builder, Firebase integration, and 'A free AI allowance' / 'A free allowance' for AI usage. No code download or APK download on Free.",
+      "source_url": "https://flutterflow.io/pricing",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-11-27"
+    },
+    {
       "vendor": "Fly.io",
       "change_type": "free_tier_removed",
       "reason": "confirmed_unchanged",
@@ -6371,6 +6395,18 @@
       "source_url": "https://ifttt.com",
       "category": "Cloud Hosting",
       "refused_date": "2026-10-08"
+    },
+    {
+      "vendor": "Ilograph",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-11-04 (unquantified_limit) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier no longer includes private diagram viewers; private diagram viewers are now a Pro feature (20 viewers per diagram), and the free tier is described as a personal workspace with unlimited public and private diagrams but no viewer sharing.",
+      "previous_state": "interactive diagrams that allow users to see their infrastructure from multiple perspectives and levels of detail. Charts can be expressed in code. The free tier has unlimited private diagrams with up to 3 viewers.",
+      "current_state": "Ilograph Free is a cloud-based personal workspace with unlimited public diagrams, unlimited private diagrams, unlimited diagram size, built-in icons, and 14 days of diagram history for $0 per month. Private diagram viewers (20 viewers per diagram) are listed under Ilograph Pro.",
+      "source_url": "https://www.ilograph.com/pricing.html",
+      "category": "Diagramming",
+      "refused_date": "2026-11-27"
     },
     {
       "vendor": "Ilograph",
@@ -8812,6 +8848,18 @@
     {
       "vendor": "nitropack.io",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-11-04 (unquantified_limit) stated the same 6 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free plan's pageview limit is now 1,000/mo. and CDN bandwidth is 1GB/mo., down from the stored 5,000 pageviews/month; the free tier still exists but with reduced limits.",
+      "previous_state": "Accelerate your site's speed on autopilot with complete front-end optimization (caching, images and code optimization, CDN). Free for up to 5,000 pageviews/month",
+      "current_state": "Free plan is $0/mo. and includes 1 website, 1,000/mo. pageviews, 1GB/mo. CDN bandwidth, 1 team member, and no 24/7 live chat support.",
+      "source_url": "https://nitropack.io/pricing",
+      "category": "Storage",
+      "refused_date": "2026-11-27"
+    },
+    {
+      "vendor": "nitropack.io",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5,000 pageview)",
       "summary": "The stored deal info describes a free tier with up to 5,000 pageviews/month, but the current pricing page shows the Free plan now includes only 1,000 pageviews/mo. and 1GB/mo. CDN bandwidth. The 5,000 pageviews/month limit now applies to the paid Starter plan.",
@@ -8897,13 +8945,13 @@
       "vendor": "Notion",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-10-31 (confirmed_unchanged) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
-      "summary": "The Free plan's page history is now listed as 7 days (matching the stored info), but the page no longer states the Free plan's block limit as 'unlimited pages and blocks for one member' — it now says 'Pages & blocks: Limited for 2+ members' and describes the Free plan as 'For individuals to organize personal projects and life.' The stored description's claim that workspaces with one member have unlimited pages and blocks is not supported by the current page.",
+      "detail": "the reading of this vendor refused on 2026-11-04 (repeats_a_refused_claim) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored description says workspaces with one member have unlimited pages and blocks, while workspaces with two or more members have a block limit. The current pricing page no longer states that single-member Free workspaces have unlimited blocks; it lists 'Block storage: Limited' for the Free plan and explains that Free Plan workspaces can add a limited number of blocks before upgrading.",
       "previous_state": "Notion Free is $0 per member a month. Workspaces with one member have unlimited pages and blocks, while workspaces with two or more members have a block limit. The Free plan includes file uploads up to 5 MB per file, 7 days of page history, and 10 external guests. It also includes a trial of Notion AI, basic forms, basic sites, Notion Calendar, and databases. Plus costs $10 per seat a month and provides unlimited file uploads, 30 days of page history, and unlimited guests.",
-      "current_state": "Free is $0 per member/month, described as 'For individuals to organize personal projects and life.' Pages & blocks are 'Limited for 2+ members.' File uploads are up to 5 MB. Page history is 7 days. External guest limit is 10. Includes trial of Notion AI, basic forms, basic sites, Notion Calendar, and databases.",
+      "current_state": "Free is $0 per seat/month. Block storage is listed as 'Limited' on the Free plan. The page states that Free Plan workspaces can add a limited number of blocks before having to upgrade; when the limit is reached, existing content blocks can still be read, edited, and organized, but new content blocks cannot be added. Free includes file uploads up to 5 MB each, 7 days of page history, 10 external guests, a trial of Notion AI, basic forms, basic sites, Notion Calendar, and databases.",
       "source_url": "https://www.notion.com/pricing",
       "category": "Productivity & Notes",
-      "refused_date": "2026-11-04"
+      "refused_date": "2026-11-27"
     },
     {
       "vendor": "Notion",
@@ -10398,13 +10446,13 @@
       "vendor": "QRtracer",
       "change_type": "limits_increased",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-10-02 (no_price_signal) claimed the same change, limits_increased, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
-      "summary": "The free tier now offers unlimited dynamic codes for a 30-day trial (previously 3 dynamic codes with 14 days of Analytics/QR Studio), and Pro pricing is €5.99/month or €49/year.",
+      "detail": "the reading of this vendor refused on 2026-11-04 (repeats_a_refused_claim) claimed the same change, limits_increased, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier now offers unlimited dynamic codes for a 30-day trial (previously 3 dynamic codes with 14 days of Analytics/QR Studio access), and Pro pricing is now €5.99/month or €49/year.",
       "previous_state": "New Free accounts can create up to 3 dynamic codes and get 14 days of Analytics and QR Studio access. After that, Pro is required to use those premium areas. Existing codes keep redirecting and scans continue to be recorded.",
-      "current_state": "Static QR codes are free with no account. Dynamic codes with scan tracking start with a 30-day trial, then Pro costs €5.99/month or €49/year. The trial includes unlimited dynamic QR codes, Analytics, and QR Studio, with no card required. Existing printed codes keep redirecting whether or not you upgrade.",
+      "current_state": "Free €0: Unlimited dynamic codes for 30 days, edit existing destinations anytime, scan recording continues, Analytics + QR Studio for 30 days, upgrade after 30 days to create more.",
       "source_url": "https://qrtracer.io/pricing",
       "category": "Storage",
-      "refused_date": "2026-11-04"
+      "refused_date": "2026-11-27"
     },
     {
       "vendor": "QRtracer",
@@ -13214,6 +13262,18 @@
     {
       "vendor": "UI Bakery",
       "change_type": "limits_increased",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-11-04 (unquantified_limit) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal says the Free tier is 'Free for up to 5 users,' but the current pricing page describes the Free plan as '$0 month per developer' with no 5-user cap; it lists unlimited apps, data sources, public app users, and community support, and does not mention a 5-user limit.",
+      "previous_state": "Low-code platform that enables faster building of custom web applications. Supports building UI using drag and drop with a high level of customization through JavaScript, Python, and SQL. Available as both cloud and self-hosted solutions. Free for up to 5 users.",
+      "current_state": "Free plan is $0 per month per developer and includes unlimited apps & data source connections, monthly AI trial credits, public and private apps, unlimited public app users, release history, hosted database, and community support.",
+      "source_url": "https://uibakery.io/pricing",
+      "category": "Low-Code Platforms",
+      "refused_date": "2026-11-27"
+    },
+    {
+      "vendor": "UI Bakery",
+      "change_type": "limits_increased",
       "reason": "unquantified_limit",
       "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (5 user)",
       "summary": "The stored deal info says the Free plan is 'Free for up to 5 users,' but the current pricing page describes the Free plan as '$0 month per developer' with unlimited apps, data source connections, public app users, and no stated 5-user cap. The page also lists a separate 'Max workspace viewer seats' limit of 50 for paid plans, not 5 users for Free.",
@@ -14242,6 +14302,18 @@
       "source_url": "https://www.zenhub.com/pricing",
       "category": "Project Management",
       "refused_date": "2026-11-04"
+    },
+    {
+      "vendor": "zenhub.com",
+      "change_type": "restriction",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-11-04 (no_terms_to_narrow) stated the same 6 figures, so the page showed these terms before the date this record gives",
+      "summary": "The stored description says Zenhub is free for public repos, OSS, and nonprofit organizations. The current pricing page no longer mentions free access for public repos, OSS, or nonprofits; instead it offers a general Free plan with hard limits (1 workspace, up to 50 users, 1 GitHub org, up to 2 connected repos, up to 250 issues).",
+      "previous_state": "The only project management solution inside GitHub. Free for public repos, OSS, and nonprofit organizations",
+      "current_state": "Free plan is $0 per user/mo, built for small teams with essential features and a single workspace; includes 1 team workspace, up to 50 users, 1 connected GitHub organization, up to 2 connected repositories, and up to 250 issues.",
+      "source_url": "https://www.zenhub.com/pricing",
+      "category": "Project Management",
+      "refused_date": "2026-11-27"
     },
     {
       "vendor": "Zenscrape",

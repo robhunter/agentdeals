@@ -1,39 +1,6 @@
 {
   "held": [
     {
-      "vendor": "Cloudflare AI Search",
-      "change_type": "pricing_restructured",
-      "impact": "low",
-      "summary": "Matching.",
-      "previous_state": "Cloudflare AI Search is a managed search service for indexing content and querying it with natural language from a Workers binding, REST API or MCP server. Every account receives 5 million ingestion tokens, 10 GB-month of storage, 1,000 semantic queries, and 1,000 full-text queries each month. The Workers Free plan includes 100 AI Search instances per account, 100,000 files per instance, and 500 pages crawled per day. Billing begins December 1, 2026, and usage before that date is not charged. Beyond the included usage, base ingestion costs $0.75 per million tokens; storage is $2.00 per GB-month; semantic, vector and hybrid queries are $0.75 per 1,000 queries; full-text queries are $0.10 per 1,000 queries. Embedding and reranking usage is included in AI Search usage, while generation and query rewriting are billed separately through Workers AI or the external model provider that runs them.",
-      "current_state": "AI Search billing begins on December 1, 2026. Every account receives 5 million ingestion tokens, 10 GB-month of storage, 1,000 semantic queries, and 1,000 full-text queries each month. Workers Free includes 100 AI Search instances per account, 100,000 files per instance, and 500 pages crawled per day. Beyond included usage: base ingestion $0.75 per million tokens, image processing an additional $0.50 per million tokens, storage $2.00 per GB-month, semantic/vector/hybrid queries $0.75 per 1,000 queries, full-text queries $0.10 per 1,000 queries. Workers Paid has unlimited instances with a default limit of 5,000, and each instance above 5,000 costs $0.10 per month.",
-      "source_url": "https://developers.cloudflare.com/ai-search/platform/limits-pricing/",
-      "category": "AI / ML",
-      "first_read_date": "2026-11-26"
-    },
-    {
-      "vendor": "Cloudflare Vectorize",
-      "change_type": "pricing_restructured",
-      "impact": "low",
-      "summary": "The current page says Workers Paid includes the first 50 million queried vector dimensions/month and the first 10 million stored vector dimensions, with overage at $0.01 per million queried and $0.05 per 100 million stored. The page also states Workers Paid includes 50,000 indexes per account, with additional indexes at $0.10/month.",
-      "previous_state": "Vectorize is Cloudflare's vector database for Workers. Workers Free includes 30 million queried vector dimensions per month and 5 million stored vector dimensions (about 6,500 vectors of 768 dimensions, or about 3,250 vectors of 1,536 dimensions). It allows 100 indexes. Workers Paid includes 50 million queried dimensions per month and 10 million stored dimensions. Overage is $0.01 per million queried dimensions and $0.05 per 100 million stored dimensions. CPU, memory and active index hours are not billed. Each vector can have up to 1536 dimensions. Each index can hold up to 20 million vectors.",
-      "current_state": "Workers Free includes 30 million queried vector dimensions/month, 5 million stored vector dimensions, and 100 indexes. Workers Paid includes the first 50 million queried vector dimensions/month, the first 10 million stored vector dimensions, and 50,000 indexes per account, with additional indexes at $0.10 per month. Overage is $0.01 per million queried vector dimensions and $0.05 per 100 million stored vector dimensions. CPU, memory, and active index hours are not billed.",
-      "source_url": "https://developers.cloudflare.com/vectorize/platform/pricing/",
-      "category": "Databases",
-      "first_read_date": "2026-11-26"
-    },
-    {
-      "vendor": "Fly.io Sprites",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "Previously info describes a $30 free trial credit. The current pricing page states every new Fly.io account gets a $1 trial credit, no credit card required, lasting 7 days.",
-      "previous_state": "$30 in free trial credit, one per user and at most one per org. Sprites are persistent, hardware-isolated Linux VMs on Fly.io for AI agents, dev environments and untrusted code, with sign-in through a Fly.io account. Compute is billed only while a Sprite runs; it pauses after about 30 seconds idle, and a paused Sprite costs nothing beyond its storage. Rates are $0.0385 per CPU-hour, $0.021875 per GB-hour of memory, $0.000683 per GB-hour of hot storage while awake and $0.000027 per GB-hour of cold storage. There is no per-Sprite charge, and bandwidth is not metered. Each Sprite has up to 8 vCPUs and 100 GB of storage. Fly.io does not say whether the credit needs a card.",
-      "current_state": "Every new Fly.io account gets a $1 trial credit, no credit card required. It works across Sprites, Machines and Managed Postgres, and lasts 7 days. Add a card whenever you're ready to keep going.",
-      "source_url": "https://fly.io/sprites/",
-      "category": "Cloud Hosting",
-      "first_read_date": "2026-11-26"
-    },
-    {
       "vendor": "MiniMax",
       "change_type": "pricing_restructured",
       "impact": "medium",
@@ -45,15 +12,26 @@
       "first_read_date": "2026-11-25"
     },
     {
-      "vendor": "Parallel",
-      "change_type": "pricing_restructured",
-      "impact": "low",
-      "summary": "The current pricing page now presents this under the 'Build' pay-as-you-go plan and adds 'up to $80 at signup' as part of the included usage. The page also now lists a 'Launch' free tier (free web search via Parallel MCP, no account needed) and a 'Scale' plan at $1,000/mo or $10,000/yr. The $5 monthly credit and card-on-file requirement are still present. The framing and additional signup credit terms have changed.",
-      "previous_state": "Web search and research APIs for AI agents. Organizations with a credit card on file get $5 of free credit each month, and unused credit expires at month end. $5 covers up to 1,000 requests a month in Search's Basic or Advanced mode (Advanced is the API default), or 5,000 in Turbo or Fast mode; usage beyond $5 is billed to the card at standard rates. The $5 monthly credit applies to all Parallel APIs at their standard rates. Extract costs $1 per 1,000 URLs, and the Decisions API costs $1 per 1,000 requests, up to 100 questions per request. One monthly credit per organization and per card; marketplace and postpaid organizations are not eligible. The pricing page also offers \"up to $80 at signup\" without stating its terms. A hosted Search MCP is free without an account or API key, at lower rate limits, for personal and hobby use. Then pay as you go: Search $1 per 1,000 requests (Turbo, Fast) or $5 (Basic, Advanced) with 10 results, at 600 requests a minute.",
-      "current_state": "Build is pay-as-you-go with $5 free monthly with a card on file, plus up to $80 at signup. Includes up to 5,000 free requests per month, all APIs, 100+ integrations, Search and Extract at 600/min, auto-reload and spend limits, up to $250 in startup credits, SOC 2 Type II, support via Docs/Discord, and Specialized Data Connectors. Once credits run out, you pay published API rates.",
-      "source_url": "https://parallel.ai/pricing",
-      "category": "AI / ML",
-      "first_read_date": "2026-11-26"
+      "vendor": "Rive",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The current pricing page still offers a Free tier at $0/seat/mo. It now explicitly states that free exports play a Rive splash screen (upgrade to remove it), and the free plan is limited to 3 collaborative files, 1 project, 50 publishes/pushes a month, and 3 live hosted web pages that expire after 3 days. The description of 'Free forever for Individuals' is no longer accurate as the free tier now carries a splash screen and specific usage limits.",
+      "previous_state": "Create and ship beautiful animations to any platform. Free forever for Individuals. The service is an editor that also hosts all the graphics on their servers. They also provide runtimes for many platforms to run representations made using Rive.",
+      "current_state": "Free plan is $0/seat/mo and includes: Rive Editor, CLI with unlimited local builds, 50 publishes and pushes a month, export .riv files with a splash screen, 3 collaborative files, 1 project, AI Agent in the Editor with limits, 3 live hosted web pages (rive.to) that expire after 3 days, 10 MB per imported asset, and community support.",
+      "source_url": "https://rive.app/pricing",
+      "category": "Design",
+      "first_read_date": "2026-11-27"
+    },
+    {
+      "vendor": "Val Town",
+      "change_type": "product_deprecated",
+      "impact": "high",
+      "summary": "Val Town is shutting down on January 10, 2027, with no new signups since November 10, 2026, so the free tier is no longer available to new users and the product is being deprecated.",
+      "previous_state": "Serverless scripting platform, shutting down on January 10, 2027, with no new signups since November 10, 2026. Free plan for existing users: 100K runs/day, 1 minute wall clock per run, unlimited public vals, MCP integration",
+      "current_state": "Val Town is shutting down on January 10, 2027. The Free plan is $0 and includes MCP integration, no custom domains, 15 min cron intervals, 1 min wall clock time / run, unlimited public vals, 3 days log retention, and 100,000 runs / day.",
+      "source_url": "https://www.val.town/pricing",
+      "category": "Cloud Hosting",
+      "first_read_date": "2026-11-27"
     }
   ],
   "resolved": [
@@ -3962,6 +3940,54 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-11-26 read it as product_deprecated too",
       "resolved_date": "2026-11-26"
+    },
+    {
+      "vendor": "Cloudflare AI Search",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "Matching.",
+      "previous_state": "Cloudflare AI Search is a managed search service for indexing content and querying it with natural language from a Workers binding, REST API or MCP server. Every account receives 5 million ingestion tokens, 10 GB-month of storage, 1,000 semantic queries, and 1,000 full-text queries each month. The Workers Free plan includes 100 AI Search instances per account, 100,000 files per instance, and 500 pages crawled per day. Billing begins December 1, 2026, and usage before that date is not charged. Beyond the included usage, base ingestion costs $0.75 per million tokens; storage is $2.00 per GB-month; semantic, vector and hybrid queries are $0.75 per 1,000 queries; full-text queries are $0.10 per 1,000 queries. Embedding and reranking usage is included in AI Search usage, while generation and query rewriting are billed separately through Workers AI or the external model provider that runs them.",
+      "source_url": "https://developers.cloudflare.com/ai-search/platform/limits-pricing/",
+      "first_read_date": "2026-11-26",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-27 read it as pricing_restructured too",
+      "resolved_date": "2026-11-27"
+    },
+    {
+      "vendor": "Cloudflare Vectorize",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "The current page says Workers Paid includes the first 50 million queried vector dimensions/month and the first 10 million stored vector dimensions, with overage at $0.01 per million queried and $0.05 per 100 million stored. The page also states Workers Paid includes 50,000 indexes per account, with additional indexes at $0.10/month.",
+      "previous_state": "Vectorize is Cloudflare's vector database for Workers. Workers Free includes 30 million queried vector dimensions per month and 5 million stored vector dimensions (about 6,500 vectors of 768 dimensions, or about 3,250 vectors of 1,536 dimensions). It allows 100 indexes. Workers Paid includes 50 million queried dimensions per month and 10 million stored dimensions. Overage is $0.01 per million queried dimensions and $0.05 per 100 million stored dimensions. CPU, memory and active index hours are not billed. Each vector can have up to 1536 dimensions. Each index can hold up to 20 million vectors.",
+      "source_url": "https://developers.cloudflare.com/vectorize/platform/pricing/",
+      "first_read_date": "2026-11-26",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-27 read it as pricing_restructured too",
+      "resolved_date": "2026-11-27"
+    },
+    {
+      "vendor": "Fly.io Sprites",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "Previously info describes a $30 free trial credit. The current pricing page states every new Fly.io account gets a $1 trial credit, no credit card required, lasting 7 days.",
+      "previous_state": "$30 in free trial credit, one per user and at most one per org. Sprites are persistent, hardware-isolated Linux VMs on Fly.io for AI agents, dev environments and untrusted code, with sign-in through a Fly.io account. Compute is billed only while a Sprite runs; it pauses after about 30 seconds idle, and a paused Sprite costs nothing beyond its storage. Rates are $0.0385 per CPU-hour, $0.021875 per GB-hour of memory, $0.000683 per GB-hour of hot storage while awake and $0.000027 per GB-hour of cold storage. There is no per-Sprite charge, and bandwidth is not metered. Each Sprite has up to 8 vCPUs and 100 GB of storage. Fly.io does not say whether the credit needs a card.",
+      "source_url": "https://fly.io/sprites/",
+      "first_read_date": "2026-11-26",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-27 read it as limits_reduced too",
+      "resolved_date": "2026-11-27"
+    },
+    {
+      "vendor": "Parallel",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "The current pricing page now presents this under the 'Build' pay-as-you-go plan and adds 'up to $80 at signup' as part of the included usage. The page also now lists a 'Launch' free tier (free web search via Parallel MCP, no account needed) and a 'Scale' plan at $1,000/mo or $10,000/yr. The $5 monthly credit and card-on-file requirement are still present. The framing and additional signup credit terms have changed.",
+      "previous_state": "Web search and research APIs for AI agents. Organizations with a credit card on file get $5 of free credit each month, and unused credit expires at month end. $5 covers up to 1,000 requests a month in Search's Basic or Advanced mode (Advanced is the API default), or 5,000 in Turbo or Fast mode; usage beyond $5 is billed to the card at standard rates. The $5 monthly credit applies to all Parallel APIs at their standard rates. Extract costs $1 per 1,000 URLs, and the Decisions API costs $1 per 1,000 requests, up to 100 questions per request. One monthly credit per organization and per card; marketplace and postpaid organizations are not eligible. The pricing page also offers \"up to $80 at signup\" without stating its terms. A hosted Search MCP is free without an account or API key, at lower rate limits, for personal and hobby use. Then pay as you go: Search $1 per 1,000 requests (Turbo, Fast) or $5 (Basic, Advanced) with 10 results, at 600 requests a minute.",
+      "source_url": "https://parallel.ai/pricing",
+      "first_read_date": "2026-11-26",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-27 read it as pricing_restructured too",
+      "resolved_date": "2026-11-27"
     }
   ]
 }
