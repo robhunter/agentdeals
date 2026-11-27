@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-11-26",
+  "measured_on": "2026-11-27",
   "pages": [
     {
       "path": "/agent-payments",
@@ -129,10 +129,10 @@
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-11-01",
+      "reviewed_at": "2026-11-26",
       "reviewer": "pm",
       "review_outcome": "pass",
-      "review_note": "Re-checked on 2026-11-01 against each vendor's pricing pages and docs. Claude's $200 plan (Ultra) and its limits, Enterprise's 20-seat minimum, the Team Premium seat, Devin's overage billing, Gemini CLI's hosted-only models and Copilot Student's Auto-only model selection were wrong or stale; all were corrected in https://github.com/robhunter/agentdeals/issues/3158 and read right on production on 2026-11-01.",
+      "review_note": "Re-checked on 2026-11-26 against each vendor's pricing pages and our listings. Augment Code's, Claude Code's, Bolt.new's, Devin's, Kiro's and Lovable's plans and prices match. GitHub Copilot's flex credits were added in https://github.com/robhunter/agentdeals/pull/3590. Two hand-typed lines are out of date: the Amazon Q Developer cost row prices a plan AWS stopped selling on 2026-05-15, and Hidden Costs says Copilot is moving toward model choice.",
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
@@ -1013,15 +1013,15 @@
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-10-31",
+      "reviewed_at": "2026-11-26",
       "reviewer": "pm",
-      "review_outcome": "pass",
-      "review_note": "Checked on 2026-10-31 against the vendors' own pricing pages and docs: every card, table cell, Key Cost Factor sentence, gotcha and FAQ answer. Every error found is corrected and read right on production: 19 hand-typed strings, among them Convex's 0.5 GB database and 1 GB of files, Upstash no longer offering Kafka, and Prisma Accelerate's 60,000 cache operations a month (https://github.com/robhunter/agentdeals/issues/3121), and Redis Cloud's search and JSON, which the Free plan includes (https://github.com/robhunter/agentdeals/issues/3123). The Key Cost Factor cells now print in full.",
+      "review_outcome": "fail",
+      "review_note": "Re-checked on 2026-11-26 against our listings and the vendors' pages. Every row matches our listing except SurrealDB Cloud, whose free plan on SurrealDB Earth now gives 10 GB of storage, 3 million requests and 100 database hours a month where the page says 1 GiB (https://github.com/robhunter/agentdeals/issues/3518). Turso's Developer plan ($5.99 a month, $4.99 billed yearly) and Nile's Pro plan ($15 a month) match the vendors' pages. One gotcha still says CockroachDB charges per Request Unit; since 2026-09-15 new clusters are billed per vCPU-hour, as the page's own CockroachDB row says.",
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 172,
-      "table_figures_from_records": 38,
+      "table_figures": 173,
+      "table_figures_from_records": 39,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -1040,8 +1040,8 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 38,
-          "from_records": 37
+          "figures": 39,
+          "from_records": 38
         },
         {
           "label": "Upcoming Changes",
@@ -1292,8 +1292,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 23,
-      "table_figures_from_records": 12,
+      "table_figures": 24,
+      "table_figures_from_records": 13,
       "tables": [
         {
           "label": "Shutdown Timeline",
@@ -1312,8 +1312,8 @@
         },
         {
           "label": "Firebase Pricing Change Timeline",
-          "figures": 11,
-          "from_records": 10
+          "figures": 12,
+          "from_records": 11
         },
         {
           "label": "Upcoming Changes",
@@ -1888,10 +1888,10 @@
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-11-02",
+      "reviewed_at": "2026-11-26",
       "reviewer": "pm",
       "review_outcome": "pass",
-      "review_note": "Every hand-typed claim checked against the vendors' pages on 2026-11-01 and 2026-11-02. The Brave card recommended Google's Custom Search JSON API, which is closed to new customers; the expansion cards counted GitHub Copilot, Terragrunt Scale and Neon as Q1 2026 changes; the advice said HashiCorp gave 6 months of notice (it gave about three and a half); and the trend cards gave Netlify, Vercel and Docker Hub as examples of moves they did not make. All were corrected in https://github.com/robhunter/agentdeals/issues/3184 and https://github.com/robhunter/agentdeals/issues/3187 and read right on production. The Q1 table prints our change records. The 19 typed in bulk in February and March 2026 were read against the vendors' pages and announcements: Docker Desktop's 2026-01-01 price rise was invented and is retracted (https://github.com/robhunter/agentdeals/pull/3186), and the records for Vercel, GitHub Actions, Stripe, AWS and Google Programmable Search Engine were misdated and are re-dated. The table's other records were spot-checked.",
+      "review_note": "Re-checked on 2026-11-26 against our records and listings. The removed, reduced and expanded cards, the trend analysis and the advice hold. Each card matches the record it cites, including X's one-time $10 voucher, Brave's $5 monthly credit and the end of Google's Custom Search JSON API on January 1, 2027, MinIO's AIStor Free and HCP Terraform's 500-resource free tier. The startup figures (Cloudflare's $350K Tier 1, Google Cloud's $350,000 for AI-first startups) match our listings. The Xero and Spotify examples each have a record. Every tool named as still free has a free listing. The quarter lists and the Q1 table print our change records.",
       "partial_recheck": null,
       "reads_index": false,
       "tables_read_index": false,
@@ -1960,8 +1960,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 151,
-      "table_figures_from_records": 102,
+      "table_figures": 152,
+      "table_figures_from_records": 103,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1980,8 +1980,8 @@
         },
         {
           "label": "Recent GCP & Google Changes",
-          "figures": 3,
-          "from_records": 3
+          "figures": 4,
+          "from_records": 4
         },
         {
           "label": "Upcoming Changes",
@@ -2131,10 +2131,10 @@
         "CPX02, Helsinki; €6.49 in Falkenstein and Nuremberg",
         "CX23, unavailable"
       ],
-      "reviewed_at": "2026-10-31",
+      "reviewed_at": "2026-11-26",
       "reviewer": "pm",
       "review_outcome": "pass",
-      "review_note": "Re-checked on 2026-10-31: section 1's 26 plan prices in euros and dollars, the plans marked not available and the cheapest orderable plan against Hetzner's price API and its three cloud line pages; the AX42 and AX102 prices and setup fees and the Volume, Storage Box, traffic, snapshot and Object Storage prices against the price API and Hetzner's own pages; the €50 sign-up credit and its rule against combining it with a referral code; and the status page's notice on creating new cloud servers, which is still open. The introduction's June percentages and section 4's Singapore example against Hetzner's June table and price API. Section 6's DigitalOcean, Vultr, Linode, OVHcloud, AWS Lightsail, Oracle Cloud, Railway, Render and Fly.io rows, and the Contabo, OVHcloud, Hostinger, IONOS and netcup prices behind the cheapest-VPS sentences, against those vendors' own pages, configurators or APIs. Section 7's OVHcloud figures against OVHcloud's announcement. Sections 2 and 3 are dated history, checked against Hetzner's April table and The Register on 2026-10-02. Nothing needed correcting; the plan prices' read date moves to 2026-10-31.",
+      "review_note": "Re-checked on 2026-11-26 against Hetzner's price API, hetzner.com's cloud pages and press releases, and the five other providers the page compares. Since 2026-11-10 Hetzner prices CPX and CCX plans 15% lower in Helsinki for new orders and rescales (CPX02 EUR 5.49 against EUR 6.49 in Falkenstein and Nuremberg); https://github.com/robhunter/agentdeals/issues/3592 added the Helsinki prices to the page. Every other figure holds: the EUR 50 sign-up credit; Contabo's Cloud VPS 4 and 6 and OVHcloud's VPS-1 and VPS-2 2027 specs and prices; IONOS, Hostinger and netcup undercut neither on a one-month term. The section 7 line on netcup is true but vague.",
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
@@ -2192,10 +2192,10 @@
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-10-31",
+      "reviewed_at": "2026-11-26",
       "reviewer": "pm",
-      "review_outcome": "pass",
-      "review_note": "Re-checked on 2026-10-31 against the vendors' own pages and docs: the main table, the cost-by-use-case table, the free-tier cards, the gotchas and the recommendations for Vercel, Netlify, Cloudflare Pages and Workers, Render, Railway, Fly.io, Koyeb, Deno Deploy, GitHub Pages, PythonAnywhere, Heroku and Google Cloud Run, including Vercel's Flat Rate CDN tiers, Netlify's credit tiers and legacy Free plan, Deno Deploy's regions and cold starts, and Cloud Run's scale-to-zero default. Every figure checked holds. GitHub Pages' listing cited GitHub's Pages docs index, which states no limits, so the page marked it unconfirmed; it now cites GitHub's Pages limits page.",
+      "review_outcome": "fail",
+      "review_note": "Re-checked on 2026-11-26 against the vendors' own pages and our listings. Every figure checked holds, including Netlify's credit tiers (10,000 credits for $63 a month and 20,000 for $126 on Netlify's own calculator), Render's 5 GB and 25 GB bandwidth then $0.15 per GB, and Railway's $0.05 per GB egress. The page says Railway's free services are always on, while Railway's Free plan sleeps services after a few minutes without outbound traffic (https://github.com/robhunter/agentdeals/issues/3547).",
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
@@ -2260,10 +2260,10 @@
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-10-31",
+      "reviewed_at": "2026-11-26",
       "reviewer": "pm",
-      "review_outcome": "pass",
-      "review_note": "Checked on 2026-10-31 against the vendors' own pricing pages and docs: every card, table cell, Key Cost Factor sentence, gotcha and FAQ answer. Every error found is corrected and read right on production: 14 hand-typed strings, among them Vercel's Elastic build machines as the Pro default, Cloudflare Workers' 64 MiB Worker size, Val Town Pro at $25 a month and Render's 1 GB free Postgres (https://github.com/robhunter/agentdeals/issues/3126). Vercel's February change record was true history; a record for its switch to Elastic builds was added in https://github.com/robhunter/agentdeals/pull/3125. The Key Cost Factor cells now print in full.",
+      "review_outcome": "fail",
+      "review_note": "Re-checked on 2026-11-26 against the vendors' own pages and our listings. Railway's, Render's, Northflank's, Netlify's, Deno Deploy's, Vercel's, Cloud Run's, GitHub Pages' and PythonAnywhere's figures match our listings. Three cells are wrong: Cloudflare Pages is given unlimited sites where Cloudflare allows 100 projects per account, new Fly.io accounts are given a 100 GB bandwidth allowance that only plans bought before October 7, 2024 keep, and Val Town is listed as a generous free tier although it stopped taking signups on November 10, 2026. See https://github.com/robhunter/agentdeals/issues/3595. The Vercel and Render dates in https://github.com/robhunter/agentdeals/issues/3513 are also still wrong.",
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
@@ -2346,8 +2346,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 125,
-      "table_figures_from_records": 124,
+      "table_figures": 123,
+      "table_figures_from_records": 122,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2366,8 +2366,8 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 13,
-          "from_records": 13
+          "figures": 11,
+          "from_records": 11
         }
       ],
       "reads_changes": true,
@@ -2968,10 +2968,10 @@
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-11-01",
+      "reviewed_at": "2026-11-26",
       "reviewer": "pm",
       "review_outcome": "pass",
-      "review_note": "Checked from 2026-10-31 to 2026-11-01 against the vendors' own pages: every Imminent and Upcoming card's cited source, and the AI-model cards the daily vendor-page watch reads. Auth0 had moved the end of life of Hooks to April 30, 2027 and of Rules to January 31, 2028, from November 18, 2026; corrected in https://github.com/robhunter/agentdeals/pull/3138 and read right on production. Shutdowns our listings state now stay on the page on their day and after it (https://github.com/robhunter/agentdeals/issues/3140), and ClawCloud Run's 2026-05-11 shutdown is recorded. MiniMax's 2026-11-18 card rests on third-party posts: MiniMax's cited models page no longer names M2.5 or M2.7. Ona's card moved to Recently Completed on its announced date, 2026-10-31; on 2026-11-01 Ona's status page still read \"fully operational\" and Ona had posted no new date.",
+      "review_note": "Re-checked on 2026-11-26. The daily date check read the cited source of all 162 future-dated records and listings that morning: 150 state their date, and the other 12 were each read by hand and carry a disposition; no source moves or calls off a shutdown. The three upcoming cards typed by hand hold: Firebase Studio shuts down on March 22, 2027, AWS ends WorkSpaces Thin Client on March 31, 2027, and Lambda blocks creating Node.js 20 functions from July 29, 2027 and updating them from August 31, 2027. AWS now lists Node.js 20 on its deprecated-runtimes page rather than the page the card cites. Node.js 26, which the card says has no deprecation date, is now dated April 30, 2029.",
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
@@ -3367,10 +3367,10 @@
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-10-31",
+      "reviewed_at": "2026-11-26",
       "reviewer": "pm",
       "review_outcome": "pass",
-      "review_note": "Re-read on 2026-10-31 against the providers' own pages: Klipy's 100-request hourly limit for testing keys and its client-side and caching rules (docs.klipy.com/integration-requirements), GIPHY's 100-call beta keys, production-key application and Tenor-compatible endpoints (developers.giphy.com/docs/api), and Imgur's UK block (help.imgur.com). Stored media.tenor.com GIF and MP4 links still load. Two readers checked every claim on 2026-09-28 (https://github.com/robhunter/agentdeals/issues/2135). Not re-read: Imgur's API limits and its non-commercial term, and GIPHY's FAQ wording on the production-key fee; both pages load only in a browser.",
+      "review_note": "Re-read on 2026-11-26 against the providers' own pages. Google's June 30 sunset and January 13 sign-up stop, Klipy's 100-request hourly testing key, Partner Panel production access, attribution, client-side and caching rules and its contentfilter and searchfilter values, GIPHY's 100-call beta key, production review, attribution and ratings rules, Tenor-compatible search and the missing /v2/registershare, and Imgur's 1,250 and 12,500 daily limits and its UK block all hold. Klipy's FAQ now names WhatsApp among the platforms using its content. Klipy's pages no longer state the 10M+ items the page attributes to it.",
       "partial_recheck": null,
       "reads_index": false,
       "tables_read_index": false,

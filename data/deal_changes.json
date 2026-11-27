@@ -21444,6 +21444,22 @@
         "OVHcloud"
       ],
       "recorded_date": "2026-11-26"
+    },
+    {
+      "vendor": "Google",
+      "change_type": "restriction",
+      "date": "2026-11-16",
+      "date_source": "vendor_page",
+      "announced_on": "2026-11-10",
+      "summary": "On November 16, 2026, the $300 Google Cloud Free Trial credit stopped paying for Gemini platform (formerly Gemini Enterprise Agent Platform and Vertex AI) services on a Free Trial opened, or an account upgraded to paid, on or after that date. A Free Trial opened before November 16, 2026 and not upgraded since can still spend it on those services. The credit still pays for other Google Cloud products.",
+      "tier": "Google Cloud $300 Welcome credit",
+      "previous_state": "Before November 16, 2026, the $300 credit could pay for Vertex AI (Gemini Enterprise Agent Platform) services, while accounts opened after March 2, 2026 could not spend it on the Gemini API in Google AI Studio.",
+      "current_state": "\"The $300 credit can't pay for Gemini platform (formerly known as Gemini Enterprise Agent Platform, Vertex AI) services if you sign up for a free trial or upgrade to a paid account on or after November 16, 2026.\" \"The $300 credit can't pay for Gemini API in AI Studio costs.\" (Google Cloud, \"Free Google Cloud features and trial offer\", last updated 2026-11-13, read 2026-11-27.) The sentence first appears in the Internet Archive's capture of 2026-11-10 and is absent from its capture of 2026-11-09.",
+      "impact": "medium",
+      "source_url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+      "category": "Cloud IaaS",
+      "alternatives": [],
+      "recorded_date": "2026-11-27"
     }
   ]
 }
