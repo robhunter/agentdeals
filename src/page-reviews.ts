@@ -640,6 +640,13 @@ export const DECLARED_FIGURE_READS: readonly DeclaredFigureRead[] = [
   },
   {
     path: "/hetzner-pricing-2026",
+    read_on: "2026-11-26",
+    vendors: ["hetzner"],
+    cited_from: "Hetzner's price API",
+    covers: "Helsinki CPX and CCX prices",
+  },
+  {
+    path: "/hetzner-pricing-2026",
     read_on: HETZNER_PLAN_AVAILABILITY_READ_ON,
     vendors: ["hetzner"],
     cited_from: "hetzner.com",

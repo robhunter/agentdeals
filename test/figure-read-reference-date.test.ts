@@ -210,15 +210,16 @@ describe("the hetzner plan table is dated by the read that produced it", () => {
     }
   });
 
-  it("dates the hetzner row by the newer of its two reads, whichever is declared first", () => {
+  it("dates the hetzner row by its newest read in any declared position", () => {
     const older = "2026-09-04";
     const newer = "2026-10-02";
-    assert.strictEqual(declared.filter(read => read.vendors.includes("hetzner")).length, 2);
-    for (const order of [[newer, older], [older, newer]]) {
-      const reads = declared.map((read, at) => ({ ...read, read_on: order[at]! }));
-      assert.ok(!tableFlags(dayAfter(older), reads).includes("hetzner"), order.join(" then "));
-      assert.ok(!tableFlags(newer, reads).includes("hetzner"), order.join(" then "));
-      assert.ok(tableFlags(dayAfter(newer), reads).includes("hetzner"), order.join(" then "));
+    const hetznerReads = declared.filter(read => read.vendors.includes("hetzner"));
+    assert.ok(hetznerReads.length >= 2);
+    for (let newest = 0; newest < hetznerReads.length; newest++) {
+      const reads = hetznerReads.map((read, at) => ({ ...read, read_on: at === newest ? newer : older }));
+      assert.ok(!tableFlags(dayAfter(older), reads).includes("hetzner"));
+      assert.ok(!tableFlags(newer, reads).includes("hetzner"));
+      assert.ok(tableFlags(dayAfter(newer), reads).includes("hetzner"));
     }
   });
 });

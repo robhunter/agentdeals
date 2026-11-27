@@ -416,7 +416,7 @@ describe("the paragraph on /hetzner-pricing-2026 that says every Cost-Optimized 
     const entry = cheapestOf(HETZNER_CLOUD_PLANS.filter(isOrderableInTheEu));
     assert.equal(
       visible(paragraph.replace(/<\/?a\b[^>]*>/g, "")).trim(),
-      `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]} are labeled "not available" on hetzner.com. The Create button says "This product is currently unavailable. Please check back later." The page notes "the number of available servers is limited." (From https://www.hetzner.com/cloud/cost-optimized/, read ${HETZNER_AVAILABILITY_READ}.) ${cheapest.sku} is ${withoutIpv4(cheapest.eur)} a month without IPv4 on Hetzner's price-adjustment page. ${entry.sku}, at €${entry.eur.toFixed(2)} a month with IPv4, is the cheapest EU plan without that notice. ${HETZNER_CUSTOMER_AVAILABILITY_NOTE}`,
+      `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]} are labeled "not available" on hetzner.com. The Create button says "This product is currently unavailable. Please check back later." The page notes "the number of available servers is limited." (From https://www.hetzner.com/cloud/cost-optimized/, read ${HETZNER_AVAILABILITY_READ}.) ${cheapest.sku} is ${withoutIpv4(cheapest.eur)} a month without IPv4 on Hetzner's price-adjustment page. ${entry.sku}, at €${entry.helsinki!.eur.toFixed(2)} a month in Helsinki (€${entry.eur.toFixed(2)} in Falkenstein and Nuremberg) with IPv4, is the cheapest EU plan without that notice. ${HETZNER_CUSTOMER_AVAILABILITY_NOTE}`,
     );
     assert.deepEqual([...paragraph.matchAll(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, text]) => `${text} -> ${href}`), [
       "hetzner.com -> https://www.hetzner.com/cloud/cost-optimized/",
@@ -450,18 +450,10 @@ describe("the pricing page prices what Hetzner sells today", () => {
     }
   });
 
-  it("counts in its table note the listed prices below the cheapest orderable plan, and names that plan", async () => {
-    const { body } = await get("/hetzner-pricing-2026");
-    const text = visible(body);
-    const cheapest = cheapestOrderableHetznerPlan();
-    const below = HETZNER_CLOUD_PLANS.filter(p => p.eur < cheapest.eur);
-    const several = text.match(/The (\d+) cheapest listed prices are for unavailable plans/)?.[1];
-    const one = text.includes("The cheapest listed price is for an unavailable plan");
-    assert.equal(several === undefined ? (one ? 1 : 0) : Number(several), below.length, "the note counts a different number of unpayable prices than the table holds");
-    assert.ok(
-      text.includes(`The first row marked orderable is ${cheapest.sku} at €${cheapest.eur.toFixed(2)} for ${cheapest.vcpu} vCPU and ${cheapest.ram} GB`),
-      "the note does not name the cheapest orderable plan",
-    );
+  it("names the first orderable plan and its prices in Helsinki and Germany", async () => {
+    const text = visible((await get("/hetzner-pricing-2026")).body);
+    const entry = cheapestOrderableHetznerPlan();
+    assert.ok(text.includes(`The first row marked orderable is ${entry.sku} at €${entry.helsinki!.eur.toFixed(2)} in Helsinki (€${entry.eur.toFixed(2)} in Falkenstein and Nuremberg)`));
   });
 
   it("names no cloud plan Hetzner no longer lists", async () => {
@@ -476,6 +468,7 @@ describe("the pricing page prices what Hetzner sells today", () => {
     const { body } = await get("/hetzner-pricing-2026");
     const allowed = new Set([
       ...HETZNER_CLOUD_PLANS.map(p => `€${p.eur.toFixed(2)}`),
+      ...HETZNER_CLOUD_PLANS.flatMap(p => p.helsinki ? [`€${p.helsinki.eur.toFixed(2)}`] : []),
       ...HETZNER_APRIL_CHANGES.flatMap(c => [c.before, c.after]),
       `€${HETZNER_SINGAPORE_EXAMPLE.eur.toFixed(2)}`,
       ...[HETZNER_AX42_GERMANY, HETZNER_AX102_GERMANY].flatMap(server => Object.values(server)).map(price => `€${price.toFixed(2)}`),
@@ -499,6 +492,7 @@ describe("the pricing page prices what Hetzner sells today", () => {
     const { body } = await get("/hetzner-pricing-2026");
     const allowed = new Set([
       ...HETZNER_CLOUD_PLANS.map(p => dollars(p.usd)),
+      ...HETZNER_CLOUD_PLANS.flatMap(p => p.helsinki ? [dollars(p.helsinki.usd)] : []),
       dollars(ipv4PerMonthUsd),
       ...HETZNER_CLOUD_PLANS.map(plan => backupPrices(plan).usd),
       dollars(HETZNER_APRIL_DOLLAR_EXAMPLE.before),
@@ -539,7 +533,7 @@ describe("every page that states a Hetzner entry price states the same one", () 
         assert.doesNotMatch(text, asEntry, `${page} offers ${plan.sku} as an entry price`);
       }
       if (/cheapest plan you can order|cheapest orderable plan/.test(text)) {
-        assert.match(text, new RegExp(`${cheapest.sku}[^.]{0,40}€${cheapest.eur.toFixed(2)}`), page);
+        assert.match(text, new RegExp(`${cheapest.sku}[^.]{0,40}€${cheapest.helsinki!.eur.toFixed(2)}`), page);
       }
     });
   }
@@ -561,7 +555,7 @@ describe("every page that states a Hetzner entry price states the same one", () 
 
   it("composes that price from the plan table rather than from a literal", () => {
     const cheapest = cheapestOrderableHetznerPlan();
-    assert.equal(hetznerEntryPriceClause(), `${cheapest.sku} at €${cheapest.eur.toFixed(2)}/mo (${cheapest.vcpu} vCPU, ${cheapest.ram} GB)`);
+    assert.equal(hetznerEntryPriceClause(), `${cheapest.sku} at €${cheapest.helsinki!.eur.toFixed(2)}/mo in Helsinki (€${cheapest.eur.toFixed(2)}/mo in Falkenstein and Nuremberg; ${cheapest.vcpu} vCPU, ${cheapest.ram} GB)`);
   });
 });
 
@@ -648,14 +642,14 @@ describe("when /hetzner-pricing-2026 says each 2026 change happened", () => {
     const summary = body.slice(body.indexOf('<div class="executive-summary">'));
     const opening = visible(summary.slice(0, summary.indexOf("</p>"))).trim();
     assert.ok(opening.startsWith(
-      "Hetzner raised cloud prices twice in 2026. Dedicated-server memory add-ons rose in February. Setup fees changed on 2 February and 29 April. Server prices rose on 1 April. New-order prices rose on 15 June. The April 1 adjustment",
+      "Hetzner raised cloud prices twice in 2026. Dedicated-server memory add-ons rose in February. Setup fees changed on 2 February and 29 April. Server prices rose on 1 April. New-order prices rose on 15 June.",
     ), opening);
   });
 
   it("counts cloud price adjustments, not every 2026 change, in its tile", async () => {
     const { body } = await get("/hetzner-pricing-2026");
     const labels = [...body.matchAll(/<div class="stat-label">([^<]*)<\/div>/g)].map((m) => m[1]);
-    assert.ok(labels.includes("Cloud price adjustments in 2026"), labels.join(" | "));
+    assert.ok(labels.includes("Cloud price increases in 2026"), labels.join(" | "));
     assert.ok(!labels.includes("Price adjustments in 2026"), labels.join(" | "));
   });
 });
@@ -793,12 +787,12 @@ describe("the cheapest orderable EU plan for each memory size on /hetzner-pricin
     const paragraphs = sectionOneParagraphs(body);
     const availabilityNote = paragraphs.findIndex(isTheAvailabilityNote);
     assert.ok(availabilityNote > -1, paragraphs.join(" | "));
-    assert.strictEqual(paragraphs[availabilityNote + 1], cheapestOrderableEuPlanForEachMemorySizeSentence());
+    assert.strictEqual(paragraphs[availabilityNote + 1], cheapestOrderableEuPlanForEachMemorySizeSentence().replace("EU plan", "plan in Falkenstein and Nuremberg"));
   });
 
   it("gives every size the memory and the euro and dollar prices of the table row for the plan it names, an orderable EU plan", async () => {
     const { body } = await get("/hetzner-pricing-2026");
-    const line = sectionOneParagraphs(body).find(paragraph => paragraph.startsWith("Hetzner's cheapest orderable EU plan for each memory size: ")) ?? "";
+    const line = sectionOneParagraphs(body).find(paragraph => paragraph.startsWith("Hetzner's cheapest orderable plan in Falkenstein and Nuremberg for each memory size: ")) ?? "";
     const entries = [...line.matchAll(/(\d+) GB, (\w+) at €(\d+\.\d{2}) \(\$(\d+\.\d{2})\)/g)];
     assert.ok(entries.length > 0, line);
     for (const [entry, ram, sku, eur, usd] of entries) {
@@ -837,7 +831,7 @@ describe("the cheaper VPS in Germany than Hetzner's plan of the same memory size
   it("is the paragraph right after Hetzner's cheapest plan for each memory size on /hetzner-pricing-2026, word for word", async () => {
     const { body } = await get("/hetzner-pricing-2026");
     const paragraphs = sectionOneParagraphs(body);
-    const memorySizeLine = paragraphs.indexOf(cheapestOrderableEuPlanForEachMemorySizeSentence());
+    const memorySizeLine = paragraphs.indexOf(cheapestOrderableEuPlanForEachMemorySizeSentence().replace("EU plan", "plan in Falkenstein and Nuremberg"));
     assert.ok(memorySizeLine > -1, paragraphs.join(" | "));
     assert.strictEqual(paragraphs[memorySizeLine + 1], CHEAPER_VPS_IN_GERMANY_AS_WRITTEN);
   });
@@ -1175,8 +1169,8 @@ describe("the day /hetzner-pricing-2026 says Hetzner's prices were read", () => 
     const text = visible(page);
     const description = page.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "";
     assert.ok(text.includes(`Plan prices read from Hetzner's price API on ${SCRATCH_DAY}`), "byline");
-    assert.ok(description.includes(`read from Hetzner's price API on ${SCRATCH_DAY}`), description);
-    assert.ok(text.includes(`with the monthly price read from Hetzner's price API on ${SCRATCH_DAY} and the availability hetzner.com showed on ${HETZNER_AVAILABILITY_READ}.`), "section 1");
+    assert.ok(description.includes(`Plan prices from Hetzner's API, read ${SCRATCH_DAY}; Helsinki CPX and CCX prices read 2026-11-26`), description);
+    assert.ok(text.includes(`with the monthly price read from Hetzner's price API on ${SCRATCH_DAY} (Helsinki CPX and CCX prices read on 2026-11-26) and the availability hetzner.com showed on ${HETZNER_AVAILABILITY_READ}.`), "section 1");
     assert.ok(text.includes(`These prices were read from Hetzner's price API on ${SCRATCH_DAY}.`), "section 1's dedicated-server prices");
     assert.ok(text.includes(`Plan prices in section 1 were read from Hetzner's price API on ${SCRATCH_DAY}`), "methodology");
     assert.ok(text.includes(`Hetzner's price API, read ${SCRATCH_DAY}`), "section 6");
@@ -1188,6 +1182,25 @@ describe("the day /hetzner-pricing-2026 says Hetzner's prices were read", () => 
     for (const text of ["{", "null", "{}", '{"read_on":"2026-02-30"}', '{"read_on":"2026-10-2"}', '{"read_on":20261002}']) {
       assert.throws(() => parseHetznerPricesRead(text, "scratch.json"), /^Error: scratch\.json /, text);
     }
+  });
+});
+
+describe("Helsinki prices in the cloud plan table", () => {
+  it("prints the November prices in the correct plan rows and identifies their scope", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const section = body.slice(body.indexOf('<h2 id="pricing">'), body.indexOf('<h2 id="april">'));
+    const table = section.match(/<table class="pricing-table">[\s\S]*?<\/table>/)?.[0] ?? "";
+    const rows = [...table.matchAll(/<tr\b[^>]*>\s*<td[\s\S]*?<\/tr>/g)].map(([row]) => [...row.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => visible(cell).trim()));
+    const expected: Record<string, string> = {
+      CPX02: "€5.49 / $6.59", CPX12: "€9.99 / $11.59", CPX22: "€16.99 / $20.09",
+      CPX32: "€30.49 / $36.09", CPX42: "€59.49 / $70.09", CPX52: "€85.49 / $101.59", CPX62: "€110.99 / $130.59",
+      CCX13: "€36.99 / $43.09", CCX23: "€73.49 / $86.59", CCX33: "€117.99 / $139.09",
+      CCX43: "€234.99 / $277.09", CCX53: "€453.49 / $535.59", CCX63: "€725.49 / $856.09",
+    };
+    for (const [sku, price] of Object.entries(expected)) assert.equal(rows.find(row => row[0] === sku)?.[5], price, sku);
+    const intro = visible(section);
+    assert.match(intro, /15% lower for new orders and rescales, while existing servers keep their price/);
+    assert.doesNotMatch(intro, /EU prices are the Falkenstein, Helsinki and Nuremberg figure/);
   });
 });
 
@@ -1203,12 +1216,13 @@ describe("the dollar prices /hetzner-pricing-2026 gives beside each euro price",
     const { body } = await get("/hetzner-pricing-2026");
     const table = planTable(body);
     const headers = [...table.matchAll(/<th>([\s\S]*?)<\/th>/g)].map(([, inner]) => visible(inner).trim());
-    assert.deepEqual(headers, ["Plan", "Spec", "Line", "Region", "Per month (€ / $)", "Availability"]);
+    assert.deepEqual(headers, ["Plan", "Spec", "Line", "Region", "Per month (€ / $)", "Helsinki (€ / $)", "Availability"]);
     const rows = [...table.matchAll(/<tr\b[^>]*>\s*<td[\s\S]*?<\/tr>/g)].map(([row]) => [...row.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map(([, inner]) => visible(inner).trim()));
     assert.deepEqual(
       rows.map(cells => [cells[0], cells[4]]),
       HETZNER_CLOUD_PLANS.map(p => [p.sku, `€${p.eur.toFixed(2)} / ${dollars(p.usd)}`]),
     );
+    assert.deepEqual(rows.map(cells => [cells[0], cells[5]]), HETZNER_CLOUD_PLANS.map(p => [p.sku, p.helsinki ? `€${p.helsinki.eur.toFixed(2)} / ${dollars(p.helsinki.usd)}` : "—"]));
   });
 
   it("says what the two prices in each cell are, right after the sentence on Singapore", async () => {
@@ -1276,8 +1290,7 @@ describe("Hetzner's stock notice and retired server types", () => {
   it("keeps the table note's computed price and specification comparison with the availability labels", async () => {
     const { body } = await get("/hetzner-pricing-2026");
     const entry = cheapestOrderableHetznerPlan();
-    const above = cheaperUnorderablePlanWithMoreServer();
-    const expected = `Read this table by availability first. ${unpayableLowestPricesSentence()} The first row marked orderable is ${entry.sku} at €${entry.eur.toFixed(2)} for ${entry.vcpu} vCPU and ${entry.ram} GB${above ? `, less server than the ${above.sku} above it at €${above.eur.toFixed(2)}` : ""}.`;
+    const expected = `Read this table by availability first. The first row marked orderable is ${entry.sku} at €${entry.helsinki!.eur.toFixed(2)} in Helsinki (€${entry.eur.toFixed(2)} in Falkenstein and Nuremberg) for ${entry.vcpu} vCPU and ${entry.ram} GB.`;
     assert.equal(sectionOneParagraphs(body).find(isTheAvailabilityNote)?.replace(/\(\s+/g, "(").replace(/\s+\)/g, ")"), `${expected} ${HETZNER_ORDERABLE_MEANING}`);
   });
 

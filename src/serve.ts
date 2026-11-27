@@ -73,7 +73,7 @@ import { MISTRAL_PRICES_PATH, MISTRAL_PRICES_SLUG, readMistralPrices, type Mistr
 import { archiveCaptureDate, archivedAddress, type ColumnTable } from "./guide-data.js";
 import { MODEL_BELIEFS_CLOSING, MODEL_BELIEFS_HEADING, MODEL_BELIEFS_PATH, MODEL_BELIEFS_RERUN_SENTENCE, MODEL_BELIEFS_SLUG, MODEL_BELIEFS_TITLE, MOSTLY_OLD_ANSWERS, QUOTED_MODEL_BELIEFS_CLASS, answersFor, answersPerFact, answersPerModel, changedLabel, factsByOldAnswers, findingOf, introOf, metaDescriptionOf, methodOf, modelsByOldAnswers, modelsMostlyOld, numberWord, oldAnswersFrom, readModelBeliefs, testedOnOf, type ModelBeliefs } from "./model-beliefs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
-import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_COST_OPTIMIZED_PAGE, HETZNER_PRICE_ADJUSTMENT_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableEuPlanForEachMemorySizeSentence, cheapestOrderableHetznerPlan, cheaperVpsInGermanyParagraph, mostRamForTheMoneyParagraph, costOptimizedLineNobodyCanOrder, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
+import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_HELSINKI_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_COST_OPTIMIZED_PAGE, HETZNER_PRICE_ADJUSTMENT_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableEuPlanForEachMemorySizeSentence, cheapestOrderableHetznerPlan, cheaperVpsInGermanyParagraph, mostRamForTheMoneyParagraph, costOptimizedLineNobodyCanOrder, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isCancelledAnnouncement, theEventNeverHappened, cancelledOn, standingOf as changeStandingOf, isNoLongerInForce, resolutionOf, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
@@ -7132,7 +7132,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     slug: "hetzner-alternatives",
     title: "Hetzner Alternatives After April 2026 Price Increase — Budget Cloud Options",
     metaDesc: "Hetzner raised prices twice in 2026 and its whole Cost-Optimized line is unavailable. Compare free-tier alternatives: DigitalOcean, Oracle Cloud, Render, Railway, Fly.io, Cloudflare Workers, Google Cloud.",
-    contextHtml: `<p>Hetzner raised prices twice in 2026. The April 1 round applied to <strong>all regions and all customers</strong>; the June 15 round applies to <strong>new orders and rescales only</strong>. All ${unorderableHetznerPlans().length} Cost-Optimized plans are now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from hetzner.com on ${HETZNER_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a>.</p>
+    contextHtml: `<p>Hetzner raised prices twice in 2026. The April 1 round applied to <strong>all regions and all customers</strong>; the June 15 round applies to <strong>new orders and rescales only</strong>. All ${unorderableHetznerPlans().length} Cost-Optimized plans are now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from Hetzner’s price API on ${HETZNER_HELSINKI_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a>.</p>
       <p>If you're looking for budget-friendly alternatives with generous free tiers or credits, here are the best options across VPS/cloud providers, managed platforms, and serverless offerings.</p>`,
     tag: "hetzner-alternative",
     primaryVendor: "Hetzner",
@@ -11222,7 +11222,7 @@ ${buildCards(startupCredits)}
 
   <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
     <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.5rem">Hetzner raised prices twice in 2026, and its cheapest line is unavailable</div>
-    <p style="margin:0;font-size:.9rem">Hetzner Cloud prices rose on April 1 for all customers and again on June 15 for new orders and rescales. Every Cost-Optimized plan is now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from hetzner.com on ${HETZNER_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a> or the <a href="/hetzner-alternatives">Hetzner Alternatives</a> guide.</p>
+    <p style="margin:0;font-size:.9rem">Hetzner Cloud prices rose on April 1 for all customers and again on June 15 for new orders and rescales. Every Cost-Optimized plan is now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from Hetzner’s price API on ${HETZNER_HELSINKI_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a> or the <a href="/hetzner-alternatives">Hetzner Alternatives</a> guide.</p>
   </div>
 
   <h2>Which Free Hosting Should I Use?</h2>
@@ -19384,7 +19384,7 @@ ${upgradeTable}
 
 function buildHetznerPricing2026Page(): string {
   const title = "Hetzner Cloud Pricing After the April and June 2026 Adjustments";
-  const metaDesc = `Hetzner raised cloud prices twice in 2026 — April 1 for all customers, June 15 for new orders and rescales. Current prices for every CX, CAX, CPX and CCX plan, read from Hetzner's price API on ${HETZNER_PRICES_READ}, with the Cost-Optimized line marked unavailable.`;
+  const metaDesc = `Hetzner raised cloud prices twice in 2026 — April 1 for all customers, June 15 for new orders and rescales. Plan prices from Hetzner's API, read ${HETZNER_PRICES_READ}; Helsinki CPX and CCX prices read ${HETZNER_HELSINKI_PRICES_READ}. Cost-Optimized plans are unavailable.`;
   const slug = "hetzner-pricing-2026";
   const pubDate = "2026-03-25";
 
@@ -19394,11 +19394,11 @@ function buildHetznerPricing2026Page(): string {
 
   const unorderable = unorderableHetznerPlans();
   const cheapestOrderable = cheapestOrderableHetznerPlan();
+  const helsinkiEntry = cheapestOrderable.helsinki!;
+  const helsinkiReductionSource = "https://www.hetzner.com/pressroom/price-reduction-cloud-servers-in-helsinki-now-15-percent-cheaper/";
   const lineNobodyCanOrder = costOptimizedLineNobodyCanOrder();
   const dedicatedExample = HETZNER_CLOUD_PLANS.filter(p => p.line === "General Purpose").reduce((a, b) => (a.eur <= b.eur ? a : b));
   const cheapestOverall = cheapestListedHetznerPlan();
-  const unpayableLowestPrices = unpayableLowestPricesSentence();
-  const moreServerForLess = cheaperUnorderablePlanWithMoreServer();
   const cheapestForEachMemorySize = cheapestOrderableEuPlanForEachMemorySizeSentence();
   const cheaperVpsInGermany = cheaperVpsInGermanyParagraph();
   const mostRamForTheMoney = mostRamForTheMoneyParagraph();
@@ -19414,6 +19414,7 @@ function buildHetznerPricing2026Page(): string {
       <td>${escHtmlServer(p.line)}</td>
       <td style="font-family:var(--mono)">${escHtmlServer(p.region)}</td>
       <td style="font-family:var(--mono);font-weight:600">${escHtmlServer(`${eur(p.eur)} / ${usd(p.usd)}`)}</td>
+      <td style="font-family:var(--mono)">${p.helsinki ? escHtmlServer(`${eur(p.helsinki.eur)} / ${usd(p.helsinki.usd)}`) : "—"}</td>
       <td><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${color}22;color:${color};font-weight:600">${label}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -19426,7 +19427,7 @@ function buildHetznerPricing2026Page(): string {
     </tr>`).join("\n        ");
 
   const competitorPricing = [
-    { vendor: "Hetzner (cheapest orderable)", spec: `${cheapestOrderable.sku} — ${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB`, price: `${eur(cheapestOrderable.eur)}/mo`, region: cheapestOrderable.region, note: "Cost-Optimized line unavailable" },
+    { vendor: "Hetzner (cheapest orderable)", spec: `${cheapestOrderable.sku} — ${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB`, price: `${eur(helsinkiEntry.eur)}/mo Helsinki; ${eur(cheapestOrderable.eur)}/mo Falkenstein and Nuremberg`, region: "EU", note: "Cost-Optimized line unavailable" },
     { vendor: "DigitalOcean", spec: "Basic — 1 vCPU, 512 MB", price: "$4/mo", region: "Global", note: "" },
     { vendor: "Vultr", spec: "Cloud — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Free instance (1 vCPU, 512 MB, 10 GB SSD) for accepted applicants, in Miami, Seattle and Frankfurt" },
     { vendor: "Linode/Akamai", listedAs: "Akamai Cloud", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "" },
@@ -19448,7 +19449,7 @@ function buildHetznerPricing2026Page(): string {
       <td style="font-family:var(--mono);font-weight:600;color:var(--accent)">${escHtmlServer(c.price)}</td>
       <td>${escHtmlServer(c.region)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}</td>
-      <td class="figure-provenance" style="color:var(--text-muted);font-size:.85rem">${isHetzner ? hetznerReadProvenanceHtml() : figureProvenanceHtml(`${c.spec} ${c.price}`, listedAs, vendorSlug)}</td>
+      <td class="figure-provenance" style="color:var(--text-muted);font-size:.85rem">${isHetzner ? `${hetznerReadProvenanceHtml()}; Helsinki CPX and CCX prices read 2026-11-26` : figureProvenanceHtml(`${c.spec} ${c.price}`, listedAs, vendorSlug)}</td>
     </tr>${isHetzner ? "" : vendorPageConditionsRowHtml(vendorSlug, 6)}`;
   }).join("\n        ");
 
@@ -19551,19 +19552,19 @@ ${globalNavCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Hetzner 2026</div>
   <h1>Hetzner Cloud Pricing After the April and June 2026 Adjustments</h1>
-  <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/hetzner-pricing-2026", offers.length)} &middot; Plan prices read from Hetzner's price API on ${HETZNER_PRICES_READ}</p>
+  <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/hetzner-pricing-2026", offers.length)} &middot; Plan prices read from Hetzner's price API on ${HETZNER_PRICES_READ}; Helsinki CPX and CCX prices read ${HETZNER_HELSINKI_PRICES_READ}</p>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number">${eur(cheapestOrderable.eur)}</div><div class="stat-label">Cheapest plan you can order (${escHtmlServer(cheapestOrderable.sku)})</div></div>
+    <div class="stat-card"><div class="stat-number">${eur(helsinkiEntry.eur)}</div><div class="stat-label">Cheapest plan you can order (${escHtmlServer(cheapestOrderable.sku)}, Helsinki; ${eur(cheapestOrderable.eur)} in Falkenstein and Nuremberg)</div></div>
     <div class="stat-card"><div class="stat-number red">${unorderable.length} of ${HETZNER_CLOUD_PLANS.length}</div><div class="stat-label">Plans marked not available</div></div>
-    <div class="stat-card"><div class="stat-number">${eur(cheapestOverall.eur)}</div><div class="stat-label">Cheapest listed price (${escHtmlServer(cheapestOverall.sku)}, unavailable)</div></div>
-    <div class="stat-card"><div class="stat-number red">2</div><div class="stat-label">Cloud price adjustments in 2026</div></div>
+    <div class="stat-card"><div class="stat-number">${eur(cheapestOverall.eur)}</div><div class="stat-label">Cheapest listed Cost-Optimized plan (${escHtmlServer(cheapestOverall.sku)}, unavailable)</div></div>
+    <div class="stat-card"><div class="stat-number red">2</div><div class="stat-label">Cloud price increases in 2026</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Hetzner raised cloud prices twice in 2026.</strong> Dedicated-server memory add-ons rose in February. Setup fees changed on ${HETZNER_SETUP_FEE_STATEMENTS.map(({ day }) => day).join(" and ")}. Server prices rose on 1 April. New-order prices rose on 15 June. The April 1 adjustment applied to all regions and all customers, new and existing. The June 15 adjustment applies only to new orders and rescales — existing server contracts keep their terms. Its standardization renamed dedicated servers with "-1", "-2", and "-3" designations. (From <a href="https://www.hetzner.com/pressroom/standardization-and-price-adjustment-of-our-server-products/" target="_blank" rel="noopener" style="overflow-wrap:anywhere">https://www.hetzner.com/pressroom/standardization-and-price-adjustment-of-our-server-products/</a>, read 2026-10-20.) Cloud server names did not change on June 15. Hetzner added the current cloud types such as cx23 and cpx22 on 16 October 2025. (From <a href="https://docs.hetzner.cloud/changelog" target="_blank" rel="noopener">https://docs.hetzner.cloud/changelog</a>, read 2026-10-20.) The June 15 adjustment raised Regular Performance (CPX) plans 144-175%, General Purpose (CCX) plans 113-173%, and Cost-Optimized (CX, CAX) plans 30-38% in Germany and Finland.</p>
+    <p><strong>Hetzner raised cloud prices twice in 2026.</strong> Dedicated-server memory add-ons rose in February. Setup fees changed on ${HETZNER_SETUP_FEE_STATEMENTS.map(({ day }) => day).join(" and ")}. Server prices rose on 1 April. New-order prices rose on 15 June. Since 10 November, Helsinki CPX and CCX prices have fallen 15% for new orders and rescales; existing servers keep their price. (<a href="${helsinkiReductionSource}" target="_blank" rel="noopener">Hetzner press release</a>.) The April 1 adjustment applied to all regions and all customers, new and existing. The June 15 adjustment applies only to new orders and rescales — existing server contracts keep their terms. Its standardization renamed dedicated servers with "-1", "-2", and "-3" designations. (From <a href="https://www.hetzner.com/pressroom/standardization-and-price-adjustment-of-our-server-products/" target="_blank" rel="noopener" style="overflow-wrap:anywhere">https://www.hetzner.com/pressroom/standardization-and-price-adjustment-of-our-server-products/</a>, read 2026-10-20.) Cloud server names did not change on June 15. Hetzner added the current cloud types such as cx23 and cpx22 on 16 October 2025. (From <a href="https://docs.hetzner.cloud/changelog" target="_blank" rel="noopener">https://docs.hetzner.cloud/changelog</a>, read 2026-10-20.) The June 15 adjustment raised Regular Performance (CPX) plans 144-175%, General Purpose (CCX) plans 113-173%, and Cost-Optimized (CX, CAX) plans 30-38% in Germany and Finland.</p>
     <p>Hetzner stopped selling cx22, cx32, cx42 and cx52 on 1 January 2026. These server types no longer work by name in the API. cpx11, cpx21, cpx31, cpx41 and cpx51 are no longer sold in Falkenstein, Nuremberg, Helsinki and Singapore. Existing servers keep working. (From <a href="https://docs.hetzner.cloud/changelog" target="_blank" rel="noopener">https://docs.hetzner.cloud/changelog</a>, read 2026-10-20.)</p>
-    ${lineNobodyCanOrder ? `<p><strong>Cost-Optimized plans are currently unavailable.</strong> ${escHtmlServer(joinWithAnd(lineNobodyCanOrder.plans.map(p => p.sku)))} are labeled "not available" on <a href="${HETZNER_COST_OPTIMIZED_PAGE}" target="_blank" rel="noopener">hetzner.com</a>. The Create button says "This product is currently unavailable. Please check back later." The page notes "the number of available servers is limited." (From <a href="${HETZNER_COST_OPTIMIZED_PAGE}" target="_blank" rel="noopener">${HETZNER_COST_OPTIMIZED_PAGE}</a>, read ${HETZNER_AVAILABILITY_READ}.) ${escHtmlServer(lineNobodyCanOrder.cheapestInTheLine.sku)} is ${eur(lineNobodyCanOrder.cheapestInTheLineEurWithoutIpv4)} a month without IPv4 on Hetzner's <a href="${HETZNER_PRICE_ADJUSTMENT_PAGE}" target="_blank" rel="noopener">price-adjustment page</a>. ${escHtmlServer(lineNobodyCanOrder.cheapestOrderableEu.sku)}, at ${eur(lineNobodyCanOrder.cheapestOrderableEu.eur)} a month with IPv4, is the cheapest EU plan without that notice. Hetzner’s status page (<a href="https://status.hetzner.com/incident/0a75c7ae-3377-41dc-aabe-601063724d24" target="_blank" rel="noopener">status.hetzner.com</a>) notes “restrict the creation of new cloud servers for both new customers and some of our existing customers” starting June 26, 2026. Affected customers cannot create or rescale cloud servers at the affected location, per Hetzner’s FAQ.</p>` : ""}
+    ${lineNobodyCanOrder ? `<p><strong>Cost-Optimized plans are currently unavailable.</strong> ${escHtmlServer(joinWithAnd(lineNobodyCanOrder.plans.map(p => p.sku)))} are labeled "not available" on <a href="${HETZNER_COST_OPTIMIZED_PAGE}" target="_blank" rel="noopener">hetzner.com</a>. The Create button says "This product is currently unavailable. Please check back later." The page notes "the number of available servers is limited." (From <a href="${HETZNER_COST_OPTIMIZED_PAGE}" target="_blank" rel="noopener">${HETZNER_COST_OPTIMIZED_PAGE}</a>, read ${HETZNER_AVAILABILITY_READ}.) ${escHtmlServer(lineNobodyCanOrder.cheapestInTheLine.sku)} is ${eur(lineNobodyCanOrder.cheapestInTheLineEurWithoutIpv4)} a month without IPv4 on Hetzner's <a href="${HETZNER_PRICE_ADJUSTMENT_PAGE}" target="_blank" rel="noopener">price-adjustment page</a>. ${escHtmlServer(lineNobodyCanOrder.cheapestOrderableEu.sku)}, at ${eur(helsinkiEntry.eur)} a month in Helsinki (${eur(lineNobodyCanOrder.cheapestOrderableEu.eur)} in Falkenstein and Nuremberg) with IPv4, is the cheapest EU plan without that notice. Hetzner’s status page (<a href="https://status.hetzner.com/incident/0a75c7ae-3377-41dc-aabe-601063724d24" target="_blank" rel="noopener">status.hetzner.com</a>) notes “restrict the creation of new cloud servers for both new customers and some of our existing customers” starting June 26, 2026. Affected customers cannot create or rescale cloud servers at the affected location, per Hetzner’s FAQ.</p>` : ""}
     <p><strong>Hardware costs increased.</strong> Hetzner cited increased costs to operate infrastructure and buy new hardware.</p>
   </div>
 
@@ -19582,19 +19583,19 @@ ${globalNavCss()}
   </div>
 
   <h2 id="pricing">1. Every Cloud Plan, Priced Today</h2>
-  <p class="section-intro">All ${HETZNER_CLOUD_PLANS.length} Hetzner Cloud plans, with the monthly price read from Hetzner's price API on ${HETZNER_PRICES_READ} and the availability hetzner.com showed on ${HETZNER_AVAILABILITY_READ}. EU prices are the Falkenstein, Helsinki and Nuremberg figure; the US rows are Ashburn and Hillsboro, which are the only datacentres those plans are offered in. Singapore is priced higher again and is not listed here. Each cell shows the price for accounts billed in euros and the price for accounts billed in US dollars.</p>
+  <p class="section-intro">All ${HETZNER_CLOUD_PLANS.length} Hetzner Cloud plans, with the monthly price read from Hetzner's price API on ${HETZNER_PRICES_READ} (Helsinki CPX and CCX prices read on 2026-11-26) and the availability hetzner.com showed on ${HETZNER_AVAILABILITY_READ}. EU prices are for Falkenstein and Nuremberg; the Helsinki column gives CPX and CCX prices since 10 November 2026, 15% lower for new orders and rescales, while existing servers keep their price; the US rows are Ashburn and Hillsboro, which are the only datacentres those plans are offered in. Singapore is priced higher again and is not listed here. Each cell shows the price for accounts billed in euros and the price for accounts billed in US dollars.</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
-        <tr><th>Plan</th><th>Spec</th><th>Line</th><th>Region</th><th>Per month (€ / $)</th><th>Availability</th></tr>
+        <tr><th>Plan</th><th>Spec</th><th>Line</th><th>Region</th><th>Per month (€ / $)</th><th>Helsinki (€ / $)</th><th>Availability</th></tr>
       </thead>
       <tbody>
         ${planRows}
       </tbody>
     </table>
   </div>
-  <p class="section-intro" style="margin-top:0"><strong>Read this table by availability first.</strong> ${unpayableLowestPrices === "" ? "" : `${unpayableLowestPrices} `}The first row marked orderable is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)} for ${cheapestOrderable.vcpu} vCPU and ${cheapestOrderable.ram} GB${moreServerForLess ? `, less server than the ${escHtmlServer(moreServerForLess.sku)} above it at ${eur(moreServerForLess.eur)}` : ""}. "Orderable" means hetzner.com shows the plan without its "not available" notice. Hetzner’s status page (<a href="https://status.hetzner.com/incident/0a75c7ae-3377-41dc-aabe-601063724d24" target="_blank" rel="noopener">status.hetzner.com</a>) states: “we are currently required to restrict the creation of new cloud servers for both new customers and some of our existing customers.” A plan marked orderable may still be one a new customer cannot create.</p>
-  ${cheapestForEachMemorySize === "" ? "" : `<p class="section-intro">${escHtmlServer(cheapestForEachMemorySize)}</p>`}
+  <p class="section-intro" style="margin-top:0"><strong>Read this table by availability first.</strong> The first row marked orderable is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(helsinkiEntry.eur)} in Helsinki (${eur(cheapestOrderable.eur)} in Falkenstein and Nuremberg) for ${cheapestOrderable.vcpu} vCPU and ${cheapestOrderable.ram} GB. "Orderable" means hetzner.com shows the plan without its "not available" notice. Hetzner’s status page (<a href="https://status.hetzner.com/incident/0a75c7ae-3377-41dc-aabe-601063724d24" target="_blank" rel="noopener">status.hetzner.com</a>) states: “we are currently required to restrict the creation of new cloud servers for both new customers and some of our existing customers.” A plan marked orderable may still be one a new customer cannot create.</p>
+  ${cheapestForEachMemorySize === "" ? "" : `<p class="section-intro">${escHtmlServer(cheapestForEachMemorySize.replace("EU plan", "plan in Falkenstein and Nuremberg"))}</p>`}
   ${cheaperVpsInGermany === "" ? "" : `<p class="section-intro">${escHtmlServer(cheaperVpsInGermany)}</p>`}
   <p class="section-intro">Every cloud price in this table includes the primary IPv4 address. Cloud servers include at least 20 TB of outgoing traffic a month in the EU, 1 TB in the US and 0.5 TB in Singapore; incoming traffic is free.</p>
   <p class="section-intro">A new AX42 dedicated server in Germany costs ${eur(HETZNER_AX42_GERMANY.newOrder)} a month and a new AX102 ${eur(HETZNER_AX102_GERMANY.newOrder)}, excluding IPv4. The one-off setup fee is €${HETZNER_AX42_GERMANY.setupFee} for an AX42 and €${HETZNER_AX102_GERMANY.setupFee} for an AX102. These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}.</p>
@@ -19628,11 +19629,12 @@ ${globalNavCss()}
   </div>
 
   <h2 id="who">4. Who Each Adjustment Applies To</h2>
-  <p class="section-intro">The two rounds have different scopes, and the difference changes what a reader should do about them:</p>
+  <p class="section-intro">The increases and Helsinki reduction have different scopes, and the difference changes what a reader should do about them:</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin:1rem 0">
     <div class="impact-card" style="border-left-color:#f85149"><h3>April 1 — everyone</h3><p class="impact-desc">All new orders and all existing servers moved to the new prices. No opt-out, no freeze period, no legacy rates.</p></div>
     <div class="impact-card" style="border-left-color:#d29922"><h3>June 15 — new orders and rescales</h3><p class="impact-desc">Existing server contracts keep their terms and stay active. You pay the June prices when you order a new server or rescale one you already run.</p></div>
-    <div class="impact-card" style="border-left-color:#d29922"><h3>All regions, unequally</h3><p class="impact-desc">Germany, Finland, US and Singapore. Singapore is the most expensive on every line that is offered there — ${escHtmlServer(HETZNER_SINGAPORE_EXAMPLE.sku)} is ${eur(HETZNER_SINGAPORE_EXAMPLE.eur)} against ${eur(HETZNER_CLOUD_PLANS.filter(p => p.sku === HETZNER_SINGAPORE_EXAMPLE.sku)[0].eur)} in the EU.</p></div>
+    <div class="impact-card" style="border-left-color:#3fb950"><h3>November 10 — Helsinki new orders and rescales</h3><p class="impact-desc">CPX and CCX prices in Helsinki fell 15% for new orders and rescales. Existing servers keep their price.</p></div>
+    <div class="impact-card" style="border-left-color:#d29922"><h3>All regions, unequally</h3><p class="impact-desc">Germany, Finland, US and Singapore. Singapore is the most expensive on every line that is offered there — ${escHtmlServer(HETZNER_SINGAPORE_EXAMPLE.sku)} is ${eur(HETZNER_SINGAPORE_EXAMPLE.eur)} against ${eur(HETZNER_CLOUD_PLANS.filter(p => p.sku === HETZNER_SINGAPORE_EXAMPLE.sku)[0].eur)} in Falkenstein and Nuremberg and ${eur(HETZNER_CLOUD_PLANS.filter(p => p.sku === HETZNER_SINGAPORE_EXAMPLE.sku)[0].helsinki!.eur)} in Helsinki.</p></div>
     <div class="impact-card" style="border-left-color:#3fb950"><h3>Excluded from June</h3><p class="impact-desc">Server Auction, IPs, storage products, Load Balancers, Volumes, Snapshots and Object Storage were all named as unaffected by the June round.</p></div>
   </div>
 
@@ -19640,7 +19642,7 @@ ${globalNavCss()}
   <p class="section-intro">How much more you pay depends on your workload size, and on whether you are starting something new. The two figures below the first card are April-round estimates for a fleet that moved to the new prices in one step; the June round only reaches you when you order or rescale.</p>
   <div class="impact-card" style="border-left-color:#3fb950">
     <h3><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:#3fb95022;color:#3fb950;font-weight:600;margin-right:.5rem">LOW</span>Hobby Projects &amp; Side Projects</h3>
-    <p class="impact-desc">If you already run a small server, June left it alone — you are on your existing contract at your existing price. Starting one now is the expensive case: the cheapest orderable plan is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}/mo for ${cheapestOrderable.vcpu} vCPU and ${cheapestOrderable.ram} GB, and the Cost-Optimized line you would once have reached for is sold only when Hetzner has stock.</p>
+    <p class="impact-desc">If you already run a small server, June left it alone — you are on your existing contract at your existing price. Starting one now is the expensive case: the cheapest orderable plan is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(helsinkiEntry.eur)}/mo in Helsinki (${eur(cheapestOrderable.eur)}/mo in Falkenstein and Nuremberg) for ${cheapestOrderable.vcpu} vCPU and ${cheapestOrderable.ram} GB, and the Cost-Optimized line you would once have reached for is sold only when Hetzner has stock.</p>
   </div>
   <div class="impact-card" style="border-left-color:#d29922">
     <h3><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:#d2992222;color:#d29922;font-weight:600;margin-right:.5rem">MEDIUM</span>Small Teams &amp; Startups</h3>
@@ -19665,7 +19667,7 @@ ${globalNavCss()}
   </div>
   <p class="section-intro"><strong>Most RAM for the money:</strong> ${escHtmlServer(mostRamForTheMoney)}</p>
   <div class="context-box">
-    <strong>Bottom line:</strong> On entry price, Hetzner is no longer the cheap option. ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)} is above DigitalOcean's $4 Basic Droplet and Vultr's and Linode's $5 tiers, and the plans that used to sit below them are sold only when Hetzner has stock. Hetzner's case now rests on what you get per euro further up the range — ${escHtmlServer(dedicatedExample.sku)} buys ${dedicatedExample.vcpu} dedicated vCPUs and ${dedicatedExample.ram} GB for ${eur(dedicatedExample.eur)}. Of the VMs here, only Oracle Cloud's Always Free tier is open to every new account at no cost. Vultr gives a free 1 vCPU, 512 MB instance to accepted applicants in Miami, Seattle and Frankfurt. Railway and Render have free plans for apps, not VMs.
+    <strong>Bottom line:</strong> On entry price, Hetzner is no longer the cheap option. ${escHtmlServer(cheapestOrderable.sku)} at ${eur(helsinkiEntry.eur)} a month in Helsinki (${eur(cheapestOrderable.eur)} in Falkenstein and Nuremberg) is above DigitalOcean's $4 Basic Droplet and Vultr's and Linode's $5 tiers, and the plans that used to sit below them are sold only when Hetzner has stock. Hetzner's case now rests on what you get per euro further up the range — ${escHtmlServer(dedicatedExample.sku)} buys ${dedicatedExample.vcpu} dedicated vCPUs and ${dedicatedExample.ram} GB for ${eur(dedicatedExample.eur)} in Falkenstein and Nuremberg (${eur(dedicatedExample.helsinki!.eur)} in Helsinki). Of the VMs here, only Oracle Cloud's Always Free tier is open to every new account at no cost. Vultr gives a free 1 vCPU, 512 MB instance to accepted applicants in Miami, Seattle and Frankfurt. Railway and Render have free plans for apps, not VMs.
     <p style="margin-top:.75rem">For a full comparison of ${altOffers.length} free-tier hosting alternatives, see <a href="/hetzner-alternatives">Hetzner Alternatives</a>.</p>
   </div>
 
@@ -19686,6 +19688,10 @@ ${globalNavCss()}
     <div class="impact-card" style="border-left-color:#3fb950">
       <h3>Keep the servers you have</h3>
       <p class="impact-desc">June applies to new orders and rescales. An existing contract keeps its terms, so rescaling a running server is a repricing event — moving up a size and moving back down does not restore the old rate.</p>
+    </div>
+    <div class="impact-card" style="border-left-color:#3fb950">
+      <h3>Consider Helsinki</h3>
+      <p class="impact-desc">A new order or rescale in Helsinki costs about 15% less on CPX and CCX than in Falkenstein or Nuremberg.</p>
     </div>
     <div class="impact-card" style="border-left-color:#3fb950">
       <h3>Use Auction Servers</h3>
@@ -19715,7 +19721,7 @@ ${globalNavCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Plan prices in section 1 were read from Hetzner's price API on ${HETZNER_PRICES_READ}, the API the three cloud family pages on <a href="${HETZNER_PRICE_SOURCE}" target="_blank" rel="noopener">hetzner.com</a> draw from; plan names, specs and availability were read from those pages on ${HETZNER_AVAILABILITY_READ}. The April figures come from <a href="https://www.hetzner.com/pressroom/statement-price-adjustment/" target="_blank" rel="noopener">Hetzner's April press statement</a> and our own change record; the June scope comes from <a href="https://www.hetzner.com/pressroom/standardization-and-price-adjustment-of-our-server-products/" target="_blank" rel="noopener">Hetzner's June statement</a>. Every competitor row in section 6 states its own provenance in the table's last column rather than in this paragraph, and ${handTypedAlternativeRowCount} of the ${competitorPricing.length} are hand-typed with nothing behind them that a re-read would correct. The competitors compared here were chosen by hand.
+    <strong>Methodology:</strong> Plan prices in section 1 were read from Hetzner's price API on ${HETZNER_PRICES_READ}, except the Helsinki CPX and CCX prices, read on 2026-11-26. This is the API the three cloud family pages on <a href="${HETZNER_PRICE_SOURCE}" target="_blank" rel="noopener">hetzner.com</a> draw from; plan names, specs and availability were read from those pages on ${HETZNER_AVAILABILITY_READ}. The April figures come from <a href="https://www.hetzner.com/pressroom/statement-price-adjustment/" target="_blank" rel="noopener">Hetzner's April press statement</a> and our own change record; the June scope comes from <a href="https://www.hetzner.com/pressroom/standardization-and-price-adjustment-of-our-server-products/" target="_blank" rel="noopener">Hetzner's June statement</a>. Every competitor row in section 6 states its own provenance in the table's last column rather than in this paragraph, and ${handTypedAlternativeRowCount} of the ${competitorPricing.length} are hand-typed with nothing behind them that a re-read would correct. The competitors compared here were chosen by hand.
   </div>
 
   <div class="search-cta">
