@@ -21460,6 +21460,34 @@
       "category": "Cloud IaaS",
       "alternatives": [],
       "recorded_date": "2026-11-27"
+    },
+    {
+      "vendor": "Pollinations.AI",
+      "change_type": "limits_reduced",
+      "date": "2026-11-25",
+      "summary": "On November 25, 2026, Pollinations capped free Classic text prompts at 16,000 characters. A longer prompt gets HTTP 413.",
+      "previous_state": "Before November 25, 2026, free Classic text had no prompt character limit.",
+      "current_state": "\"Adds a 16,000-character prompt cap ... Over it: 413\" (pull request 20599, merged 2026-11-25). APIDOCS.md (read 2026-11-27): \"Prompts are limited to 16,000 characters (about 4,000 tokens), counting messages and tools, and replies to 1,500 tokens.\"",
+      "source_url": "https://github.com/pollinations/pollinations/pull/20599",
+      "impact": "medium",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-27",
+      "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Pollinations.AI",
+      "change_type": "limits_reduced",
+      "date": "2026-11-26",
+      "summary": "On November 26, 2026, Pollinations capped free Classic text at 100 replies per IP address a day, reset at 00:00 UTC. Past the cap, requests get HTTP 402 until midnight UTC, or can be paid through x402.",
+      "previous_state": "Before November 26, 2026, free Classic text had no daily reply cap.",
+      "current_state": "\"Adds a per-IP daily quota of 100 free text replies (IPv6 by /64), reset at 00:00 UTC\" (pull request 20620, merged 2026-11-26). APIDOCS.md (read 2026-11-27): \"One at a time, at least 45 seconds apart. A stream waits for the next slot. At most 100 replies a day, reset at 00:00 UTC\"",
+      "source_url": "https://github.com/pollinations/pollinations/pull/20620",
+      "impact": "medium",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-27",
+      "date_source": "vendor_page"
     }
   ]
 }
