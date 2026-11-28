@@ -1324,13 +1324,13 @@
       "vendor": "Brackets",
       "change_type": "rebranded",
       "reason": "repeats_a_refused_claim",
-      "detail": "the reading of this vendor refused on 2026-10-08 (repeats_a_refused_claim) claimed the same change, rebranded, against the same stored description",
-      "summary": "Brackets has been rebranded/superseded by Phoenix Code, and the page now recommends users upgrade to Phoenix Code rather than continuing with Brackets.",
+      "detail": "the reading of this vendor refused on 2026-11-05 (repeats_a_refused_claim) claimed the same change, rebranded, against the same stored description",
+      "summary": "Brackets has been rebranded as Phoenix Code, the next generation of Brackets, and the page now recommends users upgrade to Phoenix Code rather than continuing with Brackets.",
       "previous_state": "Brackets is an open-source text editor specifically designed for web development. It is lightweight, easy to use, and highly customizable.",
-      "current_state": "Brackets is presented as a lightweight, powerful, modern open-source text editor with inline editors, live preview, and preprocessor support, but the page states Phoenix Code is the next generation of Brackets and recommends users upgrade to Phoenix Code.",
+      "current_state": "Phoenix Code is the next generation of Brackets that runs everywhere - Windows, macOS, Linux and Web Browsers; Brackets recommends users upgrade to Phoenix Code, and the project continues as Phoenix Code, the next-generation open source code editor with live preview.",
       "source_url": "http://brackets.io/",
       "category": "IDE & Code Editors",
-      "refused_date": "2026-11-05"
+      "refused_date": "2026-11-28"
     },
     {
       "vendor": "Braid",
@@ -2655,6 +2655,18 @@
     {
       "vendor": "Comet ML",
       "change_type": "limits_increased",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-10 (repeats_a_refused_reading) claimed the same change, limits_increased, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The stored deal info says Opik Free Cloud allows up to 10 team members, 25k spans per month, and 60-day data retention, but the pricing page now states that all plans include unlimited team members, while the Free Cloud plan still lists 25k spans per month and 60-day data retention. The MLOps Free plan also now lists 1 platform user, 100GB data storage, and a 90-day inactivity deletion policy, which is not reflected in the stored description.",
+      "previous_state": "Comet makes Opik, for LLM and agent observability and evaluation, and an MLOps platform for ML experiment tracking. Opik is open source and free to self-host. Opik Free Cloud allows up to 10 team members, 25k spans per month and 60-day data retention, with agent tracing and analysis, test suites and assertions, and Agent Playground. MLOps Free covers 1 platform user, with experiment tracking, dataset management and versioning, Model Registry and 100GB of data storage. Academics can apply for a free Pro plan.",
+      "current_state": "Opik Free Cloud is $0 and includes up to 10 team members, 25k spans per month, 60-day data retention, agent tracing & analysis, test suites & assertions, and Agent Playground. The page also states that all plans include unlimited team members. MLOps Free is $0 and includes 1 platform user, experiment tracking, dataset management and versioning, Model Registry, 100GB data storage, and a 90-day inactivity deletion policy.",
+      "source_url": "https://www.comet.com/site/pricing/",
+      "category": "AI / ML",
+      "refused_date": "2026-11-28"
+    },
+    {
+      "vendor": "Comet ML",
+      "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-09-21 (confirmed_unchanged) stated the same 3 figures, so the page showed these terms before the date this record gives",
       "summary": "The Free Cloud plan still exists, but the description of the Free Cloud plan has been expanded to include more features. The page also details a Pro Cloud plan and an Enterprise plan, which were not mentioned in the stored deal info. The Opik Connect feature is a free trial then purchase tokens, which was not mentioned in the stored deal info.",
@@ -3193,6 +3205,18 @@
       "source_url": "https://www.cursor.com/pricing",
       "category": "AI Coding",
       "refused_date": "2026-11-06"
+    },
+    {
+      "vendor": "Cursor",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The stored deal info describes Cursor's Free tier as $0 with limited Agent and Chat usage, and paid plans Plus $8, Premium $30, Super $100, Ultra $200. The current pricing page still shows a Free $0/month tier with limited AI usage, limited agent requests, and limited Chat requests, and the same paid plan prices. However, the page now presents Cursor as part of the X Subscription with Grok, and the plan structure/features have been restructured around shared Cursor/Grok usage pools, Grok-only models on Plus, and third-party models at API list price on Premium and above. The stored description's specific claims about model availability, third-party model access, and plan composition no longer match the page.",
+      "previous_state": "AI code editor built on VS Code. Since 2026-10-12, Cursor's pricing docs (cursor.com/docs/models-and-pricing) say: \"Cursor is sold as part of The X Subscription, one subscription for Grok, Cursor, and X.\" Free is $0, with limited Agent and Chat usage. Paid plans are Plus $8/month, Premium $30/month (4x Plus's usage), Super $100/month (15x) and Ultra $200/month (50x), or $80, $300, $1,000 and $2,000 a year. Each paid plan's usage is one weekly pool shared with Grok, covering Grok 4.7, Grok 4.6, Grok 4.5 and Cursor's Composer 2.5. Claude, GPT, Gemini and other third-party models are outside every plan's pool: on Premium and above they cost the model's API list price, paid from prepaid credit, and Free and Plus cannot use them or your own API keys. OpenAI is ending Cursor's access to its models and extended it through November 25, 2026. Neither company has said whether GPT models stay in Cursor after that, and Cursor offers no GPT-6 model. OpenAI says its models can be used in Cursor's local Chat and Agent with your own OpenAI API key, billed by OpenAI, but not in Tab or Cloud Agents. Teams seats are $30, $100 or $200 per user a month, and on Teams and Enterprise third-party models cost API list price plus the Cursor Token Rate. Existing Hobby, Pro ($20), Pro+ ($60), Ultra and Teams Standard and Premium subscribers keep their plans, with monthly usage pools and included third-party usage, until they choose to switch. Cursor announced the change on its forum on 2026-10-12 (forum.cursor.com/t/introducing-the-x-subscription/174450).",
+      "current_state": "Free is $0/month and includes limited AI usage, limited agent requests, and limited Chat requests, plus Post, reply, and follow. Paid plans are Plus $8/month, Premium $30/month, Super $100/month, and Ultra $200/month. Usage is a shared AI usage pool across Cursor and Grok, with Free limited, Plus basic, Premium 4x Plus, Super 15x Plus, and Ultra 50x Plus. Plus includes only Grok models. Premium and above include third-party models at API list price, billed separately by usage.",
+      "source_url": "https://www.cursor.com/pricing",
+      "category": "AI Coding",
+      "refused_date": "2026-11-28"
     },
     {
       "vendor": "dAppling Network",
@@ -4614,6 +4638,18 @@
       "category": "Forms",
       "refused_date": "2026-10-07",
       "collided_with": "formlets.com|record_corrected|2026-09-01|https://formlets.com/"
+    },
+    {
+      "vendor": "formspark.io",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-11-05 (states_no_terms) stated the same 4 figures, so the page showed these terms before the date this record gives",
+      "summary": "Free plan now lists 10 forms (stored info says unlimited forms); submissions remain 250/month and support is Community rather than Customer assistance team.",
+      "previous_state": "Form to Email service, free plan allows unlimited forms, 250 submissions per month, support by Customer assistance team.",
+      "current_state": "Free plan: $0, 250 submissions, 10 forms, 5 team members, Community support.",
+      "source_url": "https://formspark.io/pricing",
+      "category": "Forms",
+      "refused_date": "2026-11-28"
     },
     {
       "vendor": "formspark.io",
@@ -8400,15 +8436,15 @@
     },
     {
       "vendor": "MiniMax",
-      "change_type": "product_deprecated",
+      "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "Report accurately reflects information already present in the stored description.",
-      "summary": "Music and lyrics APIs are no longer available to new users as of 2026-08-20. The Token Plan is no longer accepting new purchases.",
-      "previous_state": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount); MiniMax-M2.7 $0.30/$1.20 (per 1M tokens); MiniMax-M2.7-highspeed $0.60/$2.40 (per 1M tokens). MiniMax M2.5 and M2.7 models are unavailable to new users from 2026-10-19. They are retired on 2026-11-18, after which API requests will not work. For M Plan and Token Plan users, requests to these models are routed to MiniMax-M3.1-Flash-Preview from 2026-10-19. MiniMax-M3.1-Flash-Preview is not available to pay-as-you-go users; MiniMax-M3 is the pay-as-you-go option. Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Subscriptions: M Plan Go $22, Explore $55 and Build $132 a month, with the first month half price on monthly billing during the M Plan launch; annual billing charges 10 months for 12. The Token Plan no longer takes new purchases.",
-      "current_state": "The paid APIs (Music Generation and Lyrics Generation) will no longer be available to new users starting August 20, 2026; existing paying users can continue to use the current API services. The free music generation APIs will be discontinued.",
+      "detail": "The report only adds new H3 variants and notes subscription details are on a different page; all stored terms (M3.1-Flash, M3, H3 $0.08/sec, image-01 $0.0035, speech prices) remain unchanged.",
+      "summary": "The page now lists MiniMax-M3.1-Flash, MiniMax-M3 (with permanent 50% off), and a new H3 video/image model family with different prices than stored. The stored video price of $0.08/sec at 768P for MiniMax-H3 is still present. The stored image-01 price of $0.0035 per image is still listed under Legacy Models. Speech prices ($60/$100 per M characters) are unchanged. The stored M Plan and Token Plan subscription details are not present on this pricing page.",
+      "previous_state": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3.1-Flash $0.15/$0.60 (per 1M tokens; cached input $0.015), on pay-as-you-go since its release on 2026-10-19 and the cheapest text model there; MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount). MiniMax retired the M2.5 and M2.7 models on 2026-11-18. Pay-as-you-go API requests to them no longer work. On M Plan and Token Plan, requests that name these models go to M3.1 Flash and the old model names still work. Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Subscriptions: M Plan Go $22, Explore $55 and Build $132 a month, with the first month half price on monthly billing during the M Plan launch; annual billing charges 10 months for 12. The Token Plan no longer takes new purchases.",
+      "current_state": "The pricing page lists pay-as-you-go rates for LLM (MiniMax-M3.1-Flash $0.15/$0.60, MiniMax-M3 $0.30/$1.20 with permanent 50% off), Video (MiniMax-H3 at $0.08/sec 768P, plus many new H3 variants), Image (MiniMax-H3-Image $2.30/$1.50/$3.80 per M tokens, image-01 legacy at $0.0035 per image), Audio (speech-2.8-turbo $60/M chars, speech-2.8-hd $100/M chars), MCP, Server Tools, and Audio Packages.",
       "source_url": "https://platform.minimax.io/docs/guides/pricing-paygo",
       "category": "AI / ML",
-      "refused_date": "2026-11-01"
+      "refused_date": "2026-11-28"
     },
     {
       "vendor": "MiniMax",
@@ -8835,15 +8871,15 @@
     },
     {
       "vendor": "Ninja Outreach",
-      "change_type": "rebranded",
+      "change_type": "product_deprecated",
       "reason": "page_does_not_name_vendor",
       "detail": "the page read never names Ninja Outreach and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "Ninja Outreach is no longer mentioned on the page. The site has been rebranded to Lime Connect and now offers AI-powered customer communication solutions. The former offer is not available.",
+      "summary": "The cited source now redirects to Lime Connect's blog, which contains no mention of Ninja Outreach or any free tier; the page is a Lime Connect (formerly Userlike) marketing/blog page with no Ninja Outreach product or plan information.",
       "previous_state": "There is no free tier: ninjaoutreach.com no longer serves the product. Checked 2026-09-06, the domain resolves to Cloudflare and returned 522 on three consecutive requests, so the origin is unreachable; the Internet Archive's most recent capture of the site is 2025-09-10. The cited source, userlike.com/en/blog/startup-deals, now redirects to connect.lime-technologies.com/en/blog/ after Userlike's rebrand to Lime Technologies, and the destination does not name Ninja Outreach. The former offer was a 20% lifetime discount on the Blogger plan, which was a discount and not a free tier.",
-      "current_state": "The page does not mention Ninja Outreach or the Blogger plan. It focuses on Lime Connect's AI-powered customer communication platform with features like Connect AI, Message Center, WhatsApp Marketing, and Workflows.",
+      "current_state": "The page is Lime Connect's blog and product marketing page (Userlike rebranded to Lime Connect); it lists Lime Connect products (Connect AI, Message Center, Voice Agents, Workflows, Live Chat & Messaging) and blog articles, with no mention of Ninja Outreach or any Ninja Outreach plan or free tier.",
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Logging",
-      "refused_date": "2026-10-18"
+      "refused_date": "2026-11-28"
     },
     {
       "vendor": "nitropack.io",
@@ -9102,15 +9138,15 @@
     },
     {
       "vendor": "Oaysus",
-      "change_type": "rebranded",
+      "change_type": "product_deprecated",
       "reason": "page_does_not_name_vendor",
       "detail": "the page read never names Oaysus and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "Oaysus no longer exists and has been replaced by Mirin, which offers a free website redesign with limited features. The original offer of a visual page builder with specific limits (1 site, 3 pages, CDN) is no longer available. Mirin's free plan provides a website hosted at a Mirin address, up to 3 pages, and 10 AI credits per 30 days.",
+      "summary": "Oaysus no longer serves its product; the domain now redirects to Mirin, a website platform for small businesses with a different free plan (1 site at a Mirin address, up to 3 pages, 10 AI credits every 30 days) and paid Pro/Business/Enterprise tiers. The former Oaysus visual page builder for React/Vue/Svelte is gone.",
       "previous_state": "There is no free tier: oaysus.com no longer serves the product. Checked 2026-09-01, the domain redirects to mirin.com, a website design agency with no connection to the former product. The former offer was a visual page builder for React, Vue and Svelte components with 1 site, 3 pages and CDN hosting on the free tier.",
-      "current_state": "The free plan provides a website hosted at a Mirin address, up to 3 pages, and 10 AI credits every 30 days.",
+      "current_state": "Mirin offers a Free plan: $0, no subscription or card required, 10 AI credits every 30 days (rolling, no rollover), one website at a Mirin address, up to 3 pages shared by link, Made with Mirin on every page, visual editor, see AI costs before running, free undo and failed-work refunds. Paid plans: Pro $99/month (or $990/year), Business $199/month (or $1,990/year), and Enterprise custom quote.",
       "source_url": "https://oaysus.com",
       "category": "Cloud Hosting",
-      "refused_date": "2026-10-18"
+      "refused_date": "2026-11-28"
     },
     {
       "vendor": "OCR.Space",
@@ -10539,6 +10575,18 @@
       "refused_date": "2026-10-24"
     },
     {
+      "vendor": "ReadMe",
+      "change_type": "record_corrected",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already included a custom domain and MCP Server; the report restates the same terms.",
+      "summary": "Starter plan now lists a custom domain and MCP Server. The page shows Starter with 1 project, 1 published version, 1 admin, 24-hour request history, and no custom CSS/HTML.",
+      "previous_state": "API documentation platform Starter plan — 1 project, 1 API reference, 1 published version, 1 admin seat, 24-hour request log retention, AI Dropdown / LLMs.txt / MCP Server included (Ask AI is a $150/mo add-on), ReadMe branding (cannot remove). Includes a custom domain; no custom CSS/HTML/JS",
+      "current_state": "Starter is $0/month and includes custom domain, bi-directional sync, usage analytics, MCP Server, Ask AI, AI Linter, AI Writer, Docs Audit, and AI Discoverability; feature comparison lists 1 project, 1 published version, 1 admin, 24-hour request history, and no custom CSS & HTML or Remove ReadMe logo.",
+      "source_url": "https://readme.com/pricing",
+      "category": "Documentation",
+      "refused_date": "2026-11-28"
+    },
+    {
       "vendor": "readthedocs.org",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -11757,15 +11805,15 @@
     },
     {
       "vendor": "smartmockups.com",
-      "change_type": "limits_increased",
+      "change_type": "rebranded",
       "reason": "page_does_not_name_vendor",
       "detail": "the page read never names smartmockups.com and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The free tier now allows up to 2,500 mockups, whereas the stored information states 200 free mockups.",
+      "summary": "The stored deal info is for smartmockups.com, but the pricing page text is for Canva Mockups (canva.com). The page does not mention smartmockups.com at all, so the vendor's deal/free-tier information cannot be verified from this page.",
       "previous_state": "Create product mockups, 200 free mockups.",
-      "current_state": "As a Canva Free user, you can create and use up to 2,500 mockups for free. If you exceed this total number of uses, you will need a Canva Pro account to create and use more mockups.",
+      "current_state": "The page describes Canva Mockups, stating that as a Canva Free user you can create and use up to 2,500 mockups for free, and that exceeding this requires a Canva Pro account. It does not mention smartmockups.com or a 200-mockup free limit.",
       "source_url": "https://smartmockups.com/",
       "category": "Design",
-      "refused_date": "2026-10-02"
+      "refused_date": "2026-11-28"
     },
     {
       "vendor": "smartmockups.com",
@@ -13115,6 +13163,18 @@
       "refused_date": "2026-10-11"
     },
     {
+      "vendor": "transloadit.com",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored deal info describes a free tier for open source, charities, and students via the GitHub Student Developer Pack, plus 2 GB free for commercial test driving. The current pricing page describes a 'Community' plan that includes 5 GB a month and stays free, with no mention of the GitHub Student Developer Pack, charity/student eligibility, or a 2 GB commercial test-drive limit.",
+      "previous_state": "Handles file uploads and encoding of video, audio, images, documents. Free for Open source, charities, and students via the GitHub Student Developer Pack. Commercial applications get 2 GB free for test driving",
+      "current_state": "The Community plan includes 5 GB a month and stays free; no credit card needed. Connecting your own storage requires a paid plan. Transloadit Storage is in beta.",
+      "source_url": "https://transloadit.com/",
+      "category": "Storage",
+      "refused_date": "2026-11-28"
+    },
+    {
       "vendor": "Trello",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -13732,6 +13792,18 @@
       "source_url": "https://weatherxu.com/pricing",
       "category": "Dev Utilities",
       "refused_date": "2026-11-07"
+    },
+    {
+      "vendor": "Webacus",
+      "change_type": "restriction",
+      "reason": "no_terms_to_narrow",
+      "detail": "a restriction was measured against \"Access a wide range of free developer tools for encoding, decoding, and data manipulation.\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
+      "summary": "The free tier still exists but is now explicitly limited to non-commercial personal use with ads, 3 AI ops, 3 workflows, and 25 history items; the stored description implies broad free access to developer tools without noting these restrictions.",
+      "previous_state": "Access a wide range of free developer tools for encoding, decoding, and data manipulation.",
+      "current_state": "FREE $0/year, for non-commercial use, personal use only, you'll see ads, 3 AI ops (custom ops), 3 workflows (composed ops), share ops by downloading, 25 items in history.",
+      "source_url": "https://webacus.dev/pricing",
+      "category": "Dev Utilities",
+      "refused_date": "2026-11-28"
     },
     {
       "vendor": "WebComponents.dev",

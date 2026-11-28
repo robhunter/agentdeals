@@ -1,37 +1,26 @@
 {
   "held": [
     {
-      "vendor": "MiniMax",
+      "vendor": "CurrencyFreaks",
       "change_type": "pricing_restructured",
       "impact": "medium",
-      "summary": "The current pricing page confirms pay-as-you-go billing and lists the same LLM prices (M3.1-Flash $0.15/$0.60, cached $0.015. M3 $0.30/$1.20 with permanent 50% off). It also shows a much broader and partly different product lineup: H3 video models with new tiers and provider-hosted variants, H3-Image models replacing image-01 as the headline image offering, speech-2.8 models, and audio packages.",
-      "previous_state": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3.1-Flash $0.15/$0.60 (per 1M tokens; cached input $0.015), on pay-as-you-go since its release on 2026-10-19 and the cheapest text model there; MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount). MiniMax retired the M2.5 and M2.7 models on 2026-11-18. Pay-as-you-go API requests to them no longer work. On M Plan and Token Plan, requests that name these models go to M3.1 Flash and the old model names still work. Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Subscriptions: M Plan Go $22, Explore $55 and Build $132 a month, with the first month half price on monthly billing during the M Plan launch; annual billing charges 10 months for 12. The Token Plan no longer takes new purchases.",
-      "current_state": "Pay-as-you-go billing remains available: users add funds to their account and pay per usage in USD, with charges based on tokens, characters, duration, images, voices, or requests depending on the service. LLM pricing lists MiniMax-M3.1-Flash at $0.15 input / $0.60 output / $0.015 cached read per M tokens, and MiniMax-M3 at $0.30/$1.20 (≤512k input) and $0.60/$2.40 (>512k input) with a permanent 50% discount, plus Priority tier at 1.5x standard. Video, image, audio, MCP, and server tool pricing are listed separately, and Audio Packages are offered as an alternative billing option for speech models.",
-      "source_url": "https://platform.minimax.io/docs/guides/pricing-paygo",
-      "category": "AI / ML",
-      "first_read_date": "2026-11-25"
+      "summary": "The stored free tier (1,000 API requests/month, 170+ currencies, USD base only) no longer matches the page. The page now describes a free 'Open Rates' API that requires no signup and no API key, with daily rates blended from 127 central banks, any base currency, and past dates. Paid plans (Starter $9.99, Growth $49.99, Professional $99.99) now carry the API-key features.",
+      "previous_state": "Currency exchange rate API — free tier: 1,000 API requests/month, 170+ response currencies, daily updated rates, USD base currency only (paid plans unlock all base currencies). Includes latest rates and historical data endpoints.",
+      "current_state": "Open Rates is a free currency API requiring no signup and no API key, returning daily rates blended from 127 central banks and official sources, updated daily, with any base currency and past dates supported. Paid plans are Starter ($9.99/month, 15K API calls/month, hourly updates), Growth ($49.99/month, 150K API calls/month, 10 minute updates), and Professional ($99.99/month, 550K API calls/month, 60 second updates), all with no throttling, historical exchange rates, all base currencies, and conversion endpoints.",
+      "source_url": "https://currencyfreaks.com/pricing.html",
+      "category": "Dev Utilities",
+      "first_read_date": "2026-11-28"
     },
     {
-      "vendor": "Rive",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The current pricing page still offers a Free tier at $0/seat/mo. It now explicitly states that free exports play a Rive splash screen (upgrade to remove it), and the free plan is limited to 3 collaborative files, 1 project, 50 publishes/pushes a month, and 3 live hosted web pages that expire after 3 days. The description of 'Free forever for Individuals' is no longer accurate as the free tier now carries a splash screen and specific usage limits.",
-      "previous_state": "Create and ship beautiful animations to any platform. Free forever for Individuals. The service is an editor that also hosts all the graphics on their servers. They also provide runtimes for many platforms to run representations made using Rive.",
-      "current_state": "Free plan is $0/seat/mo and includes: Rive Editor, CLI with unlimited local builds, 50 publishes and pushes a month, export .riv files with a splash screen, 3 collaborative files, 1 project, AI Agent in the Editor with limits, 3 live hosted web pages (rive.to) that expire after 3 days, 10 MB per imported asset, and community support.",
-      "source_url": "https://rive.app/pricing",
-      "category": "Design",
-      "first_read_date": "2026-11-27"
-    },
-    {
-      "vendor": "Val Town",
+      "vendor": "Prisma Accelerate",
       "change_type": "product_deprecated",
-      "impact": "high",
-      "summary": "Val Town is shutting down on January 10, 2027, with no new signups since November 10, 2026, so the free tier is no longer available to new users and the product is being deprecated.",
-      "previous_state": "Serverless scripting platform, shutting down on January 10, 2027, with no new signups since November 10, 2026. Free plan for existing users: 100K runs/day, 1 minute wall clock per run, unlimited public vals, MCP integration",
-      "current_state": "Val Town is shutting down on January 10, 2027. The Free plan is $0 and includes MCP integration, no custom domains, 15 min cron intervals, 1 min wall clock time / run, unlimited public vals, 3 days log retention, and 100,000 runs / day.",
-      "source_url": "https://www.val.town/pricing",
-      "category": "Cloud Hosting",
-      "first_read_date": "2026-11-27"
+      "impact": "medium",
+      "summary": "Prisma Accelerate is now shown as 'being retired' on the pricing page, and its Free tier terms differ from previously: the page lists 60,000 operations included with no usage billing on Free.",
+      "previous_state": "Global query cache and connection pool for Prisma ORM, retiring December 1, 2026. Every plan includes 60,000 cache operations a month, with no overage rate on Free. Also available: Prisma Postgres, which continues after that date, has a Free plan with 200,000 operations a month, 2 GB of storage, 50 databases and 10 pooled connections, with no credit card required.",
+      "current_state": "The pricing page lists 'Accelerate cache (being retired)' with 60,000 operations included on Free, no usage billing on Free, 1 KiB egress per query included, no egress overage billing on Free, cache tag invalidations not available on Free, and 5 cache purge requests per hour on Free. The page does not state a retirement date.",
+      "source_url": "https://www.prisma.io/pricing",
+      "category": "Databases",
+      "first_read_date": "2026-11-28"
     }
   ],
   "resolved": [
@@ -3988,6 +3977,42 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-11-27 read it as pricing_restructured too",
       "resolved_date": "2026-11-27"
+    },
+    {
+      "vendor": "MiniMax",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The current pricing page confirms pay-as-you-go billing and lists the same LLM prices (M3.1-Flash $0.15/$0.60, cached $0.015. M3 $0.30/$1.20 with permanent 50% off). It also shows a much broader and partly different product lineup: H3 video models with new tiers and provider-hosted variants, H3-Image models replacing image-01 as the headline image offering, speech-2.8 models, and audio packages.",
+      "previous_state": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3.1-Flash $0.15/$0.60 (per 1M tokens; cached input $0.015), on pay-as-you-go since its release on 2026-10-19 and the cheapest text model there; MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount). MiniMax retired the M2.5 and M2.7 models on 2026-11-18. Pay-as-you-go API requests to them no longer work. On M Plan and Token Plan, requests that name these models go to M3.1 Flash and the old model names still work. Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Subscriptions: M Plan Go $22, Explore $55 and Build $132 a month, with the first month half price on monthly billing during the M Plan launch; annual billing charges 10 months for 12. The Token Plan no longer takes new purchases.",
+      "source_url": "https://platform.minimax.io/docs/guides/pricing-paygo",
+      "first_read_date": "2026-11-25",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-28 read a change the gate refused as confirmed_unchanged",
+      "resolved_date": "2026-11-28"
+    },
+    {
+      "vendor": "Rive",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The current pricing page still offers a Free tier at $0/seat/mo. It now explicitly states that free exports play a Rive splash screen (upgrade to remove it), and the free plan is limited to 3 collaborative files, 1 project, 50 publishes/pushes a month, and 3 live hosted web pages that expire after 3 days. The description of 'Free forever for Individuals' is no longer accurate as the free tier now carries a splash screen and specific usage limits.",
+      "previous_state": "Create and ship beautiful animations to any platform. Free forever for Individuals. The service is an editor that also hosts all the graphics on their servers. They also provide runtimes for many platforms to run representations made using Rive.",
+      "source_url": "https://rive.app/pricing",
+      "first_read_date": "2026-11-27",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-28 read the page as unchanged",
+      "resolved_date": "2026-11-28"
+    },
+    {
+      "vendor": "Val Town",
+      "change_type": "product_deprecated",
+      "impact": "high",
+      "summary": "Val Town is shutting down on January 10, 2027, with no new signups since November 10, 2026, so the free tier is no longer available to new users and the product is being deprecated.",
+      "previous_state": "Serverless scripting platform, shutting down on January 10, 2027, with no new signups since November 10, 2026. Free plan for existing users: 100K runs/day, 1 minute wall clock per run, unlimited public vals, MCP integration",
+      "source_url": "https://www.val.town/pricing",
+      "first_read_date": "2026-11-27",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-28 read the page as unchanged",
+      "resolved_date": "2026-11-28"
     }
   ]
 }

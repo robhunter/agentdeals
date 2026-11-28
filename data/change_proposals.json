@@ -129,6 +129,56 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-11-27",
       "restatement": []
+    },
+    {
+      "proposal_id": "2026-11-28/plot-ly/limits_increased",
+      "proposed_on": "2026-11-28",
+      "vendor": "plot.ly",
+      "change_type": "limits_increased",
+      "date": "2026-11-28",
+      "date_source": "discovered",
+      "summary": "The Free plan now includes 1,000 Plotly charts.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Graph and share your data. Plotly's Free plan is $0 with no credit card required: a 10 Plotly credit trial (additional credits are $1 each), 1 Creator seat, 3 private viewers and 10 Dash or Plotly Studio apps.",
+      "current_state": "Free plan is $0 with no credit card required, includes a 10 Plotly credit trial (additional credits are $1 each), 1 Creator seat, 3 private viewers, 10 Dash or Plotly Studio apps, and 1,000 Plotly charts.",
+      "impact": "low",
+      "source_url": "https://plotly.com/pricing",
+      "category": "Storage",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-28",
+      "restatement": [
+        {
+          "url": "https://plotly.com/pricing",
+          "description": "Graph and share your data — Free plan is $0 with no credit card required, includes a 10 Plotly credit trial (additional credits are $1 each), 1 Creator seat, 3 private viewers, 10 Dash or Plotly Studio apps, and 1,000 Plotly charts."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-11-28/posthog/limits_increased",
+      "proposed_on": "2026-11-28",
+      "vendor": "PostHog",
+      "change_type": "limits_increased",
+      "date": "2026-11-28",
+      "date_source": "discovered",
+      "summary": "The stored free tier description omits several new free allowances now listed on the pricing page (Inbox 1,000 credits first month only, Replay Vision 2500 credits worth $25, PostHog Desktop Beta 2000 credits worth $20), and the page no longer mentions the stored '1M data warehouse source rows' phrasing but instead lists 'Sources 1M rows + FREE historical'. The core limits otherwise match.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "1M analytics events, 5K session recordings, 1M feature flag requests, experiments billed with feature flags, 100K error tracking exceptions, 1,500 survey responses, 10 GB of logs, 100K AI observability (LLM tracing) events shared with evaluations, 1M data warehouse source rows, 10K destination events and 1M rows, 10K workflow messages per channel, 500 PostHog AI credits worth $5. All allowances reset monthly. The same allowance applies with or without a card on file. No credit card is required.",
+      "current_state": "Free plan: 1M analytics events, 5K session recordings, 1M feature flag requests, experiments billed with feature flags, 100K error tracking exceptions, 1500 survey responses, 1M source rows + FREE historical, 10K destination events + 1M rows, 100K AI observability events/month shared with evaluations, 500 PostHog AI credits (worth $5), Inbox 1,000 credits first month only, 10K workflow messages per channel, 10 GB logs ingested, Replay Vision 2500 credits (worth $25), PostHog Desktop Beta 2000 credits (worth $20). Resets monthly, same allowance with or without a card, no credit card required.",
+      "impact": "low",
+      "source_url": "https://posthog.com/pricing",
+      "category": "Analytics",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-28",
+      "restatement": [
+        {
+          "url": "https://posthog.com/pricing",
+          "description": "Free plan: 1M analytics events, 5K session recordings, 1M feature flag requests, experiments billed with feature flags, 100K error tracking exceptions, 1500 survey responses, 1M source rows + FREE historical, 10K destination events + 1M rows, 100K AI observability events/month shared with evaluations, 500 PostHog AI credits (worth $5), Inbox 1,000 credits first month only, 10K workflow messages per channel, 10 GB logs ingested, Replay Vision 2500 credits (worth $25), PostHog Desktop Beta 2000 credits (worth $20). Resets monthly, same allowance with or without a card, no credit card required."
+        }
+      ]
     }
   ],
   "dropped": [
