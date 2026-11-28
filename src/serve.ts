@@ -1,7 +1,9 @@
+import { currentYearLabel, pricingGuideDescription, pricingGuideTitle } from "./pricing-guide-title.js";
 import { shutdownIndexNote } from "./shutdown-index-note.js";
 import { shutdownPath, shutdownPaths } from "./shutdown-paths.js";
 import { shutdownPageContent } from "./shutdown-page.js";
 import { reconcileShutdownRedirects } from "./shutdown-redirects.js";
+import { yearGuideRedirect } from "./year-guide-redirect.js";
 import { renderUpcomingTimeline, UPCOMING_TIMELINE_END } from "./upcoming-timeline-budget.js";
 import { measuredValue, quantifiedAttributes } from "./quantity-reading.js";
 import { announcementsInWeek, weeklyAnnouncementNote, weeklyAnnouncementHeading, announcementDateLabel, WEEKLY_ANNOUNCEMENTS_INTRO } from "./weekly-announcements.js";
@@ -83,7 +85,7 @@ import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, lastChangeShown, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageAnswer, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
-import { cutsByQuarterNewestFirst, cutsWindow, freeTierCutsIn } from "./free-tier-cuts.js";
+import { cutsByYearAndQuarterNewestFirst, cutsWindow, freeTierCutsWithin, rollingCutsWindow } from "./free-tier-cuts.js";
 import { STARTUP_CREDITS_META_DESCRIPTION, STARTUP_PROGRAMS, type DatedTerms, type StartupProgram } from "./startup-programmes.js";
 import { CHANGE_TIMELINE_LINK_TEXT, CHANGE_TIMELINE_PATH, CUTS_THIS_YEAR_ANCHOR, CUTS_THIS_YEAR_HEADING, CUTS_THIS_YEAR_SUMMARY_CLASS, FIGURES_AS_OF_CLASS, FREE_TIER_TRACKER_HEADING, FREE_TIER_TRACKER_META_DESCRIPTION, FREE_TIER_TRACKER_TITLE, FREE_TIER_TRACKER_YEAR, NO_KNOWN_EFFECTIVE_DATE_LEFT_OUT, UNTIL_ITS_DATE_ARRIVES, changeTypesAmong, cutsThisYearSummary, figuresAsOfTheChangeHtml, isAFirstQuarterCard, quarterAnchor, quarterHeading } from "./free-tier-tracker.js";
 import { changeCitesASource, citationLabel, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, CITATION_REL, listingSourceLinkHtml, type CitableChangeRow } from "./change-citation.js";
@@ -7281,7 +7283,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     slug: "firebase-alternatives",
     title: "Firebase Alternatives \u2014 Free Backend-as-a-Service Options for 2026",
     metaDesc: "Firebase's free Spark plan lost Cloud Storage in February 2026, and Firebase Studio shuts down on March 22, 2027. Compare free alternatives with exact tier limits: Supabase, Appwrite, PocketBase, Nhost, Convex, Back4App, Hasura.",
-    contextHtml: `<p><strong>Firebase</strong> \u2014 Google's all-in-one Backend-as-a-Service \u2014 is facing developer trust issues in 2026. Google announced on March 19, 2026 that <strong>Firebase Studio will shut down</strong>: it has taken no new workspaces since June 22, 2026, and it closes, deleting all remaining data, on March 22, 2027. Since February 3, 2026, <strong>Cloud Storage for Firebase requires the pay-as-you-go Blaze plan</strong>, and a Spark project has no access to any bucket, including its default one.</p>
+    contextHtml: `<p><strong>Firebase</strong> \u2014 Google's all-in-one Backend-as-a-Service \u2014 is facing developer trust issues. Google announced on March 19, 2026 that <strong>Firebase Studio will shut down</strong>: it has taken no new workspaces since June 22, 2026, and it closes, deleting all remaining data, on March 22, 2027. Since February 3, 2026, <strong>Cloud Storage for Firebase requires the pay-as-you-go Blaze plan</strong>, and a Spark project has no access to any bucket, including its default one.</p>
       <p>Developer sentiment is increasingly negative: "building on Google products is always a gamble." The Spark free tier still exists for new projects, but the pattern of forced migrations and product shutdowns is driving developers to open-source, self-hostable alternatives.</p>
       <p>Below are the best free Firebase alternatives, compared by <strong>what you actually get for free</strong> \u2014 exact storage, MAU, bandwidth, and function limits. Not marketing copy.</p>`,
     tag: "firebase-alternative",
@@ -7439,7 +7441,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     title: "Cursor Alternatives — Best Free AI Code Editors for 2026",
     metaDesc: "Cursor moved to credit-based pricing in 2025. Compare AI coding alternatives and their free tiers: GitHub Copilot, Cline, Aider, Windsurf, Augment Code, Amazon Q Developer and Gemini CLI, beside paid Claude Code. [[freshness]]",
     contextHtml: `<p><strong>Cursor</strong> — the AI-powered code editor built on VS Code — shifted to <strong>credit-based pricing</strong> in mid-2025, plus a new <strong>$200/month Ultra tier</strong>. The free tier still exists (Free, with limited Agent and Chat usage), but the credit model makes costs less predictable for heavy users. Developers are actively evaluating alternatives.</p>
-      <p>The AI coding tool landscape has exploded in 2026. Terminal-based agents (Claude Code, Aider, Gemini CLI), IDE extensions (GitHub Copilot, Windsurf, Augment Code), and open-source autonomous agents (Cline) each offer different trade-offs between cost, flexibility, and capability.</p>
+      <p>The AI coding tool landscape has expanded. Terminal-based agents (Claude Code, Aider, Gemini CLI), IDE extensions (GitHub Copilot, Windsurf, Augment Code), and open-source autonomous agents (Cline) each offer different trade-offs between cost, flexibility, and capability.</p>
       <p>Below are the best free alternatives to Cursor, compared by <strong>what you actually get for free</strong> — exact limits, open-source status, and what each tool is best at.</p>`,
     tag: "cursor-alternative",
     primaryVendor: "Cursor",
@@ -7532,7 +7534,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: "Datadog bills are unpredictable. Compare free observability alternatives: Grafana Cloud, New Relic, Sentry, Axiom, Prometheus, BetterStack, and more. [[freshness]]",
     contextHtml: `<p><strong>Datadog</strong> is a powerful, full-stack observability platform — but it's notorious for <strong>unpredictable pricing</strong>. Teams routinely discover their bill is 3–5× what they expected after a traffic spike, log volume increase, or custom metrics growth. "Datadog alternatives" is one of the most searched developer tools queries for good reason.</p>
     <p>The free tier (5 hosts, 1-day metric retention, 1 custom metric per host) is extremely limited — most teams outgrow it within weeks. And once you're on a paid plan, costs scale with hosts, containers, custom metrics, log volume, APM spans, and synthetics — each billed separately.</p>
-    <p>The good news: the monitoring landscape in 2026 offers strong free tiers across every observability need. Full-platform alternatives (Grafana Cloud, New Relic, Middleware.io), specialized tools (Sentry for errors, Axiom for logs), and battle-tested open-source options (Prometheus, Jaeger) can replace parts or all of a Datadog setup — often at zero cost for small-to-medium workloads.</p>`,
+    <p>The good news: the monitoring landscape offers strong free tiers across every observability need. Full-platform alternatives (Grafana Cloud, New Relic, Middleware.io), specialized tools (Sentry for errors, Axiom for logs), and battle-tested open-source options (Prometheus, Jaeger) can replace parts or all of a Datadog setup — often at zero cost for small-to-medium workloads.</p>`,
     tag: "datadog-alternative",
     primaryVendor: "Datadog",
     serviceMatrixHtml: `
@@ -7652,7 +7654,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: "Vercel hobby plan too limited? Compare free deployment alternatives: Cloudflare Pages, Netlify, Render, Railway, Coolify, and more. [[freshness]]",
     contextHtml: `<p><strong>Vercel</strong> set the standard for frontend developer experience — instant preview deployments, edge functions, and seamless framework integration. But its pricing is a recurring pain point. The Hobby plan (100 GB bandwidth, 1M function invocations, 4 hrs CPU) works for small projects, but the jump to Pro at <strong>$20/seat/month</strong> is steep for small teams and indie developers.</p>
     <p>The core issue isn't quality — Vercel is excellent. It's <strong>cost scaling</strong>. Teams discover that hobby limits are too restrictive for real traffic, bandwidth overages add up fast, and serverless function costs at scale can surprise. "Vercel alternatives" is one of the most searched hosting queries as developers look for more generous free tiers or predictable pricing.</p>
-    <p>The good news: the deployment landscape in 2026 is competitive. Full-featured platforms (Cloudflare Pages, Netlify) offer unlimited bandwidth or generous credits. Container-based platforms (Railway, Render, Fly.io) give you more control. Edge-first options such as Cloudflare Workers optimize for performance. And self-hosted tools (Coolify) eliminate hosting costs entirely if you have your own server.</p>`,
+    <p>The good news: the deployment landscape is competitive. Full-featured platforms (Cloudflare Pages, Netlify) offer unlimited bandwidth or generous credits. Container-based platforms (Railway, Render, Fly.io) give you more control. Edge-first options such as Cloudflare Workers optimize for performance. And self-hosted tools (Coolify) eliminate hosting costs entirely if you have your own server.</p>`,
     tag: "vercel-alternative",
     primaryVendor: "Vercel",
     serviceMatrixHtml: `
@@ -7758,7 +7760,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: "Auth0 free tier too limited? Compare free authentication alternatives: Clerk, WorkOS, Supabase Auth, Firebase Auth, Logto, FusionAuth, Keycloak, and more. [[freshness]]",
     contextHtml: `<p><strong>Auth0</strong> is a powerful identity platform, but its pricing is one of the steepest cliffs in developer tools. The free tier gives you <strong>25K MAU</strong> — generous for prototyping. But the moment you outgrow it, B2C paid plans start with Essentials at $35 a month for 500 MAU, and Professional at $240 a month; B2B plans start at $150.</p>
     <p>The pricing pain is compounded by complexity. Auth0's tenant model, rule/action system, and connection limits create billing surprises. Teams regularly discover they need features (SSO, MFA customization, branding removal) that are locked behind higher tiers. "Auth0 alternatives" remains one of the most consistently searched developer queries.</p>
-    <p>The authentication landscape in 2026 offers real competition. Managed platforms (Clerk, WorkOS, Stytch) provide modern DX with generous free tiers. Open-source solutions (Keycloak, FusionAuth, Ory, Logto) give you unlimited users when self-hosted. And BaaS platforms (Supabase, Firebase) include auth as part of a broader free tier. The right choice depends on whether you prioritize DX, cost, or control.</p>`,
+    <p>The authentication landscape offers real competition. Managed platforms (Clerk, WorkOS, Stytch) provide modern DX with generous free tiers. Open-source solutions (Keycloak, FusionAuth, Ory, Logto) give you unlimited users when self-hosted. And BaaS platforms (Supabase, Firebase) include auth as part of a broader free tier. The right choice depends on whether you prioritize DX, cost, or control.</p>`,
     tag: "auth0-alternative",
     primaryVendor: "Auth0",
     serviceMatrixHtml: `
@@ -7876,7 +7878,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: "MongoDB Atlas free tier too small? Compare free database alternatives: Supabase, Neon, CockroachDB, Turso, Xata, PocketBase, Convex, and more. [[freshness]]",
     contextHtml: `<p><strong>MongoDB Atlas</strong> is the most popular hosted document database, but its free tier comes with hard limits: <strong>512 MB storage</strong> on a shared M0 cluster, no backups, limited connections, and no Atlas Search on free clusters. Developers building side projects hit these limits fast — a modest collection of user data and logs can fill 512 MB in weeks.</p>
     <p>The bigger issue is the <strong>SSPL license</strong>. MongoDB switched from AGPL to the Server Side Public License in 2018, which effectively prevents cloud providers and many companies from offering MongoDB-as-a-service. This has accelerated the shift toward Postgres-based alternatives (Supabase, Neon, Xata) and edge-native databases (Turso, Cloudflare D1) that offer more generous free tiers with truly open-source licenses.</p>
-    <p>The database landscape in 2026 offers compelling alternatives across every use case: serverless Postgres with branching (Neon), distributed SQL (CockroachDB), edge SQLite (Turso, D1), reactive backends (Convex), and full BaaS platforms (Supabase, Firebase, Appwrite). Most offer significantly more free storage than MongoDB Atlas.</p>`,
+    <p>The database landscape offers compelling alternatives across every use case: serverless Postgres with branching (Neon), distributed SQL (CockroachDB), edge SQLite (Turso, D1), reactive backends (Convex), and full BaaS platforms (Supabase, Firebase, Appwrite). Most offer significantly more free storage than MongoDB Atlas.</p>`,
     tag: "mongodb-alternative",
     primaryVendor: "MongoDB Atlas",
     serviceMatrixHtml: `
@@ -7986,7 +7988,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: "Redis changed its licence? Compare free alternatives: Upstash, Valkey, DragonflyDB, KeyDB, Momento, Garnet, Memcached, Aiven. Protocol-compatible options. [[freshness]]",
     contextHtml: `<p><strong>Redis</strong> changed everything in March 2024 when it switched from BSD to a <strong>dual RSALv2/SSPLv1 licence</strong> (Redis 8 added AGPLv3 as a third option). The move restricts cloud providers from offering Redis-as-a-service without a commercial agreement — and triggered the Linux Foundation to fork Redis as <strong>Valkey</strong>, backed by AWS, Google Cloud, Oracle, and Ericsson.</p>
     <p>For developers, the practical impact depends on your use case. If you're using Redis Cloud's free tier, you get just <strong>30 MB of memory</strong> on a single shared database — barely enough for a cache layer. Self-hosting Redis is still free. RSALv2 bars offering it as a managed service; SSPLv1 allows that only if you publish your service's source code under SSPL, but the license uncertainty has pushed many teams toward truly open-source alternatives.</p>
-    <p>The 2026 landscape offers strong options: <strong>Upstash</strong> provides serverless Redis-compatible caching with 500K commands/month free. <strong>Valkey</strong> is a drop-in BSD-3 fork maintained by the Linux Foundation. <strong>DragonflyDB</strong> claims 25x better throughput. <strong>Momento</strong> offers zero-infrastructure serverless caching. And established options like <strong>Memcached</strong> and <strong>KeyDB</strong> remain fully open-source.</p>`,
+    <p>The landscape offers strong options: <strong>Upstash</strong> provides serverless Redis-compatible caching with 500K commands/month free. <strong>Valkey</strong> is a drop-in BSD-3 fork maintained by the Linux Foundation. <strong>DragonflyDB</strong> claims 25x better throughput. <strong>Momento</strong> offers zero-infrastructure serverless caching. And established options like <strong>Memcached</strong> and <strong>KeyDB</strong> remain fully open-source.</p>`,
     tag: "redis-alternative",
     primaryVendor: "Redis Cloud",
     serviceMatrixHtml: `
@@ -8120,7 +8122,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: "SendGrid retired its free plan in 2025. Compare free alternatives: Resend (3K/mo), Mailjet (6K/mo), Brevo (300/day), Postmark, Loops, AhaSend. [[freshness]]",
     contextHtml: `<p><strong>Transactional email</strong> — password resets, order confirmations, verification codes — is non-negotiable infrastructure for any app. SendGrid retired its free plan in 2025; new accounts get a 60-day trial at 100 emails a day. Mailgun still has a free plan with 100 emails a day.</p>
     <p>The good news: several developer-focused alternatives now offer generous free tiers. <strong>Resend</strong> gives you 3,000 emails/month with a modern React Email integration. <strong>Mailjet</strong> offers 6,000/month (200/day cap). <strong>Brevo</strong> provides 300/day and up to 100,000 contacts. And newer entrants like <strong>Loops</strong> and <strong>AhaSend</strong> are competing hard on developer experience and pricing.</p>
-    <p>Below are the best free email services for developers in 2026, compared by volume limits, API quality, and what you actually get for free.</p>`,
+    <p>Below are the best free email services for developers, compared by volume limits, API quality, and what you actually get for free.</p>`,
     tag: "email-service-alternative",
     primaryVendor: "SendGrid",
     serviceMatrixHtml: `
@@ -8811,7 +8813,12 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   },
 ];
 
-const ALTERNATIVES_PAGES: AlternativesPageConfig[] = ALTERNATIVES_PAGE_CONTENT.map(page => ({ ...page, hubDesc: guideBlurb(page.slug) }));
+const ALTERNATIVES_PAGES: AlternativesPageConfig[] = ALTERNATIVES_PAGE_CONTENT.map(page => ({
+  ...page,
+  get title() { return pricingGuideTitle(page.slug, page.title); },
+  get metaDesc() { return pricingGuideDescription(page.slug, page.metaDesc); },
+  hubDesc: guideBlurb(page.slug),
+}));
 const ALTERNATIVES_GUIDES = ALTERNATIVES_PAGES.filter(page => !page.notAnAlternativesGuide);
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -10705,7 +10712,7 @@ ${globalNavCss()}
 }
 
 function buildAiFreeTiersPage(): string {
-  const title = "Best Free AI APIs and Coding Tools in 2026";
+  const title = pricingGuideTitle("ai-free-tiers", "Best Free AI APIs and Coding Tools in 2026");
   const metaDesc = "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Gemini, Cursor, GitHub Copilot, and 50+ more. [[freshness]]";
   const slug = "ai-free-tiers";
 
@@ -10917,7 +10924,7 @@ ${buildCards(enrichedCoding)}
 }
 
 function buildHostingAlternativesPage(): string {
-  const title = "Best Free Hosting for Developers in 2026 — PaaS, Static, Serverless, Containers & VPS";
+  const title = pricingGuideTitle("hosting-alternatives", "Best Free Hosting for Developers in 2026 — PaaS, Static, Serverless, Containers & VPS");
   const metaDesc = "Compare 30+ free hosting options — Railway, Render, Vercel, Netlify, Cloudflare, Fly.io, Oracle Cloud, and more. Exact free tier limits by hosting type. [[freshness]]";
   const slug = "hosting-alternatives";
 
@@ -11071,7 +11078,7 @@ ${globalNavCss()}
   <h1>Best Free Hosting for Developers</h1>
 
   <div class="context">
-    <p>Finding free hosting in 2026 is both easier and harder than ever. Easier because there are <strong>${hostingOffers.length} options</strong> across PaaS, static hosting, serverless functions, containers, and traditional VPS. Harder because the landscape keeps shifting — <strong>Heroku killed its free tier</strong> in 2022, <strong>Render now spins down free services</strong> after 15 minutes, <strong>Vercel moved to credit-based pricing</strong>, and <strong>Hetzner raised prices twice in 2026</strong> and now lists every Cost-Optimized plan as unavailable.</p>
+    <p>Finding free hosting is both easier and harder than ever. Easier because there are <strong>${hostingOffers.length} options</strong> across PaaS, static hosting, serverless functions, containers, and traditional VPS. Harder because the landscape keeps shifting — <strong>Heroku killed its free tier</strong> in 2022, <strong>Render now spins down free services</strong> after 15 minutes, <strong>Vercel moved to credit-based pricing</strong>, and <strong>Hetzner raised prices twice in 2026</strong> and now lists every Cost-Optimized plan as unavailable.</p>
     <p>This page compares every free hosting option in our index, organized by type, with exact limits read from live pricing pages. Whether you need a PaaS for a full-stack app, static hosting for a portfolio, serverless functions for an API, or a VPS for full control — we have the comparison.</p>
   </div>
 
@@ -11267,7 +11274,7 @@ ${buildCards(startupCredits)}
 }
 
 function buildDatabaseAlternativesPage(): string {
-  const title = "Best Free Database Hosting for Developers in 2026";
+  const title = pricingGuideTitle("database-alternatives", "Best Free Database Hosting for Developers in 2026");
   const metaDesc = "Compare 30+ free database hosting options — Postgres, MongoDB, Redis, SQLite, graph, vector, and time-series. Exact free tier limits for Supabase, Neon, Turso, Upstash, and more. [[freshness]]";
   const slug = "database-alternatives";
 
@@ -11412,7 +11419,7 @@ ${globalNavCss()}
   <h1>Best Free Database Hosting for Developers</h1>
 
   <div class="context">
-    <p>Choosing a database is one of the most consequential infrastructure decisions for any project. The good news: in 2026, there are <strong>${dbOffers.length} free database options</strong> across every category — relational, document, key-value, edge, graph, vector, and time-series. The bad news: free tiers vary wildly, from <strong>MongoDB Atlas's cramped 512 MB</strong> to <strong>Turso's generous 5 GB</strong>.</p>
+    <p>Choosing a database is one of the most consequential infrastructure decisions for any project. The good news: there are <strong>${dbOffers.length} free database options</strong> across every category — relational, document, key-value, edge, graph, vector, and time-series. The bad news: free tiers vary wildly, from <strong>MongoDB Atlas's cramped 512 MB</strong> to <strong>Turso's generous 5 GB</strong>.</p>
     <p>This page compares every free database in our index, organized by type, with exact limits read from live pricing pages. Whether you need a Postgres database, a Redis cache, an edge SQLite store, or a vector database for RAG — we've got the comparison.</p>
     <p><strong>New:</strong> See our <a href="/database-free-tier-comparison-2026">Database Free Tier Comparison 2026</a> for a focused side-by-side matrix of the top 10 databases with use-case recommendations and the story of PlanetScale&rsquo;s free tier removal.</p>
   </div>
@@ -11444,7 +11451,7 @@ ${buildCards(edge)}
 ${buildCards(graph)}
 
   <h2>Vector Databases</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">Essential for AI/RAG pipelines, semantic search, and embeddings. The fastest-growing database category in 2026.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Essential for AI/RAG pipelines, semantic search, and embeddings. The fastest-growing database category.</p>
 ${buildCards(vector)}
 
 ${timeSeries.length > 0 ? `
@@ -11597,7 +11604,7 @@ ${buildCards(timeSeries)}
 }
 
 function buildMonitoringAlternativesPage(): string {
-  const title = "Best Free Monitoring Tools for Developers in 2026 — APM, Uptime, Logs & Error Tracking";
+  const title = pricingGuideTitle("monitoring-alternatives", "Best Free Monitoring Tools for Developers in 2026 — APM, Uptime, Logs & Error Tracking");
   const metaDesc = "Compare 70+ free monitoring tools — New Relic, Grafana Cloud, Datadog, Sentry, BetterStack, UptimeRobot, and more. Exact free tier limits by monitoring type. [[freshness]]";
   const slug = "monitoring-alternatives";
 
@@ -11935,7 +11942,7 @@ ${buildCards(startupPrograms)}
 }
 
 function buildCiCdAlternativesPage(): string {
-  const title = "Best Free CI/CD Tools for Developers in 2026 — Build Minutes, Runners & Pipelines Compared";
+  const title = pricingGuideTitle("ci-cd-alternatives", "Best Free CI/CD Tools for Developers in 2026 — Build Minutes, Runners & Pipelines Compared");
   const metaDesc = "Compare 35+ free CI/CD tools — GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Drone CI, and more. Exact free tier limits by CI/CD type. [[freshness]]";
   const slug = "ci-cd-alternatives";
 
@@ -12239,7 +12246,7 @@ ${buildCards(specialized)}
 }
 
 function buildSecurityAlternativesPage(): string {
-  const title = "Best Free Security Tools for Developers in 2026 — SAST, Secrets, Auth & Container Security";
+  const title = pricingGuideTitle("security-alternatives", "Best Free Security Tools for Developers in 2026 — SAST, Secrets, Auth & Container Security");
   const metaDesc = "Compare 100+ free security tools — Snyk, Semgrep, CodeQL, GitGuardian, Trivy, Auth0, Clerk, and more. Exact free tier limits by security domain. [[freshness]]";
   const slug = "security-alternatives";
 
@@ -12573,7 +12580,7 @@ ${buildCards(other)}
 }
 
 function buildTestingAlternativesPage(): string {
-  const title = "Best Free Testing Tools for Developers in 2026 — Browser, Visual, Load, E2E & API Testing Compared";
+  const title = pricingGuideTitle("testing-alternatives", "Best Free Testing Tools for Developers in 2026 — Browser, Visual, Load, E2E & API Testing Compared");
   const metaDesc = "Compare 45+ free testing tools — Cypress, BrowserStack, Playwright, k6, Percy, Chromatic, Postman, Selenium, and more. Exact free tier limits by testing domain. [[freshness]]";
   const slug = "testing-alternatives";
 
@@ -12904,7 +12911,7 @@ ${buildCards(other)}
 const SELF_HOSTED_S3_STORAGE_ANSWER = "MinIO&rsquo;s open-source edition is no longer maintained, and its free AIStor edition runs on one node under a commercial licence. <strong>SeaweedFS</strong> (Apache 2.0) and <strong>Garage</strong> (AGPLv3) are maintained open-source, S3-compatible options.";
 
 function buildStorageAlternativesPage(): string {
-  const title = "Best Free Cloud Storage for Developers in 2026 — Object Storage, Media CDN & File Hosting Compared";
+  const title = pricingGuideTitle("storage-alternatives", "Best Free Cloud Storage for Developers in 2026 — Object Storage, Media CDN & File Hosting Compared");
   const metaDesc = "Compare 55+ free cloud storage tools — Cloudflare R2, Backblaze B2, Tigris, Cloudinary, ImageKit, Google Cloud Storage, and more. Exact free tier limits by storage type. [[freshness]]";
   const slug = "storage-alternatives";
 
@@ -13211,7 +13218,7 @@ ${buildCards(other)}
 }
 
 function buildAnalyticsAlternativesPage(): string {
-  const title = "Best Free Analytics Tools for Developers in 2026 — Product, Web, Event & Data Analytics Compared";
+  const title = pricingGuideTitle("analytics-alternatives", "Best Free Analytics Tools for Developers in 2026 — Product, Web, Event & Data Analytics Compared");
   const metaDesc = "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, and more. Exact free tier limits by analytics domain. [[freshness]]";
   const slug = "analytics-alternatives";
 
@@ -13518,7 +13525,7 @@ ${buildCards(other)}
 }
 
 function buildAiMlAlternativesPage(): string {
-  const title = "Best Free AI & ML Tools for Developers in 2026 — LLM APIs, AI Coding, Training & Observability Compared";
+  const title = pricingGuideTitle("ai-ml-alternatives", "Best Free AI & ML Tools for Developers in 2026 — LLM APIs, AI Coding, Training & Observability Compared");
   const metaDesc = "Compare 65+ AI/ML tools and their free tiers — Groq, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. [[freshness]]";
   const slug = "ai-ml-alternatives";
 
@@ -13826,7 +13833,7 @@ ${buildCards(other)}
 }
 
 function buildEmailAlternativesPage(): string {
-  const title = "Best Free Email Tools for Developers in 2026 — Transactional APIs, Marketing Platforms & Email Infrastructure Compared";
+  const title = pricingGuideTitle("email-alternatives", "Best Free Email Tools for Developers in 2026 — Transactional APIs, Marketing Platforms & Email Infrastructure Compared");
   const metaDesc = "Compare 59+ free email tools — Resend, Brevo, Mailjet, SendGrid, Mailchimp, SimpleLogin, Proton Mail, and more. Exact free tier limits by email domain. [[freshness]]";
   const slug = "email-alternatives";
 
@@ -14154,7 +14161,7 @@ ${buildCards(other)}
 }
 
 function buildDesignAlternativesPage(): string {
-  const title = "Best Free Design Tools for Developers in 2026 — UI Kits, Prototyping, Icons & Assets Compared";
+  const title = pricingGuideTitle("design-alternatives", "Best Free Design Tools for Developers in 2026 — UI Kits, Prototyping, Icons & Assets Compared");
   const metaDesc = "Compare 100+ free design tools — Figma, Penpot, Canva, ShadcnUI, Lucide, Unsplash, Coolors, and more. Exact free tier limits by design domain. [[freshness]]";
   const slug = "design-alternatives";
 
@@ -14489,7 +14496,7 @@ ${buildCards(other)}
 }
 
 function buildProjectManagementAlternativesPage(): string {
-  const title = "Best Free Project Management & Collaboration Tools in 2026 — PM, Chat, Scheduling & Productivity Compared";
+  const title = pricingGuideTitle("project-management-alternatives", "Best Free Project Management & Collaboration Tools in 2026 — PM, Chat, Scheduling & Productivity Compared");
   const metaDesc = "Compare 93+ free project management tools — Linear, Asana, Trello, ClickUp, Notion, Slack alternatives, Cal.com, and more. Exact free tier limits. [[freshness]]";
   const slug = "project-management-alternatives";
 
@@ -14824,7 +14831,7 @@ ${buildCards(other)}
 }
 
 function buildIdeCodeEditorsAlternativesPage(): string {
-  const title = "Best Free IDEs, Code Editors & AI Coding Tools in 2026 — Desktop, Cloud & AI Assistants Compared";
+  const title = pricingGuideTitle("ide-code-editors-alternatives", "Best Free IDEs, Code Editors & AI Coding Tools in 2026 — Desktop, Cloud & AI Assistants Compared");
   const metaDesc = "Compare 59+ free IDEs and coding tools — VS Code, Cursor, GitHub Copilot, Zed, Replit, Windsurf, Devin, and more. Exact free tier limits. [[freshness]]";
   const slug = "ide-code-editors-alternatives";
 
@@ -15138,7 +15145,7 @@ ${buildCards(other)}
 }
 
 function buildFreeLlmApisPage(): string {
-  const title = "Best Free LLM APIs in 2026 — Compare Free Inference Tiers, Rate Limits & Models";
+  const title = pricingGuideTitle("free-llm-apis", "Best Free LLM APIs in 2026 — Compare Free Inference Tiers, Rate Limits & Models");
   const metaDesc = "Compare 25+ LLM API providers and their free tiers — Groq, OpenRouter, Gemini, NVIDIA NIM, and more, beside paid APIs from OpenAI, Anthropic, Mistral and Cerebras. Exact rate limits and token quotas. [[freshness]]";
   const slug = "free-llm-apis";
 
@@ -15386,7 +15393,7 @@ ${buildCards(aiGateways)}
 }
 
 function buildApiDevelopmentAlternativesPage(): string {
-  const title = "Best Free API Development Tools in 2026 — REST, GraphQL, Mocking & Documentation Compared";
+  const title = pricingGuideTitle("api-development-alternatives", "Best Free API Development Tools in 2026 — REST, GraphQL, Mocking & Documentation Compared");
   const metaDesc = "Compare 39+ free API development tools — Postman, Hoppscotch, Insomnia, Bruno, Mintlify, Swagger, RapidAPI, Nango, and more. Exact free tier limits. [[freshness]]";
   const slug = "api-development-alternatives";
 
@@ -15697,7 +15704,7 @@ ${buildCards(apiIntegration)}
 }
 
 function buildTeamCollaborationAlternativesPage(): string {
-  const title = "Best Free Team Collaboration Tools in 2026 — Chat, Video, Docs & Scheduling Compared";
+  const title = pricingGuideTitle("team-collaboration-alternatives", "Best Free Team Collaboration Tools in 2026 — Chat, Video, Docs & Scheduling Compared");
   const metaDesc = "Compare 60+ free team collaboration tools — Slack, Discord, Zoom, Jitsi, Notion, Cal.com, Rocket.Chat, and more. Exact free tier limits. [[freshness]]";
   const slug = "team-collaboration-alternatives";
 
@@ -16016,7 +16023,7 @@ ${buildCards(other)}
 }
 
 function buildFreeStartupStackPage(): string {
-  const title = "The Complete Free Startup Stack for 2026 — $0/Month SaaS Infrastructure Guide";
+  const title = pricingGuideTitle("free-startup-stack", "The Complete Free Startup Stack for 2026 — $0/Month SaaS Infrastructure Guide");
   const metaDesc = "Build a complete SaaS startup on free tiers. 10 infrastructure categories with recommended picks, exact limits, scaling guidance, and stability notes.";
   const slug = "free-startup-stack";
 
@@ -16305,7 +16312,7 @@ ${stabilityNotes}
 }
 
 function buildFreeAiStackPage(): string {
-  const title = "The Complete Free AI/ML Stack for 2026 — $0/Month AI Development Infrastructure";
+  const title = pricingGuideTitle("free-ai-stack", "The Complete Free AI/ML Stack for 2026 — $0/Month AI Development Infrastructure");
   const metaDesc = "Build AI apps on free tiers. 10 AI/ML infrastructure categories — LLM APIs, vector databases, experiment tracking, observability, and more. Exact limits, scaling guidance.";
   const slug = "free-ai-stack";
 
@@ -16630,7 +16637,7 @@ ${ossAlternatives.map(oss => `      <tr>
 }
 
 function buildFreeDevopsStackPage(): string {
-  const title = "The Complete Free DevOps Stack for 2026 — $0/Month Infrastructure Ops";
+  const title = pricingGuideTitle("free-devops-stack", "The Complete Free DevOps Stack for 2026 — $0/Month Infrastructure Ops");
   const metaDesc = "Build and run infrastructure on free tiers. 10 DevOps categories — CI/CD, monitoring, logging, container registries, secrets management, and more. Exact limits, scaling guidance.";
   const slug = "free-devops-stack";
 
@@ -16956,7 +16963,7 @@ ${ossAlternatives.map(oss => `      <tr>
 }
 
 function buildFreeFrontendStackPage(): string {
-  const title = "The Complete Free Frontend Stack for 2026 — $0/Month Jamstack & Web Development";
+  const title = pricingGuideTitle("free-frontend-stack", "The Complete Free Frontend Stack for 2026 — $0/Month Jamstack & Web Development");
   const metaDesc = "Build and ship frontend projects on free tiers. 10 categories — hosting, CDN, CMS, forms, analytics, error tracking, image optimization, and more. Exact limits, scaling guidance.";
   const slug = "free-frontend-stack";
 
@@ -17282,7 +17289,7 @@ ${ossAlternatives.map(oss => `      <tr>
 }
 
 function buildFreeNextjsStackPage(): string {
-  const title = "The Complete Free Next.js Stack for 2026 — $0/Month Full-Stack Infrastructure";
+  const title = pricingGuideTitle("free-nextjs-stack", "The Complete Free Next.js Stack for 2026 — $0/Month Full-Stack Infrastructure");
   const metaDesc = "Build a complete Next.js app on free tiers. 10 infrastructure layers — hosting, database, auth, storage, email, monitoring, CI/CD, analytics, search, and background jobs. Exact limits, growth costs.";
   const slug = "free-nextjs-stack";
 
@@ -17642,7 +17649,7 @@ GitHub → GitHub Actions (CI: tests + lint) → Vercel (CD: auto-deploy)</div>
 }
 
 function buildFreeDjangoStackPage(): string {
-  const title = "The Complete Free Django/Python Stack for 2026 — $0/Month Full-Stack Infrastructure";
+  const title = pricingGuideTitle("free-django-stack", "The Complete Free Django/Python Stack for 2026 — $0/Month Full-Stack Infrastructure");
   const metaDesc = "Build a complete Django app on free tiers. 10 infrastructure layers — WSGI hosting, Postgres, Redis/cache, auth, storage, email, monitoring, CI/CD, task queue, and search. Exact limits, growth costs.";
   const slug = "free-django-stack";
 
@@ -17771,7 +17778,7 @@ function buildFreeDjangoStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-django-stack", [
-    { q: "Can I host Django for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with Gunicorn, auto-deploy from GitHub, and managed Postgres; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (cold starts of about one minute). PythonAnywhere offers free WSGI hosting but limits you to one web app with no custom domain. Every new Fly.io account starts on the Free plan with $1 credit or $5 monthly usage after adding a card." },
+    { q: `Can I host Django for free in ${currentYearLabel()}?`, a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with Gunicorn, auto-deploy from GitHub, and managed Postgres; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (cold starts of about one minute). PythonAnywhere offers free WSGI hosting but limits you to one web app with no custom domain. Every new Fly.io account starts on the Free plan with $1 credit or $5 monthly usage after adding a card." },
     { q: "Which free databases work with Django?", a: "Any Postgres host works. Django's ORM supports Postgres, and django.contrib.postgres adds JSONField, ArrayField, full-text search and range types. Neon's Free plan gives 1 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth, and pauses free projects after a week of inactivity. We publish no ranking of these." },
     { q: "Does Django need Redis?", a: "Not strictly, but practically yes for production. Redis powers Django's cache framework (fast page/fragment caching), session storage (faster than database sessions), and Celery (the standard Django task queue for background jobs). Upstash Redis offers 500,000 commands a month and 256 MB of data free. Without Redis, you can use Django's built-in database cache and in-process task runners, but you'll hit performance ceilings sooner." },
     { q: "PythonAnywhere vs Railway vs Render for Django?", a: "Railway gives you a 30-day $5 trial credit then $1 of free credit a month, with no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing cold starts of about one minute that hurt user experience. For production Django apps, Railway or Fly.io." },
@@ -18049,7 +18056,7 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
 }
 
 function buildFreeFastapiStackPage(): string {
-  const title = "The Complete Free FastAPI/Python Stack for 2026 — $0/Month Full-Stack Infrastructure";
+  const title = pricingGuideTitle("free-fastapi-stack", "The Complete Free FastAPI/Python Stack for 2026 — $0/Month Full-Stack Infrastructure");
   const metaDesc = "Build a complete FastAPI app on free tiers. 10 infrastructure layers — ASGI hosting, async Postgres, Redis, auth, storage, email, monitoring, CI/CD, background tasks, and API docs. Exact limits, growth costs.";
   const slug = "free-fastapi-stack";
 
@@ -18176,7 +18183,7 @@ function buildFreeFastapiStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-fastapi-stack", [
-    { q: "Can I host FastAPI for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with uvicorn, auto-deploy from GitHub, and no sleep timer; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (cold starts of about one minute). Every new Fly.io account starts on the Free plan with $1 credit or $5 monthly usage after adding a card. Koyeb has had no free plan for new users since February 2026 (Pro from $29/mo). Avoid Vercel for FastAPI — it requires a serverless adapter and loses WebSocket/background task support." },
+    { q: `Can I host FastAPI for free in ${currentYearLabel()}?`, a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with uvicorn, auto-deploy from GitHub, and no sleep timer; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (cold starts of about one minute). Every new Fly.io account starts on the Free plan with $1 credit or $5 monthly usage after adding a card. Koyeb has had no free plan for new users since February 2026 (Pro from $29/mo). Avoid Vercel for FastAPI — it requires a serverless adapter and loses WebSocket/background task support." },
     { q: "What database should I use with FastAPI?", a: "FastAPI has no built-in ORM, so you choose your own. SQLAlchemy 2.0's async engine with asyncpg is the most popular choice for Postgres, and Tortoise ORM is an async-native alternative. Neon's Free plan gives 1 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth and realtime. We publish no ranking of these." },
     { q: "Does Vercel support FastAPI?", a: "Technically yes, via the Mangum adapter that wraps ASGI apps for AWS Lambda-style serverless functions. But you lose WebSocket support, FastAPI's startup/shutdown lifespan events, background tasks, and long-running connections. For API-only services, this may be acceptable. For anything using FastAPI's async features fully, use Railway, Render, or Fly.io instead." },
     { q: "FastAPI vs Django for free hosting?", a: "FastAPI is lighter weight and async-native — ideal for APIs, microservices, and AI/ML serving. Django is batteries-included with built-in ORM, admin, auth, and forms — better for full web applications. Both run on Railway's Free plan ($1 of free credit a month after a 30-day trial with a one-time $5 credit) or Render's free tier. FastAPI needs you to choose every component (ORM, auth, admin) separately. Django includes them. If you're building a REST/GraphQL API or serving ML models, FastAPI. If you're building a web app with admin panel and user accounts, Django." },
@@ -18471,7 +18478,7 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
 }
 
 function buildFreeGoStackPage(): string {
-  const title = "The Complete Free Go/Golang Stack for 2026 — $0/Month Full-Stack Infrastructure";
+  const title = pricingGuideTitle("free-go-stack", "The Complete Free Go/Golang Stack for 2026 — $0/Month Full-Stack Infrastructure");
   const metaDesc = "Build a complete Go app on free tiers. 10 infrastructure layers — single binary hosting, Postgres via pgx, Redis, auth, storage, email, monitoring, CI/CD, background jobs, and API docs. Exact limits, growth costs.";
   const slug = "free-go-stack";
 
@@ -18598,7 +18605,7 @@ function buildFreeGoStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-go-stack", [
-    { q: "Can I host Go for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month — Go's tiny memory footprint (~10 MB Docker images from scratch) stretches that furthest; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes; Go's instant cold starts (~50ms) make this tolerable. Every new Fly.io account starts on the Free plan with $1 credit or $5 monthly usage after adding a card. Google Cloud Run's free tier (2M requests/month) is excellent for Go — near-instant cold starts and true scale-to-zero." },
+    { q: `Can I host Go for free in ${currentYearLabel()}?`, a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month — Go's tiny memory footprint (~10 MB Docker images from scratch) stretches that furthest; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes; Go's instant cold starts (~50ms) make this tolerable. Every new Fly.io account starts on the Free plan with $1 credit or $5 monthly usage after adding a card. Google Cloud Run's free tier (2M requests/month) is excellent for Go — near-instant cold starts and true scale-to-zero." },
     { q: "What database should I use with Go?", a: "Use pgx, a pure-Go Postgres driver (no CGo), or sqlc, which generates Go code from SQL queries at compile time. Go developers typically prefer raw SQL with pgx or sqlc over ORMs like GORM. Neon's Free plan gives 1 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth. We publish no ranking of these." },
     { q: "Go vs Node.js for free hosting?", a: "Go compiles to a single binary with no runtime dependencies — Docker images are 5-15 MB vs 100+ MB for Node.js. This means lower memory usage (more headroom on free tiers), instant cold starts (better for serverless), and simpler deploys (no node_modules, no npm install). Go's goroutines handle concurrency without async/await complexity. Trade-off: Go's ecosystem for web frameworks is smaller, and there's no equivalent to npm's package breadth." },
     { q: "Do I need a framework for Go web apps?", a: "No. Go's net/http standard library is production-ready — it powers many of the world's largest services. Add a router (chi or gorilla/mux) for path parameters and middleware chaining. Frameworks like Gin, Echo, and Fiber add convenience (binding, validation, structured logging) but aren't required. The stdlib-first approach means fewer dependencies, smaller binaries, and no framework lock-in." },
@@ -18884,7 +18891,7 @@ GitHub → GitHub Actions (CI: go test + golangci-lint) → Railway (CD: auto-de
 }
 
 function buildFreeSaasStackPage(): string {
-  const title = "The Complete Free SaaS Starter Stack for 2026 — Build and Launch for $0/Month";
+  const title = pricingGuideTitle("free-saas-stack", "The Complete Free SaaS Starter Stack for 2026 — Build and Launch for $0/Month");
   const metaDesc = "Build a complete SaaS product on free tiers. 12 infrastructure categories — hosting, database, auth, payments, email, storage, monitoring, CI/CD, analytics. Exact limits, growth costs at 1K/10K/100K users.";
   const slug = "free-saas-stack";
 
@@ -19028,7 +19035,7 @@ function buildFreeSaasStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-saas-stack", [
-    { q: "What's the cheapest way to launch a SaaS in 2026?", a: "You can launch a complete SaaS for $0/month using free tiers: Railway or Render (hosting), Neon (Postgres database), Clerk (auth with 50K users free), Stripe (payments \u2014 no monthly fee, only per-transaction), Resend (3K emails/month), Cloudflare R2 (10 GB storage, zero egress), Sentry (error tracking), GitHub Actions (CI/CD), PostHog (1M analytics events), and Inngest (50K background job executions). Total monthly cost at launch: $0. You'll hit your first paid tier around 1,000-5,000 users." },
+    { q: `What's the cheapest way to launch a SaaS in ${currentYearLabel()}?`, a: "You can launch a complete SaaS for $0/month using free tiers: Railway or Render (hosting), Neon (Postgres database), Clerk (auth with 50K users free), Stripe (payments \u2014 no monthly fee, only per-transaction), Resend (3K emails/month), Cloudflare R2 (10 GB storage, zero egress), Sentry (error tracking), GitHub Actions (CI/CD), PostHog (1M analytics events), and Inngest (50K background job executions). Total monthly cost at launch: $0. You'll hit your first paid tier around 1,000-5,000 users." },
     { q: "Can I build a SaaS for free?", a: "Yes. Every layer of SaaS infrastructure \u2014 hosting, database, authentication, email, storage, monitoring, CI/CD, and analytics \u2014 has a viable free tier in 2026. The only category without a free option is payment processing (Stripe charges 2.9% + 30\u00a2 per transaction but has no monthly fee). Most free tiers support 1,000-5,000 active users before you need to upgrade." },
     { q: "Which free databases can a SaaS start on?", a: "Neon's Free plan gives 1 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with auth, storage and realtime, and pauses free projects after a week of inactivity. For edge SQLite, Turso's Free plan gives 5 GB of storage across up to 100 databases. We publish no ranking of these." },
     { q: "When should I start paying for infrastructure?", a: "Most SaaS products can run entirely on free tiers through their first 1,000-5,000 users. Database storage (Neon 1 GB per project) is typically the first limit you'll hit, followed by email volume (Resend 3K/month) and hosting compute. By the time you need to pay, you should have paying customers. Plan your growth path: at 10K users expect ~$150-300/month total infrastructure, at 100K users ~$1,500-3,000/month." },
@@ -19311,7 +19318,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free SaaS Stack</div>
-  <h1>The Complete Free SaaS Starter Stack for 2026</h1>
+  <h1>The Complete Free SaaS Starter Stack for ${currentYearLabel()}</h1>
 
   <div class="context">
     <p>You can build and launch a complete SaaS product without spending a dollar on infrastructure. This guide gives you the <strong>opinionated "just tell me what to use" answer</strong> \u2014 the best free tier for each layer of a SaaS stack, with exact limits for each. ${pageFigureSource("/free-saas-stack", offers.length)}</p>
@@ -19919,7 +19926,7 @@ function guideLinkedWordsHtml(text: string, links: readonly { text: string; url:
 }
 
 function buildAccountingSoftwarePricingPage(prices: AccountingPrices = accountingPrices): string {
-  const title = prices.title;
+  const title = pricingGuideTitle(ACCOUNTING_PRICES_SLUG, prices.title);
   const metaDesc = prices.meta_description;
   const slug = ACCOUNTING_PRICES_SLUG;
   const pubDate = prices.published;
@@ -20098,7 +20105,7 @@ function guideSourcesItemHtml(party: { name: string; read_on: string; sources: r
 }
 
 function buildBusinessBankAccountFeesPage(fees: BankingFees = bankingFees): string {
-  const title = fees.title;
+  const title = pricingGuideTitle(BANKING_FEES_SLUG, fees.title);
   const metaDesc = fees.meta_description;
   const slug = BANKING_FEES_SLUG;
   const pubDate = fees.published;
@@ -20224,7 +20231,7 @@ ${globalNavCss()}
 }
 
 function buildCompanyFormationPricingPage(prices: CompanyFormationPrices = companyFormationPrices): string {
-  const title = prices.title;
+  const title = pricingGuideTitle(COMPANY_FORMATION_SLUG, prices.title);
   const metaDesc = prices.meta_description;
   const slug = COMPANY_FORMATION_SLUG;
   const pubDate = prices.published;
@@ -21268,7 +21275,7 @@ ${globalNavCss()}
 }
 
 function buildGoogleDeveloperProgram2026Page(): string {
-  const title = "Google Developer Program 2026 — What Replaced Premium, Prices & Alternatives";
+  const title = pricingGuideTitle("google-developer-program-2026", "Google Developer Program 2026 — What Replaced Premium, Prices & Alternatives");
   const metaDesc = "Standalone Google Developer Program Premium ($299/year) no longer takes sign-ups. Current plans, Cloud credits and free alternatives. [[freshness]]";
   const slug = "google-developer-program-2026";
   const pubDate = "2026-03-26";
@@ -21455,7 +21462,7 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("changes")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Google Developer Program 2026</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Google Developer Program ${currentYearLabel()}</div>
   <h1>Google Developer Program Premium — What Replaced It</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/google-developer-program-2026", offers.length)}</p>
 
@@ -23312,7 +23319,7 @@ function geminiFlashPriceStepEntry(servedOn: string): GeminiTimelineEntry | null
 }
 
 function buildGeminiApiPricing2026Page(): string {
-  const title = "Gemini API Pricing 2026 — Free Tier Changes, Spend Caps & Alternatives";
+  const title = pricingGuideTitle("gemini-api-pricing-2026", "Gemini API Pricing 2026 — Free Tier Changes, Spend Caps & Alternatives");
   const metaDesc = "Gemini API billing changes in March and April 2026: spend caps by tier ($250 to $100K+ a month, enforced from April 1), prepay for new users and, from a cutover reported as October 12, 2026, for existing Postpay accounts, and Gemini 3.1 Pro Preview paid only. The free tier covers the Gemini 3.x Flash and Flash-Lite models.";
   const slug = "gemini-api-pricing-2026";
   const pubDate = "2026-03-26";
@@ -23446,8 +23453,8 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("changes")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Gemini API Pricing 2026</div>
-  <h1>Gemini API Pricing 2026 — Free Tier Changes, Spend Caps &amp; Alternatives</h1>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Gemini API Pricing ${currentYearLabel()}</div>
+  <h1>Gemini API Pricing ${currentYearLabel()} — Free Tier Changes, Spend Caps &amp; Alternatives</h1>
   <p class="pub-date">Published ${pubDate} &middot; Spend caps enforced April 1 &middot; 3.1 Pro paid-only &middot; Prepaid billing live &middot; ${pageDataProvenance("/gemini-api-pricing-2026", offers.length)}</p>
 
   <div class="summary-stats">
@@ -23766,7 +23773,7 @@ function buildFreeTierRiskPage(): string {
 
   const faqs = [
     { q: "How often is the Free Tier Risk Index updated?", a: "The grades are editorial and do not move on their own. " + gradingDates + ", and every row on the page carries the date its own grade was set. What is recomputed on every request is the record beneath them — each vendor's tracked changes since the day it was graded, and the scorecard showing how each band has fared. Our change log currently holds " + changeCountPhrase("in_force", changesInForce) + " across " + offers.length.toLocaleString() + " developer tools, and we add new changes within 48 hours of announcement." },
-    { q: "Which free tiers are safest to build on in 2026?", a: "Cloudflare, GitHub, Grafana Cloud, AWS Always Free, and Google Cloud Always Free are our lowest-risk picks, graded " + safestPicksGraded + ". They share three traits: backed by profitable companies, the free tier is a strategic acquisition funnel, and strong competitive pressure prevents removal. Section 6 of this page publishes what has happened to each band since." },
+    { q: `Which free tiers are safest to build on in ${currentYearLabel()}?`, a: "Cloudflare, GitHub, Grafana Cloud, AWS Always Free, and Google Cloud Always Free are our lowest-risk picks, graded " + safestPicksGraded + ". They share three traits: backed by profitable companies, the free tier is a strategic acquisition funnel, and strong competitive pressure prevents removal. Section 6 of this page publishes what has happened to each band since." },
     { q: "What are the warning signs that a free tier is about to be removed?", a: "Key signals: (1) acquisition or ownership change (HashiCorp/IBM, Neon/Databricks), (2) end of open-source maintenance (MinIO's AGPLv3 server), (3) credit-based pricing transition (Vercel, Netlify), (4) two or more negative changes within 6 months, and (5) 'sustaining mode' language in announcements." },
     { q: "How do you calculate risk scores?", a: "We weight four factors: pricing history (40%) — has the vendor changed before and how recently; financial signals (25%) — profitable vs VC-subsidized, recent acquisitions; competitive pressure (20%) — intense competition keeps free tiers alive; free tier strategic value (15%) — is the free tier a funnel or a cost center. " + pricingHistoryCoverageAnswer(gradedWithNoRecordAtAll, riskEntries) },
     { q: "How accurate have the risk grades been?", a: gradingDates + ", and scored against every change tracked since: " + bandScores.map(b => riskLabels[b.grade].toLowerCase() + " " + b.vendorsWithANegative + " of " + b.vendors + " (" + b.rate + "%)").join(", ") + ". A vendor counts if our change log holds a record in force since its grading date that removed a free tier, cut limits, added a restriction, killed an open-source edition, or deprecated the graded product itself. Vendors with nothing tracked stay in the denominator rather than being dropped." },
@@ -27655,8 +27662,12 @@ function buildFreeTierTrackerPage(): string {
   const slug = "free-tier-tracker";
   const pubDate = "2026-03-27";
   const servedOn = new Date().toISOString().slice(0, 10);
-  const cutsThisYear = cutsByQuarterNewestFirst(FREE_TIER_TRACKER_YEAR, freeTierCutsIn(FREE_TIER_TRACKER_YEAR, dealChanges, servedOn));
-  const cutsSummary = cutsThisYearSummary(cutsWindow(FREE_TIER_TRACKER_YEAR, servedOn), cutsThisYear.flatMap((group) => group.records));
+  const rollingCuts = servedOn >= "2027-01-01";
+  const cutsHeading = rollingCuts ? "Free Tiers Removed and Cut in the Last 12 Months" : CUTS_THIS_YEAR_HEADING;
+  const cutsCoverage = rollingCuts ? "the last 12 months" : String(FREE_TIER_TRACKER_YEAR);
+  const window = rollingCuts ? rollingCutsWindow(servedOn) : cutsWindow(FREE_TIER_TRACKER_YEAR, servedOn);
+  const cutsThisYear = cutsByYearAndQuarterNewestFirst(freeTierCutsWithin(window, dealChanges));
+  const cutsSummary = cutsThisYearSummary(window, cutsThisYear.flatMap((group) => group.records));
 
   const q1Changes = q1TrackedChanges;
 
@@ -28012,7 +28023,7 @@ ${globalNavCss()}
   <div class="toc">
     <h3>Contents</h3>
     <ol>
-      <li><a href="#${CUTS_THIS_YEAR_ANCHOR}">${escHtmlServer(CUTS_THIS_YEAR_HEADING)}</a></li>
+      <li><a href="#${CUTS_THIS_YEAR_ANCHOR}">${escHtmlServer(cutsHeading)}</a></li>
       <li><a href="#removed">Free Tiers Removed &amp; Reduced</a></li>
       <li><a href="#expanded">Free Tiers Expanded &amp; New</a></li>
       <li><a href="#patterns">Trend Analysis</a></li>
@@ -28021,7 +28032,7 @@ ${globalNavCss()}
     </ol>
   </div>
 
-  <h2 id="${CUTS_THIS_YEAR_ANCHOR}">${escHtmlServer(CUTS_THIS_YEAR_HEADING)}</h2>
+  <h2 id="${CUTS_THIS_YEAR_ANCHOR}">${escHtmlServer(cutsHeading)}</h2>
   ${cutsSummary ? `<p class="section-intro ${CUTS_THIS_YEAR_SUMMARY_CLASS}">${escHtmlServer(cutsSummary)}</p>` : ""}
   ${datedSectionNoticeHtml(
     namedFromItsDate("A change", servedOn),
@@ -28095,7 +28106,7 @@ ${globalNavCss()}
   </div>
 
   <div class="search-cta">
-    <p>This tracker covers ${FREE_TIER_TRACKER_YEAR}. For real-time tracking of all ${trackedChangeCount}+ pricing changes, use our <a href="/changes">Changes Timeline</a> or subscribe to the <a href="/feed.xml">Atom Feed</a>.</p>
+    <p>This tracker covers ${cutsCoverage}. For real-time tracking of all ${trackedChangeCount}+ pricing changes, use our <a href="/changes">Changes Timeline</a> or subscribe to the <a href="/feed.xml">Atom Feed</a>.</p>
     <p style="margin-top:.5rem;font-size:.85rem;color:var(--text-dim)">For risk scores on specific vendors, see the <a href="/free-tier-risk">Free Tier Risk Index</a>.</p>
   </div>
 
@@ -28153,7 +28164,7 @@ function upcomingChangesNamingTheVendorHtml(upcomingRows: string[]): string {
 }
 
 function buildStartupCreditsPage(): string {
-  const title = "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints";
+  const title = pricingGuideTitle("startup-credits", "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints");
   const metaDesc = STARTUP_CREDITS_META_DESCRIPTION;
   const slug = "startup-credits";
   const pubDate = "2026-03-27";
@@ -28363,7 +28374,7 @@ function buildStartupCreditsPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("alternatives") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Startup Programs</a> &rsaquo; Credits Comparison</div>\n' +
-    '  <h1>Startup Credits Comparison \u2014 The 2026 Guide</h1>\n' +
+    '  <h1>Startup Credits Comparison \u2014 The ' + currentYearLabel() + ' Guide</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + STARTUP_PROGRAMS.length + ' programs compared &middot; ' + pageDataProvenance("/startup-credits", offers.length) + '</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -28374,7 +28385,7 @@ function buildStartupCreditsPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>Startup credits in 2026:</strong> ' + STARTUP_PROGRAMS.length + ' programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.</p>\n' +
+    '    <p><strong>Startup credits:</strong> ' + STARTUP_PROGRAMS.length + ' programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.</p>\n' +
     '    <p><strong>Key insight:</strong> Stacking Google Scale (up to $200K) + AWS Activate Portfolio (up to $200K) + Cloudflare Tier 2 ($100K) can reach $500K; each needs VC funding or an affiliated partner. AWS credits from Brex and Stripe Atlas overlap: a later award pays only the difference.</p>\n' +
     '    <p><strong>This guide covers:</strong> credit values, eligibility requirements, vesting schedules, hidden constraints, application difficulty, and optimal stacking strategies \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
@@ -28484,7 +28495,7 @@ function buildStartupCreditsPage(): string {
 }
 
 function buildAiCodingToolsPricingPage(): string {
-  const title = "AI Coding Tools Pricing Comparison 2026 — The Definitive Free Tier Breakdown";
+  const title = pricingGuideTitle("ai-coding-tools-pricing", "AI Coding Tools Pricing Comparison 2026 — The Definitive Free Tier Breakdown");
   const metaDesc = "Compare 17 AI coding tools: Cursor, Windsurf, Amazon Kiro, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. [[freshness]]";
   const slug = "ai-coding-tools-pricing";
   const pubDate = "2026-04-08";
@@ -28906,7 +28917,7 @@ function buildAiCodingToolsPricingPage(): string {
   };
 
   const faqEntries = [
-    { q: "Which AI coding tools are free in 2026?", a: "Cline and Aider are free and open source; you pay only for the model API you connect. Gemini CLI is also open source and runs on a Gemini API key: Google stopped personal-account sign-in on 2026-06-18, when it ended the free Gemini Code Assist individuals tier. GitHub Copilot Free includes 2,000 code completions a month." },
+    { q: `Which AI coding tools are free in ${currentYearLabel()}?`, a: "Cline and Aider are free and open source; you pay only for the model API you connect. Gemini CLI is also open source and runs on a Gemini API key: Google stopped personal-account sign-in on 2026-06-18, when it ended the free Gemini Code Assist individuals tier. GitHub Copilot Free includes 2,000 code completions a month." },
     { q: "How much does Cursor cost vs Windsurf?", a: "Since 2026-10-12, Cursor's paid plans for new subscribers start at $8/month (Plus, Grok models and Composer only) and $30/month (Premium, the first plan that can use Claude and GPT, billed at API list price on top); Windsurf's start at $20/month. Both top out at $200/month: Cursor Ultra and Windsurf Max. For teams, Cursor seats are $30, $100 or $200 per user a month, and Windsurf is $80/month plus $40 per seat. Existing Cursor Pro ($20) and Pro+ ($60) subscribers keep their plans until they switch. Windsurf, renamed Devin Desktop, raised Pro from $15 to $20 in March 2026." },
     { q: "Is GitHub Copilot still the cheapest AI coding tool?", a: "No \u2014 Cursor Plus and ChatGPT Go cost $8/month against $10/month for Copilot Pro. Cursor Plus runs only Grok models and Cursor's Composer. ChatGPT Go includes Codex for quick, lightweight coding tasks in the desktop app. The free tier gives 2,000 code completions a month plus limited chat and agent use. On paid plans, completions and next edit suggestions are unlimited and consume nothing; agent and chat work is metered in GitHub AI Credits at $0.01 each \u2014 $15 of credits on Pro, $70 on Pro+ ($39/mo), $200 on Max ($100/mo). GitHub's premium-request billing and its $0.04 overage are retired; the docs now label that model legacy." },
     { q: "What are the hidden costs of BYO-key AI coding tools?", a: "Tools like Cline and Aider are free to install but require API keys. Typical costs: $5-50/month for moderate use with Claude Sonnet or GPT-4o. Heavy agentic usage (Cline with Opus) can reach $50-100/month in API costs alone." },
@@ -29013,7 +29024,7 @@ function buildAiCodingToolsPricingPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ide-code-editors-alternatives">AI Coding</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
-    '  <h1>AI Coding Tools Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
+    '  <h1>AI Coding Tools Pricing \u2014 The Definitive ' + currentYearLabel() + ' Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + tools.length + ' tools compared &middot; ' + pageDataProvenance("/ai-coding-tools-pricing", offers.length) + ' &middot; ' + aiCodingChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -29251,7 +29262,7 @@ function keyCostFactorCell(row: { hiddenCosts?: string; keyCostFactor?: string }
 }
 
 function buildCiCdPricingPage(): string {
-  const title = "CI/CD Tools Pricing Comparison 2026 — Build Minutes, Runners & Costs Compared";
+  const title = pricingGuideTitle("ci-cd-pricing", "CI/CD Tools Pricing Comparison 2026 — Build Minutes, Runners & Costs Compared");
   const metaDesc = "Compare 17+ CI/CD tools: GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Google Cloud Build, Bitrise and more. Free tiers, build minutes, concurrent jobs, pricing models, and hidden costs. [[freshness]]";
   const slug = "ci-cd-pricing";
   const pubDate = "2026-04-09";
@@ -29743,7 +29754,7 @@ function buildCiCdPricingPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ci-cd-alternatives">CI/CD</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
-    '  <h1>CI/CD Tools Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
+    '  <h1>CI/CD Tools Pricing \u2014 The Definitive ' + currentYearLabel() + ' Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + tools.length + ' tools compared &middot; ' + pageDataProvenance("/ci-cd-pricing", offers.length) + ' &middot; ' + cicdChanges.length + ' pricing change' + (cicdChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -29970,7 +29981,7 @@ function buildCiCdPricingPage(): string {
 }
 
 function buildDatabasePricingPage(): string {
-  const title = "Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs Compared";
+  const title = pricingGuideTitle("database-pricing", "Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs Compared");
   const metaDesc = "Compare 25+ database services: Supabase, Neon, PlanetScale, MongoDB Atlas, Firebase, CockroachDB, Turso, Upstash, Redis Cloud, DynamoDB and more. Free tiers, storage limits, connections, pricing models, and hidden costs. [[freshness]]";
   const slug = "database-pricing";
   const pubDate = "2026-04-09";
@@ -30420,7 +30431,7 @@ function buildDatabasePricingPage(): string {
   };
 
   const categoryDescs: Record<string, string> = {
-    "managed-postgres": "Fully managed PostgreSQL services with serverless scaling, branching, and modern DX. The default choice for most applications in 2026.",
+    "managed-postgres": "Fully managed PostgreSQL services with serverless scaling, branching, and modern DX. The default choice for most applications.",
     "serverless-edge": "Databases designed for serverless and edge computing. No connection management, scale to zero, and global distribution.",
     "document-nosql": "Document-oriented databases for flexible schemas. Best for rapid prototyping, mobile apps, and content management.",
     "cloud-provider": "Database services from major cloud platforms. Best when you are already invested in that ecosystem.",
@@ -30505,7 +30516,7 @@ function buildDatabasePricingPage(): string {
   };
 
   const faqEntries = [
-    { q: "Which database has the best free tier in 2026?", a: "We publish no ranking of database free tiers. Supabase gives you 500 MB Postgres with Auth, Storage, Edge Functions, and Realtime included. For edge/serverless, Turso (5 GB, 100 databases) and Cloudflare D1 (5 GB) are standouts." },
+    { q: `Which database has the best free tier in ${currentYearLabel()}?`, a: "We publish no ranking of database free tiers. Supabase gives you 500 MB Postgres with Auth, Storage, Edge Functions, and Realtime included. For edge/serverless, Turso (5 GB, 100 databases) and Cloudflare D1 (5 GB) are standouts." },
     { q: "Is Supabase really free?", a: "Yes, but with caveats. Supabase free tier includes 500 MB Postgres, Auth, Storage, Edge Functions, and Realtime. However, free projects pause after 1 week of inactivity, you are limited to 2 projects, and egress is capped at 5 GB total across all services. For active projects, it is genuinely free." },
     { q: "What happened to PlanetScale's free tier?", a: "PlanetScale retired its free Hobby plan on 2024-04-08. Hobby databases that were not upgraded were put to sleep with their data kept. The cheapest plan is now $5 a month." },
     { q: "Neon vs Supabase: which is cheaper?", a: "Both have a free plan. Neon's gives 1 GB of storage and 100 CU-hours per project across up to 100 projects, with auth up to 60k MAU, 5 GB of object storage per project and Functions. Supabase's gives a 500 MB database per project across 2 active projects, with 50,000 MAU, 1 GB of file storage and 500,000 Edge Function invocations. On paid plans, Neon's Launch plan is usage-based with no monthly minimum; Supabase Pro starts at $25 a month, with the first project and $10 a month of compute credits included. Which costs less depends on your compute and storage use." },
@@ -30611,7 +30622,7 @@ function buildDatabasePricingPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
-    '  <h1>Database Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
+    '  <h1>Database Pricing \u2014 The Definitive ' + currentYearLabel() + ' Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + services.length + ' services compared &middot; ' + pageDataProvenance("/database-pricing", offers.length) + ' &middot; ' + dbChanges.length + ' pricing change' + (dbChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -30841,7 +30852,7 @@ function buildDatabasePricingPage(): string {
 }
 
 function buildVectorDatabasePricingPage(): string {
-  const title = "Vector Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs for RAG/AI";
+  const title = pricingGuideTitle("vector-database-pricing", "Vector Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs for RAG/AI");
   const slug = "vector-database-pricing";
   const pubDate = "2026-04-10";
 
@@ -31273,7 +31284,7 @@ function buildVectorDatabasePricingPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Vector Database Pricing</div>\n' +
-    '  <h1>Vector Database Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
+    '  <h1>Vector Database Pricing \u2014 The Definitive ' + currentYearLabel() + ' Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + services.length + ' services compared &middot; ' + pageDataProvenance("/vector-database-pricing", offers.length) + ' &middot; ' + vectorChanges.length + ' pricing change' + (vectorChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -31507,7 +31518,7 @@ function buildVectorDatabasePricingPage(): string {
 }
 
 function buildHostingPricingPage(): string {
-  const title = "Cloud Hosting & PaaS Pricing Comparison 2026 — Free Tiers, Limits & Hidden Costs";
+  const title = pricingGuideTitle("hosting-pricing", "Cloud Hosting & PaaS Pricing Comparison 2026 — Free Tiers, Limits & Hidden Costs");
   const metaDesc = "Compare 15+ cloud hosting and PaaS services: Railway, Vercel, Render, Netlify, Fly.io, Cloudflare Workers/Pages, Deno Deploy, Koyeb, Val Town, Google Cloud Run and more. Free tiers, bandwidth limits, build minutes, and pricing gotchas. [[freshness]]";
   const slug = "hosting-pricing";
   const pubDate = "2026-04-13";
@@ -31850,7 +31861,7 @@ function buildHostingPricingPage(): string {
   );
 
   const faqEntries = [
-    { q: "What is the best free cloud hosting platform in 2026?", a: "Cloudflare Pages offers unlimited sites, unlimited bandwidth, and 500 builds/month. For full-stack apps, Vercel's Hobby plan (100 GB of Fast Data Transfer, builds included; non-commercial use only) is a strong free option. Railway offers $5 in free credits to get started." },
+    { q: `What is the best free cloud hosting platform in ${currentYearLabel()}?`, a: "Cloudflare Pages offers unlimited sites, unlimited bandwidth, and 500 builds/month. For full-stack apps, Vercel's Hobby plan (100 GB of Fast Data Transfer, builds included; non-commercial use only) is a strong free option. Railway offers $5 in free credits to get started." },
     { q: "Is Heroku still worth it without a free tier?", a: "Heroku removed its free tier in November 2022. The cheapest option is now Eco dynos at $5/month (shared compute, sleeps after 30 min). For most use cases, Railway ($5/mo with $5 credit), Render (free tier with spin-down), or Fly.io provide better value." },
     { q: "What are the hidden costs of Vercel?", a: "New Pro teams default to Elastic build machines, which scale between 4 and 30 vCPUs and bill $0.0035 per CPU minute. A fixed Turbo machine (30 vCPUs) costs $0.105 a minute and Standard (4 vCPUs) $0.014. The Pro plan moved to a credit-based model ($20/mo credit pool) in January 2026. Image Optimization has separate quotas. The Hobby plan is restricted to personal, non-commercial use." },
     { q: "Which PaaS is best for side projects?", a: "For static sites: Cloudflare Pages (unlimited free bandwidth) or GitHub Pages. For full-stack: Railway ($5 trial credit for 30 days, no card required), Render (free tier with 15-min spin-down), or Vercel Hobby. For serverless APIs: Cloudflare Workers (100K req/day free)." },
@@ -31972,7 +31983,7 @@ function buildHostingPricingPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/hosting-alternatives">Cloud Hosting</a> &rsaquo; Pricing Comparison</div>\n' +
-    '  <h1>Cloud Hosting &amp; PaaS Pricing \u2014 The 2026 Comparison</h1>\n' +
+    '  <h1>Cloud Hosting &amp; PaaS Pricing \u2014 The ' + currentYearLabel() + ' Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + services.length + ' platforms compared &middot; ' + pageDataProvenance("/hosting-pricing", offers.length) + ' &middot; ' + hostingChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -32208,8 +32219,8 @@ function buildHostingPricingPage(): string {
 }
 
 function buildLlmApiPricingPage(): string {
-  const title = LLM_API_PRICING_TITLE;
-  const metaDesc = LLM_API_PRICING_META_DESC;
+  const title = pricingGuideTitle("llm-api-pricing", LLM_API_PRICING_TITLE);
+  const metaDesc = pricingGuideDescription("llm-api-pricing", LLM_API_PRICING_META_DESC);
   const slug = "llm-api-pricing";
   const pubDate = "2026-04-13";
 
@@ -32594,7 +32605,7 @@ function buildLlmApiPricingPage(): string {
   ].filter(sentence => sentence !== "").join(" ");
 
   const faqEntries: FaqItem[] = [
-    { q: "Which LLM API has the best free tier in 2026?", a: freeTierAnswer },
+    { q: `Which LLM API has the best free tier in ${currentYearLabel()}?`, a: freeTierAnswer },
     { q: "How much does OpenAI's API cost per token?", a: openaiPriceAnswer, ...(openaiRates.length > 0 && openaiRecord ? { figuresFromRecord: { vendor: openaiRecord.vendor, lastRead: lastReadDate(openaiRecord) } } : {}) },
     {
       q: "How much does Claude cost per token?",
@@ -32717,7 +32728,7 @@ function buildLlmApiPricingPage(): string {
     '<div class="container">\n' +
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ai-ml-alternatives">AI / ML</a> &rsaquo; LLM API Pricing</div>\n' +
-    '  <h1>LLM API Free Tiers and Free Credits &mdash; The 2026 Comparison</h1>\n' +
+    '  <h1>LLM API Free Tiers and Free Credits &mdash; The ' + currentYearLabel() + ' Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + providers.length + ' providers compared &middot; ' + pageDataProvenance("/llm-api-pricing", offers.length) + ' &middot; ' + llmChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -34021,7 +34032,7 @@ function cloudGuideUpcomingChangesHtml(upcoming: readonly DealChange[]): string 
 }
 
 function buildAwsFreeTier2026Page(): string {
-  const title = AWS_FREE_TIER_TITLE;
+  const title = pricingGuideTitle("aws-free-tier-2026", AWS_FREE_TIER_TITLE);
   const metaDesc = "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.";
   const slug = "aws-free-tier-2026";
   const pubDate = "2026-03-27";
@@ -34220,8 +34231,8 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; AWS Free Tier 2026</div>
-  <h1>AWS Free Tier 2026</h1>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; AWS Free Tier ${currentYearLabel()}</div>
+  <h1>AWS Free Tier ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/aws-free-tier-2026", offers.length)} &middot; ${awsOffers.length} AWS entries tracked</p>
 
   <div class="summary-stats">
@@ -34400,8 +34411,8 @@ ${globalNavCss()}
 }
 
 function buildGcpFreeTier2026Page(): string {
-  const title = "GCP Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
-  const metaDescGcp = "Comprehensive guide to every Google Cloud free tier service in 2026. 20+ free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.";
+  const title = pricingGuideTitle("gcp-free-tier-2026", "GCP Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs");
+  const metaDescGcp = pricingGuideDescription("gcp-free-tier-2026", "Comprehensive guide to every Google Cloud free tier service in 2026. 20+ free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.");
   const slug = "gcp-free-tier-2026";
   const pubDate = "2026-03-27";
 
@@ -34637,8 +34648,8 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; GCP Free Tier 2026</div>
-  <h1>GCP Free Tier Complete Guide 2026</h1>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; GCP Free Tier ${currentYearLabel()}</div>
+  <h1>GCP Free Tier Complete Guide ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/gcp-free-tier-2026", offers.length)} &middot; ${gcpOffers.length} Google and Firebase entries tracked</p>
 
   <div class="summary-stats">
@@ -34809,7 +34820,7 @@ ${globalNavCss()}
 }
 
 function buildAzureFreeTier2026Page(): string {
-  const title = AZURE_FREE_TIER_TITLE;
+  const title = pricingGuideTitle("azure-free-tier-2026", AZURE_FREE_TIER_TITLE);
   const metaDescAzure = AZURE_FREE_TIER_META_DESC;
   const slug = "azure-free-tier-2026";
   const pubDate = "2026-03-31";
@@ -35056,8 +35067,8 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Azure Free Tier 2026</div>
-  <h1>Azure Free Tier 2026</h1>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Azure Free Tier ${currentYearLabel()}</div>
+  <h1>Azure Free Tier ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/azure-free-tier-2026", offers.length)} &middot; ${azureOffers.length} Azure entries tracked</p>
 
   <div class="summary-stats">
@@ -35274,8 +35285,8 @@ ${globalNavCss()}
 }
 
 function buildDigitalOceanFreeTier2026Page(): string {
-  const title = "DigitalOcean Free Tier Complete Guide 2026 — Pricing, Free Credits, and Hidden Costs";
-  const metaDescDO = "Complete guide to DigitalOcean pricing and free tier in 2026. $5 free credits for 90 days, App Platform free static sites, per-second billing, Functions serverless, and comparison with AWS, GCP, and Azure.";
+  const title = pricingGuideTitle("digitalocean-free-tier-2026", "DigitalOcean Free Tier Complete Guide 2026 — Pricing, Free Credits, and Hidden Costs");
+  const metaDescDO = pricingGuideDescription("digitalocean-free-tier-2026", "Complete guide to DigitalOcean pricing and free tier in 2026. $5 free credits for 90 days, App Platform free static sites, per-second billing, Functions serverless, and comparison with AWS, GCP, and Azure.");
   const slug = "digitalocean-free-tier-2026";
   const pubDate = "2026-03-31";
 
@@ -35480,8 +35491,8 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; DigitalOcean Free Tier 2026</div>
-  <h1>DigitalOcean Free Tier Complete Guide 2026</h1>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; DigitalOcean Free Tier ${currentYearLabel()}</div>
+  <h1>DigitalOcean Free Tier Complete Guide ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/digitalocean-free-tier-2026", offers.length)} &middot; ${doOffers.length} DigitalOcean entries tracked</p>
 
   <div class="summary-stats">
@@ -35782,7 +35793,7 @@ export function comparisonFaqItems(slug: string, forJsonLd = false): FaqItem[] {
   const noun = meta.questionNoun;
   return [
     ...(noBest === null ? [] : [{
-      q: `What is the best free ${noun} service in 2026?`,
+      q: `What is the best free ${noun} service in ${currentYearLabel()}?`,
       a: noBest,
     }]),
     {
@@ -35835,8 +35846,8 @@ function buildComparisonBreadcrumbJsonLd(slug: string, title: string): string {
 }
 
 function buildCloudFreeTierComparison2026Page(): string {
-  const title = "Cloud Free Tier Comparison 2026 — AWS vs GCP vs Azure vs DigitalOcean";
-  const metaDescComp = "Side-by-side comparison of AWS, GCP, Azure, and DigitalOcean free tiers in 2026. Compare always-free compute, databases, serverless, storage, startup credits, and hidden costs across all 4 major clouds.";
+  const title = pricingGuideTitle("cloud-free-tier-comparison-2026", "Cloud Free Tier Comparison 2026 — AWS vs GCP vs Azure vs DigitalOcean");
+  const metaDescComp = `Side-by-side comparison of AWS, GCP, Azure, and DigitalOcean free tiers in ${currentYearLabel()}. Compare always-free compute, databases, serverless, storage, startup credits, and hidden costs across all 4 major clouds.`;
   const slug = "cloud-free-tier-comparison-2026";
   const pubDate = "2026-03-31";
 
@@ -35957,7 +35968,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/cloud-hosting">Cloud Hosting</a> &rsaquo; Cloud Free Tier Comparison</div>
-  <h1>Cloud Free Tier Comparison 2026</h1>
+  <h1>Cloud Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/cloud-free-tier-comparison-2026", offers.length)} &middot; 4 cloud providers compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -36477,8 +36488,8 @@ function withNoLongerFreeSentence(html: string, declaredByThePage: (vendor: stri
 }
 
 function buildDatabaseFreeTierComparison2026Page(): string {
-  const title = "Database Free Tier Comparison 2026 — Supabase vs Neon vs Firebase vs Turso vs PlanetScale";
-  const metaDescDb = "Side-by-side comparison of 10+ database free tiers in 2026. Compare Supabase, Neon, Firebase, Turso, MongoDB, CockroachDB, Upstash, Cloudflare D1, and more — storage, compute, connections, and lock-in risk.";
+  const title = pricingGuideTitle("database-free-tier-comparison-2026", "Database Free Tier Comparison 2026 — Supabase vs Neon vs Firebase vs Turso vs PlanetScale");
+  const metaDescDb = `Side-by-side comparison of 10+ database free tiers in ${currentYearLabel()}. Compare Supabase, Neon, Firebase, Turso, MongoDB, CockroachDB, Upstash, Cloudflare D1, and more — storage, compute, connections, and lock-in risk.`;
   const slug = "database-free-tier-comparison-2026";
   const pubDate = "2026-03-31";
 
@@ -36624,7 +36635,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Database Free Tier Comparison</div>
-  <h1>Database Free Tier Comparison 2026</h1>
+  <h1>Database Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/database-free-tier-comparison-2026", offers.length)} &middot; ${COMPARED_SERVICES_PLACEHOLDER} database services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -36991,7 +37002,7 @@ ${globalNavCss()}
   </div>
 
   <h2 id="vector">Vector Databases</h2>
-  <p class="section-intro">Essential for AI/ML workloads — similarity search, RAG pipelines, and embedding storage. The fastest-growing database category in 2026.</p>
+  <p class="section-intro">Essential for AI/ML workloads — similarity search, RAG pipelines, and embedding storage. The fastest-growing database category.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -37139,8 +37150,8 @@ ${globalNavCss()}
 }
 
 function buildCicdFreeTierComparison2026Page(): string {
-  const title = "CI/CD Free Tier Comparison 2026 — GitHub Actions vs GitLab CI vs CircleCI vs Buildkite";
-  const metaDescCicd = "Side-by-side comparison of 10+ CI/CD free tiers in 2026. Compare GitHub Actions, GitLab CI, CircleCI, Buildkite, Bitrise, Codemagic, Drone CI, and more — build minutes, concurrency, runners, and hidden costs.";
+  const title = pricingGuideTitle("cicd-free-tier-comparison-2026", "CI/CD Free Tier Comparison 2026 — GitHub Actions vs GitLab CI vs CircleCI vs Buildkite");
+  const metaDescCicd = `Side-by-side comparison of 10+ CI/CD free tiers in ${currentYearLabel()}. Compare GitHub Actions, GitLab CI, CircleCI, Buildkite, Bitrise, Codemagic, Drone CI, and more — build minutes, concurrency, runners, and hidden costs.`;
   const slug = "cicd-free-tier-comparison-2026";
   const pubDate = "2026-03-31";
 
@@ -37284,7 +37295,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/ci-cd">CI/CD</a> &rsaquo; CI/CD Free Tier Comparison</div>
-  <h1>CI/CD Free Tier Comparison 2026</h1>
+  <h1>CI/CD Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/cicd-free-tier-comparison-2026", offers.length)} &middot; 37 CI/CD services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -37295,7 +37306,7 @@ ${globalNavCss()}
 
   <div class="executive-summary">
     <p><strong>Quick verdict:</strong> On public repositories, GitHub Actions' standard runners are free with no minute limit. For private repositories, GitHub Free includes 2,000 minutes a month. GitLab Free includes 400 compute minutes a month and a container registry. CircleCI Free gives 30,000 credits a month (up to 6,000 minutes on a small Docker resource class) and 30 concurrent jobs. Buildkite's Free plan includes 5 users, 10 concurrent jobs and 2,000 Linux vCPU minutes a month (1,000 minutes on its 2-vCPU agent).</p>
-    <p><strong>The CI/CD landscape in 2026:</strong> GitHub announced a charge for self-hosted runners on 2025-12-16 and postponed it the next day, with no new date. GitLab Free has included 400 compute minutes a month since October 2020. Drone's free open-source edition runs on a single machine; Woodpecker CI is a community fork of Drone. For mobile CI, Bitrise's free Hobby plan gives 500 build minutes a month and Codemagic 500 macOS M2 build minutes.</p>
+    <p><strong>The CI/CD landscape:</strong> GitHub announced a charge for self-hosted runners on 2025-12-16 and postponed it the next day, with no new date. GitLab Free has included 400 compute minutes a month since October 2020. Drone's free open-source edition runs on a single machine; Woodpecker CI is a community fork of Drone. For mobile CI, Bitrise's free Hobby plan gives 500 build minutes a month and Codemagic 500 macOS M2 build minutes.</p>
   </div>
 
   <div class="toc">
@@ -37796,8 +37807,8 @@ ${globalNavCss()}
 }
 
 function buildServerlessFreeTierComparison2026Page(): string {
-  const title = "Serverless Free Tier Comparison 2026 — AWS Lambda vs Cloud Functions vs Azure Functions vs Workers";
-  const metaDescServerless = "Side-by-side comparison of 10+ serverless free tiers in 2026. Compare AWS Lambda, Google Cloud Functions, Azure Functions, Cloudflare Workers, Deno Deploy, Cloud Run, Val Town, and more — invocations, compute, cold starts, and billing models.";
+  const title = pricingGuideTitle("serverless-free-tier-comparison-2026", "Serverless Free Tier Comparison 2026 — AWS Lambda vs Cloud Functions vs Azure Functions vs Workers");
+  const metaDescServerless = `Side-by-side comparison of 10+ serverless free tiers in ${currentYearLabel()}. Compare AWS Lambda, Google Cloud Functions, Azure Functions, Cloudflare Workers, Deno Deploy, Cloud Run, Val Town, and more — invocations, compute, cold starts, and billing models.`;
   const slug = "serverless-free-tier-comparison-2026";
   const workers = offers.find(offer => offer.vendor === "Cloudflare Workers" && offer.tier === "Free");
   const workersRequests = quantifiedAttributes(workers?.description.split(/\.\s|;/, 1)[0]).find(quantity =>
@@ -37947,7 +37958,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Serverless Free Tier Comparison</div>
-  <h1>Serverless Free Tier Comparison 2026</h1>
+  <h1>Serverless Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/serverless-free-tier-comparison-2026", offers.length)} &middot; 10+ serverless platforms compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -38445,8 +38456,8 @@ ${globalNavCss()}
 export const AUTH_COMPARISON_LISTINGS = ["Auth0", "Clerk", "Kinde", "PropelAuth", "Stytch", "Descope", "WorkOS", "Keycloak", "authentik", "FusionAuth", "SuperTokens", "Hanko", "Ory", "Authgear", "MojoAuth", "Stack Auth", "Permit.io", "Cerbos Hub", "Authress"];
 
 function buildAuthComparison2026Page(): string {
-  const title = "Auth & Identity Comparison 2026 — Auth0 vs Clerk vs Supabase Auth vs Firebase Auth";
-  const metaDescAuth = "Comprehensive comparison of 20+ auth free tiers in 2026. Compare Auth0, Clerk, Supabase Auth, Firebase Auth, PropelAuth, Kinde, Keycloak, Authentik, Authelia, Appwrite, and more — MAU/MRU limits, overage costs, MFA, SSO, agentic AI support, and growth pricing.";
+  const title = pricingGuideTitle("auth-comparison-2026", "Auth & Identity Comparison 2026 — Auth0 vs Clerk vs Supabase Auth vs Firebase Auth");
+  const metaDescAuth = `Comprehensive comparison of 20+ auth free tiers in ${currentYearLabel()}. Compare Auth0, Clerk, Supabase Auth, Firebase Auth, PropelAuth, Kinde, Keycloak, Authentik, Authelia, Appwrite, and more — MAU/MRU limits, overage costs, MFA, SSO, agentic AI support, and growth pricing.`;
   const slug = "auth-comparison-2026";
   const pubDate = "2026-04-03";
 
@@ -38599,7 +38610,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/auth">Auth</a> &rsaquo; Auth &amp; Identity Comparison</div>
-  <h1>Auth &amp; Identity Comparison 2026</h1>
+  <h1>Auth &amp; Identity Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/auth-comparison-2026", offers.length)} &middot; 20+ auth services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -39274,8 +39285,8 @@ ${upcomingChangesHtml}
 }
 
 function buildEmailComparison2026Page(): string {
-  const title = "Email & Transactional Messaging Comparison 2026 — SendGrid Alternatives After Free Tier Death";
-  const metaDescEmail = "Comprehensive comparison of 20+ email service free tiers in 2026. Resend, Postmark, Amazon SES, Brevo, Mailtrap, Loops, MailerSend, Mailjet, Maileroo, SMTP2GO, Mailchimp, MailerLite, EmailOctopus — SendGrid exodus migration guide, growth cost analysis at 10K/50K/100K/500K emails, deliverability traps.";
+  const title = pricingGuideTitle("email-comparison-2026", "Email & Transactional Messaging Comparison 2026 — SendGrid Alternatives After Free Tier Death");
+  const metaDescEmail = `Comprehensive comparison of 20+ email service free tiers in ${currentYearLabel()}. Resend, Postmark, Amazon SES, Brevo, Mailtrap, Loops, MailerSend, Mailjet, Maileroo, SMTP2GO, Mailchimp, MailerLite, EmailOctopus — SendGrid exodus migration guide, growth cost analysis at 10K/50K/100K/500K emails, deliverability traps.`;
   const slug = "email-comparison-2026";
   const pubDate = "2026-04-03";
 
@@ -39422,7 +39433,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/email">Email</a> &rsaquo; Email Comparison</div>
-  <h1>Email &amp; Transactional Messaging Comparison 2026</h1>
+  <h1>Email &amp; Transactional Messaging Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/email-comparison-2026", offers.length)} &middot; 20+ email services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -40242,8 +40253,8 @@ ${globalNavCss()}
 }
 
 function buildMonitoringComparison2026Page(): string {
-  const title = MONITORING_COMPARISON_TITLE;
-  const metaDescMonitoring = MONITORING_COMPARISON_META_DESC;
+  const title = pricingGuideTitle("monitoring-comparison-2026", MONITORING_COMPARISON_TITLE);
+  const metaDescMonitoring = pricingGuideDescription("monitoring-comparison-2026", MONITORING_COMPARISON_META_DESC);
   const slug = "monitoring-comparison-2026";
   const pubDate = "2026-04-03";
 
@@ -40390,7 +40401,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/monitoring">Monitoring</a> &rsaquo; Monitoring &amp; Observability Comparison</div>
-  <h1>Free Tiers for Error Tracking, Monitoring &amp; Observability 2026</h1>
+  <h1>Free Tiers for Error Tracking, Monitoring &amp; Observability ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/monitoring-comparison-2026", offers.length)} &middot; 25+ monitoring services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -41218,8 +41229,8 @@ function storageScaleSpreadClause(): string {
 }
 
 function buildStorageComparison2026Page(): string {
-  const title = "Storage & CDN Comparison 2026 — S3 vs R2 vs B2 vs Supabase Storage vs Cloudinary";
-  const metaDescStorage = "Comprehensive comparison of 15+ storage and CDN free tiers in 2026. AWS S3, Cloudflare R2, Backblaze B2, Tigris, Storj, Supabase Storage, Cloudinary, ImageKit, BunnyCDN, MinIO — storage limits, egress fees, S3 compatibility, CDN, and the S3 egress tax at scale.";
+  const title = pricingGuideTitle("storage-comparison-2026", "Storage & CDN Comparison 2026 — S3 vs R2 vs B2 vs Supabase Storage vs Cloudinary");
+  const metaDescStorage = `Comprehensive comparison of 15+ storage and CDN free tiers in ${currentYearLabel()}. AWS S3, Cloudflare R2, Backblaze B2, Tigris, Storj, Supabase Storage, Cloudinary, ImageKit, BunnyCDN, MinIO — storage limits, egress fees, S3 compatibility, CDN, and the S3 egress tax at scale.`;
   const slug = "storage-comparison-2026";
   const pubDate = "2026-04-03";
 
@@ -41366,7 +41377,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/storage">Storage</a> &rsaquo; Storage &amp; CDN Comparison</div>
-  <h1>Storage &amp; CDN Comparison 2026</h1>
+  <h1>Storage &amp; CDN Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/storage-comparison-2026", offers.length)} &middot; 15+ storage &amp; CDN services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -41993,8 +42004,8 @@ ${globalNavCss()}
 }
 
 function buildTestingFreeTierComparison2026Page(): string {
-  const title = "Testing & QA Tools Free Tier Comparison 2026 — Cypress vs Playwright vs BrowserStack vs k6";
-  const metaDescTesting = "Side-by-side comparison of 15+ testing free tiers in 2026. Compare Playwright, Cypress Cloud, BrowserStack, Chromatic, k6, Checkly, Codecov, and more — test runs, minutes, snapshots, and scaling costs.";
+  const title = pricingGuideTitle("testing-free-tier-comparison-2026", "Testing & QA Tools Free Tier Comparison 2026 — Cypress vs Playwright vs BrowserStack vs k6");
+  const metaDescTesting = `Side-by-side comparison of 15+ testing free tiers in ${currentYearLabel()}. Compare Playwright, Cypress Cloud, BrowserStack, Chromatic, k6, Checkly, Codecov, and more — test runs, minutes, snapshots, and scaling costs.`;
   const slug = "testing-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
 
@@ -42144,7 +42155,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/testing">Testing</a> &rsaquo; Testing Free Tier Comparison</div>
-  <h1>Testing &amp; QA Tools Free Tier Comparison 2026</h1>
+  <h1>Testing &amp; QA Tools Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/testing-free-tier-comparison-2026", offers.length)} &middot; 15+ testing services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -42653,8 +42664,8 @@ ${globalNavCss()}
 }
 
 function buildAnalyticsFreeTierComparison2026Page(): string {
-  const title = "Analytics & Product Analytics Free Tier Comparison 2026 — PostHog vs Mixpanel vs Amplitude vs Plausible";
-  const metaDescAnalytics = "Side-by-side comparison of 15+ analytics free tiers in 2026. Compare PostHog, Mixpanel, Amplitude, Plausible, Google Analytics, Umami, and more — event limits, session replays, feature flags, and scaling costs.";
+  const title = pricingGuideTitle("analytics-free-tier-comparison-2026", "Analytics & Product Analytics Free Tier Comparison 2026 — PostHog vs Mixpanel vs Amplitude vs Plausible");
+  const metaDescAnalytics = `Side-by-side comparison of 15+ analytics free tiers in ${currentYearLabel()}. Compare PostHog, Mixpanel, Amplitude, Plausible, Google Analytics, Umami, and more — event limits, session replays, feature flags, and scaling costs.`;
   const slug = "analytics-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
   const GA4_SAMPLING_DOC = { url: "https://support.google.com/analytics/answer/13331292", readOn: "2026-10-07" };
@@ -42806,7 +42817,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/analytics">Analytics</a> &rsaquo; Analytics Free Tier Comparison</div>
-  <h1>Analytics &amp; Product Analytics Free Tier Comparison 2026</h1>
+  <h1>Analytics &amp; Product Analytics Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/analytics-free-tier-comparison-2026", offers.length)} &middot; 15+ analytics services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -43321,8 +43332,8 @@ ${globalNavCss()}
 }
 
 function buildApiDevelopmentFreeTierComparison2026Page(): string {
-  const title = "API Development Tools Free Tier Comparison 2026 — Postman vs Bruno vs Hoppscotch vs Insomnia";
-  const metaDescApi = "Side-by-side comparison of 12+ API development tool free tiers in 2026. Compare Postman, Bruno, Hoppscotch, Insomnia, Thunder Client, Apidog, and more — users, collections, requests, mock servers, and migration costs.";
+  const title = pricingGuideTitle("api-development-free-tier-comparison-2026", "API Development Tools Free Tier Comparison 2026 — Postman vs Bruno vs Hoppscotch vs Insomnia");
+  const metaDescApi = `Side-by-side comparison of 12+ API development tool free tiers in ${currentYearLabel()}. Compare Postman, Bruno, Hoppscotch, Insomnia, Thunder Client, Apidog, and more — users, collections, requests, mock servers, and migration costs.`;
   const slug = "api-development-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
 
@@ -43472,7 +43483,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/api-development">API Development</a> &rsaquo; API Development Free Tier Comparison</div>
-  <h1>API Development Tools Free Tier Comparison 2026</h1>
+  <h1>API Development Tools Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/api-development-free-tier-comparison-2026", offers.length)} &middot; 12+ API development tools compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -43914,8 +43925,8 @@ ${globalNavCss()}
 }
 
 function buildSecurityFreeTierComparison2026Page(): string {
-  const title = "Developer Security Tools Free Tier Comparison 2026 — Snyk vs Semgrep vs GitGuardian vs Trivy";
-  const metaDescSec = "Side-by-side comparison of 20+ developer security tool free tiers in 2026. Compare Snyk, Semgrep, SonarCloud, GitGuardian, Trivy, CodeQL, OWASP ZAP, and more — scans, repos, contributors, and security cost traps.";
+  const title = pricingGuideTitle("security-free-tier-comparison-2026", "Developer Security Tools Free Tier Comparison 2026 — Snyk vs Semgrep vs GitGuardian vs Trivy");
+  const metaDescSec = `Side-by-side comparison of 20+ developer security tool free tiers in ${currentYearLabel()}. Compare Snyk, Semgrep, SonarCloud, GitGuardian, Trivy, CodeQL, OWASP ZAP, and more — scans, repos, contributors, and security cost traps.`;
   const slug = "security-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
 
@@ -44065,7 +44076,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/security">Security</a> &rsaquo; Security Free Tier Comparison</div>
-  <h1>Developer Security Tools Free Tier Comparison 2026</h1>
+  <h1>Developer Security Tools Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/security-free-tier-comparison-2026", offers.length)} &middot; 20+ security tools compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -44442,7 +44453,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Let&rsquo;s Encrypt &mdash; free SSL certificates</h3>
-    <div class="diff-desc">Free, automated SSL/TLS certificates trusted by all major browsers. ACME protocol for automated renewal. No limit on certificates. The default choice for any web service that needs HTTPS. Integration via certbot, Caddy, Traefik, nginx, and most cloud providers. There is no reason to pay for basic SSL certificates in 2026.</div>
+    <div class="diff-desc">Free, automated SSL/TLS certificates trusted by all major browsers. ACME protocol for automated renewal. No limit on certificates. The default choice for any web service that needs HTTPS. Integration via certbot, Caddy, Traefik, nginx, and most cloud providers. There is no reason to pay for basic SSL certificates.</div>
   </div>
   <div class="diff-card">
     <h3>Tailscale &mdash; free mesh VPN</h3>
@@ -44628,8 +44639,8 @@ ${globalNavCss()}
 }
 
 function buildHostingFreeTierComparison2026Page(): string {
-  const title = "Hosting & PaaS Free Tier Comparison 2026 — Vercel vs Netlify vs Render vs Cloudflare vs Railway";
-  const metaDescHosting = "Side-by-side comparison of 12+ developer hosting free tiers in 2026. Compare Vercel, Netlify, Render, Railway, Cloudflare Pages, Fly.io, Koyeb, Deno Deploy, GitHub Pages, and more — bandwidth, compute, build minutes, cold starts, and scaling costs.";
+  const title = pricingGuideTitle("hosting-free-tier-comparison-2026", "Hosting & PaaS Free Tier Comparison 2026 — Vercel vs Netlify vs Render vs Cloudflare vs Railway");
+  const metaDescHosting = `Side-by-side comparison of 12+ developer hosting free tiers in ${currentYearLabel()}. Compare Vercel, Netlify, Render, Railway, Cloudflare Pages, Fly.io, Koyeb, Deno Deploy, GitHub Pages, and more — bandwidth, compute, build minutes, cold starts, and scaling costs.`;
   const slug = "hosting-free-tier-comparison-2026";
   const pubDate = "2026-04-03";
 
@@ -44779,7 +44790,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/cloud-hosting">Cloud Hosting</a> &rsaquo; Hosting Free Tier Comparison</div>
-  <h1>Hosting &amp; PaaS Free Tier Comparison 2026</h1>
+  <h1>Hosting &amp; PaaS Free Tier Comparison ${currentYearLabel()}</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/hosting-free-tier-comparison-2026", offers.length)} &middot; 12+ hosting platforms compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
@@ -45260,7 +45271,7 @@ const STRUCTURALLY_FREE_CARDS = [
 
 function buildStateOfFreeTiersPage(): string {
   const changesInForce = recordsStillInForce(dealChanges);
-  const title = "State of Developer Free Tiers (2026) — Data from " + offers.length.toLocaleString() + "+ Tools | AgentDeals";
+  const title = `State of Developer Free Tiers (${currentYearLabel()}) — Data from ${offers.length.toLocaleString()}+ Tools | AgentDeals`;
   const metaDesc = `${trackedChanges(changesInForce).length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${categories.length} categories analyzed. The authoritative data on developer free tier trends, erosion patterns, and which vendors are still expanding.`;
   const now = new Date().toISOString().split("T")[0];
 
@@ -45435,8 +45446,8 @@ function buildStateOfFreeTiersPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Report",
-    headline: "State of Developer Free Tiers (2026)",
-    name: "State of Developer Free Tiers (2026)",
+    headline: `State of Developer Free Tiers (${currentYearLabel()})`,
+    name: `State of Developer Free Tiers (${currentYearLabel()})`,
     description: metaDesc,
     url: `${BASE_URL}/state-of-free-tiers`,
     datePublished: "2026-04-05",
@@ -45460,7 +45471,7 @@ function buildStateOfFreeTiersPage(): string {
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
 <link rel="canonical" href="${BASE_URL}/state-of-free-tiers">
-<meta property="og:title" content="State of Developer Free Tiers (2026) — Data from ${offers.length.toLocaleString()}+ Tools">
+<meta property="og:title" content="State of Developer Free Tiers (${currentYearLabel()}) — Data from ${offers.length.toLocaleString()}+ Tools">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="article">
 <meta property="og:url" content="${BASE_URL}/state-of-free-tiers">
@@ -45510,7 +45521,7 @@ ${globalNavCss()}
 <div class="container">
   ${buildGlobalNav("report")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; State of Free Tiers</div>
-  <h1>State of Developer Free Tiers (2026)</h1>
+  <h1>State of Developer Free Tiers (${currentYearLabel()})</h1>
   <p class="page-meta">${changeCountPhrase("tracked", changesInForce)} across ${offers.length.toLocaleString()} developer tools, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>. ${negativeChanges.length} negative vs ${positiveChanges.length} positive. The ratio tells the story.${dataChangesSegment(changesInForce)}</p>
 
   <h2>Executive Summary</h2>
@@ -53804,6 +53815,13 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     }
   }
 
+  const guideYearTarget = isGetOrHead ? yearGuideRedirect(url.pathname) : null;
+  if (guideYearTarget) {
+    res.writeHead(301, { Location: guideYearTarget });
+    res.end();
+    return;
+  }
+
   if ((url.pathname === "/rss" || url.pathname === "/feed" || url.pathname === "/atom") && isGetOrHead) {
     res.writeHead(301, { Location: "/feed.xml" });
     res.end();
@@ -54904,9 +54922,9 @@ ${MCP_TOOLS.map(t => `- **${t.name}**: ${t.brief}`).join("\n")}
 - [Browse Categories](${BASE_URL}/category)
 - [Pricing Changes Feed](${BASE_URL}/feed.xml)
 - [Expiring Deals](${BASE_URL}/expiring)
-- [${accountingPrices.title}](${BASE_URL}${ACCOUNTING_PRICES_PATH})
-- [${bankingFees.title}](${BASE_URL}${BANKING_FEES_PATH})
-- [${companyFormationPrices.title}](${BASE_URL}${COMPANY_FORMATION_PATH})
+- [${pricingGuideTitle(ACCOUNTING_PRICES_SLUG, accountingPrices.title)}](${BASE_URL}${ACCOUNTING_PRICES_PATH})
+- [${pricingGuideTitle(BANKING_FEES_SLUG, bankingFees.title)}](${BASE_URL}${BANKING_FEES_PATH})
+- [${pricingGuideTitle(COMPANY_FORMATION_SLUG, companyFormationPrices.title)}](${BASE_URL}${COMPANY_FORMATION_PATH})
 - [${whatsAppPrices.title}](${BASE_URL}${WHATSAPP_PRICES_PATH})
 - [${mistralPrices.title}](${BASE_URL}${MISTRAL_PRICES_PATH})
 - [Full details for LLMs](${BASE_URL}/llms-full.txt)

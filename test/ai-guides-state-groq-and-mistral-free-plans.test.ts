@@ -338,15 +338,15 @@ describe("the AI guides state Groq's and Mistral's free plans as the vendors lis
 
   it("keeps Mistral out of the generated free API answer in both visible and structured FAQs", () => {
     const html = served.get("/llm-api-pricing")!;
-    const question = "Which LLM API has the best free tier in 2026?";
+    const question = /^Which LLM API has the best free tier in \d{4}(?:–\d{4})?\?$/;
     const faq = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
       .map(([, raw]) => JSON.parse(raw))
       .find((node) => node["@type"] === "FAQPage");
     assert.ok(faq);
-    const answer = faq.mainEntity.find((entry: { name: string }) => entry.name === question).acceptedAnswer.text;
+    const answer = faq.mainEntity.find((entry: { name: string }) => question.test(entry.name)).acceptedAnswer.text;
     assert.match(answer, /Groq/);
     assert.doesNotMatch(answer, /Mistral/);
-    const visible = html.match(/Which LLM API has the best free tier in 2026\?<\/[^>]+>\s*<[^>]+>([\s\S]*?)<\//)?.[1];
+    const visible = html.match(/Which LLM API has the best free tier in \d{4}(?:–\d{4})?\?<\/[^>]+>\s*<[^>]+>([\s\S]*?)<\//)?.[1];
     assert.ok(visible);
     assert.doesNotMatch(textOf(visible), /Mistral/);
   });

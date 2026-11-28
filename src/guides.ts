@@ -1,3 +1,4 @@
+import { pricingGuideTitle } from "./pricing-guide-title.js";
 import { FREE_TIER_TRACKER_HEADING } from "./free-tier-tracker.js";
 import { guideBlurb } from "./guide-blurbs.js";
 
@@ -115,7 +116,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string }> = [
 export function getGuideList(): GuideMetadata[] {
   return GUIDE_ENTRIES.map(e => ({
     slug: e.slug,
-    title: e.title,
+    title: pricingGuideTitle(e.slug, e.title),
     description: guideBlurb(e.slug),
     type: classifyGuide(e.slug),
   }));
@@ -126,7 +127,7 @@ export function getGuideBySlug(slug: string): GuideMetadata | null {
   if (!entry) return null;
   return {
     slug: entry.slug,
-    title: entry.title,
+    title: pricingGuideTitle(entry.slug, entry.title),
     description: guideBlurb(entry.slug),
     type: classifyGuide(entry.slug),
   };

@@ -1,3 +1,4 @@
+import { pricingGuideTitle } from "../dist/pricing-guide-title.js";
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -98,10 +99,10 @@ describe("the company formation guide, built from data/company_formation_prices.
 
   it("answers 200 with the title, meta description, lead and read line the data file gives", () => {
     assert.strictEqual(served.status, 200);
-    assert.ok(served.page.includes(`<title>${committed.title} — AgentDeals</title>`));
+    assert.ok(served.page.includes(`<title>${pricingGuideTitle(ROUTE.slice(1), committed.title)} — AgentDeals</title>`));
     assert.strictEqual(decoded(served.page.match(/<meta name="description" content="([^"]*)">/)?.[1] ?? ""), committed.meta_description);
     const article = articleOf(served.page);
-    assert.strictEqual(cellText(article.match(/<h1>([\s\S]*?)<\/h1>/)?.[1] ?? ""), committed.title);
+    assert.strictEqual(cellText(article.match(/<h1>([\s\S]*?)<\/h1>/)?.[1] ?? ""), pricingGuideTitle(ROUTE.slice(1), committed.title));
     const paragraphs = [...article.matchAll(/<p class="([^"]+)">([\s\S]*?)<\/p>/g)].map(([, cls, inner]) => [cls, cellText(inner)]);
     assert.deepStrictEqual(paragraphs.slice(0, 2), [["section-intro", committed.lead], ["pub-date", committed.read_line]]);
   });
@@ -207,6 +208,7 @@ describe("the company formation guide, built from data/company_formation_prices.
 
   it("prints no dollar amount, percentage, date or year that the data file does not hold", () => {
     const held = figuresTheFileHolds(committed);
+    for (const figure of pricingGuideTitle(ROUTE.slice(1), committed.title).match(FIGURE) ?? []) held.add(figure);
     const printed = new Set(prose(articleOf(served.page)).match(FIGURE) ?? []);
     const inTheTables = stringsIn([
       committed.services.rows,
@@ -227,7 +229,7 @@ describe("the company formation guide, built from data/company_formation_prices.
   it("is listed in the pages sitemap, on /guides and in /llms.txt", () => {
     assert.ok(served.sitemap.includes(`<loc>http://localhost${ROUTE}</loc>`), "not in /sitemap-pages.xml");
     assert.ok(served.guides.includes(`href="${ROUTE}"`), "not on /guides");
-    assert.ok(served.llms.includes(`- [${committed.title}](http://localhost${ROUTE})`), "not in /llms.txt");
+    assert.ok(served.llms.includes(`- [${pricingGuideTitle(ROUTE.slice(1), committed.title)}](http://localhost${ROUTE})`), "not in /llms.txt");
   });
 
   it("is dated by the page-dates ledger like every other page", () => {
@@ -241,7 +243,7 @@ describe("the company formation guide, built from data/company_formation_prices.
   it("states its headline, description and publication day in its JSON-LD", () => {
     const jsonLd = JSON.parse(served.page.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1] ?? "{}");
     assert.strictEqual(jsonLd["@type"], "Article");
-    assert.strictEqual(jsonLd.headline, committed.title);
+    assert.strictEqual(jsonLd.headline, pricingGuideTitle(ROUTE.slice(1), committed.title));
     assert.strictEqual(jsonLd.description, committed.meta_description);
     assert.strictEqual(jsonLd.datePublished, committed.published);
   });

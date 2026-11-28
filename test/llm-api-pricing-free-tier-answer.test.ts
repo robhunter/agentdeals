@@ -7,7 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const QUESTION = "Which LLM API has the best free tier in 2026?";
+const QUESTION = /^Which LLM API has the best free tier in \d{4}(?:–\d{4})?\?$/;
 type Offer = { vendor: string; tier: string; description: string };
 type Catalogue = { offers: Offer[] };
 const shipped: Catalogue = JSON.parse(readFileSync(path.join(ROOT, "data/index.json"), "utf8"));
@@ -56,10 +56,10 @@ function readable(html: string): string {
 
 function answers(html: string): { visible: string; structured: string } {
   const visible = [...html.matchAll(/<div class="faq-q">([\s\S]*?)<\/div>\s*<div class="faq-a">([\s\S]*?)<\/div>/g)]
-    .filter(m => readable(m[1]) === QUESTION).map(m => readable(m[2]));
+    .filter(m => QUESTION.test(readable(m[1]))).map(m => readable(m[2]));
   const structured = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
     .map(m => JSON.parse(m[1])).filter(block => block["@type"] === "FAQPage")
-    .flatMap(block => block.mainEntity).filter(entry => entry.name === QUESTION).map(entry => entry.acceptedAnswer.text);
+    .flatMap(block => block.mainEntity).filter(entry => QUESTION.test(entry.name)).map(entry => entry.acceptedAnswer.text);
   assert.equal(visible.length, 1);
   assert.equal(structured.length, 1);
   return { visible: visible[0], structured: structured[0] };

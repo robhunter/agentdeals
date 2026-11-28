@@ -39,13 +39,30 @@ export function cutsWindow(year: number, today: string): Required<DateWindow> {
 }
 
 export function freeTierCutsIn(year: number, changes: DealChange[], today: string): DealChange[] {
-  const window = cutsWindow(year, today);
+  return freeTierCutsWithin(cutsWindow(year, today), changes);
+}
+
+export function rollingCutsWindow(today: string): Required<DateWindow> {
+  const end = new Date(`${today}T00:00:00Z`);
+  const year = end.getUTCFullYear() - 1;
+  const month = end.getUTCMonth();
+  const day = Math.min(end.getUTCDate(), new Date(Date.UTC(year, month + 1, 0)).getUTCDate());
+  const start = new Date(Date.UTC(year, month, day + 1));
+  return { start: start.toISOString().slice(0, 10), end: today };
+}
+
+export function freeTierCutsWithin(window: Required<DateWindow>, changes: DealChange[]): DealChange[] {
   return trackedChanges(changes.filter((record) => withinWindow(record.date, window)))
     .filter(tookEffectWithin(window))
     .filter(isAHighImpactCut)
     .filter(standsBehindItsSource)
     .filter(changeTouchesTheListing)
     .sort(newestFirst);
+}
+
+export function cutsByYearAndQuarterNewestFirst(cuts: readonly DealChange[]): QuarterOfCuts[] {
+  const years = [...new Set(cuts.map((record) => Number(record.date.slice(0, 4))))].sort((a, b) => b - a);
+  return years.flatMap((year) => cutsByQuarterNewestFirst(year, cuts));
 }
 
 export function quarterOf(date: string): number {
