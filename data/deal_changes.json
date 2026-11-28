@@ -20541,10 +20541,10 @@
       "vendor": "Supabase",
       "change_type": "product_deprecated",
       "date": "2026-12-31",
-      "summary": "Supabase says it is deprecating its legacy anon and service_role API keys by the end of 2026 and gives no day they stop working. Legacy keys keep working alongside the new keys until then. Replace the anon key with a publishable key (`sb_publishable_...`) and the service_role key with a secret key (`sb_secret_...`). Supabase's announcement says legacy keys will be deleted in late 2026, a date still to be confirmed. Apps that have not migrated will break then. Send the new keys on the apikey header only. The platform rejects them on the Authorization: Bearer header with Invalid JWT.",
+      "summary": "Supabase says it is deprecating its legacy anon and service_role API keys in early 2027 and gives no day they stop working. Its dashboard has said early 2027 since November 2, 2026, and its docs since November 25; before that the docs said by the end of 2026. Legacy keys keep working alongside the new keys until then. Replace the anon key with a publishable key (`sb_publishable_...`) and the service_role key with a secret key (`sb_secret_...`). Apps that have not migrated will break when the legacy keys are removed. Send the new keys on the apikey header only. The platform rejects them on the Authorization: Bearer header with Invalid JWT.",
       "what_ends": "Supabase legacy API keys",
       "previous_state": "Supabase projects authenticate with the anon and service_role keys alongside the newer publishable and secret keys.",
-      "current_state": "Supabase docs, \"API keys\" (read 2026-11-15): \"Supabase is deprecating the `anon` and `service_role` keys by the end of 2026. Use the publishable (`sb_publishable_xxx`) and secret (`sb_secret_xxx`) keys instead.\" \"Creating publishable and secret keys doesn't revoke your legacy keys. Both key systems work at the same time.\" Supabase's announcement \"Upcoming changes to Supabase API Keys\" (github.com/orgs/supabase/discussions/29260, read 2026-11-15), timeline row \"Late 2026, TBC\": \"Legacy API keys will be deleted and removed from the Docs / Dashboard.\" \"You have to migrate to use the new API keys by this point or your app will break.\"",
+      "current_state": "Supabase docs, \"API keys\" (read 2026-11-27): \"Supabase is deprecating the `anon` and `service_role` keys in early 2027. Use the publishable (`sb_publishable_xxx`) and secret (`sb_secret_xxx`) keys instead.\" \"Creating publishable and secret keys doesn't revoke your legacy keys. Both key systems work at the same time.\" The notice on the Supabase dashboard's API keys settings, added in Supabase's pull request 52250 (merged 2026-11-02): \"Legacy API keys will be retired in early 2027\" and \"Migrate to publishable and secret API keys to avoid disruption.\" The docs said \"by the end of 2026\" until Supabase's pull request 54052 (merged 2026-11-25).",
       "impact": "medium",
       "source_url": "https://supabase.com/docs/guides/api/api-keys",
       "category": "Databases",
@@ -21460,6 +21460,48 @@
       "category": "Cloud IaaS",
       "alternatives": [],
       "recorded_date": "2026-11-27"
+    },
+    {
+      "vendor": "Pollinations.AI",
+      "change_type": "limits_reduced",
+      "date": "2026-11-25",
+      "summary": "On November 25, 2026, Pollinations capped free Classic text prompts at 16,000 characters. A longer prompt gets HTTP 413.",
+      "previous_state": "Before November 25, 2026, free Classic text had no prompt character limit.",
+      "current_state": "\"Adds a 16,000-character prompt cap ... Over it: 413\" (pull request 20599, merged 2026-11-25). APIDOCS.md (read 2026-11-27): \"Prompts are limited to 16,000 characters (about 4,000 tokens), counting messages and tools, and replies to 1,500 tokens.\"",
+      "source_url": "https://github.com/pollinations/pollinations/pull/20599",
+      "impact": "medium",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-27",
+      "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Pollinations.AI",
+      "change_type": "limits_reduced",
+      "date": "2026-11-26",
+      "summary": "On November 26, 2026, Pollinations capped free Classic text replies at 100 per IP address a day, resetting at midnight UTC. Requests past the cap get HTTP 402, or can be paid through x402.",
+      "previous_state": "Before November 26, 2026, free Classic text had no daily reply cap.",
+      "current_state": "\"Adds a per-IP daily quota of 100 free text replies (IPv6 by /64)\" (pull request 20620, merged 2026-11-26). APIDOCS.md (read 2026-11-27): \"One at a time, at least 45 seconds apart. A stream waits for the next slot. At most 100 replies a day\"",
+      "source_url": "https://github.com/pollinations/pollinations/pull/20620",
+      "impact": "medium",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-11-27",
+      "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Supabase",
+      "change_type": "record_corrected",
+      "date": "2026-11-27",
+      "summary": "Data correction - our record of Supabase's legacy API keys gave the end of 2026, which Supabase's docs said when we read them on 2026-11-15. Supabase's dashboard has said early 2027 since 2026-11-02 and its docs since 2026-11-25, so the record now gives early 2027. Supabase gives no day.",
+      "previous_state": "End of 2026, from Supabase's docs (read 2026-11-15)",
+      "current_state": "Early 2027 with no day, from Supabase's docs (read 2026-11-27) and its dashboard notice (since 2026-11-02)",
+      "impact": "low",
+      "source_url": "https://supabase.com/docs/guides/api/api-keys",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-11-27",
+      "date_source": "hand_written"
     }
   ]
 }
